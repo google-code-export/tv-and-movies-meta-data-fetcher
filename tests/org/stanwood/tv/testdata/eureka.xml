@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
+  name="Eureka" sourceId="tvcom" url="http://www.tv.com/show/58448/summary.html">
+  <description>
+    <short><![CDATA[Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...]]></short>
+    <long><![CDATA[Small town. Big secret.
+
+A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.
+
+Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.
+]]></long>
+  </description>
+  <genre name="SCIFI"/>
+  <genre name="Drama"/>
+  <season
+    detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=1"
+    listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
+    <episode episodeId="784857" firstAired="2006-10-10" number="1"
+      productionCode="001" rating="1.0" siteId="1" title="Pilot"
+      totalNumber="1" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">
+      <director link="Harry" name="http://test/"/>
+      <writers link="Write a lot" name="http://test/a"/>
+      <guestStars link="sally" name="http://test/sally"/>
+      <guestStars link="Cedric" name="http://test/cedric"/>
+      <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
+    </episode>
+    <episode episodeId="800578" firstAired="2006-10-11" number="2"
+      productionCode="002" rating="9.5" siteId="2"
+      title="Many Happy Returns" totalNumber="2" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
+      <summary>Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!</summary>
+    </episode>
+  </season>
+  <season
+    detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=2"
+    listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=2" number="2">
+    <episode episodeId="800578" firstAired="2007-07-10" number="2"
+      productionCode="013" rating="0.4" siteId="13"
+      title="Phoenix Rising" totalNumber="13" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">
+      <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>
+    </episode>
+    <special episodeId="800578" firstAired="2007-07-09" number="0"
+      productionCode="200" rating="0.4" siteId="Special"
+      specialName="Special" title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">
+      <director link="JP" name="http://test/"/>
+      <writers link="Write a lot" name="http://test/a"/>
+      <writers link="Write a little" name="http://test/b"/>
+      <guestStars link="bob" name="http://test/bob"/>
+      <guestStars link="Write a little" name="http://test/fred"/>
+      <summary>Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.</summary>
+    </special>
+  </season>
+</show>
