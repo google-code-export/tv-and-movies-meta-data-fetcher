@@ -85,7 +85,7 @@ public class TVCOMSource implements ISource {
 	}
 
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws StoreException,
+	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
 		Season season = new Season(show, seasonNum);		
 		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(),
@@ -303,7 +303,7 @@ public class TVCOMSource implements ISource {
 
 	@Override
 	public Show getShow(File showDirectory, long showId)
-			throws StoreException, MalformedURLException, IOException {
+			throws SourceException, MalformedURLException, IOException {
 		Show show = new Show(showDirectory, showId);
 		show.setShowURL(new URL(getSummaryURL(show.getShowId())));
 		show.setSourceId(SOURCE_ID);
@@ -448,9 +448,15 @@ public class TVCOMSource implements ISource {
 		return SOURCE_ID;
 	}
 
+	/**
+	 * This will search for a show ID from the source. It uses the name of the show directory as the show name
+	 * when it does a search, and uses the first result it finds.
+	 * @param showDirectory The directory the show is located in
+	 * @return The results of the search, or null if the show could not be found
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForShowId(File showDirectory) throws StoreException, MalformedURLException, IOException {
+	public SearchResult searchForShowId(File showDirectory) throws SourceException, MalformedURLException, IOException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Source source = getSource(new URL(getShowSearchUrl(showDirectory.getName())));		
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);		

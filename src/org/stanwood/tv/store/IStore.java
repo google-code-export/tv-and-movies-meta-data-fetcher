@@ -24,24 +24,30 @@ import org.stanwood.tv.model.Episode;
 import org.stanwood.tv.model.Season;
 import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.SearchResult;
-import org.stanwood.tv.source.SourceException;
 
 public interface IStore  {
 
-	public void cacheEpisode(Episode episode) throws SourceException;
+	public void cacheEpisode(Episode episode) throws StoreException;
 
-	public void cacheSeason(Season season) throws SourceException;
+	public void cacheSeason(Season season) throws StoreException;
 	
-	public void cacheShow(Show show) throws SourceException;
+	public void cacheShow(Show show) throws StoreException;
 	
-	public Episode getEpisode(Season season, int episodeNum) throws SourceException, MalformedURLException, IOException;
+	public Episode getEpisode(Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
 	
-	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException;
+	/**
+	 * This will get the season from the store
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
+	public Season getSeason(Show show, int seasonNum) throws StoreException, IOException;
 	
-	public Show getShow(File showDirectory, long showId) throws SourceException, MalformedURLException, IOException;
+	public Show getShow(File showDirectory, long showId) throws StoreException, MalformedURLException, IOException;
 	
-	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException, SourceException;
+	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
 
-	public SearchResult searchForShowId(File showDirectory) throws SourceException;
+	public SearchResult searchForShowId(File showDirectory) throws StoreException;
 
 }

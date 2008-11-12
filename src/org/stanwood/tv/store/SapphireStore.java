@@ -47,7 +47,7 @@ public class SapphireStore implements IStore {
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
-	public void cacheEpisode(Episode episode) throws SourceException {		
+	public void cacheEpisode(Episode episode) throws StoreException {		
 		File showDir = episode.getSeason().getShow().getShowDirectory();		
 		try {
 		for (File file : showDir.listFiles()) {
@@ -59,7 +59,7 @@ public class SapphireStore implements IStore {
 		}	
 		}
 		catch (IOException e) {
-			throw new SourceException("Error creating spahire store",e);
+			throw new StoreException("Error creating spahire store",e);
 		}
 	}
 
@@ -122,40 +122,40 @@ public class SapphireStore implements IStore {
 	}
 
 	@Override
-	public void cacheSeason(Season season) throws SourceException {
+	public void cacheSeason(Season season) throws StoreException {
 	}
 
 	@Override
-	public void cacheShow(Show show) throws SourceException {
+	public void cacheShow(Show show) throws StoreException {
 	}
 
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
-			throws SourceException, MalformedURLException, IOException {
+			throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
+	public Season getSeason(Show show, int seasonNum) throws StoreException,
 			IOException {
 		return null;
 	}
 
 	@Override
 	public Show getShow(File showDirectory, long showId)
-			throws SourceException, MalformedURLException, IOException {
+			throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
-			throws MalformedURLException, IOException, SourceException {
+			throws MalformedURLException, IOException, StoreException {
 		return null;
 	}
 
 	@Override
 	public SearchResult searchForShowId(File showDirectory)
-			throws SourceException {
+			throws StoreException {
 		return null;
 	}
 	

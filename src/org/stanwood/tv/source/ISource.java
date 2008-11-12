@@ -36,20 +36,20 @@ public interface ISource {
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode
 	 * @return The episode
-	 * @throws StoreException Thrown if their is a problem retrieving the data
+	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Throw if their is a IO related problem
 	 */
-	public Episode getEpisode(Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
+	public Episode getEpisode(Season season, int episodeNum) throws SourceException, MalformedURLException, IOException;
 	
-	public Season getSeason(Show show, int seasonNum) throws StoreException, IOException;
+	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException;
 	
-	public Show getShow(File showDirectory, long showId) throws StoreException, MalformedURLException, IOException;
+	public Show getShow(File showDirectory, long showId) throws SourceException, MalformedURLException, IOException;
 	
-	public Episode getSpecial(Season season, int specialNumber) throws StoreException,MalformedURLException, IOException;
+	public Episode getSpecial(Season season, int specialNumber) throws SourceException,MalformedURLException, IOException;
 
 	public String getSourceId();
 
-	public SearchResult searchForShowId(File showDirectory) throws StoreException, MalformedURLException, IOException;
+	public SearchResult searchForShowId(File showDirectory) throws SourceException, MalformedURLException, IOException;
 	
 }

@@ -27,21 +27,23 @@ import org.stanwood.tv.model.Episode;
 import org.stanwood.tv.model.Season;
 import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.SearchResult;
-import org.stanwood.tv.source.SourceException;
 
-
-
+/**
+ * This store is used to store the show information in memory. This allows the tool
+ * reuse the show information without having to fetch it from other stores or sources 
+ * (which would be slower). This information will be lost once the application exits. 
+ */
 public class MemoryStore implements IStore {
 
 	private List<Show> shows = new ArrayList<Show>();
 	
 	@Override
-	public void cacheEpisode(Episode episode) throws SourceException {
+	public void cacheEpisode(Episode episode) throws StoreException {
 		
 	}
 
 	@Override
-	public void cacheSeason(Season season) throws SourceException {
+	public void cacheSeason(Season season) throws StoreException {
 		Show show = season.getShow();
 		if (show.getSeason(season.getSeasonNumber())!=null) {
 			show.removeSeason(season.getSeasonNumber());
@@ -50,7 +52,7 @@ public class MemoryStore implements IStore {
 	}
 
 	@Override
-	public void cacheShow(Show show) throws SourceException {
+	public void cacheShow(Show show) throws StoreException {
 		Iterator<Show> it = shows.iterator();
 		while (it.hasNext()) {
 			Show foundShow = it.next();
@@ -63,25 +65,32 @@ public class MemoryStore implements IStore {
 
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
-			throws SourceException, MalformedURLException, IOException {
+			throws StoreException, MalformedURLException, IOException {
 		return season.getEpisode(episodeNum);		
 	}
 	
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
-			throws MalformedURLException, IOException, SourceException {	
+			throws MalformedURLException, IOException, StoreException {	
 		return season.getSpecial(specialNumber);	
 	}
 
+	/**
+	 * This will get the season from the store
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
+	public Season getSeason(Show show, int seasonNum) throws StoreException,
 			IOException {		
 		return show.getSeason(seasonNum);
 	}
 
 	@Override
 	public Show getShow(File showDirectory, long showId)
-			throws SourceException, MalformedURLException, IOException {		
+			throws StoreException, MalformedURLException, IOException {		
 		for (Show show : shows) {
 			if (show.getShowId() == showId) {
 				return show;
@@ -89,10 +98,16 @@ public class MemoryStore implements IStore {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * This does nothing because this source does not support searching for show ID's.
+	 * @param showDirectory The directory the show is located in
+	 * @return Will always return null.
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
 	public SearchResult searchForShowId(File showDirectory)
-			throws SourceException {		
+			throws StoreException {		
 		return null;
 	}
 

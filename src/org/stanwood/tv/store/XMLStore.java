@@ -39,7 +39,6 @@ import org.stanwood.tv.model.Season;
 import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.SearchResult;
 import org.stanwood.tv.source.NotInStoreException;
-import org.stanwood.tv.source.SourceException;
 import org.stanwood.tv.util.XMLParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,7 +57,7 @@ public class XMLStore extends XMLParser implements IStore {
 
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
-			throws MalformedURLException, IOException, SourceException {
+			throws MalformedURLException, IOException, StoreException {
 		Document doc = getCache(season.getShow().getShowDirectory(), season
 				.getShow().getShowId());
 		Episode special = null;
@@ -72,7 +71,7 @@ public class XMLStore extends XMLParser implements IStore {
 
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
-			throws SourceException, MalformedURLException {
+			throws StoreException, MalformedURLException {
 		Document doc = getCache(season.getShow().getShowDirectory(), season
 				.getShow().getShowId());
 		Episode episode = null;
@@ -85,7 +84,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
+	public Season getSeason(Show show, int seasonNum) throws StoreException,
 			MalformedURLException {
 		Document doc = getCache(show.getShowDirectory(), show.getShowId());
 		Season season = null;
@@ -98,7 +97,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	private Episode getSpecialFromCache(int specialNum, Season season,
-			Document doc) throws NotInStoreException, SourceException,
+			Document doc) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
 			Node episodeNode = XPathAPI.selectSingleNode(doc, "show[@id="
@@ -120,10 +119,10 @@ public class XMLStore extends XMLParser implements IStore {
 
 			return episode;
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to parse cache: "
+			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		} catch (ParseException e) {
-			throw new SourceException(
+			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
 		}
 	}
@@ -170,7 +169,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	private Episode getEpisodeFromCache(int episodeNum, Season season,
-			Document doc) throws NotInStoreException, SourceException,
+			Document doc) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
 			Node episodeNode = XPathAPI.selectSingleNode(doc, "show[@id="
@@ -190,16 +189,16 @@ public class XMLStore extends XMLParser implements IStore {
 
 			return episode;
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to parse cache: "
+			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		} catch (ParseException e) {
-			throw new SourceException(
+			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
 		}
 	}
 
 	private Season getSeasonFromCache(int seasonNum, Show show, Document doc)
-			throws SourceException, NotInStoreException, MalformedURLException {
+			throws StoreException, NotInStoreException, MalformedURLException {
 		try {
 			Node seasonNode = XPathAPI.selectSingleNode(doc, "show[@id="
 					+ show.getShowId() + "]/season[@number=" + seasonNum + "]");
@@ -214,13 +213,13 @@ public class XMLStore extends XMLParser implements IStore {
 			return season;
 
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to parse cache: "
+			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		}
 	}
 
 	public Show getShow(File showDirectory, long showId)
-			throws SourceException, MalformedURLException, IOException {
+			throws StoreException, MalformedURLException, IOException {
 		Document doc = getCache(showDirectory, showId);
 		Show show = null;
 		try {
@@ -233,7 +232,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	private Show getShowFromCache(File showDirectory, Document doc)
-			throws SourceException, NotInStoreException, MalformedURLException {
+			throws StoreException, NotInStoreException, MalformedURLException {
 		try {
 			Long showId = getLongFromXML(doc, "show/@id");
 			String imageURL = getStringFromXML(doc, "show/@imageUrl");
@@ -257,7 +256,7 @@ public class XMLStore extends XMLParser implements IStore {
 
 			return show;
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to parse cache: "
+			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		}
 	}
@@ -282,7 +281,7 @@ public class XMLStore extends XMLParser implements IStore {
 	
 
 	private Document getCache(File showDirectory, long showId)
-			throws SourceException {
+			throws StoreException {
 		File cacheFile = getCacheFile(showDirectory);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
@@ -292,13 +291,13 @@ public class XMLStore extends XMLParser implements IStore {
 			try {
 				doc = factory.newDocumentBuilder().parse(cacheFile);
 			} catch (SAXException e) {
-				throw new SourceException("Unable to parse cache file: "
+				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);
 			} catch (IOException e) {
-				throw new SourceException("Unable to read cache file: "
+				throw new StoreException("Unable to read cache file: "
 						+ e.getMessage(), e);
 			} catch (ParserConfigurationException e) {
-				throw new SourceException("Unable to parse cache file: "
+				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);
 			}
 			return doc;
@@ -312,7 +311,7 @@ public class XMLStore extends XMLParser implements IStore {
 				doc.appendChild(series);
 				writeCache(cacheFile, doc);
 			} catch (ParserConfigurationException e) {
-				throw new SourceException("Unable to create cache: "
+				throw new StoreException("Unable to create cache: "
 						+ e.getMessage());
 			}
 		}
@@ -327,7 +326,7 @@ public class XMLStore extends XMLParser implements IStore {
 		return url.toExternalForm();
 	}
 	
-	public void cacheShow(Show show) throws SourceException {
+	public void cacheShow(Show show) throws StoreException {
 		Document doc = getCache(show.getShowDirectory(), show.getShowId());
 		Element series = (Element) doc.getFirstChild();
 		series.setAttribute("id", String.valueOf(show.getShowId()));
@@ -364,13 +363,13 @@ public class XMLStore extends XMLParser implements IStore {
 			File cacheFile = getCacheFile(show.getShowDirectory());
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to parse cache file: "
+			throw new StoreException("Unable to parse cache file: "
 					+ e.getMessage(), e);
 		}
 
 	}
 
-	private void writeCache(File file, Document doc) throws SourceException {
+	private void writeCache(File file, Document doc) throws StoreException {
 		try {
 			OutputFormat format = new OutputFormat(doc);
 			format.setLineWidth(65);
@@ -380,10 +379,10 @@ public class XMLStore extends XMLParser implements IStore {
 					file), format);
 			serializer.serialize(doc);
 		} catch (FileNotFoundException e) {
-			throw new SourceException("Unable to write cache: "
+			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		} catch (IOException e) {
-			throw new SourceException("Unable to write cache: "
+			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
 	}
@@ -394,7 +393,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	@Override
-	public void cacheEpisode(Episode episode) throws SourceException {
+	public void cacheEpisode(Episode episode) throws StoreException {
 		Season season = episode.getSeason();
 		Show show = season.getShow();
 
@@ -407,7 +406,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	private void cacheEpisode(Document doc, Show show, Season season,
-			Episode episode) throws SourceException {
+			Episode episode) throws StoreException {
 		try {
 			Node node = XPathAPI.selectSingleNode(doc, "series[@id="
 					+ show.getShowId() + "]/season[@number="
@@ -429,13 +428,13 @@ public class XMLStore extends XMLParser implements IStore {
 			File cacheFile = getCacheFile(show.getShowDirectory());
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to write cache: "
+			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
 	}
 
 	private void cacheSpecial(Document doc, Show show, Season season,
-			Episode episode) throws SourceException {
+			Episode episode) throws StoreException {
 		try {
 			Node node = XPathAPI.selectSingleNode(doc, "show[@id="
 					+ show.getShowId() + "]/season[@number="
@@ -457,7 +456,7 @@ public class XMLStore extends XMLParser implements IStore {
 			File cacheFile = getCacheFile(show.getShowDirectory());
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to write cache: "
+			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
 	}
@@ -510,7 +509,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	@Override
-	public void cacheSeason(Season season) throws SourceException {
+	public void cacheSeason(Season season) throws StoreException {
 		try {
 			Show show = season.getShow();
 			Document doc = getCache(show.getShowDirectory(), show.getShowId());
@@ -530,7 +529,7 @@ public class XMLStore extends XMLParser implements IStore {
 			File cacheFile = getCacheFile(show.getShowDirectory());
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
-			throw new SourceException("Unable to write cache: "
+			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
 	}
@@ -551,7 +550,7 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 
 	@Override
-	public SearchResult searchForShowId(File showDirectory) throws SourceException {
+	public SearchResult searchForShowId(File showDirectory) throws StoreException {
 		File cacheFile = getCacheFile(showDirectory);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
@@ -573,16 +572,16 @@ public class XMLStore extends XMLParser implements IStore {
 					}
 				}
 			} catch (TransformerException e) {
-				throw new SourceException("Unable to parse cache file: "
+				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);	
 			} catch (SAXException e) {
-				throw new SourceException("Unable to parse cache file: "
+				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);
 			} catch (IOException e) {
-				throw new SourceException("Unable to read cache file: "
+				throw new StoreException("Unable to read cache file: "
 						+ e.getMessage(), e);
 			} catch (ParserConfigurationException e) {
-				throw new SourceException("Unable to parse cache file: "
+				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);
 			}
 
