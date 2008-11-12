@@ -267,4 +267,22 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 	</target>
 
 	<target name="dist" depends="clean,run-tests,javadoc,jars,rpms"/>
+
+	<!-- 
+			http://wiki.wsmoak.net/cgi-bin/wiki.pl?DocBookToPDF
+		-->
+		
+		<property name="docbook.home"    value="${basedir}/docbook/xsl"/>
+		<property name="saxon.dir"       value="c:/java/saxon6_5_3"/>
+		<property name="xml.dir"         value="${basedir}/docs/userguide"/>
+		<property name="fo.dir"          value="${basedir}/fo"/>
+
+	
+	<target name="docs" description="Converts docbook xml to fo">		
+	     <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
+	            basedir="${xml.dir}"
+	            extension=".fo"
+	            destdir="${fo.dir}" />		
+	</target>
+
 </project>
