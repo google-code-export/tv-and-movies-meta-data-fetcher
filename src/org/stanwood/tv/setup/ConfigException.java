@@ -16,6 +16,9 @@
  */
 package org.stanwood.tv.setup;
 
+/**
+ * This exception is thrown when their is a problem related to the configuration file.
+ */
 public class ConfigException extends Exception {
 
 	private static final long serialVersionUID = 9020239129448543761L;
