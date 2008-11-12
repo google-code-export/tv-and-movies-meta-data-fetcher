@@ -24,7 +24,6 @@ import org.stanwood.tv.model.Episode;
 import org.stanwood.tv.model.Season;
 import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.SearchResult;
-import org.stanwood.tv.store.StoreException;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.

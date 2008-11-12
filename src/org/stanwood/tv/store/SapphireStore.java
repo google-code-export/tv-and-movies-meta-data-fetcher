@@ -32,7 +32,6 @@ import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.FileNameParser;
 import org.stanwood.tv.renamer.ParsedFileName;
 import org.stanwood.tv.renamer.SearchResult;
-import org.stanwood.tv.source.SourceException;
 
 /**
  * This is a write only store that is used to store information in a format that can 
@@ -46,6 +45,12 @@ public class SapphireStore implements IStore {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
+	/** 
+	 * This will store the episode and show details in a xml file next too the media file.
+	 * The XML file will be in the format found here  {@link http://appletv.nanopi.net/manual/overriding-metadata/}.
+	 * @param episode The episode to the stored
+	 * @throws StoreException Thrown if their is a problem writing to the store
+	 */
 	@Override
 	public void cacheEpisode(Episode episode) throws StoreException {		
 		File showDir = episode.getSeason().getShow().getShowDirectory();		

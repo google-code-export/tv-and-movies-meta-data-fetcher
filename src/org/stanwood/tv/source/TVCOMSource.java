@@ -36,7 +36,6 @@ import org.stanwood.tv.model.Link;
 import org.stanwood.tv.model.Season;
 import org.stanwood.tv.model.Show;
 import org.stanwood.tv.renamer.SearchResult;
-import org.stanwood.tv.store.StoreException;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
