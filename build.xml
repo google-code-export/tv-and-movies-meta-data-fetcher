@@ -1,0 +1,270 @@
+<project name="MediaInfoFetcher" default="dist" basedir=".">
+
+	<!-- Allow properties to be overridden by a property file -->
+	<property file="build.properties" />
+
+	<!-- Path properties -->
+	<property name="src.dir" location="${basedir}/src" />
+	<property name="build.dir" location="${basedir}/bin" />
+	<property name="test.src.dir" location="${basedir}/tests" />
+	<property name="test.build.dir" location="${basedir}/tests-bin" />
+	<property name="dist.dir" location="${basedir}/dist" />
+	<property name="libs.dir" location="${basedir}/libs" />
+	<property name="etc.dir" location="${basedir}/etc" />
+	<property name="rpm.dir" location="${basedir}/rpm" />
+	<property name="api.docs.dir" location="${basedir}/docs/api" />
+	<property name="reports.dir" location="${basedir}/reports"/>
+
+	<!-- Compiler properties -->
+	<property name="javac.source" value="1.6" />
+	<property name="javac.target" value="1.6" />
+
+	<!-- Dist properties -->
+	<property name="project.version" value="1.0" />
+	<property name="project.author" value="John-Paul Stanford" />
+	<property name="project.email" value="dev@stanwood.org.uk" />
+	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet." />
+
+	<!-- One Jar Setup -->
+	<property name="one-jar.dist.dir" value="${libs.dir}/compile-time"/>	
+	<import file="one-jar-ant-task.xml"/>	
+
+	<!-- Lib classpaths -->
+	<path id="run-time.libs.classpath">
+		<fileset dir="${libs.dir}/run-time" includes="*.jar" />
+	</path>
+	<path id="compile-time.libs.classpath">
+		<fileset dir="${libs.dir}/compile-time" includes="**/*.jar" />
+	</path>
+	<path id="test-time.libs.classpath">
+		<fileset dir="${libs.dir}/test-time" includes="*.jar" />
+	</path>
+	
+	<!-- Cobeture setup -->
+	<property name="cobertura.dir" value="${basedir}/cobertura" />
+	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
+	<taskdef classpathref="compile-time.libs.classpath" resource="tasks.properties" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${test.build.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${api.docs.dir}" />
+		<mkdir dir="${reports.dir}"/>
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<property name="cp" refid="run-time.libs.classpath" />
+		<echo message="Classpath is ${cp}" />
+
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
+			<classpath>
+				<path refid="run-time.libs.classpath" />				
+			</classpath>
+		</javac>
+
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="compile-tests" depends="compile" description="compile the tests">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}">
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<path refid="run-time.libs.classpath" />
+				<path refid="test-time.libs.classpath" />				
+			</classpath>
+		</javac>
+
+		<copy todir="${test.build.dir}">
+			<fileset dir="${test.src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="javadoc">
+		<delete dir="${api.docs.dir}"/>
+        <javadoc packagenames="org.stanwood.*"
+            sourcepath="src"                
+            defaultexcludes="yes"
+            destdir="${api.docs.dir}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Media Renamer/Metadata Fetcher">
+          <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
+        </javadoc>
+	</target>
+
+	<target name="run-tests" depends="compile,compile-tests">
+		<delete dir="${cobertura.dir}"/>
+		<mkdir dir="${cobertura.dir}"/>
+		<mkdir dir="${reports.dir}/xml"/>
+		<mkdir dir="${reports.dir}/coverage"/>
+		<mkdir dir="${reports.dir}/junit"/>
+		<cobertura-instrument todir="${build.instrumented.dir}">
+		    <fileset dir="${build.dir}">
+		        <include name="**/*.class"/>
+		    </fileset>
+		</cobertura-instrument>		
+		
+		<junit fork="yes" dir="${basedir}" failureProperty="test.failed">
+			<!--
+					Specify the name of the coverage data file to use.
+					The value specified below is the default.
+				-->
+		    <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser" />
+			
+		    <classpath location="${build.instrumented.dir}"/>
+		    <classpath location="${build.dir}"/>
+			<classpath location="${test.build.dir}"/>
+			<classpath refid="compile-time.libs.classpath"/>
+			<classpath refid="run-time.libs.classpath"/>
+			<classpath refid="test-time.libs.classpath"/>
+		    
+			<formatter type="xml" />
+			<test name="${testcase}" todir="${reports.dir}/xml" if="testcase" />
+			<batchtest todir="${reports.dir}/xml" unless="testcase">
+				<fileset dir="${test.src.dir}">
+					<include name="**/Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		
+		<junitreport todir="${reports.dir}/xml" >
+			
+			<fileset dir="${reports.dir}/xml">
+				<include name="TEST-*.xml"/>
+			</fileset>		  
+   			<report format="frames" todir="${reports.dir}/junit"/>
+		</junitreport>
+					
+		<cobertura-report srcdir="${src.dir}" destdir="${reports.dir}/coverage"/>		
+		
+		<fail if="test.failed"/>
+		
+		<!--
+		<cobertura-check branchrate="67" linerate="82"/>		
+		-->		
+		
+		<delete dir="${reports.dir}/xml"/>
+		<delete dir="${cobertura.dir}"/>
+		<delete file="cobertura.ser" />
+	</target>
+
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete includeemptydirs="true" >
+			<fileset dir="${build.dir}" includes="**/*"/>
+			<fileset dir="${test.build.dir}" includes="**/*"/>
+		</delete>
+		<delete dir="${dist.dir}" />
+		<delete dir="${api.docs.dir}" />
+		<delete dir="${rpm.dir}" />
+		<delete dir="${cobertura.dir}"/>
+		<delete dir="${reports.dir}"/>
+		<delete file="cobertura.ser" />
+	</target>
+
+	<target name="jars" description="generate the distribution">
+		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+
+		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar">
+			<fileset dir="${src.dir}" />
+			<fileset dir="${test.src.dir}" />
+			<fileset file="${basedir}/VERSION" />
+			<fileset file="${basedir}/COPYING" />
+			<fileset file="${basedir}/Changelog" />
+			<fileset file="${basedir}/Description" />
+			<fileset file="${basedir}/.project" />
+			<fileset file="${basedir}/.classpath" />
+		</jar>
+		
+		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." />
+
+		<mkdir dir="${dist.dir}/bin/${ant.project.name}-${project.version}" />		
+		<jar jarfile="${dist.dir}/bin/${ant.project.name}-${project.version}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+		<copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
+			<fileset file="${basedir}/VERSION" />
+			<fileset file="${basedir}/COPYING" />
+			<fileset file="${basedir}/scripts/**" />						
+		</copy>		
+		<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
+
+		<zip file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" basedir="${dist.dir}/bin" />
+
+		<delete dir="${dist.dir}/bin" />				
+		
+		<!-- Construct the One-JAR file -->
+		<one-jar destfile="${dist.dir}/${ant.project.name}-${project.version}-static-bin.jar" 
+			     manifest="${etc.dir}/manifest.mf">
+			<main>		    	
+		        <fileset dir="${build.dir}"/>
+		    </main>
+		    <lib>
+		    	<fileset dir="${libs.dir}/run-time" includes="*.jar" />		    	
+		    </lib>
+		</one-jar>
+		
+	</target>
+
+	<!--
+http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
+-->
+	<target name="createRPM">
+		
+		<delete dir="${rpm.dir}" />
+		<mkdir dir="${rpm.dir}/BUILD" />
+		<mkdir dir="${rpm.dir}/RPMS" />
+		<mkdir dir="${rpm.dir}/RPMS/noarch" />
+		<mkdir dir="${rpm.dir}/SOURCES" />
+		<mkdir dir="${rpm.dir}/SPECS" />
+		<mkdir dir="${rpm.dir}/SRPMS" />
+		<mkdir dir="${rpm.dir}/tmp" />		
+		
+		<property name="project.name" value="${ant.project.name}" />
+		<property name="project.rpm.topdir" value="${rpm.dir}" />
+		<loadfile property="project.description" srcFile="Description" />
+		<loadfile property="project.changelog" srcFile="Changelog" />
+		<echoproperties prefix="project." destfile="${dist.dir}/project.properties" />
+
+		<filter filtersfile="${dist.dir}/project.properties" />
+		<copy file="${etc.dir}/${spec.file}" tofile="${rpm.dir}/SPECS/${spec.file}" filtering="true" />		
+		<delete file="${dist.dir}/project.properties" />
+				
+		<copy file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" todir="${rpm.dir}/SOURCES" />
+		<copy file="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" todir="${rpm.dir}/SOURCES" />
+		<copy file="${libs.dir}/run-time/jericho-html-2.6.jar" todir="${rpm.dir}/SOURCES"/>
+		
+		<exec executable="rpmbuild" failifexecutionfails="true" failonerror="true">
+			<arg value="-ba" />
+			<arg value="${rpm.dir}/SPECS/${spec.file}" />
+		</exec>
+		
+		<copy todir="${dist.dir}">
+			<fileset dir="${rpm.dir}/RPMS/noarch" includes="**/*.rpm" />
+		</copy>
+		<delete dir="${rpm.dir}" />
+	</target>
+	
+	<target name="rpms" depends="jars">		
+		<echo message="Building Project RPM's for OpenSUSE 11.0"/>					
+		<antcall target="createRPM" inheritall="true">
+			<param name="spec.file" value="opensuse-11.0.spec"/>	
+		</antcall>
+		
+		<echo message="Building jericho-html for OpenSUSE 11.0" />						
+		<antcall target="createRPM" inheritall="true">
+			<param name="spec.file" value="jericho.spec"/>
+		</antcall>
+	</target>
+
+	<target name="dist" depends="clean,run-tests,javadoc,jars,rpms"/>
+</project>

@@ -1,0 +1,5 @@
+Using show id tvcom:17552
+Renaming 's02e02 - Hello this is a test.mpg' -> '2 02 - Phoenix Rising..mpg'
+Renaming '101 - Blah Blah Blah.avi' -> '1 01 - Pilot..avi'
+Renaming 'S01E02 - Hello this is a test.mkv' -> '1 02 - Many Happy Returns..mkv'
+

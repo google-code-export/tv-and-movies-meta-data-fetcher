@@ -1,0 +1,13 @@
+<config>
+	<sources>
+		<!-- www.tv.com TV Show information source -->
+		<source id="org.stanwood.tv.source.TVCOMSource"/>
+	</sources>
+	<stores>
+		<!-- Caches data in memory while the application is running -->
+		<store id="org.stanwood.tv.store.MemoryStore"/>
+		
+		<!-- A Store for saving Show/Movies in a XML file in the current directory -->
+		<store id="org.stanwood.tv.store.XMLStore"/>		
+	</stores>
+</config>

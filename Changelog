@@ -1,0 +1,4 @@
+* Fri Nov 7 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+- Able to rename TV Shows and Movies with data fetch from web sources.
+- Able to fetch TV Show information from tv.com
+- Catch the data in XML within the directory holding the show.

@@ -1,0 +1,5 @@
+Requirements
+------------
+
+java >= 1.6
+jakarta-commons-cli (1.0)
