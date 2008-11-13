@@ -1,0 +1,66 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+	<!ENTITY apptitle "MediaInfoFetcher">	
+	<!ENTITY version "1.0">
+]>
+<book>
+	<bookinfo>
+		<title>&apptitle; user guide</title>
+		<authorgroup>
+			<author>
+				<firstname>John-Paul</firstname>
+				<surname>Stanford</surname>
+				<affiliation>
+					<address><email>dev@stanwood.org.uk</email></address>
+				</affiliation>
+			</author>			
+		</authorgroup>
+		<copyright>
+			<year>2007</year>
+			<holder>John-Paul Stanford</holder>
+		</copyright>
+		<abstract>	
+			<para>
+				This document describes usage of the application &apptitle; version &version;
+			</para>
+		</abstract>
+	</bookinfo>
+	<preface>
+		<title>&apptitle;</title>
+	</preface>
+	<chapter id="introduction">
+		<title>Introduction</title>
+		<para>
+			&apptitle; is a application and a API which can be used to retrieve TV show 
+			and movie meta data from Internet sources. This information is then stored 
+			locally and can be used to rename media files with the correct title.
+		</para>				
+	</chapter>
+	<chapter id="installation">
+		<title>Installation</title>
+		<para></para>
+	</chapter>
+	<chapter id="usage">
+		<title>CLI Usage</title>
+		<para></para>
+	</chapter>
+	<chapter id="configuration">
+		<title>Configuration</title>
+		<para></para>
+	</chapter>
+	<chapter id="credits-and-licenses">
+		<title>Credits and Licenses</title>
+		
+		<para>&apptitle;</para>
+		<itemizedlist>
+			<listitem>
+				<para>John-Paul Stanford <email>dev@stanwood.org.uk</email> - Original Author</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+        	Documentation copyright 2008, John-Paul Stanford
+            <email>jp@stanwood.org.uk</email>
+		</para>		
+	</chapter>
+	
+</book>

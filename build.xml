@@ -12,9 +12,13 @@
 	<property name="libs.dir" location="${basedir}/libs" />
 	<property name="etc.dir" location="${basedir}/etc" />
 	<property name="rpm.dir" location="${basedir}/rpm" />
-	<property name="api.docs.dir" location="${basedir}/docs/api" />
+	<property name="docs.dir" location="${basedir}/docs"/>
+	<property name="api.docs.dir" location="${docs.dir}/api" />
+	<property name="userguide.dir" location="${docs.dir}/userguide" />	
 	<property name="reports.dir" location="${basedir}/reports"/>
-
+	<property name="docbook.home"    value="${basedir}/docbook/xsl"/>	
+	<property name="fo.dir"          value="${basedir}/fo"/>
+	
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
 	<property name="javac.target" value="1.6" />
@@ -45,6 +49,11 @@
 	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
 	<taskdef classpathref="compile-time.libs.classpath" resource="tasks.properties" />
 
+	<!-- Fop setup -->
+  	<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">        
+    	<classpath refid="compile-time.libs.classpath"/>	                    
+    </taskdef>
+	
 	<target name="init">
 		<!-- Create the time stamp -->
 		<tstamp />
@@ -171,6 +180,8 @@
 		<delete dir="${cobertura.dir}"/>
 		<delete dir="${reports.dir}"/>
 		<delete file="cobertura.ser" />
+		<delete dir="${fo.dir}"/>
+		<delete dir="${basedir}/docbook"/>
 	</target>
 
 	<target name="jars" description="generate the distribution">
@@ -264,25 +275,26 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 		<antcall target="createRPM" inheritall="true">
 			<param name="spec.file" value="jericho.spec"/>
 		</antcall>
-	</target>
-
-	<target name="dist" depends="clean,run-tests,javadoc,jars,rpms"/>
+	</target>	
 
 	<!-- 
 			http://wiki.wsmoak.net/cgi-bin/wiki.pl?DocBookToPDF
-		-->
+		-->					
+	<target name="docs" description="Converts docbook xml into pdf" >
+		<delete dir="${basedir}/docbook"/>
+		<mkdir dir="${basedir}/docbook"/>
+		<unzip src="docbook.zip" dest="${basedir}/docbook"/>
 		
-		<property name="docbook.home"    value="${basedir}/docbook/xsl"/>
-		<property name="saxon.dir"       value="c:/java/saxon6_5_3"/>
-		<property name="xml.dir"         value="${basedir}/docs/userguide"/>
-		<property name="fo.dir"          value="${basedir}/fo"/>
-
-	
-	<target name="docs" description="Converts docbook xml to fo">		
-	     <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
-	            basedir="${xml.dir}"
+	    <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
+	            basedir="${userguide.dir}/xml"
 	            extension=".fo"
-	            destdir="${fo.dir}" />		
+	            destdir="${fo.dir}" />	
+		
+		<fop format="application/pdf" fofile="${fo.dir}/docbook.fo" outfile="${userguide.dir}/mybook.pdf" />
+		
+		<delete dir="${fo.dir}"/>
+		<delete dir="${basedir}/docbook"/>
 	</target>
 
+	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,rpms"/>
 </project>
