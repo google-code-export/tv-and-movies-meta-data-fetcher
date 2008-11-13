@@ -67,9 +67,9 @@ public class TestRenamer extends TestCase {
 			
 			assertEquals(4,files.size());
 			assertEquals(".show.xml",files.get(0));
-			assertEquals("1 01 - Pilot..avi",files.get(1));
-			assertEquals("1 02 - Many Happy Returns..mkv",files.get(2));
-			assertEquals("2 02 - Phoenix Rising..mpg",files.get(3));
+			assertEquals("1 01 - Pilot.avi",files.get(1));
+			assertEquals("1 02 - Many Happy Returns.mkv",files.get(2));
+			assertEquals("2 02 - Phoenix Rising.mpg",files.get(3));
 			
 			assertEquals("Check exit code",0,exitCode);
 		} finally {

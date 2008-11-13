@@ -71,7 +71,7 @@
 
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
+		<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
 			<classpath>
 				<path refid="run-time.libs.classpath" />				
 			</classpath>
@@ -84,7 +84,7 @@
 
 	<target name="compile-tests" depends="compile" description="compile the tests">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}">
+		<javac debug="true" srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}">
 			<classpath>
 				<pathelement location="${build.dir}" />
 				<path refid="run-time.libs.classpath" />
@@ -295,6 +295,7 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
 	</target>
+		
 
 	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,rpms"/>
 </project>
