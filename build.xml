@@ -283,15 +283,23 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 	<target name="docs" description="Converts docbook xml into pdf" >
 		<delete dir="${basedir}/docbook"/>
 		<mkdir dir="${basedir}/docbook"/>
+		<mkdir dir="${userguide.dir}/html"/>
+		
 		<unzip src="docbook.zip" dest="${basedir}/docbook"/>
 		
 	    <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
 	            basedir="${userguide.dir}/xml"
 	            extension=".fo"
-	            destdir="${fo.dir}" />	
+	            destdir="${fo.dir}" />
+				
+		<xslt  style="${docbook.home}/html/docbook.xsl"	         	     	
+			            basedir="${userguide.dir}/xml"
+			            extension=".html"
+			            destdir="${userguide.dir}/html" />	
 		
+		<!--
 		<fop format="application/pdf" fofile="${fo.dir}/docbook.fo" outfile="${userguide.dir}/mybook.pdf" />
-		
+		-->
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
 	</target>
