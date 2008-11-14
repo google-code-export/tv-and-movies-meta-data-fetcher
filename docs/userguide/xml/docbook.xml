@@ -50,14 +50,29 @@
 		<sect1>
 			<title>Sources</title>
 			<para>
-				Sources are the places that &apptitle; retrives information from. &apptitle; has
-			    been created in such a way that it's easy to add new sources. 
+				Sources are the places that &apptitle; retrives information from. Sources
+				are read only so it's not possible to information back too them. In the 
+				current version their is a source for retrieving TV Show information from
+			    from www.tv.com, but &apptitle; has been created in such a way that it's
+			    easy to add new sources. 
+			</para>			
+		</sect1>
+		<sect1>
+			<title>Stores</title>
+			<para>
+				Stores are similar too sources, except that they are also writable. Once
+				information has been retrived from a source, it is written too a store.
+				Next time the information is needed, it can be retrived from the store.
+				This makes retriving information a lot faster.  
+			</para>			
+			<para>
+				Their are 3 stores that come with &apptitle;				
 			</para>
-			<para>			      
-			    In the current version their is a source for retriving TV Show information from
-			    from www.tv.com.  			      
-			</para>
-		</sect1>			
+			<sect2>
+				<title>org.stanwood.tv.</title>
+				
+			</sect2>
+		</sect1>				
 	</chapter>
 	<chapter id="installation">
 		<title>Installation</title>
