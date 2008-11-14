@@ -281,7 +281,7 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 			http://wiki.wsmoak.net/cgi-bin/wiki.pl?DocBookToPDF
 		-->					
 	<target name="docs" description="Converts docbook xml into pdf" >
-		<delete dir="${basedir}/docbook"/>
+		<delete dir="${basedir}/docbook"/>		
 		<mkdir dir="${basedir}/docbook"/>
 		<mkdir dir="${userguide.dir}/html"/>
 		
@@ -297,9 +297,11 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 			            extension=".html"
 			            destdir="${userguide.dir}/html" />	
 		
-		<!--
-		<fop format="application/pdf" fofile="${fo.dir}/docbook.fo" outfile="${userguide.dir}/mybook.pdf" />
-		-->
+		
+		<fop format="application/pdf" 
+			 fofile="${fo.dir}/docbook.fo" 
+			 outfile="${userguide.dir}/userguide.pdf" />
+		
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
 	</target>
