@@ -50,7 +50,7 @@
 		<sect1>
 			<title>Sources</title>
 			<para>
-				Sources are the places that &apptitle; retrives information from. Sources
+				Sources are the places that &apptitle; retrieves information from. Sources
 				are read only so it's not possible to information back too them. In the 
 				current version their is a source for retrieving TV Show information from
 			    from www.tv.com, but &apptitle; has been created in such a way that it's
@@ -61,16 +61,44 @@
 			<title>Stores</title>
 			<para>
 				Stores are similar too sources, except that they are also writable. Once
-				information has been retrived from a source, it is written too a store.
-				Next time the information is needed, it can be retrived from the store.
-				This makes retriving information a lot faster.  
+				information has been retrieved from a source, it is written too a store.
+				Next time the information is needed, it can be retrieved from the store.
+				This makes retrieving information a lot faster.  
 			</para>			
 			<para>
-				Their are 3 stores that come with &apptitle;				
+				Their are 3 stores that come with &apptitle;. Each of these has different 
+				properties. Some of these stores can also be used by applications such as 
+				media centre's to display media metadata. 				
 			</para>
 			<sect2>
-				<title>org.stanwood.tv.</title>
-				
+				<title>org.stanwood.media.store.MemoryStore</title>
+				<para>
+				This store is used to store the show information in memory. This allows the tool
+ 				reuse the show information without having to fetch it from other stores or sources 
+ 				(which would be slower). This information will be lost once the application exits. 
+				</para>
+			</sect2>
+			<sect2>
+				<title>org.stanwood.media.store.XMLStore</title>
+				<para>
+				This store is used to store the show information in a XML called &apos;.show.xml. &apos; 
+               	This is located in the directory were the show is located. It can hold all
+ 				of the information of the Shows, Seasons, Episodes and Specials. This store
+ 				can be read and written too, and it's also possible too lookup the show id 
+ 				of the show in the current directory.
+				</para>
+			</sect2>
+			<sect2>
+				<title>org.stanwood.media.store.SapphireStore</title>
+				<para>
+				This is a write only store that is used to store information in a format that can 
+ 				be used by the <ulink url="http://appletv.nanopi.net/">Sapphire</ulink> frontrow plugin. 
+ 				The details of the XML format can be found <ulink url="http://appletv.nanopi.net/manual/overriding-metadata/">here</ulink>.
+				</para>
+				<para>  				
+ 				Every time episode information is fetched from a source, a XML file is written with 
+ 				the name name as the episode file (except the extension is changed too .xml)  
+				</para>
 			</sect2>
 		</sect1>				
 	</chapter>
@@ -206,23 +234,24 @@
 		</para>
 		<para>
 			The default file is as follows:
-			<informalexample>								
-			<![CDATA[			
-		<config>\n
-		       <sources>\n
-		               <!-- www.tv.com TV Show information source -->\n
-		               <source id="org.stanwood.tv.source.TVCOMSource"/>\n
-		       </sources>\n
-		       <stores>
-		               <!-- Caches data in memory while the application is running -->
-		               <store id="org.stanwood.tv.store.MemoryStore"/>
-		
-		               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-		                <store id="org.stanwood.tv.store.XMLStore"/>
-		        </stores>
-		</config>			
-			]]>			
-			</informalexample>			
+			<example>		
+				<title>/etc/mediafetcher-conf.xml</title>
+				<programlisting>
+			<![CDATA[<config>\n
+       <sources>\n
+               <!-- www.tv.com TV Show information source -->\n
+               <source id="org.stanwood.tv.source.TVCOMSource"/>\n
+       </sources>\n
+       <stores>
+               <!-- Caches data in memory while the application is running -->
+               <store id="org.stanwood.tv.store.MemoryStore"/>
+
+               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
+                <store id="org.stanwood.tv.store.XMLStore"/>
+        </stores>
+</config>]]>			
+				</programlisting>
+			</example>			
 		</para>
 	</chapter>
 	<chapter id="credits-and-licenses">

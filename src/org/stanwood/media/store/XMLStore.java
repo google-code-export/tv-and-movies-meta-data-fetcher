@@ -50,6 +50,13 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
+/**
+ * This store is used to store the show information in a XML called .show.xml. 
+ * This is located in the directory were the show is located. It can hold all
+ * of the information of the Shows, Seasons, Episodes and Specials. This store
+ * can be read and written too, and it's also possible too lookup the show id 
+ * of the show in the current directory.
+ */
 public class XMLStore extends XMLParser implements IStore {
 	private final static String FILENAME = ".show.xml";
 

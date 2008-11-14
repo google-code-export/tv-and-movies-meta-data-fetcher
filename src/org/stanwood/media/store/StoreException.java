@@ -16,6 +16,9 @@
  */
 package org.stanwood.media.store;
 
+/**
+ * Thrown is their is a problem with a store
+ */
 public class StoreException extends Exception {
 
 	private static final long serialVersionUID = 2339844228367668776L;
