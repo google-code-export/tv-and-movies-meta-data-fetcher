@@ -100,8 +100,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertNull(episode.getSpecialName());
 	        assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getSummaryUrl().toExternalForm());
-	        assertEquals("Pilot",episode.getTitle());
-	        assertEquals(1,episode.getTotalNumber());
+	        assertEquals("Pilot",episode.getTitle());	        
 	        assertEquals("2006-10-10",df.format(episode.getAirDate()));
 	        
 	        episode = xmlSource.getEpisode(season, 2);	 
@@ -114,7 +113,6 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Many Happy Returns",episode.getTitle());
-	        assertEquals(2,episode.getTotalNumber());
 	        assertEquals("2006-10-11",df.format(episode.getAirDate()));
 	        
 			season = xmlSource.getSeason(show, 2);
@@ -133,7 +131,6 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Phoenix Rising",episode.getTitle());
-	        assertEquals(13,episode.getTotalNumber());
 	        assertEquals("2007-07-10",df.format(episode.getAirDate()));
 	        
 	        episode = xmlSource.getSpecial(season, 0);	 
@@ -146,7 +143,6 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
 	        assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Countdown to the Premiere",episode.getTitle());
-	        assertEquals(-1,episode.getTotalNumber());
 	        assertEquals("2007-07-09",df.format(episode.getAirDate()));
 			
 			
@@ -179,8 +175,7 @@ public class TestXMLStore extends XMLTestCase {
 			episode1.setSpecialName(null);
 			episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
-			episode1.setTitle("Pilot");
-			episode1.setTotalNumber(1);
+			episode1.setTitle("Pilot");			
 			episode1.setRating(1);
 			episode1.setDirectors(createLinks(new Link[]{new Link("Harry","http://test/")}));
 			episode1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a")}));
@@ -198,7 +193,6 @@ public class TestXMLStore extends XMLTestCase {
 			episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
 			episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 			episode2.setTitle("Many Happy Returns");
-			episode2.setTotalNumber(2);
 			episode2.setRating(9.5F);			
 			episode2.setEpisodeId(800578);
 			season.addEpisode(episode2);			
@@ -219,7 +213,6 @@ public class TestXMLStore extends XMLTestCase {
 			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 			episode1.setTitle("Phoenix Rising");
-			episode1.setTotalNumber(13);
 			episode1.setEpisodeId(800578);
 			episode1.setRating(0.4F);
 			season.addEpisode(episode1);			
@@ -234,7 +227,6 @@ public class TestXMLStore extends XMLTestCase {
 			special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
 			special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 			special1.setTitle("Countdown to the Premiere");
-			special1.setTotalNumber(13);
 			special1.setRating(0.4F);
 			special1.setEpisodeId(800578);
 			special1.setDirectors(createLinks(new Link[]{new Link("JP","http://test/")}));

@@ -90,8 +90,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka. After a strange accident sidelines Eureka's sheriff, Jack Carter takes over the investigation into the mysterious phenomenon that led to the death of a resident. Carter learns about the secret purpose of the town while trying to re-establish a connection with his angry and bitter daughter, Zoe. He develops a friendly working relationship with government liaison Allison Blake and meets some of the more eccentric residents of Eureka.",episode.getSummary());
-		assertEquals("Pilot",episode.getTitle());
-		assertEquals(1,episode.getTotalNumber());
+		assertEquals("Pilot",episode.getTitle());		
 		assertEquals("2006-07-18",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(784857,episode.getEpisodeId());
@@ -126,8 +125,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
-		assertEquals("Many Happy Returns",episode.getTitle());		
-		assertEquals(2,episode.getTotalNumber());
+		assertEquals("Many Happy Returns",episode.getTitle());				
 		assertEquals("2006-07-25",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(800578,episode.getEpisodeId());
@@ -138,8 +136,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("When the return of Eureka's star pupil causes problems all over town, Stark is forced to make a hard choice. Carter attempts to track down Zoe who has run off with the former resident.",episode.getSummary());
-		assertEquals("Right as Raynes",episode.getTitle());
-		assertEquals(8,episode.getTotalNumber());
+		assertEquals("Right as Raynes",episode.getTitle());		
 		assertEquals("2006-09-05",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/right-as-raynes/episode/836518/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(836518,episode.getEpisodeId());
@@ -150,8 +147,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("Following an experiment on the artifact, Eureka warps to 2010. However, temporal anomalies begin to cause problems for Eureka, which leads to a shocking revelation.",episode.getSummary());
-		assertEquals("Once in a Lifetime",episode.getTitle());
-		assertEquals(12,episode.getTotalNumber());
+		assertEquals("Once in a Lifetime",episode.getTitle());		
 		assertEquals("2006-10-03",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/once-in-a-lifetime/episode/868398/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(868398,episode.getEpisodeId());
@@ -165,8 +161,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
-		assertEquals("Phoenix Rising",episode.getTitle());
-		assertEquals(13,episode.getTotalNumber());
+		assertEquals("Phoenix Rising",episode.getTitle());		
 		assertEquals("2007-07-10",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1038982,episode.getEpisodeId());
@@ -178,7 +173,6 @@ public class TestTVCOMSource extends TestCase {
 		assertNull(episode.getSpecialName());
 		assertEquals("Global Dynamics goes into lockdown to protect itself from the now airborne metal-eating bacteria. Stuck inside GD, Sheriff Carter and Stark must work together to save both the town and Kevin, Alison's son.",episode.getSummary());
 		assertEquals("A Night at Global Dynamics (2)",episode.getTitle());
-		assertEquals(25,episode.getTotalNumber());
 		assertEquals("2007-10-02",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/a-night-at-global-dynamics-2/episode/1128794/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1128794,episode.getEpisodeId());
@@ -192,8 +186,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("As Eva Thorne prepares to seal off the subterranean military complex, Zoe's life is endangered as her body begins to rapidly age.",episode.getSummary());
-		assertEquals("From Fear to Eternity",episode.getTitle());
-		assertEquals(33,episode.getTotalNumber());
+		assertEquals("From Fear to Eternity",episode.getTitle());		
 		assertEquals("2008-09-23",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/eureka/from-fear-to-eternity/episode/1203120/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1203120,episode.getEpisodeId());
@@ -238,8 +231,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("301",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.",episode.getSummary());
-		assertEquals("(Volume Three: Villains) The Second Coming",episode.getTitle());
-		assertEquals(35,episode.getTotalNumber());
+		assertEquals("(Volume Three: Villains) The Second Coming",episode.getTitle());		
 		assertEquals("2008-09-22",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/heroes/volume-three-villains-the-second-coming/episode/1181337/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1181337,episode.getEpisodeId());
@@ -250,8 +242,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("302",episode.getProductionCode());
 		assertNull(episode.getSpecialName());
 		assertEquals("Sylar goes to the Company and inadvertently releases 12 super-powered criminals in a fight with Elle. Future Peter tries to fix his mistake. Angela takes over the company. Claire learns more about her powers. Hiro and Ando travel to Paris to track down the speedster who robbed them. Maya discovers that Mohinder's injection has changed him. Matt meats Usutu, an African with a familiar power.",episode.getSummary());
-		assertEquals("The Butterfly Effect",episode.getTitle());
-		assertEquals(36,episode.getTotalNumber());
+		assertEquals("The Butterfly Effect",episode.getTitle());		
 		assertEquals("2008-09-22",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/heroes/the-butterfly-effect/episode/1196088/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1196088,episode.getEpisodeId());
@@ -262,8 +253,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("300",episode.getProductionCode());
 		assertEquals("Special",episode.getSpecialName());
 		assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
-		assertEquals("Heroes: Countdown to the Premiere",episode.getTitle());
-		assertEquals(-1,episode.getTotalNumber());
+		assertEquals("Heroes: Countdown to the Premiere",episode.getTitle());		
 		assertEquals("2008-09-22",df.format(episode.getAirDate()));
 		assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1228258,episode.getEpisodeId());

@@ -35,11 +35,9 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.XMLStore;
 
 /**
- * The controller is used to control access to the stores and and sources. This
- * is a singleton class, and just first be setup using the @see
- * initWithDefaults() or @see initFromConfigFile() methods. From then on,
- * getInstance() can be called to a access the methods used to controll stores
- * and sources.
+ * The controller is used to control access to the stores and and sources. This is a singleton class, and just first be
+ * setup using the @see initWithDefaults() or @see initFromConfigFile() methods. From then on, getInstance() can be
+ * called to a access the methods used to control stores and sources.
  */
 public class Controller {
 
@@ -51,6 +49,10 @@ public class Controller {
 	private Controller() {
 	}
 
+	/**
+	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
+	 * Once the store has been initialised, it can't be Initialised again.
+	 */
 	public static void initWithDefaults() {
 		if (stores != null || sources != null) {
 			throw new IllegalStateException("Controller allready initialized");
@@ -62,7 +64,13 @@ public class Controller {
 		sources = new ArrayList<ISource>();
 		sources.add(new TVCOMSource());
 	}
-	
+
+	/**
+	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
+	 * again.
+	 * 
+	 * @param config The parsed configuration file.
+	 */
 	public static void initFromConfigFile(ConfigReader config) {
 		if (stores != null || sources != null) {
 			throw new IllegalStateException("Controller allready initialized");
@@ -71,39 +79,36 @@ public class Controller {
 		stores = new ArrayList<IStore>();
 		for (String storeClass : config.getStores()) {
 			try {
-				Class<? extends IStore> c = Class.forName(storeClass)
-						.asSubclass(IStore.class);
+				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
 				stores.add(c.newInstance());
 			} catch (ClassNotFoundException e) {
-				System.err.println("Unable to add store '" + storeClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
 			} catch (InstantiationException e) {
-				System.err.println("Unable to add store '" + storeClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
 			} catch (IllegalAccessException e) {
-				System.err.println("Unable to add store '" + storeClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
 			}
 		}
 		sources = new ArrayList<ISource>();
 		for (String sourceClass : config.getSources()) {
 			try {
-				Class<? extends ISource> c = Class.forName(sourceClass)
-						.asSubclass(ISource.class);
+				Class<? extends ISource> c = Class.forName(sourceClass).asSubclass(ISource.class);
 				sources.add(c.newInstance());
 			} catch (ClassNotFoundException e) {
-				System.err.println("Unable to add source '" + sourceClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
 			} catch (InstantiationException e) {
-				System.err.println("Unable to add source '" + sourceClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
 			} catch (IllegalAccessException e) {
-				System.err.println("Unable to add source '" + sourceClass
-						+ "' because " + e.getMessage());
+				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
 			}
 		}
 	}
 
+	/**
+	 * Get a instance of the controller.
+	 * 
+	 * @return A instance of the controller.
+	 */
 	public static Controller getInstance() {
 		if (stores == null || sources == null) {
 			throw new IllegalStateException(
@@ -115,9 +120,25 @@ public class Controller {
 		return instance;
 	}
 
-	public Show getShow(String sourceId, File showDirectory, long showId,
-			boolean refresh) throws MalformedURLException, SourceException,
-			IOException, StoreException {
+	/**
+	 * Get a show with a given show id and source id. This will first try to retrieve the
+	 * show from the stores. If it is not able to do this, then it will try the sources.
+	 * If it can't retrieve it from either the sources or the stores, then null is returned.
+	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
+	 * data strait from the sources. If data is retrieved from the source, then it makes an
+	 * attempt to write it too the stores.
+	 * @param sourceId The ID of the source too use
+	 * @param showDirectory The directory the show's media files are located in
+	 * @param showId The id of the show
+	 * @param refresh If true, then the stores are ignored.
+	 * @return The show, or null if it can't be found.
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws SourceException Thrown if their is a source related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws StoreException Thrown if their is a store related problem.
+	 */
+	public Show getShow(String sourceId, File showDirectory, long showId, boolean refresh)
+			throws MalformedURLException, SourceException, IOException, StoreException {
 		Show show = null;
 		if (!refresh) {
 			for (IStore store : stores) {
@@ -148,8 +169,23 @@ public class Controller {
 		return show;
 	}
 
-	public Season getSeason(Show show, int seasonNum, boolean refresh)
-			throws SourceException, IOException, StoreException {
+	/**
+	 * Get a season with a given season number. This will first try to retrieve the
+	 * season from the stores. If it is not able to do this, then it will try the sources.
+	 * If it can't retrieve it from either the sources or the stores, then null is returned.
+	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
+	 * data strait from the sources. If data is retrieved from the source, then it makes an
+	 * attempt to write it too the stores.
+	 * @param show The show the season belongs too
+	 * @param seasonNum The season number	
+	 * @param refresh If true, then the stores are ignored.
+	 * @return The season, or null if it can't be found.
+	 * @throws SourceException Thrown if their is a source related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws StoreException Thrown if their is a store related problem.
+	 */
+	public Season getSeason(Show show, int seasonNum, boolean refresh) throws SourceException, IOException,
+			StoreException {
 		String sourceId = show.getSourceId();
 		Season season = null;
 		if (!refresh) {
@@ -191,9 +227,24 @@ public class Controller {
 		return season;
 	}
 
-	public Episode getEpisode(Season season, int episodeNum, boolean refresh)
-			throws SourceException, MalformedURLException, IOException,
-			StoreException {
+	/**
+	 * Get a episode with a given episode number. This will first try to retrieve the
+	 * episode from the stores. If it is not able to do this, then it will try the sources.
+	 * If it can't retrieve it from either the sources or the stores, then null is returned.
+	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
+	 * data strait from the sources. If data is retrieved from the source, then it makes an
+	 * attempt to write it too the stores.
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The episode number	
+	 * @param refresh If true, then the stores are ignored.
+	 * @return The episode, or null if it can't be found.
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws SourceException Thrown if their is a source related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws StoreException Thrown if their is a store related problem.
+	 */
+	public Episode getEpisode(Season season, int episodeNum, boolean refresh) throws SourceException,
+			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 		if (!refresh) {
 			for (IStore store : stores) {
@@ -225,9 +276,24 @@ public class Controller {
 		return episode;
 	}
 
-	public Episode getSpecial(Season season, int specialNum, boolean refresh)
-			throws SourceException, MalformedURLException, IOException,
-			StoreException {
+	/**
+	 * Get a special episode with a given special episode number. This will first try to retrieve the
+	 * special episode from the stores. If it is not able to do this, then it will try the sources.
+	 * If it can't retrieve it from either the sources or the stores, then null is returned.
+	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
+	 * data strait from the sources. If data is retrieved from the source, then it makes an
+	 * attempt to write it too the stores.
+	 * @param season The season the episode belongs too
+	 * @param specialNum The special episode number	
+	 * @param refresh If true, then the stores are ignored.
+	 * @return The special episode, or null if it can't be found.
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws SourceException Thrown if their is a source related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws StoreException Thrown if their is a store related problem.
+	 */
+	public Episode getSpecial(Season season, int specialNum, boolean refresh) throws SourceException,
+			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 
 		if (!refresh) {
@@ -261,25 +327,18 @@ public class Controller {
 	}
 
 	/**
-	 * This will search for a show id in the stores and sources. It will use the
-	 * show directory as the name of the show if needed.
+	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
+	 * if needed.
 	 * 
-	 * @param showDirectory
-	 *            The directory of the show.
-	 * @return The results of searching for the show, or null if it can't be
-	 *         found.
-	 * @throws SourceException
-	 *             Thrown if their is a problem reading from a source
-	 * @throws StoreException
-	 *             Thrown if their is a problem reading for a store
-	 * @throws IOException
-	 *             Throw if their is a IO problem
-	 * @throws MalformedURLException
-	 *             Throw if their is a problem creating a url
+	 * @param showDirectory The directory of the show.
+	 * @return The results of searching for the show, or null if it can't be found.
+	 * @throws SourceException Thrown if their is a problem reading from a source
+	 * @throws StoreException Thrown if their is a problem reading for a store
+	 * @throws IOException Throw if their is a IO problem
+	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForShowId(File showDirectory)
-			throws SourceException, StoreException, MalformedURLException,
-			IOException {
+	public SearchResult searchForShowId(File showDirectory) throws SourceException, StoreException,
+			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
 			result = store.searchForShowId(showDirectory);
@@ -298,5 +357,4 @@ public class Controller {
 		return null;
 	}
 
-	
 }

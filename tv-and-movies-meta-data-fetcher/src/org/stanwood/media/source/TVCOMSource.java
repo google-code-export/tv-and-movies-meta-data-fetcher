@@ -288,8 +288,7 @@ public class TVCOMSource implements ISource {
 			String episodeSiteId, String prodCode, URL url, Season season,
 			long episodeId) {
 		Episode episode = new Episode(episodeNumber, season);
-		episode.setTitle(title);
-		episode.setTotalNumber(totalNum);
+		episode.setTitle(title);		
 		episode.setAirDate(airDate);
 		episode.setSpecial(special);
 		episode.setSpecialName(specialName);

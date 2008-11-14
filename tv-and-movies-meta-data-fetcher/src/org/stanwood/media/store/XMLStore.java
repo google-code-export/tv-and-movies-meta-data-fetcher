@@ -122,8 +122,6 @@ public class XMLStore extends XMLParser implements IStore {
 			episode.setSpecial(true);
 			String specialName = getStringFromXML(episodeNode, "@specialName");
 			episode.setSpecialName(specialName);
-			episode.setTotalNumber(-1);
-
 			return episode;
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to parse cache: "
@@ -190,9 +188,7 @@ public class XMLStore extends XMLParser implements IStore {
 			Episode episode = new Episode(episodeNum, season);
 			readCommonEpisodeInfo(episodeNode, episode);
 			episode.setSpecial(false);
-			episode.setSpecialName(null);
-			int totalNumber = getIntegerFromXML(episodeNode, "@totalNumber");
-			episode.setTotalNumber(totalNumber);
+			episode.setSpecialName(null);		
 
 			return episode;
 		} catch (TransformerException e) {
@@ -425,10 +421,7 @@ public class XMLStore extends XMLParser implements IStore {
 				((Element) node).setAttribute("number", String.valueOf(episode
 						.getEpisodeNumber()));
 				seasonNode.appendChild(node);
-			}
-
-			((Element) node).setAttribute("totalNumber", String.valueOf(episode
-					.getTotalNumber()));
+			}		
 
 			writeEpisodeCommonData(doc, episode, node);
 

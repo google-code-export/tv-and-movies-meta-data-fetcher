@@ -30,8 +30,7 @@ public class Episode {
 	
 	private String summary;
 	private String title;
-	private Date airDate;
-	private int totalNum;
+	private Date airDate;	
 	private String specialName;
 	private boolean special;
 	private String siteId;
@@ -44,6 +43,11 @@ public class Episode {
 	private List<Link>writers;
 	private float rating = -1;
 	
+	/**
+	 * The constructor used to create a episode instance
+	 * @param episodeNumber The number of the episode within the season
+	 * @param season The season it belongs too
+	 */
 	public Episode(int episodeNumber, Season season) {		
 		this.episodeNumber = episodeNumber;
 		this.season = season;
@@ -119,14 +123,6 @@ public class Episode {
 	 */
 	public void setSpecialName(String specialName) {
 		this.specialName = specialName;
-	}
-	
-	public void setTotalNumber(int number) {
-		this.totalNum = number;
-	}
-
-	public int getTotalNumber() {
-		return totalNum;
 	}
 
 	/**
