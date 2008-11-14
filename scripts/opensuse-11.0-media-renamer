@@ -24,4 +24,4 @@ fi
 CLASSPATH=/usr/share/java/MediaInfoFetcher.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-cli.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jericho-html.jar
-exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH org.stanwood.tv.renamer.Main "$@"
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH org.stanwood.media.renamer.Main "$@"

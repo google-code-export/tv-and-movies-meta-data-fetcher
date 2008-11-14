@@ -90,7 +90,7 @@ public class Main {
 	 * @see org.stanwood.media.renamer.Renamer for more information on the pattern.
 	 * 
 	 * When looking up files to rename, it needs to work out the episode and season number
-	 * of each file. See @see org.stanwood.tv.renamer.FileNameParser for more information
+	 * of each file. See @see org.stanwood.media.renamer.FileNameParser for more information
 	 * on the patterns it matches todo this.
 	 * 
 	 * @param args The command line arguments.
