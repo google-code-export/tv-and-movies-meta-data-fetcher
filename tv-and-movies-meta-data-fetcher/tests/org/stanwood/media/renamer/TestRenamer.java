@@ -57,7 +57,7 @@ public class TestRenamer extends TestCase {
 				public void exit(int exitCode) {
 					TestRenamer.exitCode = exitCode; 
 				}				
-			};
+			};			
 			Main.main(args);
 			
 			List<String>files = new ArrayList<String>();
