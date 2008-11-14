@@ -62,6 +62,16 @@ public class XMLStore extends XMLParser implements IStore {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * This gets a special episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return The special episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {
@@ -76,6 +86,16 @@ public class XMLStore extends XMLParser implements IStore {
 		}
 	}
 
+	/**
+	 * This gets a episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode too get
+	 * @return The episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
 			throws StoreException, MalformedURLException {
@@ -90,6 +110,15 @@ public class XMLStore extends XMLParser implements IStore {
 		}
 	}
 
+	/**
+	 * This will get a season from the store. If the season can't be found,
+	 * then it will return null.
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Season getSeason(Show show, int seasonNum) throws StoreException,
 			MalformedURLException {
@@ -221,6 +250,16 @@ public class XMLStore extends XMLParser implements IStore {
 		}
 	}
 
+	/**
+	 * This will get a show from the store. If the season can't be found, then it 
+	 * will return null. 
+	 * @param showDirectory The directory the show's media files are located in.
+	 * @param showId The id of the show to get.
+	 * @return The show if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	public Show getShow(File showDirectory, long showId)
 			throws StoreException, MalformedURLException, IOException {
 		Document doc = getCache(showDirectory, showId);
@@ -329,6 +368,11 @@ public class XMLStore extends XMLParser implements IStore {
 		return url.toExternalForm();
 	}
 	
+	/**
+	 * This is used to write a show too the store.
+	 * @param show The show too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	public void cacheShow(Show show) throws StoreException {
 		Document doc = getCache(show.getShowDirectory(), show.getShowId());
 		Element series = (Element) doc.getFirstChild();
@@ -390,11 +434,16 @@ public class XMLStore extends XMLParser implements IStore {
 		}
 	}
 
-	public File getCacheFile(File showDirectory) {
+	private File getCacheFile(File showDirectory) {
 		File file = new File(showDirectory, FILENAME);
 		return file;
 	}
 
+	/**
+	 * This is used to write a episode or special too the store
+	 * @param episode The episode or special too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
 	public void cacheEpisode(Episode episode) throws StoreException {
 		Season season = episode.getSeason();
@@ -508,6 +557,11 @@ public class XMLStore extends XMLParser implements IStore {
 		}
 	}
 
+	/**
+	 * This is used to write a season too the store.
+	 * @param season The season too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
 	public void cacheSeason(Season season) throws StoreException {
 		try {
@@ -549,6 +603,14 @@ public class XMLStore extends XMLParser implements IStore {
 		return node;
 	}
 
+	/**
+	 * This is called to search the store for a show id. If it can't be found, then
+	 * it will return null. The search is done be reading the .show.xml file within
+	 * the shows directory and looking to see what show id is stored in it.
+	 * @param showDirectory The directory the show is located in.
+	 * @return The results of the search if it was found, otherwise null
+	 * @throws StoreException Thrown if their is a problem with the store 
+	 */
 	@Override
 	public SearchResult searchForShowId(File showDirectory) throws StoreException {
 		File cacheFile = getCacheFile(showDirectory);
@@ -583,10 +645,7 @@ public class XMLStore extends XMLParser implements IStore {
 			} catch (ParserConfigurationException e) {
 				throw new StoreException("Unable to parse cache file: "
 						+ e.getMessage(), e);
-			}
-
-			
-			
+			}		
 		} 
 		return null;
 	}

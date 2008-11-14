@@ -44,6 +44,9 @@ import au.id.jericho.lib.html.Source;
 import au.id.jericho.lib.html.StartTag;
 import au.id.jericho.lib.html.Tag;
 
+/**
+ * This source will pull TV show information from www.tv.com
+ */
 public class TVCOMSource implements ISource {
 
 	private final static Pattern EPISODE_ID_PATTERN = Pattern

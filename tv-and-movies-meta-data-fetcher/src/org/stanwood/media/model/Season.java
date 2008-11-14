@@ -46,55 +46,109 @@ public class Season {
 		this.show = show;
 	}	
 	
+	/**
+	 * Used to get the episode listing URL for the season
+	 * @return The episode listing URL for the season
+	 */
 	public URL getListingUrl() {
 		return listingUrl;
 	}
 
+	/**
+	 * Sets the episode listing URL for the season
+	 * @param seasonListingUrl The episode listing URL for the season
+	 */
 	public void setListingUrl(URL seasonListingUrl) {
 		this.listingUrl = seasonListingUrl;
 	}
 
+	/**
+	 * Gets the detailed episode listing URL for the season
+	 * @return The detailed episode listing URL for the season
+	 */
 	public URL getDetailedUrl() {
 		return detailedUrl;
 	}
 
+	/**
+	 * Sets the detailed episode listing URL for the season
+	 * @param seasonDetailedUrl The detailed episode listing URL for the season
+	 */
 	public void setDetailedUrl(URL seasonDetailedUrl) {
 		this.detailedUrl = seasonDetailedUrl;
 	}
 
+	/**
+	 * Adds a episode to the season
+	 * @param episode The episode to add to the season
+	 */
 	public void addEpisode(Episode episode) {
 		episodes.put(episode.getEpisodeNumber(),episode);
 	}
 		
+	/**
+	 * Gets the number of episode's in the season
+	 * @return The number of episodes in the season
+	 */
 	public int getEpisodeCount() {
 		return episodes.size();
 	}
 	
+	/**
+	 * Used to get a episode with a given episode number
+	 * @param episodeNum The episode number of the episode to fetch
+	 * @return The episode
+	 */
 	public Episode getEpisode(int episodeNum) {
 		Episode episode =episodes.get(episodeNum);		
 		return episode;
 	}
 	
+	/**
+	 * Used to get a special episode with a given episode number
+	 * @param episodeNum The special episode number of the episode to fetch
+	 * @return The special episode
+	 */
 	public Episode getSpecial(int specialNumber) {		
 		return specials.get(specialNumber-1);
 	}
 
+	/**
+	 * Get all the episodes in the season
+	 * @return The episodes in the season
+	 */
 	public Collection<Episode> getEpisodes() {
 		return episodes.values();
 	}
 		
+	/**
+	 * Get the number of the season 
+	 * @return The season number
+	 */
 	public int getSeasonNumber() {
 		return seasonNumber;
 	}
 	
+	/**
+	 * Get the show the season belongs too
+	 * @return The show the season belongs too
+	 */
 	public Show getShow() {
 		return show;
 	}
 
+	/**
+	 * Add a special episode too the season
+	 * @param episode The special episode too add
+	 */
 	public void addSepcial(Episode episode) {		
 		specials.add(episode);
 	}
 
+	/**
+	 * Get all the special episodes in the season
+	 * @return The special episodes in the season
+	 */
 	public List<Episode> getSpecials() {
 		return specials;
 	}

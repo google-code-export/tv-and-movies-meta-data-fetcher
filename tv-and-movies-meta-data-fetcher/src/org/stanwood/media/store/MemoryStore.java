@@ -37,11 +37,20 @@ public class MemoryStore implements IStore {
 
 	private List<Show> shows = new ArrayList<Show>();
 	
-	@Override
-	public void cacheEpisode(Episode episode) throws StoreException {
+	/**
+	 * This does nothing as it's all done by the cacheSeason and cacheShow methods
+	 * @param episode The episode to write to the store
+	 */
+	@Override	
+	public void cacheEpisode(Episode episode) {
 		
 	}
 
+	/**
+	 * This is used to write a season too the store.
+	 * @param season The season too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
 	public void cacheSeason(Season season) throws StoreException {
 		Show show = season.getShow();
@@ -51,6 +60,11 @@ public class MemoryStore implements IStore {
 		show.addSeason(season);
 	}
 
+	/**
+	 * This is used to write a show too the store.
+	 * @param show The show too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */
 	@Override
 	public void cacheShow(Show show) throws StoreException {
 		Iterator<Show> it = shows.iterator();
@@ -63,12 +77,32 @@ public class MemoryStore implements IStore {
 		shows.add(show);
 	}
 
+	/**
+	 * This gets a episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode too get
+	 * @return The episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
 		return season.getEpisode(episodeNum);		
 	}
 	
+	/**
+	 * This gets a special episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return The special episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {	
@@ -88,6 +122,16 @@ public class MemoryStore implements IStore {
 		return show.getSeason(seasonNum);
 	}
 
+	/**
+	 * This will get a show from the store. If the season can't be found, then it 
+	 * will return null. 
+	 * @param showDirectory The directory the show's media files are located in.
+	 * @param showId The id of the show to get.
+	 * @return The show if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Show getShow(File showDirectory, long showId)
 			throws StoreException, MalformedURLException, IOException {		

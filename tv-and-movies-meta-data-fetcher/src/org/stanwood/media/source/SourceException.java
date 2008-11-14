@@ -16,11 +16,11 @@
  */
 package org.stanwood.media.source;
 
+/**
+ * This is thrown if their is a problem related to sources.
+ */
 public class SourceException extends Exception {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 3798863549350822214L;
 
 	public SourceException() {

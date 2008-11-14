@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -38,7 +37,7 @@ import org.stanwood.media.renamer.SearchResult;
  * be used by the sapphire frontrow plugin. {@link http://appletv.nanopi.net/}. The details
  * of the XML format can be found here: {@link http://appletv.nanopi.net/manual/overriding-metadata/}.
  * 
- * Every time the @sa cacheEpisode(Epsiode) method is called, a XML file is written next to 
+ * Every time the @sa cacheEpisode(Episode) method is called, a XML file is written next to 
  * the episode's file with a .xml extension. 
  */
 public class SapphireStore implements IStore {
@@ -126,41 +125,68 @@ public class SapphireStore implements IStore {
 		}
 	}
 
+	/**
+	 * Does nothing as it is not implemented for this store
+	 * @param season The season too store
+	 */
 	@Override
-	public void cacheSeason(Season season) throws StoreException {
+	public void cacheSeason(Season season) {
 	}
 
+	/**
+	 * Does nothing as it is not implemented for this store
+	 * @param show The show too store
+	 */
 	@Override
-	public void cacheShow(Show show) throws StoreException {
+	public void cacheShow(Show show)  {
 	}
-
+	
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode 
+	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
-			throws StoreException, MalformedURLException, IOException {
+	public Episode getEpisode(Season season, int episodeNum) {
 		return null;
 	}
 
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season 
+	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws StoreException,
-			IOException {
+	public Season getSeason(Show show, int seasonNum) {
 		return null;
 	}
 
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param showDirectory The directory the shows media files are located in
+	 * @param showId The id of the show 
+	 */
 	@Override
-	public Show getShow(File showDirectory, long showId)
-			throws StoreException, MalformedURLException, IOException {
+	public Show getShow(File showDirectory, long showId) {
 		return null;
 	}
 
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode 
+	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
-			throws MalformedURLException, IOException, StoreException {
+	public Episode getSpecial(Season season, int specialNumber) {
 		return null;
 	}
 
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param showDirectory The directory the shows media files are located in 
+	 */
 	@Override
-	public SearchResult searchForShowId(File showDirectory)
-			throws StoreException {
+	public SearchResult searchForShowId(File showDirectory) {
 		return null;
 	}
 	

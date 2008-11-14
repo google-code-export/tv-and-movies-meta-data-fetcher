@@ -95,7 +95,7 @@ public interface IStore  {
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
 	 * @return The special episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws StoreException Thrown if their is a problem with the source
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
