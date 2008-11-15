@@ -131,8 +131,10 @@
 			<title>2. Any platform static Jar Disturbution</title>
 			<para>
 				Their is a static jar distribution avaliable on the downloads page. This will run on any platform with the
-				correct JRE. Simply download it too your system, and type the command: <cmdsynopsis><command>java -jar MediaInfoFetcher-&version;-static-bin.jar </command><arg>options</arg></cmdsynopsis>. This
-				can be used to rename media files and uses the same command line parameters as the <link linkend="mediarenamercmd">media-renamer</link> script.
+				correct JRE. Simply download it too your system, and type the command:
+				<cmdsynopsis><command>java -jar MediaInfoFetcher-&version;-static-bin.jar </command><arg>options</arg></cmdsynopsis>
+			    This can be used to rename media files and uses the same command line parameters 
+			    as the <link linkend="mediarenamercmd">media-renamer</link> script.
 			</para>
 		</sect1>
 	</chapter>
@@ -205,8 +207,8 @@
  						<listitem><para><literal>%t</literal> - episode title</para></listitem>
  						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem>
 					</itemizedlist>
-				</para>
-				<sect3>
+				</para>				
+				<example>
 					<title>Examples:</title>
 					<para>
 						The following options show what happens when they are used to rename 
@@ -217,14 +219,14 @@
 					     	<listitem><para>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</para></listitem>
 					     </itemizedlist>
 					</para>
-				</sect3>
+				</example>				
 			</sect2>
 		</sect1>
 	</chapter>
 	<chapter id="configuration">
 		<title>Configuration</title>
 		<para>The applications and the API make use of a XML configuration file. This
-				tells them which sources and stores should be used.
+			  tells them which sources and stores should be used.
 		</para>
 		<para>
 			The applications have CLI options that can be used too tell it which configuration
@@ -237,11 +239,11 @@
 			<example>		
 				<title>/etc/mediafetcher-conf.xml</title>
 				<programlisting>
-			<![CDATA[<config>\n
-       <sources>\n
-               <!-- www.tv.com TV Show information source -->\n
-               <source id="org.stanwood.media.source.TVCOMSource"/>\n
-       </sources>\n
+			<![CDATA[<config>
+       <sources>
+               <!-- www.tv.com TV Show information source -->
+               <source id="org.stanwood.media.source.TVCOMSource"/>
+       </sources>
        <stores>
                <!-- Caches data in memory while the application is running -->
                <store id="org.stanwood.media.store.MemoryStore"/>
