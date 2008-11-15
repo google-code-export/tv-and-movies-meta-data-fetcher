@@ -65,6 +65,18 @@ public class TVCOMSource implements ISource {
 	
 	public static final String SOURCE_ID = "tvcom";
 
+	/**
+	 * This gets a special episode from the source. If it can't be found, then it will
+	 * return null. It does this by accessing two different URL that are needed to 
+	 * get all of the information.
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return The special episode, or null if it can't be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
+	@Override
 	public Episode getSpecial(Season season, int specialNumber)
 			throws MalformedURLException, IOException {
 		Episode special = season.getSpecial(specialNumber);
@@ -75,6 +87,17 @@ public class TVCOMSource implements ISource {
 		return special;
 	}
 
+	/**
+	 * This gets a episode from the source. If it can't be found, then it will
+	 * return null. It does this by accessing two different URL that are needed to 
+	 * get all of the information.
+	 * @param season The season the special episode belongs too
+	 * @param episodeNum The number of the episode too get
+	 * @return The episode, or null if it can't be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
 			throws MalformedURLException, IOException {
@@ -86,6 +109,16 @@ public class TVCOMSource implements ISource {
 		return episode;
 	}
 
+	/**
+	 * This will get a season from the source. If the season can't be found,
+	 * then it will return null. This also gets all the episode data as well.
+	 * Ths is because the episodes and seasons are linked in this source.
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
@@ -286,7 +319,7 @@ public class TVCOMSource implements ISource {
 		}
 	}
 
-	public Episode createEpisode(int totalNum, String title, Date airDate,
+	private Episode createEpisode(int totalNum, String title, Date airDate,
 			int episodeNumber, boolean special, String specialName,
 			String episodeSiteId, String prodCode, URL url, Season season,
 			long episodeId) {
@@ -302,6 +335,16 @@ public class TVCOMSource implements ISource {
 		return episode;
 	}
 
+	/**
+	 * This will get a show from the source. If the season can't be found, then it 
+	 * will return null. 
+	 * @param showDirectory The directory the show's media files are located in.
+	 * @param showId The id of the show to get.
+	 * @return The show if it can be found, otherwise null.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Show getShow(File showDirectory, long showId)
 			throws SourceException, MalformedURLException, IOException {
