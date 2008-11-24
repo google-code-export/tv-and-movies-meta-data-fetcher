@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
@@ -73,7 +74,7 @@ public interface ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public File getFilm(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
+	public Film getFilm(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will

@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -531,7 +532,7 @@ public class TVCOMSource implements ISource {
 	 * @return Always returns null
 	 */
 	@Override
-	public File getFilm(File filmDirectory, long filmId) {
+	public Film getFilm(File filmDirectory, long filmId) {
 		return null;
 	}
 

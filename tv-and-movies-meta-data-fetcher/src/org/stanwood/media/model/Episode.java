@@ -256,7 +256,7 @@ public class Episode {
 	}
 
 	/**
-	 * Used to set a list of writers for the show
+	 * Used to set a list of writers for the episode
 	 * @param writers The list of writers
 	 */
 	public void setWriters(List<Link> writers) {
