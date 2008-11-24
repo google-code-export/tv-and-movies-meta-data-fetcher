@@ -524,4 +524,15 @@ public class TVCOMSource implements ISource {
 		return null;
 	}
 
+	/**
+	 * Films are not supported, so this will always return null.
+	 * @param filmDirectory The directory the film is located in.
+	 * @param filmId The id of the film
+	 * @return Always returns null
+	 */
+	@Override
+	public File getFile(File filmDirectory, long filmId) {
+		return null;
+	}
+
 }

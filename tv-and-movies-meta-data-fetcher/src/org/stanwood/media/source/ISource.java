@@ -53,7 +53,7 @@ public interface ISource {
 	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException;
 	
 	/**
-	 * This will get a show from the source. If the season can't be found, then it 
+	 * This will get a show from the source. If the show can't be found, then it 
 	 * will return null. 
 	 * @param showDirectory The directory the show's media files are located in.
 	 * @param showId The id of the show to get.
@@ -63,6 +63,17 @@ public interface ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Show getShow(File showDirectory, long showId) throws SourceException, MalformedURLException, IOException;
+
+	/**
+	 * This will get a film from the source. If the film can't be found, then it will return null.
+	 * @param filmDirectory The directory the film is located in.
+	 * @param filmId The id of the film
+	 * @return The film, or null if it can't be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
+	public File getFile(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will
