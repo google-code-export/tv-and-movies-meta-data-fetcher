@@ -531,7 +531,7 @@ public class TVCOMSource implements ISource {
 	 * @return Always returns null
 	 */
 	@Override
-	public File getFile(File filmDirectory, long filmId) {
+	public File getFilm(File filmDirectory, long filmId) {
 		return null;
 	}
 

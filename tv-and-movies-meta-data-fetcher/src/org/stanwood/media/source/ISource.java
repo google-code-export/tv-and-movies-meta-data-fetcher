@@ -73,7 +73,7 @@ public interface ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public File getFile(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
+	public File getFilm(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will
