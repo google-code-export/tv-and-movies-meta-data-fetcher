@@ -30,8 +30,11 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
 
 import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
+import au.id.jericho.lib.html.Segment;
 import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.Tag;
 
 public class IMDBSource implements ISource {
 
@@ -102,15 +105,59 @@ public class IMDBSource implements ISource {
 	private void parseFilm(Source source, Film film) {
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {			
-			if (div.getAttributeValue("id") !=null) {						
-				if (div.getAttributeValue("id").equals("tn15title")) {
-					Element h1 = findFirstChild(div,HTMLElementName.H1);
-					Iterator it = h1.getNodeIterator(); 
-					it.next();										
-					film.setTitle(it.next().toString());
+			if (div.getAttributeValue("id") !=null && div.getAttributeValue("id").equals("tn15title")) {										
+				Element h1 = findFirstChild(div,HTMLElementName.H1);
+				if (h1!=null) {
+					film.setTitle(getContents(h1));
+				}
+			}
+			else if (div.getAttributeValue("class") !=null && div.getAttributeValue("class").equals("info")) {
+				Element h5 = findFirstChild(div,HTMLElementName.H5);
+				if (h5!=null) {
+					if (getContents(h5).equals("Plot:")) {																	
+						film.setSummary(getSectionText(div));
+					}
+					else if (getContents(h5).equals("Director:")){
+						System.out.println("Director: "+getSectionText(div));
+					}
+					else if (getContents(h5).equals("Writers")){
+						System.out.println("Writers: "+getSectionText(div));
+					}
+					else if (getContents(h5).equals("Genre:")){
+						System.out.println("Genre: "+getSectionText(div));
+					}
+					else if (getContents(h5).equals("User Rating:")){
+						System.out.println("User Rating: "+getSectionText(div));
+					}
+					else if (getContents(h5).equals("Certification:")){
+						System.out.println("Cert: "+getSectionText(div));
+					}
+					else if (getContents(h5).equals("Release Date:")){
+						System.out.println("Date: "+getSectionText(div));						
+					}
 				}
 			}
 		}
+	}
+
+	private String getSectionText(Element div) {
+		String result = null;
+		Iterator it = div.getNodeIterator();
+		Object node = it.next();
+		while (it.hasNext() && !(node instanceof EndTag)) {
+			node = it.next();
+		}
+		while (it.hasNext() && node instanceof Tag) {														
+			node = it.next();
+		}
+		result = node.toString().trim();
+		return result;
+	}
+	
+	private String getContents(Element e) {
+		Iterator it = e.getNodeIterator(); 
+		it.next();										
+		return it.next().toString().trim();
 	}
 
 	@SuppressWarnings("unchecked")

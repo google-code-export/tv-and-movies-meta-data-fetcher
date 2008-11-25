@@ -36,6 +36,7 @@ public class TestIMDBSource extends TestCase {
 		Film film = source.getFilm(new File("/tmp/blah"), FILM_ID_IRON_MAN);
 		assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
+		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 	}
 	
 	private IMDBSource getIMDBSource(final long filmId) {
