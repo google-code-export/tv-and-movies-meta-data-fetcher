@@ -19,10 +19,13 @@ package org.stanwood.media.source;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Link;
 import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
@@ -37,6 +40,41 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
+		
+		List<String>genres = film.getGenres();
+		assertEquals(5,genres.size());
+		assertEquals("Action",genres.get(0));		
+		assertEquals("Adventure",genres.get(1));
+		assertEquals("Drama",genres.get(2));
+		assertEquals("Sci-Fi",genres.get(3));
+		assertEquals("Thriller",genres.get(4));
+		
+		List<Link>directors = film.getDirectors();
+		assertEquals(1,directors.size());
+		assertEquals("Jon Favreau",directors.get(0).getTitle());
+		assertEquals("http://www.imdb.com/name/nm0269463/",directors.get(0).getLink());
+		
+		List<Link>writers = film.getWriters();
+		assertEquals(2,writers.size());
+		assertEquals("Mark Fergus",writers.get(0).getTitle());
+		assertEquals("http://www.imdb.com/name/nm1318843/",writers.get(0).getLink());
+		assertEquals("Hawk Ostby",writers.get(1).getTitle());
+		assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getLink());
+		
+		List<Certification>certs = film.getCertifications();
+		assertEquals(33,certs.size());
+		assertEquals("12",certs.get(0).getContry());
+		assertEquals("South Korea",certs.get(0).getCertification());		
+		assertEquals("12",certs.get(5).getContry());
+		assertEquals("Netherlands",certs.get(5).getCertification());		
+		assertEquals("IIA",certs.get(11).getContry());
+		assertEquals("Hong Kong",certs.get(11).getCertification());		
+		assertEquals("M/12",certs.get(21).getContry());
+		assertEquals("Portugal",certs.get(21).getCertification());	
+		assertEquals("12",certs.get(31).getContry());
+		assertEquals("Austria",certs.get(31).getCertification());		
+		assertEquals("PG",certs.get(32).getContry());
+		assertEquals("Canada",certs.get(32).getCertification());
 	}
 	
 	private IMDBSource getIMDBSource(final long filmId) {

@@ -20,11 +20,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
@@ -118,19 +121,35 @@ public class IMDBSource implements ISource {
 						film.setSummary(getSectionText(div));
 					}
 					else if (getContents(h5).equals("Director:")){
+						List<Link> links = getLinks(div,"/name");
+						film.setDirectors(links);
 						System.out.println("Director: "+getSectionText(div));
 					}
 					else if (getContents(h5).equals("Writers")){
+						List<Link> links = getLinks(div,"/name");
+						film.setWriters(links);
 						System.out.println("Writers: "+getSectionText(div));
 					}
 					else if (getContents(h5).equals("Genre:")){
-						System.out.println("Genre: "+getSectionText(div));
+						List<Link> links = getLinks(div,"/Sections/Genres");
+						film.setGenres(new ArrayList<String>());
+						for (Link link : links) {
+							film.addGenre(link.getTitle());
+						}
 					}
 					else if (getContents(h5).equals("User Rating:")){
 						System.out.println("User Rating: "+getSectionText(div));
 					}
 					else if (getContents(h5).equals("Certification:")){
-						System.out.println("Cert: "+getSectionText(div));
+						List<Certification> certs = new ArrayList<Certification>();
+						
+						List<Link> links = getLinks(div,"/List?certificates=");
+						for (Link link : links) {
+							int pos = link.getTitle().indexOf(':');
+							Certification cert = new Certification(link.getTitle().substring(0,pos),link.getTitle().substring(pos+1));
+							certs.add(cert);
+						}					
+						film.setCertifications(certs);
 					}
 					else if (getContents(h5).equals("Release Date:")){
 						System.out.println("Date: "+getSectionText(div));						
@@ -138,6 +157,19 @@ public class IMDBSource implements ISource {
 				}
 			}
 		}
+	}
+
+	private List<Link> getLinks(Element div,String linkStart) {
+		List<Link> links = new ArrayList<Link>();
+		for (Element a : (List<Element>)div.findAllElements(HTMLElementName.A)) {
+			String href =a.getAttributeValue("href");
+			String title = a.getTextExtractor().toString(); 
+			if (href.startsWith(linkStart)) {
+				Link link = new Link(IMDB_BASE_URL+href,title);
+				links.add(link);												
+			}
+		}
+		return links;
 	}
 
 	private String getSectionText(Element div) {

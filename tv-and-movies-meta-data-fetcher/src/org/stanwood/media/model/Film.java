@@ -17,6 +17,7 @@
 package org.stanwood.media.model;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,9 @@ public class Film {
 	private String summary;
 	private List<Link>guestStars;
 	private List<Link>directors;
-	private List<Link>writers;		
+	private List<Link>writers;
+	private List<String> genres = new ArrayList<String>();
+	private List<Certification> certifications = new ArrayList<Certification>();
 	private URL filmUrl;
 	
 	/**
@@ -169,4 +172,47 @@ public class Film {
 	public URL getFilmUrl() {
 		return filmUrl;
 	}
+	
+	/**
+	 * Used to set the genres that the film belongs too
+	 * 
+	 * @param genres The genres that the film belongs too
+	 */
+	public void setGenres(List<String> genres) {
+		this.genres = genres;
+	}
+
+	/**
+	 * Used to get the genres that the film belongs too
+	 * @return The genres the film belongs too
+	 */
+	public List<String> getGenres() {
+		return genres;
+	}
+	
+	/**
+	 * Used to add a genre to the film
+	 * @param genre the genre to add
+	 */
+	public void addGenre(String genre) {
+		genres.add(genre);
+	}
+
+	/**
+	 * Used to get a list of the films certifications
+	 * @return The films certification list
+	 */
+	public List<Certification> getCertifications() {
+		return certifications;
+	}
+
+	/**
+	 * Used to set the films certifications
+	 * @param certifications The films certifications
+	 */
+	public void setCertifications(List<Certification> certifications) {
+		this.certifications = certifications;
+	}
+	
+	
 }
