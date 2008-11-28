@@ -268,10 +268,10 @@ public class TestTVCOMSource extends TestCase {
 					return new Source(Data.class.getResource(showId+"-summary.html"));
 				}
 				else if (strUrl.indexOf("episode_listings.html?season=")!=-1) {
-					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1)));
+					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1).replaceAll("\\?","-")));
 				}
 				else if (strUrl.indexOf("episode_guide.html?printable=")!=-1) {
-					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1)));
+					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1).replaceAll("\\?","-")));
 				}
 				return null;
 			}			
