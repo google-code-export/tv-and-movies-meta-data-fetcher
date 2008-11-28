@@ -35,7 +35,6 @@ import org.stanwood.media.renamer.SearchResult;
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Segment;
 import au.id.jericho.lib.html.Source;
 import au.id.jericho.lib.html.Tag;
 
@@ -159,6 +158,7 @@ public class IMDBSource implements ISource {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Link> getLinks(Element div,String linkStart) {
 		List<Link> links = new ArrayList<Link>();
 		for (Element a : (List<Element>)div.findAllElements(HTMLElementName.A)) {
@@ -172,6 +172,7 @@ public class IMDBSource implements ISource {
 		return links;
 	}
 
+	@SuppressWarnings("unchecked")
 	private String getSectionText(Element div) {
 		String result = null;
 		Iterator it = div.getNodeIterator();
@@ -186,6 +187,7 @@ public class IMDBSource implements ISource {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private String getContents(Element e) {
 		Iterator it = e.getNodeIterator(); 
 		it.next();										
