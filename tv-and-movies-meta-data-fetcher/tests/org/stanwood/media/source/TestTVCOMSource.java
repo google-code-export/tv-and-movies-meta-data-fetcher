@@ -47,8 +47,8 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("Eureka",show.getName());
 		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...",show.getShortSummary());
 		assertEquals(SHOW_ID_EUREKA,show.getShowId());
-		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
-		assertEquals("/tmp/blah",show.getShowDirectory().getAbsolutePath());
+		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());		
+		assertTrue(show.getShowDirectory().getAbsolutePath().equals("/tmp/blah") || show.getShowDirectory().getAbsolutePath().equals("C:\\tmp\\blah"));
 		assertEquals("http://www.tv.com/show/58448/summary.html",show.getShowURL().toExternalForm());
 		assertEquals(2,show.getGenres().size());
 		assertEquals("Science-Fiction",show.getGenres().get(0));
@@ -208,7 +208,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint...",show.getShortSummary());
 		assertEquals(SHOW_ID_HEROES,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/17552.jpg",show.getImageURL().toExternalForm());
-		assertEquals("/tmp/blah",show.getShowDirectory().getAbsolutePath());
+		assertTrue(show.getShowDirectory().getAbsolutePath().equals("/tmp/blah") || show.getShowDirectory().getAbsolutePath().equals("C:\\tmp\\blah"));
 		assertEquals("http://www.tv.com/show/17552/summary.html",show.getShowURL().toExternalForm());
 		assertEquals(3,show.getGenres().size());
 		assertEquals("Drama",show.getGenres().get(0));
