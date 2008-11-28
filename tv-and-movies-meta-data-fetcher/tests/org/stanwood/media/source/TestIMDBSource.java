@@ -40,6 +40,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
+		assertEquals("Check rating",8.1F,film.getRating());
 		
 		List<String>genres = film.getGenres();
 		assertEquals(5,genres.size());

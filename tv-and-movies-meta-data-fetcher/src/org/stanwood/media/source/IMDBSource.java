@@ -36,6 +36,7 @@ import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
 import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.StartTag;
 import au.id.jericho.lib.html.Tag;
 
 public class IMDBSource implements ISource {
@@ -137,7 +138,17 @@ public class IMDBSource implements ISource {
 						}
 					}
 					else if (getContents(h5).equals("User Rating:")){
-						System.out.println("User Rating: "+getSectionText(div));
+						List<StartTag> tags = div.findAllStartTags(HTMLElementName.B);
+						if (tags!=null && tags.size()==1) {		
+							String ratingStr = tags.get(0).getElement().getTextExtractor().toString();
+							try {
+								float rating = Float.parseFloat(ratingStr.substring(0,ratingStr.indexOf('/')));								
+								film.setRating(rating);							
+							}
+							catch (NumberFormatException e) {
+								System.err.println("Unable to parse rating from string: " + ratingStr);
+							}
+						}
 					}
 					else if (getContents(h5).equals("Certification:")){
 						List<Certification> certs = new ArrayList<Certification>();

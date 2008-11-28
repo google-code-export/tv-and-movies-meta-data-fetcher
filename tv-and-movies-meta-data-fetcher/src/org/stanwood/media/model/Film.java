@@ -35,6 +35,7 @@ public class Film {
 	private List<String> genres = new ArrayList<String>();
 	private List<Certification> certifications = new ArrayList<Certification>();
 	private URL filmUrl;
+	private float rating;
 	
 	/**
 	 * Used to create a instance of the film class.
@@ -213,6 +214,21 @@ public class Film {
 	public void setCertifications(List<Certification> certifications) {
 		this.certifications = certifications;
 	}
-	
+
+	/**
+	 * Used to get the global user rating of the film
+	 * @return The global user rating of the show
+	 */
+	public float getRating() {
+		return rating;
+	}
+
+	/**
+	 * Used to set the global user rating of the film
+	 * @param rating The global user rating of the show
+	 */
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
 	
 }
