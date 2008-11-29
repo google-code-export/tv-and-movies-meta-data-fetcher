@@ -18,6 +18,8 @@ package org.stanwood.media.renamer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.setup.StoreConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.TVCOMSource;
@@ -76,19 +79,11 @@ public class Controller {
 			throw new IllegalStateException("Controller allready initialized");
 		}
 
-		stores = new ArrayList<IStore>();
-		for (String storeClass : config.getStores()) {
-			try {
-				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
-				stores.add(c.newInstance());
-			} catch (ClassNotFoundException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
-			} catch (InstantiationException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
-			} catch (IllegalAccessException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
-			}
-		}
+		loadStoresFromConfigFile(config);		
+		loadSourcesFromConfigFile(config);
+	}
+
+	private static void loadSourcesFromConfigFile(ConfigReader config) {
 		sources = new ArrayList<ISource>();
 		for (String sourceClass : config.getSources()) {
 			try {
@@ -100,6 +95,44 @@ public class Controller {
 				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
 			} catch (IllegalAccessException e) {
 				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
+			}
+		}
+	}
+
+	private static void loadStoresFromConfigFile(ConfigReader config) {
+		stores = new ArrayList<IStore>();
+		for (StoreConfig storeConfig : config.getStores()) {
+			String storeClass = storeConfig.getID();
+			try {				
+				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);				
+				IStore store = c.newInstance();
+				if (storeConfig.getParams()!=null) {
+					for (String key : storeConfig.getParams().keySet()) {
+						String value = storeConfig.getParams().get(key);
+						setParamOnStore(c, store, key, value);
+					}
+				}
+				stores.add(store);
+			} catch (ClassNotFoundException e) {
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+			} catch (InstantiationException e) {
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+			} catch (IllegalArgumentException e) {
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+			} catch (InvocationTargetException e) {
+				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+			}
+		}
+	}
+
+	private static void setParamOnStore(Class<? extends IStore> c, IStore store, String key, String value)
+			throws IllegalAccessException, InvocationTargetException {
+		for (Method method : c.getMethods()) {
+			if (method.getName().toLowerCase().equals("set"+key.toLowerCase())) {
+				method.invoke(store, value);
+				break;
 			}
 		}
 	}
@@ -357,4 +390,7 @@ public class Controller {
 		return null;
 	}
 
+	/* package for test */ final static void destoryController() {
+		instance = null;
+	}
 }

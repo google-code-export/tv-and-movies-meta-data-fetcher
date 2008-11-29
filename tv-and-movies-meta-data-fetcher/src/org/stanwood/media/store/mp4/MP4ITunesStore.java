@@ -42,7 +42,7 @@ import org.stanwood.media.store.StoreException;
  * of the application.  
  * </p>
  */
-public class MP4ItunesStore implements IStore {
+public class MP4ITunesStore implements IStore {
 
 	private File atomicParsleyPath;
 	

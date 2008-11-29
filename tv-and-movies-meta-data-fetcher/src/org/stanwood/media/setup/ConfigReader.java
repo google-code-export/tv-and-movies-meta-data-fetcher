@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerException;
 
 import org.stanwood.media.util.XMLParser;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -40,7 +40,7 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 public class ConfigReader extends XMLParser {
 
 	private File file;
-	private List<String>stores = new ArrayList<String>();
+	private List<StoreConfig>stores = new ArrayList<StoreConfig>();
 	private List<String>sources = new ArrayList<String>();
 
 	/**
@@ -63,11 +63,21 @@ public class ConfigReader extends XMLParser {
 			try {
 				Document doc = factory.newDocumentBuilder().parse(file);
 				
-				NodeList stores = XPathAPI.selectNodeList(doc, "config/stores/store/@id");
+				NodeList stores = XPathAPI.selectNodeList(doc, "config/stores/store");
 				for (int i=0;i<stores.getLength();i++) {	
-					Node item = stores.item(i);
-					if (item!=null) {
-						this.stores.add(item.getNodeValue());
+					Element storeElement = (Element) stores.item(i);
+					if (storeElement!=null) {
+						StoreConfig store = new StoreConfig();
+						store.setID(storeElement.getAttribute("id"));
+						NodeList params = XPathAPI.selectNodeList(storeElement, "param");
+						for (int j=0;j<params.getLength();j++) {
+							Element paramNode = (Element) params.item(j);
+							String name = paramNode.getAttribute("name");
+							String value = paramNode.getAttribute("value");
+							store.addParam(name, value);
+						}
+						
+						this.stores.add(store);
 					}
 				}
 				
@@ -96,7 +106,7 @@ public class ConfigReader extends XMLParser {
 	 * configuration file.
 	 * @return A list of stores from the file
 	 */
-	public List<String> getStores() {
+	public List<StoreConfig> getStores() {
 		return stores;
 	}	
 
