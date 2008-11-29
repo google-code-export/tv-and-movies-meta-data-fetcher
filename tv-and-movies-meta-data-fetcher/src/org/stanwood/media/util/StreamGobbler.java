@@ -24,13 +24,13 @@ import java.io.InputStreamReader;
 public class StreamGobbler extends Thread {
 	
 	private InputStream is;
-	private String type;
+//	private String type;
 	private StringBuffer result;
 
 	public StreamGobbler(InputStream is, String type)
     {
         this.is = is;
-        this.type = type;
+//        this.type = type;
         result= new StringBuffer("");
     }
 

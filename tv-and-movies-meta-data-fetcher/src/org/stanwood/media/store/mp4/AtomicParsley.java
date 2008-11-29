@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.AbstractExecutable;
 
 public class AtomicParsley extends AbstractExecutable {
