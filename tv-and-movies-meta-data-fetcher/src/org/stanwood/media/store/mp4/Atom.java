@@ -14,38 +14,47 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.util;
+package org.stanwood.media.store.mp4;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+/**
+ * Used to store mp4 atom information.
+ */
+public class Atom {
 
-public class StreamGobbler extends Thread {
-
-	private InputStream is;
-	private StringBuilder result;
-
-	public StreamGobbler(InputStream is) {
-		this.is = is;
-		result = new StringBuilder("");
+	private String name;
+	private String value;
+	
+	
+	
+	/**
+	 * Used to get the name of the atom
+	 * @return The name of the atom
+	 */
+	public String getName() {
+		return name;
 	}
-
-	public void run() {
-		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				result.append(line + "\n");
-			}
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-
+	
+	/**
+	 * Used to set the name of the atom
+	 * @param name The name of the atom
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
-
-	public String getResult() {
-		return result.toString();
+	
+	/** 
+	 * Used to get the value of the atom
+	 * @return The value of the atom
+	 */
+	public String getValue() {
+		return value;
+	}
+	
+	/**
+	 * Used to set the value of the atom
+	 * @param value The value of the atom
+	 */
+	public void setValue(String value) {
+		this.value = value;
 	}
 }

@@ -18,33 +18,48 @@ package org.stanwood.media.store.mp4;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.util.AbstractExecutable;
 
 public class AtomicParsley extends AbstractExecutable {
 
-	private final static DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
-	
+	// private final static DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
+	private final static String LS = System.getProperty("line.separator");
+	private final static Pattern ATOM_PATTERN = Pattern.compile("Atom \"(.*)\" contains\\: (.*)");
+
 	private File atomicParsleyApp = null;
-	
+
 	public AtomicParsley(File app) {
 		atomicParsleyApp = app;
 	}
-	
-	public void listAttoms(File mp4File) throws IOException, InterruptedException {
+
+	public List<Atom> listAttoms(File mp4File) throws IOException, InterruptedException {
 		List<String> args = new ArrayList<String>();
 		args.add(atomicParsleyApp.getAbsolutePath());
 		args.add(mp4File.getAbsolutePath());
 		args.add("-t");
 		args.add("+");
 		execute(args);
+
+		List<Atom> atoms = new ArrayList<Atom>();
+		String lines[] = getOutputStream().split(LS);
+		for (String line : lines) {
+			Matcher m = ATOM_PATTERN.matcher(line);
+			if (m.matches()) {
+				Atom atom = new Atom();
+				atom.setName(m.group(1));
+				atom.setValue(m.group(2));
+				atoms.add(atom);
+			}
+		}
+		return atoms;
 	}
-	
+
 	public void updateEpsiode(File mp4File, Episode episode) throws IOException, InterruptedException {
 		List<String> args = new ArrayList<String>();
 		args.add(atomicParsleyApp.getAbsolutePath());
@@ -53,7 +68,9 @@ public class AtomicParsley extends AbstractExecutable {
 		args.add("--freefree");
 		args.add("--overWrite");
 		args.add("--stik");
-		args.add("\"TV Show\"");
+		args.add("TV Show");
+		args.add("--TVEpisode");
+		args.add(episode.getEpisodeSiteId());
 		args.add("--TVShowName");
 		args.add(episode.getSeason().getShow().getName());
 		args.add("--TVSeasonNum");
@@ -61,17 +78,18 @@ public class AtomicParsley extends AbstractExecutable {
 		args.add("--TVEpisodeNum");
 		args.add(String.valueOf(episode.getEpisodeNumber()));
 		args.add("--year");
-		//TODO use the full date
-		args.add(YEAR_DATE_FORMAT.format(episode.getAirDate()));
+		args.add(episode.getAirDate().toString());
 		args.add("--title");
 		args.add(episode.getTitle());
 		args.add("--description");
-		args.add("\""+episode.getSummary()+"\"");
-		if (episode.getSeason().getShow().getGenres().size()>0) {
+		args.add(episode.getSummary());
+		if (episode.getSeason().getShow().getGenres().size() > 0) {
 			args.add("--genre");
+			args.add(episode.getSeason().getShow().getGenres().get(0));
+			args.add("--category");
 			args.add(episode.getSeason().getShow().getGenres().get(0));
 		}
 		execute(args);
-		
+
 	}
 }
