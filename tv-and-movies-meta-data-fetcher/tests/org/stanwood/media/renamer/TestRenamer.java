@@ -77,5 +77,6 @@ public class TestRenamer extends TestCase {
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
+		Controller.destoryController();
 	}
 }

@@ -49,6 +49,7 @@ public class TestController extends TestCase {
 		
 		ConfigReader configReader = new ConfigReader(configFile);
 		configReader.parse();
+		Controller.destoryController();
 		Controller.initFromConfigFile(configReader);
 		
 		assertEquals("/testPath/blah",FakeStore.testParam1);

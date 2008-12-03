@@ -392,5 +392,7 @@ public class Controller {
 
 	/* package for test */ final static void destoryController() {
 		instance = null;
+		stores = null;
+		sources=null;
 	}
 }

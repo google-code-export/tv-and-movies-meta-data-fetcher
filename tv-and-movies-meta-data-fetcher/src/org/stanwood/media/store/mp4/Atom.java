@@ -16,45 +16,61 @@
  */
 package org.stanwood.media.store.mp4;
 
+
 /**
  * Used to store mp4 atom information.
  */
 public class Atom {
 
+	
 	private String name;
 	private String value;
-	
-	
-	
+
+	/**
+	 * Used to create a instance of the atom and set the name and value
+	 * @param name The name of the atom
+	 * @param value The value of the atom
+	 */
+	public Atom(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
+
 	/**
 	 * Used to get the name of the atom
+	 * 
 	 * @return The name of the atom
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Used to set the name of the atom
-	 * @param name The name of the atom
+	 * 
+	 * @param name
+	 *            The name of the atom
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	/** 
+
+	/**
 	 * Used to get the value of the atom
+	 * 
 	 * @return The value of the atom
 	 */
 	public String getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Used to set the value of the atom
-	 * @param value The value of the atom
+	 * 
+	 * @param value
+	 *            The value of the atom
 	 */
 	public void setValue(String value) {
 		this.value = value;
-	}
+	}	
 }

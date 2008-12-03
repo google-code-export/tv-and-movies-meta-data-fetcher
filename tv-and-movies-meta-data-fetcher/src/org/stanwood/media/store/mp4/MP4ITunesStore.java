@@ -63,11 +63,9 @@ public class MP4ITunesStore implements IStore {
 		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
 		try {
 			ap.updateEpsiode(file,episode);
-		} catch (IOException e) {
+		} catch (AtomicParsleyException e) {
 			throw new StoreException(e.getMessage(),e);
-		} catch (InterruptedException e) {
-			throw new StoreException(e.getMessage(),e);
-		}
+		} 
 	}
 
 	public void cacheSeason(Season season) throws StoreException {

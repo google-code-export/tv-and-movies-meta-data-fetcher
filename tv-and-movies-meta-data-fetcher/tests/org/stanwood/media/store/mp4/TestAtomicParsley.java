@@ -36,7 +36,8 @@ public class TestAtomicParsley extends TestCase {
 	private SimpleDateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
 	
 	public void testNoAtomsFound() throws Exception {
-		File apCmd = new File("/usr/local/bin/AtomicParsley");
+//		File apCmd = new File("/usr/local/bin/AtomicParsley");
+		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue(apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
@@ -50,7 +51,8 @@ public class TestAtomicParsley extends TestCase {
 	}
 	
 	public void testWriteEpsiode() throws Exception {
-		File apCmd = new File("/usr/local/bin/AtomicParsley");
+//		File apCmd = new File("/usr/local/bin/AtomicParsley");
+		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue(apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
@@ -66,6 +68,7 @@ public class TestAtomicParsley extends TestCase {
 		ap.updateEpsiode(mp4File, episode);
 		
 		List<Atom> atoms = ap.listAttoms(mp4File);
+		System.out.println("Output: " +ap.getOutputStream());
 		assertEquals(10,atoms.size());
 		assertEquals("TV Show",atoms.get(0).getValue());
 		assertEquals("stik",atoms.get(0).getName());
