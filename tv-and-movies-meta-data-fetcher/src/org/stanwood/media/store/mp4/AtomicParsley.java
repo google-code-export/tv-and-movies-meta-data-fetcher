@@ -38,26 +38,26 @@ public class AtomicParsley extends AbstractExecutable {
 	static {
 		nameToParam = new HashMap<String, String>();
 
-//		nameToParam.put("", "--artist");
+		nameToParam.put("©ART", "--artist");
 		nameToParam.put("©nam", "--title");
-//		nameToParam.put("", "--album");
+		nameToParam.put("©alb", "--album");
 		nameToParam.put("©gen", "--genre");
 //		nameToParam.put("", "--tracknum");
 //		nameToParam.put("", "--disk");
-//		nameToParam.put("", "--comment");
+		nameToParam.put("©cmt", "--comment");
 		nameToParam.put("©day", "--year");
-//		nameToParam.put("", "--lyrics");
-//		nameToParam.put("", "--composer");
-//		nameToParam.put("", "--copyright");
-//		nameToParam.put("", "--grouping");
-//		nameToParam.put("", "--artwork");
-//		nameToParam.put("", "--bpm");
-//		nameToParam.put("", "--albumArtist");
-//		nameToParam.put("", "--compilation");
+		nameToParam.put("©lyr", "--lyrics");
+		nameToParam.put("©wrt", "--composer");
+		nameToParam.put("cprt", "--copyright");
+		nameToParam.put("©grp", "--grouping");
+		nameToParam.put("covr", "--artwork");
+		nameToParam.put("tmpo", "--bpm");
+		nameToParam.put("aART", "--albumArtist");
+		nameToParam.put("cpil", "--compilation");
 //		nameToParam.put("", "--advisory");
 		nameToParam.put("stik", "--stik");
 		nameToParam.put("desc", "--description");
-//		nameToParam.put("", "--TVNetwork");
+		nameToParam.put("tvnn", "--TVNetwork");
 		nameToParam.put("tvsh", "--TVShowName");
 		nameToParam.put("tven", "--TVEpisode");
 		nameToParam.put("tvsn", "--TVSeasonNum");
@@ -65,10 +65,10 @@ public class AtomicParsley extends AbstractExecutable {
 //		nameToParam.put("", "--podcastFlag");
 		nameToParam.put("catg", "--category");
 //		nameToParam.put("", "--keyword");
-//		nameToParam.put("", "--podcastURL");
-//		nameToParam.put("", "--podcastGUID");
-//		nameToParam.put("", "--purchaseDate");
-//		nameToParam.put("", "--encodingTool");
+		nameToParam.put("purl", "--podcastURL");
+		nameToParam.put("egid", "--podcastGUID");
+		nameToParam.put("purd", "--purchaseDate");
+		nameToParam.put("©too", "--encodingTool");
 //		nameToParam.put("", "--gapless");
 	}
 	
