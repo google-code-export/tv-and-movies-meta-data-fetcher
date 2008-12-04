@@ -20,7 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class IMDBSource implements ISource {
 	private static final String IMDB_BASE_URL = "http://www.imdb.com";
 	private static final String URL_SUMMARY = "/title/tt$filmId$/";
 	public static final String SOURCE_ID = "imdb";
+	private SimpleDateFormat RELEASE_DATE_FORMAT= new SimpleDateFormat("dd MMMMM yyyy");
 
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
@@ -123,12 +127,10 @@ public class IMDBSource implements ISource {
 					else if (getContents(h5).equals("Director:")){
 						List<Link> links = getLinks(div,"/name");
 						film.setDirectors(links);
-						System.out.println("Director: "+getSectionText(div));
 					}
 					else if (getContents(h5).equals("Writers")){
 						List<Link> links = getLinks(div,"/name");
 						film.setWriters(links);
-						System.out.println("Writers: "+getSectionText(div));
 					}
 					else if (getContents(h5).equals("Genre:")){
 						List<Link> links = getLinks(div,"/Sections/Genres");
@@ -162,7 +164,19 @@ public class IMDBSource implements ISource {
 						film.setCertifications(certs);
 					}
 					else if (getContents(h5).equals("Release Date:")){
-						System.out.println("Date: "+getSectionText(div));						
+						String str = getSectionText(div);
+						if (str!=null) {
+							int pos = str.lastIndexOf(' ');
+							if (pos!=-1) {
+								str = str.substring(0,pos);
+							}
+							try {
+								Date date = RELEASE_DATE_FORMAT.parse(str);
+								film.setDate(date);
+							} catch (ParseException e) {
+								System.err.println("Unable to parse date: " +str);
+							}
+						}
 					}
 				}
 			}

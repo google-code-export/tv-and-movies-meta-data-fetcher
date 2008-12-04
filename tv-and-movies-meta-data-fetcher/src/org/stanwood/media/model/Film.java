@@ -18,6 +18,7 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class Film {
 	private List<Certification> certifications = new ArrayList<Certification>();
 	private URL filmUrl;
 	private float rating;
+	private Date date;
 	
 	/**
 	 * Used to create a instance of the film class.
@@ -230,5 +232,22 @@ public class Film {
 	public void setRating(float rating) {
 		this.rating = rating;
 	}
+
+	/**
+	 * Used to get the release date of the film
+	 * @return The release date of the film
+	 */
+	public Date getDate() {
+		return date;
+	}
+
+	/**
+	 * Used to set the release date of the film
+	 * @param date The release date of the film
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 	
 }
