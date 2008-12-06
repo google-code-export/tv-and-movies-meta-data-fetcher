@@ -556,7 +556,7 @@ public class XMLStore extends XMLParser implements IStore {
 			for (Link value : links) {
 				Element newNode = doc.createElement(tagLabel);
 				newNode.setAttribute("name", value.getTitle());
-				newNode.setAttribute("link", value.getLink());
+				newNode.setAttribute("link", value.getURL());
 				node.appendChild(newNode);
 			}
 		}

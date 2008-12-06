@@ -23,16 +23,16 @@ package org.stanwood.media.model;
 public class Link {
 
 	private String title;
-	private String link;	
+	private String url;	
 	
 	/**
 	 * The constructor used to create a instance of the link class
-	 * @param link The URL of the link
+	 * @param url The URL of the link
 	 * @param title The title of the link
 	 */
-	public Link(String link, String title) {
+	public Link(String url, String title) {
 		super();
-		this.link = link;
+		this.url = url;
 		this.title = title;
 	}
 	
@@ -56,16 +56,16 @@ public class Link {
 	 * Used to get the URL of the link
 	 * @return the URL of the link
 	 */
-	public String getLink() {
-		return link;
+	public String getURL() {
+		return url;
 	}
 	
 	/**
 	 * Used to set the URL of the link
 	 * @param link The URL of the link
 	 */
-	public void setLink(String link) {
-		this.link = link;
+	public void setURL(String link) {
+		this.url = link;
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class Link {
 	 */
 	@Override
 	public String toString() {	
-		return "<a href=\""+link+"\">"+title+"</a>";
+		return "<a href=\""+url+"\">"+title+"</a>";
 	}
 	
 	

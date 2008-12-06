@@ -61,14 +61,14 @@ public class TestIMDBSource extends TestCase {
 		List<Link>directors = film.getDirectors();
 		assertEquals(1,directors.size());
 		assertEquals("Jon Favreau",directors.get(0).getTitle());
-		assertEquals("http://www.imdb.com/name/nm0269463/",directors.get(0).getLink());
+		assertEquals("http://www.imdb.com/name/nm0269463/",directors.get(0).getURL());
 		
 		List<Link>writers = film.getWriters();
 		assertEquals(2,writers.size());
 		assertEquals("Mark Fergus",writers.get(0).getTitle());
-		assertEquals("http://www.imdb.com/name/nm1318843/",writers.get(0).getLink());
+		assertEquals("http://www.imdb.com/name/nm1318843/",writers.get(0).getURL());
 		assertEquals("Hawk Ostby",writers.get(1).getTitle());
-		assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getLink());
+		assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getURL());
 		
 		List<Certification>certs = film.getCertifications();
 		assertEquals(33,certs.size());
