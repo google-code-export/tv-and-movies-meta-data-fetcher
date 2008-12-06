@@ -538,4 +538,13 @@ public class TVCOMSource implements ISource {
 		return null;
 	}
 
+	/**
+	 * This will update all references of the old file to the new file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		
+	}
 }

@@ -179,5 +179,19 @@ public class MemoryStore implements IStore {
 	@Override
 	public void cacheFilm(File filmFile, Film film) throws StoreException {
 		films.put(filmFile,film);
-	}	
+	}
+	
+	/**
+	 * This will update all references of the old file to the new file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		Film film = films.get(oldFile);
+		if (film!=null) {
+			films.remove(oldFile);
+			films.put(newFile,film);
+		}
+	}
 }

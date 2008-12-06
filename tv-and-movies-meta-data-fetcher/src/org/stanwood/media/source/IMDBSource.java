@@ -270,4 +270,13 @@ public class IMDBSource implements ISource {
 		return IMDB_BASE_URL+ URL_SUMMARY.replaceAll("\\$filmId\\$",strFilmId );
 	}
 	
+	/**
+	 * This does nothing as the meta data is stored in the actual file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		
+	}
 }

@@ -138,6 +138,15 @@ public class FakeStore implements IStore {
 		
 	}
 
+	/**
+	 * This does nothing as this store does not support writing of films
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+	}
+
 	
 	
 }

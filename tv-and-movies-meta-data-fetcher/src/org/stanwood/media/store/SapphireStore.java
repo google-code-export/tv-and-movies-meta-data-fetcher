@@ -59,12 +59,20 @@ public class SapphireStore implements IStore {
 			throw new StoreException("Error creating spahire store",e);
 		}
 	}
+	
+	private File getCacheFile(File mediaFile) {
+		int pos = mediaFile.getName().lastIndexOf('.');
+		if (pos!=-1) {					
+			String name = mediaFile.getName().substring(0,pos-1);
+			File xmlFile = new File(mediaFile.getParent(),name+".xml");
+			return xmlFile;
+		}
+		return null;
+	}
 
 	private void writeEpisode(File file, Episode episode) throws FileNotFoundException {
-		int pos = file.getName().lastIndexOf('.');
-		if (pos!=-1) {					
-			String name = file.getName().substring(0,pos-1);
-			File xmlFile = new File(file.getParent(),name+".xml");
+		File xmlFile = getCacheFile(file);
+		if (xmlFile!=null) {							
 			if (xmlFile.exists()) {
 				xmlFile.delete();
 			}
@@ -199,4 +207,27 @@ public class SapphireStore implements IStore {
 		
 	}
 	
+	/**
+	 * This will update all references of the old file to the new file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		File oldXmlFile = getCacheFile(oldFile);
+		File newXmlFile = getCacheFile(newFile);
+		if (oldXmlFile.exists()) {
+			
+		}
+		if (newXmlFile.exists()) {
+			System.err.println("Unable rename '"+oldXmlFile.getName()+"' file too '"+newXmlFile.getName()+"' as it already exists.");					
+		}
+		else {
+			System.out.println("Renaming '" + oldXmlFile.getName() + "' -> '" + newXmlFile.getName()+"'");
+					
+			if (!oldXmlFile.renameTo(newXmlFile)) {				
+				System.err.println("Failed to rename '"+oldXmlFile.getName()+"' file too '"+newXmlFile.getName()+"'.");
+			}
+		}
+	}
 }

@@ -400,7 +400,14 @@ public class Controller {
 	 * @param newFile The new file
 	 */
 	public void renamedFile(File oldFile, File newFile) {
+		for (IStore store : stores) {
+			store.renamedFile(oldFile,newFile);
+		}
 		
+		for (ISource source : sources) {
+			source.renamedFile(oldFile,newFile);
+		}
+			
 	}
 	
 	/* package for test */ final static void destoryController() {

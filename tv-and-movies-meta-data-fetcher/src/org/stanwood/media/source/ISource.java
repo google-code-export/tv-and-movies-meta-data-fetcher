@@ -102,5 +102,12 @@ public interface ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public SearchResult searchForShowId(File episodeFile) throws SourceException, MalformedURLException, IOException;
+
+	/**
+	 * This is used when a file that holds a episode or film has been renamed
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	public void renamedFile(File oldFile, File newFile);
 	
 }

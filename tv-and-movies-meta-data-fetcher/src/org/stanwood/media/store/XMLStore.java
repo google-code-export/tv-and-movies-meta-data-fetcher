@@ -666,4 +666,14 @@ public class XMLStore extends XMLParser implements IStore {
 	public void cacheFilm(File filmFile, Film film) throws StoreException {
 		
 	}
+	
+	/**
+	 * This will update all references of the old file to the new file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		
+	}
 }

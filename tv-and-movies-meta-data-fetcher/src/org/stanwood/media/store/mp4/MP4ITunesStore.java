@@ -185,5 +185,14 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
+	/**
+	 * This does nothing as the meta data is stored in the actual file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	@Override
+	public void renamedFile(File oldFile, File newFile) {
+		
+	}
 	
 }

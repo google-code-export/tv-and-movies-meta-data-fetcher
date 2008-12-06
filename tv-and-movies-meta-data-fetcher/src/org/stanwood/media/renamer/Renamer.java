@@ -121,8 +121,7 @@ public class Renamer {
 				if (file.equals(newFile)) {
 					System.out.println("File '" + oldFileName+"' already has the correct name.");
 				}
-				else {
-					
+				else {					
 					if (newFile.exists()) {
 						System.err.println("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
 					}
