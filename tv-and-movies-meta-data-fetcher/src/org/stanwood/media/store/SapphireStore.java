@@ -25,17 +25,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.FileNameParser;
-import org.stanwood.media.renamer.ParsedFileName;
 import org.stanwood.media.renamer.SearchResult;
 
 /**
  * This is a write only store that is used to store information in a format that can 
- * be used by the sapphire frontrow plugin. {@link http://appletv.nanopi.net/}. The details
- * of the XML format can be found here: {@link http://appletv.nanopi.net/manual/overriding-metadata/}.
+ * be used by the sapphire frontrow plugin. {@link "http://appletv.nanopi.net/"}. The details
+ * of the XML format can be found here: {@link "http://appletv.nanopi.net/manual/overriding-metadata/"}.
  * 
  * Every time the @sa cacheEpisode(Episode) method is called, a XML file is written next to 
  * the episode's file with a .xml extension. 
@@ -45,22 +44,16 @@ public class SapphireStore implements IStore {
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/** 
-	 * This will store the episode and show details in a xml file next too the media file.
-	 * The XML file will be in the format found here  {@link http://appletv.nanopi.net/manual/overriding-metadata/}.
+	 * This will store the episode and show details in a XML file next too the media file.
+	 * The XML file will be in the format found here  {@link "http://appletv.nanopi.net/manual/overriding-metadata/"}.
 	 * @param episode The episode to the stored
+	 * @param episodeFile the file which the episode is stored in
 	 * @throws StoreException Thrown if their is a problem writing to the store
 	 */
 	@Override
-	public void cacheEpisode(Episode episode) throws StoreException {		
-		File showDir = episode.getSeason().getShow().getShowDirectory();		
-		try {
-		for (File file : showDir.listFiles()) {
-			ParsedFileName parsed = FileNameParser.parse(file.getName());
-			if (parsed!=null && parsed.getEpisode() == episode.getEpisodeNumber() && parsed.getSeason()==episode.getSeason().getSeasonNumber()) {
-				writeEpisode(file,episode);
-				break;
-			}
-		}	
+	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
+		try {					
+			writeEpisode(episodeFile,episode);				
 		}
 		catch (IOException e) {
 			throw new StoreException("Error creating spahire store",e);
@@ -93,7 +86,7 @@ public class SapphireStore implements IStore {
 				ps.println("     <episodeNumber>"+episode.getEpisodeSiteId()+"</episodeNumber>");
 				ps.println("     <season>"+episode.getSeason().getSeasonNumber()+"</season>");
 				ps.println("     <episode>"+episode.getEpisodeNumber()+"</episode>");
-				ps.println("     <published>"+df.format(episode.getAirDate())+"</published>");
+				ps.println("     <published>"+df.format(episode.getDate())+"</published>");
 				ps.println("     <genres>");
 				for (String genre : episode.getSeason().getShow().getGenres()) {
 //					ps.println("        <genre primary="true">Mystery</genre>");
@@ -128,66 +121,82 @@ public class SapphireStore implements IStore {
 	/**
 	 * Does nothing as it is not implemented for this store
 	 * @param season The season too store
+	 * @param episodeFile the file witch the episode is stored in
 	 */
 	@Override
-	public void cacheSeason(Season season) {
+	public void cacheSeason(File episodeFile,Season season) {
 	}
 
 	/**
 	 * Does nothing as it is not implemented for this store
 	 * @param show The show too store
+	 * @param episodeFile the file witch the episode is stored in
 	 */
 	@Override
-	public void cacheShow(Show show)  {
+	public void cacheShow(File episodeFile,Show show)  {
 	}
 	
 	/**
 	 * Always returns null as it is not implemented for this store.
 	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode 
+	 * @param episodeNum The number of the episode
+	 * @param episodeFile the file which the episode is stored in 
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum) {
+	public Episode getEpisode(File episodeFile,Season season, int episodeNum) {
 		return null;
 	}
 
 	/**
 	 * Always returns null as it is not implemented for this store.
 	 * @param show The show the season belongs too
-	 * @param seasonNum The number of the season 
+	 * @param seasonNum The number of the season
+	 * @param episodeFile the file which the episode is stored in 
 	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) {
+	public Season getSeason(File episodeFile,Show show, int seasonNum) {
 		return null;
 	}
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * @param showDirectory The directory the shows media files are located in
 	 * @param showId The id of the show 
+	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Show getShow(File showDirectory, long showId) {
+	public Show getShow(File episodeFile, long showId) {
 		return null;
 	}
 
 	/**
 	 * Always returns null as it is not implemented for this store.
 	 * @param season The season the special episode belongs too
-	 * @param specialNumber The number of the special episode 
+	 * @param specialNumber The number of the special episode
+	 * @param episodeFile the file which the episode is stored in 
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber) {
+	public Episode getSpecial(File episodeFile,Season season, int specialNumber) {
 		return null;
 	}
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * @param showDirectory The directory the shows media files are located in 
+	 * @param episodeFile The file the episode is stored in 
 	 */
 	@Override
-	public SearchResult searchForShowId(File showDirectory) {
+	public SearchResult searchForShowId(File episodeFile) {
 		return null;
+	}
+
+	/**
+	 * This is used to write a film to the store.
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	@Override
+	public void cacheFilm(File filmFile, Film film) throws StoreException {
+		
 	}
 	
 }

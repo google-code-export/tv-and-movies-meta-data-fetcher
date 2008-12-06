@@ -28,6 +28,10 @@ import java.util.regex.Pattern;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.util.AbstractExecutable;
 
+/**
+ * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"}
+ * It is used to store and retrive atoms to a MP4 file.
+ */
 public class AtomicParsley extends AbstractExecutable {
 	private static Map<String, String> nameToParam;
 	// private final static DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
@@ -72,10 +76,21 @@ public class AtomicParsley extends AbstractExecutable {
 //		nameToParam.put("", "--gapless");
 	}
 	
+	/**
+	 * Used to create a instance of the Atomic Parsley command wrapper.
+	 * @param app A file object that points to the location of the Atomic Parsley command
+	 */
 	public AtomicParsley(File app) {
 		atomicParsleyApp = app;
 	}
 
+	/**
+	 * Used to get a list of atoms in the MP4 file.
+	 * @param mp4File The MP4 file
+	 * @return A list of atoms
+	 * @throws IOException Thrown if their is a I/O problem
+	 * @throws InterruptedException Thrown if a thread is interrupted
+	 */
 	public List<Atom> listAttoms(File mp4File) throws IOException, InterruptedException {
 		List<String> args = new ArrayList<String>();
 		args.add(atomicParsleyApp.getAbsolutePath());
@@ -96,6 +111,12 @@ public class AtomicParsley extends AbstractExecutable {
 		return atoms;
 	}
 
+	/**
+	 * Used to add atoms to a MP4 file
+	 * @param mp4File The MP4 file
+	 * @param atoms A list of atoms
+	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
+	 */
 	public void update(File mp4File, List<Atom>atoms) throws AtomicParsleyException {
 		List<String> args = new ArrayList<String>();
 		args.add(atomicParsleyApp.getAbsolutePath());
@@ -121,6 +142,12 @@ public class AtomicParsley extends AbstractExecutable {
 		}
 	}
 	
+	/**
+	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
+	 * @param mp4File The MP4 file
+	 * @param episode The episode details
+	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
+	 */
 	public void updateEpsiode(File mp4File, Episode episode) throws AtomicParsleyException  {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(new Atom("stik","TV Show"));
@@ -128,7 +155,7 @@ public class AtomicParsley extends AbstractExecutable {
 		atoms.add(new Atom("tvsh",episode.getSeason().getShow().getName()));
 		atoms.add(new Atom("tvsn",String.valueOf(episode.getSeason().getSeasonNumber())));
 		atoms.add(new Atom("tves",String.valueOf(episode.getEpisodeNumber())));
-		atoms.add(new Atom("©day",episode.getAirDate().toString()));
+		atoms.add(new Atom("©day",episode.getDate().toString()));
 		atoms.add(new Atom("©nam",episode.getTitle()));
 		atoms.add(new Atom("desc",episode.getSummary()));
 		

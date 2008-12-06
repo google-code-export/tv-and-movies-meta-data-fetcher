@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * This is used to store episode information
  */
-public class Episode {
+public class Episode implements IVideo {
 	
 	private Season season;
 	private int episodeNumber;
@@ -97,13 +97,13 @@ public class Episode {
 	 * Sets the air date of the show
 	 * @param airDate The air date of the show
 	 */
-	public void setAirDate(Date airDate) {
+	public void setDate(Date airDate) {
 		this.airDate = airDate;
 	}
 
 	/**
 	 * Gets the title of the show
-	 * @return
+	 * @return The title of the show
 	 */
 	public String getTitle() {
 		return title;
@@ -163,7 +163,7 @@ public class Episode {
 	 * Gets the first air date of the episode
 	 * @return The first air date of the episode
 	 */
-	public Date getAirDate() {
+	public Date getDate() {
 		return airDate;
 	}
 
@@ -277,5 +277,5 @@ public class Episode {
 	 */
 	public void setRating(float rating) {
 		this.rating = rating;
-	}
+	}	
 }

@@ -64,6 +64,7 @@ public class TVCOMSource implements ISource {
 
 	private final static String URL_SHOW_SEARCH = "search.php?type=Search&stype=ajax_search&search_type=program&qs=";
 	
+	/** The ID used to identify the www.tv.com TV source. */
 	public static final String SOURCE_ID = "tvcom";
 
 	/**
@@ -73,7 +74,6 @@ public class TVCOMSource implements ISource {
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
 	 * @return The special episode, or null if it can't be found
-	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
@@ -95,7 +95,6 @@ public class TVCOMSource implements ISource {
 	 * @param season The season the special episode belongs too
 	 * @param episodeNum The number of the episode too get
 	 * @return The episode, or null if it can't be found
-	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
@@ -326,7 +325,7 @@ public class TVCOMSource implements ISource {
 			long episodeId) {
 		Episode episode = new Episode(episodeNumber, season);
 		episode.setTitle(title);		
-		episode.setAirDate(airDate);
+		episode.setDate(airDate);
 		episode.setSpecial(special);
 		episode.setSpecialName(specialName);
 		episode.setSiteId(episodeSiteId);
@@ -338,8 +337,7 @@ public class TVCOMSource implements ISource {
 
 	/**
 	 * This will get a show from the source. If the season can't be found, then it 
-	 * will return null. 
-	 * @param showDirectory The directory the show's media files are located in.
+	 * will return null. 	
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -347,9 +345,9 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File showDirectory, long showId)
+	public Show getShow( long showId)
 			throws SourceException, MalformedURLException, IOException {
-		Show show = new Show(showDirectory, showId);
+		Show show = new Show( showId);
 		show.setShowURL(new URL(getSummaryURL(show.getShowId())));
 		show.setSourceId(SOURCE_ID);
 		Source source = getSource(show.getShowURL());
@@ -488,6 +486,10 @@ public class TVCOMSource implements ISource {
 		return url;
 	}
 
+	/**
+	 * This will return the ID of the source. @see org.stanwood.media.source.TVCOMSource#SOURCE_ID
+	 * @returns The source ID
+	 */
 	@Override
 	public String getSourceId() {
 		return SOURCE_ID;
@@ -496,14 +498,14 @@ public class TVCOMSource implements ISource {
 	/**
 	 * This will search for a show ID from the source. It uses the name of the show directory as the show name
 	 * when it does a search, and uses the first result it finds.
-	 * @param showDirectory The directory the show is located in
+	 * @param episodeFile The file the episode is located in
 	 * @return The results of the search, or null if the show could not be found
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForShowId(File showDirectory) throws SourceException, MalformedURLException, IOException {
+	public SearchResult searchForShowId(File episodeFile) throws SourceException, MalformedURLException, IOException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		Source source = getSource(new URL(getShowSearchUrl(showDirectory.getName())));		
+		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));		
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);		
 		for (Element element : elements) {
 			if (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("result")) {

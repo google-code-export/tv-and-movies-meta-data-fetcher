@@ -27,10 +27,18 @@ import junit.framework.TestCase;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.store.FakeStore;
 
+/**
+ * Used to test the {@link Controller} class.
+ */
 public class TestController extends TestCase {
 
 	private final static String LS = System.getProperty("line.separator");
 	
+	/** 
+	 * Test that the store parameters can be read from the configuration and set
+	 * on the store.
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testStoreWithParams() throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
@@ -71,7 +79,4 @@ public class TestController extends TestCase {
 		}
 		return configFile;
 	}
-	
-	
-	
 }

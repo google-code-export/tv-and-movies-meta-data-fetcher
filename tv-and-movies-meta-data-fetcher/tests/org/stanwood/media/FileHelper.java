@@ -26,14 +26,32 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+/**
+ * This is a help class that is used to perform operations on files.
+ */
 public class FileHelper {
-	public static File createTmpDir() throws IOException {
-		File dir = File.createTempFile("show", "");
+
+	/**
+	 * This will create a temporary directory using the given name.
+	 * 
+	 * @param name The name of the directory to create
+	 * @return A file object pointing to the directory that was created
+	 * @throws IOException Thrown if their is a problme creating the directory
+	 */
+	public static File createTmpDir(String name) throws IOException {
+		File dir = File.createTempFile(name, "");
 		dir.delete();
 		dir.mkdir();
 		return dir;
 	}
 
+	/**
+	 * Used to copy a source file to a destination file.
+	 * 
+	 * @param src The source file
+	 * @param dst The destination file
+	 * @throws IOException Thrown if their is a problem copying the file
+	 */
 	public static void copy(File src, File dst) throws IOException {
 		InputStream in = new FileInputStream(src);
 		OutputStream out = new FileOutputStream(dst);
@@ -48,7 +66,14 @@ public class FileHelper {
 		out.close();
 	}
 
-	public static void copy(InputStream in, File dst) throws IOException {		
+	/**
+	 * Used to copy the contents of a input stream to a destination file.
+	 * 
+	 * @param in The input stream
+	 * @param dst The destination file
+	 * @throws IOException Thrown if their is a problem copying the file
+	 */
+	public static void copy(InputStream in, File dst) throws IOException {
 		OutputStream out = new FileOutputStream(dst);
 
 		// Transfer bytes from in to out
@@ -61,6 +86,12 @@ public class FileHelper {
 		out.close();
 	}
 
+	/**
+	 * Used to delete a directory and all it's children
+	 * 
+	 * @param dir The directory to delete
+	 * @return True if successful, otherwise false
+	 */
 	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
@@ -75,13 +106,20 @@ public class FileHelper {
 		// The directory is now empty so delete it
 		return dir.delete();
 	}
-	
-	public static void displayFile(File file,PrintStream os) throws IOException {	   
-	        BufferedReader in = new BufferedReader(new FileReader(file));
-	        String str;
-	        while ((str = in.readLine()) != null) {
-	        	os.println(str);
-	        }
-	        in.close();	  
+
+	/**
+	 * Used to display the contents of a file
+	 * 
+	 * @param file The file to display
+	 * @param os The output stream to display it to
+	 * @throws IOException Thrown if their is a problem reading or displaying the file
+	 */
+	public static void displayFile(File file, PrintStream os) throws IOException {
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
+		while ((str = in.readLine()) != null) {
+			os.println(str);
+		}
+		in.close();
 	}
 }

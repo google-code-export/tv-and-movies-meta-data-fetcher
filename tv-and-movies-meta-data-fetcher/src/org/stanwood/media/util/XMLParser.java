@@ -23,8 +23,19 @@ import org.w3c.dom.Node;
 
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
+/**
+ * This is a helper class that should be extend by classes that need to parse XML
+ */
 public class XMLParser {
 
+	/**
+	 * Used to read a integer from the XML
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the integer
+	 * @return The integer value
+	 * @throws TransformerException Thrown if their is a XML problem
+	 * @throws NotInStoreException Thrown if the value can't be read
+	 */
 	protected Integer getIntegerFromXML(Node parent, String path)
 			throws TransformerException, NotInStoreException {
 		Node node = XPathAPI.selectSingleNode(parent, path);
@@ -34,6 +45,14 @@ public class XMLParser {
 		throw new NotInStoreException();
 	}
 
+	/**
+	 * Used to read a long from the XML
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the long
+	 * @return The long value
+	 * @throws TransformerException Thrown if their is a XML problem
+	 * @throws NotInStoreException Thrown if the value can't be read
+	 */
 	protected Long getLongFromXML(Node parent, String path)
 			throws TransformerException, NotInStoreException {
 		Node node = XPathAPI.selectSingleNode(parent, path);
@@ -43,6 +62,14 @@ public class XMLParser {
 		throw new NotInStoreException();
 	}
 
+	/**
+	 * Used to read a string from the XML
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the string
+	 * @return The string value
+	 * @throws TransformerException Thrown if their is a XML problem
+	 * @throws NotInStoreException Thrown if the value can't be read
+	 */
 	protected String getStringFromXML(Node parent, String path)
 			throws TransformerException, NotInStoreException {
 		Node node = XPathAPI.selectSingleNode(parent, path);
@@ -52,6 +79,14 @@ public class XMLParser {
 		throw new NotInStoreException();
 	}
 
+	/**
+	 * Used to read a float from the XML
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the float
+	 * @return The float value
+	 * @throws TransformerException Thrown if their is a XML problem
+	 * @throws NotInStoreException Thrown if the value can't be read
+	 */
 	protected float getFloatFromXML(Node parent, String path)
 			throws TransformerException, NotInStoreException {
 		Node node = XPathAPI.selectSingleNode(parent, path);

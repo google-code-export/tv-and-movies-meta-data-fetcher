@@ -18,10 +18,11 @@ package org.stanwood.media.store.mp4;
 
 import java.io.File;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Episode;
@@ -29,12 +30,17 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
 
-import junit.framework.TestCase;
-
+/**
+ * Used to test the {@link AtomicParsley} class.
+ */
 public class TestAtomicParsley extends TestCase {
 
 	private SimpleDateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
 	
+	/** 
+	 * Used to test reading atoms when the MP4 file has no atoms
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testNoAtomsFound() throws Exception {
 //		File apCmd = new File("/usr/local/bin/AtomicParsley");
 		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
@@ -50,6 +56,10 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals(0,atoms.size());	
 	}
 	
+	/** 
+	 * Used to test that the episode details can be written to the MP4 file.
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testWriteEpsiode() throws Exception {
 //		File apCmd = new File("/usr/local/bin/AtomicParsley");
 		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
@@ -91,9 +101,9 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("SciFi",atoms.get(9).getValue());
 		assertEquals("catg",atoms.get(9).getName());			
 	}
-
-	private Episode createTestEpisode() throws ParseException {
-		Show show = new Show(new File("/tmp/blah"),123);
+	
+	private Episode createTestEpisode() throws Exception {
+		Show show = new Show(123);
 		show.setName("Test Show Name");
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");
@@ -101,7 +111,7 @@ public class TestAtomicParsley extends TestCase {
 		show.setGenres(genres);
 		Season season = new Season(show,1);		
 		Episode episode = new Episode(3,season);
-		episode.setAirDate(DF.parse("10-11-2005"));
+		episode.setDate(DF.parse("10-11-2005"));
 		episode.setEpisodeId(34567);
 		episode.setProductionCode("prod103");
 		episode.setRating(5.4F);

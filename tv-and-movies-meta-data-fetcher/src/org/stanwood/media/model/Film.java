@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * This class is used to hold film related information
  */
-public class Film {
+public class Film implements IVideo {
 
 	private long id;
 	private String sourceId;

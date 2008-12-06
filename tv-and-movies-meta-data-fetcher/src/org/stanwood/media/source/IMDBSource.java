@@ -42,51 +42,79 @@ import au.id.jericho.lib.html.Source;
 import au.id.jericho.lib.html.StartTag;
 import au.id.jericho.lib.html.Tag;
 
+/**
+ * This class is a soure used to retrive information about films from {@link "www.imdb.com"}
+ */
 public class IMDBSource implements ISource {
 
-	private static final String IMDB_BASE_URL = "http://www.imdb.com";
-	private static final String URL_SUMMARY = "/title/tt$filmId$/";
+	/** The ID of the the source */
 	public static final String SOURCE_ID = "imdb";
+	
+	private static final String IMDB_BASE_URL = "http://www.imdb.com";
+	private static final String URL_SUMMARY = "/title/tt$filmId$/";	
 	private SimpleDateFormat RELEASE_DATE_FORMAT= new SimpleDateFormat("dd MMMMM yyyy");
 
+	/**
+	 * This always returns null as this source does not support reading episodes.	
+	 * @param season The season the episode belongs to.
+	 * @param episodeNum The number of the episode to read
+	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
-			throws SourceException, MalformedURLException, IOException {
+	public Episode getEpisode(Season season, int episodeNum) {
 		return null;
 	}
 
+	/**
+	 * This always returns null as this source does not support reading episodes.
+	 * @param show The show the season belongs to.
+	 * @param seasonNum The number of the season to read
+	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
-			IOException {
+	public Season getSeason(Show show, int seasonNum)  {
 		return null;
 	}
 
+	/**
+	 * This always returns null as this source does not support reading episodes.
+	 * @param showId The id of the show to read
+	 */
 	@Override
-	public Show getShow(File showDirectory, long showId)
-			throws SourceException, MalformedURLException, IOException {
+	public Show getShow(long showId)  {
 		return null;
 	}
 
+	/**
+	 * This always returns null as this source does not support reading episodes.
+	 * @param season The season the episode belongs to.
+	 * @param specialNumber The number of the special episode to read
+	 */
+	@Override
+	public Episode getSpecial(Season season, int specialNumber) {
+		return null;
+	}
+
+	/**
+	 * Get the id of the source. 
+	 * @return The id of the source
+	 */
 	@Override
 	public String getSourceId() {
-		return null;
-	}
+		return SOURCE_ID;
+	}	
 
+	/**
+	 * This will always return null as this store does not support searching
+	 * @param episodeFile The file the episode is located in
+	 * @return Always returns null
+	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
-			throws SourceException, MalformedURLException, IOException {
-		return null;
-	}
-
-	@Override
-	public SearchResult searchForShowId(File showDirectory)
-			throws SourceException, MalformedURLException, IOException {
+	public SearchResult searchForShowId(File episodeFile){
 		return null;
 	}
 	
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
-	 * @param filmDirectory The directory the film is located in.
+	 * @param filmFile The directory the film is located in.
 	 * @param filmId The id of the film
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -94,7 +122,7 @@ public class IMDBSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(File showDirectory, long filmId)
+	public Film getFilm(File filmFile, long filmId)
 			throws SourceException, MalformedURLException, IOException {
 		URL url = new URL(getFilmURL(filmId));
 		Film film = new Film(filmId);

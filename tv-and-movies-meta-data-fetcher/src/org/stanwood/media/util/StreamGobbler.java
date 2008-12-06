@@ -21,16 +21,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * Used to swallow the contents of a stream. This is a thread based
+ * class, so {@link #start()} should be called to start the thread. {@link #getResult()} 
+ * can be called to get the contents of the swallowed stream.
+ */
 public class StreamGobbler extends Thread {
 
 	private InputStream is;
 	private StringBuilder result;
 
+	/**
+	 * Creates a instance of the stream gobbler thread
+	 * @param is The stream that is to be swallowed
+	 */
 	public StreamGobbler(InputStream is) {
 		this.is = is;
 		result = new StringBuilder("");
 	}
 
+	/**
+	 * This is executed when the thread is started. It will swallow the 
+	 * input stream. 
+	 */
 	public void run() {
 		try {
 			InputStreamReader isr = new InputStreamReader(is);
@@ -45,6 +58,10 @@ public class StreamGobbler extends Thread {
 
 	}
 
+	/**
+	 * Used to get the contents of the swallowed stream.
+	 * @return The contents of the swallowed stream
+	 */
 	public String getResult() {
 		return result.toString();
 	}

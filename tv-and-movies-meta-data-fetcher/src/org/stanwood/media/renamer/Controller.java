@@ -33,9 +33,9 @@ import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.store.IStore;
-import org.stanwood.media.store.MemoryStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.XMLStore;
+import org.stanwood.media.store.memory.MemoryStore;
 
 /**
  * The controller is used to control access to the stores and and sources. This is a singleton class, and just first be
@@ -160,6 +160,7 @@ public class Controller {
 	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an
 	 * attempt to write it too the stores.
+	 * @param episodeFile The file the episode is stored in
 	 * @param sourceId The ID of the source too use
 	 * @param showDirectory The directory the show's media files are located in
 	 * @param showId The id of the show
@@ -170,28 +171,28 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(String sourceId, File showDirectory, long showId, boolean refresh)
+	public Show getShow(File episodeFile,String sourceId, File showDirectory, long showId, boolean refresh)
 			throws MalformedURLException, SourceException, IOException, StoreException {
 		Show show = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				show = store.getShow(showDirectory, showId);
+				show = store.getShow(episodeFile, showId);
 				if (show != null) {
 					break;
 				}
 			}
 		} else {
-			show = stores.get(0).getShow(showDirectory, showId);
+			show = stores.get(0).getShow(episodeFile, showId);
 		}
 
 		if (show == null) {
 			System.out.println("Reading show from sources");
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
-					show = source.getShow(showDirectory, showId);
+					show = source.getShow(showId);
 					if (show != null) {
 						for (IStore store : stores) {
-							store.cacheShow(show);
+							store.cacheShow(episodeFile,show);
 						}
 						break;
 					}
@@ -209,6 +210,7 @@ public class Controller {
 	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an
 	 * attempt to write it too the stores.
+	 * @param episodeFile The file the episode is stored in
 	 * @param show The show the season belongs too
 	 * @param seasonNum The season number	
 	 * @param refresh If true, then the stores are ignored.
@@ -217,19 +219,19 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Season getSeason(Show show, int seasonNum, boolean refresh) throws SourceException, IOException,
+	public Season getSeason(File episodeFile,Show show, int seasonNum, boolean refresh) throws SourceException, IOException,
 			StoreException {
 		String sourceId = show.getSourceId();
 		Season season = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				season = store.getSeason(show, seasonNum);
+				season = store.getSeason(episodeFile,show, seasonNum);
 				if (season != null) {
 					break;
 				}
 			}
 		} else {
-			season = stores.get(0).getSeason(show, seasonNum);
+			season = stores.get(0).getSeason(episodeFile,show, seasonNum);
 		}
 
 		if (season == null) {
@@ -239,15 +241,15 @@ public class Controller {
 					season = source.getSeason(show, seasonNum);
 					if (season != null) {
 						for (IStore store : stores) {
-							store.cacheSeason(season);
+							store.cacheSeason(episodeFile,season);
 							if (season.getEpisodes() != null) {
 								for (Episode episode : season.getEpisodes()) {
-									store.cacheEpisode(episode);
+									store.cacheEpisode(episodeFile,episode);
 								}
 							}
 							if (season.getSpecials() != null) {
 								for (Episode episode : season.getSpecials()) {
-									store.cacheEpisode(episode);
+									store.cacheEpisode(episodeFile,episode);
 								}
 							}
 						}
@@ -270,24 +272,25 @@ public class Controller {
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The episode number	
 	 * @param refresh If true, then the stores are ignored.
+	 * @param episodeFile The file the episode is stored in
 	 * @return The episode, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws SourceException Thrown if their is a source related problem.
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getEpisode(Season season, int episodeNum, boolean refresh) throws SourceException,
+	public Episode getEpisode(File episodeFile,Season season, int episodeNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getEpisode(season, episodeNum);
+				episode = store.getEpisode(episodeFile,season, episodeNum);
 				if (episode != null) {
 					break;
 				}
 			}
 		} else {
-			episode = stores.get(0).getEpisode(season, episodeNum);
+			episode = stores.get(0).getEpisode(episodeFile,season, episodeNum);
 		}
 
 		if (episode == null) {
@@ -298,7 +301,7 @@ public class Controller {
 					episode = source.getEpisode(season, episodeNum);
 					if (episode != null) {
 						for (IStore store : stores) {
-							store.cacheEpisode(episode);
+							store.cacheEpisode(episodeFile,episode);
 						}
 						break;
 					}
@@ -319,25 +322,26 @@ public class Controller {
 	 * @param season The season the episode belongs too
 	 * @param specialNum The special episode number	
 	 * @param refresh If true, then the stores are ignored.
+	 * @param specialFile The file the special episode is stored in
 	 * @return The special episode, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws SourceException Thrown if their is a source related problem.
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getSpecial(Season season, int specialNum, boolean refresh) throws SourceException,
+	public Episode getSpecial(File specialFile,Season season, int specialNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getSpecial(season, specialNum);
+				episode = store.getSpecial(specialFile,season, specialNum);
 				if (episode != null) {
 					break;
 				}
 			}
 		} else {
-			episode = stores.get(0).getEpisode(season, specialNum);
+			episode = stores.get(0).getEpisode(specialFile,season, specialNum);
 		}
 
 		if (episode == null) {
@@ -348,7 +352,7 @@ public class Controller {
 					episode = source.getSpecial(season, specialNum);
 					if (episode != null) {
 						for (IStore store : stores) {
-							store.cacheEpisode(episode);
+							store.cacheEpisode(specialFile,episode);
 						}
 						break;
 					}
@@ -390,9 +394,18 @@ public class Controller {
 		return null;
 	}
 
+	/**
+	 * This is used when a file that holds a episode or film has been renamed
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 */
+	public void renamedFile(File oldFile, File newFile) {
+		
+	}
+	
 	/* package for test */ final static void destoryController() {
 		instance = null;
 		stores = null;
 		sources=null;
-	}
+	}	
 }

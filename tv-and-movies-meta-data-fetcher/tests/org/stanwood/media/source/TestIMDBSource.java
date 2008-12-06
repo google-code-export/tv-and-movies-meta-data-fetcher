@@ -30,10 +30,17 @@ import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
 
+/**
+ * Used to test the {@link IMDBSource} class.
+ */
 public class TestIMDBSource extends TestCase {
 
 	private final static long FILM_ID_IRON_MAN = 371746L;
 	
+	/**
+	 * Test that film details are correctly read from the source
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testIronManFilm() throws Exception {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
 		Film film = source.getFilm(new File("/tmp/blah"), FILM_ID_IRON_MAN);

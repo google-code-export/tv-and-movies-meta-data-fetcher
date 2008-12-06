@@ -16,7 +16,6 @@
  */
 package org.stanwood.media.model;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,19 +33,16 @@ public class Show {
 	private String name;
 	private URL imageURL;
 	private URL showURL;
-	private File showDirectory;
 	private List<Season> seasons = new ArrayList<Season>();
 	private String sourceId;
 
 	/**
 	 * The constructor used to create a instance of the class
-	 * 
-	 * @param showDirectory The directory the show is located in
+	 * 	
 	 * @param showId The id of the show
 	 */
-	public Show(File showDirectory, long showId) {
-		this.showId = showId;
-		this.showDirectory = showDirectory;
+	public Show(long showId) {
+		this.showId = showId;		
 	}
 
 	/**
@@ -93,14 +89,7 @@ public class Show {
 		this.showURL = showURL;
 	}
 
-	/**
-	 * Used to get the directory the shows media files are located in
-	 * @return The directory the shows media files are located in
-	 */
-	public File getShowDirectory() {
-		return showDirectory;
-	}
-
+	
 	/**
 	 * Used to get a long summary of the show
 	 * @return The long summary of the show

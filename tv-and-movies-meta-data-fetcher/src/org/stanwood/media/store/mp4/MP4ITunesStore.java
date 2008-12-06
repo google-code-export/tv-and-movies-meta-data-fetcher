@@ -21,10 +21,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.FileNameParser;
-import org.stanwood.media.renamer.ParsedFileName;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -37,7 +36,7 @@ import org.stanwood.media.store.StoreException;
  * </p>
  * <p>
  * Reading and writing too the .mp4 files is done via the application AtomicParsley 
- * {@link http://atomicparsley.sourceforge.net/}. In order for this store to work, the AtomicParsley
+ * {@link "http://atomicparsley.sourceforge.net/"}. In order for this store to work, the AtomicParsley
  * command line tool must be installed. Use the method <code>setAtomicParsleyPath</code> too set the
  * of the application.  
  * </p>
@@ -46,17 +45,16 @@ public class MP4ITunesStore implements IStore {
 
 	private File atomicParsleyPath;
 	
-	public void cacheEpisode(Episode episode) throws StoreException {
+	/**
+	 * This is used to store episode information of a TVShow MP4 file into the 
+	 * file as meta data so that iTunes can read it.
+	 * @param episodeFile The mp4 episode file
+	 * @param episode The episode details
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
 		validate();
-		File showDir = episode.getSeason().getShow().getShowDirectory();		
-	
-		for (File file : showDir.listFiles()) {
-			ParsedFileName parsed = FileNameParser.parse(file.getName());
-			if (parsed!=null && parsed.getEpisode() == episode.getEpisodeNumber() && parsed.getSeason()==episode.getSeason().getSeasonNumber()) {
-				writeEpisode(file,episode);
-				break;
-			}
-		}	
+		writeEpisode(episodeFile,episode);		
 	}
 
 	private void writeEpisode(File file, Episode episode) throws StoreException {
@@ -68,35 +66,71 @@ public class MP4ITunesStore implements IStore {
 		} 
 	}
 
-	public void cacheSeason(Season season) throws StoreException {
+	/**
+	 * This does nothing as the season information can't be stored by this store
+	 * @param episodeFile The mp4 episode file
+	 * @param season The season details
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public void cacheSeason(File episodeFile,Season season) throws StoreException {
 		validate();
 	}
 
-	public void cacheShow(Show show) throws StoreException {
+	/**
+	 * This does nothing as the show information can't be stored by this store
+	 * @param episodeFile The mp4 episode file
+	 * @param show The show details
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public void cacheShow(File episodeFile,Show show) throws StoreException {
 		validate();
 	}
 
-	public Episode getEpisode(Season season, int episodeNum) throws StoreException, MalformedURLException, IOException {
+	/**
+	 * This will always return null as this is a write only store
+	 * @param episodeFile the file which the episode is stored in
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode too get
+	 * @return Always returns null
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public Episode getEpisode(File episodeFile,Season season, int episodeNum) throws StoreException {
 		validate();
 		return null;
 	}
 
-	public Season getSeason(Show show, int seasonNum) throws StoreException, IOException {
+	/**
+	 * This will always return null as this is a write only store
+	 * @param episodeFile the file which the episode is stored in
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season too get
+	 * @return Always returns null
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException {
 		validate();
 		return null;
 	}
 
-	public Show getShow(File showDirectory, long showId) throws StoreException, MalformedURLException, IOException {
+	/**
+	 * This will always return null as this is a write only store
+	 * @param episodeFile the file which the episode is stored in
+	 * @param showId The show Id of the show too get
+	 * @return Always returns null
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	public Show getShow(File episodeFile, long showId) throws StoreException {
 		validate();
 		return null;
-	}
+	}	
 
-	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException,
-			StoreException {		
-		return null;
-	}
-
-	public SearchResult searchForShowId(File showDirectory) throws StoreException {		
+	/**
+	 * This will always return null as this store does not support searching
+	 * @param episodeFile The file the episode is located in
+	 * @return Always returns null
+	 */
+	@Override
+	public SearchResult searchForShowId(File episodeFile) {		
 		return null;
 	}
 
@@ -116,7 +150,7 @@ public class MP4ITunesStore implements IStore {
 		return atomicParsleyPath.getAbsolutePath();
 	}
 
-	public void validate() throws StoreException {
+	private void validate() throws StoreException {
 		if (atomicParsleyPath==null) {
 			throw new StoreException("The atomicParsleyPath property must be set before the store can be used");
 		}
@@ -124,4 +158,32 @@ public class MP4ITunesStore implements IStore {
 			throw new StoreException("Unable to locate the AtomicParsley application at the path '"+atomicParsleyPath.getAbsolutePath()+"'.");
 		}
 	}
+
+	/**
+	 * This is used to write a film to the store.
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	@Override
+	public void cacheFilm(File filmFile, Film film) throws StoreException {
+		
+	}
+
+	/**
+	 * This will always return null as this is a write only store
+	 * @param episodeFile the file which the special episode is stored in
+	 * @param season The season the episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return Always returns null
+	 * @throws StoreException Thrown if their is a problem storing the meta data
+	 */
+	@Override
+	public Episode getSpecial(File episodeFile, Season season, int specialNumber) throws MalformedURLException,
+			IOException, StoreException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

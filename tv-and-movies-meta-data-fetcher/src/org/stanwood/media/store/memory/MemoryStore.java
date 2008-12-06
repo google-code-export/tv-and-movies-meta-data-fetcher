@@ -14,19 +14,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store;
+package org.stanwood.media.store.memory;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
+import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.StoreException;
 
 /**
  * This store is used to store the show information in memory. This allows the tool
@@ -36,41 +41,49 @@ import org.stanwood.media.renamer.SearchResult;
 public class MemoryStore implements IStore {
 
 	private List<Show> shows = new ArrayList<Show>();
+	private Map<File,Film> films = new HashMap<File,Film>();
 	
 	/**
 	 * This does nothing as it's all done by the cacheSeason and cacheShow methods
+	 * @param episodeFile the file witch the episode is stored in
 	 * @param episode The episode to write to the store
 	 */
 	@Override	
-	public void cacheEpisode(Episode episode) {
+	public void cacheEpisode(File episodeFile,Episode episode) {
 		
 	}
 
 	/**
 	 * This is used to write a season too the store.
 	 * @param season The season too write
+	 * @param episodeFile The file the episode is stored in
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheSeason(Season season) throws StoreException {
+	public void cacheSeason(File episodeFile,Season season) throws StoreException {
 		Show show = season.getShow();
-		if (show.getSeason(season.getSeasonNumber())!=null) {
-			show.removeSeason(season.getSeasonNumber());
-		}
-		show.addSeason(season);
+		for (Show cs : shows) {
+			if (cs.equals(show)) {
+				if (cs.getSeason(season.getSeasonNumber())!=null) {
+					cs.removeSeason(season.getSeasonNumber());
+				}
+				cs.addSeason(season);
+			}
+		}		
 	}
 
 	/**
 	 * This is used to write a show too the store.
+	 * @param episodeFile The file the episode is stored in
 	 * @param show The show too write
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheShow(Show show) throws StoreException {
+	public void cacheShow(File episodeFile,Show show) throws StoreException {
 		Iterator<Show> it = shows.iterator();
 		while (it.hasNext()) {
 			Show foundShow = it.next();
-			if (foundShow.getShowId() == show.getShowId()) {
+			if (foundShow.getShowId() == show.getShowId() && foundShow.getSourceId().equals(show.getSourceId())) {
 				it.remove();
 			}
 		}
@@ -80,6 +93,7 @@ public class MemoryStore implements IStore {
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will
 	 * return null;
+	 * @param episodeFile The file the episode is stored in
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode too get
 	 * @return The episode, or null if it can't be found
@@ -88,7 +102,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
+	public Episode getEpisode(File episodeFile,Season season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
 		return season.getEpisode(episodeNum);		
 	}
@@ -96,6 +110,7 @@ public class MemoryStore implements IStore {
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
 	 * return null;
+	 * @param episodeFile The file the episode is stored in
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
 	 * @return The special episode, or null if it can't be found
@@ -104,7 +119,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
+	public Episode getSpecial(File episodeFile,Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {	
 		return season.getSpecial(specialNumber);	
 	}
@@ -117,7 +132,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws StoreException,
+	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException,
 			IOException {		
 		return show.getSeason(seasonNum);
 	}
@@ -125,7 +140,7 @@ public class MemoryStore implements IStore {
 	/**
 	 * This will get a show from the store. If the season can't be found, then it 
 	 * will return null. 
-	 * @param showDirectory The directory the show's media files are located in.
+	 * @param episodeFile The file the episode is stored in
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -133,7 +148,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File showDirectory, long showId)
+	public Show getShow(File episodeFile, long showId)
 			throws StoreException, MalformedURLException, IOException {		
 		for (Show show : shows) {
 			if (show.getShowId() == showId) {
@@ -145,15 +160,24 @@ public class MemoryStore implements IStore {
 	
 	/**
 	 * This does nothing because this source does not support searching for show ID's.
-	 * @param showDirectory The directory the show is located in
+	 * @param episodeFile The file the episode is stored in
 	 * @return Will always return null.
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForShowId(File showDirectory)
+	public SearchResult searchForShowId(File episodeFile)
 			throws StoreException {		
 		return null;
 	}
 
-	
+	/**
+	 * This is used to write a film to the store.
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	@Override
+	public void cacheFilm(File filmFile, Film film) throws StoreException {
+		films.put(filmFile,film);
+	}	
 }

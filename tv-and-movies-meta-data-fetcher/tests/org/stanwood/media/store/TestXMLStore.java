@@ -31,44 +31,34 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.testdata.Data;
 import org.stanwood.media.source.TVCOMSource;
+import org.stanwood.media.testdata.Data;
 import org.xml.sax.InputSource;
 
+/**
+ * Used to test the {@link XMLStore} class.
+ */
 public class TestXMLStore extends XMLTestCase {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
-	private static final int SHOW_ID = 58448;
-
-	public void testReadOfOldXML() throws Exception {
-		XMLStore xmlSource = new XMLStore();
-
-		File dir = FileHelper.createTmpDir();
-		try {
-			File eurekaDir = new File(dir, "Eureka");
-			eurekaDir.mkdir();
-			FileHelper.copy(Data.class.getResourceAsStream("old-source.xml"),
-					new File(eurekaDir, ".series.xml"));
-			Show show = xmlSource.getShow(eurekaDir, SHOW_ID);
-			assertNull(show);			
-		} finally {
-			FileHelper.deleteDir(dir);
-		}
-
-		// showGenres = show.getGenres();
-	}
+	private static final int SHOW_ID = 58448;	
 	
+	/**
+	 * Test that the XML is read correctly
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testReadXML() throws Exception {
 		XMLStore xmlSource = new XMLStore();
 
-		File dir = FileHelper.createTmpDir();
+		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
+			File episodeFile = new File(eurekaDir,"1x01 - blah");
 			eurekaDir.mkdir();
 			FileHelper.copy(Data.class.getResourceAsStream("eureka.xml"),
 					new File(eurekaDir, ".show.xml"));
-			Show show = xmlSource.getShow(eurekaDir, SHOW_ID);
+			Show show = xmlSource.getShow(episodeFile, SHOW_ID);
 			assertNotNull(show);
 			assertEquals("Eureka", show.getName());
 			StringBuilder summary = new StringBuilder();			
@@ -80,18 +70,17 @@ public class TestXMLStore extends XMLTestCase {
 			assertEquals(summary.toString(), show.getLongSummary());
 			assertEquals("tvcom",show.getSourceId());
 			assertEquals("http://image.com.com/tv/images/b.gif", show.getImageURL().toExternalForm());
-			assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());
-			assertEquals(eurekaDir.getAbsolutePath(), show.getShowDirectory().getAbsolutePath());
+			assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());			
 			assertEquals(58448, show.getShowId());
 			assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
 						
-			Season season = xmlSource.getSeason(show, 1);
+			Season season = xmlSource.getSeason(episodeFile,show, 1);
 			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());			
 			assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getListingUrl().toExternalForm());
 			assertEquals(1,season.getSeasonNumber());
 	        assertEquals(show,season.getShow());	  
 	        
-	        Episode episode = xmlSource.getEpisode(season, 1);	 
+	        Episode episode = xmlSource.getEpisode(episodeFile,season, 1);	 
 	        assertNotNull(episode);
 	        assertEquals(1,episode.getEpisodeNumber());
 	        assertEquals(784857,episode.getEpisodeId());
@@ -101,9 +90,10 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Pilot",episode.getTitle());	        
-	        assertEquals("2006-10-10",df.format(episode.getAirDate()));
+	        assertEquals("2006-10-10",df.format(episode.getDate()));
 	        
-	        episode = xmlSource.getEpisode(season, 2);	 
+	        episodeFile = new File(eurekaDir,"1x02 - blah");
+	        episode = xmlSource.getEpisode(episodeFile,season, 2);	 
 	        assertNotNull(episode);
 	        assertEquals(2,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
@@ -113,15 +103,16 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Many Happy Returns",episode.getTitle());
-	        assertEquals("2006-10-11",df.format(episode.getAirDate()));
+	        assertEquals("2006-10-11",df.format(episode.getDate()));
 	        
-			season = xmlSource.getSeason(show, 2);
+	        episodeFile = new File(eurekaDir,"2x02 - blah");
+			season = xmlSource.getSeason(episodeFile,show, 2);
 			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=2",season.getDetailedUrl().toExternalForm());			
 			assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getListingUrl().toExternalForm());
 			assertEquals(2,season.getSeasonNumber());
 	        assertEquals(show,season.getShow());	
 	        
-	        episode = xmlSource.getEpisode(season, 2);	 
+	        episode = xmlSource.getEpisode(episodeFile,season, 2);	 
 	        assertNotNull(episode);
 	        assertEquals(2,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
@@ -131,9 +122,10 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Phoenix Rising",episode.getTitle());
-	        assertEquals("2007-07-10",df.format(episode.getAirDate()));
+	        assertEquals("2007-07-10",df.format(episode.getDate()));
 	        
-	        episode = xmlSource.getSpecial(season, 0);	 
+	        episodeFile = new File(eurekaDir,"000 - blah");
+	        episode = xmlSource.getSpecial(episodeFile,season, 0);	 
 	        assertNotNull(episode);
 	        assertEquals(0,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
@@ -143,7 +135,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
 	        assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Countdown to the Premiere",episode.getTitle());
-	        assertEquals("2007-07-09",df.format(episode.getAirDate()));
+	        assertEquals("2007-07-09",df.format(episode.getDate()));
 			
 			
 		} finally {
@@ -151,24 +143,29 @@ public class TestXMLStore extends XMLTestCase {
 		}		
 	}
 	
+	/**
+	 * Test that the show is cached correctly
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testCacheShow() throws Exception {
 		XMLStore xmlSource = new XMLStore();
 		
-		File dir = FileHelper.createTmpDir();
+		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
 			eurekaDir.mkdir();
+			File episodeFile = new File(eurekaDir,"1x01 - blah");
 			
 			Show show = createShow(eurekaDir);
-			xmlSource.cacheShow(show);		
+			xmlSource.cacheShow(episodeFile,show);		
 			
 			Season season = new Season(show,1);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
 			show.addSeason(season);		
-			xmlSource.cacheSeason(season);			
+			xmlSource.cacheSeason(episodeFile,season);			
 			Episode episode1 = new Episode(1,season);
-			episode1.setAirDate(df.parse("2006-10-10"));
+			episode1.setDate(df.parse("2006-10-10"));
 			episode1.setProductionCode("001");
 			episode1.setSiteId("1");
 			episode1.setSpecial(false);
@@ -182,10 +179,11 @@ public class TestXMLStore extends XMLTestCase {
 			episode1.setGuestStars(createLinks(new Link[]{new Link("sally","http://test/sally"),new Link("Cedric","http://test/cedric")}));
 			episode1.setEpisodeId(784857);
 			season.addEpisode(episode1);
-			xmlSource.cacheEpisode(episode1);
+			xmlSource.cacheEpisode(episodeFile,episode1);
 			
+			episodeFile = new File(eurekaDir,"1x02 - blah");
 			Episode episode2 = new Episode(2,season);
-			episode2.setAirDate(df.parse("2006-10-11"));
+			episode2.setDate(df.parse("2006-10-11"));
 			episode2.setProductionCode("002");
 			episode2.setSiteId("2");
 			episode2.setSpecial(false);
@@ -196,16 +194,17 @@ public class TestXMLStore extends XMLTestCase {
 			episode2.setRating(9.5F);			
 			episode2.setEpisodeId(800578);
 			season.addEpisode(episode2);			
-			xmlSource.cacheEpisode(episode2);
+			xmlSource.cacheEpisode(episodeFile,episode2);
 			
 			season = new Season(show,2);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
 			show.addSeason(season);	
-			xmlSource.cacheSeason(season);
+			xmlSource.cacheSeason(episodeFile,season);
 			
+			episodeFile = new File(eurekaDir,"2x13 - blah");
 			episode1 = new Episode(2,season);
-			episode1.setAirDate(df.parse("2007-7-10"));
+			episode1.setDate(df.parse("2007-7-10"));
 			episode1.setProductionCode("013");
 			episode1.setSiteId("13");
 			episode1.setSpecial(false);
@@ -216,10 +215,11 @@ public class TestXMLStore extends XMLTestCase {
 			episode1.setEpisodeId(800578);
 			episode1.setRating(0.4F);
 			season.addEpisode(episode1);			
-			xmlSource.cacheEpisode(episode1);
+			xmlSource.cacheEpisode(episodeFile,episode1);
 			
+			episodeFile = new File(eurekaDir,"000 - blah");
 			Episode special1 = new Episode(0,season);
-			special1.setAirDate(df.parse("2007-7-09"));
+			special1.setDate(df.parse("2007-7-09"));
 			special1.setProductionCode("200");
 			special1.setSiteId("Special");
 			special1.setSpecial(true);
@@ -234,7 +234,7 @@ public class TestXMLStore extends XMLTestCase {
 			special1.setGuestStars(createLinks(new Link[]{new Link("bob","http://test/bob"),new Link("Write a little","http://test/fred")}));
 						
 			season.addSepcial(special1);			
-			xmlSource.cacheEpisode(special1);
+			xmlSource.cacheEpisode(episodeFile,special1);
 			
 			File actualFile = new File(eurekaDir,".show.xml");
 //			FileHelper.displayFile(actualFile,System.out);
@@ -245,7 +245,7 @@ public class TestXMLStore extends XMLTestCase {
 		}			
 	}
 	
-	public List<Link>createLinks(Link[] links) {
+	private List<Link>createLinks(Link[] links) {
 		List<Link> result = new ArrayList<Link>();
 		for (Link link : links ) {
 			result.add(link);
@@ -254,7 +254,7 @@ public class TestXMLStore extends XMLTestCase {
 	}
 
 	private Show createShow(File eurekaDir) throws MalformedURLException {
-		Show show = new Show(eurekaDir,SHOW_ID);
+		Show show = new Show(SHOW_ID);
 		show.setSourceId(TVCOMSource.SOURCE_ID);
 		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
 		StringBuilder summary = new StringBuilder();			

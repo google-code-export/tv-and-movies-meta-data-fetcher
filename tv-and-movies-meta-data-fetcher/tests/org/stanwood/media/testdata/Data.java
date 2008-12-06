@@ -16,6 +16,10 @@
  */
 package org.stanwood.media.testdata;
 
+/**
+ * This class in used to make it easier to find all the test resources. They can be found
+ * relative to this class.
+ */
 public class Data {
 
 }

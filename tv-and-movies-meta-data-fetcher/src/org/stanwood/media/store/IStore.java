@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
@@ -36,78 +37,92 @@ public interface IStore  {
 	/**
 	 * This is used to write a episode or special too the store
 	 * @param episode The episode or special too write
-	 * @throws StoreException Thrown if their is a problem with the source
+	 * @param episodeFile the file witch the episode is stored in
+	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheEpisode(Episode episode) throws StoreException;
+	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException;
 
 	/**
 	 * This is used to write a season too the store.
 	 * @param season The season too write
-	 * @throws StoreException Thrown if their is a problem with the source
+	 * @param episodeFile The file the episode is stored in
+	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheSeason(Season season) throws StoreException;
+	public void cacheSeason(File episodeFile,Season season) throws StoreException;
 	
 	/**
 	 * This is used to write a show too the store.
 	 * @param show The show too write
-	 * @throws StoreException Thrown if their is a problem with the source
+	 * @param episodeFile The file the episode is stored in
+	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheShow(Show show) throws StoreException;
+	public void cacheShow(File episodeFile,Show show) throws StoreException;
+	
+	/**
+	 * This is used to write a film to the store.
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	public void cacheFilm(File filmFile,Film film) throws StoreException;
 	
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will
 	 * return null;
+	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode too get
 	 * @return The episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getEpisode(Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
+	public Episode getEpisode(File episodeFile,Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
 	
 	/**
 	 * This will get a season from the store. If the season can't be found,
 	 * then it will return null.
+	 * @param episodeFile the file which the episode is stored in
 	 * @param show The show the season belongs too
 	 * @param seasonNum The number of the season that is to be fetched
 	 * @return The season if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Season getSeason(Show show, int seasonNum) throws StoreException, IOException;
+	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException, IOException;
 	
 	/**
 	 * This will get a show from the store. If the season can't be found, then it 
 	 * will return null. 
-	 * @param showDirectory The directory the show's media files are located in.
+	 * @param episodeFile the file which the episode is stored in
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File showDirectory, long showId) throws StoreException, MalformedURLException, IOException;
+	public Show getShow(File episodeFile, long showId) throws StoreException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
 	 * return null;
+	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
 	 * @return The special episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
+	public Episode getSpecial(File episodeFile,Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
 
 	/**
 	 * This is called to search the store for a show id. If it can't be found, then
 	 * it will return null.
-	 * @param showDirectory The directory the show is located in.
+	 * @param episodeFile The file the episode is stored in
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store 
 	 */
-	public SearchResult searchForShowId(File showDirectory) throws StoreException;
+	public SearchResult searchForShowId(File episodeFile) throws StoreException;
 
 }

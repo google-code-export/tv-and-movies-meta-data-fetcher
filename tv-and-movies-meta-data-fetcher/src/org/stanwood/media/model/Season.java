@@ -106,7 +106,7 @@ public class Season {
 	
 	/**
 	 * Used to get a special episode with a given episode number
-	 * @param episodeNum The special episode number of the episode to fetch
+	 * @param specialNumber The special episode number of the episode to fetch
 	 * @return The special episode
 	 */
 	public Episode getSpecial(int specialNumber) {		

@@ -25,6 +25,11 @@ public class Link {
 	private String title;
 	private String link;	
 	
+	/**
+	 * The constructor used to create a instance of the link class
+	 * @param link The URL of the link
+	 * @param title The title of the link
+	 */
 	public Link(String link, String title) {
 		super();
 		this.link = link;

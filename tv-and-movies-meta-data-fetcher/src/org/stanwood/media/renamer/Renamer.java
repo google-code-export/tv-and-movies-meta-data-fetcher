@@ -90,12 +90,13 @@ public class Renamer {
 			}			
 		});
 		
-		Show show = Controller.getInstance().getShow(TVCOMSource.SOURCE_ID,showDirectory, showId,refresh);		
-		if (show == null) {
-			fail("Unable to find show details");						
-		}
+		
 		
 		for (File file : files ) {
+			Show show = Controller.getInstance().getShow(file,TVCOMSource.SOURCE_ID,showDirectory, showId,refresh);		
+			if (show == null) {
+				fail("Unable to find show details");						
+			}
 			String oldFileName = file.getName(); 
 			ParsedFileName data =  FileNameParser.parse(oldFileName);
 			if (data==null) {
@@ -103,12 +104,12 @@ public class Renamer {
 			}
 			else {
 				
-				Season season = Controller.getInstance().getSeason(show,data.getSeason(),refresh);
+				Season season = Controller.getInstance().getSeason(file,show,data.getSeason(),refresh);
 				if (season==null) {
 					System.err.println("Unable to find season for file : " + file.getAbsolutePath());
 					continue;
 				}
-				Episode episode = Controller.getInstance().getEpisode(season,data.getEpisode(),refresh);
+				Episode episode = Controller.getInstance().getEpisode(file,season,data.getEpisode(),refresh);
 				if (episode==null) {
 					System.err.println("Unable to find epsiode for file : " + file.getAbsolutePath());
 					continue;
@@ -127,7 +128,14 @@ public class Renamer {
 					}
 					else {
 						System.out.println("Renaming '" + oldFileName + "' -> '" + newName+"'");
-						file.renameTo(newFile);
+						
+						File oldFile = new File(file.getAbsolutePath());
+						if (file.renameTo(newFile)) {
+							Controller.getInstance().renamedFile(oldFile,newFile);	
+						}
+						else {
+							System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
+						}
 					}
 				}
 			}

@@ -24,17 +24,22 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.stanwood.media.FileHelper;
-import org.stanwood.media.renamer.IExitHandler;
-import org.stanwood.media.renamer.Main;
 import org.stanwood.media.testdata.Data;
 
+/**
+ * Used to test the {@link Renamer} class.
+ */
 public class TestRenamer extends TestCase {
 
 	protected static int exitCode;
 
+	/**
+	 * Test the media files are correctly renamed using the details stored in the source.
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testRenamerUsingXMLSource() throws Exception {
 		
-		File dir = FileHelper.createTmpDir();
+		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
 			eurekaDir.mkdir();

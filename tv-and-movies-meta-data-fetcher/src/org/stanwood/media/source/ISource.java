@@ -55,15 +55,14 @@ public interface ISource {
 	
 	/**
 	 * This will get a show from the source. If the show can't be found, then it 
-	 * will return null. 
-	 * @param showDirectory The directory the show's media files are located in.
+	 * will return null.
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File showDirectory, long showId) throws SourceException, MalformedURLException, IOException;
+	public Show getShow(long showId) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -96,12 +95,12 @@ public interface ISource {
 
 	/**
 	 * Used to search for a show within the source
-	 * @param showDirectory The directory the shows media files are located in
+	 * @param episodeFile The file the episode is located in
 	 * @return The results of the search, or null if nothing was found
 	 * @throws SourceException Thrown if their is a problem retrieving the data 
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public SearchResult searchForShowId(File showDirectory) throws SourceException, MalformedURLException, IOException;
+	public SearchResult searchForShowId(File episodeFile) throws SourceException, MalformedURLException, IOException;
 	
 }
