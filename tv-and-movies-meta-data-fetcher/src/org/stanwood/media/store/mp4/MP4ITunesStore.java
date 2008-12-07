@@ -25,6 +25,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
+import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
@@ -194,5 +195,14 @@ public class MP4ITunesStore implements IStore {
 	public void renamedFile(File oldFile, File newFile) {
 		
 	}
-	
+
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param filmFile The file the film is stored in
+	 * @param filmId The id of the film
+	 */
+	@Override
+	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+		return null;
+	}
 }

@@ -1,0 +1,21 @@
+<media>
+  <title>Pilot</title>
+     <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
+     <userStarRating>1</userStarRating>
+     <seriesName>Eureka</seriesName>
+     <episodeNumber>1</episodeNumber>
+     <season>1</season>
+     <episode>1</episode>
+     <published>2006-10-10</published>
+     <genres>
+        <genre>SCIFI</genre>
+        <genre>Drama</genre>
+     </genres>
+     <cast>
+        <name><a href="sally">http://test/sally</a></name>
+        <name><a href="Cedric">http://test/cedric</a></name>
+     </cast>
+     <directors>
+       <name><a href="Harry">http://test/</a></name>
+     </directors>
+</media>

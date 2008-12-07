@@ -17,12 +17,15 @@
 package org.stanwood.media.store;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
+import org.stanwood.media.source.SourceException;
 
 /**
  * This is a fake store that is used for testing of a stores params.
@@ -145,6 +148,16 @@ public class FakeStore implements IStore {
 	 */
 	@Override
 	public void renamedFile(File oldFile, File newFile) {
+	}
+
+	/**
+	 * This always returns null as this store does not support reading films.
+	 * @param filmFile The file the film is stored in
+	 * @param filmId The id of the film
+	 */
+	@Override
+	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+		return null;
 	}
 
 	

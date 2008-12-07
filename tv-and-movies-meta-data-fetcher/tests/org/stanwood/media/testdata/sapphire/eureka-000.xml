@@ -1,0 +1,21 @@
+<media>
+  <title>Countdown to the Premiere</title>
+     <summary>Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.</summary>
+     <userStarRating>0</userStarRating>
+     <seriesName>Eureka</seriesName>
+     <episodeNumber>Special</episodeNumber>
+     <season>2</season>
+     <episode>0</episode>
+     <published>2007-07-09</published>
+     <genres>
+        <genre>SCIFI</genre>
+        <genre>Drama</genre>
+     </genres>
+     <cast>
+        <name><a href="bob">http://test/bob</a></name>
+        <name><a href="Write a little">http://test/fred</a></name>
+     </cast>
+     <directors>
+       <name><a href="JP">http://test/</a></name>
+     </directors>
+</media>

@@ -40,6 +40,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.source.NotInStoreException;
+import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -675,5 +676,15 @@ public class XMLStore extends XMLParser implements IStore {
 	@Override
 	public void renamedFile(File oldFile, File newFile) {
 		
+	}
+	
+	/**
+	 * Always returns null as it is not implemented for this store.
+	 * @param filmFile The file the film is stored in
+	 * @param filmId The id of the film
+	 */
+	@Override
+	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+		return null;
 	}
 }

@@ -66,14 +66,14 @@ public interface ISource {
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
-	 * @param filmDirectory The directory the film is located in.
+	 * @param filmFile The file the film is located in..
 	 * @param filmId The id of the film
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(File filmDirectory, long filmId) throws SourceException, MalformedURLException, IOException;
+	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will

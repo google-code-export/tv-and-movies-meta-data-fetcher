@@ -54,7 +54,7 @@ public class TestXMLStore extends XMLTestCase {
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
-			File episodeFile = new File(eurekaDir,"1x01 - blah");
+			File episodeFile = new File(eurekaDir,"1x01 - blah.avi");
 			eurekaDir.mkdir();
 			FileHelper.copy(Data.class.getResourceAsStream("eureka.xml"),
 					new File(eurekaDir, ".show.xml"));
@@ -92,7 +92,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Pilot",episode.getTitle());	        
 	        assertEquals("2006-10-10",df.format(episode.getDate()));
 	        
-	        episodeFile = new File(eurekaDir,"1x02 - blah");
+	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
 	        episode = xmlSource.getEpisode(episodeFile,season, 2);	 
 	        assertNotNull(episode);
 	        assertEquals(2,episode.getEpisodeNumber());
@@ -105,7 +105,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Many Happy Returns",episode.getTitle());
 	        assertEquals("2006-10-11",df.format(episode.getDate()));
 	        
-	        episodeFile = new File(eurekaDir,"2x02 - blah");
+	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
 			season = xmlSource.getSeason(episodeFile,show, 2);
 			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=2",season.getDetailedUrl().toExternalForm());			
 			assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getListingUrl().toExternalForm());
@@ -124,7 +124,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Phoenix Rising",episode.getTitle());
 	        assertEquals("2007-07-10",df.format(episode.getDate()));
 	        
-	        episodeFile = new File(eurekaDir,"000 - blah");
+	        episodeFile = new File(eurekaDir,"000 - blah.avi");
 	        episode = xmlSource.getSpecial(episodeFile,season, 0);	 
 	        assertNotNull(episode);
 	        assertEquals(0,episode.getEpisodeNumber());
