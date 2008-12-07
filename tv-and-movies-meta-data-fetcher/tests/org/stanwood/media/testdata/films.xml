@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<films>
+  <film id="114814" rating="8.7" releaseDate="1995-08-25"
+    sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
+    <genre name="Crime"/>
+    <genre name="Drama"/>
+    <genre name="Mystery"/>
+    <genre name="Thriller"/>
+    <certification certification="16" country="Iceland"/>
+    <certification certification="R-18" country="Philippines"/>
+    <certification certification="16" country="Argentina"/>
+    <certification certification="MA" country="Australia"/>
+    <certification certification="16" country="Brazil"/>
+    <certification certification="14A" country="Canada"/>
+    <certification certification="18" country="Chile"/>
+    <certification certification="16" country="Denmark"/>
+    <certification certification="K-16" country="Finland"/>
+    <certification certification="U" country="France"/>
+    <certification certification="16" country="Germany"/>
+    <certification certification="IIB" country="Hong Kong"/>
+    <certification certification="16" country="Hungary"/>
+    <certification certification="18" country="Ireland"/>
+    <certification certification="T" country="Italy"/>
+    <certification certification="PG-12" country="Japan"/>
+    <certification certification="16" country="Netherlands"/>
+    <certification certification="R18" country="New Zealand"/>
+    <certification certification="15" country="Norway"/>
+    <certification certification="M/16" country="Portugal"/>
+    <certification certification="M18" country="Singapore"/>
+    <certification certification="PG (cut)" country="Singapore"/>
+    <certification certification="18" country="South Korea"/>
+    <certification certification="18" country="Spain"/>
+    <certification certification="15" country="Sweden"/>
+    <certification certification="18" country="UK"/>
+    <certification certification="R" country="USA"/>
+    <director link="Bryan Singer" name="http://www.imdb.com/name/nm0001741/"/>
+    <writers link="Christopher McQuarrie" name="http://www.imdb.com/name/nm0003160/"/>
+    <guestStars link="Stephen Baldwin" name="http://www.imdb.com/name/nm0000286/"/>
+    <guestStars link="Gabriel Byrne" name="http://www.imdb.com/name/nm0000321/"/>
+    <guestStars link="Benicio Del Toro" name="http://www.imdb.com/name/nm0001125/"/>
+    <guestStars link="Kevin Pollak" name="http://www.imdb.com/name/nm0001629/"/>
+    <guestStars link="Kevin Spacey" name="http://www.imdb.com/name/nm0000228/"/>
+    <guestStars link="Chazz Palminteri" name="http://www.imdb.com/name/nm0001590/"/>
+    <guestStars link="Pete Postlethwaite" name="http://www.imdb.com/name/nm0000592/"/>
+    <guestStars link="Giancarlo Esposito" name="http://www.imdb.com/name/nm0002064/"/>
+    <guestStars link="Suzy Amis" name="http://www.imdb.com/name/nm0000751/"/>
+    <guestStars link="Dan Hedaya" name="http://www.imdb.com/name/nm0000445/"/>
+    <guestStars link="Paul Bartel" name="http://www.imdb.com/name/nm0000860/"/>
+    <guestStars link="Carl Bressler" name="http://www.imdb.com/name/nm0107808/"/>
+    <guestStars link="Phillip Simon" name="http://www.imdb.com/name/nm0800342/"/>
+    <guestStars link="Jack Shearer" name="http://www.imdb.com/name/nm0790436/"/>
+    <guestStars link="Christine Estabrook" name="http://www.imdb.com/name/nm0261452/"/>
+    <file name="$filmdir$/The Usual Suspects part1.avi"/>
+    <file name="$filmdir$/The Usual Suspects part2.avi"/>
+  </film>
+</films>

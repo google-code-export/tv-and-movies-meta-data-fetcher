@@ -17,656 +17,36 @@
 package org.stanwood.media.store;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
-import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.XMLParser;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-import com.sun.org.apache.xpath.internal.XPathAPI;
+import org.stanwood.media.store.xmlstore.FilmXMLStore;
+import org.stanwood.media.store.xmlstore.TVXMLStore;
 
 /**
- * This store is used to store the show information in a XML called .show.xml. 
- * This is located in the directory were the show is located. It can hold all
- * of the information of the Shows, Seasons, Episodes and Specials. This store
- * can be read and written too, and it's also possible too lookup the show id 
- * of the show in the current directory.
+ * This store is used to store the show and film information in a XML called .show.xml or .films.xml. 
+ * This is located in the directory were the show or film is located. For more information see
+ * {@link org.stanwood.media.store.xmlstore.TVXMLStore} and {@link org.stanwood.media.store.xmlstore.FilmXMLStore}.
  */
-public class XMLStore extends XMLParser implements IStore {
-	private final static String FILENAME = ".show.xml";
+public class XMLStore implements IStore {
 
-	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-	/**
-	 * This gets a special episode from the store. If it can't be found, then it will
-	 * return null;
-	 * @param specialFile The file that contains the special episode file
-	 * @param season The season the special episode belongs too
-	 * @param specialNumber The number of the special episode too get
-	 * @return The special episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
-	@Override
-	public Episode getSpecial(File specialFile,Season season, int specialNumber)
-			throws MalformedURLException, IOException, StoreException {
-		Document doc = getCache(specialFile.getParentFile(), season
-				.getShow().getShowId());
-		Episode special = null;
-		try {
-			special = getSpecialFromCache(specialNumber, season, doc);
-			return special;
-		} catch (NotInStoreException e) {
-			return null;
-		}
-	}
+	private TVXMLStore tvStore;
+	private FilmXMLStore filmStore;
 
 	/**
-	 * This gets a episode from the store. If it can't be found, then it will
-	 * return null;
-	 * @param episodeFile The file that contains the episode file
-	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode too get
-	 * @return The episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * Used to created a instance of the XMLStore class
 	 */
-	@Override
-	public Episode getEpisode(File episodeFile,Season season, int episodeNum)
-			throws StoreException, MalformedURLException {
-		Document doc = getCache(episodeFile.getParentFile(), season
-				.getShow().getShowId());
-		Episode episode = null;
-		try {
-			episode = getEpisodeFromCache(episodeNum, season, doc);
-			return episode;
-		} catch (NotInStoreException e) {
-			return null;
-		}
+	public XMLStore() {
+		tvStore = new TVXMLStore();
+		filmStore = new FilmXMLStore();
 	}
 
-	/**
-	 * This will get a season from the store. If the season can't be found,
-	 * then it will return null.
-	 * @param episodeFile The file that contains the episode file
-	 * @param show The show the season belongs too
-	 * @param seasonNum The number of the season that is to be fetched
-	 * @return The season if it can be found, otherwise null.
-	 * @throws StoreException Thrown if their is a problem with the store
-	 */
-	@Override
-	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException,
-			MalformedURLException {
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
-		Season season = null;
-		try {
-			season = getSeasonFromCache(seasonNum, show, doc);
-			return season;
-		} catch (NotInStoreException e) {
-			return null;
-		}
-	}
-
-	private Episode getSpecialFromCache(int specialNum, Season season,
-			Document doc) throws NotInStoreException, StoreException,
-			MalformedURLException {
-		try {
-			Node episodeNode = XPathAPI.selectSingleNode(doc, "show[@id="
-					+ season.getShow().getShowId() + "]/season[@number="
-					+ season.getSeasonNumber() + "]/special[@number="
-					+ specialNum + "]");
-			if (episodeNode == null) {
-				throw new NotInStoreException();
-			}
-
-			Episode episode = new Episode(specialNum, season);
-
-			readCommonEpisodeInfo(episodeNode, episode);
-
-			episode.setSpecial(true);
-			String specialName = getStringFromXML(episodeNode, "@specialName");
-			episode.setSpecialName(specialName);
-			return episode;
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
-		} catch (ParseException e) {
-			throw new StoreException(
-					"Unable to parse date: " + e.getMessage(), e);
-		}
-	}
-
-	private void readCommonEpisodeInfo(Node episodeNode, Episode episode)
-			throws TransformerException, NotInStoreException,
-			MalformedURLException, ParseException {
-		String summary = getStringFromXML(episodeNode, "summary/text()");
-		URL url = new URL(getStringFromXML(episodeNode, "@url"));
-		String title = getStringFromXML(episodeNode, "@title");
-		String airDate = getStringFromXML(episodeNode, "@firstAired");
-		String productionCode = getStringFromXML(episodeNode, "@productionCode");
-
-		String episodeSiteId = getStringFromXML(episodeNode, "@siteId");
-		long episodeId = getLongFromXML(episodeNode, "@episodeId");
-		float rating = getFloatFromXML(episodeNode, "@rating");		
-		List<Link> directors = getLinks(episodeNode, "director");
-		List<Link> writers = getLinks(episodeNode, "writer");
-		List<Link> guestStars = getLinks(episodeNode, "guestStar");
-
-		episode.setSummaryUrl(url);
-		episode.setSummary(summary);
-		episode.setTitle(title);
-		episode.setDate(df.parse(airDate));
-		episode.setProductionCode(productionCode);
-		episode.setSiteId(episodeSiteId);		
-		episode.setEpisodeId(episodeId);
-		episode.setGuestStars(guestStars);
-		episode.setWriters(writers);
-		episode.setRating(rating);
-		episode.setDirectors(directors);
-	}
-
-	private List<Link> getLinks(Node episodeNode, String tagLabel)
-			throws TransformerException {
-		List<Link> result = new ArrayList<Link>();
-		NodeList list = XPathAPI.selectNodeList(episodeNode, tagLabel);
-		for (int i = 0; i < list.getLength(); i++) {
-			Element element = (Element) list.item(i);
-			result.add(new Link(element.getAttribute("name"), element
-					.getAttribute("link")));
-		}
-		return result;
-	}
-
-	private Episode getEpisodeFromCache(int episodeNum, Season season,
-			Document doc) throws NotInStoreException, StoreException,
-			MalformedURLException {
-		try {
-			Node episodeNode = XPathAPI.selectSingleNode(doc, "show[@id="
-					+ season.getShow().getShowId() + "]/season[@number="
-					+ season.getSeasonNumber() + "]/episode[@number="
-					+ episodeNum + "]");
-			if (episodeNode == null) {
-				throw new NotInStoreException();
-			}
-
-			Episode episode = new Episode(episodeNum, season);
-			readCommonEpisodeInfo(episodeNode, episode);
-			episode.setSpecial(false);
-			episode.setSpecialName(null);		
-
-			return episode;
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
-		} catch (ParseException e) {
-			throw new StoreException(
-					"Unable to parse date: " + e.getMessage(), e);
-		}
-	}
-
-	private Season getSeasonFromCache(int seasonNum, Show show, Document doc)
-			throws StoreException, NotInStoreException, MalformedURLException {
-		try {
-			Node seasonNode = XPathAPI.selectSingleNode(doc, "show[@id="
-					+ show.getShowId() + "]/season[@number=" + seasonNum + "]");
-			if (seasonNode == null) {
-				throw new NotInStoreException();
-			}
-			Season season = new Season(show, seasonNum);
-			season.setDetailedUrl(new URL(getStringFromXML(seasonNode,
-					"@detailedListingUrl")));
-			season.setListingUrl(new URL(getStringFromXML(seasonNode,
-					"@listingUrl")));
-			return season;
-
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * This will get a show from the store. If the season can't be found, then it 
-	 * will return null. 
-	 * @param showDirectory The directory the show's media files are located in.
-	 * @param showId The id of the show to get.
-	 * @return The show if it can be found, otherwise null.
-	 * @throws StoreException Thrown if their is a problem with the store
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
-	public Show getShow(File showDirectory, long showId)
-			throws StoreException, MalformedURLException, IOException {
-		Document doc = getCache(showDirectory, showId);
-		Show show = null;
-		try {
-			show = getShowFromCache(showDirectory, doc);
-			return show;
-		} catch (NotInStoreException e) {
-			return null;
-		}
-
-	}
-
-	private Show getShowFromCache(File showDirectory, Document doc)
-			throws StoreException, NotInStoreException, MalformedURLException {
-		try {
-			Long showId = getLongFromXML(doc, "show/@id");
-			String imageURL = getStringFromXML(doc, "show/@imageUrl");
-			String showURL = getStringFromXML(doc, "show/@url");
-			String name = getStringFromXML(doc, "show/@name");
-			String sourceId = getStringFromXML(doc, "show/@sourceId");
-			String longSummary = getStringFromXML(doc,
-					"show/description/long/text()");
-			String shortSummary = getStringFromXML(doc,
-					"show/description/short/text()");
-			List<String> genres = getGenresFromXML(doc);
-
-			Show show = new Show(showId);
-			show.setName(name);
-			show.setImageURL(new URL(imageURL));
-			show.setLongSummary(longSummary);
-			show.setShortSummary(shortSummary);
-			show.setShowURL(new URL(showURL));
-			show.setSourceId(sourceId);
-			show.setGenres(genres);
-
-			return show;
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
-		}
-	}
-
-	private List<String> getGenresFromXML(Document doc)
-			throws TransformerException, NotInStoreException {
-		List<String> genres = new ArrayList<String>();
-		NodeList nodeList = XPathAPI.selectNodeList(doc, "genre");
-		if (nodeList != null) {
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Element node = (Element) nodeList.item(i);
-				String genre = node.getAttribute("name");
-				if (genre == null) {
-					throw new NotInStoreException();
-				}
-				genres.add(genre);
-			}
-		}
-		return genres;
-	}
-
-	
-
-	private Document getCache(File showDirectory, long showId)
-			throws StoreException {
-		File cacheFile = getCacheFile(showDirectory);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		Document doc = null;
-		if (cacheFile.exists()) {
-			// Create the builder and parse the file
-			try {
-				doc = factory.newDocumentBuilder().parse(cacheFile);
-			} catch (SAXException e) {
-				throw new StoreException("Unable to parse cache file: "
-						+ e.getMessage(), e);
-			} catch (IOException e) {
-				throw new StoreException("Unable to read cache file: "
-						+ e.getMessage(), e);
-			} catch (ParserConfigurationException e) {
-				throw new StoreException("Unable to parse cache file: "
-						+ e.getMessage(), e);
-			}
-			return doc;
-		} else {
-			DocumentBuilder builder;
-			try {
-				builder = factory.newDocumentBuilder();
-				doc = builder.newDocument();
-				Element series = doc.createElement("show");
-				series.setAttribute("id", String.valueOf(showId));
-				doc.appendChild(series);
-				writeCache(cacheFile, doc);
-			} catch (ParserConfigurationException e) {
-				throw new StoreException("Unable to create cache: "
-						+ e.getMessage());
-			}
-		}
-
-		return doc;
-	}
-
-	private String urlToText(URL url) {
-		if (url==null) {
-			return "";
-		}
-		return url.toExternalForm();
-	}
-	
-	/**
-	 * This is used to write a show too the store.
-	 * @param episodeFile The file that contains the episode
-	 * @param show The show too write
-	 * @throws StoreException Thrown if their is a problem with the source
-	 */
-	@Override
-	public void cacheShow(File episodeFile,Show show) throws StoreException {
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
-		Element series = (Element) doc.getFirstChild();
-		series.setAttribute("id", String.valueOf(show.getShowId()));
-		series.setAttribute("url", urlToText(show.getShowURL()));
-		series.setAttribute("name", show.getName());
-		series.setAttribute("imageUrl", urlToText(show.getImageURL()));
-		series.setAttribute("sourceId", show.getSourceId());
-		try {
-			Node node = XPathAPI.selectSingleNode(series, "description");
-			if (node != null) {
-				series.removeChild(node);
-			}
-
-			Element description = doc.createElement("description");
-			Element shortDesc = doc.createElement("short");
-			shortDesc.appendChild(doc
-					.createCDATASection(show.getShortSummary()));
-			description.appendChild(shortDesc);
-			Element longDesc = doc.createElement("long");
-			longDesc.appendChild(doc.createCDATASection(show.getLongSummary()));
-			description.appendChild(longDesc);
-			series.appendChild(description);
-
-			NodeList nodeList = XPathAPI.selectNodeList(series, "genre");
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-			}
-
-			for (String value : show.getGenres()) {
-				Element genre = doc.createElement("genre");
-				genre.setAttribute("name", value);
-				series.appendChild(genre);
-			}
-			File cacheFile = getCacheFile(episodeFile.getParentFile());
-			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache file: "
-					+ e.getMessage(), e);
-		}
-
-	}
-
-	private void writeCache(File file, Document doc) throws StoreException {
-		try {
-			OutputFormat format = new OutputFormat(doc);
-			format.setLineWidth(65);
-			format.setIndenting(true);
-			format.setIndent(2);
-			XMLSerializer serializer = new XMLSerializer(new FileOutputStream(
-					file), format);
-			serializer.serialize(doc);
-		} catch (FileNotFoundException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		} catch (IOException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		}
-	}
-
-	private File getCacheFile(File showDirectory) {
-		File file = new File(showDirectory, FILENAME);
-		return file;
-	}
-
-	/**
-	 * This is used to write a episode or special too the store
-	 * @param episodeFile The file that contains the episode
-	 * @param episode The episode or special too write
-	 * @throws StoreException Thrown if their is a problem with the source
-	 */
-	@Override
-	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
-		Season season = episode.getSeason();
-		Show show = season.getShow();
-
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
-		if (episode.isSpecial()) {
-			cacheSpecial(episodeFile,doc, show, season, episode);
-		} else {
-			cacheEpisode(episodeFile,doc, show, season, episode);
-		}
-	}
-
-	private void cacheEpisode(File episodeFile,Document doc, Show show, Season season,
-			Episode episode) throws StoreException {
-		try {
-			Node node = XPathAPI.selectSingleNode(doc, "series[@id="
-					+ show.getShowId() + "]/season[@number="
-					+ season.getSeasonNumber() + "]/episode[number="
-					+ episode.getEpisodeNumber() + "]");
-			if (node == null) {
-				node = doc.createElement("episode");
-				Node seasonNode = getSeasonNode(season, show, doc);
-				((Element) node).setAttribute("number", String.valueOf(episode
-						.getEpisodeNumber()));
-				seasonNode.appendChild(node);
-			}		
-
-			writeEpisodeCommonData(doc, episode, node);
-
-			File cacheFile = getCacheFile(episodeFile.getParentFile());
-			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		}
-	}
-
-	private void cacheSpecial(File episodeFile,Document doc, Show show, Season season,
-			Episode episode) throws StoreException {
-		try {
-			Node node = XPathAPI.selectSingleNode(doc, "show[@id="
-					+ show.getShowId() + "]/season[@number="
-					+ season.getSeasonNumber() + "]/special[number="
-					+ episode.getEpisodeNumber() + "]");
-			if (node == null) {
-				node = doc.createElement("special");
-				Node seasonNode = getSeasonNode(season, show, doc);
-				((Element) node).setAttribute("number", String.valueOf(episode
-						.getEpisodeNumber()));
-				seasonNode.appendChild(node);
-			}
-
-			((Element) node).setAttribute("specialName", episode
-					.getSpecialName());
-
-			writeEpisodeCommonData(doc, episode, node);
-
-			File cacheFile = getCacheFile(episodeFile.getParentFile());
-			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		}
-	}
-
-	private void writeEpisodeCommonData(Document doc, Episode episode, Node node)
-			throws TransformerException {
-		((Element) node).setAttribute("rating", String.valueOf(episode
-				.getRating()));
-		((Element) node).setAttribute("siteId", episode.getEpisodeSiteId());
-		((Element) node).setAttribute("title", episode.getTitle());
-		((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
-		((Element) node).setAttribute("firstAired", df.format(episode
-				.getDate()));
-		((Element) node).setAttribute("productionCode", episode
-				.getProductionCode());
-		((Element) node).setAttribute("episodeId", String.valueOf(episode
-				.getEpisodeId()));
-
-		writeEpsoideExtraInfo(doc, episode, node, "director", episode
-				.getDirectors());
-		writeEpsoideExtraInfo(doc, episode, node, "writers", episode
-				.getWriters());
-		writeEpsoideExtraInfo(doc, episode, node, "guestStars", episode
-				.getGuestStars());
-
-		Node summaryNode = XPathAPI.selectSingleNode(node, "summary");
-		if (summaryNode != null) {
-			summaryNode.getParentNode().removeChild(summaryNode);
-		}
-		summaryNode = doc.createElement("summary");
-		node.appendChild(summaryNode);
-		summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
-	}
-
-	private void writeEpsoideExtraInfo(Document doc, Episode episode,
-			Node node, String tagLabel, List<Link> links)
-			throws TransformerException {
-		NodeList nodeList = XPathAPI.selectNodeList(node, tagLabel);
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-		}
-		if (links != null) {
-			for (Link value : links) {
-				Element newNode = doc.createElement(tagLabel);
-				newNode.setAttribute("name", value.getTitle());
-				newNode.setAttribute("link", value.getURL());
-				node.appendChild(newNode);
-			}
-		}
-	}
-
-	/**
-	 * This is used to write a season too the store.
-	 * @param episodeFile The file that contains the episode
-	 * @param season The season too write
-	 * @throws StoreException Thrown if their is a problem with the source
-	 */
-	@Override
-	public void cacheSeason(File episodeFile,Season season) throws StoreException {
-		try {
-			Show show = season.getShow();
-			Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
-
-			Node node = getSeasonNode(season, show, doc);
-			if (node == null) {
-				node = doc.createElement("season");
-				Node seriesNode = getSeriesNode(show, doc);
-				((Element) node).setAttribute("number", String.valueOf(season
-						.getSeasonNumber()));
-				seriesNode.appendChild(node);
-			}
-
-			((Element) node).setAttribute("detailedListingUrl", urlToText(season
-					.getDetailedUrl()));
-			((Element) node).setAttribute("listingUrl", urlToText(season.getListingUrl()));
-			File cacheFile = getCacheFile(episodeFile.getParentFile());
-			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		}
-	}
-
-	private Node getSeriesNode(Show show, Document doc)
-			throws TransformerException {
-		Node seriesNode = XPathAPI.selectSingleNode(doc, "show[@id="
-				+ show.getShowId() + "]");
-		return seriesNode;
-	}
-
-	private Node getSeasonNode(Season season, Show show, Document doc)
-			throws TransformerException {
-		Node node = XPathAPI.selectSingleNode(doc, "show[@id="
-				+ show.getShowId() + "]/season[@number="
-				+ season.getSeasonNumber() + "]");
-		return node;
-	}
-
-	/**
-	 * This is called to search the store for a show id. If it can't be found, then
-	 * it will return null. The search is done be reading the .show.xml file within
-	 * the shows directory and looking to see what show id is stored in it.
-	 * @param episodeFile The file the episode is stored in 
-	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store 
-	 */
-	@Override
-	public SearchResult searchForShowId(File episodeFile) throws StoreException {
-		File cacheFile = getCacheFile(episodeFile.getParentFile());
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		Document doc = null;
-		if (cacheFile.exists()) {
-			// Create the builder and parse the file
-			try {
-				doc = factory.newDocumentBuilder().parse(cacheFile);
-				NodeList nodeList = XPathAPI.selectNodeList(doc, "show");				
-				if (nodeList.getLength()==1) {
-					if (nodeList.item(0) instanceof Element) {
-						Element node = (Element) nodeList.item(0);
-						if (node.getAttribute("id")!=null && node.getAttribute("sourceId")!=null) {
-							System.out.println("Found show id in XMLStore");
-							return new SearchResult(Long.parseLong(node.getAttribute("id")),node.getAttribute("sourceId"),null);
-							
-						}
-							
-					}
-				}
-			} catch (TransformerException e) {
-				throw new StoreException("Unable to parse cache file: "
-						+ e.getMessage(), e);	
-			} catch (SAXException e) {
-				throw new StoreException("Unable to parse cache file: "
-						+ e.getMessage(), e);
-			} catch (IOException e) {
-				throw new StoreException("Unable to read cache file: "
-						+ e.getMessage(), e);
-			} catch (ParserConfigurationException e) {
-				throw new StoreException("Unable to parse cache file: "
-						+ e.getMessage(), e);
-			}		
-		} 
-		return null;
-	}
-
-	/**
-	 * This is used to write a film to the store.
-	 * @param filmFile The file which the film is stored in
-	 * @param film The film to write
-	 * @throws StoreException Thrown if their is a problem with the store
-	 */
-	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
-		
-	}
 	
 	/**
 	 * This will update all references of the old file to the new file
@@ -679,12 +59,136 @@ public class XMLStore extends XMLParser implements IStore {
 	}
 	
 	/**
-	 * Always returns null as it is not implemented for this store.
+	 * This is used to write a film to the store.
+	 * 
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	@Override
+	public void cacheFilm(File filmFile, Film film) throws StoreException {
+		filmStore.cacheFilm(filmFile, film);
+	}
+	
+	/**
+	 * Used to get the details of a film with the given id. If it can't be found,
+	 * then null is returned.
+	 * 
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
+	 * @return The film details, or null if it can't be found
 	 */
 	@Override
 	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
-		return null;
+		return filmStore.getFilm(filmFile, filmId);
+	}
+
+	/**
+	 * This is used to write a episode or special too the store
+	 * @param episodeFile The file that contains the episode
+	 * @param episode The episode or special too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */	
+	@Override
+	public void cacheEpisode(File episodeFile, Episode episode) throws StoreException {
+		tvStore.cacheEpisode(episodeFile, episode);
+	}
+	
+	/**
+	 * This is used to write a season too the store.
+	 * @param episodeFile The file that contains the episode
+	 * @param season The season too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */	
+	@Override
+	public void cacheSeason(File episodeFile, Season season) throws StoreException {
+		tvStore.cacheSeason(episodeFile, season);
+	}
+
+	/**
+	 * This is used to write a show too the store.
+	 * @param episodeFile The file that contains the episode
+	 * @param show The show too write
+	 * @throws StoreException Thrown if their is a problem with the source
+	 */	
+	@Override
+	public void cacheShow(File episodeFile, Show show) throws StoreException {
+		tvStore.cacheShow(episodeFile, show);
+	}
+
+	/**
+	 * This gets a episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param episodeFile The file that contains the episode file
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode too get
+	 * @return The episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 */	
+	@Override
+	public Episode getEpisode(File episodeFile, Season season, int episodeNum) throws StoreException,
+			MalformedURLException, IOException {
+		return tvStore.getEpisode(episodeFile, season, episodeNum);
+	}
+	
+	/**
+	 * This will get a season from the store. If the season can't be found,
+	 * then it will return null.
+	 * @param episodeFile The file that contains the episode file
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 */	
+	@Override
+	public Season getSeason(File episodeFile, Show show, int seasonNum) throws StoreException, IOException {	
+		return tvStore.getSeason(episodeFile, show, seasonNum);
+	}
+
+	/**
+	 * This will get a show from the store. If the season can't be found, then it 
+	 * will return null. 
+	 * @param episodeFile The file the episode is located in
+	 * @param showId The id of the show to get.
+	 * @return The show if it can be found, otherwise null.
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
+	@Override
+	public Show getShow(File episodeFile, long showId) throws StoreException, MalformedURLException, IOException {	
+		return tvStore.getShow(episodeFile, showId);
+	}
+
+	/**
+	 * This gets a special episode from the store. If it can't be found, then it will
+	 * return null;
+	 * @param specialFile The file that contains the special episode file
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return The special episode, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the source
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */	
+	@Override
+	public Episode getSpecial(File specialFile, Season season, int specialNumber) throws MalformedURLException,
+			IOException, StoreException {
+		return tvStore.getSpecial(specialFile, season, specialNumber);
+	}
+
+	/**
+	 * This is called to search the store for a show id. If it can't be found, then
+	 * it will return null. The search is done be reading the .show.xml file within
+	 * the shows directory and looking to see what show id is stored in it.
+	 * @param episodeFile The file the episode is stored in 
+	 * @return The results of the search if it was found, otherwise null
+	 * @throws StoreException Thrown if their is a problem with the store 
+	 */	
+	@Override
+	public SearchResult searchForShowId(File episodeFile) throws StoreException {
+		return tvStore.searchForShowId(episodeFile);
 	}
 }

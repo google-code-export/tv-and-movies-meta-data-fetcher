@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -31,6 +32,8 @@ import java.io.PrintStream;
  */
 public class FileHelper {
 
+	private final static String LS = System.getProperty("line.separator");
+	
 	/**
 	 * This will create a temporary directory using the given name.
 	 * 
@@ -121,5 +124,39 @@ public class FileHelper {
 			os.println(str);
 		}
 		in.close();
+	}
+
+	/**
+	 * Used to read the contents of a file into a string
+	 * @param file The file to read
+	 * @return The contents of the file
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static String readFileContents(File file) throws IOException {
+		StringBuilder results = new StringBuilder();
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
+		while ((str = in.readLine()) != null) {
+			results.append(str+LS);			
+		}
+		in.close();
+		return results.toString();
+	}
+	
+	/**
+	 * Used to read the contents of a stream into a string
+	 * @param inputStream The input stream
+	 * @return The contents of the file
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static String readFileContents(InputStream inputStream) throws IOException {		
+		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder results = new StringBuilder();
+		String str;
+		while ((str = in.readLine()) != null) {
+			results.append(str+LS);			
+		}
+		in.close();
+		return results.toString();
 	}
 }
