@@ -25,7 +25,6 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
-import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.xmlstore.FilmXMLStore;
 import org.stanwood.media.store.xmlstore.TVXMLStore;
 
@@ -77,9 +76,12 @@ public class XMLStore implements IStore {
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
 	 * @return The film details, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem with the store
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem. 
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
 		return filmStore.getFilm(filmFile, filmId);
 	}
 

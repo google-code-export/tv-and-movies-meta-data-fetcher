@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -180,19 +179,7 @@ public class TVXMLStore extends BaseXMLStore {
 		episode.setWriters(writers);
 		episode.setRating(rating);
 		episode.setDirectors(directors);
-	}
-
-	private List<Link> getLinks(Node episodeNode, String tagLabel)
-			throws TransformerException {
-		List<Link> result = new ArrayList<Link>();
-		NodeList list = XPathAPI.selectNodeList(episodeNode, tagLabel);
-		for (int i = 0; i < list.getLength(); i++) {
-			Element element = (Element) list.item(i);
-			result.add(new Link(element.getAttribute("name"), element
-					.getAttribute("link")));
-		}
-		return result;
-	}
+	}	
 
 	private Episode getEpisodeFromCache(int episodeNum, Season season,
 			Document doc) throws NotInStoreException, StoreException,
@@ -277,7 +264,7 @@ public class TVXMLStore extends BaseXMLStore {
 					"show/description/long/text()");
 			String shortSummary = getStringFromXML(doc,
 					"show/description/short/text()");
-			List<String> genres = getGenresFromXML(doc);
+			List<String> genres = readGenresFromXML(doc);
 
 			Show show = new Show(showId);
 			show.setName(name);
@@ -295,22 +282,7 @@ public class TVXMLStore extends BaseXMLStore {
 		}
 	}
 
-	private List<String> getGenresFromXML(Document doc)
-			throws TransformerException, NotInStoreException {
-		List<String> genres = new ArrayList<String>();
-		NodeList nodeList = XPathAPI.selectNodeList(doc, "genre");
-		if (nodeList != null) {
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Element node = (Element) nodeList.item(i);
-				String genre = node.getAttribute("name");
-				if (genre == null) {
-					throw new NotInStoreException();
-				}
-				genres.add(genre);
-			}
-		}
-		return genres;
-	}
+	
 
 	
 

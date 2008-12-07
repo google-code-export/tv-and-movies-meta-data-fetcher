@@ -25,7 +25,6 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
-import org.stanwood.media.source.SourceException;
 
 /**
  * Stores are similar too sources, except that they are also writable. Once
@@ -138,10 +137,10 @@ public interface IStore  {
 	 * @param filmFile The file the film is located in.
 	 * @param filmId The id of the film
 	 * @return The film, or null if it can't be found
-	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws StoreException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.	
 	 */
-	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException;
+	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException;
 		
 }

@@ -21,34 +21,34 @@ package org.stanwood.media.model;
  */
 public class Certification {
 	
-	private String contry;
+	private String country;
 	private String certification;		
 	
 	/**
 	 * Used to create a instance of the certification class that holds certification information
 	 * @param certification The certification
-	 * @param contry The country the certification belongs too
+	 * @param country The country the certification belongs too
 	 */
-	public Certification(String certification, String contry) {
+	public Certification(String certification, String country) {
 		super();
 		this.certification = certification;
-		this.contry = contry;
+		this.country = country;
 	}
 	
 	/**
 	 * Used to get a free text string of the county name that the certification is associated with
 	 * @return a free text string of the county name that the certification is associated with
 	 */
-	public String getContry() {
-		return contry;
+	public String getCountry() {
+		return country;
 	}
 	
 	/**
 	 * Used to set the free text string of the county name that the certification is associated with
-	 * @param contry free text string of the county name that the certification is associated with
+	 * @param country free text string of the county name that the certification is associated with
 	 */
-	public void setContry(String contry) {
-		this.contry = contry;
+	public void setCountry(String country) {
+		this.country = country;
 	}
 	
 	/**

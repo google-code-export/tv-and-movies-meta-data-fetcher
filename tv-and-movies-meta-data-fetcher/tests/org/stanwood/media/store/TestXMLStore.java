@@ -149,6 +149,65 @@ public class TestXMLStore extends XMLTestCase {
 	}
 	
 	/**
+	 * Used to test that a film can be read from the XML cache
+	 * @throws Exception Thrown if the test produces any errors
+	 */
+	public void testReadFilm() throws Exception {
+		XMLStore xmlSource = new XMLStore();				
+
+		File dir = FileHelper.createTmpDir("film");
+		try {			
+			File filmFile = new File(dir,"1x01 - blah.avi");			
+			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),new File(dir, ".films.xml"));
+			Film film = xmlSource.getFilm(filmFile, 114814L);
+			assertEquals("The Usual Suspects",film.getTitle());
+
+			assertEquals("Crime",film.getGenres().get(0));
+			assertEquals("Drama",film.getGenres().get(1));
+			assertEquals("Mystery",film.getGenres().get(2));
+			assertEquals("Thriller",film.getGenres().get(3));
+
+			assertEquals(27,film.getCertifications().size());			
+			assertEquals("Iceland",film.getCertifications().get(0).getCountry());
+			assertEquals("16",film.getCertifications().get(0).getCertification());			
+			assertEquals("Hungary",film.getCertifications().get(12).getCountry());
+			assertEquals("16",film.getCertifications().get(12).getCertification());					
+			assertEquals("USA",film.getCertifications().get(26).getCountry());
+			assertEquals("R",film.getCertifications().get(26).getCertification());
+
+			assertEquals("1995-08-25",df.format(film.getDate()));
+			
+			assertEquals(1,film.getDirectors().size());
+			assertEquals("Bryan Singer",film.getDirectors().get(0).getTitle());
+			assertEquals("http://www.imdb.com/name/nm0001741/",film.getDirectors().get(0).getURL());
+			
+			assertEquals("http://www.imdb.com/title/tt0114814/",film.getFilmUrl().toString());
+			
+			assertEquals(15,film.getGuestStars().size());
+			assertEquals("Stephen Baldwin",film.getGuestStars().get(0).getTitle());
+			assertEquals("http://www.imdb.com/name/nm0000286/",film.getGuestStars().get(0).getURL());
+			
+			assertEquals("Pete Postlethwaite",film.getGuestStars().get(6).getTitle());
+			assertEquals("http://www.imdb.com/name/nm0000592/",film.getGuestStars().get(6).getURL());
+			
+			assertEquals("Christine Estabrook",film.getGuestStars().get(14).getTitle());
+			assertEquals("http://www.imdb.com/name/nm0261452/",film.getGuestStars().get(14).getURL());
+			
+			assertEquals(8.7F,film.getRating());
+			assertEquals("imdb",film.getSourceId());
+			
+			assertEquals("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.",
+			             film.getSummary());
+			
+			assertEquals(1,film.getWriters().size());
+			assertEquals("Christopher McQuarrie",film.getWriters().get(0).getTitle());
+			assertEquals("http://www.imdb.com/name/nm0003160/",film.getWriters().get(0).getURL());			
+		} finally {
+			FileHelper.deleteDir(dir);
+		}
+	}
+	
+	/**
 	 * Test that the film is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
@@ -232,7 +291,7 @@ public class TestXMLStore extends XMLTestCase {
 			String contents = FileHelper.readFileContents(Data.class.getResourceAsStream("films.xml"));
 			contents = contents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());			
 			Reader r = new StringReader(contents);
-			FileHelper.displayFile(actualFile, System.out);
+//			FileHelper.displayFile(actualFile, System.out);
 			
 			assertXMLEqual(new InputSource(r),new InputSource(new FileInputStream(actualFile)));
 			

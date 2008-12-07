@@ -33,7 +33,6 @@ import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
-import org.stanwood.media.source.SourceException;
 
 /**
  * <p>
@@ -202,7 +201,7 @@ public class SapphireStore implements IStore {
 	private String findCert(List<Certification> certifications) {
 		if (preferedRating!=null) {
 			for (Certification cert : certifications) {
-				if (cert.getContry().toLowerCase().trim().equals(preferedRating.toLowerCase().trim())) {
+				if (cert.getCountry().toLowerCase().trim().equals(preferedRating.toLowerCase().trim())) {
 					return cert.getCertification();
 				}
 			}
@@ -337,7 +336,7 @@ public class SapphireStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 

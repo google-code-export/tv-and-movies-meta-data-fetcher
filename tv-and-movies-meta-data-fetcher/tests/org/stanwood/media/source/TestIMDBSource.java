@@ -72,17 +72,17 @@ public class TestIMDBSource extends TestCase {
 		
 		List<Certification>certs = film.getCertifications();
 		assertEquals(33,certs.size());
-		assertEquals("12",certs.get(0).getContry());
+		assertEquals("12",certs.get(0).getCountry());
 		assertEquals("South Korea",certs.get(0).getCertification());		
-		assertEquals("12",certs.get(5).getContry());
+		assertEquals("12",certs.get(5).getCountry());
 		assertEquals("Netherlands",certs.get(5).getCertification());		
-		assertEquals("IIA",certs.get(11).getContry());
+		assertEquals("IIA",certs.get(11).getCountry());
 		assertEquals("Hong Kong",certs.get(11).getCertification());		
-		assertEquals("M/12",certs.get(21).getContry());
+		assertEquals("M/12",certs.get(21).getCountry());
 		assertEquals("Portugal",certs.get(21).getCertification());	
-		assertEquals("12",certs.get(31).getContry());
+		assertEquals("12",certs.get(31).getCountry());
 		assertEquals("Austria",certs.get(31).getCertification());		
-		assertEquals("PG",certs.get(32).getContry());
+		assertEquals("PG",certs.get(32).getCountry());
 		assertEquals("Canada",certs.get(32).getCertification());
 	}
 	

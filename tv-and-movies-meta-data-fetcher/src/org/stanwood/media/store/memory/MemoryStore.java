@@ -30,7 +30,6 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.SearchResult;
-import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
@@ -202,7 +201,7 @@ public class MemoryStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
 		return films.get(filmFile);
 	}
 }

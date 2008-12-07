@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +33,7 @@ import java.util.Set;
 import javax.xml.transform.TransformerException;
 
 import org.stanwood.media.model.Link;
+import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.XMLParser;
 import org.w3c.dom.Document;
@@ -145,12 +149,61 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * @param parent The parent node
 	 * @param filenames The filenames to append
 	 */
-	protected void writeFilenames(Document doc, Node filmNode, Set<String> filenames) {		
-		for (String filename : filenames) {			
+	protected void writeFilenames(Document doc, Node filmNode, Set<String> filenames) {
+		List<String> sorted = new ArrayList<String>(filenames);
+		Collections.sort(sorted,new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}		
+		});
+		for (String filename : sorted) {			
 			Element fileNode = doc.createElement("file");
 			fileNode.setAttribute("name", filename);
 			filmNode.appendChild(fileNode);
 		}
 	}
+
+	/**
+	 * Used to read the genres from the XML document
+	 * @param parent The parent node to read them from
+	 * @return A list of genres that were found
+	 * @throws TransformerException Thrown if their is a problem parsing the XML
+	 * @throws NotInStoreException Thrown if the genres are not in the store
+	 */
+	protected List<String> readGenresFromXML(Node parent)
+			throws TransformerException, NotInStoreException {
+		List<String> genres = new ArrayList<String>();
+		NodeList nodeList = XPathAPI.selectNodeList(parent, "genre");
+		if (nodeList != null) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Element node = (Element) nodeList.item(i);
+				String genre = node.getAttribute("name");
+				if (genre == null) {
+					throw new NotInStoreException();
+				}
+				genres.add(genre);
+			}
+		}
+		return genres;
+	}
 	
+	/**
+	 * Used to read links from a node in a DOM document
+	 * @param node The node to read the links from
+	 * @param tagLabel The parent tag of the links
+	 * @return A list of links
+	 * @throws TransformerException Thrown if their is a problem parsing the XML
+	 */
+	protected List<Link> getLinks(Node node, String tagLabel)
+			throws TransformerException {
+		List<Link> result = new ArrayList<Link>();
+		NodeList list = XPathAPI.selectNodeList(node, tagLabel);
+		for (int i = 0; i < list.getLength(); i++) {
+			Element element = (Element) list.item(i);
+			result.add(new Link(element.getAttribute("name"), element
+					.getAttribute("link")));
+		}
+		return result;
+	}
 }
