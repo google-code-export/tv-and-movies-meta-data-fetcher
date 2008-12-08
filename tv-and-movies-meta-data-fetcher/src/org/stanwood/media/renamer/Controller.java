@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigReader;
@@ -162,7 +163,6 @@ public class Controller {
 	 * attempt to write it too the stores.
 	 * @param episodeFile The file the episode is stored in
 	 * @param sourceId The ID of the source too use
-	 * @param showDirectory The directory the show's media files are located in
 	 * @param showId The id of the show
 	 * @param refresh If true, then the stores are ignored.
 	 * @return The show, or null if it can't be found.
@@ -171,7 +171,7 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File episodeFile,String sourceId, File showDirectory, long showId, boolean refresh)
+	public Show getShow(File episodeFile,String sourceId, long showId, boolean refresh)
 			throws MalformedURLException, SourceException, IOException, StoreException {
 		Show show = null;
 		if (!refresh) {
@@ -201,6 +201,55 @@ public class Controller {
 		}
 
 		return show;
+	}
+	
+	/**
+	 * Get a film with a given film id and source id. This will first try to retrieve the
+	 * film from the stores. If it is not able to do this, then it will try the sources.
+	 * If it can't retrieve it from either the sources or the stores, then null is returned.
+	 * If the refresh parameter is set too true, then the stores are ignored and it retrieves
+	 * data strait from the sources. If data is retrieved from the source, then it makes an
+	 * attempt to write it too the stores.
+	 * @param filmFile The file the film is stored in
+	 * @param sourceId The ID of the source too use
+	 * @param filmId The id of the film
+	 * @param refresh If true, then the stores are ignored.
+	 * @return The film, or null if it can't be found.
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws SourceException Thrown if their is a source related problem.
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws StoreException Thrown if their is a store related problem.
+	 */
+	public Film getFilm(File filmFile, String sourceId, long filmId, boolean refresh) throws MalformedURLException,
+			SourceException, IOException, StoreException {
+		Film film = null;
+		if (!refresh) {
+			for (IStore store : stores) {
+				film = store.getFilm(filmFile, filmId);
+				if (film != null) {
+					break;
+				}
+			}
+		} else {
+			film = stores.get(0).getFilm(filmFile, filmId);
+		}
+
+		if (film == null) {
+			System.out.println("Reading show from sources");
+			for (ISource source : sources) {
+				if (source.getSourceId().equals(sourceId)) {
+					film = source.getFilm(filmId);
+					if (film != null) {
+						for (IStore store : stores) {
+							store.cacheFilm(filmFile, film);
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		return film;
 	}
 
 	/**
@@ -398,8 +447,9 @@ public class Controller {
 	 * This is used when a file that holds a episode or film has been renamed
 	 * @param oldFile The old file
 	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
-	public void renamedFile(File oldFile, File newFile) {
+	public void renamedFile(File oldFile, File newFile) throws StoreException {
 		for (IStore store : stores) {
 			store.renamedFile(oldFile,newFile);
 		}
@@ -409,6 +459,8 @@ public class Controller {
 		}
 			
 	}
+	
+	
 	
 	/* package for test */ final static void destoryController() {
 		instance = null;

@@ -16,7 +16,6 @@
  */
 package org.stanwood.media.source;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -43,7 +42,7 @@ public class TestIMDBSource extends TestCase {
 	 */
 	public void testIronManFilm() throws Exception {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
-		Film film = source.getFilm(new File("/tmp/blah"), FILM_ID_IRON_MAN);
+		Film film = source.getFilm( FILM_ID_IRON_MAN);
 		assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());

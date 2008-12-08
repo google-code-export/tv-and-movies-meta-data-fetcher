@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Map;
 
 /**
  * This is a help class that is used to perform operations on files.
@@ -87,6 +88,28 @@ public class FileHelper {
 		}
 		in.close();
 		out.close();
+	}
+	
+	/**
+	 * Used to copy the contents of a input stream to a destination file.
+	 * 
+	 * @param in The input stream
+	 * @param dst The destination file
+	 * @param params Parameters which are replaced with values when the file is copied
+	 * @throws IOException Thrown if their is a problem copying the file
+	 */
+	public static void copy(InputStream in, File dst,Map<String,String>params) throws IOException {
+		PrintStream out = new PrintStream(new FileOutputStream(dst));
+		BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+		String line;
+		while ((line = bin.readLine()) != null) {
+			for (String key : params.keySet()) {
+				line = line.replaceAll("\\$"+key+"\\$", params.get(key));
+			}
+			out.println(line);
+		}
+		in.close();		
+		bin.close();
 	}
 
 	/**

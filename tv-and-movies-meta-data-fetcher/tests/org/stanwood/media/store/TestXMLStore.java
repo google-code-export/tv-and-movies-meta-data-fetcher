@@ -25,7 +25,9 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.stanwood.media.FileHelper;
@@ -140,9 +142,7 @@ public class TestXMLStore extends XMLTestCase {
 	        assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
 	        assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Countdown to the Premiere",episode.getTitle());
-	        assertEquals("2007-07-09",df.format(episode.getDate()));
-			
-			
+	        assertEquals("2007-07-09",df.format(episode.getDate()));			
 		} finally {
 			FileHelper.deleteDir(dir);
 		}		
@@ -202,6 +202,38 @@ public class TestXMLStore extends XMLTestCase {
 			assertEquals(1,film.getWriters().size());
 			assertEquals("Christopher McQuarrie",film.getWriters().get(0).getTitle());
 			assertEquals("http://www.imdb.com/name/nm0003160/",film.getWriters().get(0).getURL());			
+		} finally {
+			FileHelper.deleteDir(dir);
+		}
+	}
+	
+	/**
+	 * Test that the store rename function works
+	 * @throws Exception Thrown if the test produces any errors
+	 */
+	public void testFilmRename() throws Exception {
+		XMLStore xmlSource = new XMLStore();				
+
+		File dir = FileHelper.createTmpDir("film");
+		try {			
+			File filmCache = new File(dir, ".films.xml");
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("filmdir", dir.getAbsolutePath());
+			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),filmCache,params);
+			
+			String contents=FileHelper.readFileContents(filmCache);
+			File oldFile = new File(dir,"The Usual Suspects part1.avi");
+			File newFile = new File(dir,"The Usual Suspects (renamed) part1.avi");
+			
+			assertTrue(contents.contains(oldFile.getAbsolutePath()));
+			assertTrue(!contents.contains(newFile.getAbsolutePath()));
+			
+			xmlSource.renamedFile(oldFile, newFile);
+			
+			contents=FileHelper.readFileContents(filmCache);
+			assertTrue(!contents.contains(oldFile.getAbsolutePath()));
+			assertTrue(contents.contains(newFile.getAbsolutePath()));
 		} finally {
 			FileHelper.deleteDir(dir);
 		}

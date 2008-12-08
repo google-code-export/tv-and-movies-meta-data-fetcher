@@ -129,8 +129,9 @@ public interface IStore  {
 	 * This is used when a file that holds a episode or film has been renamed
 	 * @param oldFile The old file
 	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
-	public void renamedFile(File oldFile, File newFile);
+	public void renamedFile(File oldFile, File newFile) throws StoreException;
 	
 	/**
 	 * This will get a film from the store. If the film can't be found, then it will return null.

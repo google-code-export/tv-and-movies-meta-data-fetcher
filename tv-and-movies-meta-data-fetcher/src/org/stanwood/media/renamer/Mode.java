@@ -17,14 +17,11 @@
 package org.stanwood.media.renamer;
 
 /**
- * This is used to handle the program exiting. It is mainly used by tests so that
- * they can override the default beheaviour of calling System.exit.
+ * This enumeration contains the rename modes
  */
-public interface IExitHandler {
-
-	/**
-	 * This is called when the app wants to exit
-	 * @param exitCode The exit code it's exiting with.
-	 */
-	public void exit(int exitCode);
+public enum Mode {
+	/** When using FILM mode files are treated as films */
+	FILM,
+	/** When using TV_SHOW mode files are treated as tv show episodes */
+	TV_SHOW;
 }

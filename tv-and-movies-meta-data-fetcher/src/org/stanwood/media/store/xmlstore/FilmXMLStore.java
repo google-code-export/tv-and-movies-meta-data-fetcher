@@ -232,4 +232,33 @@ public class FilmXMLStore extends BaseXMLStore {
 		return doc;
 	}
 
+	/**
+	 * This will update all references of the old file to the new file
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
+	 */
+	public void renamedFile(File oldFile, File newFile) throws StoreException {
+		if (!oldFile.getParent().equals(newFile.getParent())) {
+			System.err.println("Unable to update store with new file location due different parent directories");
+		}
+		else {
+			Document doc = getCache(oldFile.getParentFile());
+			
+			try {
+//				System.out.println("**/file[@name=" + oldFile.getAbsolutePath() + "]/@name");
+				NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\""+oldFile.getAbsolutePath()+"\"]/@name");
+				for (int i = 0; i < nodes.getLength(); i++) {
+//					System.out.println("Node: " + nodes.item(i).getNodeName());
+					nodes.item(i).setNodeValue(newFile.getAbsolutePath());
+				}
+				
+				File cacheFile = getCacheFile(oldFile.getParentFile(), FILENAME);
+				writeCache(cacheFile, doc);
+			} catch (TransformerException e) {
+				throw new StoreException(e.getMessage(),e);
+			}
+		} 
+	}
+
 }

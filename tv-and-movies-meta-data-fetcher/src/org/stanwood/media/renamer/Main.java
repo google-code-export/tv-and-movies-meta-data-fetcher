@@ -29,6 +29,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.source.IMDBSource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.store.StoreException;
@@ -49,16 +50,18 @@ public class Main {
 	private final static String SOURCE_ID_OPTION = "o";
 	private final static String REFRESH_STORE_OPTION = "r";
 	private final static String CONFIG_FILE_OPTION = "c";
+	private final static String MODE_OPTION = "m";
 	private static final Options OPTIONS;
 
 	private static Long showId = null;
-	private static String sourceId = TVCOMSource.SOURCE_ID;
+	private static String sourceId = null;
 	private static File showDirectory = new File(System.getProperty("user.dir"));
 	private static String pattern = DEFAULT_FILE_PATTERN;
 	private static boolean refresh = false;
 	private static File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
-	
+	private static Mode mode = Mode.TV_SHOW;
 	/* package for test */ static IExitHandler exitHandler = null;
+	
 	
 	static {
 		OPTIONS = new Options();
@@ -69,6 +72,7 @@ public class Main {
 		OPTIONS.addOption(new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present."));
 		OPTIONS.addOption(new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source."));
 		OPTIONS.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
+		OPTIONS.addOption(new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV"));
 	}
 	
 	/**
@@ -140,7 +144,7 @@ public class Main {
 	}
 
 	private static boolean run() {
-		Renamer renamer = new Renamer(showId, showDirectory, pattern,VALID_EXTS,refresh);
+		Renamer renamer = new Renamer(showId,mode, showDirectory, pattern,VALID_EXTS,refresh);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -157,6 +161,19 @@ public class Main {
 	}
 
 	private static boolean processOptions(CommandLine cmd) throws ConfigException {
+		if (cmd.hasOption(MODE_OPTION) && cmd.getOptionObject(MODE_OPTION)!=null) {
+			String cliMode = cmd.getOptionValue(MODE_OPTION);
+			if (cliMode.toLowerCase().equals("film")) {
+				mode = Mode.FILM;
+			}
+			else if (cliMode.toLowerCase().equals("tv")) {
+				mode = Mode.TV_SHOW;
+			}
+			else {
+				displayCLIError("Unkown rename mode: " + cliMode);
+				return false;
+			}
+		}
 		
 		if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
 			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION)); 
@@ -174,6 +191,14 @@ public class Main {
 		
 		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) { 
 			sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
+		}
+		else {
+			if (mode==Mode.TV_SHOW) {
+				sourceId = TVCOMSource.SOURCE_ID;
+			}
+			else {
+				sourceId = IMDBSource.SOURCE_ID;
+			}
 		}
 		
 		if (cmd.hasOption(SHOW_DIR_OPTION)

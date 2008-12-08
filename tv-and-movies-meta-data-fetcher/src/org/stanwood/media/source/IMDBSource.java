@@ -114,7 +114,6 @@ public class IMDBSource implements ISource {
 	
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
-	 * @param filmFile The directory the film is located in.
 	 * @param filmId The id of the film
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -122,7 +121,7 @@ public class IMDBSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId)
+	public Film getFilm( long filmId)
 			throws SourceException, MalformedURLException, IOException {
 		URL url = new URL(getFilmURL(filmId));
 		Film film = new Film(filmId);

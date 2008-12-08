@@ -51,10 +51,11 @@ public class XMLStore implements IStore {
 	 * This will update all references of the old file to the new file
 	 * @param oldFile The old file
 	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files 
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) {
-		
+	public void renamedFile(File oldFile, File newFile) throws StoreException {
+		filmStore.renamedFile(oldFile,newFile);
 	}
 	
 	/**

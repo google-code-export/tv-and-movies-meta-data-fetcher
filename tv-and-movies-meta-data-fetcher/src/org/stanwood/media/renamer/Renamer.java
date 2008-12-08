@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.store.StoreException;
 
 
@@ -39,32 +39,36 @@ import org.stanwood.media.store.StoreException;
  *  %e - episode number
  *  %% - add a % char
  *  %n - show name
- *  %t - episode title  
+ *  %t - episode or film title  
  *  %x - extension (avi, mkv....)
  * </pre> 
  */
 public class Renamer {
 
-	private long showId;
+	private long id;
 	private File showDirectory;
 	private String pattern;
 	private String[] exts;
 	private boolean refresh;
+	private String sourceId;
+	private Mode mode;
 
 	/**
 	 * Constructor used to create a instance of the class
-	 * @param showId The id of the show to rename
+	 * @param id The id of the show or film to rename
+	 * @param mode Used to tell the renamer what mode to work in
 	 * @param showDirectory The directory it is located in
 	 * @param pattern The pattern to use while renaming
 	 * @param exts The extensions to search for
 	 * @param refresh If true, then don't read from the stores
 	 */
-	public Renamer(long showId,File showDirectory,String pattern,String exts[], boolean refresh) {
-		this.showId = showId;
+	public Renamer(long id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
+		this.id = id;
 		this.showDirectory = showDirectory;
 		this.pattern = pattern;
 		this.exts = exts;
 		this.refresh = refresh;
+		this.mode = mode;
 	}
 	
 	/**
@@ -90,65 +94,101 @@ public class Renamer {
 			}			
 		});
 		
-		
-		
 		for (File file : files ) {
-			Show show = Controller.getInstance().getShow(file,TVCOMSource.SOURCE_ID,showDirectory, showId,refresh);		
-			if (show == null) {
-				fail("Unable to find show details");						
+			if (mode==Mode.TV_SHOW) {
+				renameTVShow(file);
 			}
-			String oldFileName = file.getName(); 
-			ParsedFileName data =  FileNameParser.parse(oldFileName);
-			if (data==null) {
-				System.err.println("Unable to workout the season and/or episode number of '" + file.getName()+"'");
+			else if (mode==Mode.FILM) {
+				renameFilm(file);
 			}
 			else {
-				
-				Season season = Controller.getInstance().getSeason(file,show,data.getSeason(),refresh);
-				if (season==null) {
-					System.err.println("Unable to find season for file : " + file.getAbsolutePath());
-					continue;
-				}
-				Episode episode = Controller.getInstance().getEpisode(file,season,data.getEpisode(),refresh);
-				if (episode==null) {
-					System.err.println("Unable to find epsiode for file : " + file.getAbsolutePath());
-					continue;
-				}
-				String ext = oldFileName.substring(oldFileName.length()-3);
-				String newName = getNewName(show,season,episode,ext);
-				
-				File newFile = new File(file.getParentFile(),newName);
-				if (file.equals(newFile)) {
-					System.out.println("File '" + oldFileName+"' already has the correct name.");
-				}
-				else {					
-					if (newFile.exists()) {
-						System.err.println("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
-					}
-					else {
-						System.out.println("Renaming '" + oldFileName + "' -> '" + newName+"'");
-						
-						File oldFile = new File(file.getAbsolutePath());
-						if (file.renameTo(newFile)) {
-							Controller.getInstance().renamedFile(oldFile,newFile);	
-						}
-						else {
-							System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
-						}
-					}
-				}
+				fail("Unknown rename mode");
 			}
 		}		
 	}
 
-	private void fail(String msg) {
-		System.err.println(msg);
-		System.exit(1);		
+	private void renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+		String oldFileName = file.getName();
+
+		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
+		
+		String ext = oldFileName.substring(oldFileName.length() - 3);
+		String newName = getNewFilmName(film, ext);
+	
+		doRename(file, oldFileName, newName);
 	}
 
-	private String getNewName(Show show,Season season, Episode episode,String ext) {
+	
+
+	private void renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+		Show show = Controller.getInstance().getShow(file,sourceId, id,refresh);		
+		if (show == null) {
+			fail("Unable to find show details");						
+		}
+		String oldFileName = file.getName(); 
+		ParsedFileName data =  FileNameParser.parse(oldFileName);
+		if (data==null) {
+			System.err.println("Unable to workout the season and/or episode number of '" + file.getName()+"'");
+		}
+		else {
+			Season season = Controller.getInstance().getSeason(file, show, data.getSeason(), refresh);
+			if (season == null) {
+				System.err.println("Unable to find season for file : " + file.getAbsolutePath());
+			} else {
+				Episode episode = Controller.getInstance().getEpisode(file, season, data.getEpisode(), refresh);
+				if (episode == null) {
+					System.err.println("Unable to find epsiode for file : " + file.getAbsolutePath());
+				} else {
+					String ext = oldFileName.substring(oldFileName.length() - 3);
+					String newName = getNewTVShowName(show, season, episode, ext);
+
+					doRename(file, oldFileName, newName);
+				}
+			}
+		}
+	}
+
+	private void doRename(File file, String oldFileName, String newName) throws StoreException {
+		File newFile = new File(file.getParentFile(),newName);
+		if (file.equals(newFile)) {
+			System.out.println("File '" + oldFileName+"' already has the correct name.");
+		}
+		else {					
+			if (newFile.exists()) {
+				System.err.println("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
+			}
+			else {
+				System.out.println("Renaming '" + oldFileName + "' -> '" + newName+"'");
+				
+				File oldFile = new File(file.getAbsolutePath());
+				if (file.renameTo(newFile)) {
+					Controller.getInstance().renamedFile(oldFile,newFile);	
+				}
+				else {
+					System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
+				}
+			}
+		}
+	}
+
+	private void fail(String msg) {
+		System.err.println(msg);
+		System.exit(1);
+		throw new RuntimeException(msg);
+	}
+
+	private String getNewFilmName(Film film, String ext) {
 		String newName = pattern;
-		newName = newName.replaceAll("%h", String.valueOf(showId));
+		newName = newName.replaceAll("%h", String.valueOf(id));
+		newName = newName.replaceAll("%%", "%");
+		newName = newName.replaceAll("%t", film.getTitle());
+		newName = newName.replaceAll("%x", ext);
+		return newName;
+	}
+	
+	private String getNewTVShowName(Show show,Season season, Episode episode,String ext) {
+		String newName = pattern;
+		newName = newName.replaceAll("%h", String.valueOf(id));
 		newName = newName.replaceAll("%s", String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
 		if (episodeNum.length()==1) {
