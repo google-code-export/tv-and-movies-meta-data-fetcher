@@ -452,12 +452,7 @@ public class Controller {
 	public void renamedFile(File oldFile, File newFile) throws StoreException {
 		for (IStore store : stores) {
 			store.renamedFile(oldFile,newFile);
-		}
-		
-		for (ISource source : sources) {
-			source.renamedFile(oldFile,newFile);
-		}
-			
+		}				
 	}
 	
 	
