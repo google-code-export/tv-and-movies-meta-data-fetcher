@@ -39,13 +39,18 @@ public class TestIMDBSource extends TestCase {
 
 	private final static long FILM_ID_IRON_MAN = 371746L;
 	
+	/**
+	 * Used to test the searching of films
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testSearch() throws Exception {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"The iron man.avi");						
 			SearchResult result = source.searchForShowId(tmpFile);
-			
+			assertEquals(772174,result.getId());
+			assertEquals("imdb",result.getSourceId());			
 		}
 		finally {
 			FileHelper.deleteDir(dir);

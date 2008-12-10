@@ -546,7 +546,7 @@ public class TVXMLStore extends BaseXMLStore {
 						Element node = (Element) nodeList.item(0);
 						if (node.getAttribute("id")!=null && node.getAttribute("sourceId")!=null) {
 							System.out.println("Found show id in XMLStore");
-							return new SearchResult(Long.parseLong(node.getAttribute("id")),node.getAttribute("sourceId"),null);
+							return new SearchResult(Long.parseLong(node.getAttribute("id")),node.getAttribute("sourceId"));
 							
 						}
 							

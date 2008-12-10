@@ -215,8 +215,6 @@ public class Main {
 			return false;
 		}
 		
-		
-		String urlId = null;
 		if (cmd.hasOption(SHOWID_OPTION)
 				&& cmd.getOptionValue(SHOWID_OPTION) != null) {
 			try {
@@ -251,15 +249,11 @@ public class Main {
 			}
 						
 			showId = result.getId();
-			sourceId = result.getSourceId();	
-			urlId = result.getUrlId();
+			sourceId = result.getSourceId();				
 		}
-		if (urlId!=null) {
-			System.out.println("Using show id " + sourceId+":" + showId+":"+urlId);
-		}
-		else {
-			System.out.println("Using show id " + sourceId+":" + showId);
-		}
+		
+		System.out.println("Using show id " + sourceId+":" + showId);
+		
 		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {			
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
 		}

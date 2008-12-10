@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -53,6 +55,8 @@ public class IMDBSource implements ISource {
 	private static final String IMDB_BASE_URL = "http://www.imdb.com";
 	private static final String URL_SUMMARY = "/title/tt$filmId$/";	
 	private SimpleDateFormat RELEASE_DATE_FORMAT= new SimpleDateFormat("dd MMMMM yyyy");
+	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
+	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 
 	/**
 	 * This always returns null as this source does not support reading episodes.	
@@ -269,6 +273,7 @@ public class IMDBSource implements ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem. 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public SearchResult searchForShowId(File episodeFile) throws SourceException,MalformedURLException, IOException{
 		
@@ -282,23 +287,32 @@ public class IMDBSource implements ISource {
 		file = file.replaceAll("\\[|\\(.*\\]|\\)", "");
 		file = file.replaceAll("dvdrip|divx|xv|xvi|full", "");
 		
-		List<SearchResult> results = new ArrayList<SearchResult>();
 		Source source = getSource(new URL(getSearchUrl(file)));
 		List<Element> elements = source.findAllElements(HTMLElementName.B);	
 		for (Element elB: elements) {			
 			if (elB.getTextExtractor().toString().contains("Exact Matches")) {
 				Tag table = elB.getEndTag().findNextTag();
 				List<Element> aEls = table.getElement().findAllElements(HTMLElementName.A);
+				String url = null;
+				int year = 0;
 				for (Element elA: aEls) {
-					String url = elA.getAttributeValue("href");
-					String title = elA.getTextExtractor().toString();
-					System.out.println(title + "|" + elA.getEndTag().findNextTag().findNextTag().getElement().getTextExtractor());
-//					System.out.println("TR: " + elTr.getTextExtractor());
+					
+					String title = elA.getEndTag().findNextTag().findNextTag().getElement().getTextExtractor().toString();
+					Matcher m = FILM_TITLE_PATTERN.matcher(title);
+					if (m.matches()) {
+						if (Integer.parseInt(m.group(2))>year) {
+							year = Integer.parseInt(m.group(2));
+							url = elA.getAttributeValue("href");							
+						}						
+					}														
 				}
-				
+				Matcher m = EXTRACT_ID_PATTERN.matcher(url);
+				if (m.matches()) {
+					SearchResult result = new SearchResult(Long.parseLong(m.group(1)),SOURCE_ID);
+					return result;						
+				}									
 			}
 		}
-		
 		
 		return null;
 	}

@@ -514,7 +514,7 @@ public class TVCOMSource implements ISource {
 					String href =element2.getAttributeValue("href");
 					Matcher m = SHOW_ID_PATTERN.matcher(href);
 					if (m.find()) {
-						SearchResult result = new SearchResult(Long.parseLong(m.group(2)),SOURCE_ID,m.group(1));
+						SearchResult result = new SearchResult(Long.parseLong(m.group(2)),SOURCE_ID);
 						results.add(result);
 					}					
 				}

@@ -23,15 +23,13 @@ public class SearchResult {
 
 	private long id;
 	private String sourceId;
-	private String urlId;
 
 	/**
 	 * Constructor of the class
 	 * @param id The id of the show that was found
 	 * @param sourceId The id of the source that it was found in
-	 * @param urlId The id that is used within url's
 	 */
-	public SearchResult(long id, String sourceId,String urlId) {
+	public SearchResult(long id, String sourceId) {
 		super();
 		this.id = id;
 		this.sourceId = sourceId;
@@ -55,15 +53,5 @@ public class SearchResult {
 		return sourceId;
 	}
 
-	/**
-	 * The id of the show used in url's. This is a converted version of the shows name.
-	 * @return The id of the show used in the url's
-	 */
-	public String getUrlId() {
-		return urlId;
-	}
 	
-	
-	
-
 }
