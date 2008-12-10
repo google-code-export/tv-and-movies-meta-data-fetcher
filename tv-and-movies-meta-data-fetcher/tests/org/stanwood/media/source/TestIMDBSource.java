@@ -16,15 +16,18 @@
  */
 package org.stanwood.media.source;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
+import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
@@ -35,6 +38,20 @@ import au.id.jericho.lib.html.Source;
 public class TestIMDBSource extends TestCase {
 
 	private final static long FILM_ID_IRON_MAN = 371746L;
+	
+	public void testSearch() throws Exception {
+		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
+		File dir = FileHelper.createTmpDir("films");
+		try {
+			File tmpFile = new File(dir,"The iron man.avi");						
+			SearchResult result = source.searchForShowId(tmpFile);
+			
+		}
+		finally {
+			FileHelper.deleteDir(dir);
+		}
+		
+	}
 	
 	/**
 	 * Test that film details are correctly read from the source
@@ -89,6 +106,7 @@ public class TestIMDBSource extends TestCase {
 		IMDBSource source = new IMDBSource() {
 			@Override
 			Source getSource(URL url) throws IOException {
+			
 				String strFilmId = String.valueOf(filmId);
 				while (strFilmId.length()<7) {
 					strFilmId="0"+strFilmId;
@@ -99,6 +117,9 @@ public class TestIMDBSource extends TestCase {
 					String file = "film-"+strFilmId+".html";
 					return new Source(Data.class.getResource(file));
 				}				
+				else if (strUrl.endsWith("find?q=the iron man;more=tt;ttype=df")) {
+					return new Source(Data.class.getResource("imdb-search.html"));
+				}
 				return null;
 			}			
 		};

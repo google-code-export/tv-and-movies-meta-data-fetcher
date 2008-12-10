@@ -102,15 +102,6 @@ public class IMDBSource implements ISource {
 		return SOURCE_ID;
 	}	
 
-	/**
-	 * This will always return null as this store does not support searching
-	 * @param episodeFile The file the episode is located in
-	 * @return Always returns null
-	 */
-	@Override
-	public SearchResult searchForShowId(File episodeFile){
-		return null;
-	}
 	
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -268,4 +259,52 @@ public class IMDBSource implements ISource {
 		
 		return IMDB_BASE_URL+ URL_SUMMARY.replaceAll("\\$filmId\\$",strFilmId );
 	}	
+	
+	/**
+	 * This will search the IMDB site for the film. It uses the last segment of the file name,
+	 * converts it to lower case, tidies up the name and performs the search.
+	 * @param episodeFile The file the episode is located in
+	 * @return Always returns null
+	 * @throws SourceException Thrown if their is a problem retrieving the data 
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem. 
+	 */
+	@Override
+	public SearchResult searchForShowId(File episodeFile) throws SourceException,MalformedURLException, IOException{
+		
+		String file = episodeFile.getName().toLowerCase().trim();
+		int pos = file.lastIndexOf(".");
+		if (pos==-1) {
+			return null;
+		}
+		file = file.substring(0,pos);
+		file = file.replaceAll("\\.|_"," ");
+		file = file.replaceAll("\\[|\\(.*\\]|\\)", "");
+		file = file.replaceAll("dvdrip|divx|xv|xvi|full", "");
+		
+		List<SearchResult> results = new ArrayList<SearchResult>();
+		Source source = getSource(new URL(getSearchUrl(file)));
+		List<Element> elements = source.findAllElements(HTMLElementName.B);	
+		for (Element elB: elements) {			
+			if (elB.getTextExtractor().toString().contains("Exact Matches")) {
+				Tag table = elB.getEndTag().findNextTag();
+				List<Element> aEls = table.getElement().findAllElements(HTMLElementName.A);
+				for (Element elA: aEls) {
+					String url = elA.getAttributeValue("href");
+					String title = elA.getTextExtractor().toString();
+					System.out.println(title + "|" + elA.getEndTag().findNextTag().findNextTag().getElement().getTextExtractor());
+//					System.out.println("TR: " + elTr.getTextExtractor());
+				}
+				
+			}
+		}
+		
+		
+		return null;
+	}
+
+	private String getSearchUrl(String query) {
+		return IMDB_BASE_URL +"/find?q="+query+";more=tt;ttype=df";
+	}
+	
 }
