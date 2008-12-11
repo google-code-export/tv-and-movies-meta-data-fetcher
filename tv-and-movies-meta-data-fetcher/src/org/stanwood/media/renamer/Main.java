@@ -103,6 +103,14 @@ public class Main {
 	 * @param args The command line arguments.
 	 */
 	public static void main(String[] args) {
+		showId = null;
+		sourceId = null;
+		showDirectory = new File(System.getProperty("user.dir"));
+		pattern = null;
+		refresh = false;
+		configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
+		mode = null;
+		
 		if (exitHandler==null) {
 			exitHandler = new IExitHandler() {
 				@Override
@@ -122,15 +130,15 @@ public class Main {
 
 			if (cmd.hasOption(HELP_OPTION)) {
 				displayHelp();
-				exitHandler.exit(0);
+				doExit(0);
 				return;
 			} else if (processOptions(cmd)) {
 				if (run()) {
-					exitHandler.exit(0);
+					doExit(0);
 					return;
 				}
 				else {
-					exitHandler.exit(1);
+					doExit(0);
 					return;
 				}
 			} else {
@@ -283,7 +291,7 @@ public class Main {
 	private static void displayCLIError(String msg) {
 		System.err.println(msg);
 		displayHelp();
-		exitHandler.exit(1);		
+		doExit(1);		
 	}
 
 	@SuppressWarnings("unchecked")

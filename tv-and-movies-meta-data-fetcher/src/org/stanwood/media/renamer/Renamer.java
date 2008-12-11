@@ -224,7 +224,7 @@ public class Renamer {
 
 	private void fail(String msg) {
 		System.err.println(msg);
-		System.exit(1);
+		Main.doExit(1);
 		throw new RuntimeException(msg);
 	}
 
