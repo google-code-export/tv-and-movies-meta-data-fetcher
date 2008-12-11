@@ -41,7 +41,8 @@ import org.stanwood.media.store.StoreException;
  */
 public class Main {
 
-	private final static String DEFAULT_FILE_PATTERN = "%s %e - %t.%x";
+	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
+	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a" };
 
 	private final static String HELP_OPTION = "h"; 
@@ -57,7 +58,7 @@ public class Main {
 	private static Long showId = null;
 	private static String sourceId = null;
 	private static File showDirectory = new File(System.getProperty("user.dir"));
-	private static String pattern = DEFAULT_FILE_PATTERN;
+	private static String pattern = null;
 	private static boolean refresh = false;
 	private static File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
 	private static Mode mode = null;
@@ -184,7 +185,9 @@ public class Main {
 		
 		if (configFile==null || !configFile.exists()) {
 			System.out.println("Unable to find config file '" +configFile+"' so using defaults." );
-			Controller.initWithDefaults();
+			if (doInit) {
+				Controller.initWithDefaults();
+			}
 		}
 		else {
 			ConfigReader reader = new ConfigReader(configFile);
@@ -251,6 +254,15 @@ public class Main {
 			}
 			else {
 				mode = getDefaultMode();
+			}
+		}
+		
+		if (pattern==null) {
+			if (mode==Mode.TV_SHOW) {
+				pattern = DEFAULT_TV_FILE_PATTERN;
+			}
+			else {
+				pattern = DEFAULT_FILM_FILE_PATTERN;
 			}
 		}
 		

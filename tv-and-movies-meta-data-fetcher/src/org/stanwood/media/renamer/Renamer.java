@@ -125,6 +125,10 @@ public class Renamer {
 		String oldFileName = file.getName();
 
 		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
+		if (film==null) {
+			System.err.println("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
+			return;
+		}
 		
 		String ext = oldFileName.substring(oldFileName.length() - 3);
 		String newName = getNewFilmName(film, ext);

@@ -272,6 +272,7 @@ public class FilmXMLStore extends BaseXMLStore {
 		file = file.replaceAll("\\.|_"," ");
 		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");
 		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
+		file = file.trim();
 		return file;
 	}
 	
@@ -287,12 +288,14 @@ public class FilmXMLStore extends BaseXMLStore {
 		Document doc = getCache(filmFile.getParentFile());
 		String query = getQuery(filmFile);
 		try {
-			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film[@title=\""+query+"\"]");
-			if (nodes.getLength()>0) {
+			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");
+			for (int i=0;i<nodes.getLength();i++) {
 				Element el = (Element) nodes.item(0);
-				SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
-				return result;
-			}			
+				if (el.getAttribute("title")!=null && el.getAttribute("title").toLowerCase().equals(query)){
+					SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
+					return result;	
+				}
+			}					
 		} catch (TransformerException e) {
 			throw new StoreException(e.getMessage(),e);			
 		}
