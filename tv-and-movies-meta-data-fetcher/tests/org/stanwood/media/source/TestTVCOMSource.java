@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.source;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -23,9 +24,11 @@ import java.text.SimpleDateFormat;
 
 import junit.framework.TestCase;
 
+import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
@@ -277,6 +280,26 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("2008-09-22",df.format(episode.getDate()));
 		assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1228258,episode.getEpisodeId());
+	}	
+
+	/**
+	 * Used to test the searching of TV shows
+	 * @throws Exception Thrown if the test produces any errors
+	 */
+	public void testSearch() throws Exception {
+		TVCOMSource source = getTVCOMSource(0);
+		File dir = FileHelper.createTmpDir("TVShows");
+		try {
+			File eurekaFile = new File(dir,"Eureka");
+			File episodeFile = new File(eurekaFile,"1 01 - Blah.avi");						
+			SearchResult result = source.searchForVideoId(episodeFile);
+			assertEquals(SHOW_ID_EUREKA,result.getId());
+			assertEquals("tvcom",result.getSourceId());			
+		}
+		finally {
+			FileHelper.deleteDir(dir);
+		}
+		
 	}
 	
 	private TVCOMSource getTVCOMSource(final long showId) {
@@ -293,9 +316,13 @@ public class TestTVCOMSource extends TestCase {
 				else if (strUrl.indexOf("episode_guide.html?printable=")!=-1) {
 					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1).replaceAll("\\?","-")));
 				}
+				else if (strUrl.indexOf("http://www.tv.com/search.php?type=Search&stype=ajax_search")!=-1) {
+					return new Source(Data.class.getResource("eureka-search.html"));
+				}
 				return null;
 			}			
 		};
-		return source;
+		return source;	
 	}
+	
 }
