@@ -2,6 +2,7 @@
 	<sources>
 		<!-- www.tv.com TV Show information source -->
 		<source id="org.stanwood.media.source.TVCOMSource"/>
+		<source id="org.stanwood.media.source.IMDBSource"/>
 	</sources>
 	<stores>
 		<!-- Caches data in memory while the application is running -->
