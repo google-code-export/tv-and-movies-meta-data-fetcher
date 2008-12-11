@@ -54,11 +54,14 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
-		validate();
-		writeEpisode(episodeFile,episode);		
+		String name = episodeFile.getName();
+		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
+			validate();
+			writeEpisode(episodeFile,episode);
+		}
 	}
 
-	private void writeEpisode(File file, Episode episode) throws StoreException {
+	private void writeEpisode(File file, Episode episode) throws StoreException {		
 		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
 		try {
 			ap.updateEpsiode(file,episode);
@@ -182,8 +185,7 @@ public class MP4ITunesStore implements IStore {
 	 */
 	@Override
 	public Episode getSpecial(File episodeFile, Season season, int specialNumber) throws MalformedURLException,
-			IOException, StoreException {
-		// TODO Auto-generated method stub
+			IOException, StoreException {		
 		return null;
 	}
 

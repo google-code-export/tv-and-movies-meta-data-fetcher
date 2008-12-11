@@ -43,7 +43,7 @@ public class Main {
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
-	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a" };
+	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v" };
 
 	private final static String HELP_OPTION = "h"; 
 	private final static String SHOWID_OPTION = "s";
