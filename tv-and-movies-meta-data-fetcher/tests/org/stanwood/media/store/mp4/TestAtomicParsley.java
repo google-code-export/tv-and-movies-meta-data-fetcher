@@ -42,8 +42,8 @@ public class TestAtomicParsley extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testNoAtomsFound() throws Exception {
-//		File apCmd = new File("/usr/local/bin/AtomicParsley");
-		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
+		File apCmd = new File("/usr/local/bin/AtomicParsley");
+//		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
@@ -61,8 +61,8 @@ public class TestAtomicParsley extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testWriteEpsiode() throws Exception {
-//		File apCmd = new File("/usr/local/bin/AtomicParsley");
-		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
+		File apCmd = new File("/usr/local/bin/AtomicParsley");
+//		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
