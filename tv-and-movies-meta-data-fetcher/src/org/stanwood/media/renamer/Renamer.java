@@ -110,18 +110,17 @@ public class Renamer {
 	}
 
 	private void renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
-		if (mode==Mode.FILM) {
-			SearchResult result = searchForId(file);
-			if (result!=null) {
-				id = result.getId();
-				sourceId = result.getSourceId();				
-			}
-			else {
-				System.err.println("Unable to find show id");
-				Main.doExit(1);
-				return;
-			}
+		SearchResult result = searchForId(file);
+		if (result!=null) {
+			id = result.getId();
+			sourceId = result.getSourceId();				
 		}
+		else {
+			System.err.println("Unable to find show id");
+			Main.doExit(1);
+			return;
+		}
+
 		String oldFileName = file.getName();
 
 		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
@@ -159,20 +158,18 @@ public class Renamer {
 	
 
 	private void renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
-		if (mode==Mode.FILM) {
-			SearchResult result = searchForId(file);
-			if (result!=null) {
-				id = result.getId();
-				sourceId = result.getSourceId();				
-			}
-			else {
-				System.err.println("Unable to find show id");
-				Main.doExit(1);
-				return;
-			}
+		SearchResult result = searchForId(file);
+		if (result!=null) {
+			id = result.getId();
+			sourceId = result.getSourceId();				
 		}
-		
-		Show show = Controller.getInstance().getShow(file,sourceId, id,refresh);		
+		else {
+			System.err.println("Unable to find show id");
+			Main.doExit(1);
+			return;
+		}
+				
+		Show show =  Controller.getInstance().getShow(file,sourceId, id,refresh);		
 		if (show == null) {
 			fail("Unable to find show details");						
 		}
@@ -197,6 +194,7 @@ public class Renamer {
 				}
 			}
 		}
+	
 	}
 
 	private void doRename(File file, String oldFileName, String newName) throws StoreException {
