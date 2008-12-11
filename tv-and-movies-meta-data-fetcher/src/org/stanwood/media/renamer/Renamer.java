@@ -45,7 +45,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class Renamer {
 
-	private long id;
+	private Long id;
 	private File showDirectory;
 	private String pattern;
 	private String[] exts;
@@ -62,7 +62,7 @@ public class Renamer {
 	 * @param exts The extensions to search for
 	 * @param refresh If true, then don't read from the stores
 	 */
-	public Renamer(long id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
+	public Renamer(Long id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
 		this.id = id;
 		this.showDirectory = showDirectory;
 		this.pattern = pattern;
@@ -79,7 +79,7 @@ public class Renamer {
 	 * @throws SourceException Thrown if their is a problem reading from the source
 	 * @throws StoreException Thrown is their is a problem with a store
 	 */
-	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
+	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {				
 		File files[] = showDirectory.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {				
@@ -93,6 +93,8 @@ public class Renamer {
 				return false;
 			}			
 		});
+		
+		
 		
 		for (File file : files ) {
 			if (mode==Mode.TV_SHOW) {
@@ -108,6 +110,18 @@ public class Renamer {
 	}
 
 	private void renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+		if (mode==Mode.FILM) {
+			SearchResult result = searchForId(file);
+			if (result!=null) {
+				id = result.getId();
+				sourceId = result.getSourceId();				
+			}
+			else {
+				System.err.println("Unable to find show id");
+				Main.doExit(1);
+				return;
+			}
+		}
 		String oldFileName = file.getName();
 
 		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
@@ -118,9 +132,42 @@ public class Renamer {
 		doRename(file, oldFileName, newName);
 	}
 
+	private SearchResult searchForId(File file)
+	{
+		SearchResult result;
+		try {
+			result = Controller.getInstance().searchForVideoId(mode,file);
+			return result;
+		} catch (SourceException e) {
+			e.printStackTrace();
+			return null;
+		} catch (StoreException e) {
+			e.printStackTrace();
+			return null;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 
 	private void renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+		if (mode==Mode.FILM) {
+			SearchResult result = searchForId(file);
+			if (result!=null) {
+				id = result.getId();
+				sourceId = result.getSourceId();				
+			}
+			else {
+				System.err.println("Unable to find show id");
+				Main.doExit(1);
+				return;
+			}
+		}
+		
 		Show show = Controller.getInstance().getShow(file,sourceId, id,refresh);		
 		if (show == null) {
 			fail("Unable to find show details");						

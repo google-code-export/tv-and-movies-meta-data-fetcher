@@ -29,6 +29,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -161,11 +162,12 @@ public class MemoryStore implements IStore {
 	/**
 	 * This does nothing because this source does not support searching for show ID's.
 	 * @param episodeFile The file the episode is stored in
+	 * @param mode The mode that the search operation should be performed in
 	 * @return Will always return null.
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForShowId(File episodeFile)
+	public SearchResult searchForVideoId(Mode mode,File episodeFile)
 			throws StoreException {		
 		return null;
 	}

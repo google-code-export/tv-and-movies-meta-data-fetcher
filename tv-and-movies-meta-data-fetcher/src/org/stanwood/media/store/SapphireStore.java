@@ -32,6 +32,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 
 /**
@@ -279,11 +280,11 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 * @param mode The mode that the search operation should be performed in
 	 * @param episodeFile The file the episode is stored in
 	 */
 	@Override
-	public SearchResult searchForShowId(File episodeFile) {
+	public SearchResult searchForVideoId(Mode mode,File episodeFile) {
 		return null;
 	}
 

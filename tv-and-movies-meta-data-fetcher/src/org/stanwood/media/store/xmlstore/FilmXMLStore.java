@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerException;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
+import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
 import org.w3c.dom.Document;
@@ -259,6 +260,43 @@ public class FilmXMLStore extends BaseXMLStore {
 				throw new StoreException(e.getMessage(),e);
 			}
 		} 
+	}
+
+	private String getQuery(File episodeFile) {
+		String file = episodeFile.getName().toLowerCase().trim();
+		int pos = file.lastIndexOf(".");
+		if (pos==-1) {
+			return null;
+		}
+		file = file.substring(0,pos);
+		file = file.replaceAll("\\.|_"," ");
+		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");
+		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
+		return file;
+	}
+	
+	/**
+	 * This is called to search the store for a film Id. 
+	 * If it can't be found, then it will return null. The search is done be reading the 
+	 * .films.xml file next to the film. 
+	 * @param filmFile The file the film is stored in	
+	 * @return The results of the search if it was found, otherwise null
+	 * @throws StoreException Thrown if their is a problem with the store 
+	 */	
+	public SearchResult searchForFilmId(File filmFile) throws StoreException {				
+		Document doc = getCache(filmFile.getParentFile());
+		String query = getQuery(filmFile);
+		try {
+			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film[@title=\""+query+"\"]");
+			if (nodes.getLength()>0) {
+				Element el = (Element) nodes.item(0);
+				SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
+				return result;
+			}			
+		} catch (TransformerException e) {
+			throw new StoreException(e.getMessage(),e);			
+		}
+		return null;
 	}
 
 }

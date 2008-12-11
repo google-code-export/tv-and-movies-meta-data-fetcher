@@ -30,6 +30,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.StoreConfig;
+import org.stanwood.media.source.IMDBSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.TVCOMSource;
@@ -67,6 +68,7 @@ public class Controller {
 		stores.add(new XMLStore());
 		sources = new ArrayList<ISource>();
 		sources.add(new TVCOMSource());
+		sources.add(new IMDBSource());
 	}
 
 	/**
@@ -415,26 +417,26 @@ public class Controller {
 	/**
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
-	 * 
-	 * @param showDirectory The directory of the show.
+	 * @param mode The mode that the search operation should be performed in
+	 * @param mediaFile The file the media is stored in
 	 * @return The results of searching for the show, or null if it can't be found.
 	 * @throws SourceException Thrown if their is a problem reading from a source
 	 * @throws StoreException Thrown if their is a problem reading for a store
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForShowId(File showDirectory) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(Mode mode,File mediaFile) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
-			result = store.searchForShowId(showDirectory);
+			result = store.searchForVideoId(mode,mediaFile);
 			if (result != null) {
 				return result;
 			}
 		}
 
 		for (ISource source : sources) {
-			result = source.searchForShowId(showDirectory);
+			result = source.searchForVideoId(mediaFile);
 			if (result != null) {
 				return result;
 			}

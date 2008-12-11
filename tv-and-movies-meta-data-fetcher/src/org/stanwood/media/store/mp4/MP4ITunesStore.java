@@ -24,6 +24,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -127,10 +128,11 @@ public class MP4ITunesStore implements IStore {
 	/**
 	 * This will always return null as this store does not support searching
 	 * @param episodeFile The file the episode is located in
+	 * @param mode The mode that the search operation should be performed in
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForShowId(File episodeFile) {		
+	public SearchResult searchForVideoId(Mode mode,File episodeFile) {		
 		return null;
 	}
 

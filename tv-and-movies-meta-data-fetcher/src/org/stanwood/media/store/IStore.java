@@ -24,6 +24,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 
 /**
@@ -120,10 +121,11 @@ public interface IStore  {
 	 * This is called to search the store for a show id. If it can't be found, then
 	 * it will return null.
 	 * @param episodeFile The file the episode is stored in
+	 * @param mode The mode that the search operation should be performed in
 	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store 
+	 * @throws StoreException Thrown if their is a problem with the store  
 	 */
-	public SearchResult searchForShowId(File episodeFile) throws StoreException;
+	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws StoreException;
 
 	/**
 	 * This is used when a file that holds a episode or film has been renamed

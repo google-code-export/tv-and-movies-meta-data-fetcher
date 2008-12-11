@@ -24,6 +24,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.store.xmlstore.FilmXMLStore;
 import org.stanwood.media.store.xmlstore.TVXMLStore;
@@ -183,15 +184,21 @@ public class XMLStore implements IStore {
 	}
 
 	/**
-	 * This is called to search the store for a show id. If it can't be found, then
-	 * it will return null. The search is done be reading the .show.xml file within
-	 * the shows directory and looking to see what show id is stored in it.
-	 * @param episodeFile The file the episode is stored in 
+	 * This is called to search the store for a show id or film Id, depending on the mode. 
+	 * If it can't be found, then it will return null. The search is done be reading the 
+	 * .show.xml file within the shows directory  or the .films.xml file. 
+	 * @param episodeFile The file the episode is stored in
+	 * @param mode The mode that the search operation should be performed in 
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store 
 	 */	
 	@Override
-	public SearchResult searchForShowId(File episodeFile) throws StoreException {
-		return tvStore.searchForShowId(episodeFile);
+	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws StoreException {
+		if (mode==Mode.TV_SHOW) {
+			return tvStore.searchForShowId(episodeFile);
+		}
+		else {
+			return filmStore.searchForFilmId(episodeFile);
+		}
 	}
 }

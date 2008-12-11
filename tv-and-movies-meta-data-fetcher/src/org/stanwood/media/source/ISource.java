@@ -100,6 +100,6 @@ public interface ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public SearchResult searchForShowId(File episodeFile) throws SourceException, MalformedURLException, IOException;
+	public SearchResult searchForVideoId(File episodeFile) throws SourceException, MalformedURLException, IOException;
 	
 }

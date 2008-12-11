@@ -48,7 +48,7 @@ public class TestIMDBSource extends TestCase {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"The iron man.avi");						
-			SearchResult result = source.searchForShowId(tmpFile);
+			SearchResult result = source.searchForVideoId(tmpFile);
 			assertEquals(772174,result.getId());
 			assertEquals("imdb",result.getSourceId());			
 		}

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.StringTokenizer;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -59,14 +60,15 @@ public class Main {
 	private static String pattern = DEFAULT_FILE_PATTERN;
 	private static boolean refresh = false;
 	private static File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
-	private static Mode mode = Mode.TV_SHOW;
+	private static Mode mode = null;
 	/* package for test */ static IExitHandler exitHandler = null;
+	/* package for test */ static boolean doInit = true;
 	
 	
 	static {
 		OPTIONS = new Options();
 		OPTIONS.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
-		OPTIONS.addOption(new Option(SHOWID_OPTION, "showid", true, "The ID of the movie/show. If not present, then it will search for the show id."));
+		OPTIONS.addOption(new Option(SHOWID_OPTION, "showid", true, "The ID of the show. If not present, then it will search for the show id."));
 		OPTIONS.addOption(new Option(SHOW_DIR_OPTION, "showdir",true,"The directory to look for media. If not present use the current directory."));
 		OPTIONS.addOption(new Option(RENAME_PATTERN, "pattern",true,"The pattern used to rename files. Defaults to \"%s %e - %t.%x\" if not present."));
 		OPTIONS.addOption(new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present."));
@@ -175,6 +177,7 @@ public class Main {
 			}
 		}
 		
+		
 		if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
 			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION)); 
 		}
@@ -186,7 +189,9 @@ public class Main {
 		else {
 			ConfigReader reader = new ConfigReader(configFile);
 			reader.parse();
-			Controller.initFromConfigFile(reader);
+			if (doInit) {
+				Controller.initFromConfigFile(reader);
+			}
 		}
 		
 		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) { 
@@ -217,42 +222,22 @@ public class Main {
 		
 		if (cmd.hasOption(SHOWID_OPTION)
 				&& cmd.getOptionValue(SHOWID_OPTION) != null) {
+			if (mode==Mode.FILM) {
+				displayCLIError("Show id is not a valid option when used with Film mode");
+			}
 			try {
 				showId = Long.parseLong(cmd.getOptionValue(SHOWID_OPTION));
 			} catch (NumberFormatException e) {
 				displayCLIError("Invalid command line parameters");
 			}
-		} else {
-			SearchResult result;
-			try {
-				result = Controller.getInstance().searchForShowId(showDirectory);
-			} catch (SourceException e) {
-				e.printStackTrace();
-				exitHandler.exit(1);
-				return false;
-			} catch (StoreException e) {
-				e.printStackTrace();
-				exitHandler.exit(1);
-				return false;
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				exitHandler.exit(1);
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				exitHandler.exit(1);
-				return false;
-			}
-			if (result==null) {
-				displayCLIError("Unable to find show id");
-				return false;
-			}
-						
-			showId = result.getId();
-			sourceId = result.getSourceId();				
-		}
+		} 
 		
-		System.out.println("Using show id " + sourceId+":" + showId);
+		if (showId==null) {
+			System.out.println("No id given, will search for id");
+		}
+		else {
+			System.out.println("Using show id " + sourceId+":" + showId);
+		}
 		
 		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {			
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
@@ -260,9 +245,27 @@ public class Main {
 
 		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
 		
+		if (mode == null) {
+			if (cmd.hasOption(SHOWID_OPTION)) {
+				mode = Mode.TV_SHOW;
+			}
+			else {
+				mode = getDefaultMode();
+			}
+		}
 		
-		
-		return (showId != null && showDirectory != null);
+		return true;
+	}
+
+	private static Mode getDefaultMode() {
+		StringTokenizer tok = new StringTokenizer(showDirectory.getAbsolutePath(),File.separator);		
+		while (tok.hasMoreTokens()) {
+			String token = tok.nextToken().toLowerCase();
+			if (token.equals("films") || token.equals("movies")) {
+				return Mode.FILM;
+			}			
+		}
+		return Mode.TV_SHOW;
 	}
 
 	private static void displayCLIError(String msg) {
@@ -282,6 +285,14 @@ public class Main {
 			}
 			System.out.println(opt+ option.getDescription());
 		}		
+	}
+
+	/**
+	 * This will exit the application
+	 * @param code The exit code
+	 */
+	public static void doExit(int code) {
+		exitHandler.exit(code);
 	}
 
 }

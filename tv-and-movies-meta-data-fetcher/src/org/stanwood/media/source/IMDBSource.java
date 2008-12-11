@@ -105,7 +105,6 @@ public class IMDBSource implements ISource {
 	public String getSourceId() {
 		return SOURCE_ID;
 	}	
-
 	
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -267,7 +266,7 @@ public class IMDBSource implements ISource {
 	/**
 	 * This will search the IMDB site for the film. It uses the last segment of the file name,
 	 * converts it to lower case, tidies up the name and performs the search.
-	 * @param episodeFile The file the episode is located in
+	 * @param filmFile The file the film is located in
 	 * @return Always returns null
 	 * @throws SourceException Thrown if their is a problem retrieving the data 
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
@@ -275,17 +274,9 @@ public class IMDBSource implements ISource {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForShowId(File episodeFile) throws SourceException,MalformedURLException, IOException{
+	public SearchResult searchForVideoId(File filmFile) throws SourceException,MalformedURLException, IOException{
 		
-		String file = episodeFile.getName().toLowerCase().trim();
-		int pos = file.lastIndexOf(".");
-		if (pos==-1) {
-			return null;
-		}
-		file = file.substring(0,pos);
-		file = file.replaceAll("\\.|_"," ");
-		file = file.replaceAll("\\[|\\(.*\\]|\\)", "");
-		file = file.replaceAll("dvdrip|divx|xv|xvi|full", "");
+		String file = getQuery(filmFile);
 		
 		Source source = getSource(new URL(getSearchUrl(file)));
 		List<Element> elements = source.findAllElements(HTMLElementName.B);	
@@ -315,6 +306,19 @@ public class IMDBSource implements ISource {
 		}
 		
 		return null;
+	}
+
+	private String getQuery(File episodeFile) {
+		String file = episodeFile.getName().toLowerCase().trim();
+		int pos = file.lastIndexOf(".");
+		if (pos==-1) {
+			return null;
+		}
+		file = file.substring(0,pos);
+		file = file.replaceAll("\\.|_"," ");
+		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");
+		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
+		return file;
 	}
 
 	private String getSearchUrl(String query) {

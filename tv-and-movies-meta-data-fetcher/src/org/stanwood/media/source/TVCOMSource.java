@@ -503,7 +503,7 @@ public class TVCOMSource implements ISource {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForShowId(File episodeFile) throws SourceException, MalformedURLException, IOException {
+	public SearchResult searchForVideoId(File episodeFile) throws SourceException, MalformedURLException, IOException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));		
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);		
