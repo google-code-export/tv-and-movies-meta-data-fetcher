@@ -38,12 +38,12 @@
 			<para>
 				<itemizedlist>
 					<listitem><para>Provides a CLI tool that renames media files with the correct names.</para></listitem>
-					<listitem><para>Fetches TV Show meta data from the Internet.</para></listitem>
+					<listitem><para>Fetches TV Show and Film meta data from the Internet.</para></listitem>
 					<listitem><para>Allows multiple sources and stores.</para></listitem>
 					<listitem><para>Caches information in XML.</para></listitem>
 					<listitem><para>Runs on any platform that supports Java 1.6.</para></listitem>
 					<listitem><para>Provides a API for accessing the information.</para></listitem>
-					<listitem><para>Provides a store that writes Sapphire XML files.</para></listitem>
+					<listitem><para>Provides a store that writes Sapphire XML files.</para></listitem>                                        
 				</itemizedlist>				
 			</para>
 		</sect1>	
@@ -51,11 +51,13 @@
 			<title>Sources</title>
 			<para>
 				Sources are the places that &apptitle; retrieves information from. Sources
-				are read only so it's not possible to information back too them. In the 
-				current version their is a source for retrieving TV Show information from
-			    from www.tv.com, but &apptitle; has been created in such a way that it's
-			    easy to add new sources. 
-			</para>			
+				are read only so it's not possible to information back too them.
+			</para>
+                        <para>
+                               Their are two sources that come with &apptitle;. The first will fetch TV show
+                               information from www.tv.com and the second will fetch film information from www.imdb.com.
+                               &apptitle; as been created in such a way that it's possible to add other sources.
+                        </para>
 		</sect1>
 		<sect1>
 			<title>Stores</title>
@@ -64,14 +66,19 @@
 				information has been retrieved from a source, it is written too a store.
 				Next time the information is needed, it can be retrieved from the store.
 				This makes retrieving information a lot faster.  
-			</para>			
+			</para>
+                        <para>
+                                Stores can have parameters. These parameters are entered via the configuration file.
+                                The stores will validated their parameters when the store is access and report
+                                back any problems that are found.
+                        </para>
 			<para>
-				Their are 3 stores that come with &apptitle;. Each of these has different 
+				Their are 4 stores that come with &apptitle;. Each of these has different
 				properties. Some of these stores can also be used by applications such as 
 				media centre's to display media metadata. 				
 			</para>
 			<sect2>
-				<title>org.stanwood.media.store.MemoryStore</title>
+				<title>org.stanwood.media.store.memory.MemoryStore</title>
 				<para>
 				This store is used to store the show information in memory. This allows the tool
  				reuse the show information without having to fetch it from other stores or sources 
@@ -100,6 +107,12 @@
  				the name name as the episode file (except the extension is changed too .xml)  
 				</para>
 			</sect2>
+                        <sect2>
+                                <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
+                                <para>
+                                This store 
+                                </para>
+                        </sect2>
 		</sect1>				
 	</chapter>
 	<chapter id="installation">
