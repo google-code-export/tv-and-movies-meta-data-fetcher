@@ -1,4 +1,11 @@
+* Fri Dec 12 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+- Able to rename Films with data fetched from the web.
+- Added new Film source for fetching film information from www.imdb.com.
+- Updated stores to store film information.
+- Added new MP4 store for storing metadata in mp4 files used in iTunes.
+- Added support for renaming .mp4 and .m4v files.
+- Stores can now have parameters, which are entered via the configuration file.
 * Fri Nov 7 2008 John-Paul.Stanford <dev@stanwood.org.uk>
-- Able to rename TV Shows and Movies with data fetch from web sources.
+- Able to rename TV Shows with data fetch from web sources.
 - Able to fetch TV Show information from tv.com
 - Catch the data in XML within the directory holding the show.
