@@ -172,7 +172,20 @@ public class MP4ITunesStore implements IStore {
 	 */
 	@Override
 	public void cacheFilm(File filmFile, Film film) throws StoreException {
-		
+		String name = filmFile.getName();
+		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
+			validate();
+			writeFilm(filmFile,film);
+		}
+	}
+
+	private void writeFilm(File filmFile, Film film) throws StoreException {
+		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
+		try {
+			ap.updateFilm(filmFile,film);
+		} catch (AtomicParsleyException e) {
+			throw new StoreException(e.getMessage(),e);
+		} 
 	}
 
 	/**

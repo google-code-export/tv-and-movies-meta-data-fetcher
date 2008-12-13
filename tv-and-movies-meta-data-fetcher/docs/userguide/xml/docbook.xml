@@ -107,12 +107,12 @@
  				the name name as the episode file (except the extension is changed too .xml)  
 				</para>
 			</sect2>
-                        <sect2>
-                                <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
-                                <para>
-                                This store 
-                                </para>
-                        </sect2>
+             <sect2>
+                 <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
+                 <para>
+                 This store 
+                 </para>
+             </sect2>
 		</sect1>				
 	</chapter>
 	<chapter id="installation">
@@ -254,12 +254,15 @@
 				<programlisting>
 			<![CDATA[<config>
        <sources>
-               <!-- www.tv.com TV Show information source -->
-               <source id="org.stanwood.media.source.TVCOMSource"/>
+              <!-- www.tv.com TV Show information source -->
+			  <source id="org.stanwood.media.source.TVCOMSource"/>
+			
+			  <!-- www.imdb.com The film information source -->
+			  <source id="org.stanwood.media.source.IMDBSource"/>
        </sources>
        <stores>
                <!-- Caches data in memory while the application is running -->
-               <store id="org.stanwood.media.store.MemoryStore"/>
+               <store id="org.stanwood.media.store.memory.MemoryStore"/>
 
                <!-- A Store for saving Show/Movies in a XML file in the current directory -->
                 <store id="org.stanwood.media.store.XMLStore"/>

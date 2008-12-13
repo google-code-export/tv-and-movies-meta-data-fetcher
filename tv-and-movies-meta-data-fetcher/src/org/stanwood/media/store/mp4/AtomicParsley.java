@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.util.AbstractExecutable;
 
 /**
@@ -162,6 +163,26 @@ public class AtomicParsley extends AbstractExecutable {
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
 			atoms.add(new Atom("©gen",episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(new Atom("catg",episode.getSeason().getShow().getGenres().get(0)));
+		}
+		update(mp4File,atoms);
+	}
+
+	/**
+	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film.
+	 * @param mp4File The MP4 file
+	 * @param film The film details
+	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
+	 */
+	public void updateFilm(File mp4File, Film film) throws AtomicParsleyException {
+		List<Atom> atoms = new ArrayList<Atom>();
+		atoms.add(new Atom("stik","Film"));
+		atoms.add(new Atom("©day",film.getDate().toString()));
+		atoms.add(new Atom("©nam",film.getTitle()));
+		atoms.add(new Atom("desc",film.getSummary()));
+		
+		if (film.getGenres().size() > 0) {
+			atoms.add(new Atom("©gen",film.getGenres().get(0)));
+			atoms.add(new Atom("catg",film.getGenres().get(0)));
 		}
 		update(mp4File,atoms);
 	}
