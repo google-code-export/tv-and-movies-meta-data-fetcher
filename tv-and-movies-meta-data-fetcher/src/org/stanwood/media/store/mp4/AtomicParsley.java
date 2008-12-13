@@ -31,7 +31,7 @@ import org.stanwood.media.util.AbstractExecutable;
 
 /**
  * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"}
- * It is used to store and retrive atoms to a MP4 file.
+ * It is used to store and retrieve atoms to a MP4 file.
  */
 public class AtomicParsley extends AbstractExecutable {
 	private static Map<String, String> nameToParam;

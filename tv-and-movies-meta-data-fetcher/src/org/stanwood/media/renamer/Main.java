@@ -70,12 +70,12 @@ public class Main {
 		OPTIONS = new Options();
 		OPTIONS.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
 		OPTIONS.addOption(new Option(SHOWID_OPTION, "showid", true, "The ID of the show. If not present, then it will search for the show id."));
-		OPTIONS.addOption(new Option(SHOW_DIR_OPTION, "showdir",true,"The directory to look for media. If not present use the current directory."));
+		OPTIONS.addOption(new Option(SHOW_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory."));
 		OPTIONS.addOption(new Option(RENAME_PATTERN, "pattern",true,"The pattern used to rename files. Defaults to \"%s %e - %t.%x\" if not present."));
 		OPTIONS.addOption(new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present."));
 		OPTIONS.addOption(new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source."));
 		OPTIONS.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
-		OPTIONS.addOption(new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV"));
+		OPTIONS.addOption(new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV."));
 	}
 	
 	/**
@@ -85,12 +85,16 @@ public class Main {
 	 * 
 	 * The following command line syntax is passed too this method:
 	 * <pre> 
-	 * media-renamer [-h|-s=<showid> [OPTIONS]...]
+	 * media-renamer [-h| [OPTIONS]...]
 	 * 
-     * -d, --showdir  The directory to look for media. If not present use the current directory
-     * -s, --showid   The ID of the movie/show
-     * -p, --pattern  The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.
-     * -h, --help     Show the help
+     * -d, --dir         The directory to look for media. If not present use the current directory
+     * -s, --showid      The ID of the show that episodes in the media directory belong to. Only usable with TV mode.
+     * -p, --pattern     The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.
+     * -o, --source      The ID of the source that should be used to lookup information.
+     * -r, --refresh     If this option is present, it will make the stores get regenerated from source.
+     * -c, --config_file The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+     * -m, --mode        The mode that the tool will work in. Either FILM or TV.
+     * -h, --help        Show the help
 	 * </pre>
 	 * 
 	 * The pattern is used to work out what the format of the renamed file should be. See

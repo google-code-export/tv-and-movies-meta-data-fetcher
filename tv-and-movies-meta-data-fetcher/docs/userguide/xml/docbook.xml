@@ -164,37 +164,36 @@
 					<command>media-renamer</command>
 					<arg>-h</arg>
 					<arg>-s <replaceable>showId</replaceable></arg>
-					<arg>-d <replaceable>show directory</replaceable></arg>
+					<arg>-d <replaceable>media directory</replaceable></arg>
 					<arg>-p <replaceable>rename pattern</replaceable></arg>
 					<arg>-o <replaceable>source id</replaceable></arg>
 					<arg>-r</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
+					<arg>-m <replaceable>TV|FILM</replaceable></arg>
 				</cmdsynopsis>
 			</para>
 			<para>
 				The command has the following options:
 				<itemizedlist>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
-					<listitem><para><literal>-s, --showid</literal> The ID of the movie/show. If not present, then it will search for the show id.</para></listitem>
-					<listitem><para><literal>-d, --showdir</literal> The directory to look for media. If not present use the current directory.</para></listitem>
+					<listitem><para><literal>-s, --showid</literal> The ID of the movie/show. If not present, then it will search for the show id. Only usable in TV mode.</para></listitem>
+					<listitem><para><literal>-d, --dir</literal> The directory to look for media. If not present use the current directory.</para></listitem>
 					<listitem><para><literal>-p, --pattern</literal> The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.</para></listitem>
 					<listitem><para><literal>-o, --source</literal> The id if the source too look up meta data in. Defaults too tvcom if not present.</para></listitem>
 					<listitem><para><literal>-r, --refresh</literal> If this option is present, it will make the stores get regenerated from source.</para></listitem>
 					<listitem><para><literal>-c, --config</literal> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</para></listitem>
+					<listitem><para><literal>-m, --mode</literal> The mode that the tool will work in. Either FILM or TV.</para></listitem>
 				</itemizedlist>				
 			</para>			
 			<para>
-				The &mediarenamer; command presumes that each TV show's media files are contained 
-				in a directory. It also has the ability to search for the TV Shows id by using the
-				directory name as the name of the show, so it would be beneficial if the media
-				files for each show are in a directory with the shows name. 								
-			</para>
-			<para>
-				Too override the show ID been used, use the <literal>--showid</literal> option on 
-				the CLI. If you are using stores, they will store the show id (if they support
-				this functionality). This can then be used when searching for a show id instead
-				of the directory name.				
-			</para>
+				The &mediarenamer; command has two modes of operations. These are TV and Film modes.
+				If mode can be used by setting the <literal>--mode</literal> option on the command line.
+				If the mode option is not given, then the command chooses a default mode. First of it checks
+				to see if the <literal>--showid</literal> option has been used. If it has, then the 
+				mode is set to TV. Next it checks the path of the media directory to see if any
+				of the directory names in the path contains the names "Films" or "Movies". If it does,
+				then the mode is set to Film, otherwise it is set to TV.
+			</para>						
 			<para>
 				It is possible to configure which sources and stores are used by the application.
 				This is done by using a configuration file. If the <literal>--config</literal> option
@@ -204,6 +203,31 @@
 				If that can't be found, then it uses in built defaults. For more information on the configuration
 				files, see the <link linkend="configuration">Configuration section</link>.
 			</para>
+			<sect2>
+				<title>TV Mode</title>				
+				<para>
+					The &mediarenamer; command presumes that each TV show's media files are contained 
+					in a directory. It also has the ability to search for the TV Shows id by using the
+					directory name as the name of the show, so it would be beneficial if the media
+					files for each show are in a directory with the shows name. 								
+				</para>
+				<para>
+					Too override the show ID been used, use the <literal>--showid</literal> option on 
+					the CLI. If you are using stores, they will store the show id (if they support
+					this functionality). This can then be used when searching for a show id instead
+					of the directory name.				
+				</para>
+			</sect2>
+			<sect2>
+				<title>Film Mode</title>
+				<para>
+					When the &mediarenamer; command is used in film mode, it will treat all the media
+					files it finds as Films. It looks up the ID's from the file names. First the file names
+					are tidied up, then stores and sources are searched using the file names. If the 
+					Film is found, then it is renamed using either the default pattern or the one given 
+					via the <literal>--pattern</literal> option.
+				</para>
+			</sect2>
 			<sect2>
 				<title>Pattern</title>
 				<para>Each of the files that is renamed is done according to a pattern. A pattern 
@@ -270,6 +294,38 @@
 </config>]]>			
 				</programlisting>
 			</example>			
+		</para>
+		<para>
+			Some of the stores can also have parameters, the following example shows how to setup 
+			the MP4ITunesStore so that it can find the AtomicParsley command and use it to store
+			TV Show/Film information into .mp4 and .m4v files that iTunes can read.
+			<example>		
+				<title>/etc/mediafetcher-conf.xml</title>
+				<programlisting>
+			<![CDATA[<config>
+       <sources>
+              <!-- www.tv.com TV Show information source -->
+			  <source id="org.stanwood.media.source.TVCOMSource"/>
+			
+			  <!-- www.imdb.com The film information source -->
+			  <source id="org.stanwood.media.source.IMDBSource"/>
+       </sources>
+       <stores>
+               <!-- Caches data in memory while the application is running -->
+               <store id="org.stanwood.media.store.memory.MemoryStore"/>
+
+               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
+                <store id="org.stanwood.media.store.XMLStore"/>
+                
+               <!-- A Store for saving Show/Movies meta data into .mp4 and .m4v files so that
+                    it can be read by iTunes. -->
+               <store id="org.stanwood.media.store.mp4.MP4ITunesStore">
+               		<param name="AtomicParsleyPath" value="/usr/local/bin/AtomicParsley"/>
+               </store>      
+        </stores>
+</config>]]>			
+				</programlisting>
+			</example>	
 		</para>
 	</chapter>
 	<chapter id="credits-and-licenses">
