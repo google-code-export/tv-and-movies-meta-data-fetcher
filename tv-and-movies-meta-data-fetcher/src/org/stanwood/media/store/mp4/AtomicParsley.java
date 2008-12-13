@@ -175,7 +175,7 @@ public class AtomicParsley extends AbstractExecutable {
 	 */
 	public void updateFilm(File mp4File, Film film) throws AtomicParsleyException {
 		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(new Atom("stik","Film"));
+		atoms.add(new Atom("stik","Movie"));
 		atoms.add(new Atom("©day",film.getDate().toString()));
 		atoms.add(new Atom("©nam",film.getTitle()));
 		atoms.add(new Atom("desc",film.getSummary()));
