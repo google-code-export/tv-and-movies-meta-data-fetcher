@@ -89,7 +89,7 @@ public class IMDBSource implements ISource {
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 * 
-	 * @param showId The id of the show to read
+	 * @param showId The id of the etshow to read
 	 */
 	@Override
 	public Show getShow(long showId) {
@@ -135,8 +135,11 @@ public class IMDBSource implements ISource {
 		String html = getSource(film.getFilmUrl());
 		if (html == null) {
 			throw new SourceException("Unable to find film with id: " + filmId);
-		}
+		} 
 		parseFilm(html, film);
+		FindFilmPosters posterFinder = new FindFilmPosters();
+		System.out.println("Poster : " +posterFinder.findFilmPosterUrl(film));
+		
 		return film;
 	}
 
