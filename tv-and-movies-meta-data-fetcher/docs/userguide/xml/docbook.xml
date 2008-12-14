@@ -51,13 +51,28 @@
 			<title>Sources</title>
 			<para>
 				Sources are the places that &apptitle; retrieves information from. Sources
-				are read only so it's not possible to information back too them.
+				are read only so it's not possible to information back too them. Their are two 
+				sources that come with &apptitle;, however others can be added.
 			</para>
-                        <para>
-                               Their are two sources that come with &apptitle;. The first will fetch TV show
-                               information from www.tv.com and the second will fetch film information from www.imdb.com.
-                               &apptitle; as been created in such a way that it's possible to add other sources.
-                        </para>
+			<sect2>
+				<title>org.stanwood.media.source.TVCOMSource</title>
+				<para>
+				The www.tv.com source will fetch TV Show information from the www.tv.com site.
+				This source also allows TV shows searching.
+				</para>
+			</sect2>
+			<sect2>
+				<title>org.stanwood.media.source.IMDBSource</title>
+				<para>
+				The www.imdb.com source will fetch Film information from the www.imdb.com. This
+				source also allows Film searching.
+				</para>
+				<para>
+				This source has the option parameter "RegexpToReplace", which is used when searching for a film
+                via the film's filename. The parameter is a regular expression, that when found in the filename,
+                is removed.   
+				</para>
+			</sect2>
 		</sect1>
 		<sect1>
 			<title>Stores</title>
@@ -296,7 +311,7 @@
 			</example>			
 		</para>
 		<para>
-			Some of the stores can also have parameters, the following example shows how to setup 
+			Some of the stores and sources can also have parameters, the following example shows how to setup 
 			the MP4ITunesStore so that it can find the AtomicParsley command and use it to store
 			TV Show/Film information into .mp4 and .m4v files that iTunes can read.
 			<example>		

@@ -36,6 +36,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 
 import au.id.jericho.lib.html.Element;
@@ -499,11 +500,18 @@ public class TVCOMSource implements ISource {
 	 * This will search for a show ID from the source. It uses the name of the show directory as the show name
 	 * when it does a search, and uses the first result it finds.
 	 * @param episodeFile The file the episode is located in
+	 * @param mode The mode that the search operation should be performed in
 	 * @return The results of the search, or null if the show could not be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data 
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForVideoId(File episodeFile) throws SourceException, MalformedURLException, IOException {
+	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws SourceException, MalformedURLException, IOException {
+		if (mode!=Mode.TV_SHOW) {
+			return null;
+		}
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));		
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);		

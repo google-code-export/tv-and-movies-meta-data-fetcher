@@ -27,10 +27,9 @@ import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.testdata.Data;
-
-import au.id.jericho.lib.html.Source;
 
 /**
  * Used to test the {@link IMDBSource} class.
@@ -48,7 +47,7 @@ public class TestIMDBSource extends TestCase {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"The iron man.avi");						
-			SearchResult result = source.searchForVideoId(tmpFile);
+			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals(772174,result.getId());
 			assertEquals("imdb",result.getSourceId());			
 		}
@@ -110,7 +109,7 @@ public class TestIMDBSource extends TestCase {
 	private IMDBSource getIMDBSource(final long filmId) {
 		IMDBSource source = new IMDBSource() {
 			@Override
-			Source getSource(URL url) throws IOException {
+			String getSource(URL url) throws IOException {
 			
 				String strFilmId = String.valueOf(filmId);
 				while (strFilmId.length()<7) {
@@ -120,10 +119,10 @@ public class TestIMDBSource extends TestCase {
 				String strUrl = url.toExternalForm();				
 				if (strUrl.equals("http://www.imdb.com/title/tt"+strFilmId+"/")) {
 					String file = "film-"+strFilmId+".html";
-					return new Source(Data.class.getResource(file));
+					return FileHelper.readFileContents(Data.class.getResourceAsStream(file));					
 				}				
 				else if (strUrl.endsWith("find?q=the iron man;more=tt;ttype=df")) {
-					return new Source(Data.class.getResource("imdb-search.html"));
+					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search.html"));
 				}
 				return null;
 			}			

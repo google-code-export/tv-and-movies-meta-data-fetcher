@@ -105,6 +105,10 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("catg",atoms.get(9).getName());			
 	}
 	
+	/**
+	 * Used to test that a film meta data can be written to a .mp4 file
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testWriteFilm() throws Exception {
 		File apCmd = new File("/usr/local/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");

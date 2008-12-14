@@ -41,7 +41,7 @@ public class ConfigReader extends XMLParser {
 
 	private File file;
 	private List<StoreConfig>stores = new ArrayList<StoreConfig>();
-	private List<String>sources = new ArrayList<String>();
+	private List<SourceConfig>sources = new ArrayList<SourceConfig>();
 
 	/**
 	 * The constructor used to create a instance of the configuration reader
@@ -82,10 +82,21 @@ public class ConfigReader extends XMLParser {
 				}
 				
 				
-				NodeList sources = XPathAPI.selectNodeList(doc, "config/sources/source/@id");
+				NodeList sources = XPathAPI.selectNodeList(doc, "config/sources/source");
 				for (int i=0;i<sources.getLength();i++) {
-					if (sources.item(i)!=null) {
-						this.sources.add(sources.item(i).getNodeValue());
+					Element sourceElement = (Element) sources.item(i);
+					if (sourceElement!=null) {
+						SourceConfig source = new SourceConfig();
+						source.setID(sourceElement.getAttribute("id"));
+						NodeList params = XPathAPI.selectNodeList(sourceElement, "param");
+						for (int j=0;j<params.getLength();j++) {
+							Element paramNode = (Element) params.item(j);
+							String name = paramNode.getAttribute("name");
+							String value = paramNode.getAttribute("value");
+							source.addParam(name, value);
+						}
+						
+						this.sources.add(source);
 					}
 				}
 				
@@ -115,7 +126,7 @@ public class ConfigReader extends XMLParser {
 	 * configuration file.
 	 * @return A list of sources from the file
 	 */
-	public List<String> getSources() {
+	public List<SourceConfig> getSources() {
 		return sources;
 	}
 

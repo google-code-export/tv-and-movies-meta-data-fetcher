@@ -116,8 +116,7 @@ public class Renamer {
 			sourceId = result.getSourceId();				
 		}
 		else {
-			System.err.println("Unable to find show id");
-			Main.doExit(1);
+			System.err.println("Unable to find film id for file '"+file.getName()+"'");
 			return;
 		}
 

@@ -87,13 +87,17 @@ public class FilmXMLStore extends BaseXMLStore {
 
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
 			throws TransformerException {
+		if (film.getDate()==null) {
+			System.out.println("Unable to store film '" + film.getTitle()+"' because it has no date.");
+			return;
+		}
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", String.valueOf(film.getId()));
 		filmNode.setAttribute("title", film.getTitle());
 		filmNode.setAttribute("sourceId", film.getSourceId());
 		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
-		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));
-		filmNode.setAttribute("releaseDate", df.format(film.getDate()));
+		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));		
+		filmNode.setAttribute("releaseDate", df.format(film.getDate()));		
 		
 		Element summaryNode = doc.createElement("summary");
 		summaryNode.appendChild(doc.createTextNode(film.getSummary()));
@@ -291,8 +295,9 @@ public class FilmXMLStore extends BaseXMLStore {
 			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");
 			for (int i=0;i<nodes.getLength();i++) {
 				Element el = (Element) nodes.item(0);
-				if (el.getAttribute("title")!=null && el.getAttribute("title").toLowerCase().equals(query)){
+				if (el.getAttribute("title")!=null && el.getAttribute("title").toLowerCase().equals(query)){				
 					SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
+					System.out.println("Found film '"+query+"' in XMLStore with id '"+result.getId()+"'");
 					return result;	
 				}
 			}					

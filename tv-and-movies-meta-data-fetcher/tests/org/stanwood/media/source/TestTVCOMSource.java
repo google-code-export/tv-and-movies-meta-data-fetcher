@@ -28,6 +28,7 @@ import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Mode;
 import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.testdata.Data;
 
@@ -292,15 +293,14 @@ public class TestTVCOMSource extends TestCase {
 		try {
 			File eurekaFile = new File(dir,"Eureka");
 			File episodeFile = new File(eurekaFile,"1 01 - Blah.avi");						
-			SearchResult result = source.searchForVideoId(episodeFile);
+			SearchResult result = source.searchForVideoId(Mode.TV_SHOW,episodeFile);
 			assertEquals(SHOW_ID_EUREKA,result.getId());
 			assertEquals("tvcom",result.getSourceId());			
 		}
 		finally {
 			FileHelper.deleteDir(dir);
-		}
-		
-	}
+		}		
+	}	
 	
 	private TVCOMSource getTVCOMSource(final long showId) {
 		TVCOMSource source = new TVCOMSource() {

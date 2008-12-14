@@ -189,8 +189,7 @@ public class Main {
 				return false;
 			}
 		}
-		
-		
+				
 		if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
 			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION)); 
 		}
@@ -211,15 +210,7 @@ public class Main {
 		
 		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) { 
 			sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
-		}
-		else {
-			if (mode==Mode.TV_SHOW) {
-				sourceId = TVCOMSource.SOURCE_ID;
-			}
-			else {
-				sourceId = IMDBSource.SOURCE_ID;
-			}
-		}
+		}		
 		
 		if (cmd.hasOption(SHOW_DIR_OPTION)
 				&& cmd.getOptionValue(SHOW_DIR_OPTION) != null) {
@@ -266,6 +257,15 @@ public class Main {
 			}
 			else {
 				mode = getDefaultMode();
+			}
+		}
+		
+		if (sourceId==null) {
+			if (mode==Mode.TV_SHOW) {
+				sourceId = TVCOMSource.SOURCE_ID;
+			}
+			else {
+				sourceId = IMDBSource.SOURCE_ID;
 			}
 		}
 		
