@@ -123,10 +123,17 @@
 				</para>
 			</sect2>
              <sect2>
-                 <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
-                 <para>
-                 This store 
-                 </para>
+                     <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
+                     <para>
+                     This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
+                     information can be read by iTunes. It does this by using the application <ulink url="http://atomicparsley.sourceforge.net/">AtomicParsley</ulink>.  
+                     </para>
+                     <para>
+                           It has the following parameters:
+                           <itemizedlist>
+                             <listitem><para><literal>AtomicParsleyPath</literal>The location of the AtomicParsley application</para></listitem>
+                           </itemizedlist>
+                     </para>
              </sect2>
 		</sect1>				
 	</chapter>
