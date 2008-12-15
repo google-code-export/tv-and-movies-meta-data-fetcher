@@ -124,8 +124,7 @@ public class TVCOMSource implements ISource {
 	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
 		Season season = new Season(show, seasonNum);		
-		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(),
-				seasonNum)));
+		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(),seasonNum)));
 		season.setDetailedUrl(new URL(getSeasonEposideDetailed(
 				show.getShowId(), seasonNum)));
 
@@ -233,17 +232,17 @@ public class TVCOMSource implements ISource {
 	@SuppressWarnings("unchecked")
 	private void parse(Season season, Source source)
 			throws MalformedURLException {
-		int specialCount = 0;
 		List<Element> elements = source.findAllElements("tbody");
 		Element tbody = elements.get(0);
 		List<Element> trs = tbody.findAllElements(HTMLElementName.TR);
-		int epCount = 0;
+//		int epCount = 0;
+		List<Episode> specials = new ArrayList<Episode>();
+		List<Episode> episodes = new ArrayList<Episode>();
 		for (Element tr : trs) {
 			List<Element> tds = tr.findAllElements(HTMLElementName.TD);
 			int totalNum = -1;
 			String title = null;
 			Date airDate = null;
-			int episodeNumber = -1;
 			boolean special = false;
 			String specialName = null;
 			String episodeSiteId = null;
@@ -254,9 +253,7 @@ public class TVCOMSource implements ISource {
 				if (td.getAttributeValue("class").equals("num")) {
 					episodeSiteId = td.getTextExtractor().toString();
 					try {
-						totalNum = Integer.parseInt(episodeSiteId);
-						epCount++;
-						episodeNumber = epCount;
+						totalNum = Integer.parseInt(episodeSiteId);						
 					} catch (NumberFormatException e) {
 						special = true;
 						specialName = td.getTextExtractor().toString();
@@ -293,18 +290,32 @@ public class TVCOMSource implements ISource {
 				}
 			}
 			if (!special) {
-				createEpisode(totalNum, title, airDate, season, episodeNumber,
+				Episode episode1 = createEpisode(totalNum, title, airDate, season, -1,
 						special, specialName, episodeSiteId, prodCode, url,
 						episodeId);
+				episodes.add(episode1);
 			} else {
-				createEpisode(totalNum, title, airDate, season, specialCount++,
+				Episode special1 = createEpisode(totalNum, title, airDate, season, -1,
 						special, specialName, episodeSiteId, prodCode, url,
 						episodeId);
+				specials.add(special1);
 			}
+		}
+		
+		int count = 1;
+		for (int i=episodes.size()-1;i>=0;i--) {
+			episodes.get(i).setEpisodeNumber(count++);
+			season.addEpisode(episodes.get(i));
+		}
+		
+		count = 0;
+		for (int i=specials.size()-1;i>=0;i--) {
+			specials.get(i).setEpisodeNumber(count++);
+			season.addSepcial(specials.get(i));
 		}
 	}
 
-	private void createEpisode(int totalNum, String title, Date airDate,
+	private Episode createEpisode(int totalNum, String title, Date airDate,
 			Season season, int episodeNumber, boolean special,
 			String specialName, String episodeSiteId, String prodCode, URL url,
 			long episodeId) {
@@ -312,12 +323,7 @@ public class TVCOMSource implements ISource {
 		Episode episode = createEpisode(totalNum, title, airDate,
 				episodeNumber, special, specialName, episodeSiteId, prodCode,
 				url, season, episodeId);
-
-		if (special) {
-			season.addSepcial(episode);
-		} else {
-			season.addEpisode(episode);
-		}
+		return episode;
 	}
 
 	private Episode createEpisode(int totalNum, String title, Date airDate,

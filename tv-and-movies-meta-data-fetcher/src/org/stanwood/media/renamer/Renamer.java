@@ -208,13 +208,13 @@ public class Renamer {
 			else {
 				System.out.println("Renaming '" + oldFileName + "' -> '" + newName+"'");
 				
-//				File oldFile = new File(file.getAbsolutePath());
-//				if (file.renameTo(newFile)) {
-//					Controller.getInstance().renamedFile(oldFile,newFile);	
-//				}
-//				else {
-//					System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
-//				}
+				File oldFile = new File(file.getAbsolutePath());
+				if (file.renameTo(newFile)) {
+					Controller.getInstance().renamedFile(oldFile,newFile);	
+				}
+				else {
+					System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
+				}
 			}
 		}
 	}

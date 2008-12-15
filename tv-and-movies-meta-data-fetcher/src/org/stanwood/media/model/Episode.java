@@ -62,11 +62,19 @@ public class Episode implements IVideo {
 	}
 
 	/**
-	 * Gets the number of the episode. This excludes specials.
+	 * Gets the number of the episode. 
 	 * @return The number of the episode
 	 */
 	public int getEpisodeNumber() {
 		return episodeNumber;
+	}
+	
+	/**
+	 * Sets the number of the episode. 
+	 * @param episodeNumner
+	 */
+	public void setEpisodeNumber(int episodeNumner) {
+		this.episodeNumber = episodeNumner;
 	}
 
 	/**
