@@ -138,7 +138,7 @@ public class IMDBSource implements ISource {
 		} 
 		parseFilm(html, film);
 		FindFilmPosters posterFinder = new FindFilmPosters();
-		System.out.println("Poster : " +posterFinder.findFilmPosterUrl(film));
+		System.out.println("Poster : " +posterFinder.findViaMoviePoster(film));
 		
 		return film;
 	}
