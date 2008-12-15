@@ -44,7 +44,8 @@ public class TestAtomicParsley extends TestCase {
 	 * Used to test reading atoms when the MP4 file has no atoms
 	 * @throws Exception Thrown if the test produces any errors
 	 */
-	public void testNoAtomsFound() throws Exception {
+	public void testNoAtomsFound() throws Exception {		
+		AtomicParsley.updateImages = false;
 		File apCmd = new File("/usr/local/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
@@ -64,6 +65,7 @@ public class TestAtomicParsley extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testWriteEpsiode() throws Exception {
+		AtomicParsley.updateImages = false;
 		File apCmd = new File("/usr/local/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
@@ -110,6 +112,7 @@ public class TestAtomicParsley extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testWriteFilm() throws Exception {
+		AtomicParsley.updateImages = false;
 		File apCmd = new File("/usr/local/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
@@ -188,7 +191,7 @@ public class TestAtomicParsley extends TestCase {
 		return film;
 	}
 	
-	private Episode createTestEpisode() throws Exception {
+	private Episode createTestEpisode() throws Exception {		
 		Show show = new Show(123);
 		show.setName("Test Show Name");
 		List<String>genres = new ArrayList<String>();

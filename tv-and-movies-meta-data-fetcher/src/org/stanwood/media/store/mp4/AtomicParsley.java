@@ -18,6 +18,9 @@ package org.stanwood.media.store.mp4;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,10 @@ import org.stanwood.media.util.AbstractExecutable;
  * It is used to store and retrieve atoms to a MP4 file.
  */
 public class AtomicParsley extends AbstractExecutable {
+	
+	/** Used to disable the update of images within MP4 files for tests */
+	public static boolean updateImages = true;
+	
 	private static Map<String, String> nameToParam;
 	// private final static DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
 	private final static Pattern ATOM_PATTERN = Pattern.compile("Atom \"(.*)\" contains\\: (.*)");
@@ -164,6 +171,7 @@ public class AtomicParsley extends AbstractExecutable {
 			atoms.add(new Atom("©gen",episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(new Atom("catg",episode.getSeason().getShow().getGenres().get(0)));
 		}
+			
 		update(mp4File,atoms);
 	}
 

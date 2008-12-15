@@ -44,7 +44,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class MP4ITunesStore implements IStore {
 
-	private File atomicParsleyPath;
+	private File atomicParsleyPath;	
 	
 	/**
 	 * This is used to store episode information of a TVShow MP4 file into the 
