@@ -122,7 +122,7 @@ public class TestIMDBSource extends TestCase {
 					String file = "film-"+strFilmId+".html";
 					return FileHelper.readFileContents(Data.class.getResourceAsStream(file));					
 				}				
-				else if (strUrl.endsWith("find?q=the iron man;more=tt;ttype=df")) {
+				else if (strUrl.endsWith("find?q=the+iron+man")) {
 					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search.html"));
 				}
 				return null;
