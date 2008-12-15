@@ -315,35 +315,43 @@ public class IMDBSource implements ISource {
 		for (Element elB : elements) {
 			if (elB.getTextExtractor().toString().contains(searchType)) {
 				Tag table = elB.getEndTag().findNextTag();
-				List<Element> aEls = table.getElement().findAllElements(HTMLElementName.A);
+				List<Element> trs = table.getElement().findAllElements(HTMLElementName.TR);
 				String url = null;
 				int year = 0;
-				for (Element elA : aEls) {													
-					Tag tag = elA.getEndTag();
-					while (tag.getElement()!=null) {
-						String text = tag.getElement().getTextExtractor().toString().trim();
-						if (text.length()>0) {
-							Matcher m = FILM_TITLE_PATTERN.matcher(text);
-							if (m.matches()) {
-								String realTitle =m.group(1).toLowerCase().replaceAll("[:|-|,|']", ""); 
-								if (realTitle.contains(query.toLowerCase())) {
-									if (Integer.parseInt(m.group(2)) > year) {
-										year = Integer.parseInt(m.group(2));
-										url = elA.getAttributeValue("href");
-										if (url != null) {
-											Matcher m2 = EXTRACT_ID_PATTERN.matcher(url);
-											if (m2.matches()) {
-												SearchResult result = new SearchResult(Long.parseLong(m2.group(1)), SOURCE_ID);
-												return result;
-											}
-										}										
-									}
-								}
-							}
-						}
-						tag = tag.findNextTag();						
-					}						
+				
+				for (Element tr : trs) {
+					List<Element>tds = tr.findAllElements(HTMLElementName.TD);
+					for (Element td: tds) {
+						System.out.println("TD: " + td.getTextExtractor());
+					}
 				}
+				
+//				for (Element elA : aEls) {													
+//					Tag tag = elA.getEndTag();
+//					while (tag.getElement()!=null && !tag.getName().equals(HTMLElementName.TR)) {
+//						String text = tag.getElement().getTextExtractor().toString().trim();
+//						if (text.length()>0) {
+//							Matcher m = FILM_TITLE_PATTERN.matcher(text);
+//							if (m.matches()) {
+//								String realTitle =m.group(1).toLowerCase().replaceAll("[:|-|,|']", ""); 
+//								if (realTitle.contains(query.toLowerCase())) {
+//									if (Integer.parseInt(m.group(2)) > year) {
+//										year = Integer.parseInt(m.group(2));
+//										url = elA.getAttributeValue("href");
+//										if (url != null) {
+//											Matcher m2 = EXTRACT_ID_PATTERN.matcher(url);
+//											if (m2.matches()) {
+//												SearchResult result = new SearchResult(Long.parseLong(m2.group(1)), SOURCE_ID);
+//												return result;
+//											}
+//										}										
+//									}
+//								}
+//							}
+//						}
+//						tag = tag.findNextTag();						
+//					}						
+//				}
 				
 			}
 		}
