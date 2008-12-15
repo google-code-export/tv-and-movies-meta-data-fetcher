@@ -38,6 +38,7 @@ public class Film implements IVideo {
 	private URL filmUrl;
 	private float rating;
 	private Date date;
+	private URL imageURL;
 	
 	/**
 	 * Used to create a instance of the film class.
@@ -248,6 +249,22 @@ public class Film implements IVideo {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
+	/**
+	 * Used to set the URL of the film poster
+	 * @param imageURL The URL of the film poster.
+	 */
+	public void setImageURL(URL imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	/**
+	 * Used to get the URL of the film poster. This will return null if
+	 * a poster could not be found.
+	 * @return The film poster, or null if it does not have one
+	 */
+	public URL getImageURL() {
+		return this.imageURL;
+	}
 	
 }

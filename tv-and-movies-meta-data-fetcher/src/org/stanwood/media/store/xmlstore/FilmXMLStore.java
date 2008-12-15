@@ -97,7 +97,8 @@ public class FilmXMLStore extends BaseXMLStore {
 		filmNode.setAttribute("sourceId", film.getSourceId());
 		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
 		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));		
-		filmNode.setAttribute("releaseDate", df.format(film.getDate()));		
+		filmNode.setAttribute("releaseDate", df.format(film.getDate()));
+		filmNode.setAttribute("imageUrl", urlToText(film.getImageURL()));
 		
 		Element summaryNode = doc.createElement("summary");
 		summaryNode.appendChild(doc.createTextNode(film.getSummary()));
@@ -159,11 +160,13 @@ public class FilmXMLStore extends BaseXMLStore {
 				List<Link> directors = getLinks(filmNode, "director");
 				List<Link> writers = getLinks(filmNode, "writer");
 				List<Link> guestStars = getLinks(filmNode, "guestStar");
+				String imageUrl = getStringFromXML(filmNode, "@imageUrl");
 				
 				film.setCertifications(certifications);
 				film.setDate(releaseDate);
 				film.setDirectors(directors);
 				film.setFilmUrl(new URL(filmURL));
+				film.setImageURL(new URL(imageUrl));
 				film.setGenres(genres);
 				film.setGuestStars(guestStars);
 				film.setRating(rating);

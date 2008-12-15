@@ -162,6 +162,8 @@ public class TestXMLStore extends XMLTestCase {
 			Film film = xmlSource.getFilm(filmFile, 114814L);
 			assertEquals("The Usual Suspects",film.getTitle());
 
+			assertEquals("Check URL","http://test/image.jpg",film.getImageURL().toExternalForm());
+			
 			assertEquals("Crime",film.getGenres().get(0));
 			assertEquals("Drama",film.getGenres().get(1));
 			assertEquals("Mystery",film.getGenres().get(2));
@@ -250,6 +252,7 @@ public class TestXMLStore extends XMLTestCase {
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
 			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
 			Film film = new Film(114814L);
+			film.setImageURL(new URL("http://test/image.jpg"));
 			film.setTitle("The Usual Suspects");
 			List<String> genres = new ArrayList<String>();
 			genres.add("Crime");

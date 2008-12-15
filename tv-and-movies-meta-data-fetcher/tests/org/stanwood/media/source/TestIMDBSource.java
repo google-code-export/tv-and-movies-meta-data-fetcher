@@ -107,6 +107,7 @@ public class TestIMDBSource extends TestCase {
 	}
 	
 	private IMDBSource getIMDBSource(final long filmId) {
+		IMDBSource.fetchPosters = false;
 		IMDBSource source = new IMDBSource() {
 			@Override
 			String getSource(URL url) throws IOException {

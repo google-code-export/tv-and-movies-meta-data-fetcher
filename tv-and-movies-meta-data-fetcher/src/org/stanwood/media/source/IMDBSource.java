@@ -62,6 +62,9 @@ public class IMDBSource implements ISource {
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 	
+	/** Used to disable fetching of posters at test time */
+	public static boolean fetchPosters = true;
+	
 	private String regexpToReplace = null;
 	
 	/**
@@ -137,8 +140,10 @@ public class IMDBSource implements ISource {
 			throw new SourceException("Unable to find film with id: " + filmId);
 		} 
 		parseFilm(html, film);
-		FindFilmPosters posterFinder = new FindFilmPosters();
-		System.out.println("Poster : " +posterFinder.findViaMoviePoster(film));
+		if (fetchPosters) {
+			FindFilmPosters posterFinder = new FindFilmPosters();
+			film.setImageURL(posterFinder.findViaMoviePoster(film));
+		}		
 		
 		return film;
 	}

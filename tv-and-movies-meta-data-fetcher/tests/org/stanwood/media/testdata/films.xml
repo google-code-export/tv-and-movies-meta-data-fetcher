@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <films>
-  <film id="114814" rating="8.7" releaseDate="1995-08-25"
+  <film id="114814" imageUrl="http://test/image.jpg" rating="8.7" releaseDate="1995-08-25"
     sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
     <summary>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</summary>
     <genre name="Crime"/>
