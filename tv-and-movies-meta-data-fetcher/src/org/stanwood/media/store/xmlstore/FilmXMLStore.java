@@ -35,7 +35,7 @@ import javax.xml.transform.TransformerException;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
-import org.stanwood.media.renamer.SearchResult;
+import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
 import org.w3c.dom.Document;

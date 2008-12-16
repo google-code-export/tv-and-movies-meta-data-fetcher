@@ -26,10 +26,10 @@ import junit.framework.TestCase;
 
 import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Mode;
-import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;

@@ -27,10 +27,10 @@ import java.util.Map;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Mode;
-import org.stanwood.media.renamer.SearchResult;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 

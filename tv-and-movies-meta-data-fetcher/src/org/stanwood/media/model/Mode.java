@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.renamer;
+package org.stanwood.media.model;
 
 /**
  * This enumeration contains the rename modes

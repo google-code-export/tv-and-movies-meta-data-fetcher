@@ -22,10 +22,10 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Mode;
-import org.stanwood.media.renamer.SearchResult;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
