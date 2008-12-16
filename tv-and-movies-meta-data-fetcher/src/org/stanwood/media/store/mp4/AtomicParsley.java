@@ -16,8 +16,14 @@
  */
 package org.stanwood.media.store.mp4;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +139,7 @@ public class AtomicParsley extends AbstractExecutable {
 		for (Atom atom: atoms) {
 			String param = nameToParam.get( atom.getName());
 			if (param==null) {
-				throw new AtomicParsleyException("Unkown attom " + atom.getName());
+				throw new AtomicParsleyException("Unkown attom '" + atom.getName() + "' with value '" + atom.getValue());
 			}
 			args.add(param);
 			args.add(atom.getValue());
@@ -184,11 +190,55 @@ public class AtomicParsley extends AbstractExecutable {
 		atoms.add(new Atom("©day",film.getDate().toString()));
 		atoms.add(new Atom("©nam",film.getTitle()));
 		atoms.add(new Atom("desc",film.getSummary()));
+		if (film.getImageURL()!=null) {
+			File artwork;
+			try {
+				artwork = downloadToTempFile(film.getImageURL());
+				atoms.add(new Atom("covr",artwork.getAbsolutePath()));
+			} catch (IOException e) {
+				System.err.println("Unable to download artwork from " + film.getImageURL().toExternalForm());
+				e.printStackTrace();
+			}			
+		}
 		
 		if (film.getGenres().size() > 0) {
 			atoms.add(new Atom("©gen",film.getGenres().get(0)));
 			atoms.add(new Atom("catg",film.getGenres().get(0)));
 		}
 		update(mp4File,atoms);
+	}
+	
+	private File downloadToTempFile(URL url) throws IOException {
+		File file = File.createTempFile("artwork",".jpg");
+		file.delete();
+		OutputStream out = null;
+		URLConnection conn = null;
+		InputStream  in = null;
+		try {			
+			out = new BufferedOutputStream(
+				new FileOutputStream(file));
+			conn = url.openConnection();
+			in = conn.getInputStream();
+			byte[] buffer = new byte[1024];
+			int numRead;
+			long numWritten = 0;
+			while ((numRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, numRead);
+				numWritten += numRead;
+			}			
+			file.deleteOnExit();
+			return file;					
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			} catch (IOException ioe) {
+			}
+		}
+
 	}
 }

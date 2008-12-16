@@ -84,6 +84,7 @@ public class TestAtomicParsley extends TestCase {
 		
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		System.out.println("Output: " +ap.getOutputStream());
+		System.out.println("Error: " +ap.getErrorStream());
 		assertEquals(10,atoms.size());
 		assertEquals("TV Show",atoms.get(0).getValue());
 		assertEquals("stik",atoms.get(0).getName());
@@ -132,7 +133,8 @@ public class TestAtomicParsley extends TestCase {
 		
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		System.out.println("Output: " +ap.getOutputStream());
-		assertEquals(6,atoms.size());
+		System.out.println("Error: " +ap.getErrorStream());
+		assertEquals(7,atoms.size());
 		assertEquals("Movie",atoms.get(0).getValue());
 		assertEquals("stik",atoms.get(0).getName());		
 		assertEquals("Thu Nov 10 00:00:00 GMT 2005",atoms.get(1).getValue());
@@ -145,6 +147,8 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("©gen",atoms.get(4).getName());
 		assertEquals("SciFi",atoms.get(5).getValue());
 		assertEquals("catg",atoms.get(5).getName());	
+		assertEquals("1 piece of artwork",atoms.get(6).getValue());
+		assertEquals("covr",atoms.get(6).getName());
 	}
 	
 	private Film createTestFilm() throws Exception {
@@ -188,6 +192,7 @@ public class TestAtomicParsley extends TestCase {
 		List<Link>writers = new ArrayList<Link>();
 		writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
 		film.setWriters(writers);
+		film.setImageURL(Data.class.getResource("test_image.jpeg"));
 		return film;
 	}
 	
