@@ -63,7 +63,7 @@ public class IMDBSource implements ISource {
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 	
 	/** Used to disable fetching of posters at test time */
-	public static boolean fetchPosters = true;
+	/* package protected */ static boolean fetchPosters = true;
 	
 	private String regexpToReplace = null;
 	

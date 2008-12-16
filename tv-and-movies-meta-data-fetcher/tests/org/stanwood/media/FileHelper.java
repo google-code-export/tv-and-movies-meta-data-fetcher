@@ -99,8 +99,11 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem copying the file
 	 */
 	public static void copy(InputStream in, File dst,Map<String,String>params) throws IOException {
-		PrintStream out = new PrintStream(new FileOutputStream(dst));
-		BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+		PrintStream out = null;		
+		BufferedReader bin = null;
+		try {
+		out = new PrintStream(new FileOutputStream(dst));
+		bin = new BufferedReader(new InputStreamReader(in));
 		String line;
 		while ((line = bin.readLine()) != null) {
 			for (String key : params.keySet()) {
@@ -108,8 +111,16 @@ public class FileHelper {
 			}
 			out.println(line);
 		}
-		in.close();		
-		bin.close();
+		
+		}
+		finally {
+			if (out!=null) {
+				out.close();
+			}
+			if (bin!=null) {
+				bin.close();	
+			}				
+		}
 	}
 
 	/**

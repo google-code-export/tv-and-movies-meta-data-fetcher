@@ -106,7 +106,7 @@ public class Episode implements IVideo {
 	 * @param airDate The air date of the show
 	 */
 	public void setDate(Date airDate) {
-		this.airDate = airDate;
+		this.airDate = new Date(airDate.getTime());
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class Episode implements IVideo {
 	 * @return The first air date of the episode
 	 */
 	public Date getDate() {
-		return airDate;
+		return new Date(airDate.getTime());
 	}
 
 	/**

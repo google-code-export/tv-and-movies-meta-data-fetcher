@@ -239,7 +239,7 @@ public class Film implements IVideo {
 	 * @return The release date of the film
 	 */
 	public Date getDate() {
-		return date;
+		return new Date(date.getTime());
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class Film implements IVideo {
 	 * @param date The release date of the film
 	 */
 	public void setDate(Date date) {
-		this.date = date;
+		this.date = new Date(date.getTime());
 	}
 
 	/**

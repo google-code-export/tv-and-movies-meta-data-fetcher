@@ -66,7 +66,7 @@ public class Renamer {
 		this.id = id;
 		this.showDirectory = showDirectory;
 		this.pattern = pattern;
-		this.exts = exts;
+		this.exts = exts.clone();
 		this.refresh = refresh;
 		this.mode = mode;
 	}
