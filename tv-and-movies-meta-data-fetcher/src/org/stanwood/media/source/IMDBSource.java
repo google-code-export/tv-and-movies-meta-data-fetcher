@@ -62,6 +62,8 @@ public class IMDBSource implements ISource {
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 	
+	
+	
 	/** Used to disable fetching of posters at test time */
 	/* package protected */ static boolean fetchPosters = true;
 	
@@ -156,13 +158,13 @@ public class IMDBSource implements ISource {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("tn15title")) {
 				Element h1 = findFirstChild(div, HTMLElementName.H1);
 				if (h1 != null) {
-					film.setTitle(getContents(h1));
+					film.setTitle(decode(getContents(h1)));
 				}
 			} else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
 				Element h5 = findFirstChild(div, HTMLElementName.H5);
 				if (h5 != null) {
 					if (getContents(h5).equals("Plot:")) {
-						film.setSummary(getSectionText(div));
+						film.setSummary(decode(getSectionText(div)));
 					} else if (getContents(h5).equals("Director:")) {
 						List<Link> links = getLinks(div, "/name");
 						film.setDirectors(links);
@@ -192,7 +194,7 @@ public class IMDBSource implements ISource {
 						List<Link> links = getLinks(div, "/List?certificates=");
 						for (Link link : links) {
 							int pos = link.getTitle().indexOf(':');
-							Certification cert = new Certification(link.getTitle().substring(0, pos), link.getTitle()
+							Certification cert = new Certification(decode(link.getTitle()).substring(0, pos), link.getTitle()
 									.substring(pos + 1));
 							certs.add(cert);
 						}
@@ -221,6 +223,10 @@ public class IMDBSource implements ISource {
 		}
 	}
 
+	private String decode(String sectionText) {		
+		return ;
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<Link> getLinks(Element div, String linkStart) {
 		List<Link> links = new ArrayList<Link>();
@@ -228,7 +234,7 @@ public class IMDBSource implements ISource {
 			String href = a.getAttributeValue("href");
 			String title = a.getTextExtractor().toString();
 			if (href.startsWith(linkStart)) {
-				Link link = new Link(IMDB_BASE_URL + href, title);
+				Link link = new Link(IMDB_BASE_URL + href, decode(title));
 				links.add(link);
 			}
 		}
@@ -395,7 +401,5 @@ public class IMDBSource implements ISource {
 	 */
 	public void setRegexpToReplace(String regexpToReplace) {
 		this.regexpToReplace = regexpToReplace;
-	}
-
-	
+	}	
 }
