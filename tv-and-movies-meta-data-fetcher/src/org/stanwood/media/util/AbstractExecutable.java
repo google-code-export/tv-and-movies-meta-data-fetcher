@@ -39,8 +39,12 @@ public class AbstractExecutable {
 	 */
 	protected int execute(List<String> args) throws IOException, InterruptedException {
 		List<String> newArgs = new ArrayList<String>();
-		if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-			newArgs.add("cmd");
+		if (System.getProperty("os.name").toLowerCase().equals("Windows 95")) {
+			newArgs.add("command.com");
+			newArgs.add("/C");
+		}
+		else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+			newArgs.add("cmd.exe");
 			newArgs.add("/C");
 		}
 		newArgs.addAll(args);
