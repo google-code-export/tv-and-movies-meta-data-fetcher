@@ -158,13 +158,13 @@ public class IMDBSource implements ISource {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("tn15title")) {
 				Element h1 = findFirstChild(div, HTMLElementName.H1);
 				if (h1 != null) {
-					film.setTitle(decode(getContents(h1)));
+					film.setTitle(decodeHtmlEntities(getContents(h1)));
 				}
 			} else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
 				Element h5 = findFirstChild(div, HTMLElementName.H5);
 				if (h5 != null) {
 					if (getContents(h5).equals("Plot:")) {
-						film.setSummary(decode(getSectionText(div)));
+						film.setSummary(decodeHtmlEntities(getSectionText(div)));
 					} else if (getContents(h5).equals("Director:")) {
 						List<Link> links = getLinks(div, "/name");
 						film.setDirectors(links);
@@ -194,7 +194,7 @@ public class IMDBSource implements ISource {
 						List<Link> links = getLinks(div, "/List?certificates=");
 						for (Link link : links) {
 							int pos = link.getTitle().indexOf(':');
-							Certification cert = new Certification(decode(link.getTitle()).substring(0, pos), link.getTitle()
+							Certification cert = new Certification(decodeHtmlEntities(link.getTitle()).substring(0, pos), link.getTitle()
 									.substring(pos + 1));
 							certs.add(cert);
 						}
@@ -223,8 +223,61 @@ public class IMDBSource implements ISource {
 		}
 	}
 
-	private String decode(String sectionText) {		
-		return ;
+	/* package private */String decodeHtmlEntities(String s) {
+//		int i = 0, j = 0, pos = 0;
+		StringBuilder sb = new StringBuilder();
+		int pos = 0;
+		
+		while (pos< s.length()) {
+			if (s.length()>pos+2 && s.substring(pos,pos+2).equals("&#")) {			
+				int n = -1;
+				int j = s.indexOf(';', pos);
+				pos+=2;
+				while (pos < j) {
+					char c = s.charAt(pos);
+					if ('0' <= c && c <= '9')
+						n = (n == -1 ? 0 : n * 10) + c - '0';
+					else
+						break;
+					pos++;					
+				}
+				if (n!=-1) {
+					sb.append((char) n);
+				}
+			}
+			else {
+				sb.append(s.charAt(pos));
+			}
+			
+			pos++;
+		}
+		
+//		while ((i = s.indexOf("&#", pos)) != -1
+//				&& (j = s.indexOf(';', i)) != -1) {
+//			int n = -1;
+//			for (i += 2; i < j; ++i) {
+//				char c = s.charAt(i);
+//				if ('0' <= c && c <= '9')
+//					n = (n == -1 ? 0 : n * 10) + c - '0';
+//				else
+//					break;
+//			}
+//			if (i != j)
+//				n = -1; // malformed entity - abort
+//			if (n != -1) {
+//				sb.append((char) n);
+//				i = j + 1; // skip ';'
+//			} else {
+//				for (int k = pos; k < i; ++k)
+//					sb.append(s.charAt(k));
+//			}
+//			pos = i;
+//		}
+//		if (sb.length() == 0)
+//			return s;
+//		else
+//			sb.append(s.substring(pos, s.length()));
+		return sb.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -234,7 +287,7 @@ public class IMDBSource implements ISource {
 			String href = a.getAttributeValue("href");
 			String title = a.getTextExtractor().toString();
 			if (href.startsWith(linkStart)) {
-				Link link = new Link(IMDB_BASE_URL + href, decode(title));
+				Link link = new Link(IMDB_BASE_URL + href, decodeHtmlEntities(title));
 				links.add(link);
 			}
 		}

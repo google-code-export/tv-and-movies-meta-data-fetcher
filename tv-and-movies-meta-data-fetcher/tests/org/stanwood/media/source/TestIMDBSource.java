@@ -53,8 +53,18 @@ public class TestIMDBSource extends TestCase {
 		}
 		finally {
 			FileHelper.deleteDir(dir);
-		}
-		
+		}	
+	}
+	
+	/**
+	 * Test the HTML entity decoding
+	 */
+	public void testHTMLEntityDecode() {
+		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
+		String result = source.decodeHtmlEntities("Jam&#243;n, jam&#243;n.avi");
+		assertEquals("Check the result","Jamón, jamón.avi",result);
+		result = source.decodeHtmlEntities("&#243;Jam&#243;n, jam&#243;n.avi&#243;&#243;");
+		assertEquals("Check the result","óJamón, jamón.avióó",result);
 	}
 	
 	/**
@@ -129,5 +139,5 @@ public class TestIMDBSource extends TestCase {
 			}			
 		};
 		return source;
-	}
+	}	
 }

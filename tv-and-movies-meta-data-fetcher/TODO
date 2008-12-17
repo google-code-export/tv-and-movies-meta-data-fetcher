@@ -1,5 +1,4 @@
 TODO
 ----
 
-Fix special characters in file names, like accented chars.
 Don't put characters like colons into filenames as they are not supported by windows.
