@@ -199,6 +199,8 @@ public class Renamer {
 	}
 
 	private void doRename(File file, String oldFileName, String newName) throws StoreException {
+		// Don't put ':' in filenames as windows does not like them
+		newName = newName.replaceAll(":","-");
 		File newFile = new File(file.getParentFile(),newName);
 		if (file.equals(newFile)) {
 			System.out.println("File '" + oldFileName+"' already has the correct name.");
