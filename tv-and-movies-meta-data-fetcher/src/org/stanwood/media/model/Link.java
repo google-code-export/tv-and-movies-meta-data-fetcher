@@ -32,8 +32,8 @@ public class Link {
 	 */
 	public Link(String url, String title) {
 		super();
-		this.url = url;
-		this.title = title;
+		setURL(url);
+		setTitle(title);
 	}
 	
 	/**

@@ -31,8 +31,8 @@ public class Certification {
 	 */
 	public Certification(String certification, String country) {
 		super();
-		this.certification = certification;
-		this.country = country;
+		setCertification(certification);
+		setCountry(country);
 	}
 	
 	/**
