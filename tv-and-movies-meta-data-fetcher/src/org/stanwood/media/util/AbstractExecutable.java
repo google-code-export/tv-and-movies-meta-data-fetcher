@@ -53,15 +53,21 @@ public class AbstractExecutable {
 		for (String arg : newArgs) {
 			debugOut+=arg+" ";
 		}
-				
-		Process p = Runtime.getRuntime().exec(newArgs.toArray(new String[newArgs.size()]));
+		
+		ProcessBuilder pb = new ProcessBuilder(newArgs);
+		Process p = pb.start();
+		
 		errorGobbler = new StreamGobbler(p.getErrorStream());
-		outputGobbler = new StreamGobbler(p.getInputStream());				
+		outputGobbler = new StreamGobbler(p.getInputStream());						
 		
-		errorGobbler.start();
         outputGobbler.start();
+        errorGobbler.start();
 		
-		return p.waitFor();
+		int exitCode =  p.waitFor();
+		p.getErrorStream().close();
+		p.getInputStream().close();
+		p.getOutputStream().close();
+		return exitCode;
 	}
 	
 	/**
@@ -77,7 +83,12 @@ public class AbstractExecutable {
 	 * @return The error stream
 	 */
 	public String getErrorStream() {
-		return errorGobbler.getResult();
+		if (errorGobbler==null) {
+			return null;
+		}
+		else {
+			return errorGobbler.getResult();
+		}
 	}
 	
 }
