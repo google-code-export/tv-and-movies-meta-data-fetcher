@@ -121,6 +121,26 @@ public class AtomicParsley extends AbstractExecutable {
 		}
 		return atoms;
 	}
+	
+	/**
+	 * Used to remove all artwork from the .mp4 file
+	 * @param mp4File The mp4 file
+	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms
+	 */
+	public void removeAllArtwork(File mp4File) throws AtomicParsleyException {
+		List<String> args = new ArrayList<String>();
+		args.add(atomicParsleyApp.getAbsolutePath());
+		args.add(mp4File.getAbsolutePath());
+		args.add("--artwork");
+		args.add("REMOVE_ALL");
+		try {
+			execute(args);
+		} catch (IOException e) {
+			throw new AtomicParsleyException(e.getMessage(),e);
+		} catch (InterruptedException e) {
+			throw new AtomicParsleyException(e.getMessage(),e);
+		}	
+	}
 
 	/**
 	 * Used to add atoms to a MP4 file
@@ -179,12 +199,14 @@ public class AtomicParsley extends AbstractExecutable {
 	}
 
 	/**
-	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film.
+	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before
+	 * adding the Film atoms and artwork.
 	 * @param mp4File The MP4 file
 	 * @param film The film details
 	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
 	 */
 	public void updateFilm(File mp4File, Film film) throws AtomicParsleyException {
+		removeAllArtwork(mp4File);
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(new Atom("stik","Movie"));
 		atoms.add(new Atom("©day",film.getDate().toString()));
