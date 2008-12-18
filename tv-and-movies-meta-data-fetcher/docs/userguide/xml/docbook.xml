@@ -41,7 +41,7 @@
 					<listitem><para>Fetches TV Show and Film meta data from the Internet.</para></listitem>
 					<listitem><para>Allows multiple sources and stores.</para></listitem>
 					<listitem><para>Caches information in XML.</para></listitem>
-					<listitem><para>Find film posters on the internet for each film.</para></listitem>					
+					<listitem><para>Find film posters on the Internet for each film.</para></listitem>					
 					<listitem><para>Provides a API for accessing the information.</para></listitem>
 					<listitem><para>Provides a store that writes Sapphire XML files.</para></listitem>                                        
 					<listitem><para>Provides a store that saves metadata into MP4/M4V files that iTunes can read.</para></listitem>
