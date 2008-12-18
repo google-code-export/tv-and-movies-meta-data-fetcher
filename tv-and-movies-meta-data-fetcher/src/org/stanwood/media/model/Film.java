@@ -239,7 +239,12 @@ public class Film implements IVideo {
 	 * @return The release date of the film
 	 */
 	public Date getDate() {
-		return new Date(date.getTime());
+		if (date==null) {
+			return null;
+		}
+		else {
+			return new Date(date.getTime());
+		}
 	}
 
 	/**

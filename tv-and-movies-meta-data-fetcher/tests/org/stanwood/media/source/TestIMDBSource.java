@@ -42,6 +42,24 @@ public class TestIMDBSource extends TestCase {
 	 * Used to test the searching of films
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	public void testSearchWithRedirectToFilm() throws Exception {
+		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
+		File dir = FileHelper.createTmpDir("films");
+		try {
+			File tmpFile = new File(dir,"Harvard Man.avi");						
+			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
+			assertEquals(242508,result.getId());
+			assertEquals("imdb",result.getSourceId());			
+		}
+		finally {
+			FileHelper.deleteDir(dir);
+		}	
+	}
+	
+	/**
+	 * Used to test the searching of films
+	 * @throws Exception Thrown if the test produces any errors
+	 */
 	public void testSearch() throws Exception {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
 		File dir = FileHelper.createTmpDir("films");
@@ -55,6 +73,10 @@ public class TestIMDBSource extends TestCase {
 			FileHelper.deleteDir(dir);
 		}	
 	}
+	
+	
+	
+	
 	
 	/**
 	 * Test the HTML entity decoding
@@ -134,6 +156,9 @@ public class TestIMDBSource extends TestCase {
 				}				
 				else if (strUrl.endsWith("find?q=the+iron+man")) {
 					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search.html"));
+				}
+				else if (strUrl.endsWith("find?q=harvard+man")) {
+					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search-excact.html"));
 				}
 				return null;
 			}			

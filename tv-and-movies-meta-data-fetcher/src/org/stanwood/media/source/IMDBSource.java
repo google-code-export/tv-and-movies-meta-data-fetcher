@@ -61,6 +61,7 @@ public class IMDBSource implements ISource {
 	private static final SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
+	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");
 	
 	
 	
@@ -252,31 +253,6 @@ public class IMDBSource implements ISource {
 			pos++;
 		}
 		
-//		while ((i = s.indexOf("&#", pos)) != -1
-//				&& (j = s.indexOf(';', i)) != -1) {
-//			int n = -1;
-//			for (i += 2; i < j; ++i) {
-//				char c = s.charAt(i);
-//				if ('0' <= c && c <= '9')
-//					n = (n == -1 ? 0 : n * 10) + c - '0';
-//				else
-//					break;
-//			}
-//			if (i != j)
-//				n = -1; // malformed entity - abort
-//			if (n != -1) {
-//				sb.append((char) n);
-//				i = j + 1; // skip ';'
-//			} else {
-//				for (int k = pos; k < i; ++k)
-//					sb.append(s.charAt(k));
-//			}
-//			pos = i;
-//		}
-//		if (sb.length() == 0)
-//			return s;
-//		else
-//			sb.append(s.substring(pos, s.length()));
 		return sb.toString();
 	}
 
@@ -357,19 +333,38 @@ public class IMDBSource implements ISource {
 		if (mode != Mode.FILM) {
 			return null;
 		}
-		String query = getQuery(filmFile); 		
+		String query = getQuery(filmFile);
+		query = query.toLowerCase().replaceAll("[:|-|,|']", "");
 		Source source = new Source(getSource(new URL(getSearchUrl(query.replaceAll(" ", "+")))));
 		SearchResult result = searchTitles(query,"Popular Titles", source);
 		if (result == null) {
 			result = searchTitles(query,"Exact Matches", source);
+		}
+		if (result == null) {
+			result = searchFilmsPage(query,source);
 		}
 
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	private SearchResult searchTitles(String query,String searchType, Source source) {
-		query = query.toLowerCase().replaceAll("[:|-|,|']", "");
+	private SearchResult searchFilmsPage(String query, Source source) {
+		List<Element> aEls = source.findAllElements(HTMLElementName.A);
+		for (Element a : aEls) {
+			if (a.getAttributeValue("class") != null && a.getAttributeValue("class").equals("linkasbutton-secondary")) {
+				Matcher m = EXTRACT_ID2_PATTERN.matcher(a.getAttributeValue("href"));
+				if (m.matches()) {
+					SearchResult result = new SearchResult(Long.parseLong(m.group(1)), SOURCE_ID);
+					return result;
+				}
+				
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private SearchResult searchTitles(String query,String searchType, Source source) {		
 		List<Element> elements = source.findAllElements(HTMLElementName.B);
 		for (Element elB : elements) {
 			if (elB.getTextExtractor().toString().contains(searchType)) {

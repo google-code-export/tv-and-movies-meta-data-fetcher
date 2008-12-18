@@ -164,9 +164,11 @@ public class FilmXMLStore extends BaseXMLStore {
 				
 				film.setCertifications(certifications);
 				film.setDate(releaseDate);
-				film.setDirectors(directors);
+				film.setDirectors(directors);				
 				film.setFilmUrl(new URL(filmURL));
-				film.setImageURL(new URL(imageUrl));
+				if (imageUrl!=null && imageUrl.length()>0) {
+					film.setImageURL(new URL(imageUrl));
+				}
 				film.setGenres(genres);
 				film.setGuestStars(guestStars);
 				film.setRating(rating);
