@@ -74,6 +74,12 @@
                 via the film's filename. The parameter is a regular expression, that when found in the filename,
                 is removed.   
 				</para>
+				<para>
+                      It has the following parameters:
+                      <itemizedlist>
+                      	<listitem><para><literal>RegexpToReplace</literal> a regular expression, that when found in the filename, is removed</para></listitem>
+                     </itemizedlist>
+				</para>
 			</sect2>
 		</sect1>
 		<sect1>
@@ -128,6 +134,12 @@
  				when fetching the rating, this country in the parameter's rating is used. If the paramter is not set 
  				or the country can't be found, then the first rating is used.
  				</para>
+ 				<para>
+                      It has the following parameters:
+                      <itemizedlist>
+                      	<listitem><para><literal>PreferredCertificationCounrty</literal> The preferred counties rating to use.</para></listitem>
+                     </itemizedlist>
+				</para>
 			</sect2>
              <sect2>
                      <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>

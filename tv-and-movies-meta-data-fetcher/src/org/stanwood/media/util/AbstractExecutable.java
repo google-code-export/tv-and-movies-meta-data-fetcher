@@ -64,6 +64,8 @@ public class AbstractExecutable {
         errorGobbler.start();
 		
 		int exitCode =  p.waitFor();
+		while (!errorGobbler.isDone() || !outputGobbler.isDone()) { }
+		
 		p.getErrorStream().close();
 		p.getInputStream().close();
 		p.getOutputStream().close();

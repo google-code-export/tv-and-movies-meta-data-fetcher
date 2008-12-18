@@ -30,6 +30,7 @@ public class StreamGobbler extends Thread {
 
 	private InputStream is;
 	private StringBuilder result;
+	private boolean done;
 
 	/**
 	 * Creates a instance of the stream gobbler thread
@@ -49,13 +50,17 @@ public class StreamGobbler extends Thread {
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
-			while ((line = br.readLine()) != null) {
+			done = false;			
+			
+			while (!done && (line = br.readLine()) != null) {
 				result.append(line + "\n");
-			}
+			}			
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-
+		finally {
+			done = true;
+		}
 	}
 
 	/**
@@ -64,5 +69,9 @@ public class StreamGobbler extends Thread {
 	 */
 	public String getResult() {
 		return result.toString();
+	}
+	
+	public boolean isDone() {
+		return done;
 	}
 }
