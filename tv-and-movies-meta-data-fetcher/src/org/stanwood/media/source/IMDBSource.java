@@ -58,7 +58,8 @@ public class IMDBSource implements ISource {
 
 	private static final String IMDB_BASE_URL = "http://www.imdb.com";
 	private static final String URL_SUMMARY = "/title/tt$filmId$/";
-	private static final SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
+	private static final SimpleDateFormat RELEASE_DATE_FORMAT_1 = new SimpleDateFormat("dd MMMMM yyyy");
+	private static final SimpleDateFormat RELEASE_DATE_FORMAT_2 = new SimpleDateFormat("MMMMM yyyy");
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");
@@ -208,10 +209,15 @@ public class IMDBSource implements ISource {
 								str = str.substring(0, pos);
 							}
 							try {
-								Date date = RELEASE_DATE_FORMAT.parse(str);
+								Date date = RELEASE_DATE_FORMAT_1.parse(str);
 								film.setDate(date);
 							} catch (ParseException e) {
-								System.err.println("Unable to parse date: " + str);
+								try {
+									Date date = RELEASE_DATE_FORMAT_2.parse(str);
+									film.setDate(date);
+								} catch (ParseException e1) {
+									System.err.println("Unable to parse date '" + str +"' of film with id '"+film.getId()+"'"); 
+								}								
 							}
 						}
 					}
@@ -220,7 +226,7 @@ public class IMDBSource implements ISource {
 		}
 
 		if (film.getDate() == null) {
-			System.err.println("Unable to find film date");
+			System.err.println("Unable to find a date of film with the id '" + film.getId()+"' and the title '"+film.getTitle()+"'");
 		}
 	}
 
@@ -363,6 +369,33 @@ public class IMDBSource implements ISource {
 		return null;
 	}
 
+	private String normalizeQuery(String s) {
+		s =s.toLowerCase();
+		
+		s = s.replaceAll("ä|á","a"); 
+		s = s.replaceAll("ñ","n");
+		s = s.replaceAll("ö","o");
+		s = s.replaceAll("ü","u");
+		s = s.replaceAll("ÿ","y");
+		s = s.replaceAll("é","e");
+		
+		s = s.replaceAll("ß","ss");  //  German beta “ß” -> “ss”
+		s = s.replaceAll("Æ","AE");  //  Æ
+		s = s.replaceAll("æ","ae");  //  æ
+		s = s.replaceAll("Ĳ","IJ");  //  Ĳ
+		s = s.replaceAll("ĳ","ij");  //  ĳ
+		s = s.replaceAll("Œ","Oe");  //  Œ
+		s = s.replaceAll("œ","oe");  //  œ
+//
+//		s = s.replaceAll("\\x{00d0}\\x{0110}\\x{00f0}\\x{0111}\\x{0126}\\x{0127}","DDddHh"); 
+//		s = s.replaceAll("\\x{0131}\\x{0138}\\x{013f}\\x{0141}\\x{0140}\\x{0142}","ikLLll"); 
+//		s = s.replaceAll("\\x{014a}\\x{0149}\\x{014b}\\x{00d8}\\x{00f8}\\x{017f}","NnnOos"); 
+//		s = s.replaceAll("\\x{00de}\\x{0166}\\x{00fe}\\x{0167}","TTtt");                     
+		
+		s =s.replaceAll(":|-|,|'", "");
+		return s;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private SearchResult searchTitles(String query,String searchType, Source source) {		
 		List<Element> elements = source.findAllElements(HTMLElementName.B);
@@ -377,8 +410,8 @@ public class IMDBSource implements ISource {
 					String filmTilteText = tr.getTextExtractor().toString();					
 					Matcher m = FILM_TITLE_PATTERN.matcher( filmTilteText);
 					if (m.matches()) {
-						String realTitle =m.group(1).toLowerCase().replaceAll("[:|-|,|']", ""); 
-						if (realTitle.contains(query.toLowerCase())) {
+						String realTitle =normalizeQuery(m.group(1)); 
+						if (realTitle.contains(normalizeQuery(query))) {
 							if (Integer.parseInt(m.group(2)) > year) {
 								year = Integer.parseInt(m.group(2));
 								url = getFirstUrl(tr).getAttributeValue("href");
@@ -424,9 +457,9 @@ public class IMDBSource implements ISource {
 		file = file.substring(0, pos);
 		file = file.replaceAll("\\.|_", " ");
 		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");	
-		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
+		file = file.replaceAll("dvdrip|dvd-rip|scr|dvd|xvid|divx|xv|xvi|full", "");
 		if (regexpToReplace!=null) {
-			file = file.replaceAll(regexpToReplace,"");
+			file = file.replaceAll(regexpToReplace.toLowerCase(),"");
 		}
 		return file.trim();
 	}

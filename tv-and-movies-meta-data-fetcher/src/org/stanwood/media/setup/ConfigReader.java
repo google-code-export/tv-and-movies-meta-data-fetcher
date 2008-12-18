@@ -68,7 +68,12 @@ public class ConfigReader extends XMLParser {
 					Element storeElement = (Element) stores.item(i);
 					if (storeElement!=null) {
 						StoreConfig store = new StoreConfig();
-						store.setID(storeElement.getAttribute("id"));
+						String id = storeElement.getAttribute("id");
+						if (id.equals("org.stanwood.media.store.MemoryStore")) {
+							id = "org.stanwood.media.store.memory.MemoryStore";
+						}
+						store.setID(id);
+						
 						NodeList params = XPathAPI.selectNodeList(storeElement, "param");
 						for (int j=0;j<params.getLength();j++) {
 							Element paramNode = (Element) params.item(j);

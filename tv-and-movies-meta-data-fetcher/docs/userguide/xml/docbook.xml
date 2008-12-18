@@ -120,9 +120,14 @@
  				The details of the XML format can be found <ulink url="http://appletv.nanopi.net/manual/overriding-metadata/">here</ulink>.
 				</para>
 				<para>  				
- 				Every time episode information is fetched from a source, a XML file is written with 
- 				the name name as the episode file (except the extension is changed too .xml)  
+ 				Every time episode or film information is fetched from a source, a XML file is written with 
+ 				the name name as the episode or film file (except the extension is changed too .xml).
 				</para>
+				<para>
+ 				This store has the optional parameter "PreferredCertificationCounrty". If this is set, then
+ 				when fetching the rating, this country in the parameter's rating is used. If the paramter is not set 
+ 				or the country can't be found, then the first rating is used.
+ 				</para>
 			</sect2>
              <sect2>
                      <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
@@ -296,9 +301,9 @@
 			it will fall back too using default settings.
 		</para>
 		<para>
-			The default file is as follows:
+			
 			<example>		
-				<title>/etc/mediafetcher-conf.xml</title>
+				<title>The default configuration file</title>
 				<programlisting>
 			<![CDATA[<config>
        <sources>
@@ -324,7 +329,7 @@
 			the MP4ITunesStore so that it can find the AtomicParsley command and use it to store
 			TV Show/Film information into .mp4 and .m4v files that iTunes can read.
 			<example>		
-				<title>/etc/mediafetcher-conf.xml</title>
+				<title>Configuration file using parameters</title>
 				<programlisting>
 			<![CDATA[<config>
        <sources>

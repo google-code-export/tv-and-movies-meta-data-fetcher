@@ -87,7 +87,7 @@ public class Renamer {
 			public boolean accept(File file, String name) {				
 				if (file.isDirectory()) {					
 					for (String ext : exts) {
-						if (name.endsWith("."+ext)) {
+						if (name.toLowerCase().endsWith("."+ext.toLowerCase())) {
 							return true;
 						}
 					}
@@ -130,7 +130,7 @@ public class Renamer {
 			return;
 		}
 		
-		String ext = oldFileName.substring(oldFileName.length() - 3);
+		String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
 		String newName = getNewFilmName(film, ext);
 	
 		doRename(file, oldFileName, newName);

@@ -239,12 +239,7 @@ public class Main {
 			}
 		} 
 		
-		if (showId==null) {
-			System.out.println("No id given, will search for id");
-		}
-		else {
-			System.out.println("Using show id " + sourceId+":" + showId);
-		}
+		
 		
 		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {			
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
@@ -259,6 +254,15 @@ public class Main {
 			else {
 				mode = getDefaultMode();
 			}
+		}
+		
+		if (showId==null) {
+			if (mode==Mode.TV_SHOW) {
+				System.out.println("No id given, will search for id");
+			}
+		}
+		else {
+			System.out.println("Using show id " + sourceId+":" + showId);
 		}
 		
 		if (sourceId==null) {

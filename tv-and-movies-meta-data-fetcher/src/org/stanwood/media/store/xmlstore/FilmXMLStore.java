@@ -86,18 +86,18 @@ public class FilmXMLStore extends BaseXMLStore {
 	}
 
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
-			throws TransformerException {
-		if (film.getDate()==null) {
-			System.out.println("Unable to store film '" + film.getTitle()+"' because it has no date.");
-			return;
-		}
+			throws TransformerException {		
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", String.valueOf(film.getId()));
 		filmNode.setAttribute("title", film.getTitle());
 		filmNode.setAttribute("sourceId", film.getSourceId());
 		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
-		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));		
-		filmNode.setAttribute("releaseDate", df.format(film.getDate()));
+		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));
+		Date date = film.getDate();
+		if (date!=null) {
+			filmNode.setAttribute("releaseDate", df.format(date));	
+		}
+		
 		filmNode.setAttribute("imageUrl", urlToText(film.getImageURL()));
 		
 		Element summaryNode = doc.createElement("summary");
@@ -154,7 +154,14 @@ public class FilmXMLStore extends BaseXMLStore {
 				String sourceId = getStringFromXML(filmNode, "@sourceId");
 				String summary = getStringFromXML(filmNode,"summary/text()");
 				float rating = getFloatFromXML(filmNode, "@rating");
-				Date releaseDate = df.parse(getStringFromXML(filmNode, "@releaseDate"));				
+				Date releaseDate = null;
+				try {
+					releaseDate = df.parse(getStringFromXML(filmNode, "@releaseDate"));
+				}
+				catch (NotInStoreException e) {
+					// No date found, leave as null
+				}
+				
 				List<String> genres = readGenresFromXML(filmNode);
 				List<Certification>certifications = readCertificationsFromXML(filmNode);
 				List<Link> directors = getLinks(filmNode, "director");
@@ -279,7 +286,7 @@ public class FilmXMLStore extends BaseXMLStore {
 		}
 		file = file.substring(0,pos);
 		file = file.replaceAll("\\.|_"," ");
-		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");
+		file = file.replaceAll("(\\[|\\().*(\\]|\\))|:|-", "");
 		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
 		file = file.trim();
 		return file;
@@ -299,8 +306,9 @@ public class FilmXMLStore extends BaseXMLStore {
 		try {
 			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");
 			for (int i=0;i<nodes.getLength();i++) {
-				Element el = (Element) nodes.item(0);
-				if (el.getAttribute("title")!=null && el.getAttribute("title").toLowerCase().equals(query)){				
+				Element el = (Element) nodes.item(i);
+				String title = getTitle(el);
+				if (title!=null && title.equals(query)){				
 					SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
 					System.out.println("Found film '"+query+"' in XMLStore with id '"+result.getId()+"'");
 					return result;	
@@ -310,6 +318,15 @@ public class FilmXMLStore extends BaseXMLStore {
 			throw new StoreException(e.getMessage(),e);			
 		}
 		return null;
+	}
+
+	private String getTitle(Element el) {
+		String title = el.getAttribute("title");
+		if (title!=null) {
+			title = title.toLowerCase();
+			title = title.replaceAll(":|-", "");
+		}
+		return title;
 	}
 
 }

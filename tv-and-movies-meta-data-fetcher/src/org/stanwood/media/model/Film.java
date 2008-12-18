@@ -252,7 +252,12 @@ public class Film implements IVideo {
 	 * @param date The release date of the film
 	 */
 	public void setDate(Date date) {
-		this.date = new Date(date.getTime());
+		if (date!=null) {
+			this.date = new Date(date.getTime());
+		}
+		else {
+			date = null;
+		}
 	}
 
 	/**
