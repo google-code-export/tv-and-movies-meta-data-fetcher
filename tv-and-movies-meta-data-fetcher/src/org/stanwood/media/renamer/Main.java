@@ -177,7 +177,7 @@ public class Main {
 	}
 
 	private static boolean processOptions(CommandLine cmd) throws ConfigException {
-		if (cmd.hasOption(MODE_OPTION) && cmd.getOptionObject(MODE_OPTION)!=null) {
+		if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
 			String cliMode = cmd.getOptionValue(MODE_OPTION);
 			if (cliMode.toLowerCase().equals("film")) {
 				mode = Mode.FILM;
