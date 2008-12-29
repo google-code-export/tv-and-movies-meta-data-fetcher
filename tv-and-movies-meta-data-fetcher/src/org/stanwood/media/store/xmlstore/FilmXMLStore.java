@@ -33,6 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.stanwood.media.model.Certification;
+import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.SearchResult;
@@ -86,7 +87,7 @@ public class FilmXMLStore extends BaseXMLStore {
 	}
 
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
-			throws TransformerException {		
+			throws TransformerException {
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
@@ -94,15 +95,20 @@ public class FilmXMLStore extends BaseXMLStore {
 		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
 		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));
 		Date date = film.getDate();
-		if (date!=null) {
-			filmNode.setAttribute("releaseDate", df.format(date));	
+		if (date != null) {
+			filmNode.setAttribute("releaseDate", df.format(date));
 		}
-		
+
 		filmNode.setAttribute("imageUrl", urlToText(film.getImageURL()));
-		
+
 		Element summaryNode = doc.createElement("summary");
 		summaryNode.appendChild(doc.createTextNode(film.getSummary()));
 		filmNode.appendChild(summaryNode);
+		Element descriptionNode = doc.createElement("description");
+		if (film.getDescription()!=null) {
+			descriptionNode.appendChild(doc.createTextNode(film.getDescription()));
+		}
+		filmNode.appendChild(descriptionNode);
 
 		for (String value : film.getGenres()) {
 			Element genre = doc.createElement("genre");
@@ -114,6 +120,13 @@ public class FilmXMLStore extends BaseXMLStore {
 			Element genre = doc.createElement("certification");
 			genre.setAttribute("country", value.getCountry());
 			genre.setAttribute("certification", value.getCertification());
+			filmNode.appendChild(genre);
+		}
+		
+		for (Chapter chapter : film.getChapters()) {
+			Element genre = doc.createElement("chapter");
+			genre.setAttribute("number", String.valueOf(chapter.getNumber()));
+			genre.setAttribute("name", chapter.getName());
 			filmNode.appendChild(genre);
 		}
 
@@ -139,41 +152,49 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @return The film details, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.	 
+	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		try {
 			Document doc = getCache(filmFile.getParentFile());
 			Element filmsNode = (Element) doc.getFirstChild();
 			Node filmNode = XPathAPI.selectSingleNode(filmsNode, "film[@id=" + filmId + "]");
-			if (filmNode!=null) {
+			if (filmNode != null) {
 				Film film = new Film(filmId);
-								
+
 				String filmURL = getStringFromXML(filmNode, "@url");
 				String title = getStringFromXML(filmNode, "@title");
 				String sourceId = getStringFromXML(filmNode, "@sourceId");
-				String summary = getStringFromXML(filmNode,"summary/text()");
+				String summary = getStringFromXML(filmNode, "summary/text()");
+				
+				String description = null;
+				
+				try {
+					description = getStringFromXML(filmNode, "description/text()");
+				} catch (NotInStoreException e) {
+					// No description found, leave as null
+				}				
 				float rating = getFloatFromXML(filmNode, "@rating");
 				Date releaseDate = null;
 				try {
 					releaseDate = df.parse(getStringFromXML(filmNode, "@releaseDate"));
-				}
-				catch (NotInStoreException e) {
+				} catch (NotInStoreException e) {
 					// No date found, leave as null
 				}
-				
+
 				List<String> genres = readGenresFromXML(filmNode);
-				List<Certification>certifications = readCertificationsFromXML(filmNode);
+				List<Certification> certifications = readCertificationsFromXML(filmNode);
+				List<Chapter> chapters = readChaptersFromXML(filmNode);
 				List<Link> directors = getLinks(filmNode, "director");
 				List<Link> writers = getLinks(filmNode, "writer");
 				List<Link> guestStars = getLinks(filmNode, "guestStar");
 				String imageUrl = getStringFromXML(filmNode, "@imageUrl");
-				
+
 				film.setCertifications(certifications);
 				film.setDate(releaseDate);
-				film.setDirectors(directors);				
+				film.setDirectors(directors);
 				film.setFilmUrl(new URL(filmURL));
-				if (imageUrl!=null && imageUrl.length()>0) {
+				if (imageUrl != null && imageUrl.length() > 0) {
 					film.setImageURL(new URL(imageUrl));
 				}
 				film.setGenres(genres);
@@ -181,39 +202,60 @@ public class FilmXMLStore extends BaseXMLStore {
 				film.setRating(rating);
 				film.setSourceId(sourceId);
 				film.setSummary(summary);
+				film.setDescription(description);
 				film.setTitle(title);
-				film.setWriters(writers);				
+				film.setWriters(writers);
 				return film;
-			}						
+			}
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		} catch (ParseException e) {
-			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);		
+			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		} catch (NotInStoreException e) {
 			return null;
 		}
 		return null;
 	}
-	
+
+	private List<Chapter> readChaptersFromXML(Node parent) throws TransformerException, NotInStoreException, StoreException {
+		List<Chapter> chapters = new ArrayList<Chapter>();
+		NodeList nodeList = XPathAPI.selectNodeList(parent, "chapter");
+		if (nodeList != null) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Element node = (Element) nodeList.item(i);
+				try {
+					Chapter chapter = new Chapter(node.getAttribute("name"), Integer.parseInt(node
+							.getAttribute("number")));
+					chapters.add(chapter);
+				} catch (NumberFormatException e) {
+					throw new StoreException("Unable to parse chapter number from text '" + node.getAttribute("number")
+							+ "'");
+				}
+
+			}
+		}
+		return chapters;
+	}
+
 	/**
 	 * Used to read the certification from the XML document
+	 * 
 	 * @param parent The parent node to read them from
 	 * @return A list of certification that were found
 	 * @throws TransformerException Thrown if their is a problem parsing the XML
 	 * @throws NotInStoreException Thrown if the genres are not in the store
 	 */
-	private List<Certification> readCertificationsFromXML(Node parent)
-			throws TransformerException, NotInStoreException {
-		List<Certification> genres = new ArrayList<Certification>();
+	private List<Certification> readCertificationsFromXML(Node parent) throws TransformerException, NotInStoreException {
+		List<Certification> certs = new ArrayList<Certification>();
 		NodeList nodeList = XPathAPI.selectNodeList(parent, "certification");
 		if (nodeList != null) {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Element node = (Element) nodeList.item(i);
-				Certification cert = new Certification(node.getAttribute("certification"),node.getAttribute("country"));				
-				genres.add(cert);
+				Certification cert = new Certification(node.getAttribute("certification"), node.getAttribute("country"));
+				certs.add(cert);
 			}
 		}
-		return genres;
+		return certs;
 	}
 
 	private Document getCache(File showDirectory) throws StoreException {
@@ -251,6 +293,7 @@ public class FilmXMLStore extends BaseXMLStore {
 
 	/**
 	 * This will update all references of the old file to the new file
+	 * 
 	 * @param oldFile The old file
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files
@@ -258,71 +301,71 @@ public class FilmXMLStore extends BaseXMLStore {
 	public void renamedFile(File oldFile, File newFile) throws StoreException {
 		if (!oldFile.getParent().equals(newFile.getParent())) {
 			System.err.println("Unable to update store with new file location due different parent directories");
-		}
-		else {
+		} else {
 			Document doc = getCache(oldFile.getParentFile());
-			
+
 			try {
-//				System.out.println("**/file[@name=" + oldFile.getAbsolutePath() + "]/@name");
-				NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\""+oldFile.getAbsolutePath()+"\"]/@name");
+				// System.out.println("**/file[@name=" + oldFile.getAbsolutePath() + "]/@name");
+				NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\"" + oldFile.getAbsolutePath()
+						+ "\"]/@name");
 				for (int i = 0; i < nodes.getLength(); i++) {
-//					System.out.println("Node: " + nodes.item(i).getNodeName());
+					// System.out.println("Node: " + nodes.item(i).getNodeName());
 					nodes.item(i).setNodeValue(newFile.getAbsolutePath());
 				}
-				
+
 				File cacheFile = getCacheFile(oldFile.getParentFile(), FILENAME);
 				writeCache(cacheFile, doc);
 			} catch (TransformerException e) {
-				throw new StoreException(e.getMessage(),e);
+				throw new StoreException(e.getMessage(), e);
 			}
-		} 
+		}
 	}
 
 	private String getQuery(File episodeFile) {
 		String file = episodeFile.getName().toLowerCase().trim();
 		int pos = file.lastIndexOf(".");
-		if (pos==-1) {
+		if (pos == -1) {
 			return null;
 		}
-		file = file.substring(0,pos);
-		file = file.replaceAll("\\.|_"," ");
+		file = file.substring(0, pos);
+		file = file.replaceAll("\\.|_", " ");
 		file = file.replaceAll("(\\[|\\().*(\\]|\\))|:|-", "");
 		file = file.replaceAll("dvdrip|dvd|xvid|divx|xv|xvi|full", "");
 		file = file.trim();
 		return file;
 	}
-	
+
 	/**
-	 * This is called to search the store for a film Id. 
-	 * If it can't be found, then it will return null. The search is done be reading the 
-	 * .films.xml file next to the film. 
-	 * @param filmFile The file the film is stored in	
+	 * This is called to search the store for a film Id. If it can't be found, then it will return null. The search is
+	 * done be reading the .films.xml file next to the film.
+	 * 
+	 * @param filmFile The file the film is stored in
 	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store 
-	 */	
-	public SearchResult searchForFilmId(File filmFile) throws StoreException {				
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
+	public SearchResult searchForFilmId(File filmFile) throws StoreException {
 		Document doc = getCache(filmFile.getParentFile());
 		String query = getQuery(filmFile);
 		try {
 			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");
-			for (int i=0;i<nodes.getLength();i++) {
+			for (int i = 0; i < nodes.getLength(); i++) {
 				Element el = (Element) nodes.item(i);
 				String title = getTitle(el);
-				if (title!=null && title.equals(query)){				
-					SearchResult result = new SearchResult(el.getAttribute("id"),el.getAttribute("sourceId"));
-					System.out.println("Found film '"+query+"' in XMLStore with id '"+result.getId()+"'");
-					return result;	
+				if (title != null && title.equals(query)) {
+					SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
+					System.out.println("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
+					return result;
 				}
-			}					
+			}
 		} catch (TransformerException e) {
-			throw new StoreException(e.getMessage(),e);			
+			throw new StoreException(e.getMessage(), e);
 		}
 		return null;
 	}
 
 	private String getTitle(Element el) {
 		String title = el.getAttribute("title");
-		if (title!=null) {
+		if (title != null) {
 			title = title.toLowerCase();
 			title = title.replaceAll(":|-", "");
 		}

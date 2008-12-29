@@ -1,4 +1,6 @@
 * Mon Dec 29 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+- FEATURE: Added new www.tagchimp.com source for films.
+- FEATURE: Films can now also have chapter name information and long descriptions.
 - BUG: Fixed text output. Now shows text for "Fetching film from source" instead of "Fetching show from source".
 - PERFORMANCE: Speed ups for MP4 store using atomic parsley. It now longer writes metadata unless it needs too and artwork is removed at the same time as writing the metadata.
 - FEATURE: Films and TV Shows can now have non numeric ID's.

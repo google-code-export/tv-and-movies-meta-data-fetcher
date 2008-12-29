@@ -160,13 +160,13 @@ public class IMDBSource implements ISource {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("tn15title")) {
 				Element h1 = findFirstChild(div, HTMLElementName.H1);
 				if (h1 != null) {
-					film.setTitle(decodeHtmlEntities(getContents(h1)));
+					film.setTitle(SearchHelper.decodeHtmlEntities(getContents(h1)));
 				}
 			} else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
 				Element h5 = findFirstChild(div, HTMLElementName.H5);
 				if (h5 != null) {
 					if (getContents(h5).equals("Plot:")) {
-						film.setSummary(decodeHtmlEntities(getSectionText(div)));
+						film.setSummary(SearchHelper.decodeHtmlEntities(getSectionText(div)));
 					} else if (getContents(h5).equals("Director:")) {
 						List<Link> links = getLinks(div, "/name");
 						film.setDirectors(links);
@@ -196,7 +196,7 @@ public class IMDBSource implements ISource {
 						List<Link> links = getLinks(div, "/List?certificates=");
 						for (Link link : links) {
 							int pos = link.getTitle().indexOf(':');
-							Certification cert = new Certification(decodeHtmlEntities(link.getTitle()).substring(0, pos), link.getTitle()
+							Certification cert = new Certification(SearchHelper.decodeHtmlEntities(link.getTitle()).substring(0, pos), link.getTitle()
 									.substring(pos + 1));
 							certs.add(cert);
 						}
@@ -230,37 +230,7 @@ public class IMDBSource implements ISource {
 		}
 	}
 
-	/* package private */String decodeHtmlEntities(String s) {
-//		int i = 0, j = 0, pos = 0;
-		StringBuilder sb = new StringBuilder();
-		int pos = 0;
-		
-		while (pos< s.length()) {
-			if (s.length()>pos+2 && s.substring(pos,pos+2).equals("&#")) {			
-				int n = -1;
-				int j = s.indexOf(';', pos);
-				pos+=2;
-				while (pos < j) {
-					char c = s.charAt(pos);
-					if ('0' <= c && c <= '9')
-						n = (n == -1 ? 0 : n * 10) + c - '0';
-					else
-						break;
-					pos++;					
-				}
-				if (n!=-1) {
-					sb.append((char) n);
-				}
-			}
-			else {
-				sb.append(s.charAt(pos));
-			}
-			
-			pos++;
-		}
-		
-		return sb.toString();
-	}
+
 
 	@SuppressWarnings("unchecked")
 	private List<Link> getLinks(Element div, String linkStart) {
@@ -269,7 +239,7 @@ public class IMDBSource implements ISource {
 			String href = a.getAttributeValue("href");
 			String title = a.getTextExtractor().toString();
 			if (href.startsWith(linkStart)) {
-				Link link = new Link(IMDB_BASE_URL + href, decodeHtmlEntities(title));
+				Link link = new Link(IMDB_BASE_URL + href, SearchHelper.decodeHtmlEntities(title));
 				links.add(link);
 			}
 		}
@@ -368,32 +338,7 @@ public class IMDBSource implements ISource {
 		return null;
 	}
 
-	private String normalizeQuery(String s) {
-		s =s.toLowerCase();
-		
-		s = s.replaceAll("ä|á","a"); 
-		s = s.replaceAll("ñ","n");
-		s = s.replaceAll("ö","o");
-		s = s.replaceAll("ü","u");
-		s = s.replaceAll("ÿ","y");
-		s = s.replaceAll("é","e");
-		
-		s = s.replaceAll("ß","ss");  //  German beta “ß” -> “ss”
-		s = s.replaceAll("Æ","AE");  //  Æ
-		s = s.replaceAll("æ","ae");  //  æ
-		s = s.replaceAll("Ĳ","IJ");  //  Ĳ
-		s = s.replaceAll("ĳ","ij");  //  ĳ
-		s = s.replaceAll("Œ","Oe");  //  Œ
-		s = s.replaceAll("œ","oe");  //  œ
-//
-//		s = s.replaceAll("\\x{00d0}\\x{0110}\\x{00f0}\\x{0111}\\x{0126}\\x{0127}","DDddHh"); 
-//		s = s.replaceAll("\\x{0131}\\x{0138}\\x{013f}\\x{0141}\\x{0140}\\x{0142}","ikLLll"); 
-//		s = s.replaceAll("\\x{014a}\\x{0149}\\x{014b}\\x{00d8}\\x{00f8}\\x{017f}","NnnOos"); 
-//		s = s.replaceAll("\\x{00de}\\x{0166}\\x{00fe}\\x{0167}","TTtt");                     
-		
-		s =s.replaceAll(":|-|,|'", "");
-		return s;
-	}
+	
 	
 	@SuppressWarnings("unchecked")
 	private SearchResult searchTitles(String query,String searchType, Source source) {		
@@ -409,8 +354,8 @@ public class IMDBSource implements ISource {
 					String filmTilteText = tr.getTextExtractor().toString();					
 					Matcher m = FILM_TITLE_PATTERN.matcher( filmTilteText);
 					if (m.matches()) {
-						String realTitle =normalizeQuery(m.group(1)); 
-						if (realTitle.contains(normalizeQuery(query))) {
+						String realTitle =SearchHelper.normalizeQuery(m.group(1)); 
+						if (realTitle.contains(SearchHelper.normalizeQuery(query))) {
 							if (Integer.parseInt(m.group(2)) > year) {
 								year = Integer.parseInt(m.group(2));
 								url = getFirstUrl(tr).getAttributeValue("href");

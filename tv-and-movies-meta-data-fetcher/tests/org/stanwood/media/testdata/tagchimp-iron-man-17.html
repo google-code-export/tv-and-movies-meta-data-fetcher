@@ -1,0 +1,597 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/master.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>tagChimp | Iron Man</title>
+<meta name="description" content="You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony" />
+<link rel="alternate" type="application/rss+xml" href="http://www.tagchimp.com/rss/tagChimp.xml" title="Recent Additions" />
+<link rel="stylesheet" href="/ssi/js/jquery/themes/flora/flora.tabs.css" type="text/css" media="screen" title="Flora (Default)" />
+<script type="text/javascript" src="/ssi/js/jquery/jquery-1.2.6.min.js" ></script>
+<script type="text/javascript" src="/ssi/js/jquery/jquery.dimensions.js"></script>
+<script type="text/javascript" src="/ssi/js/jquery/ui.tabs.js"></script>
+<script src="/ssi/spry/SpryValidationTextField.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+	$('#tabs > ul').tabs({ fx: [null, { height: 'toggle', opacity: 'toggle' }] });
+});
+//]]>
+</script>
+<script type="text/javascript">
+//<![CDATA[
+// the following functions are for adding chapter titles
+function addOnTheRun() {
+	var numb = document.getElementById("addmany").value;
+	for ( var i = 0 ; i < numb ; i++ ) {
+	add();
+	}
+}
+window.onload = function() {
+	document.getElementById("go").onclick = function() {
+		addOnTheRun();
+		document.getElementById("addmany-div").style.display = "none";
+		return false;
+	}
+}
+var elCount = 1;
+function add() {
+    var parent = document.getElementById('parent');
+    var chapter = document.createElement('DIV');
+        chapter.id = 'chapter_title' + elCount + '';
+        chapter.name = 'chapter_title' + elCount + '';
+    var chapter_title_label = document.createElement('LABEL');
+        chapter_title_label.appendChild(document.createTextNode('Chapter ' + elCount + ': '));
+    var chapter_title_text = document.createElement('INPUT');
+        chapter_title_text.id = 'chapter__title' + elCount + '';
+        chapter_title_text.name = 'chapter_title[' + elCount + ']';
+        chapter.appendChild(chapter_title_label);
+        chapter.appendChild(chapter_title_text);
+        chapter.appendChild(document.createElement('BR'));
+        parent.appendChild(chapter);
+        elCount++;
+}
+//]]>
+</script>
+<script type="text/javascript" src="/ssi/js/scripts.js"></script>
+<!-- InstanceEndEditable --><!-- InstanceBeginEditable name="head" -->
+<link href="/ssi/spry/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
+<meta name="description" content="Meta tags for Iron Man: The movie begins with Tony Stark (Robert Downey Jr.) visiting soldiers on duty in the Middle East. He is joking with some members of a convoy who seem to be genuinely amused by his persona. Suddenly, the convoy is attacked. The soldiers fight to defend themselves but are quickly killed. Stark flees when a bomb (bearing the logo of his company, &quot;Stark Industries&quot;) explodes, severely wounding Tony's chest. Tony is captured and recorded by a group of terrorists. A flashback sequence reveals Tony's history as a child prodigy before taking over his father's technology company at age 21. Colonel James Rhodes (Terrence Howard) attends a ceremony to present Tony Stark with an award for his work, but Stark is not in attendance. Tony's right-hand man (and his father's former partner) Obadiah Stane (Jeff Bridges) accepts the award in Tony's honor. Rhody later finds Tony partying in a casino. On his way out, a reporter named Christine (Leslie Bibb) approaches Stark with some questions regarding the ethics of his weapons business. Stark deflects her questions with some swift quips and the two end up spending the night together. Next morning, Christine is awakened by a voice on a computer monitor. It's JARVIS, the artificial intelligence program responsible for running Tony's house. Christine is greeted by Tony's assistant, &quot;Pepper&quot; Potts (Gwyneth Paltrow) as she leaves the house. Pepper helps Tony catch up on some business before Tony heads out to the airport where his plane is kept. In flight, Tony talks with Rhody. Rhody is unhappy about Tony's lax attitude, and Tony tries to get his old friend to relax. Before long they are drunk and leering at the stewardesses. Tony arrives at a military outpost in the Middle East to demonstrate his company's latest project - the Jericho, a super-missile system. After the demonstration, Tony gets a phone call from Obadiah and they are both pleased that the demonstration went well. Tony goes off with the convoy that is soon attacked by terrorists. Much later, Tony regains consciousness in a cave. His chest is hooked up to a strange device. Another captive, named Yinsen (Shaun Tomb), explains that he operated on Stark but was unable to remove all the shrapnel fragments from the bomb blast. Yinsen created a device - essentially a battery-powered magnet - that will keep the remaining fragments out of Tony's heart. The terrorists who captured Tony & Yinsen enter the room. Yinsen translates; they want Tony to build them a Jericho missile. Tony refuses, so they begin to torture Stark." />
+<script type="text/javascript">
+$(document).ready(function(){
+ 
+ $("#delete_selected_chapter_all").click(function()
+  {
+   var checked_status = this.checked;
+   $("input[@id=delete_selected_chapter]").each(function()
+   {
+    this.checked = checked_status;
+   });
+  });
+ 
+});
+</script>
+<!-- InstanceEndEditable -->
+<style type="text/css">
+<!--
+@import url("http://www.tagchimp.com/ssi/styles.css");
+-->
+</style>
+</head>
+<body>
+<a class="skiplink" href="#startcontent" accesskey="2" title="skip navigation">Skip over navigation</a>
+<div id="wrapper">
+  <div id="logo"><a href="http://www.tagchimp.com" title="tagChimp!"><img src="http://www.tagchimp.com/images/tagChimp.png" alt="tagChimp" width="193" height="90" border="0" /></a></div>
+<div id="top_txt_links">
+  <div id="search">
+    <script type="text/javascript">
+// Written by Rob Schmitt, The Web Developer's Blog
+// http://webdeveloper.beforeseven.com/
+
+var active_color = 'green';	// Colour of user provided text
+var inactive_color = '#999';	// Colour of default text
+window.onload = formDefaultValues;
+function formDefaultValues() {
+	var fields = getElementsByClassName(document, "input", "default-value");
+	if (!fields) {
+		return;
+	}
+	var default_values = new Array();
+	for (var i = 0; i < fields.length; i++) {
+		fields[i].style.color = inactive_color;
+		if (!default_values[fields[i].id]) {
+		default_values[fields[i].id] = fields[i].value;
+		}
+		fields[i].onfocus = function() { 
+			if (this.value == default_values[this.id]) {
+			this.value = '';
+			this.style.color = active_color;
+			}
+			this.onblur = function() {
+				if (this.value == '') {
+					this.style.color = inactive_color;
+					this.value = default_values[this.id];
+				}
+			}
+		}
+	}
+}
+// getElementsByClassName()
+// Written by Jonathan Snook, http://www.snook.ca/jonathan
+// Add-ons by Robert Nyman, http://www.robertnyman.com
+function getElementsByClassName(oElm, strTagName, strClassName){
+	var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
+	var arrReturnElements = new Array();
+	strClassName = strClassName.replace(/\-/g, "\\-");
+	var oRegExp = new RegExp("(^|\\s)" + strClassName + "(\\s|$)");
+	var oElement;
+	for (var i = 0; i < arrElements.length; i++) {
+		oElement = arrElements[i];
+		if (oRegExp.test(oElement.className)) {
+			arrReturnElements.push(oElement);
+		}
+	}
+	return (arrReturnElements);
+}
+</script>
+<form method="get" action="http://www.tagchimp.com/search/index.php" accept-charset="utf-8">
+<table style="border-collapse:collapse;">
+    <tr>
+        <td align="right">
+            <input type="text" name="searchterm" value="search" class="tf_med default-value" style="float:left; display:block; width:180px" title="search movie title, show names, music videos, actors, directors, etc." />
+            <input type="image" name="search" title="search" src="http://www.tagchimp.com/images/search.png" style="float:left; display:block; margin:2px 0 0 5px; border:0" />
+        </td>
+    </tr>
+    <td align="center">
+        <select name="kind">
+        	<option value="a">search everything</option>
+            <optgroup label="Movies">
+                <option value="mo1">Movie Title</option>
+                <option value="mo2">Actors</option>
+                <option value="mo3">Director, Producer, Screenwriter</option>
+            </optgroup>
+            <option></option>
+            <optgroup label="TV Shows">
+            	<option value="tv1">Show Name</option>
+                <option value="tv2">Episode Title</option>
+                <option value="tv3">Actors</option>
+                <option value="tv4">Director, Producer, Screenwriter</option>
+            </optgroup>
+            <option></option>
+            <optgroup label="Music Videos">
+            	<option value="mv1">Song Title</option>
+                <option value="mv2">Band Name</option>
+                <option value="mv3">Album Title</option>
+            </optgroup>
+        </select>
+        </td>
+    </tr>
+</table>
+</form>
+  </div>
+ <br />
+  <!--<div id="my_account"><img src="http://www.tagchimp.com/images/icon_lock.png" alt="" width="15" height="16" border="0" align="left" style="padding-right:4px" /> <a href="">my account</a></div>
+  <div id="help"><img src="http://www.tagchimp.com/images/icon_help.png" alt="" width="16" height="16" border="0" align="left" style="padding-right:4px" /> <a href="http://www.tagchimp.com/support/">help</a></div>-->
+</div>  <br />
+  <div id="but_browse">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/browse/" title="Browse tagChimp movies">browse</a></p>
+  </div>
+</div>
+<div id="but_add">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/add/" title="Add your meta-tags to tagChimp">add tags</a></p>
+  </div>
+</div>
+<div id="but_register">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/my_tagchimp/home.php" title="login">sign up</a></p>
+  </div>
+</div>
+<div id="but_login">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://my.tagchimp.com" title="login">login</a></p>
+  </div>
+</div>
+<div id="but_community">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/community/" title="tagChimp top contributors">community</a></p>
+  </div>
+</div>
+<div id="but_forums">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://forums.tagchimp.com" title="tagChimp community forums">forums</a></p>
+  </div>
+</div>
+<div id="but_resources">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/resources/" title="Additional tagging resources">resources</a></p>
+  </div>
+</div>
+<div id="but_donate">
+  <div class="main_nav"><img src="http://www.tagchimp.com/images/nav_arrow.png" alt="" width="26" height="11" border="0" />
+    <p class="navlink"><a href="http://www.tagchimp.com/donate/" title="Support tagChimp by donating with PayPal">donate</a></p>
+  </div>
+</div>  <br />
+  <div id="main_top"></div>
+  <br />
+  <div id="main_mid"><a name="startcontent" id="startcontent"></a><!-- InstanceBeginEditable name="main_content" -->
+<form action="/tags/index.php" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+	<!--<input type="hidden" name="img_url" value="" />-->
+		<input type="hidden" name="id" value="39752" />
+		<div id="container">
+		<div id="tabs">
+			<ul>
+				<li><a href="#info"><span>Info</span></a></li>
+				<li><a href="#television"><span>Television</span></a></li>
+				<li><a href="#sorting"><span>Sorting</span></a></li>
+				<li><a href="#additional"><span>Additional</span></a></li>
+				<li><a href="#chapters"><span>Chapters</span></a></li>
+				<li><a href="#image"><span>Image</span></a></li>
+				<li><a href="#more"><span>More...</span></a></li>
+                <li><a href="#flag"><span>Flags</span></a></li>			</ul>
+			<div id="info">
+				<table class="tab_tbl">
+					                    <tr>
+						<td class="ftd">Kind</td>
+						<td>
+                        <select name="kind" id="kind">
+                            <option value="Movie"selected="selected" >Movie</option>
+                            <option value="TV Show" >TV Show</option>
+                            <option value="Music Video" >Music Video</option>
+                        </select></td>
+					</tr>
+					<tr>
+						<td>Movie Title</td>
+						<td><input type="text" name="title" id="title" value="Iron Man" class="tf_strong" /></td>
+					</tr>
+                    					                    <tr>
+						<td>Release Date</td>
+                        <td><input type="text" name="rel_date" id="rel_date" value="2008-05-09" class="tf_lg" /></td>
+                    </tr>
+                                        <tr>
+                        <td>Release Date</td>
+                        <td>
+                            <div class="float_tf"><input type="text" name="rel_date_yyyy" id="rel_date_yyyy" value="" class="tf_sm" style="width:30px" title="Year: YYYY" /> <span class="small">YYYY</span> </div>
+                            <div class="float_tf" style="margin-left: 10px"><input type="text" name="rel_date_mm" id="rel_date_mm" value="" class="tf_sm" style="width:15px" title="Month: MM" /> <span class="small">MM</span></div>
+                            <div class="float_tf" style="margin-left: 10px"><input type="text" name="rel_date_dd" id="rel_date_dd" value="" class="tf_sm" style="width:15px" title="Day: DD" /> <span class="small">DD</span></div>
+                        </td>
+					</tr>
+					<tr>
+						<td>Category</td>
+						<td>
+                        <select name="category" id="category">
+                                                        <option value="Action & Adventure">Action &amp; Adventure</option>
+                            <option value="Animation">Animation</option>
+                            <option value="Classics">Classics</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Documentary">Documentary</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Independent">Independent</option>
+                            <option value="Kids & Family">Kids &amp; Family</option>
+                            <option value="Military & War">Military &amp; War</option>
+                            <option value="Music">Music</option>
+                            <option value="Musical">Musical</option>
+                            <option value="Reality TV">Reality TV</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Sci-Fi & Fantasy"selected="selected">Sci-Fi &amp; Fantasy</option>
+                            <option value="Short Films">Short Films</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Western">Western</option>
+                                                    </select>
+                        </td>
+					</tr>
+					<tr>
+						<td>Rating</td>
+						<td>
+                        <select name="rating" id="rating">
+                            <option value="G">G</option>
+                            <option value="PG">PG</option>
+                            <option value="PG-13"selected="selected">PG-13</option>
+                            <option value="R">R</option>
+                            <option value="NC-17">NC-17</option>
+                            <option value="Unrated">Unrated</option>
+                            <option value="TV-Y7">TV-Y7</option>
+                            <option value="TV-Y">TV-Y</option>
+                            <option value="TV-G">TV-G</option>
+                            <option value="TV-PG">TV-PG</option>
+                            <option value="TV-14">TV-14</option>
+                            <option value="TV-MA">TV-MA</option>
+                            <option value="No Rating">No Rating</option>
+                                                                                                                                                                                                    </select></td>
+					</tr>
+					<tr>
+						<td>Director</td>
+						<td><input type="text" name="director" id="director" value="Jon Favreau" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Producer</td>
+						<td><input type="text" name="producer" id="producer" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Screenwriter</td>
+						<td><input type="text" name="screenwriter" id="screenwriter" value="Mark Fergus, Hawk Ostby" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top">Cast</td>
+						<td style="vertical-align:top"><textarea name="cast" id="cast" class="ta_sm">Robert Downey Jr., Gwyneth Paltrow</textarea></td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top">Short<br />Description</td>
+						<td style="vertical-align:top"><textarea name="short_description" id="short_description" class="ta_sm">You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony</textarea></td>
+					</tr>
+                    <tr>
+						<td style="vertical-align:top">Long<br />Description</td>
+						<td style="vertical-align:top"><textarea name="long_description" id="long_description" class="ta_lg">The movie begins with Tony Stark (Robert Downey Jr.) visiting soldiers on duty in the Middle East. He is joking with some members of a convoy who seem to be genuinely amused by his persona. Suddenly, the convoy is attacked. The soldiers fight to defend themselves but are quickly killed. Stark flees when a bomb (bearing the logo of his company, &quot;Stark Industries&quot;) explodes, severely wounding Tony's chest. Tony is captured and recorded by a group of terrorists. A flashback sequence reveals Tony's history as a child prodigy before taking over his father's technology company at age 21. Colonel James Rhodes (Terrence Howard) attends a ceremony to present Tony Stark with an award for his work, but Stark is not in attendance. Tony's right-hand man (and his father's former partner) Obadiah Stane (Jeff Bridges) accepts the award in Tony's honor. Rhody later finds Tony partying in a casino. On his way out, a reporter named Christine (Leslie Bibb) approaches Stark with some questions regarding the ethics of his weapons business. Stark deflects her questions with some swift quips and the two end up spending the night together. Next morning, Christine is awakened by a voice on a computer monitor. It's JARVIS, the artificial intelligence program responsible for running Tony's house. Christine is greeted by Tony's assistant, &quot;Pepper&quot; Potts (Gwyneth Paltrow) as she leaves the house. Pepper helps Tony catch up on some business before Tony heads out to the airport where his plane is kept. In flight, Tony talks with Rhody. Rhody is unhappy about Tony's lax attitude, and Tony tries to get his old friend to relax. Before long they are drunk and leering at the stewardesses. Tony arrives at a military outpost in the Middle East to demonstrate his company's latest project - the Jericho, a super-missile system. After the demonstration, Tony gets a phone call from Obadiah and they are both pleased that the demonstration went well. Tony goes off with the convoy that is soon attacked by terrorists. Much later, Tony regains consciousness in a cave. His chest is hooked up to a strange device. Another captive, named Yinsen (Shaun Tomb), explains that he operated on Stark but was unable to remove all the shrapnel fragments from the bomb blast. Yinsen created a device - essentially a battery-powered magnet - that will keep the remaining fragments out of Tony's heart. The terrorists who captured Tony & Yinsen enter the room. Yinsen translates; they want Tony to build them a Jericho missile. Tony refuses, so they begin to torture Stark.</textarea></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="television">
+				<table class="tab_tbl">
+					<tr>
+						<td class="ftd">Show</td>
+						<td><input type="text" name="show_name" id="show_name" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Season</td>
+						<td><span id="sprytextfield1">
+                        <input type="text" name="season" id="season" value="" class="tf_lg" />
+                        <span class="textfieldInvalidFormatMsg">numbers only</span></span></td>
+				  </tr>
+					<tr>
+						<td>Episode #</td>
+						<td><span id="sprytextfield2">
+                        <input type="text" name="episode" id="episode" value="" class="tf_lg" />
+                        <span class="textfieldInvalidFormatMsg">numbers only</span></span></td>
+				  </tr>
+					<tr>
+						<td>Episode ID</td>
+						<td><input type="text" name="episode_id" id="episode_id" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>TV Network</td>
+						<td><input type="text" name="tv_network" id="tv_network" value="" class="tf_lg" /></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="sorting">
+				<table class="tab_tbl">
+					<tr>
+						<td class="ftd">Name</td>
+						<td><input type="text" name="sort_name" id="sort_name" value="Iron Man" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Artist</td>
+						<td><input type="text" name="sort_artist" id="sort_artist" value="Robert Downey Jr., Gwyneth Paltrow" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Album Artist</td>
+						<td><input type="text" name="sort_album_artist" id="sort_album_artist" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Album</td>
+						<td><input type="text" name="sort_album" id="sort_album" value="IRON MAN" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Show</td>
+						<td><input type="text" name="sort_show" id="sort_show" value="" class="tf_lg" /></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="additional">
+				<table class="tab_tbl">
+					<tr>
+						<td class="ftd">Advisory</td>
+						<td>
+							<select name="advisory" id="advisory">
+								<option value="None">None</option>
+								<option value="Clean">Clean</option>
+                                <option value="Inoffensive">Inoffensive</option>
+								<option value="Explicit">Explicit</option>
+							</select></td>
+					</tr>
+					<tr>
+						<td>Copyright</td>
+						<td><input type="text" name="copyright" id="copyright" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top">Comments</td>
+						<td style="vertical-align:top"><textarea name="comments" id="comments" class="ta_sm">Appletv/iPhone</textarea></td>
+					</tr>
+					<tr>
+						<td>Track #</td>
+						<td><input name="track_num" type="text" id="track_num" size="5" value="" class="tf_sm" /> of <input name="track_total" type="text" id="track_total" size="5" value="" class="tf_sm" /></td>
+					</tr>
+				</table>
+			</div>
+			
+            
+            
+			<div id="chapters">
+				<table class="tab_tbl">
+				<tr>
+					<td colspan="2"><div align="center"></div></td>
+				</tr>
+				
+						<tr>
+							<td class="ftd">Chapter 1:</td>
+							<td><input type="text" name="chapter_title[1]" value="Start" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 2:</td>
+							<td><input type="text" name="chapter_title[2]" value="Las Vegas" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 3:</td>
+							<td><input type="text" name="chapter_title[3]" value="Puttering" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 4:</td>
+							<td><input type="text" name="chapter_title[4]" value="Survived" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 5:</td>
+							<td><input type="text" name="chapter_title[5]" value="The Plans" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 6:</td>
+							<td><input type="text" name="chapter_title[6]" value="What Progress" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 7:</td>
+							<td><input type="text" name="chapter_title[7]" value="Home" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 8:</td>
+							<td><input type="text" name="chapter_title[8]" value="Pundits" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 9:</td>
+							<td><input type="text" name="chapter_title[9]" value="Industry" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 10:</td>
+							<td><input type="text" name="chapter_title[10]" value="Morning After" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 11:</td>
+							<td><input type="text" name="chapter_title[11]" value="New Grids" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 12:</td>
+							<td><input type="text" name="chapter_title[12]" value="Allies" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 13:</td>
+							<td><input type="text" name="chapter_title[13]" value="Pepper:Accomplice" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 14:</td>
+							<td><input type="text" name="chapter_title[14]" value="Old Inventions" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 15:</td>
+							<td><input type="text" name="chapter_title[15]" value="Underpowered" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 16:</td>
+							<td><input type="text" name="chapter_title[16]" value="Official Statement" class="tf_lg" /></td>
+						</tr>
+						<tr>
+							<td class="ftd">Chapter 17:</td>
+							<td><input type="text" name="chapter_title[17]" value="End Credits" class="tf_lg" /></td>
+						</tr>				</table>
+			</div>
+            
+            
+			
+			<div id="image">
+				<div align="center">
+					                    <img src="/covers/large/39752.jpg" />					<input type="hidden" name="img_lg" value="39752.jpg" />
+					<input type="hidden" name="img_sm" value="39752.jpg" />
+                    <input type="hidden" name="total_chapters" value="17" />
+                                        <input type="hidden" name="sort_album_artist_slug" value="" />
+				</div>
+			</div>
+			
+			<div id="more">
+                <div style="padding:40px">
+                    <table>
+                        <tr>
+                            <td class="ftd">IMDB ID</td>
+                            <td><input type="text" name="imdb_id" id="imdb_id" value="" class="tf_sm" title="Enter the unique IMDB 7 digit ID/Title Code" /></td>
+                        </tr>
+                        <tr>
+                            <td class="ftd">Netflix ID</td>
+                            <td><input type="text" name="netflix_id" id="netflix_id" value="" class="tf_sm" title="Enter the unique Netflix 8 digit ID number" /></td>
+                        </tr>
+                        <tr>
+                        	<td colspan="2">
+                            <h3>Additional information is available at</h3>
+							<a href="http://imdb.com/find?q=Iron+Man" target="_blank">The Internet Movie Database (IMDB)</a><br />							                            
+                            <a href="http://www.netflix.com/Search?v1=Iron+Man&lnkce=acsEnhCk" target="_blank">Rent this at Netflix</a>							                            
+                            <h3>Chapter information is available at</h3> 
+                            <a href="http://www.spun.com/search.jsp?page=1&type=movies.title.buy&query=Iron+Man&image.x=20&image.y=13" target="_blank">Spun.com</a><br />
+                            <a href="http://video.barnesandnoble.com/search/results.asp?quickSearchType=TTL&FRM=0&quickSearchText=Iron+Man" target="_blank">Barnes &amp; Noble</a>
+                            <p class="small">Links open in a new browser window.</p></td>
+                    	</tr>
+                    </table>
+                </div>
+            </div>
+			
+			
+			
+				<div id="flag">
+				<div style="padding:10px; text-align:center"><h3>you must be a member to set flags</h3>
+				</div>
+				</div>            
+            
+            
+			<div id="add_edit">
+				<a href="/my_tagchimp/?ref=%2Fmovies%2Firon-man-17">login</a> or <a href="/register/">register</a> to add and edit tags!			</div>
+            
+            
+            
+		</div>
+	</div>
+</form>
+<!-- InstanceEndEditable --></div>
+  <br />
+  <div id="main_bottom"></div>
+  <br />
+  <div id="boxes">
+  	<!-- InstanceBeginEditable name="box" -->
+    <div id="affiliate_banner"><a href="http://click.linksynergy.com/fs-bin/click?id=pTePyDR*FiI&offerid=146261.10001964&type=4&subid=0"><IMG alt="Apple iTunes" border="0" src="http://images.apple.com/itunesaffiliates/US/newsletter/GiftCertificates_468x60.jpg"></a><IMG border="0" width="1" height="1" src="http://ad.linksynergy.com/fs-bin/show?id=pTePyDR*FiI&bids=146261.10001964&type=4&subid=0"></div>
+    <script type="text/javascript">
+<!--
+var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "integer", {isRequired:false});
+var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "integer", {isRequired:false});
+//-->
+</script>
+<!-- InstanceEndEditable -->
+  </div>
+  <br />
+  <div id="hr"></div>
+  <br />
+  <div id="footer">
+    <div align="center">
+<table align="center">
+  <tr>
+    <td>&copy; 2008 tagChimp</td>
+    <td> | </td>
+    <td><a href="http://www.tagchimp.com">home</a></td>
+    <td> | </td>
+    <td><a href="https://www.tagchimp.com/register/">sign up</a></td>
+    <td> | </td>
+    <td><a href="/contact/">contact</a></td>
+    <td> | </td>
+    <td><a href="http://www.tagchimp.com/rss/tagChimp.xml">grab my feed</a></td>
+    <td><a href="http://www.tagchimp.com/rss/tagChimp.xml"><img src="http://www.tagchimp.com/images/rss.png" alt="" width="16" height="16" border="0" /></a></td>
+  </tr>
+  <tr>
+    <td colspan="12"><div align="center"><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+</form></div></td>
+  </tr>
+</table>
+</div>
+  </div>
+</div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2126511-2";
+urchinTracker();
+</script>
+</body>
+<!-- InstanceEnd --></html>

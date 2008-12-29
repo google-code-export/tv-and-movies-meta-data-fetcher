@@ -32,6 +32,7 @@ import java.util.Map;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Certification;
+import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
@@ -314,10 +315,15 @@ public class TestXMLStore extends XMLTestCase {
 			film.setRating(8.7F);
 			film.setSourceId(IMDBSource.SOURCE_ID);
 			film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
+			film.setDescription("Test description of the film");
 			List<Link>writers = new ArrayList<Link>();
 			writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
 			film.setWriters(writers);
 			
+			film.addChapter(new Chapter("The start",1));
+			film.addChapter(new Chapter("The end",3));
+			film.addChapter(new Chapter("Second Chapter",2));
+						
 			xmlSource.cacheFilm(filmFile1, film);
 			xmlSource.cacheFilm(filmFile2, film);
 			
@@ -326,7 +332,13 @@ public class TestXMLStore extends XMLTestCase {
 			String contents = FileHelper.readFileContents(Data.class.getResourceAsStream("films.xml"));
 			contents = contents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());			
 			Reader r = new StringReader(contents);
+			
+//			System.out.println(">>>>>>> expected >>>>>>>>>>>>");
+//			System.out.println(contents);
+//			System.out.println("<<<<<<< epected <<<<<<<<<<<<");
+//			System.out.println(">>>>>>> actual >>>>>>>>>>>>");
 //			FileHelper.displayFile(actualFile, System.out);
+//			System.out.println("<<<<<<< actual <<<<<<<<<<<<");
 			
 			assertXMLEqual(new InputSource(r),new InputSource(new FileInputStream(actualFile)));
 			

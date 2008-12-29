@@ -3,6 +3,7 @@
   <film id="114814" imageUrl="http://test/image.jpg" rating="8.7" releaseDate="1995-08-25"
     sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
     <summary>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</summary>
+    <description>Test description of the film</description>
     <genre name="Crime"/>
     <genre name="Drama"/>
     <genre name="Mystery"/>
@@ -34,6 +35,9 @@
     <certification certification="15" country="Sweden"/>
     <certification certification="18" country="UK"/>
     <certification certification="R" country="USA"/>
+    <chapter name="The start" number="1"/>
+    <chapter name="Second Chapter" number="2"/>
+    <chapter name="The end" number="3"/>
     <director link="Bryan Singer" name="http://www.imdb.com/name/nm0001741/"/>
     <writer link="Christopher McQuarrie" name="http://www.imdb.com/name/nm0003160/"/>
     <guestStar link="Stephen Baldwin" name="http://www.imdb.com/name/nm0000286/"/>

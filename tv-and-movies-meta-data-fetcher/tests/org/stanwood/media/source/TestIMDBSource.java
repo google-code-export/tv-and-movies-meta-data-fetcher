@@ -73,19 +73,15 @@ public class TestIMDBSource extends TestCase {
 			FileHelper.deleteDir(dir);
 		}	
 	}
-	
-	
-	
-	
-	
+		
 	/**
 	 * Test the HTML entity decoding
 	 */
 	public void testHTMLEntityDecode() {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
-		String result = source.decodeHtmlEntities("Jam&#243;n, jam&#243;n.avi");
+		String result = SearchHelper.decodeHtmlEntities("Jam&#243;n, jam&#243;n.avi");
 		assertEquals("Check the result","Jamón, jamón.avi",result);
-		result = source.decodeHtmlEntities("&#243;Jam&#243;n, jam&#243;n.avi&#243;&#243;");
+		result = SearchHelper.decodeHtmlEntities("&#243;Jam&#243;n, jam&#243;n.avi&#243;&#243;");
 		assertEquals("Check the result","óJamón, jamón.avióó",result);
 	}
 	
@@ -144,7 +140,7 @@ public class TestIMDBSource extends TestCase {
 			@Override
 			String getSource(URL url) throws IOException {
 			
-				String strFilmId = String.valueOf(filmId);
+				String strFilmId = filmId;
 				while (strFilmId.length()<7) {
 					strFilmId="0"+strFilmId;
 				}

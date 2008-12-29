@@ -18,6 +18,8 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +38,11 @@ public class Film implements IVideo {
 	private List<String> genres = new ArrayList<String>();
 	private List<Certification> certifications = new ArrayList<Certification>();
 	private URL filmUrl;
-	private float rating;
+	private Float rating;
 	private Date date;
 	private URL imageURL;
+	private List<Chapter> chapters = new ArrayList<Chapter>();
+	private String description;
 	
 	/**
 	 * Used to create a instance of the film class.
@@ -222,7 +226,7 @@ public class Film implements IVideo {
 	 * Used to get the global user rating of the film
 	 * @return The global user rating of the show
 	 */
-	public float getRating() {
+	public Float getRating() {
 		return rating;
 	}
 
@@ -230,7 +234,7 @@ public class Film implements IVideo {
 	 * Used to set the global user rating of the film
 	 * @param rating The global user rating of the show
 	 */
-	public void setRating(float rating) {
+	public void setRating(Float rating) {
 		this.rating = rating;
 	}
 
@@ -276,5 +280,50 @@ public class Film implements IVideo {
 	public URL getImageURL() {
 		return this.imageURL;
 	}
+
+	/**
+	 * Used to add a chapter to the film
+	 * @param chapter The chapter to add
+	 */
+	public void addChapter(Chapter chapter) {
+		chapters.add(chapter);
+		Collections.sort(chapters,new Comparator<Chapter>() {
+			@Override
+			public int compare(Chapter o1, Chapter o2) {
+				return Integer.valueOf(o1.getNumber()).compareTo(o2.getNumber());				
+			}			
+		});
+	}
 	
+	/**
+	 * Used to get the chapters of the film
+	 * @return The chapters of the film
+	 */
+	public List<Chapter> getChapters() {
+		return chapters;
+	}
+
+	/**
+	 * Used to set the chapter information for the film
+	 * @param chapters The chapters of the film
+	 */
+	public void setChapters(List<Chapter> chapters) {
+		this.chapters = chapters;
+	}
+
+	/** 
+	 * Used to set the films long description
+	 * @param description The films long description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}	
+	
+	/**
+	 * Used to get the films long description
+	 * @return the films long description
+	 */
+	public String getDescription() {
+		return this.description;
+	}
 }
