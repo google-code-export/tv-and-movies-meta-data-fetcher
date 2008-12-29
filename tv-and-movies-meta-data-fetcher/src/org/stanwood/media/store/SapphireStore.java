@@ -168,8 +168,12 @@ public class SapphireStore implements IStore {
 				ps.println("     <published>" + df.format(film.getDate()) + "</published>");
 				ps.println("     <genres>");
 				for (String genre : film.getGenres()) {
-					// ps.println("        <genre primary="true">Mystery</genre>");
-					ps.println("        <genre>" + genre + "</genre>");
+					if (genre.equals(film.getPreferredGenre())) {
+						ps.println("        <genre primary=\"true\">" + genre + "</genre>");
+					}
+					else {
+						ps.println("        <genre>" + genre + "</genre>");
+					}
 				}
 				ps.println("     </genres>");
 				if (film.getGuestStars() != null) {

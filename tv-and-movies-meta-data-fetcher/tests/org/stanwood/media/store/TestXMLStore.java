@@ -169,6 +169,8 @@ public class TestXMLStore extends XMLTestCase {
 			assertEquals("Drama",film.getGenres().get(1));
 			assertEquals("Mystery",film.getGenres().get(2));
 			assertEquals("Thriller",film.getGenres().get(3));
+			
+			assertEquals("Drama",film.getPreferredGenre());
 
 			assertEquals(27,film.getCertifications().size());			
 			assertEquals("Iceland",film.getCertifications().get(0).getCountry());
@@ -259,8 +261,10 @@ public class TestXMLStore extends XMLTestCase {
 			genres.add("Crime");
 			genres.add("Drama");
 			genres.add("Mystery");
-			genres.add("Thriller");
+			genres.add("Thriller");			
 			film.setGenres(genres);
+			
+			film.setPreferredGenre("Drama");
 			List<Certification> certifications= new ArrayList<Certification>();
 			certifications.add(new Certification("16","Iceland"));
 			certifications.add(new Certification("R-18","Philippines"));

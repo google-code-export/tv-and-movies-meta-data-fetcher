@@ -43,7 +43,25 @@ public class Film implements IVideo {
 	private URL imageURL;
 	private List<Chapter> chapters = new ArrayList<Chapter>();
 	private String description;
+	private String preferredGenre;
 	
+	/** 
+	 * This is useful if the film belongs to more than one genres. It will returned the 
+	 * genre that is preferred.
+	 * @return The preferred genre or null if not or flagged as preferred.
+	 */
+	public String getPreferredGenre() {
+		return preferredGenre;
+	}
+
+	/**
+	 * Used to set the genre that is preferred in the list of genres.
+	 * @param preferredGenre The preferred genre
+	 */
+	public void setPreferredGenre(String preferredGenre) {
+		this.preferredGenre = preferredGenre;
+	}
+
 	/**
 	 * Used to create a instance of the film class.
 	 * @param id The id of the film used by the source that it was read from.

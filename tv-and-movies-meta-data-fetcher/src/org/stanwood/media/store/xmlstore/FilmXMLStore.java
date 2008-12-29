@@ -113,21 +113,24 @@ public class FilmXMLStore extends BaseXMLStore {
 		for (String value : film.getGenres()) {
 			Element genre = doc.createElement("genre");
 			genre.setAttribute("name", value);
+			if (value.equals(film.getPreferredGenre())) {
+				genre.setAttribute("preferred", "true");	
+			}
 			filmNode.appendChild(genre);
 		}
 
 		for (Certification value : film.getCertifications()) {
-			Element genre = doc.createElement("certification");
-			genre.setAttribute("country", value.getCountry());
-			genre.setAttribute("certification", value.getCertification());
-			filmNode.appendChild(genre);
+			Element cert = doc.createElement("certification");
+			cert.setAttribute("country", value.getCountry());
+			cert.setAttribute("certification", value.getCertification());
+			filmNode.appendChild(cert);
 		}
 		
 		for (Chapter chapter : film.getChapters()) {
-			Element genre = doc.createElement("chapter");
-			genre.setAttribute("number", String.valueOf(chapter.getNumber()));
-			genre.setAttribute("name", chapter.getName());
-			filmNode.appendChild(genre);
+			Element chap = doc.createElement("chapter");
+			chap.setAttribute("number", String.valueOf(chapter.getNumber()));
+			chap.setAttribute("name", chapter.getName());
+			filmNode.appendChild(chap);
 		}
 
 		writeEpsoideExtraInfo(doc, filmNode, "director", film.getDirectors());
@@ -187,8 +190,13 @@ public class FilmXMLStore extends BaseXMLStore {
 				List<Chapter> chapters = readChaptersFromXML(filmNode);
 				List<Link> directors = getLinks(filmNode, "director");
 				List<Link> writers = getLinks(filmNode, "writer");
-				List<Link> guestStars = getLinks(filmNode, "guestStar");
+				List<Link> guestStars = getLinks(filmNode, "guestStar");								
 				String imageUrl = getStringFromXML(filmNode, "@imageUrl");
+				
+				Element preferredGenreNode = (Element) XPathAPI.selectSingleNode(filmNode, "genre[@preferred='true']");
+				if (preferredGenreNode!=null) {
+					film.setPreferredGenre(preferredGenreNode.getAttribute("name"));
+				}
 
 				film.setCertifications(certifications);
 				film.setDate(releaseDate);
