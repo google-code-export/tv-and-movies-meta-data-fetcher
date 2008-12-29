@@ -1,3 +1,6 @@
+* Mon Dec 29 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+- BUG: Fixed text output. Now shows text for "Fetching film from source" instead of "Fetching show from source".
+- PERFORMANCE: Speed ups for MP4 store using atomic parsley. It now longer writes metadata unless it needs too and artwork is removed at the same time as writing the metadata.
 * Fri Dec 16 2008 John-Paul.Stanford <dev@stanwood.org.uk>
 - Film posters are fetched from the internet and stored in .mp4 and .m4v files.
 - Updated to the latest format changes of www.tv.com site.
