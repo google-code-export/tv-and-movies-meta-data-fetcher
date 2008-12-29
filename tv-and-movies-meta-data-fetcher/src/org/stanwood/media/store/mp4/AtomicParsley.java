@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,28 +150,59 @@ public class AtomicParsley extends AbstractExecutable {
 	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
 	 */
 	public void update(File mp4File, List<Atom>atoms) throws AtomicParsleyException {
-		List<String> args = new ArrayList<String>();
-		args.add(atomicParsleyApp.getAbsolutePath());
-		args.add(mp4File.getAbsolutePath());
-		args.add("--metaEnema");
-		args.add("--freefree");
-		args.add("--overWrite");
-		
-		for (Atom atom: atoms) {
-			String param = nameToParam.get( atom.getName());
-			if (param==null) {
-				throw new AtomicParsleyException("Unkown attom '" + atom.getName() + "' with value '" + atom.getValue());
-			}
-			args.add(param);
-			args.add(atom.getValue());
-		}
 		try {
-			execute(args);
+			List<Atom> newAtoms = new ArrayList<Atom>(atoms);
+			List<Atom> atomsAlreadyInFile = this.listAttoms(mp4File);			
+			
+			List<String> args = new ArrayList<String>();
+			args.add(atomicParsleyApp.getAbsolutePath());
+			args.add(mp4File.getAbsolutePath());
+//			args.add("--metaEnema"); 
+			args.add("--freefree");
+			args.add("--overWrite");
+			
+			boolean found = false;
+			for (Atom atom: newAtoms) {
+				// Check if this atom as already been set on this file
+				if (!atomsAlreadyInFile.contains(atom)) {
+					found = true;
+					String param = nameToParam.get( atom.getName());
+					if (param==null) {
+						throw new AtomicParsleyException("Unkown attom '" + atom.getName() + "' with value '" + atom.getValue());
+					}
+					args.add(param);
+					args.add(atom.getValue());
+				}
+			}
+		
+			if (found) {
+				// If their is already artwork, then remove it
+				if (hasAtomWithName("covr",atomsAlreadyInFile)) {
+					args.add(1,"--artwork");
+					args.add(2,"REMOVE_ALL");					
+				}
+								
+				System.out.println("Updating mp4/m4v file '"+mp4File.getName()+"' with new metadata");
+				execute(args);
+			}
+			else {
+				System.out.println("No new metadata to add to mp4/m4v file '"+mp4File.getName()+"'");
+			}
 		} catch (IOException e) {
 			throw new AtomicParsleyException(e.getMessage(),e);
 		} catch (InterruptedException e) {
 			throw new AtomicParsleyException(e.getMessage(),e);
 		}
+	}
+	
+	
+	private boolean hasAtomWithName(String name,List<Atom> atoms) {
+		for (Atom atom : atoms) {
+			if (atom.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -205,8 +237,7 @@ public class AtomicParsley extends AbstractExecutable {
 	 * @param film The film details
 	 * @throws AtomicParsleyException Thrown if their is a problem updating the atoms 
 	 */
-	public void updateFilm(File mp4File, Film film) throws AtomicParsleyException {
-		removeAllArtwork(mp4File);
+	public void updateFilm(File mp4File, Film film) throws AtomicParsleyException {		
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(new Atom("stik","Movie"));
 		atoms.add(new Atom("©day",film.getDate().toString()));

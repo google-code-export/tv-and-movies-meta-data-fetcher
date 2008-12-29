@@ -260,7 +260,7 @@ public class Controller {
 		}
 
 		if (film == null) {
-			System.out.println("Reading show from sources");
+			System.out.println("Reading film from sources");
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
 					film = source.getFilm(filmId);
