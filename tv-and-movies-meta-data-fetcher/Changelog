@@ -1,4 +1,5 @@
 * Mon Dec 29 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+- FEATURE: Films can now have a genre flagged as primary
 - FEATURE: Added new www.tagchimp.com source for films.
 - FEATURE: Films can now also have chapter name information and long descriptions.
 - BUG: Fixed text output. Now shows text for "Fetching film from source" instead of "Fetching show from source".
