@@ -40,8 +40,8 @@ import au.id.jericho.lib.html.Source;
 public class TestTVCOMSource extends TestCase {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int SHOW_ID_EUREKA = 58448;
-	private static final int SHOW_ID_HEROES = 17552;
+	private static final String SHOW_ID_EUREKA = "58448";
+	private static final String SHOW_ID_HEROES = "17552";
 	
 	/**
 	 * Test that the show details are read correctly.
@@ -288,7 +288,7 @@ public class TestTVCOMSource extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testSearch() throws Exception {
-		TVCOMSource source = getTVCOMSource(0);
+		TVCOMSource source = getTVCOMSource("0");
 		File dir = FileHelper.createTmpDir("TVShows");
 		try {
 			File eurekaFile = new File(dir,"Eureka");
@@ -302,7 +302,7 @@ public class TestTVCOMSource extends TestCase {
 		}		
 	}	
 	
-	private TVCOMSource getTVCOMSource(final long showId) {
+	private TVCOMSource getTVCOMSource(final String showId) {
 		TVCOMSource source = new TVCOMSource() {
 			@Override
 			Source getSource(URL url) throws IOException {

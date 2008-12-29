@@ -44,7 +44,7 @@ import org.xml.sax.InputSource;
 public class TestSapphireStore extends XMLTestCase {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int SHOW_ID = 58448;	
+	private static final String SHOW_ID = "58448";	
 	
 	/**
 	 * Test that the film is cached correctly
@@ -57,7 +57,7 @@ public class TestSapphireStore extends XMLTestCase {
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File filmFile = new File(dir,"The Usual Suspects.avi");
-			Film film = new Film(114814L);
+			Film film = new Film("114814");
 			film.setTitle("The Usual Suspects");
 			List<String> genres = new ArrayList<String>();
 			genres.add("Crime");

@@ -84,7 +84,7 @@ public class MemoryStore implements IStore {
 		Iterator<Show> it = shows.iterator();
 		while (it.hasNext()) {
 			Show foundShow = it.next();
-			if (foundShow.getShowId() == show.getShowId() && foundShow.getSourceId().equals(show.getSourceId())) {
+			if (foundShow.getShowId().equals(show.getShowId()) && foundShow.getSourceId().equals(show.getSourceId())) {
 				it.remove();
 			}
 		}
@@ -149,10 +149,10 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File episodeFile, long showId)
+	public Show getShow(File episodeFile, String showId)
 			throws StoreException, MalformedURLException, IOException {		
 		for (Show show : shows) {
-			if (show.getShowId() == showId) {
+			if (show.getShowId().equals(showId)) {
 				return show;
 			}
 		}
@@ -203,7 +203,7 @@ public class MemoryStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return films.get(filmFile);
 	}
 }

@@ -83,7 +83,7 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem. 
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return filmStore.getFilm(filmFile, filmId);
 	}
 
@@ -162,7 +162,7 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File episodeFile, long showId) throws StoreException, MalformedURLException, IOException {	
+	public Show getShow(File episodeFile, String showId) throws StoreException, MalformedURLException, IOException {	
 		return tvStore.getShow(episodeFile, showId);
 	}
 

@@ -67,15 +67,15 @@ public class TestController extends TestCase {
 
 	private File createConfigFileWithContents(StringBuilder testConfig) throws IOException, FileNotFoundException {
 		File configFile = File.createTempFile("config", ".xml");
-		configFile.deleteOnExit();
-		FileOutputStream os = null;
+		configFile.deleteOnExit();		
+		PrintStream ps = null; 
 		try {
-			os = new FileOutputStream(configFile);
-			PrintStream ps = new PrintStream(os);
+			FileOutputStream os = new FileOutputStream(configFile);
+			ps = new PrintStream(os);
 			ps.print(testConfig.toString());
 		}
-		finally {
-			os.close();
+		finally {			
+			ps.close();
 		}
 		return configFile;
 	}

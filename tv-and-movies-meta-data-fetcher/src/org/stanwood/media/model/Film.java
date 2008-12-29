@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class Film implements IVideo {
 
-	private long id;
+	private String id;
 	private String sourceId;
 	private String title;
 	private String summary;
@@ -44,7 +44,7 @@ public class Film implements IVideo {
 	 * Used to create a instance of the film class.
 	 * @param id The id of the film used by the source that it was read from.
 	 */
-	public Film(long id) {
+	public Film(String id) {
 		setId(id);
 	}
 	
@@ -52,7 +52,7 @@ public class Film implements IVideo {
 	 * Used to get the id of the film used by the source that it was read from.
 	 * @return The id of the film
 	 */
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 	
@@ -60,7 +60,7 @@ public class Film implements IVideo {
 	 * Used to set the id of the film used by the source that it was read from.
 	 * @param id The id of the film
 	 */
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	

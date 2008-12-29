@@ -88,7 +88,7 @@ public class FilmXMLStore extends BaseXMLStore {
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
 			throws TransformerException {		
 		Element filmNode = doc.createElement("film");
-		filmNode.setAttribute("id", String.valueOf(film.getId()));
+		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
 		filmNode.setAttribute("sourceId", film.getSourceId());
 		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
@@ -141,7 +141,7 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.	 
 	 */
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		try {
 			Document doc = getCache(filmFile.getParentFile());
 			Element filmsNode = (Element) doc.getFirstChild();
@@ -309,7 +309,7 @@ public class FilmXMLStore extends BaseXMLStore {
 				Element el = (Element) nodes.item(i);
 				String title = getTitle(el);
 				if (title!=null && title.equals(query)){				
-					SearchResult result = new SearchResult(Long.parseLong(el.getAttribute("id")),el.getAttribute("sourceId"));
+					SearchResult result = new SearchResult(el.getAttribute("id"),el.getAttribute("sourceId"));
 					System.out.println("Found film '"+query+"' in XMLStore with id '"+result.getId()+"'");
 					return result;	
 				}

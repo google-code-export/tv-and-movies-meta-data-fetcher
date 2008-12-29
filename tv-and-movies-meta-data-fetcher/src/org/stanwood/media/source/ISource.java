@@ -63,7 +63,7 @@ public interface ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(long showId) throws SourceException, MalformedURLException, IOException;
+	public Show getShow(String showId) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -73,7 +73,7 @@ public interface ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(long filmId) throws SourceException, MalformedURLException, IOException;
+	public Film getFilm(String filmId) throws SourceException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will

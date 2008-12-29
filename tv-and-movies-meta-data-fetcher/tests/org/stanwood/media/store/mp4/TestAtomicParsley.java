@@ -152,7 +152,7 @@ public class TestAtomicParsley extends TestCase {
 	}
 	
 	private Film createTestFilm() throws Exception {
-		Film film = new Film(123);
+		Film film = new Film("123");
 		List<Certification> certifications= new ArrayList<Certification>();
 		certifications.add(new Certification("16","Iceland"));
 		certifications.add(new Certification("R-18","Philippines"));
@@ -197,7 +197,7 @@ public class TestAtomicParsley extends TestCase {
 	}
 	
 	private Episode createTestEpisode() throws Exception {		
-		Show show = new Show(123);
+		Show show = new Show("123");
 		show.setName("Test Show Name");
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");

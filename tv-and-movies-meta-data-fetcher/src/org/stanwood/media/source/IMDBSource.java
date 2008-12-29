@@ -49,7 +49,7 @@ import au.id.jericho.lib.html.Tag;
  * This class is a source used to retrieve information about films from {@link "www.imdb.com"}.
  * This source has the option parameter "regexpToReplace". This is used when searching for a film
  * via the film's filename. The parameter is a regular expression, that when found in the filename,
- * is removed. Use the method <code>setAtomicParsleyPath</code> too set the of the application.  
+ * is removed. Use the method <code>setRegexpToReplace</code> to set the regular expression.  
  */
 public class IMDBSource implements ISource {
 
@@ -96,10 +96,10 @@ public class IMDBSource implements ISource {
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 * 
-	 * @param showId The id of the etshow to read
+	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(long showId) {
+	public Show getShow(String showId) {
 		return null;
 	}
 
@@ -134,7 +134,7 @@ public class IMDBSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(long filmId) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(String filmId) throws SourceException, MalformedURLException, IOException {
 		URL url = new URL(getFilmURL(filmId));
 		Film film = new Film(filmId);
 		film.setFilmUrl(url);
@@ -313,8 +313,8 @@ public class IMDBSource implements ISource {
 		return html;
 	}
 
-	private final static String getFilmURL(long filmId) {
-		String strFilmId = String.valueOf(filmId);
+	private final static String getFilmURL(String filmId) {
+		String strFilmId = filmId;
 		while (strFilmId.length() < 7) {
 			strFilmId = "0" + strFilmId;
 		}
@@ -339,8 +339,7 @@ public class IMDBSource implements ISource {
 		if (mode != Mode.FILM) {
 			return null;
 		}
-		String query = getQuery(filmFile);
-		query = query.toLowerCase().replaceAll("[:|-|,|']", "");
+		String query = SearchHelper.getQuery(filmFile,regexpToReplace).toLowerCase();		
 		Source source = new Source(getSource(new URL(getSearchUrl(query.replaceAll(" ", "+")))));
 		SearchResult result = searchTitles(query,"Popular Titles", source);
 		if (result == null) {
@@ -360,7 +359,7 @@ public class IMDBSource implements ISource {
 			if (a.getAttributeValue("class") != null && a.getAttributeValue("class").equals("linkasbutton-secondary")) {
 				Matcher m = EXTRACT_ID2_PATTERN.matcher(a.getAttributeValue("href"));
 				if (m.matches()) {
-					SearchResult result = new SearchResult(Long.parseLong(m.group(1)), SOURCE_ID);
+					SearchResult result = new SearchResult(m.group(1), SOURCE_ID);
 					return result;
 				}
 				
@@ -418,7 +417,7 @@ public class IMDBSource implements ISource {
 								if (url != null) {
 									Matcher m2 = EXTRACT_ID_PATTERN.matcher(url);
 									if (m2.matches()) {
-										SearchResult result = new SearchResult(Long.parseLong(m2.group(1)), SOURCE_ID);
+										SearchResult result = new SearchResult(m2.group(1), SOURCE_ID);
 										return result;
 									}
 								}
@@ -446,23 +445,7 @@ public class IMDBSource implements ISource {
 			html = new String(content, "iso-8859-1");
 		}
 		return html;
-	}
-
-	private String getQuery(File episodeFile) {
-		String file = episodeFile.getName().toLowerCase().trim();
-		int pos = file.lastIndexOf(".");
-		if (pos == -1) {
-			return null;
-		}
-		file = file.substring(0, pos);
-		file = file.replaceAll("\\.|_", " ");
-		file = file.replaceAll("(\\[|\\().*(\\]|\\))", "");	
-		file = file.replaceAll("dvdrip|dvd-rip|scr|dvd|xvid|divx|xv|xvi|full", "");
-		if (regexpToReplace!=null) {
-			file = file.replaceAll(regexpToReplace.toLowerCase(),"");
-		}
-		return file.trim();
-	}
+	}	
 
 	private String getSearchUrl(String query) {
 		return IMDB_BASE_URL + "/find?q=" + query + "";

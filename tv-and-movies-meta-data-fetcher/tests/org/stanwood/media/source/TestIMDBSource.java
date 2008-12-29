@@ -36,7 +36,7 @@ import org.stanwood.media.testdata.Data;
  */
 public class TestIMDBSource extends TestCase {
 
-	private final static long FILM_ID_IRON_MAN = 371746L;
+	private final static String FILM_ID_IRON_MAN = "371746";
 	
 	/**
 	 * Used to test the searching of films
@@ -48,7 +48,7 @@ public class TestIMDBSource extends TestCase {
 		try {
 			File tmpFile = new File(dir,"Harvard Man.avi");						
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
-			assertEquals(242508,result.getId());
+			assertEquals("0242508",result.getId());
 			assertEquals("imdb",result.getSourceId());			
 		}
 		finally {
@@ -66,7 +66,7 @@ public class TestIMDBSource extends TestCase {
 		try {
 			File tmpFile = new File(dir,"The iron man.avi");						
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
-			assertEquals(772174,result.getId());
+			assertEquals("0772174",result.getId());
 			assertEquals("imdb",result.getSourceId());			
 		}
 		finally {
@@ -138,7 +138,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Canada",certs.get(32).getCertification());
 	}
 	
-	private IMDBSource getIMDBSource(final long filmId) {
+	private IMDBSource getIMDBSource(final String filmId) {
 		IMDBSource.fetchPosters = false;
 		IMDBSource source = new IMDBSource() {
 			@Override

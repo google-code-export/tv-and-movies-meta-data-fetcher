@@ -56,7 +56,7 @@ public class Main {
 	private final static String MODE_OPTION = "m";
 	private static final Options OPTIONS;
 
-	private static Long showId = null;
+	private static String showId = null;
 	private static String sourceId = null;
 	private static File showDirectory = new File(System.getProperty("user.dir"));
 	private static String pattern = null;
@@ -233,7 +233,7 @@ public class Main {
 				displayCLIError("Show id is not a valid option when used with Film mode");
 			}
 			try {
-				showId = Long.parseLong(cmd.getOptionValue(SHOWID_OPTION));
+				showId = cmd.getOptionValue(SHOWID_OPTION);
 			} catch (NumberFormatException e) {
 				displayCLIError("Invalid command line parameters");
 			}

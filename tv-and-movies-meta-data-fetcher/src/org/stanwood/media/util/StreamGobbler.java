@@ -71,6 +71,10 @@ public class StreamGobbler extends Thread {
 		return result.toString();
 	}
 	
+	/**
+	 * This will return true when the string has been gobbled.
+	 * @return True if the stream has been completly gobbled, otherwise false.
+	 */
 	public boolean isDone() {
 		return done;
 	}

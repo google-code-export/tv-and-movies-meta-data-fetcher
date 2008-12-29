@@ -47,7 +47,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class Renamer {
 
-	private Long id;
+	private String id;
 	private File showDirectory;
 	private String pattern;
 	private String[] exts;
@@ -64,7 +64,7 @@ public class Renamer {
 	 * @param exts The extensions to search for
 	 * @param refresh If true, then don't read from the stores
 	 */
-	public Renamer(Long id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
+	public Renamer(String id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
 		this.id = id;
 		this.showDirectory = showDirectory;
 		this.pattern = pattern;

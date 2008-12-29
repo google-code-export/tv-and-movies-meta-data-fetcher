@@ -49,7 +49,7 @@ public class TestXMLStore extends XMLTestCase {
 
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
-	private static final int SHOW_ID = 58448;	
+	private static final String SHOW_ID = "58448";	
 	
 	/**
 	 * Test that the XML is read correctly
@@ -78,7 +78,7 @@ public class TestXMLStore extends XMLTestCase {
 			assertEquals("tvcom",show.getSourceId());
 			assertEquals("http://image.com.com/tv/images/b.gif", show.getImageURL().toExternalForm());
 			assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());			
-			assertEquals(58448, show.getShowId());
+			assertEquals("58448", show.getShowId());
 			assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
 						
 			Season season = xmlSource.getSeason(episodeFile,show, 1);
@@ -159,7 +159,7 @@ public class TestXMLStore extends XMLTestCase {
 		try {			
 			File filmFile = new File(dir,"1x01 - blah.avi");			
 			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),new File(dir, ".films.xml"));
-			Film film = xmlSource.getFilm(filmFile, 114814L);
+			Film film = xmlSource.getFilm(filmFile, "114814");
 			assertEquals("The Usual Suspects",film.getTitle());
 
 			assertEquals("Check URL","http://test/image.jpg",film.getImageURL().toExternalForm());
@@ -251,7 +251,7 @@ public class TestXMLStore extends XMLTestCase {
 		try {
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
 			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
-			Film film = new Film(114814L);
+			Film film = new Film("114814");
 			film.setImageURL(new URL("http://test/image.jpg"));
 			film.setTitle("The Usual Suspects");
 			List<String> genres = new ArrayList<String>();

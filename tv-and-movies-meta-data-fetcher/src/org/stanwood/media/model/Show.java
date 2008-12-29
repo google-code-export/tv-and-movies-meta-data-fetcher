@@ -25,7 +25,7 @@ import java.util.List;
  * This is used to store and retrive information about shows
  */
 public class Show {
-	private final long showId;
+	private final String showId;
 
 	private String longSummary;
 	private String shortSummary;
@@ -41,7 +41,7 @@ public class Show {
 	 * 	
 	 * @param showId The id of the show
 	 */
-	public Show(long showId) {
+	public Show(String showId) {
 		this.showId = showId;		
 	}
 
@@ -127,7 +127,7 @@ public class Show {
 	 * the source it was fetched from.
 	 * @return The show id
 	 */
-	public long getShowId() {
+	public String getShowId() {
 		return showId;
 	}
 	

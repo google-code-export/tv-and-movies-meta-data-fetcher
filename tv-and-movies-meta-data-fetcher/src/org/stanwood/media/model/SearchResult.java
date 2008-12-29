@@ -21,7 +21,7 @@ package org.stanwood.media.model;
  */
 public class SearchResult {
 
-	private long id;
+	private String id;
 	private String sourceId;
 
 	/**
@@ -29,7 +29,7 @@ public class SearchResult {
 	 * @param id The id of the show that was found
 	 * @param sourceId The id of the source that it was found in
 	 */
-	public SearchResult(long id, String sourceId) {
+	public SearchResult(String id, String sourceId) {
 		super();
 		this.id = id;
 		this.sourceId = sourceId;
@@ -40,7 +40,7 @@ public class SearchResult {
 	 * 
 	 * @return The id of the show
 	 */
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 

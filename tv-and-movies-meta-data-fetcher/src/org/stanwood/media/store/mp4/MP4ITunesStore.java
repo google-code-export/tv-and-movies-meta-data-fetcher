@@ -123,7 +123,7 @@ public class MP4ITunesStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Show getShow(File episodeFile, long showId) throws StoreException {
+	public Show getShow(File episodeFile, String showId) throws StoreException {
 		validate();
 		return null;
 	}	
@@ -218,7 +218,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 }

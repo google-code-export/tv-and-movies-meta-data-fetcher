@@ -90,7 +90,7 @@ public class FakeStore implements IStore {
 	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(File episodeFile, long showId)  {
+	public Show getShow(File episodeFile, String showId)  {
 		return null;
 	}
 
@@ -157,7 +157,7 @@ public class FakeStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 

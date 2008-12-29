@@ -352,7 +352,7 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow( long showId)
+	public Show getShow( String showId)
 			throws SourceException, MalformedURLException, IOException {
 		Show show = new Show( showId);
 		show.setShowURL(new URL(getSummaryURL(show.getShowId())));
@@ -467,23 +467,23 @@ public class TVCOMSource implements ISource {
 		}
 	}	
 	
-	private final static String getSummaryURL(long showId) {
+	private final static String getSummaryURL(String showId) {
 		return TVCOM_BASE_URL
 				+ URL_SUMMARY
-						.replaceAll("\\$showId\\$", String.valueOf(showId));
+						.replaceAll("\\$showId\\$", showId);
 	}
 
-	private final static String getSeasonEposideListing(long showId,
+	private final static String getSeasonEposideListing(String showId,
 			int seasonNumber) {
 		String url = TVCOM_BASE_URL + URL_EPISODE_LISTING;
-		url = url.replaceAll("\\$showId\\$", String.valueOf(showId));
+		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;
 	}
 
-	private String getSeasonEposideDetailed(long showId, int seasonNumber) {
+	private String getSeasonEposideDetailed(String showId, int seasonNumber) {
 		String url = TVCOM_BASE_URL + URL_EPISODES;
-		url = url.replaceAll("\\$showId\\$", String.valueOf(showId));
+		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;
 	}
@@ -528,7 +528,7 @@ public class TVCOMSource implements ISource {
 					String href =element2.getAttributeValue("href");
 					Matcher m = SHOW_ID_PATTERN.matcher(href);
 					if (m.find()) {
-						SearchResult result = new SearchResult(Long.parseLong(m.group(2)),SOURCE_ID);
+						SearchResult result = new SearchResult(m.group(2),SOURCE_ID);
 						results.add(result);
 					}					
 				}
@@ -547,7 +547,7 @@ public class TVCOMSource implements ISource {
 	 * @return Always returns null
 	 */
 	@Override
-	public Film getFilm(long filmId) {
+	public Film getFilm(String filmId) {
 		return null;
 	}	
 }

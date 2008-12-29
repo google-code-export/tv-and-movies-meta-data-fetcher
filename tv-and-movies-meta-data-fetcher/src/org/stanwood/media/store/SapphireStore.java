@@ -262,7 +262,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Show getShow(File episodeFile, long showId) {
+	public Show getShow(File episodeFile, String showId) {
 		return null;
 	}
 
@@ -337,7 +337,7 @@ public class SapphireStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 

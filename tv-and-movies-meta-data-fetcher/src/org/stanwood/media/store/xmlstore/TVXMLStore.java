@@ -239,7 +239,7 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File episodeFile, long showId)
+	public Show getShow(File episodeFile, String showId)
 			throws StoreException, MalformedURLException, IOException {
 		Document doc = getCache(episodeFile.getParentFile(), showId);
 		Show show = null;
@@ -255,7 +255,7 @@ public class TVXMLStore extends BaseXMLStore {
 	private Show getShowFromCache(File showDirectory, Document doc)
 			throws StoreException, NotInStoreException, MalformedURLException {
 		try {
-			Long showId = getLongFromXML(doc, "show/@id");
+			String showId = getStringFromXML(doc, "show/@id");
 			String imageURL = getStringFromXML(doc, "show/@imageUrl");
 			String showURL = getStringFromXML(doc, "show/@url");
 			String name = getStringFromXML(doc, "show/@name");
@@ -286,7 +286,7 @@ public class TVXMLStore extends BaseXMLStore {
 
 	
 
-	private Document getCache(File showDirectory, long showId)
+	private Document getCache(File showDirectory, String showId)
 			throws StoreException {
 		File cacheFile = getCacheFile(showDirectory,FILENAME);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -313,7 +313,7 @@ public class TVXMLStore extends BaseXMLStore {
 				builder = factory.newDocumentBuilder();
 				doc = builder.newDocument();
 				Element series = doc.createElement("show");
-				series.setAttribute("id", String.valueOf(showId));
+				series.setAttribute("id", showId);
 				doc.appendChild(series);
 				writeCache(cacheFile, doc);
 			} catch (ParserConfigurationException e) {
@@ -546,7 +546,7 @@ public class TVXMLStore extends BaseXMLStore {
 						Element node = (Element) nodeList.item(0);
 						if (node.getAttribute("id")!=null && node.getAttribute("sourceId")!=null) {
 							System.out.println("Found show id in XMLStore");
-							return new SearchResult(Long.parseLong(node.getAttribute("id")),node.getAttribute("sourceId"));
+							return new SearchResult(node.getAttribute("id"),node.getAttribute("sourceId"));
 							
 						}
 							

@@ -196,7 +196,7 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File episodeFile, String sourceId, long showId, boolean refresh) throws MalformedURLException,
+	public Show getShow(File episodeFile, String sourceId, String showId, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		Show show = null;
 		if (!refresh) {
@@ -245,7 +245,7 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Film getFilm(File filmFile, String sourceId, long filmId, boolean refresh) throws MalformedURLException,
+	public Film getFilm(File filmFile, String sourceId, String filmId, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		Film film = null;
 		if (!refresh) {

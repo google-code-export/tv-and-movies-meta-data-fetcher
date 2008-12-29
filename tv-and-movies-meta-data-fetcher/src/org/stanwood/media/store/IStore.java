@@ -102,7 +102,7 @@ public interface IStore  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File episodeFile, long showId) throws StoreException, MalformedURLException, IOException;
+	public Show getShow(File episodeFile, String showId) throws StoreException, MalformedURLException, IOException;
 	
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
@@ -144,6 +144,6 @@ public interface IStore  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.	
 	 */
-	public Film getFilm(File filmFile, long filmId) throws StoreException, MalformedURLException, IOException;
+	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
 		
 }

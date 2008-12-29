@@ -37,7 +37,7 @@ public class TestFindFilmPosters extends TestCase {
 	 */
 	public void testFindPoster() throws Exception {
 		FindFilmPosters findPosters = getPosterFinder();
-		Film film = new Film(371746L);
+		Film film = new Film("371746");
 		film.setTitle("Iron Man");
 		URL posterUrl = findPosters.findViaMoviePoster(film);
 		assertTrue("Check the url",posterUrl.toExternalForm().endsWith("movieposter.com/posters/archive/main/68/MPW-34217"));
