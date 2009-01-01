@@ -62,9 +62,7 @@ public class IMDBSource implements ISource {
 	private static final SimpleDateFormat RELEASE_DATE_FORMAT_2 = new SimpleDateFormat("MMMMM yyyy");
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
-	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");
-	
-	
+	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");		
 	
 	/** Used to disable fetching of posters at test time */
 	/* package protected */ static boolean fetchPosters = true;

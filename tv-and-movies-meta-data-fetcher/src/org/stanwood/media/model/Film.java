@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -304,7 +305,16 @@ public class Film implements IVideo {
 	 * @param chapter The chapter to add
 	 */
 	public void addChapter(Chapter chapter) {
+		Iterator<Chapter> it = chapters.iterator();
+		while (it.hasNext()) {
+			Chapter chap = it.next();
+			if (chap.getNumber() == chapter.getNumber()) {
+				it.remove();
+			}
+		}		
 		chapters.add(chapter);
+		
+		
 		Collections.sort(chapters,new Comparator<Chapter>() {
 			@Override
 			public int compare(Chapter o1, Chapter o2) {

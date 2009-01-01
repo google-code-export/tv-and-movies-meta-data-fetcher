@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,7 +171,7 @@ public class AtomicParsley extends AbstractExecutable {
 					found = true;
 					String param = nameToParam.get(atom.getName());
 					if (param == null) {
-						throw new AtomicParsleyException("Unkown attom '" + atom.getName() + "' with value '"
+						throw new AtomicParsleyException("Unknown atom '" + atom.getName() + "' with value '"
 								+ atom.getValue());
 					}
 					args.add(param);
@@ -183,8 +182,8 @@ public class AtomicParsley extends AbstractExecutable {
 			if (found) {
 				// If their is already artwork, then remove it
 				if (hasAtomWithName("covr", atomsAlreadyInFile)) {
-					args.add(1, "--artwork");
-					args.add(2, "REMOVE_ALL");
+					args.add(2, "--artwork");
+					args.add(3, "REMOVE_ALL");
 				}
 
 				System.out.println("Updating mp4/m4v file '" + mp4File.getName() + "' with new metadata");
@@ -247,7 +246,7 @@ public class AtomicParsley extends AbstractExecutable {
 		atoms.add(new Atom("stik", "Movie"));
 		atoms.add(new Atom("©day", film.getDate().toString()));
 		atoms.add(new Atom("©nam", film.getTitle()));
-		atoms.add(new Atom("desc", film.getSummary()));
+		atoms.add(new Atom("desc", film.getDescription()));
 		if (film.getImageURL() != null) {
 			File artwork;
 			try {

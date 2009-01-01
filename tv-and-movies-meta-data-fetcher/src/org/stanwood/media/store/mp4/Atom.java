@@ -112,7 +112,17 @@ public class Atom {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	/**
+	 * Print out the contents of the atom
+	 * @return Textual value of the atom
+	 */
+	@Override
+	public String toString() {
+		return name +"="+value;
 	}	
+	
 	
 	
 }

@@ -69,16 +69,16 @@ public class TagChimpSource implements ISource {
 			throw new SourceException("Unable to find film with id: " + filmId);
 		} 
 		parseFilm(source, film);
-		if (fetchPosters) {
-			FindFilmPosters posterFinder = new FindFilmPosters();
-			film.setImageURL(posterFinder.findViaMoviePoster(film));
-		}		
+//		if (fetchPosters) {
+//			FindFilmPosters posterFinder = new FindFilmPosters();
+//			film.setImageURL(posterFinder.findViaMoviePoster(film));
+//		}		
 		
 		return film;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void parseFilm(Source source, Film film) {
+	private void parseFilm(Source source, Film film) throws MalformedURLException {
 		List<Element>trs = source.findAllElements(HTMLElementName.TR);
 		for (Element tr : trs) {
 			List<Element> tds = tr.getChildElements();
@@ -106,6 +106,13 @@ public class TagChimpSource implements ISource {
 					handleField(film,fieldName,SearchHelper.decodeHtmlEntities(fieldValue).trim());
 				}
 			}			
+		}
+		List<Element>imgs = source.findAllElements(HTMLElementName.IMG);
+		for (Element img : imgs) {
+			String src = img.getAttributeValue("src");
+			if (src!=null && src.startsWith("/covers/large/") ) {
+				film.setImageURL(new URL(BASE_URL+src));
+			}
 		}
 	}
 
@@ -150,6 +157,7 @@ public class TagChimpSource implements ISource {
 			List<String>genres = new ArrayList<String>();
 			genres.add(value);
 			film.setGenres(genres);
+			film.setPreferredGenre(value);
 		}
 		else if (name.equals("artist")) {
 			List<Link> guestStars = new ArrayList<Link>();

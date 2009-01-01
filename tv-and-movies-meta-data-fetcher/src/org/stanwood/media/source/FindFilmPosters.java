@@ -53,7 +53,10 @@ public class FindFilmPosters {
 			Matcher m = URL_PATTERN.matcher(href);
 			if (m.matches()) {
 				String part1 = m.group(1);
-				if (title != null && title.toLowerCase().contains(film.getTitle().toLowerCase())) {
+				String filmTitle = film.getTitle().toLowerCase();
+				filmTitle = filmTitle.replaceAll("the", "");
+				filmTitle = filmTitle.trim();
+				if (title != null && title.toLowerCase().contains(filmTitle)) {
 					List<Element> imgs = source.findAllElements(HTMLElementName.IMG);
 					for (Element img : imgs) {
 						String src = img.getAttributeValue("src");

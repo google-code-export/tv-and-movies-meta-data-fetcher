@@ -141,7 +141,7 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("©day",atoms.get(1).getName());
 		assertEquals("Test film name",atoms.get(2).getValue());
 		assertEquals("©nam",atoms.get(2).getName());
-		assertEquals("A test summary",atoms.get(3).getValue());
+		assertEquals("A test description",atoms.get(3).getValue());
 		assertEquals("desc",atoms.get(3).getName());
 		assertEquals("SciFi",atoms.get(4).getValue());
 		assertEquals("©gen",atoms.get(4).getName());
@@ -188,6 +188,7 @@ public class TestAtomicParsley extends TestCase {
 		film.setRating(8.4F);
 		film.setSourceId("imdb");
 		film.setSummary("A test summary");
+		film.setDescription("A test description");
 		film.setTitle("Test film name");
 		List<Link>writers = new ArrayList<Link>();
 		writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
