@@ -30,9 +30,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractGenericDatabase implements IDatabase {
 
-	private final static Log log = LogFactory.getLog(AbstractGenericDatabase.class);
-	
-	
+	private final static Log log = LogFactory.getLog(AbstractGenericDatabase.class);		
 	
 	/**
 	 * This is used to get a non-auto-committing connection to the database from a datasource
