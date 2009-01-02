@@ -209,10 +209,7 @@ public class TVCOMSource implements ISource {
 								}
 								else if (span.equals("first aired date:")) {
 									
-								}
-								else {
-									System.out.println("Unhandled span: " + span);
-								}
+								}								
 									
 								tag = getNextTag(it);
 							}

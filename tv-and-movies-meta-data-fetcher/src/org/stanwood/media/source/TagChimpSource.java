@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
@@ -33,6 +35,8 @@ import au.id.jericho.lib.html.Source;
  */
 public class TagChimpSource implements ISource {
 
+	private final static Log log = LogFactory.getLog(TagChimpSource.class);
+	
 	private static final SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/** The ID of the the source */
@@ -125,7 +129,7 @@ public class TagChimpSource implements ISource {
 			try {
 				film.setDate(RELEASE_DATE_FORMAT.parse(value));
 			} catch (ParseException e) {
-				System.err.println("Unable to parse date '" + value +"' of film with id '"+film.getId()+"'");
+				log.error("Unable to parse date '" + value +"' of film with id '"+film.getId()+"'");
 			}			
 		}
 		else if (name.equals("director")) {

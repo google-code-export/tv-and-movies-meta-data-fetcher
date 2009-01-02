@@ -1,3 +1,5 @@
+* Mon Jan 3 2009 John-Paul.Stanford <dev@stanwood.org.uk>
+- FEATURE: Added logging to the application
 * Mon Jan 1 2009 John-Paul.Stanford <dev@stanwood.org.uk>
 - FEATURE: Added new Film Hybrid source that takes the best of all the film sources.
 * Mon Dec 29 2008 John-Paul.Stanford <dev@stanwood.org.uk>

@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.util.AbstractExecutable;
@@ -41,6 +43,8 @@ import org.stanwood.media.util.AbstractExecutable;
  */
 public class AtomicParsley extends AbstractExecutable {
 
+	private final static Log log = LogFactory.getLog(AtomicParsley.class);
+	
 	/** Used to disable the update of images within MP4 files for tests */
 	public static boolean updateImages = true;
 
@@ -186,10 +190,10 @@ public class AtomicParsley extends AbstractExecutable {
 					args.add(3, "REMOVE_ALL");
 				}
 
-				System.out.println("Updating mp4/m4v file '" + mp4File.getName() + "' with new metadata");
+				log.info("Updating mp4/m4v file '" + mp4File.getName() + "' with new metadata");
 				execute(args);
 			} else {
-				System.out.println("No new metadata to add to mp4/m4v file '" + mp4File.getName() + "'");
+				log.info("No new metadata to add to mp4/m4v file '" + mp4File.getName() + "'");
 			}
 		} catch (IOException e) {
 			throw new AtomicParsleyException(e.getMessage(), e);
@@ -253,8 +257,8 @@ public class AtomicParsley extends AbstractExecutable {
 				artwork = downloadToTempFile(film.getImageURL());
 				atoms.add(new Atom("covr", artwork.getAbsolutePath()));
 			} catch (IOException e) {
-				System.err.println("Unable to download artwork from " + film.getImageURL().toExternalForm());
-				e.printStackTrace();
+				log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
+				return;
 			}
 		}
 		if (film.getPreferredGenre() != null) {

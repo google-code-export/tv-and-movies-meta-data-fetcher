@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -53,6 +55,8 @@ import au.id.jericho.lib.html.Tag;
  */
 public class IMDBSource implements ISource {
 
+	private final static Log log = LogFactory.getLog(IMDBSource.class);
+	
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "imdb";
 
@@ -185,7 +189,7 @@ public class IMDBSource implements ISource {
 								float rating = Float.parseFloat(ratingStr.substring(0, ratingStr.indexOf('/')));
 								film.setRating(rating);
 							} catch (NumberFormatException e) {
-								System.err.println("Unable to parse rating from string: " + ratingStr);
+								log.error("Unable to parse rating from string: " + ratingStr);
 							}
 						}
 					} else if (getContents(h5).equals("Certification:")) {
@@ -214,7 +218,7 @@ public class IMDBSource implements ISource {
 									Date date = RELEASE_DATE_FORMAT_2.parse(str);
 									film.setDate(date);
 								} catch (ParseException e1) {
-									System.err.println("Unable to parse date '" + str +"' of film with id '"+film.getId()+"'"); 
+									log.error("Unable to parse date '" + str +"' of film with id '"+film.getId()+"'"); 
 								}								
 							}
 						}
@@ -224,7 +228,7 @@ public class IMDBSource implements ISource {
 		}
 
 		if (film.getDate() == null) {
-			System.err.println("Unable to find a date of film with the id '" + film.getId()+"' and the title '"+film.getTitle()+"'");
+			log.error("Unable to find a date of film with the id '" + film.getId()+"' and the title '"+film.getTitle()+"'");
 		}
 	}
 

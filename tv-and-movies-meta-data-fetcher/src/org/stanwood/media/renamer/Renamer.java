@@ -21,6 +21,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -47,6 +49,8 @@ import org.stanwood.media.store.StoreException;
  */
 public class Renamer {
 
+	private final static Log log = LogFactory.getLog(Renamer.class);
+	
 	private String id;
 	private File showDirectory;
 	private String pattern;
@@ -106,7 +110,7 @@ public class Renamer {
 				renameFilm(file);
 			}
 			else {
-				fail("Unknown rename mode");
+				fatal("Unknown rename mode");
 			}
 		}		
 	}
@@ -118,7 +122,7 @@ public class Renamer {
 			sourceId = result.getSourceId();				
 		}
 		else {
-			System.err.println("Unable to find film id for file '"+file.getName()+"'");
+			log.error("Unable to find film id for file '"+file.getName()+"'");
 			return;
 		}
 
@@ -126,7 +130,7 @@ public class Renamer {
 
 		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
 		if (film==null) {
-			System.err.println("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
+			log.error("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
 			return;
 		}
 		
@@ -165,28 +169,28 @@ public class Renamer {
 			sourceId = result.getSourceId();				
 		}
 		else {
-			System.err.println("Unable to find show id");
+			log.error("Unable to find show id");
 			Main.doExit(1);
 			return;
 		}
 				
 		Show show =  Controller.getInstance().getShow(file,sourceId, id,refresh);		
 		if (show == null) {
-			fail("Unable to find show details");						
+			fatal("Unable to find show details");						
 		}
 		String oldFileName = file.getName(); 
 		ParsedFileName data =  FileNameParser.parse(oldFileName);
 		if (data==null) {
-			System.err.println("Unable to workout the season and/or episode number of '" + file.getName()+"'");
+			log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
 		}
 		else {
 			Season season = Controller.getInstance().getSeason(file, show, data.getSeason(), refresh);
 			if (season == null) {
-				System.err.println("Unable to find season for file : " + file.getAbsolutePath());
+				log.error("Unable to find season for file : " + file.getAbsolutePath());
 			} else {
 				Episode episode = Controller.getInstance().getEpisode(file, season, data.getEpisode(), refresh);
 				if (episode == null) {
-					System.err.println("Unable to find epsiode for file : " + file.getAbsolutePath());
+					log.error("Unable to find epsiode for file : " + file.getAbsolutePath());
 				} else {
 					String ext = oldFileName.substring(oldFileName.length() - 3);
 					String newName = getNewTVShowName(show, season, episode, ext);
@@ -203,28 +207,28 @@ public class Renamer {
 		newName = newName.replaceAll(":","-");
 		File newFile = new File(file.getParentFile(),newName);
 		if (file.equals(newFile)) {
-			System.out.println("File '" + oldFileName+"' already has the correct name.");
+			log.info("File '" + oldFileName+"' already has the correct name.");
 		}
 		else {					
 			if (newFile.exists()) {
-				System.err.println("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
+				log.error("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
 			}
 			else {
-				System.out.println("Renaming '" + oldFileName + "' -> '" + newName+"'");
+				log.info("Renaming '" + oldFileName + "' -> '" + newName+"'");
 				
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
 					Controller.getInstance().renamedFile(oldFile,newFile);	
 				}
 				else {
-					System.err.println("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
+					log.error("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
 				}
 			}
 		}
 	}
 
-	private void fail(String msg) {
-		System.err.println(msg);
+	private void fatal(String msg) {
+		log.fatal(msg);
 		Main.doExit(1);
 		throw new RuntimeException(msg);
 	}

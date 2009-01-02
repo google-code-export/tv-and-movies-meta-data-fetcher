@@ -26,6 +26,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -54,6 +56,8 @@ import org.stanwood.media.model.Show;
  */
 public class SapphireStore implements IStore {
 
+	private final static Log log = LogFactory.getLog(SapphireStore.class);
+	
 	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private String preferedRating = null;
 	
@@ -141,7 +145,7 @@ public class SapphireStore implements IStore {
 				ps = null;
 			}
 		} else {
-			System.err.println("Unable to find extension of media file: " + file.getName());
+			log.error("Unable to find extension of media file: " + file.getName());			
 		}
 	}
 
@@ -199,7 +203,7 @@ public class SapphireStore implements IStore {
 				ps = null;
 			}
 		} else {
-			System.err.println("Unable to find extension of media file: " + filmFile.getName());
+			log.error("Unable to find extension of media file: " + filmFile.getName());
 		}
 	}
 
@@ -322,13 +326,13 @@ public class SapphireStore implements IStore {
 
 		}
 		if (newXmlFile.exists()) {
-			System.err.println("Unable rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
+			log.error("Unable rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
 					+ "' as it already exists.");
 		} else {
-			System.out.println("Renaming '" + oldXmlFile.getName() + "' -> '" + newXmlFile.getName() + "'");
+			log.error("Renaming '" + oldXmlFile.getName() + "' -> '" + newXmlFile.getName() + "'");
 
 			if (!oldXmlFile.renameTo(newXmlFile)) {
-				System.err.println("Failed to rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
+				log.error("Failed to rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
 						+ "'.");
 			}
 		}

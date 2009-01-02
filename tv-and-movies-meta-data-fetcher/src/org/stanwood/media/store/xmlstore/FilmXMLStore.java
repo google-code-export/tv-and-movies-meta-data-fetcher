@@ -32,6 +32,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
@@ -54,6 +56,8 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class FilmXMLStore extends BaseXMLStore {
 
+	private final static Log log = LogFactory.getLog(FilmXMLStore.class);
+	
 	private final static String FILENAME = ".films.xml";
 
 	/**
@@ -309,16 +313,14 @@ public class FilmXMLStore extends BaseXMLStore {
 	 */
 	public void renamedFile(File oldFile, File newFile) throws StoreException {
 		if (!oldFile.getParent().equals(newFile.getParent())) {
-			System.err.println("Unable to update store with new file location due different parent directories");
+			log.error("Unable to update store with new file location due different parent directories");
 		} else {
 			Document doc = getCache(oldFile.getParentFile());
 
 			try {
-				// System.out.println("**/file[@name=" + oldFile.getAbsolutePath() + "]/@name");
 				NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\"" + oldFile.getAbsolutePath()
 						+ "\"]/@name");
 				for (int i = 0; i < nodes.getLength(); i++) {
-					// System.out.println("Node: " + nodes.item(i).getNodeName());
 					nodes.item(i).setNodeValue(newFile.getAbsolutePath());
 				}
 
@@ -362,7 +364,7 @@ public class FilmXMLStore extends BaseXMLStore {
 				String title = getTitle(el);
 				if (title != null && title.equals(query)) {
 					SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
-					System.out.println("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
+					log.info("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
 					return result;
 				}
 			}

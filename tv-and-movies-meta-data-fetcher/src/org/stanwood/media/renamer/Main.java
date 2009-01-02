@@ -29,6 +29,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.renamer.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.IMDBSource;
@@ -54,6 +55,7 @@ public class Main {
 	private final static String REFRESH_STORE_OPTION = "r";
 	private final static String CONFIG_FILE_OPTION = "c";
 	private final static String MODE_OPTION = "m";
+	private final static String LOG_CONFIG_OPTION = "l";
 	private static final Options OPTIONS;
 
 	private static String showId = null;
@@ -77,6 +79,7 @@ public class Main {
 		OPTIONS.addOption(new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source."));
 		OPTIONS.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
 		OPTIONS.addOption(new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV."));
+		OPTIONS.addOption(new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]"));
 	}
 	
 	/**
@@ -147,14 +150,14 @@ public class Main {
 					return;
 				}
 			} else {
-				displayCLIError("Invalid command line parameters");
+				fatal("Invalid command line parameters");
 				return;
 			}
 		} catch (ParseException e1) {
-			displayCLIError(e1.getMessage());
+			fatal(e1.getMessage());
 			return;
 		} catch (ConfigException e) {
-			displayCLIError(e.getMessage());
+			fatal(e.getMessage());
 			return;
 		}
 	}
@@ -177,6 +180,13 @@ public class Main {
 	}
 
 	private static boolean processOptions(CommandLine cmd) throws ConfigException {
+		String logConfig = null;
+		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
+			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
+		}
+		if (!initLogging(logConfig)) {
+			return false;
+		}
 		if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
 			String cliMode = cmd.getOptionValue(MODE_OPTION);
 			if (cliMode.toLowerCase().equals("film")) {
@@ -186,7 +196,7 @@ public class Main {
 				mode = Mode.TV_SHOW;
 			}
 			else {
-				displayCLIError("Unkown rename mode: " + cliMode);
+				fatal("Unkown rename mode: " + cliMode);
 				return false;
 			}
 		}
@@ -196,7 +206,7 @@ public class Main {
 		}
 		
 		if (configFile==null || !configFile.exists()) {
-			System.out.println("Unable to find config file '" +configFile+"' so using defaults." );
+			warn("Unable to find config file '" +configFile+"' so using defaults.");
 			if (doInit) {
 				Controller.initWithDefaults();
 			}
@@ -219,28 +229,29 @@ public class Main {
 			if (dir.isDirectory() && dir.canWrite()) {
 				showDirectory = dir;
 			} else {
-				displayCLIError("Show directory must be a writable directory");
+				fatal("Show directory must be a writable directory");
+				return false;
 			}					
 		}
 		if (showDirectory==null || !showDirectory.exists()) {
-			displayCLIError("Show directory '" + showDirectory +"' does not exist.");
+			fatal("Show directory '" + showDirectory +"' does not exist.");
 			return false;
 		}
 		
 		if (cmd.hasOption(SHOWID_OPTION)
 				&& cmd.getOptionValue(SHOWID_OPTION) != null) {
 			if (mode==Mode.FILM) {
-				displayCLIError("Show id is not a valid option when used with Film mode");
+				fatal("Show id is not a valid option when used with Film mode");
+				return false;
 			}
 			try {
 				showId = cmd.getOptionValue(SHOWID_OPTION);
 			} catch (NumberFormatException e) {
-				displayCLIError("Invalid command line parameters");
+				fatal("Invalid command line parameters");
+				return false;
 			}
 		} 
-		
-		
-		
+				
 		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {			
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
 		}
@@ -258,11 +269,11 @@ public class Main {
 		
 		if (showId==null) {
 			if (mode==Mode.TV_SHOW) {
-				System.out.println("No id given, will search for id");
+				info("No id given, will search for id");
 			}
 		}
 		else {
-			System.out.println("Using show id " + sourceId+":" + showId);
+			info("Using show id " + sourceId+":" + showId);
 		}
 		
 		if (sourceId==null) {
@@ -284,6 +295,33 @@ public class Main {
 		}
 		
 		return true;
+	}	
+
+	private static boolean initLogging(String logConfig) {
+		if (logConfig!=null) {			
+			if (logConfig.toLowerCase().equals("info")) {
+				LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+			}
+			else if (logConfig.toLowerCase().equals("debug")) {
+				LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+			}
+			else {
+				File logConfigFile = new File(logConfig);
+				if (logConfigFile.exists()) {
+					LogSetupHelper.initLogingFromConfigFile(logConfigFile);
+				}
+				else {
+					fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath());
+					return false;
+				}
+				
+			}
+		}
+		else {
+			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		}
+		
+		return true;
 	}
 
 	private static Mode getDefaultMode() {
@@ -297,22 +335,18 @@ public class Main {
 		return Mode.TV_SHOW;
 	}
 
-	private static void displayCLIError(String msg) {
-		System.err.println(msg);
-		displayHelp();
-		doExit(1);		
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	private static void displayHelp() {
-		System.out.println("media-renamer [-"+HELP_OPTION+"|-"+SHOWID_OPTION+"=<showid> [OPTIONS]...]\n");		
+		info("media-renamer [-"+HELP_OPTION+"|-"+SHOWID_OPTION+"=<showid> [OPTIONS]...]\n");		
 		
 		for (Option option : (Collection<Option>)OPTIONS.getOptions()) {
 			String opt = "-"+option.getOpt()+", --" + option.getLongOpt();
 			while (opt.length()<15) {
 				opt+=" ";
 			}
-			System.out.println(opt+ option.getDescription());
+			info(opt+ option.getDescription());
 		}		
 	}
 
@@ -324,4 +358,18 @@ public class Main {
 		exitHandler.exit(code);
 	}
 
+	private static void warn(String msg) {
+		System.out.println("WARN: "+msg);
+	}
+	
+	private static void fatal(String msg) {
+		System.err.println("FATAL: "+msg);
+		displayHelp();
+		doExit(1);		
+	}
+	
+	private static void info(String msg) {
+		System.out.println(msg);
+	}
+	
 }

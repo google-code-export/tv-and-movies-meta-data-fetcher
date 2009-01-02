@@ -28,6 +28,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.SearchResult;
@@ -52,6 +54,8 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class TVXMLStore extends BaseXMLStore {
 
+	private final static Log log = LogFactory.getLog(TVXMLStore.class);
+	
 	private final static String FILENAME = ".show.xml";	
 	
 	/**
@@ -545,7 +549,7 @@ public class TVXMLStore extends BaseXMLStore {
 					if (nodeList.item(0) instanceof Element) {
 						Element node = (Element) nodeList.item(0);
 						if (node.getAttribute("id")!=null && node.getAttribute("sourceId")!=null) {
-							System.out.println("Found show id in XMLStore");
+							log.info("Found show id in XMLStore");
 							return new SearchResult(node.getAttribute("id"),node.getAttribute("sourceId"));
 							
 						}

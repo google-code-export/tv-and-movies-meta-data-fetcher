@@ -24,6 +24,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -49,6 +51,8 @@ import org.stanwood.media.store.memory.MemoryStore;
  */
 public class Controller {
 
+	private final static Log log = LogFactory.getLog(Controller.class);
+	
 	private static Controller instance = null;
 
 	private static List<ISource> sources = null;
@@ -104,13 +108,13 @@ public class Controller {
 				}
 				sources.add(source);
 			} catch (ClassNotFoundException e) {
-				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (InstantiationException e) {
-				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
 			} catch (IllegalAccessException e) {
-				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
 			} catch (InvocationTargetException e) {
-				System.err.println("Unable to add source '" + sourceClass + "' because " + e.getMessage());
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
 			}
 		}
 	}
@@ -130,15 +134,15 @@ public class Controller {
 				}
 				stores.add(store);
 			} catch (ClassNotFoundException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (InstantiationException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalArgumentException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (InvocationTargetException e) {
-				System.err.println("Unable to add store '" + storeClass + "' because " + e.getMessage());
+				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			}
 		}
 	}
@@ -211,7 +215,7 @@ public class Controller {
 		}
 
 		if (show == null) {
-			System.out.println("Reading show from sources");
+			log.info("Reading show from sources");
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
 					show = source.getShow(showId);
@@ -260,7 +264,7 @@ public class Controller {
 		}
 
 		if (film == null) {
-			System.out.println("Reading film from sources");
+			log.info("Reading film from sources");
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
 					film = source.getFilm(filmId);
@@ -309,7 +313,7 @@ public class Controller {
 		}
 
 		if (season == null) {
-			System.out.println("Reading season from sources");
+			log.info("Reading season from sources");
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
 					season = source.getSeason(show, seasonNum);
@@ -368,7 +372,7 @@ public class Controller {
 		}
 
 		if (episode == null) {
-			System.out.println("Reading episode from sources");
+			log.info("Reading episode from sources");
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
@@ -419,7 +423,7 @@ public class Controller {
 		}
 
 		if (episode == null) {
-			System.out.println("Reading special from sources");
+			log.info("Reading special from sources");
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {

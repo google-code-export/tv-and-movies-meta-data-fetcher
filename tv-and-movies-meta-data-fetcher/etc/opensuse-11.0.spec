@@ -13,6 +13,8 @@ Requires:       java >= 1.6
 Requires:		jpackage-utils
 Requires:		jakarta-commons-cli = 1.0
 Requires:       jericho-html >= 2.6
+Requires:       log4j
+Requires:       jakarta-commons-logging
 BuildRequires:	jpackage-utils
 BuildRequires:	unzip
 Summary:        @project.summary@
