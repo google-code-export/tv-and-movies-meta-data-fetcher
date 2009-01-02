@@ -230,6 +230,7 @@
 					<arg>-r</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
 					<arg>-m <replaceable>TV|FILM</replaceable></arg>
+					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>
 				</cmdsynopsis>
 			</para>
 			<para>
@@ -241,8 +242,9 @@
 					<listitem><para><literal>-p, --pattern</literal> The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.</para></listitem>
 					<listitem><para><literal>-o, --source</literal> The id if the source too look up meta data in. Defaults too tvcom if not present.</para></listitem>
 					<listitem><para><literal>-r, --refresh</literal> If this option is present, it will make the stores get regenerated from source.</para></listitem>
-					<listitem><para><literal>-c, --config</literal> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</para></listitem>
+					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</para></listitem>
 					<listitem><para><literal>-m, --mode</literal> The mode that the tool will work in. Either FILM or TV.</para></listitem>
+					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
 				</itemizedlist>				
 			</para>			
 			<para>
