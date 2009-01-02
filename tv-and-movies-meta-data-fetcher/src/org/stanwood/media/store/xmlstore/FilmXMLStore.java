@@ -199,6 +199,7 @@ public class FilmXMLStore extends BaseXMLStore {
 				}
 
 				film.setCertifications(certifications);
+				film.setChapters(chapters);
 				film.setDate(releaseDate);
 				film.setDirectors(directors);
 				film.setFilmUrl(new URL(filmURL));

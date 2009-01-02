@@ -77,8 +77,7 @@ public class TestIMDBSource extends TestCase {
 	/**
 	 * Test the HTML entity decoding
 	 */
-	public void testHTMLEntityDecode() {
-		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
+	public void testHTMLEntityDecode() {		
 		String result = SearchHelper.decodeHtmlEntities("Jam&#243;n, jam&#243;n.avi");
 		assertEquals("Check the result","Jamón, jamón.avi",result);
 		result = SearchHelper.decodeHtmlEntities("&#243;Jam&#243;n, jam&#243;n.avi&#243;&#243;");
