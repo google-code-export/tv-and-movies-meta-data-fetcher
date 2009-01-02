@@ -1,4 +1,4 @@
-package org.stanwood.media.renamer.logging;
+package org.stanwood.media.logging;
 
 import java.io.File;
 
