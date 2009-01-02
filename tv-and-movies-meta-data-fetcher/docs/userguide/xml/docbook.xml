@@ -81,6 +81,25 @@
                      </itemizedlist>
 				</para>
 			</sect2>
+			<sect2>
+				<title>org.stanwood.media.source.HybridFilmSource</title>
+				<para>
+				The HybridFilm Source is a bit different to the other sources. It uses the other sources to 
+				find the best information it can about a film. This is the preferred source to use when
+				fetching film information.
+				</para>				
+				<para>
+				This source has the option parameter "RegexpToReplace", which is used when searching for a film
+                via the film's filename. The parameter is a regular expression, that when found in the filename,
+                is removed.   
+				</para>
+				<para>
+                      It has the following parameters:
+                      <itemizedlist>
+                      	<listitem><para><literal>RegexpToReplace</literal> a regular expression, that when found in the filename, is removed</para></listitem>
+                     </itemizedlist>
+				</para>
+			</sect2>
 		</sect1>
 		<sect1>
 			<title>Stores</title>
