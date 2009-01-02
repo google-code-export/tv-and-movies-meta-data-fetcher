@@ -28,6 +28,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
@@ -43,6 +45,8 @@ import org.stanwood.media.store.StoreException;
  */
 public class Main {
 
+	private final static Log log = LogFactory.getLog(Main.class);
+	
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v" };
@@ -359,11 +363,11 @@ public class Main {
 	}
 
 	private static void warn(String msg) {
-		System.out.println("WARN: "+msg);
+		System.out.println(msg);
 	}
 	
 	private static void fatal(String msg) {
-		System.err.println("FATAL: "+msg);
+		System.err.println(msg);
 		displayHelp();
 		doExit(1);		
 	}

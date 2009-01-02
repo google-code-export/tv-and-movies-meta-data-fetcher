@@ -1,3 +1,19 @@
+/*
+ *  Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.stanwood.media.logging;
 
 import java.io.PrintStream;
@@ -8,6 +24,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * The StreamAppender will log events Streams. Error and Fatal level 
+ * events will be sent to a error stream, and the other levels to the output
+ * stream. By default, the error and output streams are set to use the 
+ * console streams.
+ */
 public class StreamAppender extends AppenderSkeleton {
 
 	private PrintStream errorStream = System.err;
@@ -24,15 +46,26 @@ public class StreamAppender extends AppenderSkeleton {
 	 */
 	protected boolean immediateFlush = true;
 
-	
-	/** This default constructor does nothing. */
+	/** 
+	 * This default constructor does nothing. 
+	 */
 	public StreamAppender() {
 	}
 	
+	/**
+	 * Creates a configured appender using the console streams.
+	 * @param layout The layout to use. 
+	 */
 	public StreamAppender(Layout layout) {
 		this(layout, System.out,System.err);
 	}
 	
+	/**
+	 * Creates a configured appender using the given streams.	 
+	 * @param layout The layout to use. 
+	 * @param outputStream The output stream to use
+	 * @param errorStream The error stream to use
+	 */
 	private StreamAppender(Layout layout,PrintStream outputStream, PrintStream errorStream) {
 		setLayout(layout);
 		setTargets(errorStream, outputStream);
@@ -76,6 +109,18 @@ public class StreamAppender extends AppenderSkeleton {
 		
 	}
 	
+	/**
+	 * <p>This method is called by the {@link AppenderSkeleton#doAppend} method.</p>
+	 * 
+	 * <p>
+	 * This will write ERROR and FATAL messages to the error stream and the other levels
+	 * to the output stream. If it is unable to write to the stream, then a single 
+	 * warning message is written to <code>System.err</code>.
+	 * </p>
+	 * 
+	 * <p>The format of the output will depend on this appender's layout.</p>
+	 * @param event The event to log
+	 */
 	public void append(LoggingEvent event) {		
 		if (!checkEntryConditions()) {
 			return;
@@ -140,20 +185,6 @@ public class StreamAppender extends AppenderSkeleton {
 		}
 	}
 	
-//	/**
-//	 * Set the {@link ErrorHandler} for this StreamAppender and also the underlying {@link QuietWriter} if any.
-//	 */
-//	public synchronized void setErrorHandler(ErrorHandler eh) {
-//		if (eh == null) {
-//			LogLog.warn("You have tried to set a null error-handler.");
-//		} else {
-//			this.errorHandler = eh;
-//			if (this.qw != null) {
-//				this.qw.setErrorHandler(eh);
-//			}
-//		}
-//	}
-
 	/**
 	 * Actual writing occurs here.
 	 * 
@@ -195,6 +226,7 @@ public class StreamAppender extends AppenderSkeleton {
 	
 	/**
 	 * The WriterAppender requires a layout. Hence, this method returns <code>true</code>.
+	 * @return Always returns true. 
 	 */
 	public boolean requiresLayout() {
 		return true;
