@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 /**
@@ -87,6 +88,25 @@ public interface IDatabase {
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
 	public long executeUpdate(String sql, Object[] params) throws SQLException;
+	
+	/**
+	 * This is used to insert table row into a table. The table row is made up from fields.
+	 * @param connection a connection to be re-used, useful for running a series 
+	 * @param tableName  The name of the table
+	 * @param fields     The fields of the table that are to be inserted.
+	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @throws SQLException Thrown if their is a problem talking to the database
+	 */
+	public long insertIntoTable(Connection connection, String tableName,List<Field> fields) throws SQLException;
+
+	/**
+	 * This is used to insert table row into a table. The table row is made up from fields.
+	 * @param tableName  The name of the table
+	 * @param fields     The fields of the table that are to be inserted.
+	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @throws SQLException Thrown if their is a problem talking to the database
+	 */
+	public long insertIntoTable(String tableName,List<Field> fields) throws SQLException;
 	
 	/**
 	 * This is used to execute a update state that takes params. The SQL should
@@ -157,4 +177,5 @@ public interface IDatabase {
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
 	public void closeConnection(Connection connection) throws SQLException;
+	
 }

@@ -15,6 +15,7 @@ Requires:		jakarta-commons-cli = 1.0
 Requires:       jericho-html >= 2.6
 Requires:       log4j >= 1.2.15
 Requires:       jakarta-commons-logging >= 1.0.4
+Requires:       mysql-connector-java >= 5.1.6
 BuildRequires:	jpackage-utils 
 BuildRequires:	unzip
 Summary:        @project.summary@

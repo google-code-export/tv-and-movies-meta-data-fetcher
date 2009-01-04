@@ -51,7 +51,7 @@ public class TestTagChimpSource extends TestCase {
 		try {
 			File tmpFile = new File(dir,"Iron man.avi");						
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
-			assertEquals("iron-man-17",result.getId());
+			assertEquals("39752",result.getId());
 			assertEquals("tagChimp",result.getSourceId());			
 		}
 		finally {
@@ -71,6 +71,7 @@ public class TestTagChimpSource extends TestCase {
 		assertEquals("Check summary","You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony",film.getSummary());
 		assertNull("Check rating",film.getRating());
 		assertEquals("Check the release date","Fri May 09 00:00:00 BST 2008",film.getDate().toString());
+		assertEquals("Check image url","http://www.tagchimp.com/covers/large/39752.jpg",film.getImageURL().toExternalForm());
 		StringBuilder expectedDesc = new StringBuilder();
 		expectedDesc.append("The movie begins with Tony Stark (Robert Downey Jr.) visiting soldiers on duty ");
 		expectedDesc.append("in the Middle East. He is joking with some members of a convoy who seem to be ");
@@ -139,8 +140,7 @@ public class TestTagChimpSource extends TestCase {
 		assertEquals("Check chapter name", "End Credits",chapters.get(16).getName());
 	}
 
-	private TagChimpSource getSource(final String filmId) {
-		TagChimpSource.fetchPosters = false;
+	private TagChimpSource getSource(final String filmId) {		
 		TagChimpSource source = new TagChimpSource() {
 			@Override
 			Source getSource(URL url) throws IOException {						

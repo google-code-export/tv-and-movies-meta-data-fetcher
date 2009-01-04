@@ -67,7 +67,7 @@ public class MysqlDatabase extends AbstractGenericDatabase implements IDatabase{
 			throw new UnableToConnectToDatabaseException("Cant find mysql driver class : " + DB_DRIVER_CLASS);
 		}		
         String url = getConnectionUrl();
-        log.info("Attempting to connect to database: " + username + "@" + url);
+        log.debug("Attempting to connect to database: " + username + "@" + url);
 	}
 	
 	/**
@@ -176,7 +176,5 @@ public class MysqlDatabase extends AbstractGenericDatabase implements IDatabase{
 		} finally {
 			closeDatabaseResources(null, stmt, null);			
 		}
-	}
-
-	
+	}		
 }

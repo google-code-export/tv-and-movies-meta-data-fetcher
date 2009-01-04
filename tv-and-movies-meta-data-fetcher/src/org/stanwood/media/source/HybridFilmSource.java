@@ -46,6 +46,9 @@ public class HybridFilmSource implements ISource {
 	
 	private String regexpToReplace = null;
 	
+	/** Used to disable fetching of posters at test time */
+	/* package private for test */ boolean fetchPosters = true;
+	
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 * 
@@ -133,15 +136,21 @@ public class HybridFilmSource implements ISource {
 			film.setDirectors(imdbFilm.getDirectors());
 			film.setFilmUrl(imdbFilm.getFilmUrl());			
 			film.setGuestStars(imdbFilm.getGuestStars());
-			if (imdbFilm.getImageURL()!=null) {
-				film.setImageURL(imdbFilm.getImageURL());
-			}
-			else {
+			if (tagChimpFilm.getImageURL()!=null){
 				film.setImageURL(tagChimpFilm.getImageURL());
+			}
+			else if (imdbFilm.getImageURL()!=null) {
+				film.setImageURL(imdbFilm.getImageURL());
+			}			
+			else {
+				if (fetchPosters) {
+					FindFilmPosters posterFinder = new FindFilmPosters();
+					film.setImageURL(posterFinder.findViaMoviePoster(imdbFilm));
+				}	
 			}
 			film.setPreferredGenre(tagChimpFilm.getPreferredGenre());
 			List<String> genres = imdbFilm.getGenres();
-			if (!genres.contains(tagChimpFilm.getPreferredGenre())) {
+			if (tagChimpFilm.getPreferredGenre()!=null && !genres.contains(tagChimpFilm.getPreferredGenre())) {
 				genres.add(tagChimpFilm.getPreferredGenre());
 			}
 			film.setGenres(genres);

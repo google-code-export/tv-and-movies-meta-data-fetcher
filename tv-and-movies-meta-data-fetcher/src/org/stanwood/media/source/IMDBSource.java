@@ -59,17 +59,17 @@ public class IMDBSource implements ISource {
 	
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "imdb";
-
+	
 	private static final String IMDB_BASE_URL = "http://www.imdb.com";
 	private static final String URL_SUMMARY = "/title/tt$filmId$/";
-	private static final SimpleDateFormat RELEASE_DATE_FORMAT_1 = new SimpleDateFormat("dd MMMMM yyyy");
-	private static final SimpleDateFormat RELEASE_DATE_FORMAT_2 = new SimpleDateFormat("MMMMM yyyy");
+	private static final SimpleDateFormat RELEASE_DATE_FORMAT_1 = new SimpleDateFormat("dd MMMM yyyy");
+	private static final SimpleDateFormat RELEASE_DATE_FORMAT_2 = new SimpleDateFormat("MMMM yyyy");
 	private static final Pattern FILM_TITLE_PATTERN = Pattern.compile(".*\\d+\\. (.*) \\((\\d+)\\).*");
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
-	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");		
+	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");
+	private static final Pattern IMAGE_PATTERN = Pattern.compile("(.*)SX(\\d+)_SY(\\d+)(.*)");
 	
-	/** Used to disable fetching of posters at test time */
-	/* package protected */ static boolean fetchPosters = true;
+	
 	
 	private String regexpToReplace = null;
 	
@@ -145,17 +145,13 @@ public class IMDBSource implements ISource {
 		if (html == null) {
 			throw new SourceException("Unable to find film with id: " + filmId);
 		} 
-		parseFilm(html, film);
-		if (fetchPosters) {
-			FindFilmPosters posterFinder = new FindFilmPosters();
-			film.setImageURL(posterFinder.findViaMoviePoster(film));
-		}		
+		parseFilm(html, film);		
 		
 		return film;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void parseFilm(String html, Film film) {
+	private void parseFilm(String html, Film film) throws MalformedURLException {
 		Source source = new Source(html);
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {
@@ -164,7 +160,20 @@ public class IMDBSource implements ISource {
 				if (h1 != null) {
 					film.setTitle(SearchHelper.decodeHtmlEntities(getContents(h1)));
 				}
-			} else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
+			} 
+			else if (div.getAttributeValue("class")!=null && div.getAttributeValue("class").equals("photo")) {
+				List<Element> imgs = div.findAllElements(HTMLElementName.IMG);
+				if (imgs.size()>0) {
+					Element img = imgs.get(0);
+					String src = img.getAttributeValue("src");
+					Matcher m = IMAGE_PATTERN.matcher(src);
+					if (m.matches()) {
+						String url = m.group(1)+"SX284_SY400"+m.group(4);
+						film.setImageURL(new URL(url));
+					}
+				}
+			}
+			else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
 				Element h5 = findFirstChild(div, HTMLElementName.H5);
 				if (h5 != null) {
 					if (getContents(h5).equals("Plot:")) {

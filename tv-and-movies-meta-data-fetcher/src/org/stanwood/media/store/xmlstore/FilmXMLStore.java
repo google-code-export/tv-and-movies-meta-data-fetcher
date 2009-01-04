@@ -165,7 +165,7 @@ public class FilmXMLStore extends BaseXMLStore {
 		try {
 			Document doc = getCache(filmFile.getParentFile());
 			Element filmsNode = (Element) doc.getFirstChild();
-			Node filmNode = XPathAPI.selectSingleNode(filmsNode, "film[@id=" + filmId + "]");
+			Node filmNode = XPathAPI.selectSingleNode(filmsNode, "film[@id='" + filmId + "']");
 			if (filmNode != null) {
 				Film film = new Film(filmId);
 
@@ -362,11 +362,14 @@ public class FilmXMLStore extends BaseXMLStore {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Element el = (Element) nodes.item(i);
 				String title = getTitle(el);
+				while (title.endsWith(".") && title.length()>0) {
+					title = title.substring(0,title.length()-1);
+				}
 				if (title != null && title.equals(query)) {
 					SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
 					log.info("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
 					return result;
-				}
+				}				
 			}
 		} catch (TransformerException e) {
 			throw new StoreException(e.getMessage(), e);

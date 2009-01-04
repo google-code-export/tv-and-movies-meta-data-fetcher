@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -172,7 +173,9 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			closeDatabaseResources(connection, null, null);
 			connection = null;
 		}
-	}
+	}	
+	
+	
 	
 	/**
 	 * This is used to create a PreparedStatement from the given SQL. The SQL should
@@ -218,7 +221,6 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 		}
 		return stmt;
 	}
-	
 	
 	/**
 	 * This is used to execute an update statement that takes parameters. The SQL should
@@ -279,6 +281,84 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			throw e;
 		} finally {
 			closeDatabaseResources(null, stmt, rs);
+		}
+	}
+	
+	/**
+	 * This is used to insert table row into a table. The table row is made up from fields.
+	 * @param connection a connection to be re-used, useful for running a series 
+	 * @param tableName  The name of the table
+	 * @param fields     The fields of the table that are to be inserted.
+	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @throws SQLException Thrown if their is a problem talking to the database
+	 */
+	@Override	
+	public long insertIntoTable(Connection connection, String tableName, List<Field> fields) throws SQLException {
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO " + tableName + "(");
+		boolean first = true;				
+		for (Field field : fields) {
+			if (first) {
+				sql.append(field.getKey());
+			}
+			else {
+				sql.append(","+field.getKey());
+			}
+			first = false;
+		}
+		sql.append(") VALUES (");
+		Object params[] = new Object[fields.size()];
+		for (int i=0;i<fields.size();i++) {
+			if (i==0) {
+				sql.append("?");
+			}
+			else {
+				sql.append(",?");
+			}
+			params[i] = fields.get(i).getValue();
+		}
+		sql.append(")");
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {			
+			//Prepare and execute the update
+			stmt = getStatement(connection, sql.toString(), params);
+			stmt.executeUpdate();
+			
+			//Check for any keys
+			rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				long key = rs.getLong(1);
+				return key;
+			}
+			
+			//If not return
+			return -1;
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		} finally {
+			closeDatabaseResources(null, stmt, rs);
+		}	
+	}
+	
+	/**
+	 * This is used to insert table row into a table. The table row is made up from fields.
+	 * @param tableName  The name of the table
+	 * @param fields     The fields of the table that are to be inserted.
+	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @throws SQLException Thrown if their is a problem talking to the database
+	 */
+	public long insertIntoTable(String tableName,List<Field> fields) throws SQLException {
+		Connection connection = null;
+		try {
+			//Get a connection
+			connection = createConnection();
+			return insertIntoTable(connection, tableName, fields);
+		} finally {
+			closeDatabaseResources(connection, null, null);			
 		}
 	}
 }
