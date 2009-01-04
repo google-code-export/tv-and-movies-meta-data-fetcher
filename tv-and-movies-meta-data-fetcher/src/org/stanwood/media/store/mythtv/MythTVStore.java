@@ -25,8 +25,10 @@ import org.stanwood.media.database.Field;
 import org.stanwood.media.database.IDatabase;
 import org.stanwood.media.database.MysqlDatabase;
 import org.stanwood.media.database.UnableToConnectToDatabaseException;
+import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -85,20 +87,29 @@ public class MythTVStore implements IStore {
 		if (film.getSummary() != null) {
 			fields.add(new Field("plot", film.getSummary()));
 		}
-		fields.add(new Field("rating", "NR")); // TODO find correct rating
+		boolean foundCert = false;
+		for (Certification cert : film.getCertifications()) {
+			if (cert.getCountry().equals("USA")) {
+				fields.add(new Field("rating", cert.getCertification()));
+				foundCert = true;
+				break;
+			}
+		}
+		if (!foundCert) {
+			fields.add(new Field("rating", "NR"));
+		}
+
 		fields.add(new Field("inetref", film.getId())); // TODO find correct IMDB reference
-		if (film.getDate()!=null) {
+		if (film.getDate() != null) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(film.getDate());
 			fields.add(new Field("year", c.get(Calendar.YEAR)));
-		}
-		else {
+		} else {
 			fields.add(new Field("year", 0));
 		}
 		if (film.getRating() != null) {
 			fields.add(new Field("userrating", film.getRating()));
-		}
-		else {
+		} else {
 			fields.add(new Field("userrating", 0));
 		}
 		fields.add(new Field("length", filmFile.length()));
@@ -112,11 +123,50 @@ public class MythTVStore implements IStore {
 
 		long id = db.insertIntoTable(connection, "videometadata", fields);
 
-		// TODO insert cast metadata
-		// TODO insert contry metadata
-		// TODO insert genre metadata
+		if (film.getGuestStars() != null) {
+			for (Link cast : film.getGuestStars()) {
+				Long castId = getCastId(cast.getTitle(), db, connection);
+				if (castId == null) {
+					castId = insertNewCast(cast.getTitle(), db, connection);
+				}
+				db.executeUpdate(connection, "insert into videometadatacast values(?,?)", new Object[] { id, castId });
+			}
+		}
+
+		if (film.getGenres() != null) {
+			for (String genre : film.getGenres()) {
+				Long genreId = getGenreId(genre, db, connection);
+				if (genreId == null) {
+					genreId = insertNewGenre(genre, db, connection);
+				}
+				db
+						.executeUpdate(connection, "insert into videometadatagenre values(?,?)", new Object[] { id,
+								genreId });
+			}
+		}
+
+		// TODO insert country metadata
+		// TODO insert category metadata
 
 		return id;
+	}
+
+	private long insertNewCast(String castName, IDatabase db, Connection connection) throws SQLException {
+		return db.executeUpdate(connection, "insert into videocast(cast) values (?)", new Object[] { castName });
+	}
+
+	private long insertNewCountry(String countryName, IDatabase db, Connection connection) throws SQLException {
+		return db.executeUpdate(connection, "insert into videocountry(country) values (?)",
+				new Object[] { countryName });
+	}
+
+	private long insertNewGenre(String genreName, IDatabase db, Connection connection) throws SQLException {
+		return db.executeUpdate(connection, "insert into videogenre(genre) values (?)", new Object[] { genreName });
+	}
+
+	private long insertNewCategory(String categoryName, IDatabase db, Connection connection) throws SQLException {
+		return db.executeUpdate(connection, "insert into videocategory(category) values (?)",
+				new Object[] { categoryName });
 	}
 
 	private File getCoverImage(Film film) {
@@ -126,17 +176,20 @@ public class MythTVStore implements IStore {
 			filename = filename.replaceAll(":", "-");
 			File coverFile = new File(coversPath, filename);
 			if (coverFile.exists()) {
-				log.warn("Cover file already '" + coverFile.getAbsolutePath() + "'exsits so won't redownload it");
-			} else {
-				// TODO set the correct image extension
-				try {
-					coversImage = downloadToFile(coverFile, film.getImageURL());
-				} catch (IOException e) {
-					log
-							.error("Unable to download cover image for film '" + film.getTitle() + "'. "
-									+ e.getMessage(), e);
+				log.warn("Cover image file already '" + coverFile.getAbsolutePath() + "', replacing....");
+				if (!coverFile.delete()) {
+					log.error("Unable to delete old cover image file '" + coverFile.getAbsolutePath() + "'");
+					return null;
 				}
 			}
+
+			// TODO set the correct image extension
+			try {
+				coversImage = downloadToFile(coverFile, film.getImageURL());
+			} catch (IOException e) {
+				log.error("Unable to download cover image for film '" + film.getTitle() + "'. " + e.getMessage(), e);
+			}
+
 		}
 		return coversImage;
 	}
@@ -146,6 +199,81 @@ public class MythTVStore implements IStore {
 		db.executeSQL(connection, "DELETE FROM videometadatacast WHERE idvideo = " + id);
 		db.executeSQL(connection, "DELETE FROM videometadatacountry WHERE idvideo = " + id);
 		db.executeSQL(connection, "DELETE FROM videometadatagenre WHERE idvideo = " + id);
+	}
+
+	private Long getCastId(String castName, IDatabase db, Connection connection) throws SQLException {
+		Long id = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = db.getStatement(connection, "SELECT intid FROM videocast WHERE cast = ?", new Object[] { castName });
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} finally {
+			db.closeDatabaseResources(null, stmt, rs);
+			stmt = null;
+			rs = null;
+		}
+		return id;
+	}
+
+	private Long getCategoryId(String categoryName, IDatabase db, Connection connection) throws SQLException {
+		Long id = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = db.getStatement(connection, "SELECT intid FROM videocategory WHERE category = ?",
+					new Object[] { categoryName });
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} finally {
+			db.closeDatabaseResources(null, stmt, rs);
+			stmt = null;
+			rs = null;
+		}
+		return id;
+	}
+
+	private Long getCountryId(String countryName, IDatabase db, Connection connection) throws SQLException {
+		Long id = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = db.getStatement(connection, "SELECT intid FROM videocountry WHERE country = ?",
+					new Object[] { countryName });
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} finally {
+			db.closeDatabaseResources(null, stmt, rs);
+			stmt = null;
+			rs = null;
+		}
+		return id;
+	}
+
+	private Long getGenreId(String genreName, IDatabase db, Connection connection) throws SQLException {
+		Long id = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = db.getStatement(connection, "SELECT intid FROM videogenre WHERE genre = ?",
+					new Object[] { genreName });
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} finally {
+			db.closeDatabaseResources(null, stmt, rs);
+			stmt = null;
+			rs = null;
+		}
+		return id;
 	}
 
 	private Long getFilmIdFromDB(File filmFile, IDatabase db, Connection connection) throws SQLException {
