@@ -1,0 +1,142 @@
+<project name="MediaInfoFetcher" default="all" basedir=".">
+
+<!-- Path properties -->
+    <property name="src.dir" location="${basedir}/src" />
+    <property name="build.dir" location="${basedir}/bin" />
+    <property name="test.src.dir" location="${basedir}/tests" />
+    <property name="test.build.dir" location="${basedir}/tests-bin" />
+    <property name="dist.dir" location="${basedir}/dist" />
+    <property name="libs.dir" location="${basedir}/libs" />
+    <property name="etc.dir" location="${basedir}/etc" />
+    <property name="rpm.dir" location="${basedir}/rpm" />
+    <property name="docs.dir" location="${basedir}/docs"/>
+    <property name="api.docs.dir" location="${docs.dir}/api" />
+    <property name="userguide.dir" location="${docs.dir}/userguide" />
+    <property name="reports.dir" location="${basedir}/reports"/>
+    <property name="docbook.home"    value="${basedir}/docbook/xsl"/>
+    <property name="fo.dir"          value="${basedir}/fo"/>
+    <property name="lib.dir" value="changeme"/>
+    <property name="fop.dir" value="changeme"/>
+
+    <!-- Compiler properties -->
+    <property name="javac.source" value="1.6" />
+    <property name="javac.target" value="1.6" />
+
+    <!-- Dist properties -->
+    <property name="project.version" value="changeme" />
+    <property name="project.author" value="John-Paul Stanford" />
+
+    <!-- Lib classpaths -->
+    <path id="run-time.libs.classpath">
+        <pathelement location="${lib.dir}/jericho-html.jar"/>
+        <pathelement location="${lib.dir}/commons-logging.jar"/>
+        <pathelement location="${lib.dir}/commons-cli.jar"/>
+        <pathelement location="${lib.dir}/commons-log4j.jar"/>        
+    </path>
+
+    <path id="compile-time.libs.classpath">
+        <fileset dir="${fop.dir}" includes="*.jar" excludes="commons-logging-*.jar"/>
+    </path>
+
+    <!-- Fop setup -->
+    <taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
+        <classpath refid="compile-time.libs.classpath"/>
+    </taskdef>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp />
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${test.build.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${api.docs.dir}" />
+        <mkdir dir="${reports.dir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source ">
+        <property name="cp" refid="run-time.libs.classpath" />
+        <echo message="Classpath is ${cp}" />
+
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
+            <classpath>
+                <path refid="run-time.libs.classpath" />
+            </classpath>
+        </javac>
+
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java" />
+        </copy>
+    </target>
+
+    <target name="javadoc">
+        <delete dir="${api.docs.dir}"/>
+        <javadoc packagenames="org.stanwood.*"
+            sourcepath="src"
+            defaultexcludes="yes"
+            destdir="${api.docs.dir}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Media Renamer/Metadata Fetcher">
+          <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
+        </javadoc>
+    </target>
+
+    <target name="clean" description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete includeemptydirs="true" >
+            <fileset dir="${build.dir}" includes="**/*"/>
+            <fileset dir="${test.build.dir}" includes="**/*"/>
+        </delete>
+        <delete dir="${dist.dir}" />
+        <delete dir="${api.docs.dir}" />
+        <delete dir="${rpm.dir}" />
+        <delete dir="${cobertura.dir}"/>
+        <delete dir="${reports.dir}"/>
+        <delete file="cobertura.ser" />
+        <delete dir="${fo.dir}"/>
+        <delete dir="${basedir}/docbook"/>
+    </target>
+
+    <target name="jars" description="generate the distribution">
+        <echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+
+        <mkdir dir="${dist.dir}/bin/${ant.project.name}-${project.version}" />
+        <jar jarfile="${dist.dir}/bin/${ant.project.name}-${project.version}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+        <copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
+            <fileset file="${basedir}/VERSION" />
+            <fileset file="${basedir}/COPYING" />
+            <fileset file="${basedir}/scripts/**" />
+        </copy>
+        <copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
+    </target>
+
+    <target name="docs" description="Converts docbook xml into pdf" >
+        <delete dir="${docbook.dir}/docbook"/>
+        <mkdir dir="${basedir}/docbook"/>
+        <mkdir dir="${userguide.dir}/html"/>
+
+        <unzip src="docbook.zip" dest="${basedir}/docbook"/>
+
+        <xslt  style="${docbook.home}/fo/docbook.xsl"
+                basedir="${userguide.dir}/xml"
+                extension=".fo"
+                destdir="${fo.dir}" />
+
+        <xslt  style="${docbook.home}/html/docbook.xsl"
+                        basedir="${userguide.dir}/xml"
+                        extension=".html"
+                        destdir="${userguide.dir}/html" />
+
+        <fop format="application/pdf"
+             fofile="${fo.dir}/docbook.fo"
+             outfile="${userguide.dir}/userguide.pdf" />
+
+        <delete dir="${fo.dir}"/>
+        <delete dir="${basedir}/docbook"/>
+    </target>
+
+    <target name="all" depends="clean,compile,javadoc,docs,jars"/>
+</project>
