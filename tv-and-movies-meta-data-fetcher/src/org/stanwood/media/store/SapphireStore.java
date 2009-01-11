@@ -162,7 +162,9 @@ public class SapphireStore implements IStore {
 				ps.println("<media>");
 				ps.println("  <title>" + film.getTitle() + "</title>");
 				ps.println("     <summary>" + film.getSummary() + "</summary>");
-				 ps.println("     <description>"+film.getDescription()+"</description>");
+				if (film.getDescription()!=null) {
+					ps.println("     <description>"+film.getDescription()+"</description>");
+				}
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");

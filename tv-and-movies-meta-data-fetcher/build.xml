@@ -24,7 +24,7 @@
 	<property name="javac.target" value="1.6" />
 
 	<!-- Dist properties -->
-	<property name="project.version" value="1.1" />
+	<property name="project.version" value="1.2" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
@@ -185,21 +185,33 @@
 	<target name="jars" description="generate the distribution">
 		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
 
-		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar">
+		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
 			<fileset dir="${src.dir}" />
-			<fileset dir="${test.src.dir}" />
-			<fileset file="${basedir}/VERSION" />
-			<fileset file="${basedir}/COPYING" />
-			<fileset file="${basedir}/Changelog" />
-			<fileset file="${basedir}/Description" />
-			<fileset file="${basedir}/.project" />
-			<fileset file="${basedir}/.classpath" />
+			<fileset dir="${test.src.dir}" />			
 		</jar>
 		
-		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." />
+		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-src.zip" compress="true">
+			<zipfileset dir="${src.dir}" prefix="${ant.project.name}-${project.version}/src"/>
+			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
+			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
+			<zipfileset dir="scripts" prefix="${ant.project.name}-${project.version}/scripts"/>
+			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
+			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/VERSION" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/COPYING" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/Changelog" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/Description" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/.project" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/.classpath" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/one-jar-ant-task.xml" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/docbook.zip" prefix="${ant.project.name}-${project.version}"/>
+		</zip>
+		
+		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." compress="true" />
 
 		<mkdir dir="${dist.dir}/bin/${ant.project.name}-${project.version}" />		
-		<jar jarfile="${dist.dir}/bin/${ant.project.name}-${project.version}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+		<jar jarfile="${dist.dir}/bin/${ant.project.name}-${project.version}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" compress="true"/>
 		<copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
 			<fileset file="${basedir}/VERSION" />
 			<fileset file="${basedir}/COPYING" />
@@ -207,7 +219,7 @@
 		</copy>		
 		<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
 
-		<zip file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" basedir="${dist.dir}/bin" />
+		<zip file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" basedir="${dist.dir}/bin" compress="true"/>
 
 		<delete dir="${dist.dir}/bin" />				
 		
