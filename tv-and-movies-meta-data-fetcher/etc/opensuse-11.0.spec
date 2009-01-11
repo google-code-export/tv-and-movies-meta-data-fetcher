@@ -59,7 +59,7 @@ pushd %{buildroot}%{_javadir}
 	done
 popd
 %__install -m 755 %{name}-%{version}/opensuse-11.0-media-renamer %{buildroot}%{_bindir}/media-renamer
-%__install -m 755 %{name}-%{version}/mediafetcher-conf.xml %{buildroot}/etc/mediafetcher-conf.xml
+%__install -m 655 %{name}-%{version}/mediafetcher-conf.xml %{buildroot}/etc/mediafetcher-conf.xml
 
 # javadoc
 %__install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
@@ -76,7 +76,7 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %files
 %{_javadir}/*.jar
 %{_bindir}/media-renamer
-/etc/mediafetcher-conf.xml
+%config /etc/mediafetcher-conf.xml
 
 %files javadoc
 %defattr(-,root,root)

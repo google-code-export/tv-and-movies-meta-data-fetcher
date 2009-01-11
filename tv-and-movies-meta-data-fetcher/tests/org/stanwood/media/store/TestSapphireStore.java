@@ -58,6 +58,7 @@ public class TestSapphireStore extends XMLTestCase {
 		try {
 			File filmFile = new File(dir,"The Usual Suspects.avi");
 			Film film = new Film("114814");
+			film.setDescription("This is a test description");
 			film.setTitle("The Usual Suspects");
 			List<String> genres = new ArrayList<String>();
 			genres.add("Crime");
@@ -127,7 +128,7 @@ public class TestSapphireStore extends XMLTestCase {
 			
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			assertTrue(actualFile.exists());
-//			FileHelper.displayFile(actualFile, System.out);
+			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/film-0114814.xml")), new InputSource(new FileInputStream(actualFile)));
 			
 		} finally {

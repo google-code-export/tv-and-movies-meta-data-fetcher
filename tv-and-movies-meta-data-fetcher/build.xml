@@ -18,7 +18,7 @@
 	<property name="reports.dir" location="${basedir}/reports"/>
 	<property name="docbook.home"    value="${basedir}/docbook/xsl"/>	
 	<property name="fo.dir"          value="${basedir}/fo"/>
-	
+    
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
 	<property name="javac.target" value="1.6" />
@@ -27,10 +27,10 @@
 	<property name="project.version" value="1.1" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
-	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet." />
+	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
 
 	<!-- One Jar Setup -->
-	<property name="one-jar.dist.dir" value="${libs.dir}/compile-time"/>	
+	<property name="one-jar.dist.dir" value="${libs.dir}/compile-time"/>
 	<import file="one-jar-ant-task.xml"/>	
 
 	<!-- Lib classpaths -->
@@ -69,7 +69,6 @@
 		<property name="cp" refid="run-time.libs.classpath" />
 		<echo message="Classpath is ${cp}" />
 
-
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
 			<classpath>
@@ -88,7 +87,7 @@
 			<classpath>
 				<pathelement location="${build.dir}" />
 				<path refid="run-time.libs.classpath" />
-				<path refid="test-time.libs.classpath" />				
+				<path refid="test-time.libs.classpath" />                
 			</classpath>
 		</javac>
 
@@ -167,7 +166,6 @@
 		<delete file="cobertura.ser" />
 	</target>
 
-
 	<target name="clean" description="clean up">
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete includeemptydirs="true" >
@@ -223,7 +221,6 @@
 		    	<fileset dir="${libs.dir}/run-time" includes="*.jar" />		    	
 		    </lib>
 		</one-jar>
-		
 	</target>
 
 	<!--
@@ -275,6 +272,7 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 		<antcall target="createRPM" inheritall="true">
 			<param name="spec.file" value="jericho.spec"/>
 		</antcall>
+
 	</target>	
 
 	<!-- 

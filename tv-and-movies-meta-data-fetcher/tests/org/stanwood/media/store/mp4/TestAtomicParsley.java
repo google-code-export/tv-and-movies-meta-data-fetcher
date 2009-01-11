@@ -46,7 +46,7 @@ public class TestAtomicParsley extends TestCase {
 	 */
 	public void testNoAtomsFound() throws Exception {		
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/local/bin/AtomicParsley");
+		File apCmd = new File("/usr/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
@@ -66,7 +66,7 @@ public class TestAtomicParsley extends TestCase {
 	 */
 	public void testWriteEpsiode() throws Exception {
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/local/bin/AtomicParsley");
+		File apCmd = new File("/usr/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
@@ -114,7 +114,7 @@ public class TestAtomicParsley extends TestCase {
 	 */
 	public void testWriteFilm() throws Exception {
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/local/bin/AtomicParsley");
+		File apCmd = new File("/usr/bin/AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
