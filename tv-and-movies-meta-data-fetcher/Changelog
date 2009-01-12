@@ -1,25 +1,22 @@
-* Mon Jan 3 2009 John-Paul.Stanford <dev@stanwood.org.uk>
+* Mon Jan 3 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2
 - FEATURE: Added logging to the application
-* Mon Jan 1 2009 John-Paul.Stanford <dev@stanwood.org.uk>
 - FEATURE: Added new Film Hybrid source that takes the best of all the film sources.
-* Mon Dec 29 2008 John-Paul.Stanford <dev@stanwood.org.uk>
 - FEATURE: Films can now have a genre flagged as primary
 - FEATURE: Added new www.tagchimp.com source for films.
 - FEATURE: Films can now also have chapter name information and long descriptions.
 - BUG: Fixed text output. Now shows text for "Fetching film from source" instead of "Fetching show from source".
 - PERFORMANCE: Speed ups for MP4 store using atomic parsley. It now longer writes metadata unless it needs too and artwork is removed at the same time as writing the metadata.
 - FEATURE: Films and TV Shows can now have non numeric ID's.
-* Fri Dec 16 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+* Fri Dec 16 2008 John-Paul.Stanford <dev@stanwood.org.uk> - v1.1
 - Film posters are fetched from the internet and stored in .mp4 and .m4v files.
 - Updated to the latest format changes of www.tv.com site.
-* Fri Dec 12 2008 John-Paul.Stanford <dev@stanwood.org.uk>
 - Able to rename Films with data fetched from the web.
 - Added new Film source for fetching film information from www.imdb.com.
 - Updated stores to store film information.
 - Added new MP4 store for storing metadata in mp4 files used in iTunes.
 - Added support for renaming .mp4 and .m4v files.
 - Stores and Sources can now have parameters, which are entered via the configuration file.
-* Fri Nov 7 2008 John-Paul.Stanford <dev@stanwood.org.uk>
+* Fri Nov 7 2008 John-Paul.Stanford <dev@stanwood.org.uk> - v1.0
 - Able to rename TV Shows with data fetch from web sources.
 - Able to fetch TV Show information from tv.com
 - Catch the data in XML within the directory holding the show.

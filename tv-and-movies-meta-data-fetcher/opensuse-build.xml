@@ -114,11 +114,16 @@
 
         <unzip src="docbook.zip" dest="${basedir}/docbook"/>
 
-        <xmlcatalog id="dtds">
+        <echo message="DTD: ${docbook.home}/../dtd/docbookx.dtd"/>
+
+        <xmlcatalog id="dtds">                           
             <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
             <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
+            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+                 
         </xmlcatalog>
 
         <xslt  style="${docbook.home}/fo/docbook.xsl"
