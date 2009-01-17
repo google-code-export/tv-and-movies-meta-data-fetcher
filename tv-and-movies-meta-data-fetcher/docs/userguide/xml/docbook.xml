@@ -173,6 +173,33 @@
                            </itemizedlist>
                      </para>
              </sect2>
+             <sect2>
+             		<title>org.stanwood.media.store.mythtv.MythTVStore</title>
+             		<para>
+             		This is a write only store that is used to store Film information in a 
+             		<ulink url="http://www.mythtv.org/">Myth TV</ulink> database hosted in a 
+                    MySQL database. .
+             		</para>
+             		<para>  				
+ 					Every time film information is fetched from a source, he film information is 
+ 					inserted/updated in the Myth TV database. Cover images are also fetched and 
+ 					placed in a directory (which is configured via a parameter). The location of 
+ 					these images is inserted with the film into the database.
+					</para>
+					<para>
+					This store has several required parameters:
+					  <itemizedlist>
+					       <listitem><para><literal>DatabaseHost</literal>The host name of the database server</para></listitem>
+					  	   <listitem><para><literal>DatabaseName</literal>The name of the Myth TV database</para></listitem>
+					       <listitem><para><literal>DatabaseUser</literal>The user name used to access the Myth TV database</para></listitem>
+					       <listitem><para><literal>DatabasePassword</literal>The password of the user used to access the Myth TV database</para></listitem>
+					  </itemizedlist>
+					  This store has these optional parameters:
+					  <itemizedlist>
+					       <listitem><para><literal>CoversPath</literal>If set to a directory, then covers images are stored in the directory</para></listitem>
+					  </itemizedlist>
+					</para>
+             </sect2>
 		</sect1>				
 	</chapter>
 	<chapter id="installation">

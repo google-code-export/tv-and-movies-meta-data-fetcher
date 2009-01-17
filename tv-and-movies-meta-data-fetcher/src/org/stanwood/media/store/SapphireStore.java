@@ -17,7 +17,6 @@
 package org.stanwood.media.store;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -89,12 +88,12 @@ public class SapphireStore implements IStore {
 		return null;
 	}
 
-	private void writeEpisode(File file, Episode episode) throws FileNotFoundException {
+	private void writeEpisode(File file, Episode episode) throws IOException {
 		File xmlFile = getCacheFile(file);
 		if (xmlFile != null) {
-			if (xmlFile.exists()) {
-				xmlFile.delete();
-			}
+			if (xmlFile.exists() && !xmlFile.delete()) {
+				throw new IOException("couldn't delete file " + xmlFile);
+	        }			
 			PrintStream ps = null;
 			try {
 				ps = new PrintStream(new FileOutputStream(xmlFile));
@@ -149,12 +148,12 @@ public class SapphireStore implements IStore {
 		}
 	}
 
-	private void writeFilm(File filmFile, Film film) throws FileNotFoundException {
+	private void writeFilm(File filmFile, Film film) throws IOException {
 		File xmlFile = getCacheFile(filmFile);
 		if (xmlFile != null) {
-			if (xmlFile.exists()) {
-				xmlFile.delete();
-			}
+			if (xmlFile.exists() && !xmlFile.delete()) {
+				throw new IOException("couldn't delete file " + xmlFile);
+	        }
 			PrintStream ps = null;
 			try {
 				ps = new PrintStream(new FileOutputStream(xmlFile));

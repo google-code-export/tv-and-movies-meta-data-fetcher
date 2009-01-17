@@ -36,6 +36,31 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
+/**
+ * <p>
+ * This is a write only store that is used to store Film information in a Myth TV database hosted in a 
+ * MySQL database. {@link "http://www.mythtv.org/"}.
+ * </p>
+ * <p>
+ * Every time the {@link MythTVStore#cacheFilm(File,Film)} 
+ * method is called, the film information is inserted/updated in the Myth TV database.
+ * Cover images are also fetched and placed in a directory (which is configured via a parameter). 
+ * The location of these images is inserted with the film into the database.
+ * </p>
+ * <p>
+ * This store has several required parameters:
+ * <ul>
+ *      <li>DatabaseHost - The host name of the database server</li>
+ * 		<li>DatabaseName - The name of the Myth TV database</li>
+ *      <li>DatabaseUser - The user name used to access the Myth TV database</li>
+ *      <li>DatabasePassword - The password of the user used to access the Myth TV database</li>
+ * </ul>
+ * This store has these optional parameters:
+ * <ul>
+ *      <li>CoversPath - If set to a directory, then covers images are stored in the directory</li>
+ * </ul>
+ * </p>
+ */
 public class MythTVStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(MythTVStore.class);
@@ -47,6 +72,12 @@ public class MythTVStore implements IStore {
 	private String databaseClass = MysqlDatabase.class.getName();
 	private String coversPath;
 
+	/**
+	 * This is used to write a film to the MythTV database.
+	 * @param filmFile The file which the film is stored in
+	 * @param film The film to write
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
 	@Override
 	public void cacheFilm(File filmFile, Film film) throws StoreException {
 		validateOptions();
@@ -60,7 +91,7 @@ public class MythTVStore implements IStore {
 			if (id != null) {
 				deleteFilmMetaData(id, db, connection);
 			}
-			id = insertFilmMetaData(filmFile, film, db, connection);
+			insertFilmMetaData(filmFile, film, db, connection);
 		} catch (SQLException e) {
 			throw new StoreException("Database error: " + e.getMessage(), e);
 		} finally {
@@ -164,10 +195,10 @@ public class MythTVStore implements IStore {
 		return db.executeUpdate(connection, "insert into videogenre(genre) values (?)", new Object[] { genreName });
 	}
 
-	private long insertNewCategory(String categoryName, IDatabase db, Connection connection) throws SQLException {
-		return db.executeUpdate(connection, "insert into videocategory(category) values (?)",
-				new Object[] { categoryName });
-	}
+//	private long insertNewCategory(String categoryName, IDatabase db, Connection connection) throws SQLException {
+//		return db.executeUpdate(connection, "insert into videocategory(category) values (?)",
+//				new Object[] { categoryName });
+//	}
 
 	private File getCoverImage(Film film) {
 		File coversImage = null;
@@ -219,25 +250,25 @@ public class MythTVStore implements IStore {
 		return id;
 	}
 
-	private Long getCategoryId(String categoryName, IDatabase db, Connection connection) throws SQLException {
-		Long id = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = db.getStatement(connection, "SELECT intid FROM videocategory WHERE category = ?",
-					new Object[] { categoryName });
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				id = rs.getLong(1);
-			}
-		} finally {
-			db.closeDatabaseResources(null, stmt, rs);
-			stmt = null;
-			rs = null;
-		}
-		return id;
-	}
-
+//	private Long getCategoryId(String categoryName, IDatabase db, Connection connection) throws SQLException {
+//		Long id = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//		try {
+//			stmt = db.getStatement(connection, "SELECT intid FROM videocategory WHERE category = ?",
+//					new Object[] { categoryName });
+//			rs = stmt.executeQuery();
+//			if (rs.next()) {
+//				id = rs.getLong(1);
+//			}
+//		} finally {
+//			db.closeDatabaseResources(null, stmt, rs);
+//			stmt = null;
+//			rs = null;
+//		}
+//		return id;
+//	}
+//
 	private Long getCountryId(String countryName, IDatabase db, Connection connection) throws SQLException {
 		Long id = null;
 		PreparedStatement stmt = null;
@@ -395,9 +426,42 @@ public class MythTVStore implements IStore {
 		return null;
 	}
 
+	/**
+	 * This is called when a file that holds a episode or film has been renamed.
+	 * If the file is found in the myth tv database (as a film currently), then 
+	 * it is renamed.
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
+	 */
 	@Override
 	public void renamedFile(File oldFile, File newFile) throws StoreException {
+		validateOptions();
+		IDatabase db = connectToDatabase();
 
+		Connection connection = null;
+		PreparedStatement stmt = null;
+
+		try {
+			connection = db.createConnection();
+			stmt = db.getStatement(connection, "UPDATE videometadata SET filename = ? where filename = ?",new Object[]{
+					newFile.getAbsolutePath(),
+					oldFile.getAbsolutePath()		
+			});					
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new StoreException("Database error: " + e.getMessage(), e);
+		} finally {
+			if (connection != null) {
+				try {
+					db.closeConnection(connection);
+				} catch (SQLException e) {
+					throw new StoreException("Database error: " + e.getMessage(), e);
+				}
+				connection = null;
+			}
+		}
 	}
 
 	/**
@@ -584,11 +648,12 @@ public class MythTVStore implements IStore {
 			try {
 				if (in != null) {
 					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
+				}			
 			} catch (IOException ioe) {
+				log.error("Unable to close input stream",ioe);
+			}
+			if (out != null) {
+				out.close();
 			}
 		}
 	}

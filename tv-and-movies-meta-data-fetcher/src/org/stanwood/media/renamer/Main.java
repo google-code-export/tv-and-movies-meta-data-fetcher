@@ -45,6 +45,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class Main {
 
+	@SuppressWarnings("unused")
 	private final static Log log = LogFactory.getLog(Main.class);
 	
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
@@ -100,8 +101,9 @@ public class Main {
      * -p, --pattern     The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.
      * -o, --source      The ID of the source that should be used to lookup information.
      * -r, --refresh     If this option is present, it will make the stores get regenerated from source.
-     * -c, --config_file The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+     * -c, --config_file The location of the configuration file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
      * -m, --mode        The mode that the tool will work in. Either FILM or TV.
+     * -l, --log_config  The log configuration mode [<INFO>|<DEBUG>|<log4j configuration file>], defaults to INFO
      * -h, --help        Show the help
 	 * </pre>
 	 * 
