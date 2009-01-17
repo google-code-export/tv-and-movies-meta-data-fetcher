@@ -48,7 +48,7 @@ import org.xml.sax.InputSource;
  */
 public class TestXMLStore extends XMLTestCase {
 
-	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private static final String SHOW_ID = "58448";	
 	

@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -56,7 +58,8 @@ public class TVXMLStore extends BaseXMLStore {
 
 	private final static Log log = LogFactory.getLog(TVXMLStore.class);
 	
-	private final static String FILENAME = ".show.xml";	
+	private final static String FILENAME = ".show.xml";
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will

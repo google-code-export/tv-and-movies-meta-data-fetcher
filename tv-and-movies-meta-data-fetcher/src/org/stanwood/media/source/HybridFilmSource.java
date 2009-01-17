@@ -191,21 +191,23 @@ public class HybridFilmSource implements ISource {
 		if (mode != Mode.FILM) {
 			return null;
 		}
-		String id = "";
+		StringBuilder id = new StringBuilder();
 		
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
 			SearchResult result = source.searchForVideoId(mode, filmFile);
 			if (result!=null) {
 				if (id.length()>0) {
-					id+="|";
+					id.append("|");					
 				}
-				id+=result.getSourceId()+"|" + result.getId();
+				id.append(result.getSourceId());
+				id.append("|");
+				id.append(result.getId());				
 			}
 		}
 			
 		if (id!=null && id.length()>0) {
-			SearchResult result = new SearchResult(id,SOURCE_ID);
+			SearchResult result = new SearchResult(id.toString(),SOURCE_ID);
 			return result;
 		}
 

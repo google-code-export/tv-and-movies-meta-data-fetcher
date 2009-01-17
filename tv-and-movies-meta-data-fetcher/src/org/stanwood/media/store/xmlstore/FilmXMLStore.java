@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -56,9 +58,11 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class FilmXMLStore extends BaseXMLStore {
 
+	
 	private final static Log log = LogFactory.getLog(FilmXMLStore.class);
 	
 	private final static String FILENAME = ".films.xml";
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * This is used to write a film to the store.
@@ -362,14 +366,16 @@ public class FilmXMLStore extends BaseXMLStore {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Element el = (Element) nodes.item(i);
 				String title = getTitle(el);
-				while (title.endsWith(".") && title.length()>0) {
-					title = title.substring(0,title.length()-1);
+				if (title!=null) {
+					while (title.endsWith(".") && title.length() > 0) {
+						title = title.substring(0, title.length() - 1);
+					}
+					if (title.equals(query)) {
+						SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
+						log.info("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
+						return result;
+					}
 				}
-				if (title != null && title.equals(query)) {
-					SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
-					log.info("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
-					return result;
-				}				
 			}
 		} catch (TransformerException e) {
 			throw new StoreException(e.getMessage(), e);

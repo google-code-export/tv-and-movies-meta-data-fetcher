@@ -57,7 +57,7 @@ public class SapphireStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(SapphireStore.class);
 	
-	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private String preferedRating = null;
 	
 	

@@ -49,9 +49,10 @@ public class AbstractExecutable {
 		}
 		newArgs.addAll(args);
 		
-		String debugOut = "";
+		StringBuilder debugOutput = new StringBuilder();	
 		for (String arg : newArgs) {
-			debugOut+=arg+" ";
+			debugOutput.append(arg);
+			debugOutput.append(" ");
 		}
 		
 		ProcessBuilder pb = new ProcessBuilder(newArgs);

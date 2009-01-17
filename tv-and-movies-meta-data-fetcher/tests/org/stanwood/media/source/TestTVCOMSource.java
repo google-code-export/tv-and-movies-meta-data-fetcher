@@ -39,7 +39,7 @@ import au.id.jericho.lib.html.Source;
  */
 public class TestTVCOMSource extends TestCase {
 
-	private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String SHOW_ID_EUREKA = "58448";
 	private static final String SHOW_ID_HEROES = "17552";
 	

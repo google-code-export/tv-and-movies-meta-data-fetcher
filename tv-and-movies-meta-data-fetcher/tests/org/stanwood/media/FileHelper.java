@@ -28,13 +28,17 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This is a help class that is used to perform operations on files.
  */
 public class FileHelper {
 
+	private final static Log log = LogFactory.getLog(FileHelper.class);
 	private final static String LS = System.getProperty("line.separator");
-	
+
 	/**
 	 * This will create a temporary directory using the given name.
 	 * 
@@ -44,8 +48,13 @@ public class FileHelper {
 	 */
 	public static File createTmpDir(String name) throws IOException {
 		File dir = File.createTempFile(name, "");
-		dir.delete();
-		dir.mkdir();
+		if (!dir.delete()) {
+			throw new IOException("Unable to delete file: " + dir.getAbsolutePath());
+		}
+		if (!dir.mkdir()) {
+			throw new IOException("Unable to create directory: " + dir.getAbsolutePath());
+		}
+
 		return dir;
 	}
 
@@ -57,17 +66,34 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem copying the file
 	 */
 	public static void copy(File src, File dst) throws IOException {
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dst);
-
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+		InputStream in = null;
+		OutputStream out = null;
+		
+		try {
+			in = new FileInputStream(src);
+			out = new FileOutputStream(dst);
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					log.error("Unable to close output stream", e);
+				}
+			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					log.error("Unable to close input stream", e);
+				}
+			}
 		}
-		in.close();
-		out.close();
 	}
 
 	/**
@@ -78,18 +104,35 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem copying the file
 	 */
 	public static void copy(InputStream in, File dst) throws IOException {
-		OutputStream out = new FileOutputStream(dst);
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(dst);
 
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					log.error("Unable to close output stream", e);
+				}
+			}
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					log.error("Unable to close input stream", e);
+				}
+			}
 		}
-		in.close();
-		out.close();
+
 	}
-	
+
 	/**
 	 * Used to copy the contents of a input stream to a destination file.
 	 * 
@@ -98,28 +141,27 @@ public class FileHelper {
 	 * @param params Parameters which are replaced with values when the file is copied
 	 * @throws IOException Thrown if their is a problem copying the file
 	 */
-	public static void copy(InputStream in, File dst,Map<String,String>params) throws IOException {
-		PrintStream out = null;		
+	public static void copy(InputStream in, File dst, Map<String, String> params) throws IOException {
+		PrintStream out = null;
 		BufferedReader bin = null;
 		try {
-		out = new PrintStream(new FileOutputStream(dst));
-		bin = new BufferedReader(new InputStreamReader(in));
-		String line;
-		while ((line = bin.readLine()) != null) {
-			for (String key : params.keySet()) {
-				line = line.replaceAll("\\$"+key+"\\$", params.get(key));
+			out = new PrintStream(new FileOutputStream(dst));
+			bin = new BufferedReader(new InputStreamReader(in));
+			String line;
+			while ((line = bin.readLine()) != null) {
+				for (String key : params.keySet()) {
+					line = line.replaceAll("\\$" + key + "\\$", params.get(key));
+				}
+				out.println(line);
 			}
-			out.println(line);
-		}
-		
-		}
-		finally {
-			if (out!=null) {
+
+		} finally {
+			if (out != null) {
 				out.close();
 			}
-			if (bin!=null) {
-				bin.close();	
-			}				
+			if (bin != null) {
+				bin.close();
+			}
 		}
 	}
 
@@ -162,6 +204,7 @@ public class FileHelper {
 
 	/**
 	 * Used to read the contents of a file into a string
+	 * 
 	 * @param file The file to read
 	 * @return The contents of the file
 	 * @throws IOException Thrown if their is a problem reading the file
@@ -171,24 +214,25 @@ public class FileHelper {
 		BufferedReader in = new BufferedReader(new FileReader(file));
 		String str;
 		while ((str = in.readLine()) != null) {
-			results.append(str+LS);			
+			results.append(str + LS);
 		}
 		in.close();
 		return results.toString();
 	}
-	
+
 	/**
 	 * Used to read the contents of a stream into a string
+	 * 
 	 * @param inputStream The input stream
 	 * @return The contents of the file
 	 * @throws IOException Thrown if their is a problem reading the file
 	 */
-	public static String readFileContents(InputStream inputStream) throws IOException {		
+	public static String readFileContents(InputStream inputStream) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		StringBuilder results = new StringBuilder();
 		String str;
 		while ((str = in.readLine()) != null) {
-			results.append(str+LS);			
+			results.append(str + LS);
 		}
 		in.close();
 		return results.toString();

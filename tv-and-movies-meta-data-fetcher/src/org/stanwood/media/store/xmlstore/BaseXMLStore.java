@@ -21,8 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,9 +47,7 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  * This is the base class for the XML Store classes. It has the methods which are common between
  * the different store classes.
  */
-public abstract class BaseXMLStore extends XMLParser {
-
-	protected final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+public abstract class BaseXMLStore extends XMLParser {	
 	
 	/**
 	 * Used to write the case document to a file

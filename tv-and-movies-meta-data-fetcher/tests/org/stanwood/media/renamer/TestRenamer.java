@@ -17,6 +17,7 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,14 +64,22 @@ public class TestRenamer extends TestCase {
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
-			eurekaDir.mkdir();
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directoru : " + eurekaDir.getAbsolutePath());
+			}
 			
 			File f = new File(eurekaDir,"101 - Blah Blah Blah.avi");
-			f.createNewFile();
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
 			f = new File(eurekaDir,"S01E02 - Hello this is a test.mkv");
-			f.createNewFile();
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
 			f = new File(eurekaDir,"s02e02 - Hello this is a test.mpg");
-			f.createNewFile();
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
 			
 			FileHelper.copy(Data.class.getResourceAsStream("eureka.xml"),
 					new File(eurekaDir, ".show.xml"));
@@ -108,9 +117,13 @@ public class TestRenamer extends TestCase {
 		File tmpDir = FileHelper.createTmpDir("Films");
 		try {
 			File filmDir = new File(tmpDir,"Films");
-			filmDir.mkdir();
+			if (!filmDir.mkdir()) {
+				throw new IOException("Unable to make film dir" + filmDir.getAbsolutePath());
+			}
 			File f = new File(filmDir,"[divx].dvdrip.The.Usual_susPEcts.avi");
-			f.createNewFile();
+			if (!f.exists() && !f.createNewFile()) {
+                throw new IOException("couldn't create file " + f);
+            }
 			
 			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),new File(filmDir, ".films.xml"));
 			
