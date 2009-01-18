@@ -9,6 +9,7 @@
 	<classpathentry kind="lib" path="libs/run-time/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/mysql-connector-java-5.1.6.jar"/>
+	<classpathentry kind="lib" path="libs/test-time/hsqldb.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

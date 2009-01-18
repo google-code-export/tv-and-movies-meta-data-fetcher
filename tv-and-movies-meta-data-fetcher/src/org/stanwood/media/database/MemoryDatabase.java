@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,8 +35,20 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 		IDatabase {
 
 	private final static Log log = LogFactory.getLog(MemoryDatabase.class);
-	private static final String DB_DRIVER_CLASS = "org.hsqldb.jdbcDriver";
-
+	private static final String DB_DRIVER_CLASS = "org.hsqldb.jdbcDriver";	
+	private final static IDBTokenMappings mappings[] = new IDBTokenMappings[] {		
+		new DBTextTokenMapping("FLOAT", "REAL"),
+		new DBTextTokenMapping("auto_increment|AUTO_INCREMENT", "IDENTITY"),
+		new DBTextTokenMapping("INTEGER\\([\\d]*\\)", "INTEGER"),
+		new DBTextTokenMapping("INT\\([\\d]*\\)", "INTEGER"),
+		new DBTextTokenMapping("tinyint\\([\\d]*\\)", "INTEGER"),
+		new DBTextTokenMapping("unsigned", ""),
+		new DBTextTokenMapping("default '.*'", ""),
+		new DBTextTokenMapping("key \\\".*\\\" \\(.*\\)", ""),
+		new DBTextTokenMapping("text", "varchar")
+	};
+	
+	
 	/**
 	 * This is used to setup the database manager class, it should be called
 	 * after creating a database manager class.
@@ -113,8 +126,7 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 	 * @see PreparedStatement
 	 * @param connection
 	 *            A connection to the database
-	 * @param sql
-	 *            The statements sql
+	 * @param sql The statements sql
 	 * @return A Prepared Statement
 	 * @throws SQLException
 	 *             Thrown if their is a problem creating the statement
@@ -130,10 +142,8 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 	 * 
 	 * @param connection
 	 *            The connection to close
-	 * @param stmt
-	 *            The statement to close
-	 * @param rs
-	 *            The result set to close
+	 * @param stmt The statement to close
+	 * @param rs The result set to close
 	 */
 	public void closeDatabaseResources(Connection connection,
 			PreparedStatement stmt, ResultSet rs) {
@@ -164,13 +174,79 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 	}
 
 	private String fixSQL(String sql) {
-		sql = sql.replaceAll("`", "");
-		sql = sql.replaceAll("FLOAT", "REAL");
-		sql = sql.replaceAll("auto_increment|AUTO_INCREMENT", "IDENTITY");
-		sql = sql.replaceAll("INTEGER\\([\\d]*\\)", "INTEGER");
+		sql = sql.replaceAll("`", "\"");
+		if (sql.toLowerCase().startsWith("create table")) {
+			sql = fixSQLCreateTable(sql);
+		}
+
 		return sql;
 	}
 	
+	private int findCloseBracket(String sql,int start) {
+		int depth = 0;
+		for (int i=start;i<sql.length();i++) {
+			if (sql.charAt(i)=='(') {
+				depth++;
+			}
+			else if (sql.charAt(i)==')') {
+				depth--;
+				if (depth==0) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	private String fixSQLCreateTable(String sql) {
+		StringBuffer result = new StringBuffer();
+		
+		int start = sql.indexOf("(");
+		int end = findCloseBracket(sql, start)+1;
+		result.append(translateSQL(sql.substring(0,start)));
+		
+		String tableDef = sql.substring(start,end);
+		
+		StringTokenizer tok = new StringTokenizer(tableDef,",");
+		boolean first = true;
+		while (tok.hasMoreTokens()) {
+			String token = translateSQL(tok.nextToken());
+			if (token.length()>0) {
+				if (!first) {
+					result.append(",");				
+				}
+				result.append(token);
+				first = false;
+			}				
+		}
+		
+		result.append(translateSQL(sql.substring(end)));
+		return result.toString();
+	}
+	
+	private String translateSQL(String sql) {
+		sql = translateTokens(sql);	
+		StringBuilder result = new StringBuilder();
+		StringTokenizer tok = new StringTokenizer(sql," ",true);
+		while (tok.hasMoreTokens()) {
+			String token = tok.nextToken();
+			token = translateTokens(token);	
+			result.append(token);
+		}
+		
+		return result.toString().trim();
+	}
+
+	private String translateTokens(String token) {
+		for (IDBTokenMappings mapping : mappings) {
+			if (mapping.accept(token)) {
+				token = mapping.getNativeToken();
+				break;
+			}
+		}
+		return token;
+	}	
+
 	/**
 	 * This is used to execute a simple SQL statement on the database.
 	 * @param connection	a connection to be re-used, useful for running a series 
