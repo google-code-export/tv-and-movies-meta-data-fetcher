@@ -43,7 +43,8 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 		new DBTextTokenMapping("INT\\([\\d]*\\)", "INTEGER"),
 		new DBTextTokenMapping("tinyint\\([\\d]*\\)", "INTEGER"),
 		new DBTextTokenMapping("unsigned", ""),
-		new DBTextTokenMapping("default '.*'", ""),
+		new DBTextTokenMapping("(.*)default '.*'(.*)", "$1$2"),
+		new DBTextTokenMapping("(.*)default null(.*)", "$1$2"),
 		new DBTextTokenMapping("key \\\".*\\\" \\(.*\\)", ""),
 		new DBTextTokenMapping("text", "varchar")
 	};
