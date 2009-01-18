@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -42,6 +44,8 @@ public class TestTVCOMSource extends TestCase {
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String SHOW_ID_EUREKA = "58448";
 	private static final String SHOW_ID_HEROES = "17552";
+	private static final Pattern SEASON_PATTERN = Pattern.compile(".*/episode_listings.html\\?season=(\\d+)");
+	private static final Pattern PRINT_GUIDE_PATTERN = Pattern.compile(".*/episode_guide.html\\?printable=(\\d+)");
 	
 	/**
 	 * Test that the show details are read correctly.
@@ -303,18 +307,22 @@ public class TestTVCOMSource extends TestCase {
 	}	
 	
 	private TVCOMSource getTVCOMSource(final String showId) {
-		TVCOMSource source = new TVCOMSource() {
+		TVCOMSource source = new TVCOMSource() {			
 			@Override
 			Source getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();				
+				Matcher seasonMatcher = SEASON_PATTERN.matcher(strUrl);
+				Matcher printGuideMatcher = PRINT_GUIDE_PATTERN.matcher(strUrl);
+				
+				
 				if (strUrl.equals("http://www.tv.com/show/"+showId+"/summary.html")) {
 					return new Source(Data.class.getResource(showId+"-summary.html"));
 				}
-				else if (strUrl.indexOf("episode_listings.html?season=")!=-1) {
-					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1).replaceAll("\\?","-")));
+				else if (seasonMatcher.matches()) {					
+					return new Source(Data.class.getResource(showId+"-episode_listings-season="+seasonMatcher.group(1)+".html"));
 				}
-				else if (strUrl.indexOf("episode_guide.html?printable=")!=-1) {
-					return new Source(Data.class.getResource(showId+"-"+strUrl.substring(strUrl.lastIndexOf('/')+1).replaceAll("\\?","-")));
+				else if (printGuideMatcher.matches()) {
+					return new Source(Data.class.getResource(showId+"-episode_guide-printable="+printGuideMatcher.group(1)+".html"));					
 				}
 				else if (strUrl.indexOf("http://www.tv.com/search.php?type=Search&stype=ajax_search")!=-1) {
 					return new Source(Data.class.getResource("eureka-search.html"));

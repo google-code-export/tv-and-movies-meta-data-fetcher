@@ -300,13 +300,15 @@ public class TVCOMSource implements ISource {
 		}
 		
 		int count = 1;
-		for (int i=episodes.size()-1;i>=0;i--) {
+//		for (int i=episodes.size()-1;i>=0;i--) {
+		for (int i=0;i<episodes.size();i++) {
 			episodes.get(i).setEpisodeNumber(count++);
 			season.addEpisode(episodes.get(i));
 		}
 		
 		count = 0;
-		for (int i=specials.size()-1;i>=0;i--) {
+//		for (int i=specials.size()-1;i>=0;i--) {
+		for (int i=0;i<specials.size();i++) {
 			specials.get(i).setEpisodeNumber(count++);
 			season.addSepcial(specials.get(i));
 		}
