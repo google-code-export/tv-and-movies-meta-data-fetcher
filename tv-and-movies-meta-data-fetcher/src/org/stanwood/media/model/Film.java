@@ -45,6 +45,7 @@ public class Film implements IVideo {
 	private List<Chapter> chapters = new ArrayList<Chapter>();
 	private String description;
 	private String preferredGenre;
+	private Link country;
 	
 	/** 
 	 * This is useful if the film belongs to more than one genres. It will returned the 
@@ -353,5 +354,24 @@ public class Film implements IVideo {
 	 */
 	public String getDescription() {
 		return this.description;
-	}	
+	}
+
+	/**
+	 * This will return the country the film was made in, or
+	 * null if it's not known.
+	 * @return the country the film was made in.
+	 */
+	public Link getCountry() {
+		return country;
+	}
+
+	/**
+	 * Used to set the country the film was made in.
+	 * @param country the country to set
+	 */
+	public void setCountry(Link country) {
+		this.country = country;
+	}
+	
+	
 }

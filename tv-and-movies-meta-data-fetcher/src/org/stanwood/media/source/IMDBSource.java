@@ -68,9 +68,7 @@ public class IMDBSource implements ISource {
 	private static final Pattern EXTRACT_ID_PATTERN = Pattern.compile(".*tt(\\d+)/");
 	private static final Pattern EXTRACT_ID2_PATTERN = Pattern.compile(".*title/tt(\\d+).*");
 	private static final Pattern IMAGE_PATTERN = Pattern.compile("(.*)SX(\\d+)_SY(\\d+)(.*)");
-	
-	
-	
+		
 	private String regexpToReplace = null;
 	
 	/**
@@ -231,6 +229,12 @@ public class IMDBSource implements ISource {
 								}								
 							}
 						}
+					}
+					else if (getContents(h5).equals("Country:")) {
+						List<Link> countries = getLinks(div, "/Sections/Countries");
+						if (countries!=null && countries.size()==1) {
+							film.setCountry(countries.get(0));
+						}										
 					}
 				}
 			}

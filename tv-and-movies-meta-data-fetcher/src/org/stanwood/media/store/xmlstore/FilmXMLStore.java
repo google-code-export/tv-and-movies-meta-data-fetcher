@@ -144,7 +144,12 @@ public class FilmXMLStore extends BaseXMLStore {
 		writeEpsoideExtraInfo(doc, filmNode, "director", film.getDirectors());
 		writeEpsoideExtraInfo(doc, filmNode, "writer", film.getWriters());
 		writeEpsoideExtraInfo(doc, filmNode, "guestStar", film.getGuestStars());
-		writeFilenames(doc, filmNode, filenames);
+		if (film.getCountry()!=null) {
+			List<Link> countries = new ArrayList<Link>();
+			countries.add(film.getCountry());
+			writeEpsoideExtraInfo(doc, filmNode, "country",countries );
+			writeFilenames(doc, filmNode, filenames);
+		}
 
 		filmsNode.appendChild(filmNode);
 	}
