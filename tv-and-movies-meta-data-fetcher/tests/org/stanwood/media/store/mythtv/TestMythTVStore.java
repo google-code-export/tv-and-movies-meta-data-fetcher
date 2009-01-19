@@ -17,12 +17,14 @@
 package org.stanwood.media.store.mythtv;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +128,54 @@ public class TestMythTVStore extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testCacheFilm() throws Exception {
+		MythTVStore xmlSource = createStore();
+		
+		File dir = FileHelper.createTmpDir("film");
+		try {
+			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
+			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
+			Film film = createTestFilm();
+						
+			xmlSource.cacheFilm(filmFile1, film);
+			xmlSource.cacheFilm(filmFile2, film);
+			
+			checkFilm(0,filmFile1.getAbsolutePath());
+			checkFilm(1,filmFile2.getAbsolutePath());
+			
+			assertEquals("Check number of films",2,getNumberOfFilms());												
+		} finally {
+			FileHelper.deleteDir(dir);
+		}
+	}
+
+	private void checkFilm(int id,String filename) throws SQLException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection connection = null; 
+		try {
+			connection = database.createConnection();
+			stmt = database.getStatement(connection, "SELECT * FROM `videometadata` where `intid` = ?");
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
+			assertTrue(rs.next());
+			assertEquals("Check id",id,rs.getInt("intid"));
+			assertEquals("Check title","The Usual Suspects",rs.getString("title"));		
+			assertEquals("Check rating","R",rs.getString("rating"));
+			assertEquals("Check inetref","114814",rs.getString("inetref"));
+			assertEquals("Check inetref",8.7F,rs.getFloat("userrating"));
+			assertEquals("Check directory","Bryan Singer",rs.getString("director"));			
+			assertEquals("Check directory",filename,rs.getString("filename"));
+			assertFalse(rs.next());
+			
+		} finally {
+			database.closeDatabaseResources(connection, stmt, rs);
+			stmt = null;
+			rs = null;
+			connection =null;
+		}
+	}
+
+	private MythTVStore createStore() {
 		MythTVStore xmlSource = new MythTVStore() {
 			@Override
 			protected IDatabase connectToDatabase() throws StoreException {				
@@ -138,91 +188,83 @@ public class TestMythTVStore extends TestCase {
 		xmlSource.setDatabaseName(DB_NAME);
 		xmlSource.setDatabasePassword("");
 		xmlSource.setDatabaseUser(DB_USER);
-		File dir = FileHelper.createTmpDir("film");
-		try {
-			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
-			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
-			Film film = new Film("114814");
-			film.setImageURL(new URL("http://test/image.jpg"));
-			film.setTitle("The Usual Suspects");
-			List<String> genres = new ArrayList<String>();
-			genres.add("Crime");
-			genres.add("Drama");
-			genres.add("Mystery");
-			genres.add("Thriller");			
-			film.setGenres(genres);
-			
-			film.setPreferredGenre("Drama");
-			List<Certification> certifications= new ArrayList<Certification>();
-			certifications.add(new Certification("16","Iceland"));
-			certifications.add(new Certification("R-18","Philippines"));
-			certifications.add(new Certification("16","Argentina"));
-			certifications.add(new Certification("MA","Australia"));
-			certifications.add(new Certification("16","Brazil"));
-			certifications.add(new Certification("14A","Canada"));
-			certifications.add(new Certification("18","Chile"));
-			certifications.add(new Certification("16","Denmark"));
-			certifications.add(new Certification("K-16","Finland"));
-			certifications.add(new Certification("U","France"));
-			certifications.add(new Certification("16","Germany"));
-			certifications.add(new Certification("IIB","Hong Kong"));
-			certifications.add(new Certification("16","Hungary"));
-			certifications.add(new Certification("18","Ireland"));
-			certifications.add(new Certification("T","Italy"));
-			certifications.add(new Certification("PG-12","Japan"));
-			certifications.add(new Certification("16","Netherlands"));
-			certifications.add(new Certification("R18","New Zealand"));
-			certifications.add(new Certification("15","Norway"));
-			certifications.add(new Certification("M/16","Portugal"));
-			certifications.add(new Certification("M18","Singapore"));
-			certifications.add(new Certification("PG (cut)","Singapore"));
-			certifications.add(new Certification("18","South Korea"));
-			certifications.add(new Certification("18","Spain"));
-			certifications.add(new Certification("15","Sweden"));
-			certifications.add(new Certification("18","UK"));
-			certifications.add(new Certification("R","USA"));
-			film.setCertifications(certifications);
-			film.setDate(df.parse("1995-08-25"));
-			List<Link> directors = new ArrayList<Link>();
-			directors.add(new Link("Bryan Singer","http://www.imdb.com/name/nm0001741/"));
-			film.setDirectors(directors);
-			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));			
-			List<Link> guestStars = new ArrayList<Link>();
-			guestStars.add(new Link("Stephen Baldwin","http://www.imdb.com/name/nm0000286/"));
-			guestStars.add(new Link("Gabriel Byrne","http://www.imdb.com/name/nm0000321/"));
-			guestStars.add(new Link("Benicio Del Toro","http://www.imdb.com/name/nm0001125/"));
-			guestStars.add(new Link("Kevin Pollak","http://www.imdb.com/name/nm0001629/"));
-			guestStars.add(new Link("Kevin Spacey","http://www.imdb.com/name/nm0000228/"));
-			guestStars.add(new Link("Chazz Palminteri","http://www.imdb.com/name/nm0001590/"));
-			guestStars.add(new Link("Pete Postlethwaite","http://www.imdb.com/name/nm0000592/"));
-			guestStars.add(new Link("Giancarlo Esposito","http://www.imdb.com/name/nm0002064/"));
-			guestStars.add(new Link("Suzy Amis","http://www.imdb.com/name/nm0000751/"));
-			guestStars.add(new Link("Dan Hedaya","http://www.imdb.com/name/nm0000445/"));
-			guestStars.add(new Link("Paul Bartel","http://www.imdb.com/name/nm0000860/"));
-			guestStars.add(new Link("Carl Bressler","http://www.imdb.com/name/nm0107808/"));
-			guestStars.add(new Link("Phillip Simon","http://www.imdb.com/name/nm0800342/"));
-			guestStars.add(new Link("Jack Shearer","http://www.imdb.com/name/nm0790436/"));
-			guestStars.add(new Link("Christine Estabrook","http://www.imdb.com/name/nm0261452/"));
-			film.setGuestStars(guestStars);
-			film.setRating(8.7F);
-			film.setSourceId(IMDBSource.SOURCE_ID);
-			film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
-			film.setDescription("Test description of the film");
-			List<Link>writers = new ArrayList<Link>();
-			writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
-			film.setWriters(writers);
-			
-			film.addChapter(new Chapter("The start",1));
-			film.addChapter(new Chapter("The end",3));
-			film.addChapter(new Chapter("Second Chapter",2));
-						
-			xmlSource.cacheFilm(filmFile1, film);
-			xmlSource.cacheFilm(filmFile2, film);
-			
-			assertEquals("Check number of films",2,getNumberOfFilms());			
-			
-		} finally {
-			FileHelper.deleteDir(dir);
-		}
+		return xmlSource;
+	}
+
+	private Film createTestFilm() throws MalformedURLException, ParseException {
+		Film film = new Film("114814");
+		film.setImageURL(new URL("http://test/image.jpg"));
+		film.setTitle("The Usual Suspects");
+		List<String> genres = new ArrayList<String>();
+		genres.add("Crime");
+		genres.add("Drama");
+		genres.add("Mystery");
+		genres.add("Thriller");			
+		film.setGenres(genres);
+		
+		film.setPreferredGenre("Drama");
+		List<Certification> certifications= new ArrayList<Certification>();
+		certifications.add(new Certification("16","Iceland"));
+		certifications.add(new Certification("R-18","Philippines"));
+		certifications.add(new Certification("16","Argentina"));
+		certifications.add(new Certification("MA","Australia"));
+		certifications.add(new Certification("16","Brazil"));
+		certifications.add(new Certification("14A","Canada"));
+		certifications.add(new Certification("18","Chile"));
+		certifications.add(new Certification("16","Denmark"));
+		certifications.add(new Certification("K-16","Finland"));
+		certifications.add(new Certification("U","France"));
+		certifications.add(new Certification("16","Germany"));
+		certifications.add(new Certification("IIB","Hong Kong"));
+		certifications.add(new Certification("16","Hungary"));
+		certifications.add(new Certification("18","Ireland"));
+		certifications.add(new Certification("T","Italy"));
+		certifications.add(new Certification("PG-12","Japan"));
+		certifications.add(new Certification("16","Netherlands"));
+		certifications.add(new Certification("R18","New Zealand"));
+		certifications.add(new Certification("15","Norway"));
+		certifications.add(new Certification("M/16","Portugal"));
+		certifications.add(new Certification("M18","Singapore"));
+		certifications.add(new Certification("PG (cut)","Singapore"));
+		certifications.add(new Certification("18","South Korea"));
+		certifications.add(new Certification("18","Spain"));
+		certifications.add(new Certification("15","Sweden"));
+		certifications.add(new Certification("18","UK"));
+		certifications.add(new Certification("R","USA"));
+		film.setCertifications(certifications);
+		film.setDate(df.parse("1995-08-25"));
+		List<Link> directors = new ArrayList<Link>();
+		directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
+		film.setDirectors(directors);
+		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));			
+		List<Link> guestStars = new ArrayList<Link>();
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001125/","Benicio Del Toro"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001629/","Kevin Pollak"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000228/","Kevin Spacey"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001590/","Chazz Palminteri"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000592/","Pete Postlethwaite"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0002064/","Giancarlo Esposito"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000751/","Suzy Amis"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000445/","Dan Hedaya"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000860/","Paul Bartel"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0107808/","Carl Bressler"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0800342/","Phillip Simon"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0790436/","Jack Shearer"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0261452/","Christine Estabrook"));
+		film.setGuestStars(guestStars);
+		film.setRating(8.7F);
+		film.setSourceId(IMDBSource.SOURCE_ID);
+		film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
+		film.setDescription("Test description of the film");
+		List<Link>writers = new ArrayList<Link>();
+		writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
+		film.setWriters(writers);
+		
+		film.addChapter(new Chapter("The start",1));
+		film.addChapter(new Chapter("The end",3));
+		film.addChapter(new Chapter("Second Chapter",2));
+		return film;
 	}
 }
