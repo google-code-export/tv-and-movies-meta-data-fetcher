@@ -491,7 +491,7 @@ public class MythTVStore implements IStore {
 		}
 	}
 
-	private IDatabase connectToDatabase() throws StoreException {
+	protected IDatabase connectToDatabase() throws StoreException {
 		try {
 			Class<? extends IDatabase> c = Class.forName(databaseClass).asSubclass(IDatabase.class);
 			Constructor<? extends IDatabase> constructor = c.getConstructor(String.class, String.class, String.class,

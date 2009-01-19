@@ -31,10 +31,10 @@ import org.apache.commons.logging.LogFactory;
  * TCP/IP to to a memory only database called HSQLDB. This is mainly used with
  * JUnit tests.
  */
-public class MemoryDatabase extends AbstractGenericDatabase implements
+public class HSQLDatabase extends AbstractGenericDatabase implements
 		IDatabase {
 
-	private final static Log log = LogFactory.getLog(MemoryDatabase.class);
+	private final static Log log = LogFactory.getLog(HSQLDatabase.class);
 	private static final String DB_DRIVER_CLASS = "org.hsqldb.jdbcDriver";	
 	private final static IDBTokenMappings mappings[] = new IDBTokenMappings[] {		
 		new DBTextTokenMapping("FLOAT", "REAL"),
@@ -49,6 +49,27 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 		new DBTextTokenMapping("text", "varchar")
 	};
 	
+	
+	private String host = "localhost";
+	private String port = "3306";
+	private String database = null;
+	private String password;
+	private String username;	
+	
+	/**
+	 * Used to create a MYSQL database controller class.
+	 * @param host The database host
+	 * @param username The name of the user used to access the database
+	 * @param password The name of the password used to access the database
+	 * @param database The name of the database to connect to
+	 */
+	public HSQLDatabase(String host,String username,String password,String database) {
+		super();
+		this.host = host;		
+		this.password = password;
+		this.username = username;
+		this.database = database;
+	}
 	
 	/**
 	 * This is used to setup the database manager class, it should be called
@@ -77,7 +98,7 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 	 */
 	public Connection createConnection() throws SQLException {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:aname", "sa", "");
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:"+database, "sa", "");
 			log.debug("Connected to the database");
 			return connection;
 		} catch (RuntimeException e) {
@@ -92,7 +113,7 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 	 */
 	public void createTestDatabase() {
 		try {
-			executeSQL("create database testdb");
+			executeSQL("create database "+database);
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -203,7 +224,11 @@ public class MemoryDatabase extends AbstractGenericDatabase implements
 		StringBuffer result = new StringBuffer();
 		
 		int start = sql.indexOf("(");
-		int end = findCloseBracket(sql, start)+1;
+		int end = findCloseBracket(sql, start);
+		if (end==-1) {
+			log.error("Bracket mismatch in SQL statement");
+			return null;
+		}
 		result.append(translateSQL(sql.substring(0,start)));
 		
 		String tableDef = sql.substring(start,end);
