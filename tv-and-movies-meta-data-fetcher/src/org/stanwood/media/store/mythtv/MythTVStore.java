@@ -152,6 +152,11 @@ public class MythTVStore implements IStore {
 			fields.add(new Field("coverfile", coverImage.getAbsolutePath()));
 		}
 
+		// Add default values for unused fields
+		fields.add(new Field("childid",-1));
+		fields.add(new Field("browse",1));
+		fields.add(new Field("category",0));
+		
 		long id = db.insertIntoTable(connection, "videometadata", fields);
 
 		if (film.getGuestStars() != null) {

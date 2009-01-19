@@ -318,6 +318,7 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			params[i] = fields.get(i).getValue();
 		}
 		sql.append(")");
+				
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -344,6 +345,11 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 		}	
 	}
 	
+	private void debugSQL() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * This is used to insert table row into a table. The table row is made up from fields.
 	 * @param tableName  The name of the table

@@ -155,7 +155,9 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	 */
 	public PreparedStatement getStatement(Connection connection, String sql)
 			throws SQLException {
-		return connection.prepareStatement(fixSQL(sql));
+		String fixedSQL = fixSQL(sql);
+		System.out.println("SQL : " +fixedSQL);
+		return connection.prepareStatement(fixedSQL);
 	}
 
 	/**
