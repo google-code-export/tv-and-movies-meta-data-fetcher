@@ -344,11 +344,6 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			closeDatabaseResources(null, stmt, rs);
 		}	
 	}
-	
-	private void debugSQL() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * This is used to insert table row into a table. The table row is made up from fields.

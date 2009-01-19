@@ -30,9 +30,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.stanwood.media.FileHelper;
-import org.stanwood.media.database.IDatabase;
 import org.stanwood.media.database.HSQLDatabase;
-import org.stanwood.media.database.MysqlDatabase;
+import org.stanwood.media.database.IDatabase;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
@@ -45,6 +44,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class TestMythTVStore extends TestCase {
 
+	private static final String DB_USER = "ua";
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private final static String DB_NAME = "aname";
 	
@@ -56,7 +56,7 @@ public class TestMythTVStore extends TestCase {
 	 * @throws Exception Thrown if not able to connect to DB or create the tables
 	 */
 	public void setUp() throws Exception {
-		database = new HSQLDatabase("","","",DB_NAME);
+		database = new HSQLDatabase("",DB_USER,"",DB_NAME);
 		database.init();
 		((HSQLDatabase) database).createTestDatabase();
 		setupTables();
@@ -114,6 +114,7 @@ public class TestMythTVStore extends TestCase {
 
 	/**
 	 * Used to close the database after the tests have finished
+	 * @throws Exception Thriwn if their is a problem shutting down the DB
 	 */
 	public void tearDown() throws Exception{
 		database.executeSQL("SHUTDOWN");
@@ -136,7 +137,7 @@ public class TestMythTVStore extends TestCase {
 		xmlSource.setDatabaseHost("");
 		xmlSource.setDatabaseName(DB_NAME);
 		xmlSource.setDatabasePassword("");
-		xmlSource.setDatabaseUser("");
+		xmlSource.setDatabaseUser(DB_USER);
 		File dir = FileHelper.createTmpDir("film");
 		try {
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");

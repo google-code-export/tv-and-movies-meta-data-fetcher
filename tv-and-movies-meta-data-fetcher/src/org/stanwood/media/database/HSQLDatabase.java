@@ -37,21 +37,19 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	private final static Log log = LogFactory.getLog(HSQLDatabase.class);
 	private static final String DB_DRIVER_CLASS = "org.hsqldb.jdbcDriver";	
 	private final static IDBTokenMappings mappings[] = new IDBTokenMappings[] {		
-		new DBTextTokenMapping("FLOAT", "REAL"),
-		new DBTextTokenMapping("auto_increment|AUTO_INCREMENT", "IDENTITY"),
-		new DBTextTokenMapping("INTEGER\\([\\d]*\\)", "INTEGER"),
-		new DBTextTokenMapping("INT\\([\\d]*\\)", "INTEGER"),
-		new DBTextTokenMapping("tinyint\\([\\d]*\\)", "INTEGER"),
-		new DBTextTokenMapping("unsigned", ""),
-		new DBTextTokenMapping("(.*)default '.*'(.*)", "$1$2"),
-		new DBTextTokenMapping("(.*)default null(.*)", "$1$2"),
-		new DBTextTokenMapping("key \\\".*\\\" \\(.*\\)", ""),
-		new DBTextTokenMapping("text", "varchar")
+		new DBRegExpTokenMapping("FLOAT", "REAL"),
+		new DBRegExpTokenMapping("auto_increment|AUTO_INCREMENT", "IDENTITY"),
+		new DBRegExpTokenMapping("INTEGER\\([\\d]*\\)", "INTEGER"),
+		new DBRegExpTokenMapping("INT\\([\\d]*\\)", "INTEGER"),
+		new DBRegExpTokenMapping("tinyint\\([\\d]*\\)", "INTEGER"),
+		new DBRegExpTokenMapping("unsigned", ""),
+		new DBRegExpTokenMapping("(.*)default '.*'(.*)", "$1$2"),
+		new DBRegExpTokenMapping("(.*)default null(.*)", "$1$2"),
+		new DBRegExpTokenMapping("key \\\".*\\\" \\(.*\\)", ""),
+		new DBRegExpTokenMapping("primary key.*\\(.*\\)", ""),
+		new DBRegExpTokenMapping("text", "varchar")
 	};
-	
-	
-	private String host = "localhost";
-	private String port = "3306";
+		
 	private String database = null;
 	private String password;
 	private String username;	
@@ -64,10 +62,8 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	 * @param database The name of the database to connect to
 	 */
 	public HSQLDatabase(String host,String username,String password,String database) {
-		super();
-		this.host = host;		
+		super();		
 		this.password = password;
-		this.username = username;
 		this.database = database;
 	}
 	
@@ -98,7 +94,7 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	 */
 	public Connection createConnection() throws SQLException {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:"+database, "sa", "");
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:"+database, username, password);
 			log.debug("Connected to the database");
 			return connection;
 		} catch (RuntimeException e) {
@@ -156,7 +152,7 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	public PreparedStatement getStatement(Connection connection, String sql)
 			throws SQLException {
 		String fixedSQL = fixSQL(sql);
-		System.out.println("SQL : " +fixedSQL);
+		log.debug("SQL : " +fixedSQL);
 		return connection.prepareStatement(fixedSQL);
 	}
 
@@ -285,7 +281,7 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 	@Override
 	public void executeSQL(Connection connection, String sql) throws SQLException {
 		sql = fixSQL(sql);
-		System.out.println("SQL : " + sql);
+		log.debug("SQL : " + sql);
 
 		PreparedStatement stmt = null;
 
@@ -299,7 +295,6 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 		} finally {
 			closeDatabaseResources(null, stmt, null);
 			stmt = null;
-//			connection = null;
 		}
 	}
 

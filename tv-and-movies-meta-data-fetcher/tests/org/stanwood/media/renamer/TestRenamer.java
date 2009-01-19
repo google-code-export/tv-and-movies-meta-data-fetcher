@@ -33,8 +33,6 @@ import org.stanwood.media.testdata.Data;
 public class TestRenamer extends TestCase {
 
 	protected static int exitCode;
-
-	
 	
 	@Override
 	protected void setUp() throws Exception {

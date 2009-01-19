@@ -275,7 +275,9 @@ public class AtomicParsley extends AbstractExecutable {
 
 	private File downloadToTempFile(URL url) throws IOException {
 		File file = File.createTempFile("artwork", ".jpg");
-		file.delete();
+		if (!file.delete()) {
+			throw new IOException("Unable to delete temp file "+file.getAbsolutePath());
+		}
 		OutputStream out = null;
 		URLConnection conn = null;
 		InputStream in = null;
