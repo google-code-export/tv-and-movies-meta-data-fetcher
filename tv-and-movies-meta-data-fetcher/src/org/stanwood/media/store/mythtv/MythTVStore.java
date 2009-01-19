@@ -312,7 +312,7 @@ public class MythTVStore implements IStore {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = db.getStatement(connection, "SELECT intid FROM videometadata WHERE filename = ?",
+			stmt = db.getStatement(connection, "SELECT `intid` FROM `videometadata` WHERE `filename` = ?",
 					new Object[] { filmFile.getAbsolutePath() });
 			rs = stmt.executeQuery();
 			if (rs.next()) {

@@ -295,15 +295,15 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 	@Override	
 	public long insertIntoTable(Connection connection, String tableName, List<Field> fields) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO " + tableName + "(");
+		sql.append("INSERT INTO `" + tableName + "` (");
 		boolean first = true;				
-		for (Field field : fields) {
-			if (first) {
-				sql.append(field.getKey());
+		for (Field field : fields) {			
+			if (!first) {
+				sql.append(",");
 			}
-			else {
-				sql.append(","+field.getKey());
-			}
+			sql.append("`");
+			sql.append(field.getKey());
+			sql.append("`");
 			first = false;
 		}
 		sql.append(") VALUES (");

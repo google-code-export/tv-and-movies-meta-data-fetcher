@@ -63,10 +63,10 @@ public class TestMythTVStore extends TestCase {
 	}
 		
 	private void setupTables() throws SQLException {		
-		database.executeSQL("CREATE TABLE videocast(`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `cast` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
-		database.executeSQL("CREATE TABLE videocategory(`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `category` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
-		database.executeSQL("CREATE TABLE videocountry(`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `country` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
-		database.executeSQL("CREATE TABLE videogenre(`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `genre` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
+		database.executeSQL("CREATE TABLE `videocast` (`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `cast` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
+		database.executeSQL("CREATE TABLE `videocategory` (`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `category` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
+		database.executeSQL("CREATE TABLE `videocountry` (`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `country` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
+		database.executeSQL("CREATE TABLE `videogenre` (`intid` INTEGER(10) NOT NULL AUTO_INCREMENT, `genre` VARCHAR(128) NOT NULL,PRIMARY KEY (`intid`))");
 		database.executeSQL("CREATE TABLE `videometadata` (" + "`intid` int(10) unsigned NOT NULL auto_increment,"
 				+ "`title` varchar(128) NOT NULL," + "`director` varchar(128) NOT NULL," + "`plot` text,"
 				+ "`rating` varchar(128) NOT NULL," + "`inetref` varchar(255) NOT NULL,"
@@ -98,7 +98,7 @@ public class TestMythTVStore extends TestCase {
 		Connection connection = null; 
 		try {
 			connection = database.createConnection();
-			stmt = database.getStatement(connection, "SELECT count(*) FROM videometadata");
+			stmt = database.getStatement(connection, "SELECT count(*) FROM `videometadata`");
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				count = rs.getLong(1);
