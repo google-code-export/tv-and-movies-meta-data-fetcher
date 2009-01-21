@@ -165,6 +165,10 @@ public class TestMythTVStore extends TestCase {
 			assertEquals("Check inetref",8.7F,rs.getFloat("userrating"));
 			assertEquals("Check directory","Bryan Singer",rs.getString("director"));			
 			assertEquals("Check directory",filename,rs.getString("filename"));
+			
+			List<String> countries = getCountry(id);
+			assertEquals("Check number of countries",1,countries.size());
+			assertEquals("Check the country","USA",countries.get(0));
 			assertFalse(rs.next());
 			
 		} finally {
@@ -175,6 +179,60 @@ public class TestMythTVStore extends TestCase {
 		}
 	}
 
+	private List<Long> getVideoCountryId(long videoId) throws SQLException {
+		List<Long> list = new ArrayList<Long>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection connection = null; 
+		try {
+			connection = database.createConnection();
+			stmt = database.getStatement(connection, "SELECT * FROM `videometadatacountry`" +					                                 
+                                                     " WHERE `idvideo` = ?" );
+                    			
+			stmt.setLong(1, videoId);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getLong("idcountry"));
+			}
+		}
+		finally {
+			database.closeDatabaseResources(connection, stmt, rs);
+			stmt = null;
+			rs = null;
+			connection =null;
+		}
+		return list;
+	}
+	
+	private List<String> getCountry(long filmId) throws SQLException {
+		List<Long>countryIds = getVideoCountryId(filmId);
+		List<String> countries = new ArrayList<String>();
+		
+		for (Long countryId : countryIds) {
+		
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			Connection connection = null; 
+			try {
+				connection = database.createConnection();
+				stmt = database.getStatement(connection, "SELECT * FROM `videocountry`"+					                                 
+						                                 " WHERE `intid` = ?");
+				stmt.setLong(1, countryId);
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					countries.add(rs.getString("country"));
+				}
+			}
+			finally {
+				database.closeDatabaseResources(connection, stmt, rs);
+				stmt = null;
+				rs = null;
+				connection =null;
+			}
+		}
+		return countries;
+	}
+	
 	private MythTVStore createStore() {
 		MythTVStore xmlSource = new MythTVStore() {
 			@Override
@@ -195,6 +253,7 @@ public class TestMythTVStore extends TestCase {
 		Film film = new Film("114814");
 		film.setImageURL(new URL("http://test/image.jpg"));
 		film.setTitle("The Usual Suspects");
+		film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
 		List<String> genres = new ArrayList<String>();
 		genres.add("Crime");
 		genres.add("Drama");

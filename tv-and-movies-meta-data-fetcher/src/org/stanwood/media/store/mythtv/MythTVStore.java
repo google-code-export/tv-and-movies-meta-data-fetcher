@@ -158,14 +158,36 @@ public class MythTVStore implements IStore {
 		fields.add(new Field("category",0));
 		
 		long id = db.insertIntoTable(connection, "videometadata", fields);
+		if (id==-1) {
+			id = getFilmIdFromDB(filmFile, db, connection);
+		}
 
 		if (film.getGuestStars() != null) {
 			for (Link cast : film.getGuestStars()) {
 				Long castId = getCastId(cast.getTitle(), db, connection);
 				if (castId == null) {
 					castId = insertNewCast(cast.getTitle(), db, connection);
+					if (castId == null) {
+						castId = getCastId(cast.getTitle(), db, connection);
+					}
 				}
-				db.executeUpdate(connection, "insert into `videometadatacast` values(?,?)", new Object[] { id, castId });
+				if (castId!=null) {
+					db.executeUpdate(connection, "insert into `videometadatacast` values(?,?)", new Object[] { id, castId });
+				}
+			}
+		}
+		
+		if (film.getCountry()!=null) {
+			String country = film.getCountry().getTitle();
+			Long countryId = getCountryId(country, db, connection);
+			if (countryId == null) {
+				countryId = insertNewCountry(country, db, connection);
+				if (countryId == null) {
+					countryId = getCountryId(country, db, connection);
+				}
+			}			
+			if (countryId!=null) {				
+				db.executeUpdate(connection, "insert into `videometadatacountry` values(?,?)", new Object[] { id, countryId });
 			}
 		}
 
@@ -174,30 +196,44 @@ public class MythTVStore implements IStore {
 				Long genreId = getGenreId(genre, db, connection);
 				if (genreId == null) {
 					genreId = insertNewGenre(genre, db, connection);
+					if (genreId == null) {
+						genreId = getGenreId(genre, db, connection);
+					}
 				}
-				db
-						.executeUpdate(connection, "insert into `videometadatagenre` values(?,?)", new Object[] { id,
-								genreId });
+				if (genreId!=null)  {
+					db.executeUpdate(connection, "insert into `videometadatagenre` values(?,?)", new Object[] { id,genreId });
+				}
 			}
 		}
 
-		// TODO insert country metadata
 		// TODO insert category metadata
 
 		return id;
 	}
 
-	private long insertNewCast(String castName, IDatabase db, Connection connection) throws SQLException {
-		return db.executeUpdate(connection, "insert into `videocast`(`cast`) values (?)", new Object[] { castName });
+	private Long insertNewCast(String castName, IDatabase db, Connection connection) throws SQLException {		 
+		long id = db.executeUpdate(connection, "insert into `videocast`(`cast`) values (?)", new Object[] { castName });
+		if (id==-1) {
+			return null;
+		}
+		return id;
 	}
 
-//	private long insertNewCountry(String countryName, IDatabase db, Connection connection) throws SQLException {
-//		return db.executeUpdate(connection, "insert into `videocountry`(`country`) values (?)",
-//				new Object[] { countryName });
-//	}
+	private Long insertNewCountry(String countryName, IDatabase db, Connection connection) throws SQLException {
+		long id = db.executeUpdate(connection, "insert into `videocountry`(`country`) values (?)",
+				new Object[] { countryName });
+		if (id==-1) {
+			return null;
+		}
+		return id;
+	}
 
-	private long insertNewGenre(String genreName, IDatabase db, Connection connection) throws SQLException {
-		return db.executeUpdate(connection, "insert into `videogenre`(`genre`) values (?)", new Object[] { genreName });
+	private Long insertNewGenre(String genreName, IDatabase db, Connection connection) throws SQLException {
+		long id = db.executeUpdate(connection, "insert into `videogenre`(`genre`) values (?)", new Object[] { genreName });
+		if (id==-1) {
+			return null;
+		}
+		return id;
 	}
 
 //	private long insertNewCategory(String categoryName, IDatabase db, Connection connection) throws SQLException {
@@ -274,24 +310,24 @@ public class MythTVStore implements IStore {
 //		return id;
 //	}
 //
-//	private Long getCountryId(String countryName, IDatabase db, Connection connection) throws SQLException {
-//		Long id = null;
-//		PreparedStatement stmt = null;
-//		ResultSet rs = null;
-//		try {
-//			stmt = db.getStatement(connection, "SELECT `intid` FROM `videocountry` WHERE `country` = ?",
-//					new Object[] { countryName });
-//			rs = stmt.executeQuery();
-//			if (rs.next()) {
-//				id = rs.getLong(1);
-//			}
-//		} finally {
-//			db.closeDatabaseResources(null, stmt, rs);
-//			stmt = null;
-//			rs = null;
-//		}
-//		return id;
-//	}
+	private Long getCountryId(String countryName, IDatabase db, Connection connection) throws SQLException {
+		Long id = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = db.getStatement(connection, "SELECT `intid` FROM `videocountry` WHERE `country` = ?",
+					new Object[] { countryName });
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} finally {
+			db.closeDatabaseResources(null, stmt, rs);
+			stmt = null;
+			rs = null;
+		}
+		return id;
+	}
 
 	private Long getGenreId(String genreName, IDatabase db, Connection connection) throws SQLException {
 		Long id = null;
