@@ -96,7 +96,7 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("tvsn",atoms.get(3).getName());
 		assertEquals("3",atoms.get(4).getValue());
 		assertEquals("tves",atoms.get(4).getName());
-		assertEquals("Thu Nov 10 00:00:00 GMT 2005",atoms.get(5).getValue());
+		assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(5).getValue().replaceAll("0 ... ", "0 "));
 		assertEquals("©day",atoms.get(5).getName());
 		assertEquals("Test Episode",atoms.get(6).getValue());
 		assertEquals("©nam",atoms.get(6).getName());
@@ -137,7 +137,7 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals(7,atoms.size());
 		assertEquals("Movie",atoms.get(0).getValue());
 		assertEquals("stik",atoms.get(0).getName());		
-		assertEquals("Thu Nov 10 00:00:00 GMT 2005",atoms.get(1).getValue());
+		assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(1).getValue().replaceAll("0 ... ", "0 "));
 		assertEquals("©day",atoms.get(1).getName());
 		assertEquals("Test film name",atoms.get(2).getValue());
 		assertEquals("©nam",atoms.get(2).getName());

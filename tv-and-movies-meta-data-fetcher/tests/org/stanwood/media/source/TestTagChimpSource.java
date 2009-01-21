@@ -19,6 +19,8 @@ package org.stanwood.media.source;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -37,9 +39,11 @@ import au.id.jericho.lib.html.Source;
 /**
  * Used to test the {@link TagChimpSource} class.
  */
-public class TestTagChimpSource extends TestCase {
-
+public class TestTagChimpSource extends TestCase {	
+	
 	private final static String FILM_ID_IRON_MAN = "iron-man-17";
+	
+	private final DateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
 	
 	/**
 	 * Used to test the searching of films
@@ -70,7 +74,7 @@ public class TestTagChimpSource extends TestCase {
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony",film.getSummary());
 		assertNull("Check rating",film.getRating());
-		assertEquals("Check the release date","Fri May 09 00:00:00 BST 2008",film.getDate().toString());
+		assertEquals("Check the release date","00:00:00 2008-05-09",df.format(film.getDate()));
 		assertEquals("Check image url","http://www.tagchimp.com/covers/large/39752.jpg",film.getImageURL().toExternalForm());
 		StringBuilder expectedDesc = new StringBuilder();
 		expectedDesc.append("The movie begins with Tony Stark (Robert Downey Jr.) visiting soldiers on duty ");
