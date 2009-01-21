@@ -204,6 +204,7 @@ public class FilmXMLStore extends BaseXMLStore {
 				List<Link> directors = getLinks(filmNode, "director");
 				List<Link> writers = getLinks(filmNode, "writer");
 				List<Link> guestStars = getLinks(filmNode, "guestStar");								
+				List<Link> countries = getLinks(filmNode, "country");
 				String imageUrl = getStringFromXML(filmNode, "@imageUrl");
 				
 				Element preferredGenreNode = (Element) XPathAPI.selectSingleNode(filmNode, "genre[@preferred='true']");
@@ -227,6 +228,9 @@ public class FilmXMLStore extends BaseXMLStore {
 				film.setDescription(description);
 				film.setTitle(title);
 				film.setWriters(writers);
+				if (countries!=null && countries.size()>0) {
+					film.setCountry(countries.get(0));
+				}
 				return film;
 			}
 		} catch (TransformerException e) {

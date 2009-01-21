@@ -92,8 +92,7 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * @param links The links to add to the document.
 	 * @throws TransformerException Thrown if their is a problem adding the links too the document
 	 */
-	protected void writeEpsoideExtraInfo(Document doc, 
-			Node node, String tagLabel, List<Link> links)
+	protected void writeEpsoideExtraInfo(Document doc, Node node, String tagLabel, List<Link> links)
 			throws TransformerException {
 		NodeList nodeList = XPathAPI.selectNodeList(node, tagLabel);
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -197,8 +196,7 @@ public abstract class BaseXMLStore extends XMLParser {
 		NodeList list = XPathAPI.selectNodeList(node, tagLabel);
 		for (int i = 0; i < list.getLength(); i++) {
 			Element element = (Element) list.item(i);
-			result.add(new Link(element.getAttribute("name"), element
-					.getAttribute("link")));
+			result.add(new Link(element.getAttribute("link"),element.getAttribute("name")));
 		}
 		return result;
 	}

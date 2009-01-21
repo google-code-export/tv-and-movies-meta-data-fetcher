@@ -95,8 +95,11 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 		assertEquals("Check rating",8.1F,film.getRating());
-		assertEquals("Check the release date","Fri May 02 00:00:00 BST 2008",film.getDate().toString());
+		assertEquals("Check the release date","Fri May 02 00:00:00 UTC 2008",film.getDate().toString());
 		assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTM0MzgwNTAzNl5BMl5BanBnXkFtZTcwODkyNjg5MQ@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
+		
+		assertEquals("Check the country","USA",film.getCountry().getTitle());
+		assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
 		
 		List<String>genres = film.getGenres();
 		assertEquals(5,genres.size());

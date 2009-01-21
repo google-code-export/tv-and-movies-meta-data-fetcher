@@ -136,6 +136,7 @@ public class HybridFilmSource implements ISource {
 			film.setDirectors(imdbFilm.getDirectors());
 			film.setFilmUrl(imdbFilm.getFilmUrl());			
 			film.setGuestStars(imdbFilm.getGuestStars());
+			film.setCountry(imdbFilm.getCountry());
 			if (tagChimpFilm.getImageURL()!=null){
 				film.setImageURL(tagChimpFilm.getImageURL());
 			}

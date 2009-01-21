@@ -165,6 +165,9 @@ public class TestXMLStore extends XMLTestCase {
 
 			assertEquals("Check URL","http://test/image.jpg",film.getImageURL().toExternalForm());
 			
+			assertEquals("Check the country","USA",film.getCountry().getTitle());
+			assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
+			
 			assertEquals("Crime",film.getGenres().get(0));
 			assertEquals("Drama",film.getGenres().get(1));
 			assertEquals("Mystery",film.getGenres().get(2));
@@ -265,6 +268,7 @@ public class TestXMLStore extends XMLTestCase {
 			film.setGenres(genres);
 			
 			film.setPreferredGenre("Drama");
+			film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
 			List<Certification> certifications= new ArrayList<Certification>();
 			certifications.add(new Certification("16","Iceland"));
 			certifications.add(new Certification("R-18","Philippines"));
@@ -296,32 +300,32 @@ public class TestXMLStore extends XMLTestCase {
 			film.setCertifications(certifications);
 			film.setDate(df.parse("1995-08-25"));
 			List<Link> directors = new ArrayList<Link>();
-			directors.add(new Link("Bryan Singer","http://www.imdb.com/name/nm0001741/"));
+			directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
 			film.setDirectors(directors);
 			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));			
 			List<Link> guestStars = new ArrayList<Link>();
-			guestStars.add(new Link("Stephen Baldwin","http://www.imdb.com/name/nm0000286/"));
-			guestStars.add(new Link("Gabriel Byrne","http://www.imdb.com/name/nm0000321/"));
-			guestStars.add(new Link("Benicio Del Toro","http://www.imdb.com/name/nm0001125/"));
-			guestStars.add(new Link("Kevin Pollak","http://www.imdb.com/name/nm0001629/"));
-			guestStars.add(new Link("Kevin Spacey","http://www.imdb.com/name/nm0000228/"));
-			guestStars.add(new Link("Chazz Palminteri","http://www.imdb.com/name/nm0001590/"));
-			guestStars.add(new Link("Pete Postlethwaite","http://www.imdb.com/name/nm0000592/"));
-			guestStars.add(new Link("Giancarlo Esposito","http://www.imdb.com/name/nm0002064/"));
-			guestStars.add(new Link("Suzy Amis","http://www.imdb.com/name/nm0000751/"));
-			guestStars.add(new Link("Dan Hedaya","http://www.imdb.com/name/nm0000445/"));
-			guestStars.add(new Link("Paul Bartel","http://www.imdb.com/name/nm0000860/"));
-			guestStars.add(new Link("Carl Bressler","http://www.imdb.com/name/nm0107808/"));
-			guestStars.add(new Link("Phillip Simon","http://www.imdb.com/name/nm0800342/"));
-			guestStars.add(new Link("Jack Shearer","http://www.imdb.com/name/nm0790436/"));
-			guestStars.add(new Link("Christine Estabrook","http://www.imdb.com/name/nm0261452/"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0001125/","Benicio Del Toro"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0001629/","Kevin Pollak"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000228/","Kevin Spacey"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0001590/","Chazz Palminteri"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000592/","Pete Postlethwaite"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0002064/","Giancarlo Esposito"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000751/","Suzy Amis"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000445/","Dan Hedaya"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0000860/","Paul Bartel"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0107808/","Carl Bressler"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0800342/","Phillip Simon"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0790436/","Jack Shearer"));
+			guestStars.add(new Link("http://www.imdb.com/name/nm0261452/","Christine Estabrook"));
 			film.setGuestStars(guestStars);
 			film.setRating(8.7F);
 			film.setSourceId(IMDBSource.SOURCE_ID);
 			film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
 			film.setDescription("Test description of the film");
 			List<Link>writers = new ArrayList<Link>();
-			writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
+			writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
 			film.setWriters(writers);
 			
 			film.addChapter(new Chapter("The start",1));

@@ -38,23 +38,24 @@
     <chapter name="The start" number="1"/>
     <chapter name="Second Chapter" number="2"/>
     <chapter name="The end" number="3"/>
-    <director link="Bryan Singer" name="http://www.imdb.com/name/nm0001741/"/>
-    <writer link="Christopher McQuarrie" name="http://www.imdb.com/name/nm0003160/"/>
-    <guestStar link="Stephen Baldwin" name="http://www.imdb.com/name/nm0000286/"/>
-    <guestStar link="Gabriel Byrne" name="http://www.imdb.com/name/nm0000321/"/>
-    <guestStar link="Benicio Del Toro" name="http://www.imdb.com/name/nm0001125/"/>
-    <guestStar link="Kevin Pollak" name="http://www.imdb.com/name/nm0001629/"/>
-    <guestStar link="Kevin Spacey" name="http://www.imdb.com/name/nm0000228/"/>
-    <guestStar link="Chazz Palminteri" name="http://www.imdb.com/name/nm0001590/"/>
-    <guestStar link="Pete Postlethwaite" name="http://www.imdb.com/name/nm0000592/"/>
-    <guestStar link="Giancarlo Esposito" name="http://www.imdb.com/name/nm0002064/"/>
-    <guestStar link="Suzy Amis" name="http://www.imdb.com/name/nm0000751/"/>
-    <guestStar link="Dan Hedaya" name="http://www.imdb.com/name/nm0000445/"/>
-    <guestStar link="Paul Bartel" name="http://www.imdb.com/name/nm0000860/"/>
-    <guestStar link="Carl Bressler" name="http://www.imdb.com/name/nm0107808/"/>
-    <guestStar link="Phillip Simon" name="http://www.imdb.com/name/nm0800342/"/>
-    <guestStar link="Jack Shearer" name="http://www.imdb.com/name/nm0790436/"/>
-    <guestStar link="Christine Estabrook" name="http://www.imdb.com/name/nm0261452/"/>
+    <director link="http://www.imdb.com/name/nm0001741/" name="Bryan Singer"/>
+    <writer link="http://www.imdb.com/name/nm0003160/" name="Christopher McQuarrie"/>
+    <guestStar link="http://www.imdb.com/name/nm0000286/" name="Stephen Baldwin"/>
+    <guestStar link="http://www.imdb.com/name/nm0000321/" name="Gabriel Byrne"/>
+    <guestStar link="http://www.imdb.com/name/nm0001125/" name="Benicio Del Toro"/>
+    <guestStar link="http://www.imdb.com/name/nm0001629/" name="Kevin Pollak"/>
+    <guestStar link="http://www.imdb.com/name/nm0000228/" name="Kevin Spacey"/>
+    <guestStar link="http://www.imdb.com/name/nm0001590/" name="Chazz Palminteri"/>
+    <guestStar link="http://www.imdb.com/name/nm0000592/" name="Pete Postlethwaite"/>
+    <guestStar link="http://www.imdb.com/name/nm0002064/" name="Giancarlo Esposito"/>
+    <guestStar link="http://www.imdb.com/name/nm0000751/" name="Suzy Amis"/>
+    <guestStar link="http://www.imdb.com/name/nm0000445/" name="Dan Hedaya"/>
+    <guestStar link="http://www.imdb.com/name/nm0000860/" name="Paul Bartel"/>
+    <guestStar link="http://www.imdb.com/name/nm0107808/" name="Carl Bressler"/>
+    <guestStar link="http://www.imdb.com/name/nm0800342/" name="Phillip Simon"/>
+    <guestStar link="http://www.imdb.com/name/nm0790436/" name="Jack Shearer"/>
+    <guestStar link="http://www.imdb.com/name/nm0261452/" name="Christine Estabrook"/>
+    <country link="http://www.imdb.com/Sections/Countries/USA/" name="USA"/>
     <file name="$filmdir$/The Usual Suspects part1.avi"/>
     <file name="$filmdir$/The Usual Suspects part2.avi"/>
   </film>
