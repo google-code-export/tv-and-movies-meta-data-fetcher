@@ -19,6 +19,8 @@ package org.stanwood.media.source;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -36,6 +38,7 @@ import org.stanwood.media.testdata.Data;
  */
 public class TestIMDBSource extends TestCase {
 
+	private final DateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
 	private final static String FILM_ID_IRON_MAN = "371746";
 	
 	/**
@@ -95,7 +98,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 		assertEquals("Check rating",8.1F,film.getRating());
-		assertEquals("Check the release date","Fri May 02 00:00:00 UTC 2008",film.getDate().toString());
+		assertEquals("Check the release date","00:00:00 2008-05-02",df.format(film.getDate()));
 		assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTM0MzgwNTAzNl5BMl5BanBnXkFtZTcwODkyNjg5MQ@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
 		
 		assertEquals("Check the country","USA",film.getCountry().getTitle());
