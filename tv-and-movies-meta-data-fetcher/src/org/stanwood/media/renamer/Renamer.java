@@ -94,6 +94,9 @@ public class Renamer {
 	}
 	
 	public void tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("Tidying show names in the directory : " + parentDir);
+		}
 		File files[] = parentDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {				
