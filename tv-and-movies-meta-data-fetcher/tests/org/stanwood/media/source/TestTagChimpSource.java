@@ -149,7 +149,7 @@ public class TestTagChimpSource extends TestCase {
 			@Override
 			Source getSource(URL url) throws IOException {						
 				String strUrl = url.toExternalForm();				
-				if (strUrl.equals("http://www.tagchimp.com/movies/"+filmId+"/")) {
+				if (strUrl.equals("http://www.tagchimp.com/tc/"+filmId+"/")) {
 					String file = "tagchimp-"+filmId+".html";
 					return new Source(Data.class.getResource(file));									
 				}						

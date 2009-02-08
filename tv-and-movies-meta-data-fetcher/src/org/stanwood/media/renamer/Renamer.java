@@ -17,6 +17,7 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,6 +59,7 @@ public class Renamer {
 	private boolean refresh;
 	private String sourceId;
 	private Mode mode;
+	private boolean recursive;
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -67,14 +69,16 @@ public class Renamer {
 	 * @param pattern The pattern to use while renaming
 	 * @param exts The extensions to search for
 	 * @param refresh If true, then don't read from the stores
+	 * @param recursive If true, then also include subdirectories
 	 */
-	public Renamer(String id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh) {
+	public Renamer(String id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh, boolean recursive) {
 		this.id = id;
 		this.showDirectory = showDirectory;
 		this.pattern = pattern;
 		this.exts = exts.clone();
 		this.refresh = refresh;
 		this.mode = mode;
+		this.recursive = recursive;
 	}
 	
 	/**
@@ -85,11 +89,16 @@ public class Renamer {
 	 * @throws SourceException Thrown if their is a problem reading from the source
 	 * @throws StoreException Thrown is their is a problem with a store
 	 */
-	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {				
-		File files[] = showDirectory.listFiles(new FilenameFilter() {
+	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
+		tidyDirectory(showDirectory);		
+	}
+	
+	public void tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
+		File files[] = parentDir.listFiles(new FileFilter() {
 			@Override
-			public boolean accept(File file, String name) {				
-				if (file.isDirectory()) {					
+			public boolean accept(File file) {				
+				if (file.isFile()) {
+					String name = file.getName();
 					for (String ext : exts) {
 						if (name.toLowerCase().endsWith("."+ext.toLowerCase())) {
 							return true;
@@ -99,20 +108,33 @@ public class Renamer {
 				return false;
 			}			
 		});
-		
-		
-		
-		for (File file : files ) {
-			if (mode==Mode.TV_SHOW) {
+				
+		if (mode == Mode.TV_SHOW) {
+			for (File file : files) {
 				renameTVShow(file);
 			}
-			else if (mode==Mode.FILM) {
+		} else if (mode == Mode.FILM) {
+			for (File file : files) {
 				renameFilm(file);
 			}
-			else {
-				fatal("Unknown rename mode");
+		} else {
+			fatal("Unknown rename mode");
+		}
+		
+		if (recursive) {
+			File dirs[] = parentDir.listFiles(new FileFilter() {
+				@Override
+				public boolean accept(File file) {				
+					if (file.isDirectory()) {
+						return true;					
+					}
+					return false;
+				}			
+			});
+			for (File dir : dirs) {
+				tidyDirectory(dir);
 			}
-		}		
+		}
 	}
 
 	private void renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {

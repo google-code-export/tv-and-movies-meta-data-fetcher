@@ -61,6 +61,7 @@ public class Main {
 	private final static String CONFIG_FILE_OPTION = "c";
 	private final static String MODE_OPTION = "m";
 	private final static String LOG_CONFIG_OPTION = "l";
+	private final static String RECURSIVE_OPTION = "R";
 	private static final Options OPTIONS;
 
 	private static String showId = null;
@@ -72,7 +73,7 @@ public class Main {
 	private static Mode mode = null;
 	/* package for test */ static IExitHandler exitHandler = null;
 	/* package for test */ static boolean doInit = true;
-	
+	private static boolean recursive = false;
 	
 	static {
 		OPTIONS = new Options();
@@ -85,6 +86,7 @@ public class Main {
 		OPTIONS.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
 		OPTIONS.addOption(new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV."));
 		OPTIONS.addOption(new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]"));
+		OPTIONS.addOption(new Option(RECURSIVE_OPTION,"recursive",false,"Also process subdirectories"));
 	}
 	
 	/**
@@ -169,7 +171,7 @@ public class Main {
 	}
 
 	private static boolean run() {
-		Renamer renamer = new Renamer(showId,mode, showDirectory, pattern,VALID_EXTS,refresh);
+		Renamer renamer = new Renamer(showId,mode, showDirectory, pattern,VALID_EXTS,refresh,recursive);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -262,7 +264,8 @@ public class Main {
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
 		}
 
-		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
+		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));		
+		recursive = (cmd.hasOption(RECURSIVE_OPTION));
 		
 		if (mode == null) {
 			if (cmd.hasOption(SHOWID_OPTION)) {
@@ -298,7 +301,7 @@ public class Main {
 			else {
 				pattern = DEFAULT_FILM_FILE_PATTERN;
 			}
-		}
+		}			
 		
 		return true;
 	}	

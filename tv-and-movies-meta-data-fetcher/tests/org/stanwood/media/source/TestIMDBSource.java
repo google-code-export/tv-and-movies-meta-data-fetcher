@@ -97,7 +97,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		assertEquals("Check title","Iron Man",film.getTitle().trim());
 		assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
-		assertEquals("Check rating",8.1F,film.getRating());
+		assertEquals("Check rating",8.0F,film.getRating());
 		assertEquals("Check the release date","00:00:00 2008-05-02",df.format(film.getDate()));
 		assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTM0MzgwNTAzNl5BMl5BanBnXkFtZTcwODkyNjg5MQ@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
 		
@@ -105,12 +105,13 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
 		
 		List<String>genres = film.getGenres();
-		assertEquals(5,genres.size());
+		assertEquals(6,genres.size());
 		assertEquals("Action",genres.get(0));		
 		assertEquals("Adventure",genres.get(1));
-		assertEquals("Drama",genres.get(2));
-		assertEquals("Sci-Fi",genres.get(3));
-		assertEquals("Thriller",genres.get(4));
+		assertEquals("Crime",genres.get(2));
+		assertEquals("Drama",genres.get(3));
+		assertEquals("Sci-Fi",genres.get(4));
+		assertEquals("Thriller",genres.get(5));
 		
 		List<Link>directors = film.getDirectors();
 		assertEquals(1,directors.size());

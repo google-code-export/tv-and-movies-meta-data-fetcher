@@ -43,9 +43,9 @@ public class TagChimpSource implements ISource {
 	public static final String SOURCE_ID = "tagChimp";
 
 	private static final String BASE_URL = "http://www.tagchimp.com";
-	private static final String MOVIES_URL = "/movies/$filmId$/";
+	private static final String MOVIES_URL = "/tc/$filmId$/";
 	private Pattern CHAPTER_PATTERN = Pattern.compile("chapter (\\d+):");
-	private Pattern SEARCH_PATTERN = Pattern.compile("/(\\d+)/");
+	private Pattern SEARCH_PATTERN = Pattern.compile("/tc/(\\d+)/");
 
 	private String regexpToReplace = null;
 
