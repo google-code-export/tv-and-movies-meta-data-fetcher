@@ -216,8 +216,8 @@ public class Controller {
 
 		if (show == null) {
 			log.info("Reading show from sources");
-			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
+			for (ISource source : sources) {				
+				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
 					show = source.getShow(showId);
 					if (show != null) {
 						for (IStore store : stores) {

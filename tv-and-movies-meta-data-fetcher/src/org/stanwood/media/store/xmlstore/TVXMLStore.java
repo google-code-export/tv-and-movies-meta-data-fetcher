@@ -275,7 +275,13 @@ public class TVXMLStore extends BaseXMLStore {
 
 			Show show = new Show(showId);
 			show.setName(name);
-			show.setImageURL(new URL(imageURL));
+			try {
+				show.setImageURL(new URL(imageURL));
+			}
+			catch (MalformedURLException e) {
+				log.warn("Unable to get show image url " + imageURL);
+			}
+		
 			show.setLongSummary(longSummary);
 			show.setShortSummary(shortSummary);
 			show.setShowURL(new URL(showURL));
