@@ -66,8 +66,10 @@ public class Controller {
 	 * Once the store has been initialised, it can't be Initialised again.
 	 */
 	public static void initWithDefaults() {
-		if (stores != null || sources != null) {
-			throw new IllegalStateException("Controller allready initialized");
+		synchronized (Controller.class) {
+			if (stores != null || sources != null) {
+				throw new IllegalStateException("Controller allready initialized");
+			}
 		}
 
 		stores = new ArrayList<IStore>();

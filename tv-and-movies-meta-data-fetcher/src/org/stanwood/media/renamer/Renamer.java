@@ -53,27 +53,27 @@ public class Renamer {
 	private final static Log log = LogFactory.getLog(Renamer.class);
 	
 	private String id;
-	private File showDirectory;
+	private File rootMediaDir;
 	private String pattern;
 	private String[] exts;
 	private boolean refresh;
 	private String sourceId;
-	private Mode mode;
+	private Mode mode;	
 	private boolean recursive;
 
 	/**
 	 * Constructor used to create a instance of the class
 	 * @param id The id of the show or film to rename
 	 * @param mode Used to tell the renamer what mode to work in
-	 * @param showDirectory The directory it is located in
+	 * @param rootMediaDirectory The directory the media is located in
 	 * @param pattern The pattern to use while renaming
 	 * @param exts The extensions to search for
 	 * @param refresh If true, then don't read from the stores
 	 * @param recursive If true, then also include subdirectories
 	 */
-	public Renamer(String id,Mode mode,File showDirectory,String pattern,String exts[], boolean refresh, boolean recursive) {
+	public Renamer(String id,Mode mode,File rootMediaDirectory,String pattern,String exts[], boolean refresh,boolean recursive) {
 		this.id = id;
-		this.showDirectory = showDirectory;
+		this.rootMediaDir = rootMediaDirectory;
 		this.pattern = pattern;
 		this.exts = exts.clone();
 		this.refresh = refresh;
@@ -90,14 +90,15 @@ public class Renamer {
 	 * @throws StoreException Thrown is their is a problem with a store
 	 */
 	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
-		tidyDirectory(showDirectory);		
+		tidyDirectory(rootMediaDir);		
 	}
-	
+		
 	public void tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
 		File files[] = parentDir.listFiles(new FileFilter() {
+
 			@Override
 			public boolean accept(File file) {				
 				if (file.isFile()) {
@@ -160,9 +161,9 @@ public class Renamer {
 		}
 		
 		String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
-		String newName = getNewFilmName(film, ext);
+		File newName = getNewFilmName(film, ext);
 	
-		doRename(file, oldFileName, newName);
+		doRename(file, newName);
 	}
 
 	private SearchResult searchForId(File file)
@@ -218,36 +219,38 @@ public class Renamer {
 					log.error("Unable to find epsiode for file : " + file.getAbsolutePath());
 				} else {
 					String ext = oldFileName.substring(oldFileName.length() - 3);
-					String newName = getNewTVShowName(show, season, episode, ext);
+					File newName = getNewTVShowName(show, season, episode, ext);
 
-					doRename(file, oldFileName, newName);
+					doRename(file, newName);
 				}
 			}
 		}
 	
 	}
 
-	private void doRename(File file, String oldFileName, String newName) throws StoreException {
-		// Remove characters from filenames that windows and linux don't like
-		newName = newName.replaceAll(":|/","-");
-		newName = newName.replaceAll("!",".");
-		File newFile = new File(file.getParentFile(),newName);
+	private void doRename(File file, File newFile) throws StoreException {
+		// Remove characters from filenames that windows and linux don't like				
 		if (file.equals(newFile)) {
-			log.info("File '" + oldFileName+"' already has the correct name.");
+			log.info("File '" + file.getAbsolutePath()+"' already has the correct name.");
 		}
 		else {					
 			if (newFile.exists()) {
-				log.error("Unable rename '"+oldFileName+"' file too '"+newFile.getName()+"' as it already exists.");					
+				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");					
 			}
 			else {
-				log.info("Renaming '" + oldFileName + "' -> '" + newName+"'");
+				if (newFile.getParentFile().exists()) {
+					if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
+						log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());
+					}
+				}
+				log.info("Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"'");
 				
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
 					Controller.getInstance().renamedFile(oldFile,newFile);	
 				}
 				else {
-					log.error("Failed to rename '"+oldFileName+"' file too '"+newFile.getName()+"'.");
+					log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
 				}
 			}
 		}
@@ -258,19 +261,27 @@ public class Renamer {
 		Main.doExit(1);
 		throw new RuntimeException(msg);
 	}
+	
+	private String normalizeTest(String text) {
+		text = text.replaceAll(":|/","-");
+		text = text.replaceAll("!",".");
+		return text;
+	}
 
-	private String getNewFilmName(Film film, String ext) {
+	private File getNewFilmName(Film film, String ext) {		
 		String newName = pattern;
-		newName = newName.replaceAll("%h", String.valueOf(id));
+		newName = newName.replaceAll("%h", normalizeTest(String.valueOf(id)));
 		newName = newName.replaceAll("%%", "%");
-		newName = newName.replaceAll("%t", film.getTitle());
-		newName = newName.replaceAll("%x", ext);
-		return newName;
+		newName = newName.replaceAll("%t", normalizeTest(film.getTitle()));
+		newName = newName.replaceAll("%x", normalizeTest(ext));
+		File dir = getDirs(newName);
+		
+		return new File(dir,newName);
 	}
 	
-	private String getNewTVShowName(Show show,Season season, Episode episode,String ext) {
+	private File getNewTVShowName(Show show,Season season, Episode episode,String ext) {
 		String newName = pattern;
-		newName = newName.replaceAll("%h", String.valueOf(id));
+		newName = newName.replaceAll("%h", normalizeTest(String.valueOf(id)));
 		newName = newName.replaceAll("%s", String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
 		if (episodeNum.length()==1) {
@@ -279,9 +290,22 @@ public class Renamer {
 		
 		newName = newName.replaceAll("%e", episodeNum);
 		newName = newName.replaceAll("%%", "%");
-		newName = newName.replaceAll("%n", show.getName());
-		newName = newName.replaceAll("%t", episode.getTitle());
-		newName = newName.replaceAll("%x", ext);
-		return newName;
+		newName = newName.replaceAll("%n", normalizeTest(show.getName()));
+		newName = newName.replaceAll("%t", normalizeTest(episode.getTitle()));
+		newName = newName.replaceAll("%x", normalizeTest(ext));
+		
+		File dir = getDirs(newName);		
+		return new File(dir,newName);
+	}
+
+	private File getDirs(String newName) {
+		File dir = rootMediaDir;
+		if (newName.indexOf(File.separator)!=-1) {
+			String dirs[] = newName.split("\\\\"+File.separatorChar);
+			for (int i=0;i<dirs.length-1;i++) {
+				dir = new File(dir,dirs[i]);
+			}
+		}
+		return dir;
 	}
 }

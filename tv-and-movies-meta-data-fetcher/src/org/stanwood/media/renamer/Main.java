@@ -54,7 +54,7 @@ public class Main {
 
 	private final static String HELP_OPTION = "h"; 
 	private final static String SHOWID_OPTION = "s";
-	private final static String SHOW_DIR_OPTION = "d";
+	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String RENAME_PATTERN = "p";
 	private final static String SOURCE_ID_OPTION = "o";
 	private final static String REFRESH_STORE_OPTION = "r";
@@ -66,7 +66,7 @@ public class Main {
 
 	private static String showId = null;
 	private static String sourceId = null;
-	private static File showDirectory = new File(System.getProperty("user.dir"));
+	private static File rootMediaDirectory = new File(System.getProperty("user.dir"));
 	private static String pattern = null;
 	private static boolean refresh = false;
 	private static File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
@@ -79,7 +79,7 @@ public class Main {
 		OPTIONS = new Options();
 		OPTIONS.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
 		OPTIONS.addOption(new Option(SHOWID_OPTION, "showid", true, "The ID of the show. If not present, then it will search for the show id."));
-		OPTIONS.addOption(new Option(SHOW_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory."));
+		OPTIONS.addOption(new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory."));
 		OPTIONS.addOption(new Option(RENAME_PATTERN, "pattern",true,"The pattern used to rename files. Defaults to \"%s %e - %t.%x\" if not present."));
 		OPTIONS.addOption(new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present."));
 		OPTIONS.addOption(new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source."));
@@ -121,7 +121,7 @@ public class Main {
 	public static void main(String[] args) {
 		showId = null;
 		sourceId = null;
-		showDirectory = new File(System.getProperty("user.dir"));
+		rootMediaDirectory = new File(System.getProperty("user.dir"));
 		pattern = null;
 		refresh = false;
 		configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
@@ -171,7 +171,7 @@ public class Main {
 	}
 
 	private static boolean run() {
-		Renamer renamer = new Renamer(showId,mode, showDirectory, pattern,VALID_EXTS,refresh,recursive);
+		Renamer renamer = new Renamer(showId,mode, rootMediaDirectory, pattern,VALID_EXTS,refresh,recursive);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -231,18 +231,17 @@ public class Main {
 			sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
 		}		
 		
-		if (cmd.hasOption(SHOW_DIR_OPTION)
-				&& cmd.getOptionValue(SHOW_DIR_OPTION) != null) {
-			File dir = new File(cmd.getOptionValue(SHOW_DIR_OPTION));
+		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
+			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory() && dir.canWrite()) {
-				showDirectory = dir;
+				rootMediaDirectory = dir;
 			} else {
 				fatal("Show directory must be a writable directory");
 				return false;
 			}					
 		}
-		if (showDirectory==null || !showDirectory.exists()) {
-			fatal("Show directory '" + showDirectory +"' does not exist.");
+		if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
+			fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
 			return false;
 		}
 		
@@ -334,7 +333,7 @@ public class Main {
 	}
 
 	private static Mode getDefaultMode() {
-		StringTokenizer tok = new StringTokenizer(showDirectory.getAbsolutePath(),File.separator);		
+		StringTokenizer tok = new StringTokenizer(rootMediaDirectory.getAbsolutePath(),File.separator);		
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken().toLowerCase();
 			if (token.equals("films") || token.equals("movies")) {
