@@ -307,13 +307,11 @@ public class Renamer {
 	}
 
 	private File getPath(String newName) {
-		File dir = rootMediaDir;
-		if (newName.indexOf(File.separator)!=-1) {
-			StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
-			while (tok.hasMoreTokens()) {
-				dir = new File(dir,tok.nextToken());
-			}			
-		}
+		File dir = rootMediaDir;		
+		StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
+		while (tok.hasMoreTokens()) {
+			dir = new File(dir,tok.nextToken());
+		}					
 		return dir;
 	}
 }

@@ -141,15 +141,15 @@ public class TestRenamer extends TestCase {
 				throw new IOException("Unable to create directoru : " + eurekaDir.getAbsolutePath());
 			}
 			
-			f = new File(subEurekaDir,"101 - Blah Blah Blah.avi");
+			f = new File(subEurekaDir,"103 - Blah Blah Blah.avi");
 			if (!f.createNewFile()) {
 				throw new IOException("Unable to create file : " + f.getAbsolutePath());
 			}
-			f = new File(subEurekaDir,"S01E02 - Hello this is a test.mkv");
+			f = new File(subEurekaDir,"S01E04 - Hello this is a test.mkv");
 			if (!f.createNewFile()) {
 				throw new IOException("Unable to create file : " + f.getAbsolutePath());
 			}
-			f = new File(subEurekaDir,"s02e02 - Hello this is a test.mpg");
+			f = new File(subEurekaDir,"s02e03 - Hello this is a test.mpg");
 			if (!f.createNewFile()) {
 				throw new IOException("Unable to create file : " + f.getAbsolutePath());
 			}
@@ -163,31 +163,21 @@ public class TestRenamer extends TestCase {
 			Main.main(args);
 			
 			List<File>files = new ArrayList<File>();
-			for (File file : eurekaDir.listFiles()) {
-				files.add(file);
+			listRecursively(eurekaDir,files);						
+			sortFiles(files);
+			for (File file : files) {
+				System.out.println("Found file : " + file);
 			}
-			
-			Collections.sort(files);
-			
-			assertEquals(5,files.size());			
-			assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"2 02 - Phoenix Rising.mpg").getAbsolutePath(),files.get(3).getAbsolutePath());
-			assertEquals(subEurekaDir.getAbsolutePath(),files.get(5).getAbsolutePath());
-			
-			files = new ArrayList<File>();
-			for (File file : subEurekaDir.listFiles()) {
-				files.add(file);
-			}
-			
-			Collections.sort(files);
 						
-			assertEquals(new File(subEurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
-			assertEquals(new File(subEurekaDir,"1 01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
-			assertEquals(new File(subEurekaDir,"1 02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
-			assertEquals(new File(subEurekaDir,"2 02 - Phoenix Rising.mpg").getAbsolutePath(),files.get(3).getAbsolutePath());
-			assertEquals(4,files.size());
+			assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());						
+			assertEquals(new File(eurekaDir,"1 01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
+			assertEquals(new File(eurekaDir,"1 02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());			
+			assertEquals(new File(eurekaDir,"1 03 - Before I Forget.avi").getAbsolutePath(),files.get(3).getAbsolutePath());
+			assertEquals(new File(eurekaDir,"1 04 - Alienated.mkv").getAbsolutePath(),files.get(4).getAbsolutePath());
+			assertEquals(new File(eurekaDir,"2 02 - Phoenix Rising.mpg").getAbsolutePath(),files.get(5).getAbsolutePath());
+			assertEquals(new File(eurekaDir,"2 03 - Unpredictable.mpg").getAbsolutePath(),files.get(6).getAbsolutePath());
+			assertEquals(new File(eurekaDir,"Eureka"+File.separator+".show.xml").getAbsolutePath(),files.get(7).getAbsolutePath());
+			assertEquals(8,files.size());	
 
 			assertEquals("Check exit code",0,exitCode);
 		} finally {
@@ -230,10 +220,7 @@ public class TestRenamer extends TestCase {
 			
 			List<File>files = new ArrayList<File>();
 			listRecursively(eurekaDir,files);						
-			sortFiles(files);
-			for (File file : files) {
-				System.out.println("Found file : " + file);
-			}
+			sortFiles(files);			
 						
 			assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());						
 			assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
