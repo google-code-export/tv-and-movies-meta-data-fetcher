@@ -41,7 +41,7 @@ public class FakeStore implements IStore {
 	 * @param episode The details of the episode
 	 */
 	@Override
-	public void cacheEpisode(File episodeFile,Episode episode) {
+	public void cacheEpisode(File rootMediaDir, File episodeFile,Episode episode) {
 	}
 
 	/** 
@@ -50,7 +50,7 @@ public class FakeStore implements IStore {
 	 * @param season The details of the season
 	 */
 	@Override
-	public void cacheSeason(File episodeFile,Season season) {
+	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) {
 	}
 
 	/** 
@@ -59,7 +59,7 @@ public class FakeStore implements IStore {
 	 * @param show The details of the show
 	 */
 	@Override
-	public void cacheShow(File episodeFile,Show show) {
+	public void cacheShow(File rootMediaDir,File episodeFile,Show show) {
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class FakeStore implements IStore {
 	 * @param episodeNum The number of the episode to read
 	 */
 	@Override
-	public Episode getEpisode(File episodeFile,Season season, int episodeNum) {
+	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum) {
 		return null;
 	}
 
@@ -80,7 +80,7 @@ public class FakeStore implements IStore {
 	 * @param seasonNum The number of the season to read
 	 */
 	@Override
-	public Season getSeason(File episodeFile,Show show, int seasonNum)  {
+	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum)  {
 		return null;
 	}
 
@@ -90,7 +90,7 @@ public class FakeStore implements IStore {
 	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(File episodeFile, String showId)  {
+	public Show getShow(File rootMediaDir,File episodeFile, String showId)  {
 		return null;
 	}
 
@@ -101,7 +101,7 @@ public class FakeStore implements IStore {
 	 * @param specialNumber The number of the special episode to read
 	 */
 	@Override
-	public Episode getSpecial(File episodeFile,Season season, int specialNumber) {
+	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber) {
 		return null;
 	}
 
@@ -112,7 +112,7 @@ public class FakeStore implements IStore {
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {
 		return null;
 	}
 
@@ -138,7 +138,7 @@ public class FakeStore implements IStore {
 	 * @param film The film details
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) {
 		
 	}
 
@@ -148,7 +148,7 @@ public class FakeStore implements IStore {
 	 * @param newFile The new file
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class FakeStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 

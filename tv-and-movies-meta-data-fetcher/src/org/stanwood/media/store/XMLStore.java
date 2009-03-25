@@ -55,8 +55,9 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem renaming files 
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) throws StoreException {
-		filmStore.renamedFile(oldFile,newFile);
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {	
+//			tvStore.renamedFile(rootMediaDir,oldFile,newFile);					
+		filmStore.renamedFile(rootMediaDir,oldFile,newFile);
 	}
 	
 	/**
@@ -67,8 +68,8 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
-		filmStore.cacheFilm(filmFile, film);
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
+		filmStore.cacheFilm(rootMediaDir,filmFile, film);
 	}
 	
 	/**
@@ -83,8 +84,8 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem. 
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
-		return filmStore.getFilm(filmFile, filmId);
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+		return filmStore.getFilm(rootMediaDir,filmFile, filmId);
 	}
 
 	/**
@@ -94,8 +95,8 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
 	@Override
-	public void cacheEpisode(File episodeFile, Episode episode) throws StoreException {
-		tvStore.cacheEpisode(episodeFile, episode);
+	public void cacheEpisode(File rootMediaDir,File episodeFile, Episode episode) throws StoreException {
+		tvStore.cacheEpisode(rootMediaDir,episodeFile, episode);
 	}
 	
 	/**
@@ -105,8 +106,8 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
 	@Override
-	public void cacheSeason(File episodeFile, Season season) throws StoreException {
-		tvStore.cacheSeason(episodeFile, season);
+	public void cacheSeason(File rootMediaDir,File episodeFile, Season season) throws StoreException {
+		tvStore.cacheSeason(rootMediaDir,episodeFile, season);
 	}
 
 	/**
@@ -116,8 +117,8 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
 	@Override
-	public void cacheShow(File episodeFile, Show show) throws StoreException {
-		tvStore.cacheShow(episodeFile, show);
+	public void cacheShow(File rootMediaDir,File episodeFile, Show show) throws StoreException {
+		tvStore.cacheShow(rootMediaDir,episodeFile, show);
 	}
 
 	/**
@@ -131,9 +132,9 @@ public class XMLStore implements IStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */	
 	@Override
-	public Episode getEpisode(File episodeFile, Season season, int episodeNum) throws StoreException,
+	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum) throws StoreException,
 			MalformedURLException, IOException {
-		return tvStore.getEpisode(episodeFile, season, episodeNum);
+		return tvStore.getEpisode(rootMediaDir,episodeFile, season, episodeNum);
 	}
 	
 	/**
@@ -147,8 +148,8 @@ public class XMLStore implements IStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */	
 	@Override
-	public Season getSeason(File episodeFile, Show show, int seasonNum) throws StoreException, IOException {	
-		return tvStore.getSeason(episodeFile, show, seasonNum);
+	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum) throws StoreException, IOException {	
+		return tvStore.getSeason(rootMediaDir,episodeFile, show, seasonNum);
 	}
 
 	/**
@@ -162,8 +163,8 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File episodeFile, String showId) throws StoreException, MalformedURLException, IOException {	
-		return tvStore.getShow(episodeFile, showId);
+	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException {	
+		return tvStore.getShow(rootMediaDir,episodeFile, showId);
 	}
 
 	/**
@@ -178,9 +179,9 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */	
 	@Override
-	public Episode getSpecial(File specialFile, Season season, int specialNumber) throws MalformedURLException,
+	public Episode getSpecial(File rootMediaDir,File specialFile, Season season, int specialNumber) throws MalformedURLException,
 			IOException, StoreException {
-		return tvStore.getSpecial(specialFile, season, specialNumber);
+		return tvStore.getSpecial(rootMediaDir,specialFile, season, specialNumber);
 	}
 
 	/**
@@ -193,12 +194,12 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store 
 	 */	
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws StoreException {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) throws StoreException {
 		if (mode==Mode.TV_SHOW) {
-			return tvStore.searchForShowId(episodeFile);
+			return tvStore.searchForShowId(rootMediaDir,episodeFile);
 		}
 		else {
-			return filmStore.searchForFilmId(episodeFile);
+			return filmStore.searchForFilmId(rootMediaDir,episodeFile);
 		}
 	}
 }

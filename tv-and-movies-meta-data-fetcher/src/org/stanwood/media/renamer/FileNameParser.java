@@ -16,6 +16,11 @@
  */
 package org.stanwood.media.renamer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,9 +62,9 @@ public class FileNameParser {
 	 * @param filename The filename to parse
 	 * @return The parsed information
 	 */
-	public static ParsedFileName parse(String filename) {			
+	public static ParsedFileName parse(File rootMediaDir,String renamePattern,File file) {			
 		for (Pattern pattern : PATTERNS) {
-			Matcher m = pattern.matcher(filename);
+			Matcher m = pattern.matcher(file.getName());
 			if (m.matches()) {
 				ParsedFileName result = new ParsedFileName();
 				int seasonNumber = Integer.parseInt(m.group(1));
@@ -69,6 +74,58 @@ public class FileNameParser {
 				return result;
 			}
  		}
+		
+		Map<String,String> tokens = getTokens(rootMediaDir,renamePattern,file.getAbsolutePath());
+		String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);		
+		String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);
+		if (episodeNumber!=null && seasonNumber!=null) {
+			ParsedFileName result = new ParsedFileName();
+			try {
+				result.setSeason(Integer.parseInt(seasonNumber));
+				result.setEpisode(Integer.parseInt(episodeNumber));
+				return result;
+			}
+			catch (NumberFormatException e) {
+				return null;
+			}		
+		}
+		return null;
+	}
+	
+
+
+	private static Map<String, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
+		List<String>groups = new ArrayList<String>();
+		Pattern p = Pattern.compile("(%.)");
+		renamePattern = renamePattern.replaceAll("\\"+File.separator,"\\\\"+File.separator );
+		renamePattern = renamePattern.replaceAll("\\.","\\\\." );
+		StringBuffer buffer = new StringBuffer();
+		Matcher m = p.matcher(renamePattern);
+		while (m.find()) {	
+			String group = m.group();
+			groups.add(group);
+			if (group.equals(Renamer.TOKEN_EPISODE) || group.equals(Renamer.TOKEN_SEASON)){
+				m.appendReplacement(buffer,"([\\\\d]+)");
+			}
+			else {
+				m.appendReplacement(buffer,"(.*)");
+			}
+		}
+		m.appendTail(buffer);
+		renamePattern = buffer.toString();
+		
+		p  = Pattern.compile(renamePattern);
+		if (filename.startsWith(rootMediaDir.getAbsolutePath())) {
+			filename=filename.substring(rootMediaDir.getAbsolutePath().length()+1);
+		}
+		m = p.matcher(filename);
+		if (m.matches()) {
+			Map<String,String>result = new HashMap<String,String>();
+			for (int i=0;i<m.groupCount();i++) {
+				result.put(groups.get(i),m.group(i+1));
+			}
+			return result;
+		}
 		return null;
 	}
 	

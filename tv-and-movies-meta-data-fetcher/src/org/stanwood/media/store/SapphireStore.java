@@ -70,7 +70,7 @@ public class SapphireStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem writing to the store
 	 */
 	@Override
-	public void cacheEpisode(File episodeFile, Episode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile, Episode episode) throws StoreException {
 		try {
 			writeEpisode(episodeFile, episode);
 		} catch (IOException e) {
@@ -227,7 +227,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file witch the episode is stored in
 	 */
 	@Override
-	public void cacheSeason(File episodeFile, Season season) {
+	public void cacheSeason(File rootMediaDir,File episodeFile, Season season) {
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file witch the episode is stored in
 	 */
 	@Override
-	public void cacheShow(File episodeFile, Show show) {
+	public void cacheShow(File rootMediaDir,File episodeFile, Show show) {
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Episode getEpisode(File episodeFile, Season season, int episodeNum) {
+	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum) {
 		return null;
 	}
 
@@ -260,7 +260,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Season getSeason(File episodeFile, Show show, int seasonNum) {
+	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum) {
 		return null;
 	}
 
@@ -271,7 +271,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Show getShow(File episodeFile, String showId) {
+	public Show getShow(File rootMediaDir,File episodeFile, String showId) {
 		return null;
 	}
 
@@ -283,7 +283,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public Episode getSpecial(File episodeFile, Season season, int specialNumber) {
+	public Episode getSpecial(File rootMediaDir,File episodeFile, Season season, int specialNumber) {
 		return null;
 	}
 
@@ -293,7 +293,7 @@ public class SapphireStore implements IStore {
 	 * @param episodeFile The file the episode is stored in
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {
 		return null;
 	}
 
@@ -305,7 +305,7 @@ public class SapphireStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		try {
 			writeFilm(filmFile, film);
 		} catch (IOException e) {
@@ -320,7 +320,7 @@ public class SapphireStore implements IStore {
 	 * @param newFile The new file
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
 		File oldXmlFile = getCacheFile(oldFile);
 		File newXmlFile = getCacheFile(newFile);
 		if (oldXmlFile.exists()) {
@@ -346,7 +346,7 @@ public class SapphireStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 

@@ -79,7 +79,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		validateOptions();
 		IDatabase db = connectToDatabase();
 
@@ -375,7 +375,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheEpisode(File episodeFile, Episode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile, Episode episode) throws StoreException {
 
 	}
 
@@ -387,7 +387,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheSeason(File episodeFile, Season season) throws StoreException {
+	public void cacheSeason(File rootMediaDir,File episodeFile, Season season) throws StoreException {
 
 	}
 
@@ -399,7 +399,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheShow(File episodeFile, Show show) throws StoreException {
+	public void cacheShow(File rootMediaDir,File episodeFile, Show show) throws StoreException {
 
 	}
 
@@ -412,7 +412,8 @@ public class MythTVStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Episode getEpisode(File episodeFile, Season season, int episodeNum) throws StoreException {
+	@Override
+	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum) throws StoreException {
 		return null;
 	}
 
@@ -425,7 +426,8 @@ public class MythTVStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Season getSeason(File episodeFile, Show show, int seasonNum) throws StoreException {
+	@Override
+	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum) throws StoreException {
 		return null;
 	}
 
@@ -437,7 +439,8 @@ public class MythTVStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Show getShow(File episodeFile, String showId) throws StoreException {
+	@Override
+	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException {
 		return null;
 	}
 
@@ -448,7 +451,7 @@ public class MythTVStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 
@@ -462,7 +465,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Episode getSpecial(File episodeFile, Season season, int specialNumber) throws MalformedURLException,
+	public Episode getSpecial(File rootMediaDir,File episodeFile, Season season, int specialNumber) throws MalformedURLException,
 			IOException, StoreException {
 		return null;
 	}
@@ -476,7 +479,7 @@ public class MythTVStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) throws StoreException {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {
 		validateOptions();
 		IDatabase db = connectToDatabase();
 
@@ -513,7 +516,7 @@ public class MythTVStore implements IStore {
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode, File episodeFile) throws StoreException {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File episodeFile) throws StoreException {
 		return null;
 	}
 

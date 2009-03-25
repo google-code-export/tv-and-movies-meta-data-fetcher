@@ -136,8 +136,8 @@ public class TestMythTVStore extends TestCase {
 			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
 			Film film = createTestFilm();
 						
-			xmlSource.cacheFilm(filmFile1, film);
-			xmlSource.cacheFilm(filmFile2, film);
+			xmlSource.cacheFilm(dir,filmFile1, film);
+			xmlSource.cacheFilm(dir,filmFile2, film);
 			
 			checkFilm(0,filmFile1.getAbsolutePath());
 			checkFilm(1,filmFile2.getAbsolutePath());

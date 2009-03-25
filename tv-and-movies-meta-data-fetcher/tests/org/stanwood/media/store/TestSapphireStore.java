@@ -124,7 +124,7 @@ public class TestSapphireStore extends XMLTestCase {
 			writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
 			film.setWriters(writers);
 			
-			xmlSource.cacheFilm(filmFile, film);
+			xmlSource.cacheFilm(dir,filmFile, film);
 			
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			assertTrue(actualFile.exists());
@@ -150,13 +150,13 @@ public class TestSapphireStore extends XMLTestCase {
 			File episodeFile = new File(eurekaDir,"1x01 - blah.avi");
 			
 			Show show = createShow(eurekaDir);
-			xmlSource.cacheShow(episodeFile,show);		
+			xmlSource.cacheShow(eurekaDir,episodeFile,show);		
 			
 			Season season = new Season(show,1);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
 			show.addSeason(season);		
-			xmlSource.cacheSeason(episodeFile,season);			
+			xmlSource.cacheSeason(eurekaDir,episodeFile,season);			
 			Episode episode1 = new Episode(1,season);
 			episode1.setDate(df.parse("2006-10-10"));
 			episode1.setProductionCode("001");
@@ -172,7 +172,7 @@ public class TestSapphireStore extends XMLTestCase {
 			episode1.setGuestStars(createLinks(new Link[]{new Link("sally","http://test/sally"),new Link("Cedric","http://test/cedric")}));
 			episode1.setEpisodeId(784857);
 			season.addEpisode(episode1);
-			xmlSource.cacheEpisode(episodeFile,episode1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 			
 			episodeFile = new File(eurekaDir,"1x02 - blah.avi");
 			Episode episode2 = new Episode(2,season);
@@ -187,13 +187,13 @@ public class TestSapphireStore extends XMLTestCase {
 			episode2.setRating(9.5F);			
 			episode2.setEpisodeId(800578);
 			season.addEpisode(episode2);			
-			xmlSource.cacheEpisode(episodeFile,episode2);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
 			
 			season = new Season(show,2);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
 			show.addSeason(season);	
-			xmlSource.cacheSeason(episodeFile,season);
+			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 			
 			episodeFile = new File(eurekaDir,"2x13 - blah.avi");
 			episode1 = new Episode(2,season);
@@ -208,7 +208,7 @@ public class TestSapphireStore extends XMLTestCase {
 			episode1.setEpisodeId(800578);
 			episode1.setRating(0.4F);
 			season.addEpisode(episode1);			
-			xmlSource.cacheEpisode(episodeFile,episode1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 			
 			episodeFile = new File(eurekaDir,"000 - blah.avi");
 			Episode special1 = new Episode(0,season);
@@ -227,7 +227,7 @@ public class TestSapphireStore extends XMLTestCase {
 			special1.setGuestStars(createLinks(new Link[]{new Link("bob","http://test/bob"),new Link("Write a little","http://test/fred")}));
 						
 			season.addSepcial(special1);			
-			xmlSource.cacheEpisode(episodeFile,special1);			
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);			
 			
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
 			assertTrue(actualFile.exists());

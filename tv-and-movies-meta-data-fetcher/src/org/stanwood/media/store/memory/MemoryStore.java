@@ -50,7 +50,7 @@ public class MemoryStore implements IStore {
 	 * @param episode The episode to write to the store
 	 */
 	@Override	
-	public void cacheEpisode(File episodeFile,Episode episode) {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) {
 		
 	}
 
@@ -61,7 +61,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheSeason(File episodeFile,Season season) throws StoreException {
+	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
 		Show show = season.getShow();
 		for (Show cs : shows) {
 			if (cs.equals(show)) {
@@ -80,7 +80,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheShow(File episodeFile,Show show) throws StoreException {
+	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
 		Iterator<Show> it = shows.iterator();
 		while (it.hasNext()) {
 			Show foundShow = it.next();
@@ -103,7 +103,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getEpisode(File episodeFile,Season season, int episodeNum)
+	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
 		return season.getEpisode(episodeNum);		
 	}
@@ -120,7 +120,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(File episodeFile,Season season, int specialNumber)
+	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {	
 		return season.getSpecial(specialNumber);	
 	}
@@ -133,7 +133,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException,
+	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException,
 			IOException {		
 		return show.getSeason(seasonNum);
 	}
@@ -149,7 +149,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File episodeFile, String showId)
+	public Show getShow(File rootMediaDir,File episodeFile, String showId)
 			throws StoreException, MalformedURLException, IOException {		
 		for (Show show : shows) {
 			if (show.getShowId().equals(showId)) {
@@ -167,7 +167,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile)
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile)
 			throws StoreException {		
 		return null;
 	}
@@ -179,7 +179,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		films.put(filmFile,film);
 	}
 	
@@ -189,7 +189,7 @@ public class MemoryStore implements IStore {
 	 * @param newFile The new file
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
 		Film film = films.get(oldFile);
 		if (film!=null) {
 			films.remove(oldFile);
@@ -203,7 +203,7 @@ public class MemoryStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return films.get(filmFile);
 	}
 }

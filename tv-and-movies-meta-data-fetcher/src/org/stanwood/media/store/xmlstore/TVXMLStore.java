@@ -72,10 +72,12 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */	
-	public Episode getSpecial(File specialFile,Season season, int specialNumber)
+	public Episode getSpecial(File rootMediaDir,File specialFile,Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {
-		Document doc = getCache(specialFile.getParentFile(), season
-				.getShow().getShowId());
+		Document doc = getCache(rootMediaDir, season.getShow().getShowId());
+		if (doc==null) {
+			return null;
+		}
 		Episode special = null;
 		try {
 			special = getSpecialFromCache(specialNumber, season, doc);
@@ -95,10 +97,12 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */	
-	public Episode getEpisode(File episodeFile,Season season, int episodeNum)
+	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum)
 			throws StoreException, MalformedURLException {
-		Document doc = getCache(episodeFile.getParentFile(), season
-				.getShow().getShowId());
+		Document doc = getCache(rootMediaDir, season.getShow().getShowId());
+		if (doc==null) {
+			return null;
+		};
 		Episode episode = null;
 		try {
 			episode = getEpisodeFromCache(episodeNum, season, doc);
@@ -118,9 +122,12 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */	
-	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException,
+	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException,
 			MalformedURLException {
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
+		Document doc = getCache(rootMediaDir, show.getShowId());
+		if (doc==null) {
+			return null;
+		}
 		Season season = null;
 		try {
 			season = getSeasonFromCache(seasonNum, show, doc);
@@ -246,9 +253,12 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File episodeFile, String showId)
-			throws StoreException, MalformedURLException, IOException {
-		Document doc = getCache(episodeFile.getParentFile(), showId);
+	public Show getShow(File rootMediaDir,File episodeFile, String showId)
+			throws StoreException, MalformedURLException, IOException {		
+		Document doc = getCache(rootMediaDir, showId);
+		if (doc==null) {
+			return null;
+		}		
 		Show show = null;
 		try {
 			show = getShowFromCache(episodeFile.getParentFile(), doc);
@@ -299,13 +309,13 @@ public class TVXMLStore extends BaseXMLStore {
 
 	
 
-	private Document getCache(File showDirectory, String showId)
+	private Document getCache(File rootMediaDirectory, String showId)
 			throws StoreException {
-		File cacheFile = getCacheFile(showDirectory,FILENAME);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		Document doc = null;
+		File cacheFile = getCacheFile(rootMediaDirectory,FILENAME);				
 		if (cacheFile.exists()) {
+			Document doc = null;
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
 			// Create the builder and parse the file
 			try {
 				doc = factory.newDocumentBuilder().parse(cacheFile);
@@ -320,21 +330,30 @@ public class TVXMLStore extends BaseXMLStore {
 						+ e.getMessage(), e);
 			}
 			return doc;
-		} else {
-			DocumentBuilder builder;
-			try {
-				builder = factory.newDocumentBuilder();
-				doc = builder.newDocument();
-				Element series = doc.createElement("show");
-				series.setAttribute("id", showId);
-				doc.appendChild(series);
-				writeCache(cacheFile, doc);
-			} catch (ParserConfigurationException e) {
-				throw new StoreException("Unable to create cache: "
-						+ e.getMessage());
-			}
-		}
+		} 		
+		else {							
+			Document doc = createCacheFile(showId, cacheFile);
+			return doc;			
+		}				
+	}
 
+	private Document createCacheFile(String showId, File cacheFile)
+			throws StoreException {
+		Document doc = null;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+		DocumentBuilder builder;
+		try {
+			builder = factory.newDocumentBuilder();
+			doc = builder.newDocument();
+			Element series = doc.createElement("show");
+			series.setAttribute("id", showId);
+			doc.appendChild(series);
+			writeCache(cacheFile, doc);
+		} catch (ParserConfigurationException e) {
+			throw new StoreException("Unable to create cache: "
+					+ e.getMessage());
+		}
 		return doc;
 	}
 	
@@ -344,8 +363,9 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @param show The show too write
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
-	public void cacheShow(File episodeFile,Show show) throws StoreException {
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
+	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
+		Document doc = getCache(rootMediaDir, show.getShowId());
+		
 		Element series = (Element) doc.getFirstChild();
 		series.setAttribute("id", String.valueOf(show.getShowId()));
 		series.setAttribute("url", urlToText(show.getShowURL()));
@@ -393,19 +413,19 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @param episode The episode or special too write
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
-	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) throws StoreException {
 		Season season = episode.getSeason();
 		Show show = season.getShow();
 
-		Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
+		Document doc = getCache(rootMediaDir, show.getShowId());		
 		if (episode.isSpecial()) {
-			cacheSpecial(episodeFile,doc, show, season, episode);
+			cacheSpecial(rootMediaDir,episodeFile,doc, show, season, episode);
 		} else {
-			cacheEpisode(episodeFile,doc, show, season, episode);
+			cacheEpisode(rootMediaDir,episodeFile,doc, show, season, episode);
 		}
 	}
 
-	private void cacheEpisode(File episodeFile,Document doc, Show show, Season season,
+	private void cacheEpisode(File rootMediaDir,File episodeFile,Document doc, Show show, Season season,
 			Episode episode) throws StoreException {
 		try {
 			Node node = XPathAPI.selectSingleNode(doc, "series[@id="
@@ -430,7 +450,7 @@ public class TVXMLStore extends BaseXMLStore {
 		}
 	}
 
-	private void cacheSpecial(File episodeFile,Document doc, Show show, Season season,
+	private void cacheSpecial(File rootMediaDir,File episodeFile,Document doc, Show show, Season season,
 			Episode episode) throws StoreException {
 		try {
 			Node node = XPathAPI.selectSingleNode(doc, "show[@id="
@@ -496,10 +516,10 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @param season The season too write
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */	
-	public void cacheSeason(File episodeFile,Season season) throws StoreException {
+	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
 		try {
 			Show show = season.getShow();
-			Document doc = getCache(episodeFile.getParentFile(), show.getShowId());
+			Document doc = getCache(rootMediaDir, show.getShowId());
 
 			Node node = getSeasonNode(season, show, doc);
 			if (node == null) {
@@ -544,7 +564,16 @@ public class TVXMLStore extends BaseXMLStore {
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store 
 	 */	
-	public SearchResult searchForShowId(File episodeFile) throws StoreException {
+	public SearchResult searchForShowId(File rootMediaDir,File episodeFile) throws StoreException {
+		SearchResult result = searchInLocalCacheFile(episodeFile);
+		if (result == null) {
+			
+		}
+		return result;
+	}
+
+	private SearchResult searchInLocalCacheFile(File episodeFile)
+			throws StoreException {
 		File cacheFile = getCacheFile(episodeFile.getParentFile(),FILENAME);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);

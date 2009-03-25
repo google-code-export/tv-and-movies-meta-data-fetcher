@@ -71,9 +71,9 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @param film The film to write
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		try {
-			Document doc = getCache(filmFile.getParentFile());
+			Document doc = getCache(rootMediaDir,true);
 			Element filmsNode = (Element) doc.getFirstChild();
 			Node filmNode = XPathAPI.selectSingleNode(filmsNode, "film[@id=" + film.getId() + "]");
 			Set<String> filenames = null;
@@ -170,9 +170,9 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		try {
-			Document doc = getCache(filmFile.getParentFile());
+			Document doc = getCache(rootMediaDir,true);
 			Element filmsNode = (Element) doc.getFirstChild();
 			Node filmNode = XPathAPI.selectSingleNode(filmsNode, "film[@id='" + filmId + "']");
 			if (filmNode != null) {
@@ -284,7 +284,7 @@ public class FilmXMLStore extends BaseXMLStore {
 		return certs;
 	}
 
-	private Document getCache(File showDirectory) throws StoreException {
+	private Document getCache(File showDirectory,boolean createIfNotFound) throws StoreException {
 		File cacheFile = getCacheFile(showDirectory, FILENAME);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
@@ -302,15 +302,17 @@ public class FilmXMLStore extends BaseXMLStore {
 			}
 			return doc;
 		} else {
-			DocumentBuilder builder;
-			try {
-				builder = factory.newDocumentBuilder();
-				doc = builder.newDocument();
-				Element films = doc.createElement("films");
-				doc.appendChild(films);
-				writeCache(cacheFile, doc);
-			} catch (ParserConfigurationException e) {
-				throw new StoreException("Unable to create cache: " + e.getMessage());
+			if (createIfNotFound) {
+				DocumentBuilder builder;
+				try {
+					builder = factory.newDocumentBuilder();
+					doc = builder.newDocument();
+					Element films = doc.createElement("films");
+					doc.appendChild(films);
+					writeCache(cacheFile, doc);
+				} catch (ParserConfigurationException e) {
+					throw new StoreException("Unable to create cache: " + e.getMessage());
+				}
 			}
 		}
 
@@ -324,25 +326,36 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
-	public void renamedFile(File oldFile, File newFile) throws StoreException {
-		if (!oldFile.getParent().equals(newFile.getParent())) {
-			log.error("Unable to update store with new file location due different parent directories");
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {
+		if (!isUnderParent(rootMediaDir,newFile)) {			
+			log.error("Unable to update store with new file location due different not been under media directory");
 		} else {
-			Document doc = getCache(oldFile.getParentFile());
-
-			try {
-				NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\"" + oldFile.getAbsolutePath()
-						+ "\"]/@name");
-				for (int i = 0; i < nodes.getLength(); i++) {
-					nodes.item(i).setNodeValue(newFile.getAbsolutePath());
+			Document doc = getCache(rootMediaDir,false);
+			if (doc!=null) {
+				try {
+					NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film/file[@name=\"" + oldFile.getAbsolutePath()
+							+ "\"]/@name");
+					for (int i = 0; i < nodes.getLength(); i++) {
+						nodes.item(i).setNodeValue(newFile.getAbsolutePath());
+					}
+	
+					File cacheFile = getCacheFile(oldFile.getParentFile(), FILENAME);
+					writeCache(cacheFile, doc);
+				} catch (TransformerException e) {
+					throw new StoreException(e.getMessage(), e);
 				}
-
-				File cacheFile = getCacheFile(oldFile.getParentFile(), FILENAME);
-				writeCache(cacheFile, doc);
-			} catch (TransformerException e) {
-				throw new StoreException(e.getMessage(), e);
 			}
 		}
+	}
+	
+	public boolean isUnderParent(File parent,File dir) {		
+		while (dir!=null) {
+			if (dir.equals(parent)) {
+				return true;
+			}
+			dir = dir.getParentFile();
+		}
+		return false;
 	}
 
 	private String getQuery(File episodeFile) {
@@ -367,8 +380,8 @@ public class FilmXMLStore extends BaseXMLStore {
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public SearchResult searchForFilmId(File filmFile) throws StoreException {
-		Document doc = getCache(filmFile.getParentFile());
+	public SearchResult searchForFilmId(File rootMediaDir,File filmFile) throws StoreException {
+		Document doc = getCache(rootMediaDir,false);
 		String query = getQuery(filmFile);
 		try {
 			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");

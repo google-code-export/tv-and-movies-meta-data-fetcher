@@ -202,18 +202,18 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File episodeFile, String sourceId, String showId, boolean refresh) throws MalformedURLException,
+	public Show getShow(File rootMediaDir,File episodeFile, String sourceId, String showId, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		Show show = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				show = store.getShow(episodeFile, showId);
+				show = store.getShow(rootMediaDir,episodeFile, showId);
 				if (show != null) {
 					break;
 				}
 			}
 		} else {
-			show = stores.get(0).getShow(episodeFile, showId);
+			show = stores.get(0).getShow(rootMediaDir,episodeFile, showId);
 		}
 
 		if (show == null) {
@@ -223,7 +223,7 @@ public class Controller {
 					show = source.getShow(showId);
 					if (show != null) {
 						for (IStore store : stores) {
-							store.cacheShow(episodeFile, show);
+							store.cacheShow(rootMediaDir,episodeFile, show);
 						}
 						break;
 					}
@@ -251,18 +251,18 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Film getFilm(File filmFile, String sourceId, String filmId, boolean refresh) throws MalformedURLException,
+	public Film getFilm(File rootMediaDir,File filmFile, String sourceId, String filmId, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		Film film = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				film = store.getFilm(filmFile, filmId);
+				film = store.getFilm(rootMediaDir,filmFile, filmId);
 				if (film != null) {
 					break;
 				}
 			}
 		} else {
-			film = stores.get(0).getFilm(filmFile, filmId);
+			film = stores.get(0).getFilm(rootMediaDir,filmFile, filmId);
 		}
 
 		if (film == null) {
@@ -272,7 +272,7 @@ public class Controller {
 					film = source.getFilm(filmId);
 					if (film != null) {
 						for (IStore store : stores) {
-							store.cacheFilm(filmFile, film);
+							store.cacheFilm(rootMediaDir,filmFile, film);
 						}
 						break;
 					}
@@ -299,19 +299,19 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Season getSeason(File episodeFile, Show show, int seasonNum, boolean refresh) throws SourceException,
+	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum, boolean refresh) throws SourceException,
 			IOException, StoreException {
 		String sourceId = show.getSourceId();
 		Season season = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				season = store.getSeason(episodeFile, show, seasonNum);
+				season = store.getSeason(rootMediaDir,episodeFile, show, seasonNum);
 				if (season != null) {
 					break;
 				}
 			}
 		} else {
-			season = stores.get(0).getSeason(episodeFile, show, seasonNum);
+			season = stores.get(0).getSeason(rootMediaDir,episodeFile, show, seasonNum);
 		}
 
 		if (season == null) {
@@ -321,15 +321,15 @@ public class Controller {
 					season = source.getSeason(show, seasonNum);
 					if (season != null) {
 						for (IStore store : stores) {
-							store.cacheSeason(episodeFile, season);
+							store.cacheSeason(rootMediaDir,episodeFile, season);
 							if (season.getEpisodes() != null) {
 								for (Episode episode : season.getEpisodes()) {
-									store.cacheEpisode(episodeFile, episode);
+									store.cacheEpisode(rootMediaDir,episodeFile, episode);
 								}
 							}
 							if (season.getSpecials() != null) {
 								for (Episode episode : season.getSpecials()) {
-									store.cacheEpisode(episodeFile, episode);
+									store.cacheEpisode(rootMediaDir,episodeFile, episode);
 								}
 							}
 						}
@@ -359,18 +359,18 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getEpisode(File episodeFile, Season season, int episodeNum, boolean refresh) throws SourceException,
+	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getEpisode(episodeFile, season, episodeNum);
+				episode = store.getEpisode(rootMediaDir,episodeFile, season, episodeNum);
 				if (episode != null) {
 					break;
 				}
 			}
 		} else {
-			episode = stores.get(0).getEpisode(episodeFile, season, episodeNum);
+			episode = stores.get(0).getEpisode(rootMediaDir,episodeFile, season, episodeNum);
 		}
 
 		if (episode == null) {
@@ -381,7 +381,7 @@ public class Controller {
 					episode = source.getEpisode(season, episodeNum);
 					if (episode != null) {
 						for (IStore store : stores) {
-							store.cacheEpisode(episodeFile, episode);
+							store.cacheEpisode(rootMediaDir,episodeFile, episode);
 						}
 						break;
 					}
@@ -409,19 +409,19 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getSpecial(File specialFile, Season season, int specialNum, boolean refresh) throws SourceException,
+	public Episode getSpecial(File rootMediaDir,File specialFile, Season season, int specialNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		Episode episode = null;
 
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getSpecial(specialFile, season, specialNum);
+				episode = store.getSpecial(rootMediaDir,specialFile, season, specialNum);
 				if (episode != null) {
 					break;
 				}
 			}
 		} else {
-			episode = stores.get(0).getEpisode(specialFile, season, specialNum);
+			episode = stores.get(0).getEpisode(rootMediaDir,specialFile, season, specialNum);
 		}
 
 		if (episode == null) {
@@ -432,7 +432,7 @@ public class Controller {
 					episode = source.getSpecial(season, specialNum);
 					if (episode != null) {
 						for (IStore store : stores) {
-							store.cacheEpisode(specialFile, episode);
+							store.cacheEpisode(rootMediaDir,specialFile, episode);
 						}
 						break;
 					}
@@ -455,11 +455,11 @@ public class Controller {
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(Mode mode, File mediaFile) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File mediaFile) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
-			result = store.searchForVideoId(mode, mediaFile);
+			result = store.searchForVideoId(rootMediaDir,mode, mediaFile);
 			if (result != null) {
 				return result;
 			}
@@ -482,9 +482,9 @@ public class Controller {
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
-	public void renamedFile(File oldFile, File newFile) throws StoreException {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {
 		for (IStore store : stores) {
-			store.renamedFile(oldFile, newFile);
+			store.renamedFile(rootMediaDir,oldFile, newFile);
 		}
 	}
 

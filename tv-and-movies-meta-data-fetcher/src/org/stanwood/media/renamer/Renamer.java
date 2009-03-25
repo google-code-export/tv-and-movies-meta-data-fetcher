@@ -21,6 +21,7 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,6 +50,14 @@ import org.stanwood.media.store.StoreException;
  * </pre> 
  */
 public class Renamer {
+
+	public static final String TOKEN_SHOW_NAME = "%n";
+	public static final String TOKEN_EPISODE = "%e";
+	public static final String TOKEN_SEASON = "%s";
+	public static final String TOKEN_EXT = "%x";
+	public static final String TOKEN_TITLE = "%t";
+	public static final String TOKEN_PERCENT = "%%";
+	public static final String TOKEN_ID = "%h";
 
 	private final static Log log = LogFactory.getLog(Renamer.class);
 	
@@ -154,7 +163,7 @@ public class Renamer {
 
 		String oldFileName = file.getName();
 
-		Film film = Controller.getInstance().getFilm(file,sourceId,id,refresh);
+		Film film = Controller.getInstance().getFilm(rootMediaDir, file,sourceId,id,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
 			return;
@@ -170,7 +179,7 @@ public class Renamer {
 	{
 		SearchResult result;
 		try {
-			result = Controller.getInstance().searchForVideoId(mode,file);
+			result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file);
 			return result;
 		} catch (SourceException e) {
 			e.printStackTrace();
@@ -200,21 +209,21 @@ public class Renamer {
 			return;
 		}
 				
-		Show show =  Controller.getInstance().getShow(file,sourceId, id,refresh);		
+		Show show =  Controller.getInstance().getShow(rootMediaDir,file,sourceId, id,refresh);		
 		if (show == null) {
 			fatal("Unable to find show details");						
 		}
 		String oldFileName = file.getName(); 
-		ParsedFileName data =  FileNameParser.parse(oldFileName);
+		ParsedFileName data =  FileNameParser.parse(rootMediaDir,pattern,file);
 		if (data==null) {
 			log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
 		}
 		else {
-			Season season = Controller.getInstance().getSeason(file, show, data.getSeason(), refresh);
+			Season season = Controller.getInstance().getSeason(rootMediaDir,file, show, data.getSeason(), refresh);
 			if (season == null) {
 				log.error("Unable to find season for file : " + file.getAbsolutePath());
 			} else {
-				Episode episode = Controller.getInstance().getEpisode(file, season, data.getEpisode(), refresh);
+				Episode episode = Controller.getInstance().getEpisode(rootMediaDir,file, season, data.getEpisode(), refresh);
 				if (episode == null) {
 					log.error("Unable to find epsiode for file : " + file.getAbsolutePath());
 				} else {
@@ -238,7 +247,7 @@ public class Renamer {
 				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");					
 			}
 			else {
-				if (newFile.getParentFile().exists()) {
+				if (!newFile.getParentFile().exists()) {
 					if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
 						log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());
 					}
@@ -247,7 +256,7 @@ public class Renamer {
 				
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
-					Controller.getInstance().renamedFile(oldFile,newFile);	
+					Controller.getInstance().renamedFile(rootMediaDir,oldFile,newFile);	
 				}
 				else {
 					log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
@@ -270,41 +279,40 @@ public class Renamer {
 
 	private File getNewFilmName(Film film, String ext) {		
 		String newName = pattern;
-		newName = newName.replaceAll("%h", normalizeTest(String.valueOf(id)));
-		newName = newName.replaceAll("%%", "%");
-		newName = newName.replaceAll("%t", normalizeTest(film.getTitle()));
-		newName = newName.replaceAll("%x", normalizeTest(ext));
-		File dir = getDirs(newName);
-		
-		return new File(dir,newName);
+		newName = newName.replaceAll(TOKEN_ID, normalizeTest(String.valueOf(id)));
+		newName = newName.replaceAll(TOKEN_PERCENT, "%");
+		newName = newName.replaceAll(TOKEN_TITLE, normalizeTest(film.getTitle()));
+		newName = newName.replaceAll(TOKEN_EXT, normalizeTest(ext));
+		File path = getPath(newName);		
+		return path;
 	}
 	
 	private File getNewTVShowName(Show show,Season season, Episode episode,String ext) {
 		String newName = pattern;
-		newName = newName.replaceAll("%h", normalizeTest(String.valueOf(id)));
-		newName = newName.replaceAll("%s", String.valueOf(season.getSeasonNumber()));
+		newName = newName.replaceAll(TOKEN_ID, normalizeTest(String.valueOf(id)));
+		newName = newName.replaceAll(TOKEN_SEASON, String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
 		if (episodeNum.length()==1) {
 			episodeNum = "0" +episodeNum;
 		}
 		
-		newName = newName.replaceAll("%e", episodeNum);
-		newName = newName.replaceAll("%%", "%");
-		newName = newName.replaceAll("%n", normalizeTest(show.getName()));
-		newName = newName.replaceAll("%t", normalizeTest(episode.getTitle()));
-		newName = newName.replaceAll("%x", normalizeTest(ext));
+		newName = newName.replaceAll(TOKEN_EPISODE, episodeNum);
+		newName = newName.replaceAll(TOKEN_PERCENT, "%");
+		newName = newName.replaceAll(TOKEN_SHOW_NAME, normalizeTest(show.getName()));
+		newName = newName.replaceAll(TOKEN_TITLE, normalizeTest(episode.getTitle()));
+		newName = newName.replaceAll(TOKEN_EXT, normalizeTest(ext));
 		
-		File dir = getDirs(newName);		
-		return new File(dir,newName);
+		File path = getPath(newName);		
+		return path;
 	}
 
-	private File getDirs(String newName) {
+	private File getPath(String newName) {
 		File dir = rootMediaDir;
 		if (newName.indexOf(File.separator)!=-1) {
-			String dirs[] = newName.split("\\\\"+File.separatorChar);
-			for (int i=0;i<dirs.length-1;i++) {
-				dir = new File(dir,dirs[i]);
-			}
+			StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
+			while (tok.hasMoreTokens()) {
+				dir = new File(dir,tok.nextToken());
+			}			
 		}
 		return dir;
 	}

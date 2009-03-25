@@ -53,7 +53,8 @@ public class MP4ITunesStore implements IStore {
 	 * @param episode The episode details
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public void cacheEpisode(File episodeFile,Episode episode) throws StoreException {
+	@Override
+	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) throws StoreException {
 		String name = episodeFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
 			validate();
@@ -76,7 +77,8 @@ public class MP4ITunesStore implements IStore {
 	 * @param season The season details
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public void cacheSeason(File episodeFile,Season season) throws StoreException {
+	@Override
+	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
 		validate();
 	}
 
@@ -86,7 +88,8 @@ public class MP4ITunesStore implements IStore {
 	 * @param show The show details
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public void cacheShow(File episodeFile,Show show) throws StoreException {
+	@Override
+	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
 		validate();
 	}
 
@@ -98,7 +101,8 @@ public class MP4ITunesStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Episode getEpisode(File episodeFile,Season season, int episodeNum) throws StoreException {
+	@Override
+	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum) throws StoreException {
 		validate();
 		return null;
 	}
@@ -111,7 +115,8 @@ public class MP4ITunesStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Season getSeason(File episodeFile,Show show, int seasonNum) throws StoreException {
+	@Override
+	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException {
 		validate();
 		return null;
 	}
@@ -123,7 +128,8 @@ public class MP4ITunesStore implements IStore {
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
-	public Show getShow(File episodeFile, String showId) throws StoreException {
+	@Override
+	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException {
 		validate();
 		return null;
 	}	
@@ -135,7 +141,7 @@ public class MP4ITunesStore implements IStore {
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) {		
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {		
 		return null;
 	}
 
@@ -171,7 +177,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
 			validate();
@@ -197,7 +203,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Episode getSpecial(File episodeFile, Season season, int specialNumber) throws MalformedURLException,
+	public Episode getSpecial(File rootMediaDir,File episodeFile, Season season, int specialNumber) throws MalformedURLException,
 			IOException, StoreException {		
 		return null;
 	}
@@ -208,7 +214,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param newFile The new file
 	 */
 	@Override
-	public void renamedFile(File oldFile, File newFile) {
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
 		
 	}
 
@@ -218,7 +224,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 }
