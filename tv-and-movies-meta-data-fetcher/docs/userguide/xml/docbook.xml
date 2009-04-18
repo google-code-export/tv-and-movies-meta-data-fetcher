@@ -272,6 +272,7 @@
 					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</para></listitem>
 					<listitem><para><literal>-m, --mode</literal> The mode that the tool will work in. Either FILM or TV.</para></listitem>
 					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
+					<listitem><para><literal>-R, --recursive</literal> Also process subdirectories</para></listitem>
 				</itemizedlist>				
 			</para>			
 			<para>
@@ -327,11 +328,12 @@
 					The following list contains the meaning for each token:
 					<itemizedlist>
 					 	<listitem><para><literal>%h</literal> - show Id</para></listitem>
- 						<listitem><para><literal>%s</literal> - series number</para></listitem> 
+ 						<listitem><para><literal>%s</literal> - seaspn number</para></listitem> 
  						<listitem><para><literal>%e</literal> - episode number</para></listitem>
  						<listitem><para><literal>%n</literal> - show name</para></listitem>
- 						<listitem><para><literal>%t</literal> - episode title</para></listitem>
- 						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem>
+ 						<listitem><para><literal>%t</literal> - episode title or film title</para></listitem>
+ 						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
+ 						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
 					</itemizedlist>
 				</para>				
 				<example>
