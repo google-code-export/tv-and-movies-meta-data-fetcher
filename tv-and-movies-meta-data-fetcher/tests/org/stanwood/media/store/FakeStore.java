@@ -34,8 +34,8 @@ public class FakeStore implements IStore {
 
 	/** This is used to test that a param was test */
 	public static String testParam1;
-		
-	/** 
+
+	/**
 	 * This does nothing as the store does not support it.
 	 * @param episodeFile The file the episode is stored in
 	 * @param episode The details of the episode
@@ -44,7 +44,7 @@ public class FakeStore implements IStore {
 	public void cacheEpisode(File rootMediaDir, File episodeFile,Episode episode) {
 	}
 
-	/** 
+	/**
 	 * This does nothing as the store does not support it.
 	 * @param episodeFile The file the episode is stored in
 	 * @param season The details of the season
@@ -53,7 +53,7 @@ public class FakeStore implements IStore {
 	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) {
 	}
 
-	/** 
+	/**
 	 * This does nothing as the store does not support it.
 	 * @param episodeFile The file the episode is stored in
 	 * @param show The details of the show
@@ -121,7 +121,9 @@ public class FakeStore implements IStore {
 	 * @return The value of the test parameter
 	 */
 	public String getTestParam1() {
-		return FakeStore.testParam1;
+		synchronized (testParam1) {
+			return FakeStore.testParam1;
+		}
 	}
 
 	/**
@@ -129,7 +131,9 @@ public class FakeStore implements IStore {
 	 * @param testParam1 The value of the test parameter
 	 */
 	public void setTestParam1(String testParam1) {
-		FakeStore.testParam1 = testParam1;
+		synchronized (testParam1) {
+			FakeStore.testParam1 = testParam1;
+		}
 	}
 
 	/**
@@ -139,7 +143,7 @@ public class FakeStore implements IStore {
 	 */
 	@Override
 	public void cacheFilm(File rootMediaDir,File filmFile, Film film) {
-		
+
 	}
 
 	/**
@@ -161,6 +165,6 @@ public class FakeStore implements IStore {
 		return null;
 	}
 
-	
-	
+
+
 }

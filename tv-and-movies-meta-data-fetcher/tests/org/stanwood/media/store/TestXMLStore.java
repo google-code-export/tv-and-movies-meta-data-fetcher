@@ -18,6 +18,7 @@ package org.stanwood.media.store;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -49,9 +50,9 @@ import org.xml.sax.InputSource;
 public class TestXMLStore extends XMLTestCase {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	
-	private static final String SHOW_ID = "58448";	
-	
+
+	private static final String SHOW_ID = "58448";
+
 	/**
 	 * Test that the XML is read correctly
 	 * @throws Exception Thrown if the test produces any errors
@@ -63,13 +64,15 @@ public class TestXMLStore extends XMLTestCase {
 		try {
 			File eurekaDir = new File(dir, "Eureka");
 			File episodeFile = new File(eurekaDir,"1x01 - blah.avi");
-			eurekaDir.mkdir();
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir);
+			}
 			FileHelper.copy(Data.class.getResourceAsStream("eureka.xml"),
 					new File(eurekaDir, ".show.xml"));
 			Show show = xmlSource.getShow(eurekaDir,episodeFile, SHOW_ID);
 			assertNotNull(show);
 			assertEquals("Eureka", show.getName());
-			StringBuilder summary = new StringBuilder();			
+			StringBuilder summary = new StringBuilder();
 			summary.append("Small town. Big secret.\n");
 			summary.append("\n");
 			summary.append("A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.\n");
@@ -78,167 +81,160 @@ public class TestXMLStore extends XMLTestCase {
 			assertEquals(summary.toString(), show.getLongSummary());
 			assertEquals("tvcom",show.getSourceId());
 			assertEquals("http://image.com.com/tv/images/b.gif", show.getImageURL().toExternalForm());
-			assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());			
+			assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());
 			assertEquals("58448", show.getShowId());
 			assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
-						
+
 			Season season = xmlSource.getSeason(eurekaDir,episodeFile,show, 1);
-			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());			
+			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());
 			assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getListingUrl().toExternalForm());
 			assertEquals(1,season.getSeasonNumber());
-	        assertEquals(show,season.getShow());	  
-	        
-	        Episode episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 1);	 
+	        assertEquals(show,season.getShow());
+
+	        Episode episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 1);
 	        assertNotNull(episode);
 	        assertEquals(1,episode.getEpisodeNumber());
 	        assertEquals(784857,episode.getEpisodeId());
-	        assertEquals("1",episode.getEpisodeSiteId());
-	        assertEquals("001",episode.getProductionCode());
-	        assertNull(episode.getSpecialName());
+	        assertEquals(1,episode.getShowEpisodeNumber());
 	        assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getSummaryUrl().toExternalForm());
-	        assertEquals("Pilot",episode.getTitle());	        
+	        assertEquals("Pilot",episode.getTitle());
 	        assertEquals("2006-10-10",df.format(episode.getDate()));
-	        
+
 	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
-	        episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 2);	 
+	        episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 2);
 	        assertNotNull(episode);
 	        assertEquals(2,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
-	        assertEquals("2",episode.getEpisodeSiteId());
-	        assertEquals("002",episode.getProductionCode());
-	        assertNull(episode.getSpecialName());
+	        assertEquals(2,episode.getShowEpisodeNumber());
 	        assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Many Happy Returns",episode.getTitle());
 	        assertEquals("2006-10-11",df.format(episode.getDate()));
-	        
+
 	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
 			season = xmlSource.getSeason(eurekaDir,episodeFile,show, 2);
-			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=2",season.getDetailedUrl().toExternalForm());			
+			assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=2",season.getDetailedUrl().toExternalForm());
 			assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getListingUrl().toExternalForm());
 			assertEquals(2,season.getSeasonNumber());
-	        assertEquals(show,season.getShow());	
-	        
-	        episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 2);	 
+	        assertEquals(show,season.getShow());
+
+	        episode = xmlSource.getEpisode(eurekaDir,episodeFile,season, 2);
 	        assertNotNull(episode);
 	        assertEquals(2,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
-	        assertEquals("13",episode.getEpisodeSiteId());
-	        assertEquals("013",episode.getProductionCode());
-	        assertNull(episode.getSpecialName());
+	        assertEquals(13,episode.getShowEpisodeNumber());
+
 	        assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
 	        assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Phoenix Rising",episode.getTitle());
 	        assertEquals("2007-07-10",df.format(episode.getDate()));
-	        
+
 	        episodeFile = new File(eurekaDir,"000 - blah.avi");
-	        episode = xmlSource.getSpecial(eurekaDir,episodeFile,season, 0);	 
+	        episode = xmlSource.getSpecial(eurekaDir,episodeFile,season, 0);
 	        assertNotNull(episode);
 	        assertEquals(0,episode.getEpisodeNumber());
 	        assertEquals(800578,episode.getEpisodeId());
-	        assertEquals("Special",episode.getEpisodeSiteId());
-	        assertEquals("200",episode.getProductionCode());
-	        assertEquals("Special",episode.getSpecialName());
+	        assertEquals(-1,episode.getShowEpisodeNumber());
 	        assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
 	        assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
 	        assertEquals("Countdown to the Premiere",episode.getTitle());
-	        assertEquals("2007-07-09",df.format(episode.getDate()));			
+	        assertEquals("2007-07-09",df.format(episode.getDate()));
 		} finally {
 			FileHelper.deleteDir(dir);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Used to test that a film can be read from the XML cache
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testReadFilm() throws Exception {
-		XMLStore xmlSource = new XMLStore();				
+		XMLStore xmlSource = new XMLStore();
 
 		File dir = FileHelper.createTmpDir("film");
-		try {			
-			File filmFile = new File(dir,"1x01 - blah.avi");			
+		try {
+			File filmFile = new File(dir,"1x01 - blah.avi");
 			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),new File(dir, ".films.xml"));
 			Film film = xmlSource.getFilm(dir,filmFile, "114814");
 			assertEquals("The Usual Suspects",film.getTitle());
 
 			assertEquals("Check URL","http://test/image.jpg",film.getImageURL().toExternalForm());
-			
+
 			assertEquals("Check the country","USA",film.getCountry().getTitle());
 			assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
-			
+
 			assertEquals("Crime",film.getGenres().get(0));
 			assertEquals("Drama",film.getGenres().get(1));
 			assertEquals("Mystery",film.getGenres().get(2));
 			assertEquals("Thriller",film.getGenres().get(3));
-			
+
 			assertEquals("Drama",film.getPreferredGenre());
 
-			assertEquals(27,film.getCertifications().size());			
+			assertEquals(27,film.getCertifications().size());
 			assertEquals("Iceland",film.getCertifications().get(0).getCountry());
-			assertEquals("16",film.getCertifications().get(0).getCertification());			
+			assertEquals("16",film.getCertifications().get(0).getCertification());
 			assertEquals("Hungary",film.getCertifications().get(12).getCountry());
-			assertEquals("16",film.getCertifications().get(12).getCertification());					
+			assertEquals("16",film.getCertifications().get(12).getCertification());
 			assertEquals("USA",film.getCertifications().get(26).getCountry());
 			assertEquals("R",film.getCertifications().get(26).getCertification());
 
 			assertEquals("1995-08-25",df.format(film.getDate()));
-			
+
 			assertEquals(1,film.getDirectors().size());
 			assertEquals("Bryan Singer",film.getDirectors().get(0).getTitle());
 			assertEquals("http://www.imdb.com/name/nm0001741/",film.getDirectors().get(0).getURL());
-			
+
 			assertEquals("http://www.imdb.com/title/tt0114814/",film.getFilmUrl().toString());
-			
+
 			assertEquals(15,film.getGuestStars().size());
 			assertEquals("Stephen Baldwin",film.getGuestStars().get(0).getTitle());
 			assertEquals("http://www.imdb.com/name/nm0000286/",film.getGuestStars().get(0).getURL());
-			
+
 			assertEquals("Pete Postlethwaite",film.getGuestStars().get(6).getTitle());
 			assertEquals("http://www.imdb.com/name/nm0000592/",film.getGuestStars().get(6).getURL());
-			
+
 			assertEquals("Christine Estabrook",film.getGuestStars().get(14).getTitle());
 			assertEquals("http://www.imdb.com/name/nm0261452/",film.getGuestStars().get(14).getURL());
-			
+
 			assertEquals(8.7F,film.getRating());
 			assertEquals("imdb",film.getSourceId());
-			
+
 			assertEquals("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.",
 			             film.getSummary());
-			
+
 			assertEquals(1,film.getWriters().size());
 			assertEquals("Christopher McQuarrie",film.getWriters().get(0).getTitle());
-			assertEquals("http://www.imdb.com/name/nm0003160/",film.getWriters().get(0).getURL());			
+			assertEquals("http://www.imdb.com/name/nm0003160/",film.getWriters().get(0).getURL());
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
 	}
-	
+
 	/**
 	 * Test that the store rename function works
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testFilmRename() throws Exception {
-		XMLStore xmlSource = new XMLStore();				
+		XMLStore xmlSource = new XMLStore();
 
 		File dir = FileHelper.createTmpDir("film");
-		try {			
+		try {
 			File filmCache = new File(dir, ".films.xml");
-			
+
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("filmdir", dir.getAbsolutePath());
 			FileHelper.copy(Data.class.getResourceAsStream("films.xml"),filmCache,params);
-			
+
 			String contents=FileHelper.readFileContents(filmCache);
 			File oldFile = new File(dir,"The Usual Suspects part1.avi");
 			File newFile = new File(dir,"The Usual Suspects (renamed) part1.avi");
-			
+
 			assertTrue(contents.contains(oldFile.getAbsolutePath()));
 			assertTrue(!contents.contains(newFile.getAbsolutePath()));
-			
+
 			xmlSource.renamedFile(dir,oldFile, newFile);
-			
+
 			contents=FileHelper.readFileContents(filmCache);
 			assertTrue(!contents.contains(oldFile.getAbsolutePath()));
 			assertTrue(contents.contains(newFile.getAbsolutePath()));
@@ -246,13 +242,13 @@ public class TestXMLStore extends XMLTestCase {
 			FileHelper.deleteDir(dir);
 		}
 	}
-	
+
 	/**
 	 * Test that the film is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testCacheFilm() throws Exception {
-		XMLStore xmlSource = new XMLStore();				
+		XMLStore xmlSource = new XMLStore();
 		File dir = FileHelper.createTmpDir("film");
 		try {
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
@@ -264,9 +260,9 @@ public class TestXMLStore extends XMLTestCase {
 			genres.add("Crime");
 			genres.add("Drama");
 			genres.add("Mystery");
-			genres.add("Thriller");			
+			genres.add("Thriller");
 			film.setGenres(genres);
-			
+
 			film.setPreferredGenre("Drama");
 			film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
 			List<Certification> certifications= new ArrayList<Certification>();
@@ -302,7 +298,7 @@ public class TestXMLStore extends XMLTestCase {
 			List<Link> directors = new ArrayList<Link>();
 			directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
 			film.setDirectors(directors);
-			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));			
+			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 			List<Link> guestStars = new ArrayList<Link>();
 			guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
 			guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
@@ -327,64 +323,64 @@ public class TestXMLStore extends XMLTestCase {
 			List<Link>writers = new ArrayList<Link>();
 			writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
 			film.setWriters(writers);
-			
+
 			film.addChapter(new Chapter("The start",1));
 			film.addChapter(new Chapter("The end",3));
 			film.addChapter(new Chapter("Second Chapter",2));
-						
+
 			xmlSource.cacheFilm(dir,filmFile1, film);
 			xmlSource.cacheFilm(dir,filmFile2, film);
-			
+
 			File actualFile = new File(dir,".films.xml");
-			assertTrue(actualFile.exists());					
+			assertTrue(actualFile.exists());
 			String contents = FileHelper.readFileContents(Data.class.getResourceAsStream("films.xml"));
-			contents = contents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());			
+			contents = contents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());
 			Reader r = new StringReader(contents);
-			
+
 //			System.out.println(">>>>>>> expected >>>>>>>>>>>>");
 //			System.out.println(contents);
 //			System.out.println("<<<<<<< epected <<<<<<<<<<<<");
 //			System.out.println(">>>>>>> actual >>>>>>>>>>>>");
 //			FileHelper.displayFile(actualFile, System.out);
 //			System.out.println("<<<<<<< actual <<<<<<<<<<<<");
-			
+
 			assertXMLEqual(new InputSource(r),new InputSource(new FileInputStream(actualFile)));
-			
+
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
 	}
-	
+
 	/**
 	 * Test that the show is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testCacheShow() throws Exception {
 		XMLStore xmlSource = new XMLStore();
-		
+
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
-			eurekaDir.mkdir();
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir);
+			}
 			File episodeFile = new File(eurekaDir,"1x01 - blah");
-			
+
 			Show show = createShow(eurekaDir);
-			xmlSource.cacheShow(eurekaDir,episodeFile,show);		
-			
+			xmlSource.cacheShow(eurekaDir,episodeFile,show);
+
 			Season season = new Season(show,1);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
-			show.addSeason(season);		
-			xmlSource.cacheSeason(eurekaDir,episodeFile,season);			
+			show.addSeason(season);
+			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 			Episode episode1 = new Episode(1,season);
 			episode1.setDate(df.parse("2006-10-10"));
-			episode1.setProductionCode("001");
-			episode1.setSiteId("1");
+			episode1.setShowEpisodeNumber(1);
 			episode1.setSpecial(false);
-			episode1.setSpecialName(null);
 			episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
-			episode1.setTitle("Pilot");			
+			episode1.setTitle("Pilot");
 			episode1.setRating(1);
 			episode1.setDirectors(createLinks(new Link[]{new Link("Harry","http://test/")}));
 			episode1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a")}));
@@ -392,50 +388,44 @@ public class TestXMLStore extends XMLTestCase {
 			episode1.setEpisodeId(784857);
 			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-			
+
 			episodeFile = new File(eurekaDir,"1x02 - blah");
 			Episode episode2 = new Episode(2,season);
 			episode2.setDate(df.parse("2006-10-11"));
-			episode2.setProductionCode("002");
-			episode2.setSiteId("2");
+			episode2.setShowEpisodeNumber(2);
 			episode2.setSpecial(false);
-			episode2.setSpecialName(null);
 			episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
 			episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 			episode2.setTitle("Many Happy Returns");
-			episode2.setRating(9.5F);			
+			episode2.setRating(9.5F);
 			episode2.setEpisodeId(800578);
-			season.addEpisode(episode2);			
+			season.addEpisode(episode2);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
-			
+
 			season = new Season(show,2);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
-			show.addSeason(season);	
+			show.addSeason(season);
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
-			
+
 			episodeFile = new File(eurekaDir,"2x13 - blah");
 			episode1 = new Episode(2,season);
 			episode1.setDate(df.parse("2007-7-10"));
-			episode1.setProductionCode("013");
-			episode1.setSiteId("13");
+			episode1.setShowEpisodeNumber(13);
 			episode1.setSpecial(false);
-			episode1.setSpecialName(null);
 			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 			episode1.setTitle("Phoenix Rising");
 			episode1.setEpisodeId(800578);
 			episode1.setRating(0.4F);
-			season.addEpisode(episode1);			
+			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-			
+
 			episodeFile = new File(eurekaDir,"000 - blah");
 			Episode special1 = new Episode(0,season);
 			special1.setDate(df.parse("2007-7-09"));
-			special1.setProductionCode("200");
-			special1.setSiteId("Special");
+			special1.setShowEpisodeNumber(-1);
 			special1.setSpecial(true);
-			special1.setSpecialName("Special");
 			special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
 			special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 			special1.setTitle("Countdown to the Premiere");
@@ -444,19 +434,19 @@ public class TestXMLStore extends XMLTestCase {
 			special1.setDirectors(createLinks(new Link[]{new Link("JP","http://test/")}));
 			special1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a"),new Link("Write a little","http://test/b")}));
 			special1.setGuestStars(createLinks(new Link[]{new Link("bob","http://test/bob"),new Link("Write a little","http://test/fred")}));
-						
-			season.addSepcial(special1);			
+
+			season.addSepcial(special1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
-			
+
 			File actualFile = new File(eurekaDir,".show.xml");
 //			FileHelper.displayFile(actualFile,System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("eureka.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 		} finally {
 			FileHelper.deleteDir(dir);
-		}			
+		}
 	}
-	
+
 	private List<Link>createLinks(Link[] links) {
 		List<Link> result = new ArrayList<Link>();
 		for (Link link : links ) {
@@ -469,7 +459,7 @@ public class TestXMLStore extends XMLTestCase {
 		Show show = new Show(SHOW_ID);
 		show.setSourceId(TVCOMSource.SOURCE_ID);
 		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
-		StringBuilder summary = new StringBuilder();			
+		StringBuilder summary = new StringBuilder();
 		summary.append("Small town. Big secret.\n");
 		summary.append("\n");
 		summary.append("A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.\n");
@@ -486,5 +476,5 @@ public class TestXMLStore extends XMLTestCase {
 		return show;
 	}
 
-	
+
 }

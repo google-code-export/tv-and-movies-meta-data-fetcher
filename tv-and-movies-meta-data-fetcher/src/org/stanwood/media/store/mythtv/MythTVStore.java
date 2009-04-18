@@ -38,13 +38,13 @@ import org.stanwood.media.store.StoreException;
 
 /**
  * <p>
- * This is a write only store that is used to store Film information in a Myth TV database hosted in a 
+ * This is a write only store that is used to store Film information in a Myth TV database hosted in a
  * MySQL database. {@link "http://www.mythtv.org/"}.
  * </p>
  * <p>
- * Every time the {@link MythTVStore#cacheFilm(File,Film)} 
+ * Every time the {@link MythTVStore#cacheFilm(File, File, Film)}
  * method is called, the film information is inserted/updated in the Myth TV database.
- * Cover images are also fetched and placed in a directory (which is configured via a parameter). 
+ * Cover images are also fetched and placed in a directory (which is configured via a parameter).
  * The location of these images is inserted with the film into the database.
  * </p>
  * <p>
@@ -156,7 +156,7 @@ public class MythTVStore implements IStore {
 		fields.add(new Field("childid",-1));
 		fields.add(new Field("browse",1));
 		fields.add(new Field("category",0));
-		
+
 		long id = db.insertIntoTable(connection, "videometadata", fields);
 		if (id==-1) {
 			id = getFilmIdFromDB(filmFile, db, connection);
@@ -176,7 +176,7 @@ public class MythTVStore implements IStore {
 				}
 			}
 		}
-		
+
 		if (film.getCountry()!=null) {
 			String country = film.getCountry().getTitle();
 			Long countryId = getCountryId(country, db, connection);
@@ -185,8 +185,8 @@ public class MythTVStore implements IStore {
 				if (countryId == null) {
 					countryId = getCountryId(country, db, connection);
 				}
-			}			
-			if (countryId!=null) {				
+			}
+			if (countryId!=null) {
 				db.executeUpdate(connection, "insert into `videometadatacountry` values(?,?)", new Object[] { id, countryId });
 			}
 		}
@@ -211,7 +211,7 @@ public class MythTVStore implements IStore {
 		return id;
 	}
 
-	private Long insertNewCast(String castName, IDatabase db, Connection connection) throws SQLException {		 
+	private Long insertNewCast(String castName, IDatabase db, Connection connection) throws SQLException {
 		long id = db.executeUpdate(connection, "insert into `videocast`(`cast`) values (?)", new Object[] { castName });
 		if (id==-1) {
 			return null;
@@ -369,7 +369,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This store does not support the caching of episodes, so this does nothing
-	 * 
+	 *
 	 * @param episode The episode or special too write
 	 * @param episodeFile the file witch the episode is stored in
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -381,7 +381,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This store does not support the caching of seasons, so this does nothing
-	 * 
+	 *
 	 * @param season The season too write
 	 * @param episodeFile The file the episode is stored in
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -393,7 +393,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This store does not support the caching of shows, so this does nothing
-	 * 
+	 *
 	 * @param show The show too write
 	 * @param episodeFile The file the episode is stored in
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -405,7 +405,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This will always return null as this is a write only store
-	 * 
+	 *
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode too get
@@ -419,7 +419,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This will always return null as this is a write only store
-	 * 
+	 *
 	 * @param episodeFile the file which the episode is stored in
 	 * @param show The show the season belongs too
 	 * @param seasonNum The number of the season too get
@@ -433,7 +433,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This will always return null as this is a write only store
-	 * 
+	 *
 	 * @param episodeFile the file which the episode is stored in
 	 * @param showId The show Id of the show too get
 	 * @return Always returns null
@@ -446,7 +446,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
 	 */
@@ -457,7 +457,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This will always return null as this is a write only store
-	 * 
+	 *
 	 * @param episodeFile the file which the special episode is stored in
 	 * @param season The season the episode belongs too
 	 * @param specialNumber The number of the special episode too get
@@ -472,7 +472,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This is called when a file that holds a episode or film has been renamed.
-	 * If the file is found in the myth tv database (as a film currently), then 
+	 * If the file is found in the myth tv database (as a film currently), then
 	 * it is renamed.
 	 * @param oldFile The old file
 	 * @param newFile The new file
@@ -490,10 +490,10 @@ public class MythTVStore implements IStore {
 			connection = db.createConnection();
 			stmt = db.getStatement(connection, "UPDATE videometadata SET filename = ? where filename = ?",new Object[]{
 					newFile.getAbsolutePath(),
-					oldFile.getAbsolutePath()		
-			});					
+					oldFile.getAbsolutePath()
+			});
 			stmt.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			throw new StoreException("Database error: " + e.getMessage(), e);
 		} finally {
@@ -510,7 +510,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * This will always return null as this store does not support searching
-	 * 
+	 *
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @return Always returns null
@@ -566,7 +566,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the name of the database to connect to
-	 * 
+	 *
 	 * @return The database name to connect to
 	 */
 	public String getDatabaseName() {
@@ -575,7 +575,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the name of the database to connect to
-	 * 
+	 *
 	 * @param databaseName The name of the database to connect to
 	 */
 	public void setDatabaseName(String databaseName) {
@@ -584,7 +584,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the hostname of the database to connect to
-	 * 
+	 *
 	 * @return The hostname of the database to connect to
 	 */
 	public String getDatabaseHost() {
@@ -593,7 +593,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the hostname of the database to connect to
-	 * 
+	 *
 	 * @param databaseHost The hostname of the database to connect to
 	 */
 	public void setDatabaseHost(String databaseHost) {
@@ -602,7 +602,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the user name of the user to use when connecting to the database.
-	 * 
+	 *
 	 * @return the user name of the user to use when connecting to the database.
 	 */
 	public String getDatabaseUser() {
@@ -611,7 +611,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the user name of the user to use when connecting to the database
-	 * 
+	 *
 	 * @param databaseUser the user name of the user to use when connecting to the database
 	 */
 	public void setDatabaseUser(String databaseUser) {
@@ -620,7 +620,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the users password which is used when connecting to the database
-	 * 
+	 *
 	 * @return the users password which is used when connecting to the database
 	 */
 	public String getDatabasePassword() {
@@ -629,7 +629,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the users password which is used when connecting to the database
-	 * 
+	 *
 	 * @param databasePassword the users password which is used when connecting to the database
 	 */
 	public void setDatabasePassword(String databasePassword) {
@@ -638,7 +638,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the database controller class
-	 * 
+	 *
 	 * @return The database controller class
 	 */
 	public String getDatabaseClass() {
@@ -647,7 +647,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the class of the database controller
-	 * 
+	 *
 	 * @param databaseClass The class name of the database controller
 	 */
 	public void setDatabaseClass(String databaseClass) {
@@ -656,7 +656,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to get the location covers should be stored at
-	 * 
+	 *
 	 * @return The location covers should be started at
 	 */
 	public String getCoversPath() {
@@ -665,7 +665,7 @@ public class MythTVStore implements IStore {
 
 	/**
 	 * Used to set the location covers should be stored at
-	 * 
+	 *
 	 * @param coversPath The location covers should be stored at
 	 */
 	public void setCoversPath(String coversPath) {
@@ -692,7 +692,7 @@ public class MythTVStore implements IStore {
 			try {
 				if (in != null) {
 					in.close();
-				}			
+				}
 			} catch (IOException ioe) {
 				log.error("Unable to close input stream",ioe);
 			}

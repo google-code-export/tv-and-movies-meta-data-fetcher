@@ -52,7 +52,7 @@ import org.stanwood.media.store.memory.MemoryStore;
 public class Controller {
 
 	private final static Log log = LogFactory.getLog(Controller.class);
-	
+
 	private static Controller instance = null;
 
 	private static List<ISource> sources = null;
@@ -83,7 +83,7 @@ public class Controller {
 	/**
 	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
 	 * again.
-	 * 
+	 *
 	 * @param config The parsed configuration file.
 	 */
 	public static void initFromConfigFile(ConfigReader config) {
@@ -112,11 +112,11 @@ public class Controller {
 			} catch (ClassNotFoundException e) {
 				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (InstantiationException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (InvocationTargetException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);				
+				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class Controller {
 
 	/**
 	 * Get a instance of the controller.
-	 * 
+	 *
 	 * @return A instance of the controller.
 	 */
 	public static Controller getInstance() {
@@ -191,7 +191,8 @@ public class Controller {
 	 * then null is returned. If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an attempt to write it too the
 	 * stores.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param episodeFile The file the episode is stored in
 	 * @param sourceId The ID of the source too use
 	 * @param showId The id of the show
@@ -218,7 +219,7 @@ public class Controller {
 
 		if (show == null) {
 			log.info("Reading show from sources");
-			for (ISource source : sources) {				
+			for (ISource source : sources) {
 				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
 					show = source.getShow(showId);
 					if (show != null) {
@@ -240,7 +241,8 @@ public class Controller {
 	 * then null is returned. If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an attempt to write it too the
 	 * stores.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param filmFile The file the film is stored in
 	 * @param sourceId The ID of the source too use
 	 * @param filmId The id of the film
@@ -289,7 +291,8 @@ public class Controller {
 	 * then null is returned. If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an attempt to write it too the
 	 * stores.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param episodeFile The file the episode is stored in
 	 * @param show The show the season belongs too
 	 * @param seasonNum The season number
@@ -348,7 +351,8 @@ public class Controller {
 	 * then null is returned. If the refresh parameter is set too true, then the stores are ignored and it retrieves
 	 * data strait from the sources. If data is retrieved from the source, then it makes an attempt to write it too the
 	 * stores.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The episode number
 	 * @param refresh If true, then the stores are ignored.
@@ -398,7 +402,8 @@ public class Controller {
 	 * the sources or the stores, then null is returned. If the refresh parameter is set too true, then the stores are
 	 * ignored and it retrieves data strait from the sources. If data is retrieved from the source, then it makes an
 	 * attempt to write it too the stores.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param season The season the episode belongs too
 	 * @param specialNum The special episode number
 	 * @param refresh If true, then the stores are ignored.
@@ -446,7 +451,8 @@ public class Controller {
 	/**
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param mode The mode that the search operation should be performed in
 	 * @param mediaFile The file the media is stored in
 	 * @return The results of searching for the show, or null if it can't be found.
@@ -477,7 +483,8 @@ public class Controller {
 
 	/**
 	 * This is used when a file that holds a episode or film has been renamed
-	 * 
+	 *
+	 * @param rootMediaDir The root media directory
 	 * @param oldFile The old file
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files

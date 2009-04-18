@@ -43,7 +43,7 @@ import org.stanwood.media.model.Show;
  * "http://appletv.nanopi.net/manual/overriding-metadata/"}.
  * </p>
  * <p>
- * Every time the {@link SapphireStore#cacheEpisode(File,Episode)} or the {@link SapphireStore#cacheFilm(File,Film)} 
+ * Every time the {@link SapphireStore#cacheEpisode(File, File, Episode)} or the {@link SapphireStore#cacheFilm(File, File, Film)}
  * method is called, a XML file is written next to the episodes/films file with a
  * .xml extension.
  * </p>
@@ -56,15 +56,15 @@ import org.stanwood.media.model.Show;
 public class SapphireStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(SapphireStore.class);
-	
+
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private String preferedRating = null;
-	
-	
+
+
 	/**
 	 * This will store the episode and show details in a XML file next too the media file. The XML file will be in the
 	 * format found here {@link "http://appletv.nanopi.net/manual/overriding-metadata/"}.
-	 * 
+	 *
 	 * @param episode The episode to the stored
 	 * @param episodeFile the file which the episode is stored in
 	 * @throws StoreException Thrown if their is a problem writing to the store
@@ -93,7 +93,7 @@ public class SapphireStore implements IStore {
 		if (xmlFile != null) {
 			if (xmlFile.exists() && !xmlFile.delete()) {
 				throw new IOException("couldn't delete file " + xmlFile);
-	        }			
+	        }
 			PrintStream ps = null;
 			try {
 				ps = new PrintStream(new FileOutputStream(xmlFile));
@@ -109,7 +109,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     <rating>TV-PG</rating>");
 				ps.println("     <seriesName>" + episode.getSeason().getShow().getName() + "</seriesName>");
 				// ps.println("     <broadcaster>The CW</broadcaster>");
-				ps.println("     <episodeNumber>" + episode.getEpisodeSiteId() + "</episodeNumber>");
+				ps.println("     <episodeNumber>" + episode.getShowEpisodeNumber() + "</episodeNumber>");
 				ps.println("     <season>" + episode.getSeason().getSeasonNumber() + "</season>");
 				ps.println("     <episode>" + episode.getEpisodeNumber() + "</episode>");
 				ps.println("     <published>" + df.format(episode.getDate()) + "</published>");
@@ -126,7 +126,7 @@ public class SapphireStore implements IStore {
 					}
 					ps.println("     </cast>");
 				}
-				
+
 				// ps.println("     <producers>");
 				// ps.println("        <name>Rob Thomas</name>");
 				// ps.println("     </producers>");
@@ -144,7 +144,7 @@ public class SapphireStore implements IStore {
 				ps = null;
 			}
 		} else {
-			log.error("Unable to find extension of media file: " + file.getName());			
+			log.error("Unable to find extension of media file: " + file.getName());
 		}
 	}
 
@@ -216,13 +216,13 @@ public class SapphireStore implements IStore {
 				}
 			}
 		}
-				
+
 		return certifications.get(0).getCertification();
 	}
 
 	/**
 	 * Does nothing as it is not implemented for this store
-	 * 
+	 *
 	 * @param season The season too store
 	 * @param episodeFile the file witch the episode is stored in
 	 */
@@ -232,7 +232,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Does nothing as it is not implemented for this store
-	 * 
+	 *
 	 * @param show The show too store
 	 * @param episodeFile the file witch the episode is stored in
 	 */
@@ -242,7 +242,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode
 	 * @param episodeFile the file which the episode is stored in
@@ -254,7 +254,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param show The show the season belongs too
 	 * @param seasonNum The number of the season
 	 * @param episodeFile the file which the episode is stored in
@@ -266,7 +266,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param showId The id of the show
 	 * @param episodeFile the file which the episode is stored in
 	 */
@@ -277,7 +277,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode
 	 * @param episodeFile the file which the episode is stored in
@@ -299,7 +299,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * This is used to write a film to the store.
-	 * 
+	 *
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -315,7 +315,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * This will update all references of the old file to the new file
-	 * 
+	 *
 	 * @param oldFile The old file
 	 * @param newFile The new file
 	 */
@@ -341,7 +341,7 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * Always returns null as it is not implemented for this store.
-	 * 
+	 *
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
 	 */
@@ -360,13 +360,13 @@ public class SapphireStore implements IStore {
 	}
 
 	/**
-	 * Used to set the store parameter used to find which country's certification should be 
+	 * Used to set the store parameter used to find which country's certification should be
 	 * used. If this is not set, then it will used the first if finds.
 	 * @param country The country that should be used when getting the certification
 	 */
 	public void setPreferredCertificationCounrty(String country) {
 		preferedRating = country;
 	}
-	
-	
+
+
 }

@@ -1,58 +1,56 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>Eureka - TV.com </title>
-    <meta name="description" content="Eureka TV Show, TV.com is your reference guide to Eureka Show. Episode guide, photos, videos, cast and crew information, forums, reviews and more. " />
-    <meta name="keywords" content="Eureka TV Show, Eureka Television Show, Eureka Episode guide, Eureka photos, Eureka videos, Eureka cast, Eureka crew , Eureka Information, Eureka forums, Eureka reviews, Eureka Reference, Eureka ,Drama, Sci-fi, Comedy, Action-Adventure, Reality, Animation, Soap, Children, Talk Shows, Top Shows" />
-    
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/layout.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/fonts.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/buttons.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/modules.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/colors.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/ads.src.css" />
+    <title>Eureka on TV.com - Free Full Episodes & Clips, & Show Info</title>
+    <meta name="description" content="The best source for TV listings, free videos, show and episode info, cast lists, TV gossip, and entertainment news." />
+    <meta name="keywords" content="Episode Videos, TV Celebrities, Reality TV Shows, Comedy TV Shows, Old Television Shows, Reality TV, Comedy TV, TV Shows, Television Shows, Old TV Shows, Action/Adventure, Animation, Children, Comedy, Drama, Science-Fiction, Soap, Talk Shows, Popular Shows, TV Listings, CBS, NBC, Fox, HBO, ABC, CW, TV News, TV trivia" />
 
-        <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/redesign.css?&cachebuster=52889" />
+    	
+	
+	
 
-        <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/ads_uk.src.css" />
-    
-    
-    <script type="text/javascript" src="http://image.com.com/tv/js/mootools/mootools-1.2-core-nc.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/mootools/mootools-1.2-more.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/global/mootools.plugins.src.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/cnet/clientside.src.js"></script>
+        
+
+
+        <!--load_css-->
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/reset.css?&cachebuster=54458" />
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/tv.css?&cachebuster=54458" />
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/shows/58448.css?&cachebuster=54458" />
+<!--/load_css-->
+
+
+        <!--load_js_at_top-->
+            <script src="http://www.tv.com/js/mootools/1.2.1/mootools-1.2.1-core-yc.js" ></script>
+                <script src="http://www.tv.com/js/tv.js" ></script>
+                                    <script src="http://dw.com.com/js/dw.js" ></script>
+    <!--/load_js_at_top-->
 
     <script type="text/javascript">
                 var TV = {'init':[]};
     </script>
-
-    
-    
-
-    
-<script type="text/javascript">
-<!--
-function RefreshAds() {
-    
-    LoadAds();
-    
-}
-// -->
-</script>
-
-<script type="text/javascript" src="http://i.i.com.com/cnwk.1d/Ads/common/js/rmif.js"></script>
-
 </head>
 
-<body>
-
-
-                
-
-
-
-
+<body id="page_body" class="SHOWSPACE NEW2009 uk">
+    <div id="page_background">&nbsp;</div>
     
+                <!--skin ad call(b)-->
+        
+
+
+
 
     
         <div id="global_login_box">
@@ -62,7 +60,7 @@ function RefreshAds() {
 	<div class="panel">
         <h2>TV.com Sign-in</h2>
         <p id="why_are_you_making_me_log_in"></p>
-            <form id="login" name="login" method="post" action="http://authorize.tv.com/1324-4-90.html?tag=;login">
+            <form id="login" name="login" method="post" action="http://authorize.tv.com/1324-4-90.html?tag=photos;login">
                     <label for="EMAILADDR">Enter your username or email address:</label>
                     <input class="email" type="text" name="EMAILADDR"/>
 
@@ -77,9 +75,12 @@ function RefreshAds() {
             <a class="lost_password"  href="http://authorize.tv.com/1328-4_45-90.html">Forgot Password?</a>
 	</div>
 </div>
+
 <script>
 
+/* TODO: move this to a js file */
 function doGlobalLogin(instructions, extraPath) {
+    window.scrollTo(0,0);
     if ((typeof extraPath) == "string"){
         document.forms["login"].path.value += "?" + extraPath;
     }
@@ -93,12 +94,47 @@ function doGlobalLogin(instructions, extraPath) {
 }
 
 </script>
-
-    
     <div id="header_area">
-        <div class="header_line"></div>
+        
+<script type="text/javascript">
+    window.addEvent('domready', function() {
+
+	    new Autocompleter.Request.JSON('tv_search_head', 'http://www.tv.com/search/autocomplete/',
+ 
+	    {
+	        'postVar': 'q',
+	        'zIndex': 100
+	    });
+	});
+
+function light_switch() {
+
+	if (Cookie.read('lights_out')) {
+		lights_out = Cookie.read('lights_out');
+		Cookie.dispose('lights_out');
+		if (lights_out == 0)
+			lights_out = 1;
+		else
+			lights_out = 0;
+	} else {
+		lights_out = 1;
+	}
+
+	if (lights_out == 1) {
+		$('page_body').addClass('LIGHTS_OUT');
+	} else {
+		$('page_body').removeClass('LIGHTS_OUT');
+	}
+
+	Cookie.write('lights_out', lights_out, {duration: 365*10, path: '/'})
+}
+</script>
+
+
+<div class="header_line"></div>
 <div id="tv_header">
-        <a class="tv_logo uk" href="http://www.tv.com?tag=logo;newshows">TV.com</a>
+        
+    <a class="tv_logo uk" href="http://www.tv.com?tag=logo;newshows">TV.com</a>
     <ul class="site_nav">
         <li class="first">
             <a href="http://www.tv.com?tag=nav_top;home">Home</a>
@@ -130,770 +166,978 @@ function doGlobalLogin(instructions, extraPath) {
             <label>SPECIAL FEATURES</label>
             <ul>
                                     <li class="first">
-                    	                    	                        <a href="http://www.tv.com/story/12352.html?tag=headlines;title;12352&om_act=convert&om_clk=news">Hollyoaks Interview</a>
+                                                                        <a href="http://uk.tv.com/story/13921.html?tag=topslot;button;?tag=specialfeature;1">Terminator is Terminated</a>
                                             </li>
                                     <li>
-                    	                    	                        <a href="/best-of/">Best TV of 2008 - TV.com</a>
+                                                                        <a href="http://www.tv.com/story/14002.html?tag=headlines;title;1&om_act=convert&om_clk=news&tag=topslot;button;?tag=specialfeature;2">Adele to star in Ugly Betty</a>
                                             </li>
                                     <li>
-                    	                    	                        <a href="/premiere-plots/">Premiere Plots 2008</a>
+                                                                        <a href="http://www.tv.com/story/13984.html?tag=headlines;title;0&om_act=convert&om_clk=news&tag=topslot;button;?tag=specialfeature;3">Top 10: Reality Break-Ups</a>
                                             </li>
                             </ul>
         </div>
     
 
-    <div id="sign_in_status">        <!--user login info-->
+   
+    <form action="http://www.tv.com/search.php" method="GET" name="search_form" class="search_form">
+        <label for="qs">Search</label>
+        <input type="hidden" name="type" value="11" />
+        <input type="hidden" name="stype" value="all" />
+                    <input type="hidden" name="tag" value="search;newshows" />
+                <input id="tv_search_head" type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
+            Search
+        </button>
+    </form>
+
+    
+    <div class="row_of_stuff">
+        <div id="sign_in_status">            <!--user login info-->
     <script>LOGGED_IN = false</script>
     <div class="sign_in">
         <a class="login" href="http://authorize.tv.com/1324-4-90.html" onclick="return doGlobalLogin('Log in to TV.com')">Login</a>
         <a class="join"  href="http://www.tv.com/signup/basic?tag=usermenu;join">Join</a>
     </div>
 
+        </div>
+        <div class="lights_out">
+            Lights:
+            	    <a href="#" class="on" onclick="light_switch(); return false;">On</a>
+	    <a href="#" class="off" onclick="light_switch(); return false;">Off</a>
+        </div>
+        <div class="cnet_promo">
+            <div class='rubics_netxp1_main' id='rbx_netxp1_parent'>
+<script type='text/javascript'>
+function do_rbx_ctrk_netxp1 (aElem, iTrkId, cTrkPrefix) {
+	var imgElem = document.getElementById(iTrkId);
+	if (!imgElem) {
+		return true;
+	}
+
+	if (!aElem.rbxCPrefixed) {
+		aElem.rbxCPrefixed = true;
+		var destUri = encodeURIComponent(aElem.href);
+		var newUri = cTrkPrefix + destUri;
+		aElem.href = newUri;
+	}
+	return true;
+}
+function do_rbx_itrk_netxp1 (parentId, iTrkId, iTrkUri) {
+	if (!document.images) {
+		return false;
+	}
+
+	var imgId = iTrkId;
+	var imgElem = document.getElementById(imgId);
+
+	if (!imgElem) {
+
+		var parentElem = document.getElementById(parentId);
+		if (!parentElem) {
+			return false;
+		}
+
+		var imgElem = document.createElement('img');
+		if (!imgElem) {
+			return false;
+		}
+
+		imgElem.id = imgId;
+		imgElem.src = iTrkUri;
+		imgElem.alt = '';
+		imgElem.width = '1';
+		imgElem.height = '1';
+
+		parentElem.appendChild(imgElem);
+	}
+	return true;
+}
+</script>
+	On MovieTome: 
+	<a target='_top' onclick="return do_rbx_ctrk_netxp1(this, 'rbx_netxp1_1', 'http://dw.com.com/rubicsclk?ver=2&amp;ts=2009.04.17.13.25.21&amp;edId=&amp;onId=&amp;ptId=&amp;sId=-2&amp;appId=19&amp;offId=5875&amp;unitId=45&amp;poolId=1&amp;f1=16&amp;f2=%2d0&amp;f3=%2d0&amp;alg=8&amp;&amp;opt=1&amp;linkPos=1&amp;destUrl=');" href='http://www.movietome.com/movie/365682/transformers-revenge-of-the-fallen/index.html' class='xpromolink'>See the new TRANSFORMERS 2 TRAILER!</a>
+<script type='text/javascript'>
+//<![CDATA[
+do_rbx_itrk_netxp1('rbx_netxp1_parent', 'rbx_netxp1_1', 'http://dw.com.com/rubicsimp/c.gif?ver=2&ts=2009.04.17.13.25.21&edId=&onId=&ptId=&sId=-2&appId=19&unitId=45&poolId=1&f1=16&f2=%2d0&f3=%2d0&alg=8&opt=1&off=5875,-1');
+//]]>
+</script>
+</div>
+<!-- ros [r20070521-1832-ronr-v1-13-5:1.13.5] c17-ad-rubics-ros7.cnet.com::3977079728 2009.04.17.13.25.21 --><!-- ros t 0.0.0.0.1.1.1.1 -->
+        </div>
     </div>
 
-    <form action="http://www.tv.com/search.php" method="GET" name="search_form" class="search_form">
-        <label for="qs">Search</label>
-        <input type="hidden" name="type" value="11" />
-        <input type="hidden" name="stype" value="all" />
-                    <input type="hidden" name="tag" value="search;newshows" />
-                <input type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
-            Search
-        </button>
-    </form>
 
-    <div class="feedback">
-        Help Improve TV.com - <a href="mailto:support@tv.com">Send Your Feedback </a>
-    </div>
 </div>
 
     </div><!--/header_area-->
-    
+        
     <div id="mantle_skin" class="MANTLE_SKIN">
         <div id="container">
-            <div id="content_wrap">
-                <!-- headband here -->
-                
-                                
-<div id="mpu_layout">
-    <div id="content" class="mini">
-                <div id="mini" class="col">
-            <div class="col_wrap">
-                
-
-
-
-<div id="content_nav">
-    <ul><li class="on"><a href="http://www.tv.com/eureka/show/58448/summary.html"><span>Summary</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html"><span>Videos</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?v_category=">All Videos</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=episode_clip">Episode Clips</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=promotional_trailer">Promotional Trailers</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=interview">Interviews</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=dvd_bonus_features">DVD Bonus Features</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=full_episode"><span>Full Episode Videos</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/episode.html"><span>Episodes</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/episode_guide.html">Episode Guide</a></li><li ><a href="http://www.tv.com/eureka/show/58448/episode_listings.html">Episode List</a></li><li ><a href="http://www.tv.com/eureka/show/58448/top.html">Top Episodes</a></li><li ><a href="http://www.tv.com/eureka/show/58448/trivia.html">Trivia Guide</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html"><span>Cast</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=1">Stars</a></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=2">Recurring Roles</a></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=3">Writers, Directors & Crew</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html"><span>Reviews</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html?flag=1">Show Reviews</a></li><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html?flag=2">Episode Reviews</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/downloads.html"><span>Downloads + DVDs</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/forums.html"><span>Forum</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/blog.html"><span>Blog</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html"><span>News</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/news.html">News</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=multimedia">Multimedia</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=articles">Articles</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=appearances">Appearances</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=sls">User Submitted</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html"><span>Photos</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=1">All Photos</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=2">Publicity</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=3">Episode Galleries</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=4">Events</a></li></ul></li></ul>
-</div>
-
-<div class="related_nav" section="page_nav">
-<dl><dt>Related</dt><dd><a href=""></a></dd></dl>
-</div>
-<div id="top_news" class="module pink">
+                <!-- TVCOM_OK_SHOW_SUMMARY -->
+                    <div id="smallhead">
+    <span class="bg_layer">&nbsp;</span>
+    <h1>Eureka</h1>
+    <span class="tagline">
+                                Tuesday 9:00 PM on
+                SciFi
     
-
-<div class="header">
-        <div class="wrap">
+    </span>
+</div>    
             
-                <h2 class="module_title">LATEST NEWS</h2>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-        <ul><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;title;0"><EM>Samantha Who</EM> goes out of Africa</a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;count;0" rel="nofollow">1</a></span><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;thumb;0" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/s/SamanthaWho2_Hub.jpg" alt="Image related to &lt;EM&gt;Samantha Who&lt;/EM&gt; goes out of Africa" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;title;1">Frank really is <em>Shameless</em></a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;count;1" rel="nofollow">2</a></span><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;thumb;1" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/s/Shameless_Hub.jpg" alt="Image related to Frank really is &lt;em&gt;Shameless&lt;/em&gt;" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;title;2"><em>90210</em> reveals <em>Beverly Hills</em> secret</a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;count;2" rel="nofollow">3</a></span><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;thumb;2" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/j/jenniegarth_hub.jpg" alt="Image related to &lt;em&gt;90210&lt;/em&gt; reveals &lt;em&gt;Beverly Hills&lt;/em&gt; secret" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;title;3">BBC launches <em>Torchwood</em> trailer </a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;count;3" rel="nofollow">4</a></span><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;thumb;3" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/t/Torchwood_Hub.jpg" alt="Image related to BBC launches &lt;em&gt;Torchwood&lt;/em&gt; trailer " /></a></div></div></div></li><li class="last"><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;title;4">TV.com Top 10: Who should move on in <em>American Idol</em></a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;count;4" rel="nofollow">5</a></span><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;thumb;4" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/a/americanidol8_hub.jpg" alt="Image related to TV.com Top 10: Who should move on in &lt;em&gt;American Idol&lt;/em&gt;" /></a></div></div></div></li></ul>
-    </div>
-</div>
-            </div>
-        </div>
-        
-                <div id="top" class="col">
-            <div class="col_wrap">
-                
-<div class="content_title">
-    <h1>Eureka: <span>Summary</span></h1>
-    </div>            </div>
-        </div>
-        
-        <div id="main" class="col">
-            <div class="col_wrap">
-                                
-<style>
-
-.topslot_overlay_button {
-    background-image:url(http://image.com.com/tv/images/tv_wide/frontdoor/mfb_buttons.gif);
-    position:absolute;
-    width:120px;
-    height:72px;
-    filter:alpha(opacity=85);-moz-opacity:.85;opacity:.85;
-    left: 354px;
-    top:124px;
-}
-
-.topslot_overlay_button:hover{
-    filter:alpha(opacity=100);-moz-opacity:1;opacity:1;
-}
-
-</style>
-   <div id="topslot">
-                             		 
-        		<a href="http://www.tv.com/video/14246/101/58448/scifi-channel-2008-2009?o=tv&tag=showspacevideo;thumb">
-             	<img src="http://image.com.com/tv/images/content_headers/program_new/58448.jpg" oncontextmenu="return false;" onmousedown="return false;"/>
-            	</a>
-            <a class="topslot_overlay_button" href="http://www.tv.com/video/14246/101/58448/scifi-channel-2008-2009?o=tv&tag=showspacevideo;thumb">&nbsp</a>
-                       </div>
-
-    
-
-
-<div id="info_block" class="module">
-        <div class="body summary_block">
-        <div class="wrap">
+                    <div id="nav_tabs" class="has_subtabs">
+                <ul class="sections">
+                            
+                                <li class="section on">
+                    <a href="http://www.tv.com/eureka/show/58448/summary.html">Main</a>
+                                                                    <ul class="subsections">
+                                                            
+                                                                                                    <li class="subsection on">
+                                        <a href="http://www.tv.com/eureka/show/58448/summary.html">Overview</a>
+                                    </li>
+                                                                                                                                
+                                                                                                    <li class="subsection">
+                                        <a href="http://www.tv.com/eureka/show/58448/news.html">News</a>
+                                    </li>
+                                                                                                                                
+                                                                                                    <li class="subsection">
+                                        <a href="http://www.tv.com/eureka/show/58448/cast.html">Cast and Crew</a>
+                                    </li>
+                                                                                                                                
+                                                                                                    <li class="subsection">
+                                        <a href="http://www.tv.com/eureka/show/58448/blog.html">Blog</a>
+                                    </li>
+                                                                                                                                
+                                                                                                    <li class="subsection">
+                                        <a href="http://www.tv.com/eureka/show/58448/trivia.html">Trivia</a>
+                                    </li>
+                                                                                                                        </ul>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/episode.html">Episodes</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/reviews.html">Reviews</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/forums.html">Forums</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/photos.html">Photos</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/videos.html">Videos</a>
+                                    </li>
+                                    </ul>
+                    <a class="function_link write_a_review" href="http://www.tv.com/Eureka/show/58448/write_review.html">Review this Show</a>
+                        <a class="function_link add_to_favorites" href="http://www.tv.com/index.php?action=add_favorite&type=45&ref_type_id=101&ref_id=58448" onclick="return ajaxReplace(this,this.href,'You must register to add a favorite show')">Add Show to Favorites</a>
             
+    </div><!--/nav_tabs"-->
+    <div class="BENTO_BOX GRID_MPU_2">
 
 
+        <div class="COLUMN_A">
+            <div class="COLUMN_A1">
 
-<div id="show_summary" class="module show_summary">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span>
-<div id="" class="btn edit_add_btn ">
-    <div class="btn_wrap">
-        <span>
-                            <a href="http://www.tv.com/usersubmission/show_summary.html?show_id=58448&tag=showspace_summary;add&om_act=convert&om_clk=summarysh" rel="">edit</a>
-                    </span>
-    </div>
-</div>
-</span>
-    
-                <h1 class="module_title">SUMMARY</h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-        <div class="wrap">
-                                    <div class="details">
-                <ul><li><div class="wrap">Airs Next:<span class="network_name">SciFi at Tuesday 9:00 PM (60 min.)</span></div></li><li><div class="wrap">Status:<span class="program_status_name">Returning Series </span></div></li><li><div class="wrap">Premiered:<span class="start_date">July 18, 2006 </span></div></li><li><div class="wrap">Show Categories:<span class="genres"><a href="http://www.tv.com/shows/top-shows/science-fiction/10/today.html?tag=showspace_summary;genre;0&om_act=convert&om_clk=summarysh">Science-Fiction</a>, <a href="http://www.tv.com/shows/top-shows/drama/5/today.html?tag=showspace_summary;genre;1&om_act=convert&om_clk=summarysh">Drama</a></span></div></li></ul>
+                                                         
+    <div class="MODULE MODULE_FIRST" id="rate_it">
+                    <h3>Show Score</h3>
+            <div class="global_rating score90">
+                <div class="PUMPKIN">&nbsp;</div>
+                <div class="global_score">
+                    <span class="number">9.0</span>
+                    <span class="description">Superb</span>
+                </div>
+                <span class="num_votes">7,132 votes</span>
             </div>
+        
+        <h4>Your Score</h4>
 
-                        <div class="summary long">
-                <span class="long"><em>Small town. Big secret.</em><br />
+
+        <div class="RATING_WIDGET active">
+            <ul>
+                                                     <li class="no_score"><div class="thermometer"><div class="score_readout"></div><div class="PUMPKIN">&nbsp;</div></div></li>
+
+                                                     <li class="full-step score100"style="width:140px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=100&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">10</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score95"style="width:133px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=95&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">9.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score90"style="width:126px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=90&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">9</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score85"style="width:119px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=85&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">8.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score80"style="width:112px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=80&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">8</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score75"style="width:105px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=75&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">7.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score70"style="width:98px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=70&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">7</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score65"style="width:91px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=65&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">6.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score60"style="width:84px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=60&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">6</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score55"style="width:77px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=55&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">5.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score50"style="width:70px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=50&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">5</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score45"style="width:63px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=45&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">4.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score40"style="width:56px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=40&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">4</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score35"style="width:49px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=35&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">3.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score30"style="width:42px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=30&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">3</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score25"style="width:35px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=25&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">2.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score20"style="width:28px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=20&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">2</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                                     <li class="half-step score15"style="width:21px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=15&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">1.5</div><div class="PUMPKIN">&nbsp;</div></a></li><li class="full-step score10"style="width:14px"><a class="thermometer" href="http://www.tv.com/Eureka/show/58448/summary.html?&user_rating=10&rating_ref_type=101" onclick="return loginCheck('You must log in to rate a show');"><div class="score_readout">1</div><div class="PUMPKIN">&nbsp;</div></a></li>
+                            </ul>
+                            <span class="prompt">Rate it now!</span>
+                    </div><!--/my_rating-->
+
+    </div>                
+                                    
+    <div class="MODULE" id="show_buzz_info">
+        <h3>Buzz</h3>
+        <p>
+            Eureka ranks 346 out of the 18,086 shows on TV.com.
+        </p>
+
+                            <p>The 13,493 users who count themselves as Eureka fans have written a total of 163 reviews.</p>
+            
+        
+
+        
+        
+                    <h4>Status</h4>
+            Returning Series
+        
+                    <h4>Premiered</h4>
+            July 18, 2006
+        
+        
+                    <h4>Genres</h4>
+                                            <a href="http://www.tv.com/shows/top-shows/Science-Fiction/10/today.html">Science-Fiction</a>
+                            ,                 <a href="http://www.tv.com/shows/top-shows/Drama/5/today.html">Drama</a>
+                        </div>
+
+
+                
+            </div><!--/COLUMN_A1-->
+
+            <div class="COLUMN_A2">
+                <h2 id="show_page_head">Show Overview</h2>
+
+                 
+                                                    <div id="show_top_image" class="first">
+                                                                            
+                            <a class="top_image" href="http://www.tv.com/video/18645/101/58448/scifi-channel-fall-line-up?o=tv">
+                                <img src="http://image.com.com/tv/images/content_headers/program_new/58448.jpg" oncontextmenu="return false;" onmousedown="return false;"/>
+                            </a>
+                            <a class="TOPSLOT_OVERLAY_BUTTON" href="http://www.tv.com/video/18645/101/58448/scifi-channel-fall-line-up?o=tv"><span class="background">&nbsp;</span><span class="text">Watch Now</span><span class="button">&raquo;</span></a>
+                                            </div>
+                    
+                                    
+
+
+                                                    
+    <div id="episode_capsule" class="MODULE MODULE_FIRST">
+    <div class="MODULE_HEAD">
+        <h3>Latest Episode</h3>
+        <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/episode.html?&tag=prev_episode;more">More Episodes &raquo;</a>
+    </div>
+                <div class="grid">
+        <div class="column_a">
+                            <a class="thumb" href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/summary.html?tag=prev_episode;thumb"><img src="http://image.com.com/tv/images/processed/thumb/78/57/113923.jpg"/></a>
+                                        <div class="rating score90">
+                    <h5>Episode Score</h5>
+                    <div class="PUMPKIN_SMALL">&nbsp;</div>
+                    <div class="global_score">
+                                                    <span class="number">8.9</span>
+                            <span class="description">Great</span>
+                                            </div>
+                </div>
+                    </div>
+        <div class="column_b">
+                        <div class="column_b1">
+                <h4><a href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/summary.html?tag=prev_episode;title">From Fear to Eternity</a></h4>
+                                                        <p class="synopsis">As Eva Thorne prepares to seal off the subterranean military complex, Zoe's life is endangered as her body begins to rapidly age.</p>
+                                <div class="airdate">Aired: 09/23/08</div>
+            </div>
+                            <ul class="links">
+                    <li class="first"><a href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/summary.html?tag=prev_episode;summary">Summary</a></li>
+                                            <li><a href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/reviews.html?tag=prev_episode;reviews">Reviews</a></li>
+                        <li><a href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/recap.html?tag=prev_episode;recap">Recap</a></li>
+                        <li><a href="http://www.tv.com/no-name/From+Fear+to+Eternity/episode/1203120/trivia.html?tag=prev_episode;trivia">Trivia</a></li>
+                </ul>
+                    </div>
+    </div>
+</div><!--/episode_capsule-->                
+                
+                
+                                <div class="MODULE MODULE_FIRST" id="show_summary">
+                    <div class="MODULE_HEAD">
+                        <h3>Show Summary</h3>
+                        <a class="SEE_MORE" href="http://www.tv.com/usersubmission/show_summary.html?show_id=58448&tag=big_summary;edit">Edit Summary &raquo;</a>
+                    </div>
+
+                                        
+
+
+                    <p id="trunc_summ">
+                        <em>Small town. Big secret.</em><br />
 <br />
 A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.<br />
 <br />
-<em>Eureka</em> is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.</span>
-                            </div>
-                    </div>
-    </div>
-</div>
-
-
-<script type="text/javascript">
-TV.init.include(function(){
-    if($chk($('info_block'))){
-        // Variables for the summary and it's header
-        var summary_block = $('info_block').getElement('.summary_block');
-        var summary = summary_block.getElement('.summary'), summary_header = summary_block.getElement('.header span');
-
-        //Check that the summary actually exists and there's a short version of the summary
-        if($chk(summary && summary.getElement('.short'))){
-
-            //Grab the long height that is showing first.
-            var long_height = summary.getElement('.long').getSize().y;
-            //Hide the long version and show the short version
-            summary.addClass('short').removeClass('long');
-            //Grab the short height
-            var short_height = summary.getElement('.short').getSize().y;
-
-            //Setup the effect
-            var summary_fx = summary.get('morph',{'link':'cancel', 'transition': Fx.Transitions.Cubic.easeInOut});
-            summary_fx.set({'height': short_height});
-
-            //Create the link to show/hide the long/short summaries
-            new Element('a',{
-                'href':'#blank',
-                'text':'full summary +',
-                'class':'more_link',
-                'events':{
-                    'click':function(evt){
-                        (new Event(evt)).stop()
-                        if(summary.hasClass('short')){
-                            //*/Chain the effects
-                            summary_fx.start({'opacity': 0}).chain(function(){
-                                summary.removeClass('short').addClass('long');
-                                summary_fx.start({'opacity': 1, 'height': long_height});
-                            });
-                            //*/
-                            this.set('text', 'less summary -');
-                        }else{
-                            //*/
-                            summary_fx.start({'opacity': 0}).chain(function(){
-                                summary.removeClass('long').addClass('short');
-                                summary_fx.start({'opacity': 1, 'height': short_height});
-                            });
-                            //*/
-                            this.set('text', 'full summary +');
-                        }
-                    }
-                }
-             //Plug into the header
-             }).inject(summary_header, 'top');
-        }
-    }
-});
-</script>
-
-        </div>
-    </div>
-    <div class="clear"></div>
-
-        <div class="body episode">
-        <div class="wrap no_screen">
-            
-
-                                            
-
-<div class="module">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span><a class="more_link" href="http://www.tv.com/eureka/show/58448/episode_listings.html?tag=episodes;more&om_act=convert&om_clk=episodessh">all episode list &raquo;</a>
-
-
-<div id="" class="btn edit_add_btn ">
-    <div class="btn_wrap">
-        <span>
-                            <a href="http://www.tv.com/usersubmission/episode_synopsis.html?show_id=58448&tag=episodes;add&om_act=convert&om_clk=episodessh" rel="">edit/add</a>
-                    </span>
-    </div>
-</div>
-</span>
-    
-                <h1 class="module_title">LAST EPISODE</h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-                <h3 class="title">
-            <a href="http://www.tv.com/eureka/from-fear-to-eternity/episode/1203120/summary.html?om_act=convert&om_clk=episodessh&tag=episodes;title">
-                 From Fear to Eternity
-             </a>
-         </h3>
-        <div class="details">
-                        <div class="info">
-                                 <div class="airdate">Aired: <span>Tuesday September 23, 2008</span></div>
-                <p class="deck">As Eva Thorne prepares to seal off the subterranean military complex, Zoe's life is endangered as her body begins to rapidly age.</p>
-            </div>
-        </div>
-            </div>
-</div>        </div>
-    </div>
-
-            <div class="body photos">
-        <div class="wrap">
-                
-
-
-
-
-<div id="" class="module">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span>            <a href="http://www.tv.com/eureka/show/58448/photos.html?tag=photos;more&om_act=convert&om_clk=photosssh">more photos &raquo;</a>
-    </span>
-    
-                <h1 class="module_title">            <a href="http://www.tv.com/eureka/show/58448/photos.html?tag=photos&om_act=convert&om_clk=photosssh">PHOTOS</a>
-    </h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-                                
-                <a class="thumb" style="background-image:url(http://image.com.com/tv/images/processed/mini_thumb/83/6a/235247.jpg);" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=1&grti=101&gri=58448&om_act=convert&om_clk=photosssh&tag=pictures;image;0"></a>
-                                
-                <a class="thumb" style="background-image:url(http://image.com.com/tv/images/processed/mini_thumb/d8/41/235245.jpg);" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=2&grti=101&gri=58448&om_act=convert&om_clk=photosssh&tag=pictures;image;1"></a>
-                                
-                <a class="thumb" style="background-image:url(http://image.com.com/tv/images/processed/mini_thumb/e6/28/235246.jpg);" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=3&grti=101&gri=58448&om_act=convert&om_clk=photosssh&tag=pictures;image;2"></a>
-                                
-                <a class="thumb" style="background-image:url(http://image.com.com/tv/images/processed/mini_thumb/0b/37/229217.jpg);" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=4&grti=101&gri=58448&om_act=convert&om_clk=photosssh&tag=pictures;image;3"></a>
-                                
-                <a class="thumb last" style="background-image:url(http://image.com.com/tv/images/processed/mini_thumb/54/03/229215.jpg);" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=5&grti=101&gri=58448&om_act=convert&om_clk=photosssh&tag=pictures;image;4"></a>
-            </div>
- </div>
-        </div>
-    </div>
-    
-            <div class="body video">
-        <div class="wrap">
-            
-
-
-
-
-
-
-
-
-<div class="module">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span><a class="more_link" href="http://www.tv.com/eureka/show/58448/videos.html?tag=videos;more&om_act=convert&om_clk=videospph">more videos &raquo;</a></span>
-    
-                <h1 class="module_title"><a href="http://www.tv.com/eureka/show/58448/videos.html?tag=videos&om_act=convert&om_clk=videospph">VIDEO</a></h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-        <div class="details">
-            <h3 class="title">
-                <a href="http://www.tv.com/video/14246/101/58448/scifi-channel-2008-2009?o=tv&tag=show_summary;video;title" rel="video">
-                    SciFi Channel 2008-2009
-                </a>
-            </h3>
-            <div class="thumb">
-                <a href="http://www.tv.com/video/14246/101/58448/scifi-channel-2008-2009?o=tv&tag=show_summary;video;thumb">
-                    <img src="http://image.com.com/tv/images/genie_images/video/2008/s/scifi_promo_medvid.jpg" alt="Screenshot of " />
-                </a>
-            </div>
-            <div class="info">
-                <p class="deck">The Sci-Fi channel brings you more original, compelling programming and also picks up syndication of Lost. Catch your favorites and some new ones coming in 2008 and 2009!</p>
-                <ul class="stats"><li>Posted: 05/22/08</li><li>Views: N/A</li><li><a href="http://www.tv.com/video/14246/101/58448/scifi-channel-2008-2009?o=tv&tag=show_summary;video;comments#comments">Comments: N/A</a></li></ul>
-            </div>
-        </div>
-    </div>
-</div>
-        </div>
-    </div>
-    
-        <div class="body blog">
-        <div class="wrap">
-            
-<div class="module">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span>
-<div id="" class="btn edit_add_btn ">
-    <div class="btn_wrap">
-        <span>
-                            <a href="http://www.tv.com/eureka/show/58448/create_blog.html?tag=show_summary;blog;add" rel="">add</a>
-                    </span>
-    </div>
-</div>
-</span>
-    
-                <h1 class="module_title">BLOG</h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-        
-                        Sorry, no blogs exist at this time.
-        
-            </div>
-</div>        </div>
-    </div>
-
-        <div class="body news">
-        <div class="wrap">
-            <div class="module">
-                
-
-<div class="header">
-        <div class="wrap">
-            
-                <h1 class="module_title">NEWS</h1>
-    </div>
-    </div>
-                
-                
-                <div class="body">
-                                        <ul class="news_list"><li class="first "><div class="wrap"><div class="title_wrap"><h3 class="title"><a href="http://www.tv.com/story/11416.html">Cast updates: <em>Match Game</em>, <em>Gossip Girl</em></a></h3></div><div class="details"><div class="info"><p class="deck">Sarah Silverman, Norm McDonald join revamped game show; a <em>Twin Peaks</em> alum hears <em>Gossip</em>.</p><ul class="stats"><li>06/20/08  3:05 PM</li><li><a href="http://www.tv.com/story/11416.html#comments">17 comments</a>&nbsp; \ &nbsp;<a href="http://www.tv.com/story/11416.html#comments">add yours</a></li></ul></div></div></div></li><li class=" "><div class="wrap"><div class="title_wrap"><h3 class="title"><a href="http://www.tv.com/story/10244.html">Sci-Fi calls for more <em>Eureka</em></a></h3></div><div class="details"><div class="info"><p class="deck">Genre cable channel renews original series for a third season and 13 more episodes; <em>Destination Truth</em> also picked up.</p><ul class="stats"><li>09/28/07 10:15 AM</li><li><a href="http://www.tv.com/story/10244.html#comments">36 comments</a>&nbsp; \ &nbsp;<a href="http://www.tv.com/story/10244.html#comments">add yours</a></li></ul></div></div></div></li><li class=" last"><div class="wrap"><div class="title_wrap"><h3 class="title"><a href="http://www.tv.com/story/6673.html"><em>Battlestar</em> dips in viewers
-</a></h3></div><div class="details"><div class="info"><p class="deck">Season-three premiere of space opera off almost 30 percent from last season.
-</p><ul class="stats"><li>10/10/06  1:22 PM</li><li><a href="http://www.tv.com/story/6673.html#comments">37 comments</a>&nbsp; \ &nbsp;<a href="http://www.tv.com/story/6673.html#comments">add yours</a></li></ul></div></div></div></li></ul>                                    </div>
-            </div>
-        </div>
-    </div>
-
-        <div class="body cast">
-        <div class="wrap">
-            
-
-
-<div id="" class="module cast_list">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span>
-
-<a class="more_link" href="http://www.tv.com/eureka/show/58448/cast.html?om_act=convert&om_clk=castsh&tag=cast;more">all cast and crew &raquo;</a>
-
-
-<div id="" class="btn edit_add_btn ">
-    <div class="btn_wrap">
-        <span>
-                            <a href="http://www.tv.com/usersubmission/show_stars.html?show_id=58448&tag=cast;edit&om_act=convert&om_clk=castsh" rel="">edit/add</a>
-                    </span>
-    </div>
-</div>
-</span>
-    
-                <h1 class="module_title">CAST</h1>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-                <ul><li ><div class="wrap"><span class="cast_member"><span><a href="http://www.tv.com/colin-ferguson/person/42403/summary.html?tag=cast;name;0&om_act=convert&om_clk=castsh">Colin Ferguson</a></span></span><span class="role"><span>Jack Carter <a href="http://www.tv.com/colin-ferguson/person/42403/photos.html?tag=cast;more_img;0&om_act=convert&om_clk=castsh">(photos)</a></span></span></div></li><li ><div class="wrap"><span class="cast_member"><span><a href="http://www.tv.com/salli-richardson-whitfield/person/1575/summary.html?tag=cast;name;1&om_act=convert&om_clk=castsh">Salli Richardson-Whitfield</a></span></span><span class="role"><span>Allison Blake <a href="http://www.tv.com/salli-richardson-whitfield/person/1575/photos.html?tag=cast;more_img;1&om_act=convert&om_clk=castsh">(photos)</a></span></span></div></li><li ><div class="wrap"><span class="cast_member"><span><a href="http://www.tv.com/joe-morton/person/4546/summary.html?tag=cast;name;2&om_act=convert&om_clk=castsh">Joe Morton</a></span></span><span class="role"><span>Henry Deacon <a href="http://www.tv.com/joe-morton/person/4546/photos.html?tag=cast;more_img;2&om_act=convert&om_clk=castsh">(photos)</a></span></span></div></li><li ><div class="wrap"><span class="cast_member"><span><a href="http://www.tv.com/jordan-hinson/person/356113/summary.html?tag=cast;name;3&om_act=convert&om_clk=castsh">Jordan Hinson</a></span></span><span class="role"><span>Zoe Carter <a href="http://www.tv.com/jordan-hinson/person/356113/photos.html?tag=cast;more_img;3&om_act=convert&om_clk=castsh">(photos)</a></span></span></div></li><li  class="last"><div class="wrap"><span class="cast_member"><span><a href="http://www.tv.com/ed-quinn/person/75913/summary.html?tag=cast;name;4&om_act=convert&om_clk=castsh">Ed Quinn</a></span></span><span class="role"><span>Nathan Stark <a href="http://www.tv.com/ed-quinn/person/75913/photos.html?tag=cast;more_img;4&om_act=convert&om_clk=castsh">(photos)</a></span></span></div></li></ul>
-            </div>
-</div>
-        </div>
-    </div>
-</div>
-
-
-<div id="show_user_reviews" class="module user_reviews ">
-    
-
-<div class="header">
-        <div class="wrap">
-                    <span><a class="add_link" rel="nofollow" href="http://www.tv.com/eureka/show/58448/write_review.html?tag=showspace;summary;write_review">add a review</a></span>
-    
-                <h1 class="module_title">USER REVIEWS</h1>
-    </div>
-    </div>
-    
-    
-        <div class="body">
-        <div class="wrap">
-            
-    <script type="text/javascript">
-	function expand(div,div1){
-	    document.getElementById(div).style.display = "none";
-	    document.getElementById(div1).style.display = "block";
-	}
-    </script>
-
-<ul id="show_user_reviews" class="user_reviews_list"><li ><div class="wrap"><div class="score_data"><div class="score">10</div><div class="rank"><span class="thumb_up"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F565805%2Fthumbs.html%3Fthumb%3Dy?tag=reviews;agree" rel="{'url':'http://www.tv.com/review/565805/thumbs.html', 'values': {'thumb':'y'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_up', 'cval':'565805'}} nofollow">2</a></span><span class="thumb_down"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F565805%2Fthumbs.html%3Fthumb%3Dn?tag=reviews;disagree" rel="{'url':'http://www.tv.com/review/565805/thumbs.html', 'values': {'thumb':'n'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_down', 'cval':'565805'}} nofollow">0</a></span><img class="ajax_loader" src="http://image.com.com/tv/images/b.gif" alt="loading_img" /></div></div><div class="review_data"><div class="user_data"><a class="thumb" href="http://www.tv.com/users/Techguy129/profile.php?tag=reviews;avatar;0"><img src="http://image.com.com/tv/images/b.gif" alt="Techguy129's avatar" style="background:url(http://image.com.com/tv/images/avatar.jpg) no-repeat center scroll;" /></a><div class="username"><a href="http://www.tv.com/users/Techguy129/profile.php?tag=reviews;author;0">Techguy129</a></div><span class="reg_date">member since: <span class="date">Jan 19, 2009</span></span></div><div class="bottom_line_blurb">The Bottom Line: <span>"Personal favorite"</span></div><div class="summary" id="sum_565805" style="display: block"><p>Excellent show! Best "original thought" show I've seen in years! <a class="more_link" onclick="expand('sum_565805','565805')" onmouseover="this.style.cursor = 'pointer'">...Continue &raquo;</a></p></div><div id="565805" style="display: none"><p>Ok, this show is awesome. Great story line, great acting (Which if you've ever seen any of Sci-Fi's original movies, is odd) Now, their network is irritating. Sci-Fi is horribly bi-polar about their shows. First they cancel StarGate Atlantis (Also a great show) and then they air 8 episodes of Eureka and go to mid-season break. I get that it's all about money, I'm a working actor, but from a fan's perspective, it's not a very good way to keep viewers interested with a three month break.<br />
+<em>Eureka</em> is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.
+                    </p>
+                    <p id="whole_summ" style="display:none;">
+                        <em>Small town. Big secret.</em><br />
 <br />
-Anyway. Now that my Sci-Fi rant is over...<br />
-Just give this show a try and I can almost gaurantee you'd be hooked.</p></div><span class="post_date">01/18/09 12:04pm</span> | <a class="report" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F565805%2Freport_abuse.html&tag=reviews;report">report abuse</a></div></div></li><li ><div class="wrap"><div class="score_data"><div class="score">10</div><div class="rank"><span class="thumb_up"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F565138%2Fthumbs.html%3Fthumb%3Dy?tag=reviews;agree" rel="{'url':'http://www.tv.com/review/565138/thumbs.html', 'values': {'thumb':'y'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_up', 'cval':'565138'}} nofollow">1</a></span><span class="thumb_down"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F565138%2Fthumbs.html%3Fthumb%3Dn?tag=reviews;disagree" rel="{'url':'http://www.tv.com/review/565138/thumbs.html', 'values': {'thumb':'n'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_down', 'cval':'565138'}} nofollow">4</a></span><img class="ajax_loader" src="http://image.com.com/tv/images/b.gif" alt="loading_img" /></div></div><div class="review_data"><div class="user_data"><a class="thumb" href="http://www.tv.com/users/morghanna/profile.php?tag=reviews;avatar;1"><img src="http://image.com.com/tv/images/b.gif" alt="morghanna's avatar" style="background:url(http://image.com.com/tv/images/avatar.jpg) no-repeat center scroll;" /></a><div class="username"><a href="http://www.tv.com/users/morghanna/profile.php?tag=reviews;author;1">morghanna</a></div><span class="reg_date">member since: <span class="date">Nov 20, 2004</span></span></div><div class="bottom_line_blurb">The Bottom Line: <span>"Better every season"</span></div><div class="summary" id="sum_565138" style="display: block"><p>Wonderful and amusing. <a class="more_link" onclick="expand('sum_565138','565138')" onmouseover="this.style.cursor = 'pointer'">...Continue &raquo;</a></p></div><div id="565138" style="display: none"><p>My daughter and I love Eureka.  It has intriguing characters that we love to watch evolve, ever changing stimulating plots, and is set in a beautiful place we'd love to live in.  Yes, we are geeks and I've done my best to bring my daughter up to view intelligence as extremely more attractive than looks.  With Eureka, while it does have it's attractive actors, we have a show to watch that brings about discussions, ideas, and fulfills our science fiction viewing needs in an exemplary manner.  Bring more on, we love it!<br />
-If only we knew when it will be coming back, so we could mark it on our calendars!</p></div><span class="post_date">01/14/09 09:05pm</span> | <a class="report" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F565138%2Freport_abuse.html&tag=reviews;report">report abuse</a></div></div></li><li ><div class="wrap"><div class="score_data"><div class="score">9</div><div class="rank"><span class="thumb_up"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F563088%2Fthumbs.html%3Fthumb%3Dy?tag=reviews;agree" rel="{'url':'http://www.tv.com/review/563088/thumbs.html', 'values': {'thumb':'y'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_up', 'cval':'563088'}} nofollow">1</a></span><span class="thumb_down"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F563088%2Fthumbs.html%3Fthumb%3Dn?tag=reviews;disagree" rel="{'url':'http://www.tv.com/review/563088/thumbs.html', 'values': {'thumb':'n'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_down', 'cval':'563088'}} nofollow">1</a></span><img class="ajax_loader" src="http://image.com.com/tv/images/b.gif" alt="loading_img" /></div></div><div class="review_data"><div class="user_data"><a class="thumb" href="http://www.tv.com/users/Theophylaktos/profile.php?tag=reviews;avatar;2"><img src="http://image.com.com/tv/images/b.gif" alt="Theophylaktos's avatar" style="background:url(http://image.com.com/tv/images/user_icons/24/sutherland.jpg) no-repeat center scroll;" /></a><div class="username"><a href="http://www.tv.com/users/Theophylaktos/profile.php?tag=reviews;author;2">Theophylaktos</a></div><span class="reg_date">member since: <span class="date">Dec 31, 2008</span></span></div><div class="bottom_line_blurb">The Bottom Line: <span>"Cutting edge"</span></div><div class="summary" id="sum_563088" style="display: block"><p>A scientific comedy full of mystery. <a class="more_link" onclick="expand('sum_563088','563088')" onmouseover="this.style.cursor = 'pointer'">...Continue &raquo;</a></p></div><div id="563088" style="display: none"><p>I began watching it halfway through the series after a friend convinced me to watch it.  I became enthralled after watching just the first half of the show and began wishing I were living inside a smart house.  The only major disappointment I have had throughout the show was the death of Nathan.  I didn't like him much from the start but without him the show feels a bit empty not having him and Jack bickering back and forth comically.  The technology in the show would be amazing if it were possible and makes me wonder why we don't have some of it in real life.  I'm just in suspense waiting for the next season.</p></div><span class="post_date">01/02/09 12:53pm</span> | <a class="report" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F563088%2Freport_abuse.html&tag=reviews;report">report abuse</a></div></div></li><li ><div class="wrap"><div class="score_data"><div class="score">8.8</div><div class="rank"><span class="thumb_up"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F560830%2Fthumbs.html%3Fthumb%3Dy?tag=reviews;agree" rel="{'url':'http://www.tv.com/review/560830/thumbs.html', 'values': {'thumb':'y'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_up', 'cval':'560830'}} nofollow">6</a></span><span class="thumb_down"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F560830%2Fthumbs.html%3Fthumb%3Dn?tag=reviews;disagree" rel="{'url':'http://www.tv.com/review/560830/thumbs.html', 'values': {'thumb':'n'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_down', 'cval':'560830'}} nofollow">1</a></span><img class="ajax_loader" src="http://image.com.com/tv/images/b.gif" alt="loading_img" /></div></div><div class="review_data"><div class="user_data"><a class="thumb" href="http://www.tv.com/users/drdan2410/profile.php?tag=reviews;avatar;3"><img src="http://image.com.com/tv/images/b.gif" alt="drdan2410's avatar" style="background:url(http://image.com.com/tv/images/user_icons/firefly/mal-01.jpg) no-repeat center scroll;" /></a><div class="username"><a href="http://www.tv.com/users/drdan2410/profile.php?tag=reviews;author;3">drdan2410</a></div><span class="reg_date">member since: <span class="date">Aug 20, 2006</span></span></div><div class="bottom_line_blurb">The Bottom Line: <span>"Underappreciated"</span></div><div class="summary" id="sum_560830" style="display: block"><p>Why don't more people watch this show it is great?! <a class="more_link" onclick="expand('sum_560830','560830')" onmouseover="this.style.cursor = 'pointer'">...Continue &raquo;</a></p></div><div id="560830" style="display: none"><p>This is s fabulous show with a great cast, brilliant plots, and an excellent script.<br />
+A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.<br />
 <br />
-The show centres on Jack Carter a US Marshal who after passing through a seemingly quiet little town discovers a big secret. The entire town is in fact a top secret facillity where the most brilliant geniuses of a generation work, and soon Jack Carter is Sheriff Carter and he and his daughter are living and working in Eureka!<br />
-<br />
-This show continues to go from stength to strength and is a real joy to watch. My only concern is that my favourite character (Nathan Stark) has been killed off and I am going to really miss the dynamic between him and carter.<br />
-<br />
-The show is back in the new year and I hope that it doesn't lose any of the magic.</p></div><span class="post_date">12/16/08 09:10am</span> | <a class="report" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F560830%2Freport_abuse.html&tag=reviews;report">report abuse</a></div></div></li><li class="last"><div class="wrap"><div class="score_data"><div class="score">10</div><div class="rank"><span class="thumb_up"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F556359%2Fthumbs.html%3Fthumb%3Dy?tag=reviews;agree" rel="{'url':'http://www.tv.com/review/556359/thumbs.html', 'values': {'thumb':'y'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_up', 'cval':'556359'}} nofollow">2</a></span><span class="thumb_down"><a href="http%3A%2F%2Fwww.tv.com%2Freview%2F556359%2Fthumbs.html%3Fthumb%3Dn?tag=reviews;disagree" rel="{'url':'http://www.tv.com/review/556359/thumbs.html', 'values': {'thumb':'n'}, 'dw':{'siteid':'45', 'edid':'3', 'useract':'1', 'ctype':'review_thumb_down', 'cval':'556359'}} nofollow">3</a></span><img class="ajax_loader" src="http://image.com.com/tv/images/b.gif" alt="loading_img" /></div></div><div class="review_data"><div class="user_data"><a class="thumb" href="http://www.tv.com/users/2p1k3/profile.php?tag=reviews;avatar;4"><img src="http://image.com.com/tv/images/b.gif" alt="2p1k3's avatar" style="background:url(http://image.com.com/tv/images/avatar.jpg) no-repeat center scroll;" /></a><div class="username"><a href="http://www.tv.com/users/2p1k3/profile.php?tag=reviews;author;4">2p1k3</a></div><span class="reg_date">member since: <span class="date">Jul 12, 2006</span></span></div><div class="bottom_line_blurb">The Bottom Line: <span>"Absolutely fabulous"</span></div><div class="summary" id="sum_556359" style="display: block"><p>I like Eureka, and it is a great show.  I tend to just watch a show versus trying to find fault with it.  I like the show a lot though and I wish Sci-Fi would come out with more SCIENCE FICTION shows. <a class="more_link" onclick="expand('sum_556359','556359')" onmouseover="this.style.cursor = 'pointer'">...Continue &raquo;</a></p></div><div id="556359" style="display: none"><p>I like Eureka, and it is a great show.  I tend to just watch a show versus trying to find fault with it.  I think a lot of people are that way and that is why this show is successful.  I honestly wonder if they have the mojo to last and I have felt that since it started.  I like the show a lot though and I wish Sci-Fi would come out with more SCIENCE FICTION shows.<br />
-<br />
-They need to replace shows like Scare Tactics and the next lame reboot of Survivor with more Sci-Fi. Better yet? Bring back shows like Angel, Firefly, Space: Above & Beyond, Crusades, The Dresdin Files, Now and Again. I mean, if they have the money to shove a lame duck like Scare Tactics our throat, then they should be able to cut some slack for a show that actually was making them money like Now and Again. However, that was CBS, the Dead Zone of Sci-Fi.</p></div><span class="post_date">11/18/08 10:24pm</span> | <a class="report" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F556359%2Freport_abuse.html&tag=reviews;report">report abuse</a></div></div></li></ul>
-
-        </div>
-    </div>
-        <div class="footer">
-                    <a href="http://www.tv.com/eureka/show/58448/reviews.html?tag=showspace;summary;all_reviews" rel="nofollow">see all reviews &raquo;</a>
-            </div>
-    </div>
-
-
-<div class="module sponsored_links">
-    <div class="body">
-        <iframe src="http://bwp.tv.com/search" id="sponsored_iframe" width="100%" height="201" align="top" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" target="_top" longdesc="Sponsored Matches"></iframe>
-    </div>
-</div>                            </div>
-        </div>
-
-        <div id="side" class="col">
-            <div class="col_wrap">
-                                
-<div id="" class="module stats_scores">
-    <div class="body">
-        <div class="stats_wrap">
-            <div class="details">
-                <div class="score">
-                    <span>Show Score</span>
-                    9.0
-                    <span class="description">superb</span>
+<em>Eureka</em> is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.<a class="show_less" id="shoo_less" href="#nonesuch" onclick="return($('whole_summ').hide() || $('shoo_less').hide() || $('trunc_summ').show('') || $('shoo_more').show('inline') )">less&nbsp;&laquo;</a>
+                    </p>
                 </div>
-                <div class="info">
-                    <ul>
-                        <li class="first">Show Statistics</li>
-                        <li>
-                            <div class="wrap">
-                                <span>311 of 17,960</span>
-                                Rating Rank
-                            </div>
-                        </li>
-                        <li>
-                            <div class="wrap">
-                                <span>157</span>
-                                Reviews
-                            </div>
-                        </li>
-                        <li>
-                            <div class="wrap">
-                                <span>13,263</span>
-                                Tracked by
-                            </div>
-                        </li>
-                        <li class="last">
-                            <div class="wrap">
-                                <span>6,878</span>
-                                Votes
-                            </div>
-                        </li>
+
+
+                                    <div id="forum_highlights" class="MODULE">
+        <div class="MODULE_HEAD">
+            <h3>From the Forums</h3>
+            <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/board/76729/post_msg.html?&tag=fresh_forums;add_topic">+ Add a Topic</a>
+            <a class="SEE_MORE another" href="http://www.tv.com/Eureka/show/58448/forums.html?&tag=fresh_forums;more_topics;top">More Topics &raquo;</a>
+        </div>
+        <ul class="topics">
+                            <li class="topic index0">
+                    <h4 class="topic_title"><a href="http://www.tv.com/eureka/show/58448/4th-season/topic/76729-1248836/msgs.html">4th Season??</a></h4>
+                                        
+
+                    <div class="topic_text">
+
+                        <p id="trunc_topc0">
+                            Will there be a forth season?? I really like this show and after The middleman and starter wife were canceled I don't think ...<a class="show_more" id="mehr0" href="#nonesuch" onclick="return($('trunc_topc0').hide() || $('mehr0').hide() || $('whole_topc0').show() || $('weniger0').show('inline') )">more&nbsp;&raquo;</a>
+                        </p>
+                        <p id="whole_topc0" style="display:none;">
+                            Will there be a forth season?? I really like this show and after The middleman and starter wife were canceled I don't think I could take it if I lost this one too. Its such a great show that I don't see how Sci-fi could keep it on hiatus so long and one poster on this forum said the number of episodes was cut from 21 to 18. I don't know if they are just cutting the 3rd season or ending the series faster. Any input would be greatly appreciated. <a class="show_less" id="weniger0" href="#nonesuch" onclick="return($('whole_topc0').hide() || $('weniger0').hide() || $('trunc_topc0').show() || $('mehr0').show('inline') )">less&nbsp;&laquo;</a>
+                        </p>
+
+
+                    </div>
+                    <div class="byline">
+                        <img class="thumb" src="http://i205.photobucket.com/albums/bb79/nymphadoratonks007/n5svvn-1.gif"/>
+                        <a class="USERNAME" href="http://www.tv.com/users/ARealGenius007/profile.php">ARealGenius007</a>
+                                                  <span class="date">Last online 1 day, 22 hrs ago</span>
+                                                                    </div>
+                    <div class="meta">
+                        <a class="num_posts" href="http://www.tv.com/eureka/show/58448/4th-season/topic/76729-1248836/msgs.html">15 comments, </a>
+                        <span class="last_post">last one 14 hrs, 59 mins ago</span>
+                        <a class="add_comment" href="http://www.tv.com/eureka/show/58448/4th-season/topic/76729-1248836/post_msg.html">+ Add Comment</a>
+                    </div>
+                </li>
+                            <li class="topic index1">
+                    <h4 class="topic_title"><a href="http://www.tv.com/eureka/show/58448/how-do-they-bring-jack-back/topic/76729-1246716/msgs.html">How do they bring Jack Back?</a></h4>
+                                        
+
+                    <div class="topic_text">
+
+                        <p id="trunc_topc1">
+                            Having been fired for allowing Eva Thorne to escape how does Jack get his job back? As I recall the Eureka Mayor the Honerable, Henry Deacon helped her get away. 
+                        </p>
+                        <p id="whole_topc1" style="display:none;">
+                            Having been fired for allowing Eva Thorne to escape how does Jack get his job back? As I recall the Eureka Mayor the Honerable, Henry Deacon helped her get away. <a class="show_less" id="weniger1" href="#nonesuch" onclick="return($('whole_topc1').hide() || $('weniger1').hide() || $('trunc_topc1').show() || $('mehr1').show('inline') )">less&nbsp;&laquo;</a>
+                        </p>
+
+
+                    </div>
+                    <div class="byline">
+                        <img class="thumb" src="http://image.com.com/tv/images/avatar.jpg"/>
+                        <a class="USERNAME" href="http://www.tv.com/users/Dave62150/profile.php">Dave62150</a>
+                                                  <span class="date">Last online 3 days ago</span>
+                                                                    </div>
+                    <div class="meta">
+                        <a class="num_posts" href="http://www.tv.com/eureka/show/58448/how-do-they-bring-jack-back/topic/76729-1246716/msgs.html">5 comments, </a>
+                        <span class="last_post">last one 1 day, 4 hrs ago</span>
+                        <a class="add_comment" href="http://www.tv.com/eureka/show/58448/how-do-they-bring-jack-back/topic/76729-1246716/post_msg.html">+ Add Comment</a>
+                    </div>
+                </li>
+                            <li class="topic index2">
+                    <h4 class="topic_title"><a href="http://www.tv.com/eureka/show/58448/am-i-the-only-one/topic/76729-1266437/msgs.html">Am i the only one?</a></h4>
+                                        
+
+                    <div class="topic_text">
+
+                        <p id="trunc_topc2">
+                             i just started watching the show, im only on season one right now about 6 episodes in and although allison and carter&#39;s...<a class="show_more" id="mehr2" href="#nonesuch" onclick="return($('trunc_topc2').hide() || $('mehr2').hide() || $('whole_topc2').show() || $('weniger2').show('inline') )">more&nbsp;&raquo;</a>
+                        </p>
+                        <p id="whole_topc2" style="display:none;">
+                             i just started watching the show, im only on season one right now about 6 episodes in and although allison and carter&#39;s friendship is nice i dont necessarily want them together. Personally, i like jo and jack i think that as a couple they&#39;re more unlikely which makes them better...even though sometimes it works i dont like when you can tell right off the bat which characters the writers want together due to them not really liking each other in the beginning and bickering throughout episodes.   i was just wondering am i the only one who likes jack and jo together lol, i don hate him with allison i think they would make a good couple, i just prefer jo...idk like i said im only a few episodes into the 1st season, i might change my mind  <a class="show_less" id="weniger2" href="#nonesuch" onclick="return($('whole_topc2').hide() || $('weniger2').hide() || $('trunc_topc2').show() || $('mehr2').show('inline') )">less&nbsp;&laquo;</a>
+                        </p>
+
+
+                    </div>
+                    <div class="byline">
+                        <img class="thumb" src="http://userimage.tv.com/user_images/icon/2/9/21280643715505247099096598125392/tv_icon.PNG"/>
+                        <a class="USERNAME" href="http://www.tv.com/users/CoffeeCake225/profile.php">CoffeeCake225</a>
+                                                  <span class="date">Last online 18 hrs, 8 mins ago</span>
+                                                                    </div>
+                    <div class="meta">
+                        <a class="num_posts" href="http://www.tv.com/eureka/show/58448/am-i-the-only-one/topic/76729-1266437/msgs.html">1 comments, </a>
+                        <span class="last_post">last one 3 days ago</span>
+                        <a class="add_comment" href="http://www.tv.com/eureka/show/58448/am-i-the-only-one/topic/76729-1266437/post_msg.html">+ Add Comment</a>
+                    </div>
+                </li>
                     </ul>
-                </div>
-            </div>
-        </div>
+        <a class="CONTINUED" href="http://www.tv.com/Eureka/show/58448/forums.html?&tag=fresh_forums;more_topics;bottom">More Topics &raquo;</a>
+    </div>
 
-                <div class="rating_slider">
-    <div class="rating_wrap">
-        <div class="rater">
-                        <span class="title">YOUR SCORE</span>
-                        <div class="slider ">
-                <a class="slider_reset" href="?user_rating=0&rating_ref_type=101">
-                    RESET
-                </a>
-                <div class="slider_wrap">
-                    <div class="user_rating">
-                        <span class="knob"></span>
+                                
+<div id="capsule_reviews" class="MODULE">
+                                 
+
+            
+        <div class="MODULE_HEAD">
+            <h3>Fans' Reviews</h3>
+            <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/write_review.html">+Review This Show</a>
+            <a class="SEE_MORE another" href="http://www.tv.com/Eureka/show/58448/reviews.html">More Reviews &raquo;</a>
+        </div>
+        <ul class="reviews">
+                            <li class="review number1">
+                                        
+                                        <div class="review_score score80">
+                        <div class="PUMPKIN_SMALL">&nbsp;</div>
+                        <span class="number">7.5</span>
+                        <span class="description">Good</span>
                     </div>
 
-                                        <ul><li class="rating_10"><a href="?user_rating=10&rating_ref_type=101"><span class="knob">1</span></a></li><li class="rating_15"><a href="?user_rating=15&rating_ref_type=101"><span class="knob">1.5</span></a></li><li class="rating_20"><a href="?user_rating=20&rating_ref_type=101"><span class="knob">2</span></a></li><li class="rating_25"><a href="?user_rating=25&rating_ref_type=101"><span class="knob">2.5</span></a></li><li class="rating_30"><a href="?user_rating=30&rating_ref_type=101"><span class="knob">3</span></a></li><li class="rating_35"><a href="?user_rating=35&rating_ref_type=101"><span class="knob">3.5</span></a></li><li class="rating_40"><a href="?user_rating=40&rating_ref_type=101"><span class="knob">4</span></a></li><li class="rating_45"><a href="?user_rating=45&rating_ref_type=101"><span class="knob">4.5</span></a></li><li class="rating_50"><a href="?user_rating=50&rating_ref_type=101"><span class="knob">5</span></a></li><li class="rating_55"><a href="?user_rating=55&rating_ref_type=101"><span class="knob">5.5</span></a></li><li class="rating_60"><a href="?user_rating=60&rating_ref_type=101"><span class="knob">6</span></a></li><li class="rating_65"><a href="?user_rating=65&rating_ref_type=101"><span class="knob">6.5</span></a></li><li class="rating_70"><a href="?user_rating=70&rating_ref_type=101"><span class="knob">7</span></a></li><li class="rating_75"><a href="?user_rating=75&rating_ref_type=101"><span class="knob">7.5</span></a></li><li class="rating_80"><a href="?user_rating=80&rating_ref_type=101"><span class="knob">8</span></a></li><li class="rating_85"><a href="?user_rating=85&rating_ref_type=101"><span class="knob">8.5</span></a></li><li class="rating_90"><a href="?user_rating=90&rating_ref_type=101"><span class="knob">9</span></a></li><li class="rating_95"><a href="?user_rating=95&rating_ref_type=101"><span class="knob">9.5</span></a></li><li class="rating_100"><a href="?user_rating=100&rating_ref_type=101"><span class="knob">10</span></a></li></ul>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="user_score">
-            <span class="score">N/A</span>
-            <span class="description">n/a</span>
-        </div>
+
+                    <div class="review_body">
+                                                <p class="summary">
+                            i have a question 
+                            <a class="show_less" id="banglich0" href="#nonesuch" onclick="return($('franglich0').hide() || $('banglich0').hide() || $('stranglich0').show('inline') )">hide&nbsp;&laquo;</a>
+                            <a class="show_more" id="stranglich0" href="http://www.tv.com/users/ralfyboy666/history.php#579103" onclick="return($('franglich0').show() || $('banglich0').show('inline') || $('stranglich0').hide() )">show&nbsp;&raquo;</a>
+                        </p>
+                        <div class="review_text" id="franglich0">
+                            i need answering and i'm hoping sum1 can help me, jack has a 'lazy boy' type chair in his house in season 1, does any1 kno were/if i can buy that chair, it looked amazin and i can't find it anywere!!!!! if anybody knows please email me at ralfyboy666@hotmail.com and put eureka in the subject so i don't deleat it by mistake, it would be muchly apreciated if any1 can help, i just love that chair....<br />
+<br />
+apart from that, amazing show, love it, hope it has a gd tv life... i'm only just starting out, only seen the first 6 episodes, but from what i've seen its very gd and very addictive. 
+                                                        <div class="vote_on_it">
+                                <div class="vote_label">Do you agree?</div>
+                                <div class="VOTE_WIDGET" id="review_voter579103">
+                                    <span class="ajax_loader" id="loader579103">&nbsp;</span>
+                                    <a class="vote up" href="#vote_yes" onclick="return thumbVote(579103,1, 'http://www.tv.com')" alt="agree"><span id="up579103">0</span></a>
+                                    <a class="vote down" href="#vote_no" onclick="return thumbVote(579103,0, 'http://www.tv.com')" alt="disagree"><span id="down579103">1</span></a>
+                                </div>
+                                                                                                    <a class="report_abuse" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F579103%2Freport_abuse.html">Report Abuse</a>
+                                                            </div>
+                        </div>
+
+                                                <div class="byline">
+                            <a  name="579103" class="thumb" href="http://www.tv.com/users/ralfyboy666/profile.php"><img src="http://image.com.com/tv/images/avatar.jpg"/></a>
+                            <a class="USERNAME" href="http://www.tv.com/users/ralfyboy666/profile.php">ralfyboy666</a>
+                            <span class="date">Added Mar 28, 2009</span>
+                            <a class="all_my_reviews" href="http://www.tv.com/users/ralfyboy666/history.php">All my reviews</a>
+                        </div>
+
+
+                                            </div>
+
+
+
+                </li>
+                            <li class="review number2">
+                                        
+                                        <div class="review_score score100">
+                        <div class="PUMPKIN_SMALL">&nbsp;</div>
+                        <span class="number">9.5</span>
+                        <span class="description">Superb</span>
+                    </div>
+
+
+                    <div class="review_body">
+                                                <p class="summary">
+                            Man is this show underrated or what???Really well taken and acted show.
+                            <a class="show_less" id="banglich1" href="#nonesuch" onclick="return($('franglich1').hide() || $('banglich1').hide() || $('stranglich1').show('inline') )">hide&nbsp;&laquo;</a>
+                            <a class="show_more" id="stranglich1" href="http://www.tv.com/users/not4u_rahul/history.php#577978" onclick="return($('franglich1').show() || $('banglich1').show('inline') || $('stranglich1').hide() )">show&nbsp;&raquo;</a>
+                        </p>
+                        <div class="review_text" id="franglich1">
+                            Eureka is a really well thought of show where even the most impossible phenomenons are explained so realistically that one would think its actually for real.This is the beauty of the show.The series begins with Jack Carter a U.S Marshall accidentally ends up in a secret town of eureka.There is some trouble there(which as you will realize while watching the show that its all the time)and Jack helps to resolve the issue with a totally different approach.The former Sheriff of Eureka is crippled in an accident,and Jack is offered a promotion from being a Marshall to a Sheriff which he doesn't get initially.He and Joey(his daughter) moves to Eureka and the series revolves around their life in Eureka.Jack falls in love with Dr.Allison Blake(she works for the Department Of Defense).Dr.Nathan Stark the head at GD(Global Dynamics)was married to Allison and Jack and Nathan share a maturely disliking each other kind of relationship.There are loads of other important characters which you will become familiar with once you start watching the show.It has its own beautiful world where one would surely get lost.
+                                                        <div class="vote_on_it">
+                                <div class="vote_label">Do you agree?</div>
+                                <div class="VOTE_WIDGET" id="review_voter577978">
+                                    <span class="ajax_loader" id="loader577978">&nbsp;</span>
+                                    <a class="vote up" href="#vote_yes" onclick="return thumbVote(577978,1, 'http://www.tv.com')" alt="agree"><span id="up577978">1</span></a>
+                                    <a class="vote down" href="#vote_no" onclick="return thumbVote(577978,0, 'http://www.tv.com')" alt="disagree"><span id="down577978">0</span></a>
+                                </div>
+                                                                                                    <a class="report_abuse" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F577978%2Freport_abuse.html">Report Abuse</a>
+                                                            </div>
+                        </div>
+
+                                                <div class="byline">
+                            <a  name="577978" class="thumb" href="http://www.tv.com/users/not4u_rahul/profile.php"><img src="http://image.com.com/tv/images/user_icons/anime/9-anime.jpg"/></a>
+                            <a class="USERNAME" href="http://www.tv.com/users/not4u_rahul/profile.php">not4u_rahul</a>
+                            <span class="date">Added Mar 22, 2009</span>
+                            <a class="all_my_reviews" href="http://www.tv.com/users/not4u_rahul/history.php">All my reviews</a>
+                        </div>
+
+
+                                            </div>
+
+
+
+                </li>
+                            <li class="review number3">
+                                        
+                                        <div class="review_score score90">
+                        <div class="PUMPKIN_SMALL">&nbsp;</div>
+                        <span class="number">9</span>
+                        <span class="description">Superb</span>
+                    </div>
+
+
+                    <div class="review_body">
+                                                <p class="summary">
+                            Under rated but brillant.personal fav.
+                            <a class="show_less" id="banglich2" href="#nonesuch" onclick="return($('franglich2').hide() || $('banglich2').hide() || $('stranglich2').show('inline') )">hide&nbsp;&laquo;</a>
+                            <a class="show_more" id="stranglich2" href="http://www.tv.com/users/sarock22/history.php#576714" onclick="return($('franglich2').show() || $('banglich2').show('inline') || $('stranglich2').hide() )">show&nbsp;&raquo;</a>
+                        </p>
+                        <div class="review_text" id="franglich2">
+                            This show has good writing and great acting. I like the premise of this show, a town full of genusis (spelling not my fortay) and a sheriff with street smarts. It is humorous and smart without being in your face about it. Colin Ferguson is a great actor and also very cute. Allison Blake Is nice yet bosslady, Jo Lupo is deadly with any weapon. When is it coming back??!! I want it back now. Oh one more thing. Why the hell did they kill Nathan Stark!?
+                                                        <div class="vote_on_it">
+                                <div class="vote_label">Do you agree?</div>
+                                <div class="VOTE_WIDGET" id="review_voter576714">
+                                    <span class="ajax_loader" id="loader576714">&nbsp;</span>
+                                    <a class="vote up" href="#vote_yes" onclick="return thumbVote(576714,1, 'http://www.tv.com')" alt="agree"><span id="up576714">0</span></a>
+                                    <a class="vote down" href="#vote_no" onclick="return thumbVote(576714,0, 'http://www.tv.com')" alt="disagree"><span id="down576714">0</span></a>
+                                </div>
+                                                                                                    <a class="report_abuse" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F576714%2Freport_abuse.html">Report Abuse</a>
+                                                            </div>
+                        </div>
+
+                                                <div class="byline">
+                            <a  name="576714" class="thumb" href="http://www.tv.com/users/sarock22/profile.php"><img src="http://image.com.com/tv/images/user_icons/looney_tunes/coyote.jpg"/></a>
+                            <a class="USERNAME" href="http://www.tv.com/users/sarock22/profile.php">sarock22</a>
+                            <span class="date">Added Mar 16, 2009</span>
+                            <a class="all_my_reviews" href="http://www.tv.com/users/sarock22/history.php">All my reviews</a>
+                        </div>
+
+
+                                            </div>
+
+
+
+                </li>
+                            <li class="review number4">
+                                        
+                                        <div class="review_score score100">
+                        <div class="PUMPKIN_SMALL">&nbsp;</div>
+                        <span class="number">9.5</span>
+                        <span class="description">Superb</span>
+                    </div>
+
+
+                    <div class="review_body">
+                                                <p class="summary">
+                            Cool series
+                            <a class="show_less" id="banglich3" href="#nonesuch" onclick="return($('franglich3').hide() || $('banglich3').hide() || $('stranglich3').show('inline') )">hide&nbsp;&laquo;</a>
+                            <a class="show_more" id="stranglich3" href="http://www.tv.com/users/cra2ywolf/history.php#573879" onclick="return($('franglich3').show() || $('banglich3').show('inline') || $('stranglich3').hide() )">show&nbsp;&raquo;</a>
+                        </p>
+                        <div class="review_text" id="franglich3">
+                            I like the whole premise behind this show. Its a whole town of unexplained mysteries except that there is an explanation. Everybody inside the town has nothing to hide unless somebody is not from Eureka and does not have the proper clearance. Colin Ferguson does a great job as Jack Carter. Salli Richardson has devastating charisma on the show. She is my favorite as Allison Blake. I like how the town is just one huge experimental and research center. Wish that the eps made up a full season. It takes too long to get to the next season. Hope to see more.
+                                                        <div class="vote_on_it">
+                                <div class="vote_label">Do you agree?</div>
+                                <div class="VOTE_WIDGET" id="review_voter573879">
+                                    <span class="ajax_loader" id="loader573879">&nbsp;</span>
+                                    <a class="vote up" href="#vote_yes" onclick="return thumbVote(573879,1, 'http://www.tv.com')" alt="agree"><span id="up573879">0</span></a>
+                                    <a class="vote down" href="#vote_no" onclick="return thumbVote(573879,0, 'http://www.tv.com')" alt="disagree"><span id="down573879">0</span></a>
+                                </div>
+                                                                                                    <a class="report_abuse" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F573879%2Freport_abuse.html">Report Abuse</a>
+                                                            </div>
+                        </div>
+
+                                                <div class="byline">
+                            <a  name="573879" class="thumb" href="http://www.tv.com/users/cra2ywolf/profile.php"><img src="http://userimage.tv.com/user_images/icon/8/0/22794874513804029914402259141608/tv_icon.jpg"/></a>
+                            <a class="USERNAME" href="http://www.tv.com/users/cra2ywolf/profile.php">cra2ywolf</a>
+                            <span class="date">Added Mar 1, 2009</span>
+                            <a class="all_my_reviews" href="http://www.tv.com/users/cra2ywolf/history.php">All my reviews</a>
+                        </div>
+
+
+                                            </div>
+
+
+
+                </li>
+                            <li class="review number5">
+                                        
+                                        <div class="review_score score100">
+                        <div class="PUMPKIN_SMALL">&nbsp;</div>
+                        <span class="number">9.7</span>
+                        <span class="description">Superb</span>
+                    </div>
+
+
+                    <div class="review_body">
+                                                <p class="summary">
+                            Wonderful show. Excellent acting and writing. Good show for the whole family. Intelligent science fiction based humor.
+                            <a class="show_less" id="banglich4" href="#nonesuch" onclick="return($('franglich4').hide() || $('banglich4').hide() || $('stranglich4').show('inline') )">hide&nbsp;&laquo;</a>
+                            <a class="show_more" id="stranglich4" href="http://www.tv.com/users/tabingam/history.php#573709" onclick="return($('franglich4').show() || $('banglich4').show('inline') || $('stranglich4').hide() )">show&nbsp;&raquo;</a>
+                        </p>
+                        <div class="review_text" id="franglich4">
+                            This is a wonderful show. It mixes real life situations with science fiction oriented humor, like how to be a single parent, while simultaneously trying to stop the world from melting, freezing, blowing up, turning to gold, etc...<br />
+<br />
+The only problem with this show is that during the 3 years it has been on, the longest season has been 13 episodes. I wish Sci-fi Channel would buy more Eureka episodes so they can fill up their time slots with fewer "made for Sci-fi" movies. Don't get me wrong, I like a good "B" movie every now and then, but Eureka is "A" class entertainment.
+                                                        <div class="vote_on_it">
+                                <div class="vote_label">Do you agree?</div>
+                                <div class="VOTE_WIDGET" id="review_voter573709">
+                                    <span class="ajax_loader" id="loader573709">&nbsp;</span>
+                                    <a class="vote up" href="#vote_yes" onclick="return thumbVote(573709,1, 'http://www.tv.com')" alt="agree"><span id="up573709">0</span></a>
+                                    <a class="vote down" href="#vote_no" onclick="return thumbVote(573709,0, 'http://www.tv.com')" alt="disagree"><span id="down573709">0</span></a>
+                                </div>
+                                                                                                    <a class="report_abuse" href="http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptid=6046&onid=9349&useract=47&destURL=http%3A%2F%2Fwww.tv.com%2Freview%2F573709%2Freport_abuse.html">Report Abuse</a>
+                                                            </div>
+                        </div>
+
+                                                <div class="byline">
+                            <a  name="573709" class="thumb" href="http://www.tv.com/users/tabingam/profile.php"><img src="http://image.com.com/tv/images/user_icons/peanuts/snooopy.jpg"/></a>
+                            <a class="USERNAME" href="http://www.tv.com/users/tabingam/profile.php">tabingam</a>
+                            <span class="date">Added Feb 28, 2009</span>
+                            <a class="all_my_reviews" href="http://www.tv.com/users/tabingam/history.php">All my reviews</a>
+                        </div>
+
+
+                                            </div>
+
+
+
+                </li>
+                    </ul>
+        <div class="CLEAR">&nbsp;</div>
+        <a class="CONTINUED" href="http://www.tv.com/Eureka/show/58448/reviews.html">See All Reviews &raquo;</a>
     </div>
-</div>            </div>
+
+                                                                        <div id="show_news" class="MODULE">
+                        <div class="MODULE_HEAD">
+                            <h3>News</h3>
+                            <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/news.html?&tag=show_news;more;top">More News &raquo;</a>
+                        </div>
+                        <ul class="stories">
+                                                            <li class="story index0">
+                                    <h4 class="headline"><a href="http://www.tv.com/story/11416.html?tag=show_news;headline">Cast updates: <em>Match Game</em>, <em>Gossip Girl</em></a></h4>
+                                    <div class="story_text">Sarah Silverman, Norm McDonald join revamped game show; a <em>Twin Peaks</em> alum hears <em>Gossip</em>.</div>
+                                    <div class="byline">
+                                        <span class="date">Added 06/20/08 15:05</span>
+                                        <a class="comments_link" href="http://www.tv.com/story/11416.html?tag=show_news;comments#comments">17 comments</a>
+                                        <a class="add_comment_link" href="http://www.tv.com/story/11416.html?tag=show_news;add_comment#comments">+ Add Comment</a>
+                                    </div>
+                                </li>
+                                                            <li class="story index1">
+                                    <h4 class="headline"><a href="http://www.tv.com/story/10244.html?tag=show_news;headline">Sci-Fi calls for more <em>Eureka</em></a></h4>
+                                    <div class="story_text">Genre cable channel renews original series for a third season and 13 more episodes; <em>Destination Truth</em> also picked up.</div>
+                                    <div class="byline">
+                                        <span class="date">Added 09/28/07 10:15</span>
+                                        <a class="comments_link" href="http://www.tv.com/story/10244.html?tag=show_news;comments#comments">38 comments</a>
+                                        <a class="add_comment_link" href="http://www.tv.com/story/10244.html?tag=show_news;add_comment#comments">+ Add Comment</a>
+                                    </div>
+                                </li>
+                                                            <li class="story index2">
+                                    <h4 class="headline"><a href="http://www.tv.com/story/6673.html?tag=show_news;headline"><em>Battlestar</em> dips in viewers
+</a></h4>
+                                    <div class="story_text">Season-three premiere of space opera off almost 30 percent from last season.
+</div>
+                                    <div class="byline">
+                                        <span class="date">Added 10/10/06 13:22</span>
+                                        <a class="comments_link" href="http://www.tv.com/story/6673.html?tag=show_news;comments#comments">37 comments</a>
+                                        <a class="add_comment_link" href="http://www.tv.com/story/6673.html?tag=show_news;add_comment#comments">+ Add Comment</a>
+                                    </div>
+                                </li>
+                                                    </ul>
+                        <a class="CONTINUED" href="http://www.tv.com/Eureka/show/58448/news.html?&tag=show_news;more;bottom">All  Eureka News &raquo;</a>
+                    </div>
+                
+                                <div class="MODULE sponsored_links">
+    <iframe
+        src="http://bwp.tv.com/search"
+        id="sponsored_iframe"
+        width="100%"
+        height="231"
+        align="top"
+        scrolling="no"
+        marginheight="0"
+        marginwidth="0"
+        frameborder="0"
+        target="_top"
+        longdesc="Sponsored Matches"></iframe>
 </div>
 
 
+            </div><!--/COLUMN_A2-->
 
+            <div class="CLEAR"> </div>
+        </div><!--/COLUMN_A-->
 
-
-<div id="show_tool_bar" class="module tool_bar">
-    <div class="body">
-        <div class="wrap">
-            <div id="" class="useract_toolbar ">
-    <div class="actions">
-        <div class="actions_wrap">
-            <ul><li class="first "><a class="tag_show" href="http://www.tv.com/signup/" onclick="">Tag</a></li><li class=" "><a class="review_show" href="http://www.tv.com/eureka/show/58448/write_review.html" onclick="">Write a Review</a></li><li class=" "><a class="add_favorites" href="http://www.tv.com/signup/" onclick="">Add to Favorites</a></li><li class=" last"><a class="discuss_show" href="http://www.tv.com/eureka/show/58448/forums.html" onclick="">Discuss</a></li></ul>
-        </div>
-    </div>
-    </div>
-        </div>
-    </div>
-</div>
-
-<div class="clear"></div>
-
-
-
-<script type="text/javascript">
-
-var new_option_value = 'http://www.tv.com/eureka/show/58448/summary.html?tag=stats;dropdown';
-var new_option_name = 'Eureka';
-var dw_url = 'http://dw.com.com/redir?ltype=&siteid=45&edid=3&asId=&astId=&ctype=&cval=&ptId=6553&ontid=9139&useract=13&destURL=';
-
-
-TV.init.include(function(){
-    var tool_bar_options = {
-        'toolbar':'.useract_toolbar',
-        'anchor_selectors': '.tag_show, .add_favorites',
-        'activity_module_selector': '.tool_bar_activity',
-        'response_type': 'json'
-    };
-    var tool_bar_module = $('show_tool_bar');
-    this.tool_bar = new toolbarActions(tool_bar_module, tool_bar_options);
-});
-</script>
-
-
-<div id="mpu" class="ad mpu">
-    <div id="mpu_wrap" class="wrap">
-
-<div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
+        <div class="COLUMN_MPU">
+            
+                        
+                        <div id="mpu" class="ad mpu">
+            <div id="mpu_wrap" class="wrap">
+    
+    <div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
 <!-- begin ad tag (tile=3) -->
-                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1234087618?' type='text/javascript'></script>
+                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999921?' type='text/javascript'></script>
                     <noscript>
-                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1234087618?' target='_blank'>
-                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1234087618?' width='300' height='600' border='0' alt=''></a>
+                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999921?' target='_blank'>
+                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/summary;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999921?' width='300' height='600' border='0' alt=''></a>
                     </noscript>
                 <!-- End ad tag -->
 
-
-    </div>
-</div>
-
-
-
-
-
-
-
-
-<div id="listings" class="module">
+        
     
-
-<div class="header">
-        <div class="wrap">
-                    <span><a href="http://www.tv.com/listings/index.html">complete listings &raquo;</a>
-</span>
-    
-                <h2 class="module_title">TV-TONIGHT</h2>
-    </div>
-    </div>
-    
-    
-    <div class="body">
-        <ul><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/lark-rise-to-candleford/show/75059/summary.html?tag=listings_module;show_title;0" title="Lark Rise to Candleford">Lark Rise to Candleford</a></h3><div class="details"><div class="info"><span class="time"> 8:00</span><span class="network">BBC1</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/the-simpsons/show/146/summary.html?tag=listings_module;show_title;1" title="The Simpsons">The Simpsons</a></h3><div class="details"><div class="info"><span class="time"> 8:00</span><span class="network">SKYONE</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/friends/show/71/summary.html?tag=listings_module;show_title;2" title="Friends">Friends</a></h3><div class="details"><div class="info"><span class="time"> 8:30</span><span class="network">E4</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/the-simpsons/show/146/summary.html?tag=listings_module;show_title;3" title="The Simpsons">The Simpsons</a></h3><div class="details"><div class="info"><span class="time"> 8:30</span><span class="network">SKYONE</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/wild-at-heart/show/69682/summary.html?tag=listings_module;show_title;4" title="Wild at Heart">Wild at Heart</a></h3><div class="details"><div class="info"><span class="time"> 8:30</span><span class="network">ITV1</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/broken-arrow/show/1112/summary.html?tag=listings_module;show_title;5" title="Broken Arrow">Broken Arrow</a></h3><div class="details"><div class="info"><span class="time"> 9:00</span><span class="network">E4</span></div></div></div></li><li><div class="wrap"><h3 class="title"><a href="http://www.tv.com/lost/show/24313/summary.html?tag=listings_module;show_title;6" title="Lost">Lost</a></h3><div class="details"><div class="info"><span class="time"> 9:00</span><span class="network">SKYONE</span></div></div></div></li></ul>
-    </div>
-    <div class="footer">
-        	    </div>
-</div>
-
-
-
-
-
-
-
-
-<div class="clear"></div>
-<div id="top_members" class="module community has_action">
-    
-
-<div class="header">
-        <div class="wrap">
-                <div class="action_box">
-        <div class="wrap">
-            <div class="wrap">
-                <span><a href="">join now!</a>
-</span>
-            </div>
+                </div>
         </div>
-    </div>
     
-                <h1 class="module_title">top contributors</h1>
-    </div>
-    </div>
-    
-    
-        <div class="subheader">
-        <a href="http://www.tv.com/eureka/show/58448/contribute.html?tag=contributors;contribute&om_act=convert&om_clk=contributesh">contribute &raquo;</a>
-
-    </div>
-        <div class="body">
-        <ul><li ><div class="wrap"><div class="details"><div class="thumb"><a href="http://www.tv.com/users/Mafeu/profile.php?tag=contributors;avatar;&om_act=convert&om_clk=contributesh" rel="nofollow"><img src="http://userimage.tv.com/user_images/icon/4/6/21443703985025564492569576606864/tv_icon.jpg" alt="Avatar of Mafeu" /></a></div><div class="info has_emblem"><h3 class="title"><a href="http://www.tv.com/users/Mafeu/profile.php?tag=contributors;username;&om_act=convert&om_clk=contributesh">Mafeu</a></h3><div class="wrap"><img class="emblem" src="http://image.com.com/tv/images/b.gif" style="background:url(http://image.com.com/tv/images/tv_wide/forums/editor.gif) no-repeat center;" alt="emblem" /><ul><li>user score: <span>949</span></li><li>last online: <span>Feb  7, 2009</span></li></ul></div></div></div></div></li><li ><div class="wrap"><div class="details"><div class="thumb"><a href="http://www.tv.com/users/VillaFan/profile.php?tag=contributors;avatar;&om_act=convert&om_clk=contributesh" rel="nofollow"><img src="http://image.com.com/tv/images/user_icons/the_office/office-12.jpg" alt="Avatar of VillaFan" /></a></div><div class="info has_emblem"><h3 class="title"><a href="http://www.tv.com/users/VillaFan/profile.php?tag=contributors;username;&om_act=convert&om_clk=contributesh">VillaFan</a></h3><div class="wrap"><img class="emblem" src="http://image.com.com/tv/images/b.gif" style="background:url(http://image.com.com/tv/images/tv_wide/forums/retired.gif) no-repeat center;" alt="emblem" /><ul><li>user score: <span>447</span></li><li>last online: <span>Feb  2, 2009</span></li></ul></div></div></div></div></li><li ><div class="wrap"><div class="details"><div class="thumb"><a href="http://www.tv.com/users/WhiteKnightonTV/profile.php?tag=contributors;avatar;&om_act=convert&om_clk=contributesh" rel="nofollow"><img src="http://userimage.tv.com/user_images/icon/0/2/20695513197817441018099931495520/tv_icon.jpg" alt="Avatar of WhiteKnightonTV" /></a></div><div class="info "><h3 class="title"><a href="http://www.tv.com/users/WhiteKnightonTV/profile.php?tag=contributors;username;&om_act=convert&om_clk=contributesh">WhiteKnightonTV</a></h3><div class="wrap"><ul><li>user score: <span>457</span></li></ul></div></div></div></div></li><li ><div class="wrap"><div class="details"><div class="thumb"><a href="http://www.tv.com/users/spaci/profile.php?tag=contributors;avatar;&om_act=convert&om_clk=contributesh" rel="nofollow"><img src="http://image.com.com/tv/images/user_icons/firefly/river-03.jpg" alt="Avatar of spaci" /></a></div><div class="info "><h3 class="title"><a href="http://www.tv.com/users/spaci/profile.php?tag=contributors;username;&om_act=convert&om_clk=contributesh">spaci</a></h3><div class="wrap"><ul><li>user score: <span>164</span></li><li>last online: <span>Oct 25, 2008</span></li></ul></div></div></div></div></li><li class="last"><div class="wrap"><div class="details"><div class="thumb"><a href="http://www.tv.com/users/layle1/profile.php?tag=contributors;avatar;&om_act=convert&om_clk=contributesh" rel="nofollow"><img src="http://i91.photobucket.com/albums/k281/layle1/GloatingStewieResized.jpg" alt="Avatar of layle1" /></a></div><div class="info "><h3 class="title"><a href="http://www.tv.com/users/layle1/profile.php?tag=contributors;username;&om_act=convert&om_clk=contributesh">layle1</a></h3><div class="wrap"><ul><li>user score: <span>138</span></li><li>last online: <span>Feb  8, 2009</span></li></ul></div></div></div></div></li></ul>
-    </div>
-</div>
 
 
+
+
+                                     
+    
+<div class="MODULE MODULE_FIRST" id="show_listings">
+    <div class="MODULE_HEAD">
+        <h3>TV Listings</h3>
+        <a class="SEE_MORE" href="http://www.tv.com/listings/index.html">Full Listings &raquo;</a>
+    </div>
+    <ul class="listings">
+                                                                    <li class="listing">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/everybody-hates-chris/show/34457/summary.html?tag=listings_module;show_title;0">Everybody Hates Chris</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/ghost-whisperer/show/33483/summary.html?tag=listings_module;show_title;1">Ghost Whisperer</a>
+                        <span class="network">CBS</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/prison-break/show/31635/summary.html?tag=listings_module;show_title;2">Prison Break</a>
+                        <span class="network">Fox</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/wife-swap/show/27180/summary.html?tag=listings_module;show_title;3">Wife Swap</a>
+                        <span class="network">ABC</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                         8:30
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/the-game/show/33226/summary.html?tag=listings_module;show_title;4">The Game</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/americas-next-top-model/show/14888/summary.html?tag=listings_module;show_title;5">America's Next Top Model</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/prison-break/show/31635/summary.html?tag=listings_module;show_title;6">Prison Break</a>
+                        <span class="network">Fox</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/supernanny/show/28836/summary.html?tag=listings_module;show_title;7">Supernanny</a>
+                        <span class="network">ABC</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/the-tudors/show/69029/summary.html?tag=listings_module;show_title;8">The Tudors</a>
+                        <span class="network">SHOW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                        10:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/numb3rs/show/25043/summary.html?tag=listings_module;show_title;9">NUMB3RS</a>
+                        <span class="network">CBS</span>
+                    </div>
+                </li>
+                                        </ul>
+    </div>
+         <div class="special_features_new MODULE">
+            <h3>Also on TV.com...</h3>
+            <ul>
+                                    <li class="first">
+                                                                        <a href="http://uk.tv.com/story/13921.html?tag=topslot;button;">Terminator is Terminated &raquo;</a>
+                                            </li>
+                                    <li>
+                                                                        <a href="http://www.tv.com/story/14002.html?tag=headlines;title;1&om_act=convert&om_clk=news&tag=topslot;button;">Adele to star in Ugly Betty &raquo;</a>
+                                            </li>
+                                    <li>
+                                                                        <a href="http://www.tv.com/story/13984.html?tag=headlines;title;0&om_act=convert&om_clk=news&tag=topslot;button;">Top 10: Reality Break-Ups &raquo;</a>
+                                            </li>
+                            </ul>
+        </div>
+                
 
                         
-            
-    <div class="clear"></div>
-    <div id="" class="module community related_forum_topics">
-        
-
-<div class="header">
-        <div class="wrap">
-                    <span>    <a href="http://www.tv.com/eureka/show/58448/board/76729/topics.html?om_act=convert&om_clk=forumsh&tag=board_topics;more">discuss &#187;</a>
-    </span>
-    
-                <h1 class="module_title">related forums</h1>
-    </div>
-    </div>
-        
-        
-        <div class="body">
-            <ul><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/eureka/the-placement-advertising-is-getting-painful/topic/76729-1155156/msgs.html?tag=board_topics;title;0">The placement advertising is getting painful</a></h3><div class="details"><div class="info">by <a href="http://www.tv.com/users/ChoixAkion/profile.php?tag=board_topics;author">ChoixAkion</a> - 20 posts</div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/eureka/when-is-eureka-back/topic/76729-1191887/msgs.html?tag=board_topics;title;1">when is eureka back???</a></h3><div class="details"><div class="info">by <a href="http://www.tv.com/users/Meredith-Grey/profile.php?tag=board_topics;author">Meredith-Grey</a> - 24 posts</div></div></div></li><li class="last"><div class="wrap"><h3 class="title"><a href="http://www.tv.com/eureka/10-facts-about-.../topic/76729-805340/msgs.html?tag=board_topics;title;2">10 Facts About ...</a></h3><div class="details"><div class="info">by <a href="http://www.tv.com/users/SweetPeaSurry/profile.php?tag=board_topics;author">SweetPeaSurry</a> - 80 posts</div></div></div></li></ul>
+    <div id="top_contributors" class="MODULE">
+        <div class="MODULE_HEAD">
+            <h3>Top Contributors</h3>
+            <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/contribute.html">Contribute&nbsp;&raquo;</a>
         </div>
+        <ul class="contributors">
+                            <li class="contributor index0">
+                    <a class="thumb" href="http://www.tv.com/users/Mafeu/profile.php"><img src="http://userimage.tv.com/user_images/icon/4/6/21443703985025564492569576606864/tv_icon.jpg"/></a>
+                    <a class="user_name" href="http://www.tv.com/users/Mafeu/profile.php">Mafeu</a>
+                    <span class="role">
+                                                Editor                                             </span>
+                    <div class="stats">
+                        <span class="score">User Score 949</span>
+                                                <span class="status">, Last Online 20 hrs, 54 mins ago</span>
+                                            </div>
+                </li>
+                            <li class="contributor index1">
+                    <a class="thumb" href="http://www.tv.com/users/VillaFan/profile.php"><img src="http://image.com.com/tv/images/user_icons/the_office/office-12.jpg"/></a>
+                    <a class="user_name" href="http://www.tv.com/users/VillaFan/profile.php">VillaFan</a>
+                    <span class="role">
+                        Retired                                                                     </span>
+                    <div class="stats">
+                        <span class="score">User Score 447</span>
+                                                <span class="status">, Last Online Feb 2, 2009</span>
+                                            </div>
+                </li>
+                            <li class="contributor index2">
+                    <a class="thumb" href="http://www.tv.com/users/WhiteKnightonTV/profile.php"><img src="http://userimage.tv.com/user_images/icon/0/2/20695513197817441018099931495520/tv_icon.jpg"/></a>
+                    <a class="user_name" href="http://www.tv.com/users/WhiteKnightonTV/profile.php">WhiteKnightonTV</a>
+                    <span class="role">
+                                                                                            </span>
+                    <div class="stats">
+                        <span class="score">User Score 457</span>
+                                            </div>
+                </li>
+                            <li class="contributor index3">
+                    <a class="thumb" href="http://www.tv.com/users/spaci/profile.php"><img src="http://image.com.com/tv/images/user_icons/firefly/river-03.jpg"/></a>
+                    <a class="user_name" href="http://www.tv.com/users/spaci/profile.php">spaci</a>
+                    <span class="role">
+                                                                                            </span>
+                    <div class="stats">
+                        <span class="score">User Score 164</span>
+                                                <span class="status">, Last Online Oct 25, 2008</span>
+                                            </div>
+                </li>
+                            <li class="contributor index4">
+                    <a class="thumb" href="http://www.tv.com/users/layle1/profile.php"><img src="http://i91.photobucket.com/albums/k281/layle1/GloatingStewieResized.jpg"/></a>
+                    <a class="user_name" href="http://www.tv.com/users/layle1/profile.php">layle1</a>
+                    <span class="role">
+                                                                                            </span>
+                    <div class="stats">
+                        <span class="score">User Score 138</span>
+                                                <span class="status">, Last Online 5 hrs, 21 mins ago</span>
+                                            </div>
+                </li>
+                    </ul>
+        <a class="CONTINUED" href="http://www.tv.com/Eureka/show/58448/contribute.html">What is a TV.com Contributor?</a>
     </div>
 
 
-<div id="tags" class="module community">
-    
 
-<div class="header">
-        <div class="wrap">
-                    <span><a href="http://www.tv.com/index.php?type=42&action=get_all_tags&ref_id=58448&ref_type_id=101&tag=stats;more">all tags &#187;</a>
-</span>
-    
-                <h1 class="module_title">tags</h1>
-    </div>
-    </div>
-    <div class="body">
-        <div class="wrap">
-                        <a class="smallest" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=1.0&tag=stats;cloud;0">1.0</a>&nbsp;
-                        <a class="medium" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=20eureka&tag=stats;cloud;1">20eureka</a>&nbsp;
-                        <a class="medium" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=eureka&tag=stats;cloud;2">eureka</a>&nbsp;
-                        <a class="medium" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=genius&tag=stats;cloud;3">genius</a>&nbsp;
-                        <a class="medium" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=geniuses&tag=stats;cloud;4">geniuses</a>&nbsp;
-                        <a class="large" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=quirky&tag=stats;cloud;5">quirky</a>&nbsp;
-                        <a class="large" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=sci-fi&tag=stats;cloud;6">sci-fi</a>&nbsp;
-                        <a class="largest" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=science-fiction&tag=stats;cloud;7">science-fiction</a>&nbsp;
-                        <a class="small" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=1&tag=stats;cloud;8">1</a>&nbsp;
-                        <a class="small" href="http://www.tv.com/index.php?type=42&action=get_items_for_tag&qs=111&tag=stats;cloud;9">111</a>&nbsp;
+                                                        <div id="photos_module" class="MODULE">
+                    <div class="MODULE_HEAD">
+                        <h3>Photos</h3>
+                        <a class="SEE_MORE" href="http://www.tv.com/Eureka/show/58448/photos.html?&tag=photos;more;top">More Photos &raquo;</a>
                     </div>
-    </div>
-</div>                            </div>
-        </div>
+                                            
+                        <a class="thumb number1" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=1&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/83/6a/235247.jpg);" title="Season Three">&nbsp;</a>
+                                            
+                        <a class="thumb number2" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=2&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/d8/41/235245.jpg);" title="Season Three">&nbsp;</a>
+                                            
+                        <a class="thumb number3" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=3&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/e6/28/235246.jpg);" title="Season Three">&nbsp;</a>
+                                            
+                        <a class="thumb number4" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=4&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/0b/37/229217.jpg);" title="Best in Faux">&nbsp;</a>
+                                            
+                        <a class="thumb number5" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=5&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/54/03/229215.jpg);" title="Best in Faux">&nbsp;</a>
+                                            
+                        <a class="thumb number6" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=6&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/a6/48/229216.jpg);" title="Best in Faux">&nbsp;</a>
+                                            
+                        <a class="thumb number7" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=7&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/6f/6f/224339.jpg);" title="Season Three">&nbsp;</a>
+                                            
+                        <a class="thumb number8" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=8&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/65/e5/224338.jpg);" title="Season Three">&nbsp;</a>
+                                            
+                        <a class="thumb number9" href="http://www.tv.com/eureka/show/58448/viewer.html?ii=9&grti=101&gri=58448" style="background-image:url(http://image.com.com/tv/images/processed/thumb/44/57/221006.jpg);" title="Season Three">&nbsp;</a>
+                                        <a class="CONTINUED" href="http://www.tv.com/Eureka/show/58448/photos.html?&tag=photos;more;bottom">All Eureka Photos &raquo;</a>
+                </div>
+            
 
-            </div>
-</div>
-<img class="absolute" src="http://dw.com.com/clear/c.gif?oid=6138-10852_45-0&sid=45&edid=3&ptId=6138&onid=10852&ctype=program_id&cval=58448&asId=0&astId=&pid=58448&prodtypid=21&ttag=&loc=&srch=&xref=&xrq=&useract=&ld=www.tv.com&clgf=&globid=&ts=1234087618" height="1" width="1" /><script type="text/javascript">var onid=10852;</script>
-            </div><!--/content_wrap-->
 
-                                                    
-<div id="footerleader" class="ad leader_bottom">
-    <div id="footerleader_wrap" class="wrap">
 
-<div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
+
+        </div><!--/COLUMN_MPU-->
+        <div class="CLEAR"> </div>
+
+    </div><!--/BENTO_BOX-->
+
+
+
+<img class="absolute" src="http://dw.com.com/clear/c.gif?oid=6138-10852_45-0&sid=45&edid=3&ptId=6138&onid=10852&ctype=&cval=&asId=0&astId=&pid=58448&prodtypid=21&ttag=&loc=&srch=&xref=&xrq=&useract=&ld=www.tv.com&clgf=&globid=&ts=1239999921" height="1" width="1" /><script type="text/javascript">var onid=10852;</script>
+
+
+                                        
+                        <div id="footerleader" class="ad leader_bottom">
+            <div id="footerleader_wrap" class="wrap">
+    
+    <div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
 <!-- begin ad tag (tile=6) -->
-                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087618?' type='text/javascript'></script>
+                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999921?' type='text/javascript'></script>
                     <noscript>
-                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087618?' target='_blank'>
-                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087618?' width='728' height='90' border='0' alt=''></a>
+                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999921?' target='_blank'>
+                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/summary;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999921?' width='728' height='90' border='0' alt=''></a>
                     </noscript>
                 <!-- End ad tag -->
 
+        
+    
+                </div>
+        </div>
+    
 
-    </div>
-</div>
 
 
+                        <div id="footer">
 
+<script type="text/javascript">
+    window.addEvent('domready', function() {
 
-                            
-            <div id="footer" class="MODULE">
+	    new Autocompleter.Request.JSON('tv_search_foot', 'http://www.tv.com/search/autocomplete/',
+ 
+	    {
+	        'postVar': 'q',
+	        'zIndex': 100
+	    });
+	});
+</script>
+
 	<div class="search_bar_container">
 	    <form action="http://www.tv.com/search.php" method="GET" name="footer_search_form" class="search_form">
 		<label for="qs">Search</label>
 		<input type="hidden" name="type" value="11" />
 		<input type="hidden" name="stype" value="all" />
 				    <input type="hidden" name="tag" value="search;newshows" />
-				<input type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
+				<input type="text" id="tv_search_foot" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
 		    Search
 		</button>
 	    </form>
@@ -942,10 +1186,10 @@ TV.init.include(function(){
 <div id="infoline">
     <dl>
         <dt>TV.com:TV News - TV Shows - TV Listings - Entertainment News</dt>
-        <dd class="last">&nbsp;&nbsp;<a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=globalheader;">Help</a></dd>
-        <dd><a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=globalheader;">Help</a></dd>
+        <dd class="last">&nbsp;&nbsp;<a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=photos;">Help</a></dd>
+        <dd><a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=photos;">Help</a></dd>
         <dd><a class="ad_link" href="http://www.cnetnetworks.com/advertise/properties/ge_portfolio.php?tag=tv.ft.no">Advertising Inquiries</a></dd>
-        <dd><a href="http://www.tv.com/aboutus.html?tag=globalheader;">About TV.com</a></dd>
+        <dd><a href="http://www.tv.com/aboutus.html?tag=photos;">About TV.com</a></dd>
 	<dd><a href="http://us.tv.com/">US.tv.com</a></dd>
     </dl>
 </div>
@@ -985,22 +1229,13 @@ TV.init.include(function(){
         <a href="http://www.cnetnetworks.com/editorial/copyright.html" rel="nofollow">Copyright</a> &copy;2009 CBS Interactive. All Rights Reserved. <a href="http://www.cnetnetworks.com/editorial/privacy.html" class="privacy_link" rel="nofollow">Privacy Policy</a> | <a href="http://www.tv.com/feature/tos/" rel="nofollow"><b>Terms of Use</b></a>
     </div>
 
-</div>	</div><!--/footer-->
-        </div><!--/container-->
+</div>	</div><!--/footer-->        </div><!--/container-->
     </div><!--/mantle_skin-->
-
-        
-
-        <script type="text/javascript" src="http://image.com.com/tv/js/thumb_ratings.src.js" ></script>
-        <script type="text/javascript" src="http://image.com.com/tv/js/toolbar.src.js" ></script>
-        <script type="text/javascript" src="http://www.tv.com/js/global/init.src.js" ></script>
-        <script type="text/javascript" src="http://dw.com.com/js/dw.js" ></script>
+            
+                        <div id="" class="ad revenue_science_uk">
+            <div id="_wrap" class="wrap">
     
-    	
-<div id="" class="ad revenue_science_uk">
-    <div id="_wrap" class="wrap">
-
-<!-- START REVENUE SCIENCE PIXELLING CODE --> 
+    <!-- START REVENUE SCIENCE PIXELLING CODE --> 
                     <script type='text/javascript' src='http://js.revsci.net/gateway/gw.js?csid=D08735'></script> 
                     <script type='text/javascript'> 
                     DM_addEncToLoc('site', ('45'));
@@ -1009,27 +1244,15 @@ TV.init.include(function(){
                     </script> 
                 <!-- END REVENUE SCIENCE PIXELLING CODE -->
 
-
-    </div>
-</div>
-
-
-
-
-    
-    
-    
-    <script type="text/javascript">
-        if($chk(TV.init)){
-            TV.init.each(function(func, i){
-                if($chk(func)){
-                    func();
-                }
-            });
-        }
-    </script>
-    
         
+    
+                </div>
+        </div>
+    
+
+
+
+            
 <!-- revenue science -->
   <script type="text/javascript">var $skipMadUCat = 1;</script>
 	<script type="text/javascript" src="http://js.revsci.net/gateway/gw.js?csid=K05540"></script>
@@ -1050,6 +1273,7 @@ TV.init.include(function(){
 		<script type="text/javascript" src="http://i.i.com.com/cnwk.1d/Ads/common/madUCat/MadUCat.js"></script>
 	
 <!-- /revenue science -->
+	
     	    <script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -1060,13 +1284,25 @@ TV.init.include(function(){
 			pageTracker._trackPageview();
 		} catch(err) {}
 		</script>
-	</body>
-</html><!-- CACHED: 0/10.15.8.244 RENDER TIME:  | 5358804 -->
-
-
-<!-- 
-
- MEMCACHED OFF 
-
- -->
-
+	
+        <!--load_js_at_end-->
+                    <script type="text/javascript" src="http://www.tv.com/js/misc/ajax_replace.js" ></script>
+                <script type="text/javascript" src="http://www.tv.com/js/misc/ajax_thumb_vote.js" ></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Observer.js" id="observer"></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Autocompleter.js" ></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Autocompleter.Request.js" ></script>
+        <!--/load_js_at_end-->
+	<script type="text/javascript" src="http://surveys.cnet.com/html/surveys/1358.js"></script>
+    
+    <script type="text/javascript">
+        if($chk(TV.init)){
+            TV.init.each(function(func, i){
+                if($chk(func)){
+                    func();
+                }
+            });
+        }
+    </script>
+    
+</body>
+</html>

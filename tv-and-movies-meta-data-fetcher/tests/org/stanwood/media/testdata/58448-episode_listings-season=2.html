@@ -1,58 +1,55 @@
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>Eureka Episode List  - TV.com  </title>
-    <meta name="description" content="Eureka episode list. TV.com television episode listings for all your favorite TV shows, along with photos, videos, cast and crew information, forums, reviews and more " />
-    <meta name="keywords" content="Eureka Eureka Episode Guide, Eureka Season Episodes, Eureka summary, Eureka photos, Eureka videos, Eureka cast, Eureka crew , Eureka Information, Eureka forums, Eureka reviews, Episode, Air Date, Reviews, Top Episodes, Drama, Sci-fi, Comedy, Action-Adventure, Reality, Animation, Soap, Children, Talk Shows, Top Shows" />
-    
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/layout.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/fonts.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/buttons.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/modules.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/colors.src.css" />
-    <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/ads.src.css" />
+    <title>Eureka on TV.com - Free Full Episodes & Clips, & Show Info</title>
+    <meta name="description" content="The best source for TV listings, free videos, show and episode info, cast lists, TV gossip, and entertainment news." />
+    <meta name="keywords" content="Episode Videos, TV Celebrities, Reality TV Shows, Comedy TV Shows, Old Television Shows, Reality TV, Comedy TV, TV Shows, Television Shows, Old TV Shows, Action/Adventure, Animation, Children, Comedy, Drama, Science-Fiction, Soap, Talk Shows, Popular Shows, TV Listings, CBS, NBC, Fox, HBO, ABC, CW, TV News, TV trivia" />
 
-        <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/redesign.css?&cachebuster=52889" />
+    	
+	
+	
 
-        <link rel="stylesheet" type="text/css" href="http://image.com.com/tv/css/global/ads_uk.src.css" />
-    
-    
-    <script type="text/javascript" src="http://image.com.com/tv/js/mootools/mootools-1.2-core-nc.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/mootools/mootools-1.2-more.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/global/mootools.plugins.src.js"></script>
-    <script type="text/javascript" src="http://image.com.com/tv/js/cnet/clientside.src.js"></script>
+        
+
+
+        <!--load_css-->
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/reset.css?&cachebuster=54458" />
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/tv.css?&cachebuster=54458" />
+    <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/shows/58448.css?&cachebuster=54458" />
+<!--/load_css-->
+
+
+        <!--load_js_at_top-->
+            <script src="http://www.tv.com/js/mootools/1.2.1/mootools-1.2.1-core-yc.js" ></script>
+                <script src="http://www.tv.com/js/tv.js" ></script>
+                                <script src="http://dw.com.com/js/dw.js" ></script>
+    <!--/load_js_at_top-->
 
     <script type="text/javascript">
                 var TV = {'init':[]};
     </script>
-
-    
-    
-
-    
-<script type="text/javascript">
-<!--
-function RefreshAds() {
-    
-    LoadAds();
-    
-}
-// -->
-</script>
-
-<script type="text/javascript" src="http://i.i.com.com/cnwk.1d/Ads/common/js/rmif.js"></script>
-
 </head>
 
-<body>
-
-
-                
-
-
-
-
+<body id="page_body" class="NEW2009 uk">
+    <div id="page_background">&nbsp;</div>
     
+                <!--skin ad call(b)-->
+        
+
+
+
 
     
         <div id="global_login_box">
@@ -69,7 +66,7 @@ function RefreshAds() {
                     <label for="PASSWORD">Your password:</label>
                     <input class="password" type="password" name="PASSWORD">
 
-                                      <input type="hidden" name="path" value="http://www.tv.com/show/58448/episode_listings.html?season=2" />
+                                      <input type="hidden" name="path" value="http://www.tv.com/show/58448/episode.html?season=2" />
                     <input class="submit" type="submit" tabindex="" value="Login" name="submit_btn"/>
                     <input class="cancel" type="button" tabindex="" value="Cancel" name="cancel_button" onclick="$('global_login_box').style.display = 'none';"/>
             </form>
@@ -77,9 +74,12 @@ function RefreshAds() {
             <a class="lost_password"  href="http://authorize.tv.com/1328-4_45-90.html">Forgot Password?</a>
 	</div>
 </div>
+
 <script>
 
+/* TODO: move this to a js file */
 function doGlobalLogin(instructions, extraPath) {
+    window.scrollTo(0,0);
     if ((typeof extraPath) == "string"){
         document.forms["login"].path.value += "?" + extraPath;
     }
@@ -93,12 +93,47 @@ function doGlobalLogin(instructions, extraPath) {
 }
 
 </script>
-
-    
     <div id="header_area">
-        <div class="header_line"></div>
+        
+<script type="text/javascript">
+    window.addEvent('domready', function() {
+
+	    new Autocompleter.Request.JSON('tv_search_head', 'http://www.tv.com/search/autocomplete/',
+ 
+	    {
+	        'postVar': 'q',
+	        'zIndex': 100
+	    });
+	});
+
+function light_switch() {
+
+	if (Cookie.read('lights_out')) {
+		lights_out = Cookie.read('lights_out');
+		Cookie.dispose('lights_out');
+		if (lights_out == 0)
+			lights_out = 1;
+		else
+			lights_out = 0;
+	} else {
+		lights_out = 1;
+	}
+
+	if (lights_out == 1) {
+		$('page_body').addClass('LIGHTS_OUT');
+	} else {
+		$('page_body').removeClass('LIGHTS_OUT');
+	}
+
+	Cookie.write('lights_out', lights_out, {duration: 365*10, path: '/'})
+}
+</script>
+
+
+<div class="header_line"></div>
 <div id="tv_header">
-        <a class="tv_logo uk" href="http://www.tv.com?tag=logo;newshows">TV.com</a>
+        
+    <a class="tv_logo uk" href="http://www.tv.com?tag=logo;newshows">TV.com</a>
     <ul class="site_nav">
         <li class="first">
             <a href="http://www.tv.com?tag=nav_top;home">Home</a>
@@ -130,225 +165,926 @@ function doGlobalLogin(instructions, extraPath) {
             <label>SPECIAL FEATURES</label>
             <ul>
                                     <li class="first">
-                    	                    	                        <a href="http://www.tv.com/story/12352.html?tag=headlines;title;12352&om_act=convert&om_clk=news">Hollyoaks Interview</a>
+                                                                        <a href="http://uk.tv.com/story/13921.html?tag=topslot;button;?tag=specialfeature;1">Terminator is Terminated</a>
                                             </li>
                                     <li>
-                    	                    	                        <a href="/best-of/">Best TV of 2008 - TV.com</a>
+                                                                        <a href="http://www.tv.com/story/14002.html?tag=headlines;title;1&om_act=convert&om_clk=news&tag=topslot;button;?tag=specialfeature;2">Adele to star in Ugly Betty</a>
                                             </li>
                                     <li>
-                    	                    	                        <a href="/premiere-plots/">Premiere Plots 2008</a>
+                                                                        <a href="http://www.tv.com/story/13984.html?tag=headlines;title;0&om_act=convert&om_clk=news&tag=topslot;button;?tag=specialfeature;3">Top 10: Reality Break-Ups</a>
                                             </li>
                             </ul>
         </div>
     
 
-    <div id="sign_in_status">        <!--user login info-->
+   
+    <form action="http://www.tv.com/search.php" method="GET" name="search_form" class="search_form">
+        <label for="qs">Search</label>
+        <input type="hidden" name="type" value="11" />
+        <input type="hidden" name="stype" value="all" />
+                    <input type="hidden" name="tag" value="search;newshows" />
+                <input id="tv_search_head" type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
+            Search
+        </button>
+    </form>
+
+    
+    <div class="row_of_stuff">
+        <div id="sign_in_status">            <!--user login info-->
     <script>LOGGED_IN = false</script>
     <div class="sign_in">
         <a class="login" href="http://authorize.tv.com/1324-4-90.html" onclick="return doGlobalLogin('Log in to TV.com')">Login</a>
         <a class="join"  href="http://www.tv.com/signup/basic?tag=usermenu;join">Join</a>
     </div>
 
+        </div>
+        <div class="lights_out">
+            Lights:
+            	    <a href="#" class="on" onclick="light_switch(); return false;">On</a>
+	    <a href="#" class="off" onclick="light_switch(); return false;">Off</a>
+        </div>
+        <div class="cnet_promo">
+            <div class='rubics_netxp1_main' id='rbx_netxp1_parent'>
+<script type='text/javascript'>
+function do_rbx_ctrk_netxp1 (aElem, iTrkId, cTrkPrefix) {
+	var imgElem = document.getElementById(iTrkId);
+	if (!imgElem) {
+		return true;
+	}
+
+	if (!aElem.rbxCPrefixed) {
+		aElem.rbxCPrefixed = true;
+		var destUri = encodeURIComponent(aElem.href);
+		var newUri = cTrkPrefix + destUri;
+		aElem.href = newUri;
+	}
+	return true;
+}
+function do_rbx_itrk_netxp1 (parentId, iTrkId, iTrkUri) {
+	if (!document.images) {
+		return false;
+	}
+
+	var imgId = iTrkId;
+	var imgElem = document.getElementById(imgId);
+
+	if (!imgElem) {
+
+		var parentElem = document.getElementById(parentId);
+		if (!parentElem) {
+			return false;
+		}
+
+		var imgElem = document.createElement('img');
+		if (!imgElem) {
+			return false;
+		}
+
+		imgElem.id = imgId;
+		imgElem.src = iTrkUri;
+		imgElem.alt = '';
+		imgElem.width = '1';
+		imgElem.height = '1';
+
+		parentElem.appendChild(imgElem);
+	}
+	return true;
+}
+</script>
+	On MovieTome: 
+	<a target='_top' onclick="return do_rbx_ctrk_netxp1(this, 'rbx_netxp1_1', 'http://dw.com.com/rubicsclk?ver=2&amp;ts=2009.04.17.13.25.31.PDT&amp;edId=&amp;onId=&amp;ptId=&amp;sId=&amp;appId=19&amp;offId=5875&amp;unitId=45&amp;poolId=1&amp;f1=16&amp;f2=-0&amp;f3=-0&amp;alg=8&amp;&amp;opt=1&amp;linkPos=0&amp;destUrl=');" href='http://www.movietome.com/movie/365682/transformers-revenge-of-the-fallen/index.html' class='xpromolink'>See the new TRANSFORMERS 2 TRAILER!</a>
+<script type='text/javascript'>
+//<![CDATA[
+do_rbx_itrk_netxp1('rbx_netxp1_parent', 'rbx_netxp1_1', 'http://dw.com.com/rubicsimp/c.gif?ver=2&ts=2009.04.17.13.25.31.PDT&edId=&onId=&ptId=&sId=&appId=19&unitId=45&poolId=1&f1=16&f2=-0&f3=-0&alg=8&opt=1&off=5875,-1');
+//]]>
+</script>
+</div>
+<!-- ros [$Id: interpreter.py 54129 2009-04-12 19:59:42Z ronr $] c17-ad-rubics-ros13.cnet.com:11560 2009.04.17.13.25.31.PDT --><!-- pyrus t 0.0.0.1.3.3.3.4 -->
+        </div>
     </div>
 
-    <form action="http://www.tv.com/search.php" method="GET" name="search_form" class="search_form">
-        <label for="qs">Search</label>
-        <input type="hidden" name="type" value="11" />
-        <input type="hidden" name="stype" value="all" />
-                    <input type="hidden" name="tag" value="search;newshows" />
-                <input type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
-            Search
-        </button>
-    </form>
 
-    <div class="feedback">
-        Help Improve TV.com - <a href="mailto:support@tv.com">Send Your Feedback </a>
-    </div>
 </div>
 
     </div><!--/header_area-->
     
     <div id="mantle_skin" class="MANTLE_SKIN">
         <div id="container">
-            <div id="content_wrap">
-                <!-- headband here -->
-                
-                                <div id="sky_layout">
-    <div id="content" class="mini">
-                <div id="mini" class="col">
-            <div class="col_wrap">
-                
-
-
-
-<div id="content_nav">
-    <ul><li ><a href="http://www.tv.com/eureka/show/58448/summary.html"><span>Summary</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html"><span>Videos</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?v_category=">All Videos</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=episode_clip">Episode Clips</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=promotional_trailer">Promotional Trailers</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=interview">Interviews</a></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=dvd_bonus_features">DVD Bonus Features</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/videos.html?category=full_episode"><span>Full Episode Videos</span></a></li><li class="on"><a href="http://www.tv.com/eureka/show/58448/episode.html"><span>Episodes</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/episode_guide.html">Episode Guide</a></li><li class="on"><a href="http://www.tv.com/eureka/show/58448/episode_listings.html">Episode List</a></li><li ><a href="http://www.tv.com/eureka/show/58448/top.html">Top Episodes</a></li><li ><a href="http://www.tv.com/eureka/show/58448/trivia.html">Trivia Guide</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html"><span>Cast</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=1">Stars</a></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=2">Recurring Roles</a></li><li ><a href="http://www.tv.com/eureka/show/58448/cast.html?flag=3">Writers, Directors & Crew</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html"><span>Reviews</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html?flag=1">Show Reviews</a></li><li ><a href="http://www.tv.com/eureka/show/58448/reviews.html?flag=2">Episode Reviews</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/downloads.html"><span>Downloads + DVDs</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/forums.html"><span>Forum</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/blog.html"><span>Blog</span></a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html"><span>News</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/news.html">News</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=multimedia">Multimedia</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=articles">Articles</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=appearances">Appearances</a></li><li ><a href="http://www.tv.com/eureka/show/58448/news.html?sort=sls">User Submitted</a></li></ul></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html"><span>Photos</span></a><ul><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=1">All Photos</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=2">Publicity</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=3">Episode Galleries</a></li><li ><a href="http://www.tv.com/eureka/show/58448/photos.html?flag=4">Events</a></li></ul></li></ul>
-</div>
-
-<div id="top_news" class="module pink">
+                <div class="BENTO_BOX GRID_MPU_2">
+            <link rel="stylesheet" type="text/css" href="http://www.tv.com/css/shows/58448.css" />
+            <div id="smallhead">
+    <span class="bg_layer">&nbsp;</span>
+    <h1>Eureka</h1>
+    <span class="tagline">
+                                Tuesday 9:00 PM on
+                SciFi
     
-
-<div class="header">
-        <div class="wrap">
+    </span>
+</div>            
+                    <div id="nav_tabs">
+                <ul class="sections">
+                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/summary.html">Main</a>
+                                    </li>
+                                            
+                                <li class="section on">
+                    <a href="http://www.tv.com/eureka/show/58448/episode.html">Episodes</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/reviews.html">Reviews</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/forums.html">Forums</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/photos.html">Photos</a>
+                                    </li>
+                                            
+                                <li class="section">
+                    <a href="http://www.tv.com/eureka/show/58448/videos.html">Videos</a>
+                                    </li>
+                                    </ul>
+                    <a class="function_link write_a_review" href="http://www.tv.com/Eureka/show/58448/write_review.html">Review this Show</a>
+                        <a class="function_link add_to_favorites" href="http://www.tv.com/index.php?action=add_favorite&type=45&ref_type_id=101&ref_id=58448" onclick="return ajaxReplace(this,this.href,'You must register to add a favorite show')">Add Show to Favorites</a>
             
-                <h2 class="module_title">LATEST NEWS</h2>
-    </div>
-    </div>
+    </div><!--/nav_tabs"-->
     
-    
-    <div class="body">
-        <ul><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;title;0"><EM>Samantha Who</EM> goes out of Africa</a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;count;0" rel="nofollow">1</a></span><a href="http://www.tv.com/story/12375.html?tag=show;latest_news;thumb;0" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/s/SamanthaWho2_Hub.jpg" alt="Image related to &lt;EM&gt;Samantha Who&lt;/EM&gt; goes out of Africa" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;title;1">Frank really is <em>Shameless</em></a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;count;1" rel="nofollow">2</a></span><a href="http://www.tv.com/story/12374.html?tag=show;latest_news;thumb;1" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/s/Shameless_Hub.jpg" alt="Image related to Frank really is &lt;em&gt;Shameless&lt;/em&gt;" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;title;2"><em>90210</em> reveals <em>Beverly Hills</em> secret</a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;count;2" rel="nofollow">3</a></span><a href="http://www.tv.com/story/12373.html?tag=show;latest_news;thumb;2" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/j/jenniegarth_hub.jpg" alt="Image related to &lt;em&gt;90210&lt;/em&gt; reveals &lt;em&gt;Beverly Hills&lt;/em&gt; secret" /></a></div></div></div></li><li ><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;title;3">BBC launches <em>Torchwood</em> trailer </a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;count;3" rel="nofollow">4</a></span><a href="http://www.tv.com/story/12372.html?tag=show;latest_news;thumb;3" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/t/Torchwood_Hub.jpg" alt="Image related to BBC launches &lt;em&gt;Torchwood&lt;/em&gt; trailer " /></a></div></div></div></li><li class="last"><div class="wrap"><h3 class="title"><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;title;4">TV.com Top 10: Who should move on in <em>American Idol</em></a></h3><div class="details"><div class="thumb"><span><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;count;4" rel="nofollow">5</a></span><a href="http://www.tv.com/story/12370.html?tag=show;latest_news;thumb;4" rel="nofollow"><img src="http://image.com.com/tv/images/genie_images/news_hub/a/americanidol8_hub.jpg" alt="Image related to TV.com Top 10: Who should move on in &lt;em&gt;American Idol&lt;/em&gt;" /></a></div></div></div></li></ul>
-    </div>
-</div>
-            </div>
-        </div>
-                
-                <div id="top" class="col">
-            <div class="col_wrap">
-                
-<div class="content_title">
-    <h1>Eureka: <span>Episode Listings</span></h1>
-    </div>            </div>
-        </div>
-                
-        <div id="main" class="col">
-            <div class="col_wrap">
-                                
+    <div class="COLUMN_A">
+                    <div class="MODULE" id="episode_list_header">
+    <span class="bg_image">&nbsp;</span>
+    <h2>Episode Guide</h2>
+    <ul class="TAB_LINKS more_links">
+        <li class="first"><a class="first" href="http://www.tv.com/usersubmission/episode_synopsis.html?show_id=58448">+ Add Episode</a></li>
+                <li><a href="http://www.tv.com/Eureka/show/58448/episode.html?printable=1">Print</a></li>
+    </ul>
 
-<div id="eps_table" class="module episode_list ">
-    
-
-<div class="header">
-        <div class="wrap">
-    <span style="font-weight: bolder; font-size: 14 px;">Season: 
-    
-			&nbsp;
-										 
-											<a href="http://www.tv.com/eureka/show/58448/episode_listings.html?season=3">3</a>
-														
-		
-			&nbsp;
-						<strong>2</strong>
-								
-		
-			&nbsp;
-																					<a href="http://www.tv.com/eureka/show/58448/episode_listings.html?season=1">1</a>
-														
-		
-			&nbsp;
-															<a href="http://www.tv.com/eureka/show/58448/episode_listings.html?season=Other">Other</a>
-									
-		
-			&nbsp;
-															<a href="http://www.tv.com/eureka/show/58448/episode_listings.html?season=All">All</a>
-									
-		
-	    </span>
-                
         
-<div id="" class="btn edit_add_btn ">
-    <div class="btn_wrap">
-        <span>
-                            <a href="http://www.tv.com/usersubmission/episode_synopsis.html?show_id=58448&tag=season_dropdown;add_ep" rel="">add</a>
-                    </span>
-    </div>
+<div class="paginator">
+            <label>Season:</label>
+        
+    <ul class="TAB_LINKS">
+                                                                                <li class="number0">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=3">3</a>
+                </li>
+                                                                            <li class="number1">
+                    <a class="selected" href="http://www.tv.com/Eureka/show/58448/episode.html?season=2">2</a>
+                </li>
+                                                                            <li class="number2">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=1">1</a>
+                </li>
+                                                                            <li class="number3">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=Special">Special</a>
+                </li>
+                                                                            <li class="number4">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=All">All</a>
+                </li>
+                                                                            <li class="number5">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=Top Episodes">Top Episodes</a>
+                </li>
+                                                    </ul>
+
+
+</div>
+
+            <a class="switch_to_list" href="episode.html?shv=list&season=2" title="Switch to List view">List View</a>
+        <div class="CLEAR">&nbsp;</div>
+</div>        
+                                                    
+
+<div id="episode_guide_list">
+    <ul>
+                <li class="episode first">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9.2</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">292 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 1
+                                                                &#150; Aired: 7/10/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Phoenix+Rising/episode/1038982/summary.html">Phoenix Rising</a>
+                </h3>
+                <p class="synopsis">
+                                            Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Phoenix+Rising/episode/1038982/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Phoenix+Rising/episode/1038982/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9.1</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">254 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 2
+                                                                &#150; Aired: 7/17/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Try%2C+Try+Again/episode/1088397/summary.html">Try, Try Again</a>
+                </h3>
+                <p class="synopsis">
+                                            Carter and Stark are forced to team up when Global Dynamics is threatened by an expanding personal forcefield.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Try%2C+Try+Again/episode/1088397/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Try%2C+Try+Again/episode/1088397/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">264 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                            <div class="video">
+                    <div class="thumb">
+                        <img src="http://image.com.com/tv/images/genie_images/video/2007/e/eureka_s2e2_medvid.jpg"/>
+                        <a class="video_overlay" href="http://www.tv.com/video/10637/101/58448/Unpredictable (Episode Clip)?o=tv">Play</a>
+                    </div>
+                    <div class="provider">
+                                            </div>
+                </div>
+                        <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 3
+                                                                &#150; Aired: 7/24/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Unpredictable/episode/1088406/summary.html">Unpredictable</a>
+                </h3>
+                <p class="synopsis">
+                                            An isolated deep freeze trigger causes a chain reaction of sudden weather changes in Eureka.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                            <li class="first">
+                            <a class="play_video" href="http://www.tv.com/video/10637/101/58448/Unpredictable (Episode Clip)?o=tv">Watch Now</a>
+                        </li>
+                                        <li >
+                        <a href="http://www.tv.com/Eureka/Unpredictable/episode/1088406/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Unpredictable/episode/1088406/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">8.9</span>
+                        <span class="description">Great</span>
+                        <span class="ratings_count">258 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 4
+                                                                &#150; Aired: 7/31/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Games+People+Play/episode/1088408/summary.html">Games People Play</a>
+                </h3>
+                <p class="synopsis">
+                                            After receiving a hit to the head, Carter finds that he is in a parallel Eureka. He discovers that the residents of the parallel Eureka are mysteriously disappearing.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Games+People+Play/episode/1088408/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Games+People+Play/episode/1088408/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">8.8</span>
+                        <span class="description">Great</span>
+                        <span class="ratings_count">232 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 5
+                                                                &#150; Aired: 8/7/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Duck%2C+Duck+Goose/episode/1117929/summary.html">Duck, Duck Goose</a>
+                </h3>
+                <p class="synopsis">
+                                            Space debris threatens Eureka after it accumulates into a large cloud. Carter investigates in an effort to avert potential disaster.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Duck%2C+Duck+Goose/episode/1117929/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Duck%2C+Duck+Goose/episode/1117929/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9.2</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">241 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 6
+                                                                &#150; Aired: 8/14/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Noche+de+Sue%F1os/episode/1117930/summary.html">Noche de Sueños</a>
+                </h3>
+                <p class="synopsis">
+                                            The denizens of Eureka are experiencing shared dreams. What is considered humorous at first soon takes a dire turn for the worst.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Noche+de+Sue%F1os/episode/1117930/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Noche+de+Sue%F1os/episode/1117930/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">217 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 7
+                                                                &#150; Aired: 8/21/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Family+Reunion/episode/1117931/summary.html">Family Reunion</a>
+                </h3>
+                <p class="synopsis">
+                                            Douglas Fargo's grandfather, Pierre, is accidentally awakened from his cryogenic slumber. However, Pierre makes it clear that he was not willingly "frozen".
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Family+Reunion/episode/1117931/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Family+Reunion/episode/1117931/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9.1</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">218 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 8
+                                                                &#150; Aired: 8/28/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/E%3DMC...%3F/episode/1117932/summary.html">E=MC...?</a>
+                </h3>
+                <p class="synopsis">
+                                            An experiment to recreate the big bang seems to be causing Eureka's finest to become dumber and dumber, including everyone involved in the experiment. When it comes to the verge of destroying Global Dynamics, the fate of the town lies in the hands of Jack Carter and the team of scientists he assembles, amongst them the newest member of the town, an anti-social genius.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/E%3DMC...%3F/episode/1117932/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/E%3DMC...%3F/episode/1117932/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">8.9</span>
+                        <span class="description">Great</span>
+                        <span class="ratings_count">216 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 9
+                                                                &#150; Aired: 9/4/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Sight+Unseen/episode/1126725/summary.html">Sight Unseen</a>
+                </h3>
+                <p class="synopsis">
+                                            Strange happenings and spreading radiation at Global Dynamics lead to speculations that an abandoned research project concerning invisibility might have been revived. When Sheriff Carter accidentally becomes involved, the effects of invisibility threaten his life.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Sight+Unseen/episode/1126725/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Sight+Unseen/episode/1126725/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score80">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">8.1</span>
+                        <span class="description">Great</span>
+                        <span class="ratings_count">216 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 10
+                                                                &#150; Aired: 9/11/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/God+is+in+the+Details/episode/1126726/summary.html">God is in the Details</a>
+                </h3>
+                <p class="synopsis">
+                                            A series of strange events causes Eureka's residents to worry that a biblical plague may be upon them.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/God+is+in+the+Details/episode/1126726/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/God+is+in+the+Details/episode/1126726/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9.1</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">224 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 11
+                                                                &#150; Aired: 9/18/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/Maneater/episode/1126727/summary.html">Maneater</a>
+                </h3>
+                <p class="synopsis">
+                                            The women of Eureka become infatuated with Sheriff Carter, who they find irresistible.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/Maneater/episode/1126727/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/Maneater/episode/1126727/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">9</span>
+                        <span class="description">Superb</span>
+                        <span class="ratings_count">206 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 12
+                                                                &#150; Aired: 9/25/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/All+That+Glitters+%281%29/episode/1126729/summary.html">All That Glitters (1)</a>
+                </h3>
+                <p class="synopsis">
+                                            Eureka faces an inexplicable quandary when metal objects&mdash;and people too&mdash;begin turning to gold.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/All+That+Glitters+%281%29/episode/1126729/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/All+That+Glitters+%281%29/episode/1126729/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+                <li class="episode">
+            <div class="rating score90">
+                <div class="PUMPKIN_SMALL">&nbsp;</div>
+                <div class="global_score">
+                                            <span class="number">8.9</span>
+                        <span class="description">Great</span>
+                        <span class="ratings_count">239 Votes</span>
+                                    </div>
+            </div>
+
+
+
+                                                    <div class="info">
+                <div class="meta">
+                                                                                    Season 2,                                                                Episode 13
+                                                                &#150; Aired: 10/2/2007
+                                    </div>
+                <h3>
+                    <a href="http://www.tv.com/Eureka/A+Night+at+Global+Dynamics+%282%29/episode/1128794/summary.html">A Night at Global Dynamics (2)</a>
+                </h3>
+                <p class="synopsis">
+                                            Global Dynamics goes into lockdown to protect itself from the now airborne metal-eating bacteria. Stuck inside GD, Sheriff Carter and Stark must work together to save both the town and Kevin, Alison's son.
+                                    </p>
+
+                <ul class="TAB_LINKS various_links">
+                                        <li class="first">
+                        <a href="http://www.tv.com/Eureka/A+Night+at+Global+Dynamics+%282%29/episode/1128794/summary.html">Episode Overview</a>
+                    </li>
+                    <li>
+                        <a href="http://www.tv.com/Eureka/A+Night+at+Global+Dynamics+%282%29/episode/1128794/reviews.html">Read Reviews</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </li>
+
+
+            </ul>
+
+
+
+<div class="paginator">
+            <label>Season:</label>
+        
+    <ul class="TAB_LINKS">
+                                                                                <li class="number0">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=3">3</a>
+                </li>
+                                                                            <li class="number1">
+                    <a class="selected" href="http://www.tv.com/Eureka/show/58448/episode.html?season=2">2</a>
+                </li>
+                                                                            <li class="number2">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=1">1</a>
+                </li>
+                                                                            <li class="number3">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=Special">Special</a>
+                </li>
+                                                                            <li class="number4">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=All">All</a>
+                </li>
+                                                                            <li class="number5">
+                    <a  href="http://www.tv.com/Eureka/show/58448/episode.html?season=Top Episodes">Top Episodes</a>
+                </li>
+                                                    </ul>
+
+
 </div>
-            
-
-    </div>
-
-    </div>
-    
-    
-        <div class="body">
-                <table cellpadding="0" cellspacing="0"><thead><tr><th class="num"><div>no.</div></th><th class="ep_title"><div>episode</div></th><th><div>air date</div></th><th><div>prod #</div></th><th><div>reviews</div></th><th><div>downloads</div></th><th class="last"><div>score</div></th></tr></thead><tbody><tr class="first"><td class="num"><div>13</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html?tag=ep_list;title;0">Phoenix Rising</a></div></td><td class="ep_air_date"><div>7/10/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/phoenix-rising/episode/1038982/reviews.html?tag=ep_list;review;0"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.19</div></td></tr><tr class=""><td class="num"><div>14</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/try-try-again/episode/1088397/summary.html?tag=ep_list;title;1">Try, Try Again</a></div></td><td class="ep_air_date"><div>7/17/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/try-try-again/episode/1088397/reviews.html?tag=ep_list;review;1"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.08</div></td></tr><tr class=""><td class="num"><div>15</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/unpredictable/episode/1088406/summary.html?tag=ep_list;title;3">Unpredictable</a></div></td><td class="ep_air_date"><div>7/24/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/unpredictable/episode/1088406/reviews.html?tag=ep_list;review;3"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.96</div></td></tr><tr class=""><td class="num"><div>16</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/games-people-play/episode/1088408/summary.html?tag=ep_list;title;2">Games People Play</a></div></td><td class="ep_air_date"><div>7/31/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/games-people-play/episode/1088408/reviews.html?tag=ep_list;review;2"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.87</div></td></tr><tr class=""><td class="num"><div>17</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/duck-duck-goose/episode/1117929/summary.html?tag=ep_list;title;7">Duck, Duck Goose</a></div></td><td class="ep_air_date"><div>8/7/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/duck-duck-goose/episode/1117929/reviews.html?tag=ep_list;review;7"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.82</div></td></tr><tr class=""><td class="num"><div>18</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/noche-de-sueños/episode/1117930/summary.html?tag=ep_list;title;6">Noche de Sueños</a></div></td><td class="ep_air_date"><div>8/14/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/noche-de-sueños/episode/1117930/reviews.html?tag=ep_list;review;6"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.15</div></td></tr><tr class=""><td class="num"><div>19</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/family-reunion/episode/1117931/summary.html?tag=ep_list;title;5">Family Reunion</a></div></td><td class="ep_air_date"><div>8/21/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/family-reunion/episode/1117931/reviews.html?tag=ep_list;review;5"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.02</div></td></tr><tr class=""><td class="num"><div>20</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/e=mc.../episode/1117932/summary.html?tag=ep_list;title;4">E=MC...?</a></div></td><td class="ep_air_date"><div>8/28/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/e=mc.../episode/1117932/reviews.html?tag=ep_list;review;4"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.07</div></td></tr><tr class=""><td class="num"><div>21</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/sight-unseen/episode/1126725/summary.html?tag=ep_list;title;9">Sight Unseen</a></div></td><td class="ep_air_date"><div>9/4/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/sight-unseen/episode/1126725/reviews.html?tag=ep_list;review;9"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.90</div></td></tr><tr class=""><td class="num"><div>22</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/god-is-in-the-details/episode/1126726/summary.html?tag=ep_list;title;10">God is in the Details</a></div></td><td class="ep_air_date"><div>9/11/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/god-is-in-the-details/episode/1126726/reviews.html?tag=ep_list;review;10"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.12</div></td></tr><tr class=""><td class="num"><div>23</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/maneater/episode/1126727/summary.html?tag=ep_list;title;11">Maneater</a></div></td><td class="ep_air_date"><div>9/18/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/maneater/episode/1126727/reviews.html?tag=ep_list;review;11"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>9.11</div></td></tr><tr class=""><td class="num"><div>24</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/all-that-glitters-1/episode/1126729/summary.html?tag=ep_list;title;12">All That Glitters (1)</a></div></td><td class="ep_air_date"><div>9/25/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/all-that-glitters-1/episode/1126729/reviews.html?tag=ep_list;review;12"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.95</div></td></tr><tr class="last"><td class="num"><div>25</div></td><td class="ep_title"><div><a href="http://www.tv.com/eureka/a-night-at-global-dynamics-2/episode/1128794/summary.html?tag=ep_list;title;8">A Night at Global Dynamics (2)</a></div></td><td class="ep_air_date"><div>10/2/2007</div></td><td class="ep_prod_code"><div></div></td><td class="ep_rev_count"><div><a href="http://www.tv.com/eureka/a-night-at-global-dynamics-2/episode/1128794/reviews.html?tag=ep_list;review;8"> Reviews</a></div></td><td class="ep_downloads"><div>&nbsp;</div></td><td class="ep_rating"><div>8.89</div></td></tr></tbody></table>            </div>
-
-    </div>
-
-
-<script type="text/javascript">
-TV.init.include(function(){
-    var module = $('eps_table');
-    if($chk(module)){
-        // Add js_on to the module and grab the form
-        var eps_form = module.addClass('js_on').getElement('form');
-        if($chk(eps_form)){
-            // Add change event to the select to submit the form
-            var eps_select = eps_form.getElement('select').addEvent('change', function(event){
-                eps_form.submit();
-            });
-        }
-    }
-    //*/
-});
-</script>
-
-
-<div class="module sponsored_links">
+</div>    
+        <div class="module sponsored_links">
     <div class="body">
         <iframe src="http://bwp.tv.com/search" id="sponsored_iframe" width="100%" height="201" align="top" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" target="_top" longdesc="Sponsored Matches"></iframe>
     </div>
-</div>                            </div>
-        </div>
-        
-        <div id="side" class="col">
-            <div class="col_wrap">
-                                
-<div id="" class="ad sky">
-    <div id="_wrap" class="wrap">
-
-<div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
-<!-- begin ad tag (tile=2) -->
-                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/episode_listings;chan=shows;show=58448;genre=scifi;tile=2;sz=160x600;ord=1234087623?' type='text/javascript'></script>
-                    <noscript>
-                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/episode_listings;chan=shows;show=58448;genre=scifi;tile=2;sz=160x600;ord=1234087623?' target='_blank'>
-                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/episode_listings;chan=shows;show=58448;genre=scifi;tile=2;sz=160x600;ord=1234087623?' width='160' height='600' border='0' alt=''></a>
-                    </noscript>
-                <!-- End ad tag -->
-
-
-    </div>
 </div>
-
-
-
-                            </div>
-        </div>
-        
-            </div>
-</div>
-<img class="absolute" src="http://dw.com.com/clear/c.gif?oid=6140-10852_45-0&sid=45&edid=3&ptId=6140&onid=10852&ctype=program_id&cval=58448&asId=0&astId=&pid=58448&prodtypid=21&ttag=&loc=&srch=&xref=&xrq=&useract=&ld=www.tv.com&clgf=&globid=&ts=1234087623" height="1" width="1" /><script type="text/javascript">var onid=10852;</script>
-            </div><!--/content_wrap-->
-
-                                                    
-<div id="footerleader" class="ad leader_bottom">
-    <div id="footerleader_wrap" class="wrap">
-
-<div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
-<!-- begin ad tag (tile=6) -->
-                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/episode_listings;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087623?' type='text/javascript'></script>
-                    <noscript>
-                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/episode_listings;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087623?' target='_blank'>
-                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/episode_listings;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1234087623?' width='728' height='90' border='0' alt=''></a>
-                    </noscript>
-                <!-- End ad tag -->
-
-
-    </div>
-</div>
-
-
-
-
+                            <div class="CLEAR"> </div>
+    </div><!--/COLUMN_A-->
+    <div class="COLUMN_MPU">
                             
-            <div id="footer" class="MODULE">
+                        <div id="mpu" class="ad mpu">
+            <div id="mpu_wrap" class="wrap">
+    
+    <div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
+<!-- begin ad tag (tile=3) -->
+                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/episode;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999931?' type='text/javascript'></script>
+                    <noscript>
+                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/episode;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999931?' target='_blank'>
+                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/episode;chan=shows;show=58448;genre=scifi;tile=3;dcopt=ist;sz=300x250,300x600;ord=1239999931?' width='300' height='600' border='0' alt=''></a>
+                    </noscript>
+                <!-- End ad tag -->
+
+        
+    
+                </div>
+        </div>
+    
+
+
+
+
+             
+    
+<div class="MODULE MODULE_FIRST" id="show_listings">
+    <div class="MODULE_HEAD">
+        <h3>TV Listings</h3>
+        <a class="SEE_MORE" href="http://www.tv.com/listings/index.html">Full Listings &raquo;</a>
+    </div>
+    <ul class="listings">
+                                                                    <li class="listing">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/everybody-hates-chris/show/34457/summary.html?tag=listings_module;show_title;0">Everybody Hates Chris</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/ghost-whisperer/show/33483/summary.html?tag=listings_module;show_title;1">Ghost Whisperer</a>
+                        <span class="network">CBS</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/prison-break/show/31635/summary.html?tag=listings_module;show_title;2">Prison Break</a>
+                        <span class="network">Fox</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         8:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/wife-swap/show/27180/summary.html?tag=listings_module;show_title;3">Wife Swap</a>
+                        <span class="network">ABC</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                         8:30
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/the-game/show/33226/summary.html?tag=listings_module;show_title;4">The Game</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/americas-next-top-model/show/14888/summary.html?tag=listings_module;show_title;5">America's Next Top Model</a>
+                        <span class="network">CW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/prison-break/show/31635/summary.html?tag=listings_module;show_title;6">Prison Break</a>
+                        <span class="network">Fox</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/supernanny/show/28836/summary.html?tag=listings_module;show_title;7">Supernanny</a>
+                        <span class="network">ABC</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing same_time">
+                    <div class="time">
+                         9:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/the-tudors/show/69029/summary.html?tag=listings_module;show_title;8">The Tudors</a>
+                        <span class="network">SHOW</span>
+                    </div>
+                </li>
+                                                                                                <li class="listing">
+                    <div class="time">
+                        10:00
+                    </div>
+                    <div class="show">
+                        <a class="show_title" href="http://www.tv.com/numb3rs/show/25043/summary.html?tag=listings_module;show_title;9">NUMB3RS</a>
+                        <span class="network">CBS</span>
+                    </div>
+                </li>
+                                        </ul>
+    </div>
+         <div class="special_features_new MODULE">
+            <h3>Also on TV.com...</h3>
+            <ul>
+                                    <li class="first">
+                                                                        <a href="http://uk.tv.com/story/13921.html?tag=topslot;button;">Terminator is Terminated &raquo;</a>
+                                            </li>
+                                    <li>
+                                                                        <a href="http://www.tv.com/story/14002.html?tag=headlines;title;1&om_act=convert&om_clk=news&tag=topslot;button;">Adele to star in Ugly Betty &raquo;</a>
+                                            </li>
+                                    <li>
+                                                                        <a href="http://www.tv.com/story/13984.html?tag=headlines;title;0&om_act=convert&om_clk=news&tag=topslot;button;">Top 10: Reality Break-Ups &raquo;</a>
+                                            </li>
+                            </ul>
+        </div>
+        
+            </div><!--/COLUMN_MPU-->
+    <div class="CLEAR"> </div>
+
+    </div>    <img class="absolute" src="http://dw.com.com/clear/c.gif?oid=6139-10852_45-0&sid=45&edid=3&ptId=6139&onid=10852&ctype=program_id&cval=58448&asId=0&astId=&pid=58448&prodtypid=21&ttag=&loc=&srch=&xref=&xrq=&useract=&ld=www.tv.com&clgf=&globid=&ts=1239999931" height="1" width="1" /><script type="text/javascript">var onid=10852;</script>
+
+                                        
+                        <div id="footerleader" class="ad leader_bottom">
+            <div id="footerleader_wrap" class="wrap">
+    
+    <div style='text-align: center;'><img src='http://ads.com.com/Ads/common/advertisement.gif' width='120' height='10' alt='Advertisement' /></div>
+<!-- begin ad tag (tile=6) -->
+                    <script language='JavaScript' src='http://ad.uk.doubleclick.net/adj/tvuk.shows/episode;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999931?' type='text/javascript'></script>
+                    <noscript>
+                        <a href='http://ad.uk.doubleclick.net/jump/tvuk.shows/episode;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999931?' target='_blank'>
+                        <img src='http://ad.uk.doubleclick.net/ad/tvuk.shows/episode;chan=shows;pos=bottom;show=58448;genre=scifi;tile=6;sz=728x90;ord=1239999931?' width='728' height='90' border='0' alt=''></a>
+                    </noscript>
+                <!-- End ad tag -->
+
+        
+    
+                </div>
+        </div>
+    
+
+
+
+                        <div id="footer">
+
+<script type="text/javascript">
+    window.addEvent('domready', function() {
+
+	    new Autocompleter.Request.JSON('tv_search_foot', 'http://www.tv.com/search/autocomplete/',
+ 
+	    {
+	        'postVar': 'q',
+	        'zIndex': 100
+	    });
+	});
+</script>
+
 	<div class="search_bar_container">
 	    <form action="http://www.tv.com/search.php" method="GET" name="footer_search_form" class="search_form">
 		<label for="qs">Search</label>
 		<input type="hidden" name="type" value="11" />
 		<input type="hidden" name="stype" value="all" />
 				    <input type="hidden" name="tag" value="search;newshows" />
-				<input type="text" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
+				<input type="text" id="tv_search_foot" class="search_text" name="qs" value="" onblur="if(this.value=='')this.value='';"/><button class="submit" type="submit">
 		    Search
 		</button>
 	    </form>
@@ -397,10 +1133,10 @@ TV.init.include(function(){
 <div id="infoline">
     <dl>
         <dt>TV.com:TV News - TV Shows - TV Listings - Entertainment News</dt>
-        <dd class="last">&nbsp;&nbsp;<a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=globalheader;">Help</a></dd>
-        <dd><a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=globalheader;">Help</a></dd>
+        <dd class="last">&nbsp;&nbsp;<a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=;">Help</a></dd>
+        <dd><a class="help_link" href="http://www.tv.com/feature/helpcenter/?tag=;">Help</a></dd>
         <dd><a class="ad_link" href="http://www.cnetnetworks.com/advertise/properties/ge_portfolio.php?tag=tv.ft.no">Advertising Inquiries</a></dd>
-        <dd><a href="http://www.tv.com/aboutus.html?tag=globalheader;">About TV.com</a></dd>
+        <dd><a href="http://www.tv.com/aboutus.html?tag=;">About TV.com</a></dd>
 	<dd><a href="http://us.tv.com/">US.tv.com</a></dd>
     </dl>
 </div>
@@ -440,20 +1176,13 @@ TV.init.include(function(){
         <a href="http://www.cnetnetworks.com/editorial/copyright.html" rel="nofollow">Copyright</a> &copy;2009 CBS Interactive. All Rights Reserved. <a href="http://www.cnetnetworks.com/editorial/privacy.html" class="privacy_link" rel="nofollow">Privacy Policy</a> | <a href="http://www.tv.com/feature/tos/" rel="nofollow"><b>Terms of Use</b></a>
     </div>
 
-</div>	</div><!--/footer-->
-        </div><!--/container-->
+</div>	</div><!--/footer-->        </div><!--/container-->
     </div><!--/mantle_skin-->
-
-        
-
-        <script type="text/javascript" src="http://www.tv.com/js/global/init.src.js" ></script>
-        <script type="text/javascript" src="http://dw.com.com/js/dw.js" ></script>
+            
+                        <div id="" class="ad revenue_science_uk">
+            <div id="_wrap" class="wrap">
     
-    	
-<div id="" class="ad revenue_science_uk">
-    <div id="_wrap" class="wrap">
-
-<!-- START REVENUE SCIENCE PIXELLING CODE --> 
+    <!-- START REVENUE SCIENCE PIXELLING CODE --> 
                     <script type='text/javascript' src='http://js.revsci.net/gateway/gw.js?csid=D08735'></script> 
                     <script type='text/javascript'> 
                     DM_addEncToLoc('site', ('45'));
@@ -462,27 +1191,15 @@ TV.init.include(function(){
                     </script> 
                 <!-- END REVENUE SCIENCE PIXELLING CODE -->
 
-
-    </div>
-</div>
-
-
-
-
-    
-    
-    
-    <script type="text/javascript">
-        if($chk(TV.init)){
-            TV.init.each(function(func, i){
-                if($chk(func)){
-                    func();
-                }
-            });
-        }
-    </script>
-    
         
+    
+                </div>
+        </div>
+    
+
+
+
+            
 <!-- revenue science -->
   <script type="text/javascript">var $skipMadUCat = 1;</script>
 	<script type="text/javascript" src="http://js.revsci.net/gateway/gw.js?csid=K05540"></script>
@@ -496,13 +1213,14 @@ TV.init.include(function(){
 		
     	    	
     		DM_addToLoc("site", ('45'));
-		DM_addToLoc("ptype", ('6140'));
+		DM_addToLoc("ptype", ('6139'));
     		DM_tag();
 		//-->
 		</script>
 		<script type="text/javascript" src="http://i.i.com.com/cnwk.1d/Ads/common/madUCat/MadUCat.js"></script>
 	
 <!-- /revenue science -->
+	
     	    <script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -513,13 +1231,24 @@ TV.init.include(function(){
 			pageTracker._trackPageview();
 		} catch(err) {}
 		</script>
-	</body>
-</html><!-- CACHED: 0/10.15.8.222 RENDER TIME:  | 4144340 -->
-
-
-<!-- 
-
- MEMCACHED OFF 
-
- -->
-
+	
+        <!--load_js_at_end-->
+                    <script type="text/javascript" src="http://www.tv.com/js/misc/ajax_replace.js" ></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Observer.js" id="observer"></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Autocompleter.js" ></script>
+                <script type="text/javascript" src="http://www.tv.com/js/Autocomplete/Autocompleter.Request.js" ></script>
+        <!--/load_js_at_end-->
+	<script type="text/javascript" src="http://surveys.cnet.com/html/surveys/1358.js"></script>
+    
+    <script type="text/javascript">
+        if($chk(TV.init)){
+            TV.init.each(function(func, i){
+                if($chk(func)){
+                    func();
+                }
+            });
+        }
+    </script>
+    
+</body>
+</html>

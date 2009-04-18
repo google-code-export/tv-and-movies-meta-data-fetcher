@@ -25,14 +25,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Used to parse a filename and work out the correct season and episode number 
- * of the file. 
- * 
+ * Used to parse a filename and work out the correct season and episode number
+ * of the file.
+ *
  * It does this my attempting to match a series of regular expressions against the
  * file. It attempts to do a case insensitive match against each of the following
  * regular expressions The first one that is matched, is used to get the episode and
  * season number. Group 1 is always the season number and group 2 is always the
- * episode number. 
+ * episode number.
  * <ul>
  * 	<li>.*[s]([\d]+)[e]([\d]+).*<li>
  *  <li>.*[s]([\d]+)\.[e]([\d]+).*</li>
@@ -51,18 +51,20 @@ public class FileNameParser {
 			Pattern.compile(".*([\\d]+)[x]([\\d]+).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile("^([\\d])[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),			
+			Pattern.compile("^([\\d])[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile("^([\\d]{1,2})[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*season\\s([\\d]+)\\sepisode\\s([\\d]+).*",Pattern.CASE_INSENSITIVE)
 	};
-	
+
 
 	/**
 	 * Parse the filename and work out the episode and season number
-	 * @param filename The filename to parse
+	 * @param rootMediaDir The root media directory
+	 * @param renamePattern The pattern been used to rename media
+	 * @param file The file been renamed
 	 * @return The parsed information
 	 */
-	public static ParsedFileName parse(File rootMediaDir,String renamePattern,File file) {			
+	public static ParsedFileName parse(File rootMediaDir,String renamePattern,File file) {
 		for (Pattern pattern : PATTERNS) {
 			Matcher m = pattern.matcher(file.getName());
 			if (m.matches()) {
@@ -74,9 +76,9 @@ public class FileNameParser {
 				return result;
 			}
  		}
-		
+
 		Map<String,String> tokens = getTokens(rootMediaDir,renamePattern,file.getAbsolutePath());
-		String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);		
+		String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);
 		String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);
 		if (episodeNumber!=null && seasonNumber!=null) {
 			ParsedFileName result = new ParsedFileName();
@@ -87,11 +89,11 @@ public class FileNameParser {
 			}
 			catch (NumberFormatException e) {
 				return null;
-			}		
+			}
 		}
 		return null;
 	}
-	
+
 
 
 	private static Map<String, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
@@ -101,7 +103,7 @@ public class FileNameParser {
 		renamePattern = renamePattern.replaceAll("\\.","\\\\." );
 		StringBuffer buffer = new StringBuffer();
 		Matcher m = p.matcher(renamePattern);
-		while (m.find()) {	
+		while (m.find()) {
 			String group = m.group();
 			groups.add(group);
 			if (group.equals(Renamer.TOKEN_EPISODE) || group.equals(Renamer.TOKEN_SEASON)){
@@ -113,7 +115,7 @@ public class FileNameParser {
 		}
 		m.appendTail(buffer);
 		renamePattern = buffer.toString();
-		
+
 		p  = Pattern.compile(renamePattern);
 		if (filename.startsWith(rootMediaDir.getAbsolutePath())) {
 			filename=filename.substring(rootMediaDir.getAbsolutePath().length()+1);
@@ -128,5 +130,5 @@ public class FileNameParser {
 		}
 		return null;
 	}
-	
+
 }

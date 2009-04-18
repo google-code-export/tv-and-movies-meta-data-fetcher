@@ -24,37 +24,42 @@ import java.util.List;
  * This is used to store episode information
  */
 public class Episode implements IVideo {
-	
+
 	private Season season;
+
+	/** The number of the episode within the season */
 	private int episodeNumber;
-	
+
 	private String summary;
 	private String title;
-	private Date airDate;	
-	private String specialName;
+	private Date airDate;
 	private boolean special;
-	private String siteId;
-	private String productionCode;
+
 	private URL summaryUrl;
+
+	/** The id of the show as found on the source site */
 	private long episodeId;
-		
+
+	/** Episode number counting since the show started */
+	private long showEpisodeNumber;
+
 	private List<Link>guestStars;
 	private List<Link>directors;
 	private List<Link>writers;
 	private float rating = -1;
-	
+
 	/**
 	 * The constructor used to create a episode instance
 	 * @param episodeNumber The number of the episode within the season
 	 * @param season The season it belongs too
 	 */
-	public Episode(int episodeNumber, Season season) {		
+	public Episode(int episodeNumber, Season season) {
 		this.episodeNumber = episodeNumber;
 		this.season = season;
 	}
 
 	/**
-	 * Get the season the episode belongs too 
+	 * Get the season the episode belongs too
 	 * @return The season the episode belongs too
 	 */
 	public Season getSeason() {
@@ -62,15 +67,15 @@ public class Episode implements IVideo {
 	}
 
 	/**
-	 * Gets the number of the episode. 
+	 * Gets the number of the episode.
 	 * @return The number of the episode
 	 */
 	public int getEpisodeNumber() {
 		return episodeNumber;
 	}
-	
+
 	/**
-	 * Sets the number of the episode. 
+	 * Sets the number of the episode.
 	 * @param episodeNumner
 	 */
 	public void setEpisodeNumber(int episodeNumner) {
@@ -126,22 +131,6 @@ public class Episode implements IVideo {
 	}
 
 	/**
-	 * This is the name of the special. Specials have a extra name used to ID them.
-	 * @param specialName The name of the special.
-	 */
-	public void setSpecialName(String specialName) {
-		this.specialName = specialName;
-	}
-
-	/**
-	 * Get the name of the special.  Specials have a extra name used to ID them.
-	 * @return The name of the special.
-	 */
-	public String getSpecialName() {
-		return specialName;
-	}
-
-	/**
 	 * Used to find out if this is a special
 	 * @return True if special, otherwise false
 	 */
@@ -150,23 +139,21 @@ public class Episode implements IVideo {
 	}
 
 	/**
-	 * The id of the as it's found on the sources size. Quite often these
-	 * don't start from 1 for each season, but carry on counting.
-	 * @param episodeSiteId The id of the episode as found on the site
+	 * Sets the episode count since the show started
+	 * @param showEpisodeNumber The episode number since the show started
 	 */
-	public void setSiteId(String episodeSiteId) {
-		this.siteId = episodeSiteId;
+	public void setShowEpisodeNumber(long showEpisodeNumber) {
+		this.showEpisodeNumber = showEpisodeNumber;
 	}
-	
+
 	/**
-	 * Gets the episode id as it was on the sources site. Quite often these
-	 * don't start from 1 for each season, but carry on counting.
-	 * @return The episode site id
+	 * Gets the episode number since the show started
+	 * @return The episode number since the show started
 	 */
-	public String getEpisodeSiteId() {
-		return this.siteId;
+	public long getShowEpisodeNumber() {
+		return this.showEpisodeNumber;
 	}
-	
+
 	/**
 	 * Gets the first air date of the episode
 	 * @return The first air date of the episode
@@ -175,21 +162,6 @@ public class Episode implements IVideo {
 		return new Date(airDate.getTime());
 	}
 
-	/**
-	 * Gets the production code of the episode
-	 * @return The production code of the episode
-	 */
-	public String getProductionCode() {
-		return productionCode;
-	}
-
-	/**
-	 * Used to set the production code of the episode
-	 * @param productionCode The production code of the episode
-	 */
-	public void setProductionCode(String productionCode) {
-		this.productionCode = productionCode;
-	}
 
 	/**
 	 * Used to set the URL used to get a summary of the show
@@ -198,7 +170,7 @@ public class Episode implements IVideo {
 	public void setSummaryUrl(URL url) {
 		summaryUrl = url;
 	}
-	
+
 	/**
 	 * Used to get the URL used to get a summary of the show
 	 * @return The summary URL
@@ -239,7 +211,7 @@ public class Episode implements IVideo {
 		this.guestStars = guestStars;
 	}
 
-	/** 
+	/**
 	 * Used to get a list of directors for the episode
 	 * @return A list of directors for the episode
 	 */
@@ -280,10 +252,10 @@ public class Episode implements IVideo {
 	}
 
 	/**
-	 * Used to set the rating of the show 
+	 * Used to set the rating of the show
 	 * @param rating The rating of the show
 	 */
 	public void setRating(float rating) {
 		this.rating = rating;
-	}	
+	}
 }

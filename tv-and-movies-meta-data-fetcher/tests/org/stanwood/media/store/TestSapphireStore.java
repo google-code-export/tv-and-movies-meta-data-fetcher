@@ -18,6 +18,7 @@ package org.stanwood.media.store;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -44,8 +45,8 @@ import org.xml.sax.InputSource;
 public class TestSapphireStore extends XMLTestCase {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	private static final String SHOW_ID = "58448";	
-	
+	private static final String SHOW_ID = "58448";
+
 	/**
 	 * Test that the film is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
@@ -99,7 +100,7 @@ public class TestSapphireStore extends XMLTestCase {
 			List<Link> directors = new ArrayList<Link>();
 			directors.add(new Link("Bryan Singer","http://www.imdb.com/name/nm0001741/"));
 			film.setDirectors(directors);
-			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));			
+			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 			List<Link> guestStars = new ArrayList<Link>();
 			guestStars.add(new Link("Stephen Baldwin","http://www.imdb.com/name/nm0000286/"));
 			guestStars.add(new Link("Gabriel Byrne","http://www.imdb.com/name/nm0000321/"));
@@ -123,49 +124,49 @@ public class TestSapphireStore extends XMLTestCase {
 			List<Link>writers = new ArrayList<Link>();
 			writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
 			film.setWriters(writers);
-			
+
 			xmlSource.cacheFilm(dir,filmFile, film);
-			
+
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			assertTrue(actualFile.exists());
-			FileHelper.displayFile(actualFile, System.out);
+//			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/film-0114814.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
 	}
-	
+
 	/**
 	 * Test that the show is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testCacheShow() throws Exception {
 		SapphireStore xmlSource = new SapphireStore();
-		
+
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
-			eurekaDir.mkdir();
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir);
+			}
 			File episodeFile = new File(eurekaDir,"1x01 - blah.avi");
-			
+
 			Show show = createShow(eurekaDir);
-			xmlSource.cacheShow(eurekaDir,episodeFile,show);		
-			
+			xmlSource.cacheShow(eurekaDir,episodeFile,show);
+
 			Season season = new Season(show,1);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
-			show.addSeason(season);		
-			xmlSource.cacheSeason(eurekaDir,episodeFile,season);			
+			show.addSeason(season);
+			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 			Episode episode1 = new Episode(1,season);
 			episode1.setDate(df.parse("2006-10-10"));
-			episode1.setProductionCode("001");
-			episode1.setSiteId("1");
+			episode1.setShowEpisodeNumber(1);
 			episode1.setSpecial(false);
-			episode1.setSpecialName(null);
 			episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
-			episode1.setTitle("Pilot");			
+			episode1.setTitle("Pilot");
 			episode1.setRating(1);
 			episode1.setDirectors(createLinks(new Link[]{new Link("Harry","http://test/")}));
 			episode1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a")}));
@@ -173,50 +174,44 @@ public class TestSapphireStore extends XMLTestCase {
 			episode1.setEpisodeId(784857);
 			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-			
+
 			episodeFile = new File(eurekaDir,"1x02 - blah.avi");
 			Episode episode2 = new Episode(2,season);
 			episode2.setDate(df.parse("2006-10-11"));
-			episode2.setProductionCode("002");
-			episode2.setSiteId("2");
+			episode2.setShowEpisodeNumber(2);
 			episode2.setSpecial(false);
-			episode2.setSpecialName(null);
 			episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
 			episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 			episode2.setTitle("Many Happy Returns");
-			episode2.setRating(9.5F);			
+			episode2.setRating(9.5F);
 			episode2.setEpisodeId(800578);
-			season.addEpisode(episode2);			
+			season.addEpisode(episode2);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
-			
+
 			season = new Season(show,2);
 			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
 			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
-			show.addSeason(season);	
+			show.addSeason(season);
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
-			
+
 			episodeFile = new File(eurekaDir,"2x13 - blah.avi");
 			episode1 = new Episode(2,season);
 			episode1.setDate(df.parse("2007-7-10"));
-			episode1.setProductionCode("013");
-			episode1.setSiteId("13");
+			episode1.setShowEpisodeNumber(13);
 			episode1.setSpecial(false);
-			episode1.setSpecialName(null);
 			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
 			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 			episode1.setTitle("Phoenix Rising");
 			episode1.setEpisodeId(800578);
 			episode1.setRating(0.4F);
-			season.addEpisode(episode1);			
+			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-			
+
 			episodeFile = new File(eurekaDir,"000 - blah.avi");
 			Episode special1 = new Episode(0,season);
 			special1.setDate(df.parse("2007-7-09"));
-			special1.setProductionCode("200");
-			special1.setSiteId("Special");
+			special1.setShowEpisodeNumber(-1);
 			special1.setSpecial(true);
-			special1.setSpecialName("Special");
 			special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
 			special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 			special1.setTitle("Countdown to the Premiere");
@@ -225,35 +220,35 @@ public class TestSapphireStore extends XMLTestCase {
 			special1.setDirectors(createLinks(new Link[]{new Link("JP","http://test/")}));
 			special1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a"),new Link("Write a little","http://test/b")}));
 			special1.setGuestStars(createLinks(new Link[]{new Link("bob","http://test/bob"),new Link("Write a little","http://test/fred")}));
-						
-			season.addSepcial(special1);			
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);			
-			
+
+			season.addSepcial(special1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
+
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
 			assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-101.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 			actualFile = new File(eurekaDir,"1x02 - blah.xml");
 			assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-102.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 			actualFile = new File(eurekaDir,"2x13 - blah.xml");
 			assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-213.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 			actualFile = new File(eurekaDir,"000 - blah.xml");
 			assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-000.xml")), new InputSource(new FileInputStream(actualFile)));
-			
+
 		} finally {
 			FileHelper.deleteDir(dir);
-		}			
+		}
 	}
-	
+
 	private List<Link>createLinks(Link[] links) {
 		List<Link> result = new ArrayList<Link>();
 		for (Link link : links ) {
@@ -266,7 +261,7 @@ public class TestSapphireStore extends XMLTestCase {
 		Show show = new Show(SHOW_ID);
 		show.setSourceId(TVCOMSource.SOURCE_ID);
 		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
-		StringBuilder summary = new StringBuilder();			
+		StringBuilder summary = new StringBuilder();
 		summary.append("Small town. Big secret.\n");
 		summary.append("\n");
 		summary.append("A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.\n");

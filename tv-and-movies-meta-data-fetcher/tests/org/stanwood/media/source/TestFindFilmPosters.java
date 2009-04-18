@@ -20,11 +20,12 @@ package org.stanwood.media.source;
 import java.io.IOException;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.stanwood.media.model.Film;
 import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
-import junit.framework.TestCase;
 
 /**
  * Used to test the {@link FindFilmPosters} class.
@@ -40,7 +41,7 @@ public class TestFindFilmPosters extends TestCase {
 		Film film = new Film("371746");
 		film.setTitle("Iron Man");
 		URL posterUrl = findPosters.findViaMoviePoster(film);
-		assertTrue("Check the url",posterUrl.toExternalForm().endsWith("movieposter.com/posters/archive/main/68/MPW-34217"));
+		assertTrue("Check the url",posterUrl.toExternalForm().endsWith("movieposter.com/posters/archive/main/66/MPW-33160"));
 	}
 
 	private FindFilmPosters getPosterFinder() {
@@ -52,7 +53,7 @@ public class TestFindFilmPosters extends TestCase {
 					return new Source(Data.class.getResource("filmposters/movieposter-ironman.html"));
 				}
 				return null;
-			}			
-		};		
+			}
+		};
 	}
 }

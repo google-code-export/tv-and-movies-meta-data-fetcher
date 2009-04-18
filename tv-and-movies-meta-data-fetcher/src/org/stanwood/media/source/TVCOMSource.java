@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,24 +52,30 @@ public class TVCOMSource implements ISource {
 
 	private final static Pattern EPISODE_ID_PATTERN = Pattern
 			.compile(".*episode\\/(.*)\\/summary.*");
-	
+
 	private final static Pattern SHOW_ID_PATTERN = Pattern
 	.compile("\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
+
+	private final static Pattern PRINT_PAGE_TITLE_PATTERN = Pattern.compile(".*?(\\d+)\\..*");
+
+	private final static Pattern EPISODE_EXTRACT_PATTERN = Pattern.compile("Season (\\d+), Episode (\\d+).*Aired: (.*)");
+	private final static Pattern SPECIAL_EXTRACT_PATTERN = Pattern.compile("Special\\. Season (\\d+).*Aired: (.*)");
 
 	private final static String TVCOM_BASE_URL = "http://www.tv.com/";
 	private final static String URL_SUMMARY = "show/$showId$/summary.html";
 
+	private final static String URL_EPISODE_LISTING_FULL = "show/$showId$/episode.html?season=$seasonNum$";
 	private final static String URL_EPISODES = "show/$showId$/episode_guide.html?printable=1";
-	private final static String URL_EPISODE_LISTING = "show/$showId$/episode_listings.html?season=$seasonNum$";
+//	private final static String URL_EPISODE_LISTING = "show/$showId$/episode_listings.html?season=$seasonNum$";
 
 	private final static String URL_SHOW_SEARCH = "search.php?type=Search&stype=ajax_search&search_type=program&qs=";
-	
+
 	/** The ID used to identify the www.tv.com TV source. */
 	public static final String SOURCE_ID = "tvcom";
 
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will
-	 * return null. It does this by accessing two different URL that are needed to 
+	 * return null. It does this by accessing two different URL that are needed to
 	 * get all of the information.
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
@@ -91,7 +96,7 @@ public class TVCOMSource implements ISource {
 
 	/**
 	 * This gets a episode from the source. If it can't be found, then it will
-	 * return null. It does this by accessing two different URL that are needed to 
+	 * return null. It does this by accessing two different URL that are needed to
 	 * get all of the information.
 	 * @param season The season the special episode belongs too
 	 * @param episodeNum The number of the episode too get
@@ -123,7 +128,7 @@ public class TVCOMSource implements ISource {
 	@Override
 	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
-		Season season = new Season(show, seasonNum);		
+		Season season = new Season(show, seasonNum);
 		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(),seasonNum)));
 		season.setDetailedUrl(new URL(getSeasonEposideDetailed(
 				show.getShowId(), seasonNum)));
@@ -160,190 +165,215 @@ public class TVCOMSource implements ISource {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void populateEpisodeWithDetail(Source source, Episode episode) {
-		List<Element> divs = source.findAllElements(HTMLElementName.DIV);		
-		
-		for (Element div : divs) {
-			String classAttr = div.getAttributeValue("class");
-			if (classAttr != null && classAttr.equals("pl-5 pr-5")) {
-				List<Element> h1s = div.getChildElements();
-				Element h1 = h1s.get(0);
-				if (h1.getTextExtractor().toString().trim().startsWith(
-						episode.getEpisodeSiteId() + ".")) {
-					// Element innerDiv = h1s.get(1);
-					Element summary = h1s.get(2);
-					episode.setSummary(summary.getTextExtractor().toString());
-				}
-				Element div1 = ((List<Element>) div
-						.findAllElements(HTMLElementName.DIV)).get(0);
-				Iterator it = div1.getNodeIterator();
-				String span = "";							
-				List<Link>guestStars = new ArrayList<Link>();
-				List<Link>directors = new ArrayList<Link>();
-				List<Link>writers = new ArrayList<Link>();	
-				while (it.hasNext()) {
-					Tag o = getNextStartTag(it);
-						
-					if (o!=null) {
-						Tag el = (Tag) o;
-						if (el.getName().equals("span")) {							
-							Element spanEl = el.getElement();							
-							span =  spanEl.getTextExtractor().toString().toLowerCase().trim();							
-							Tag tag = getNextEndTag(it);
-							while ((tag = getNextTag(it)).getName().equals(HTMLElementName.A)) {
-								Element link = tag.getElement();
-								String href = link.getAttributeValue("href");
-								String title = link.getTextExtractor().toString().trim();
-								if (span.equals("global rating:")) {									
-									episode.setRating(Float.parseFloat(title));
-								}
-								else if (span.equals("guest star:")) {
-									guestStars.add(new Link(href,title));
-								}
-								else if (span.equals("director:")) {
-									directors.add(new Link(href,title));
-								}
-								else if (span.equals("writer:")) {
-									writers.add(new Link(href,title));
-								}
-								else if (span.equals("first aired date:")) {
-									
-								}								
-									
-								tag = getNextTag(it);
-							}
-							span = "";
-						}							
-					}
-				}
-				episode.setWriters(writers);		
-				episode.setGuestStars(guestStars);
-				episode.setDirectors(directors);
+	private Link getDetailedPageEpisodeLink(Element div) {
+		Element h1 = ParseHelper.findFirstChild(div, HTMLElementName.H1, null);
+		if (h1!=null) {
+			List<Link> links = ParseHelper.getLinks(TVCOM_BASE_URL,h1,null);
+			if (links!=null && links.size()>0) {
+				return links.get(0);
 			}
 		}
-		
-		
+		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
+	private void populateEpisodeWithDetail(Source source, final Episode episode) {
+		Element div = ParseHelper.findFirstElement(source, HTMLElementName.DIV, new IFilterElement() {
+			@Override
+			public boolean accept(Element div) {
+				String classAttr = div.getAttributeValue("class");
+				if (classAttr != null && classAttr.equals("pl-5 pr-5")) {
+					Link link = getDetailedPageEpisodeLink(div);
+					Matcher m = EPISODE_ID_PATTERN.matcher(link.getURL());
+					if (m.matches()) {
+						if (Long.parseLong(m.group(1)) == episode.getEpisodeId()) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+
+		if (div!=null) {
+			Link epLink = getDetailedPageEpisodeLink(div);
+			Matcher m = PRINT_PAGE_TITLE_PATTERN.matcher(epLink.getTitle());
+			if (m.matches()) {
+				episode.setShowEpisodeNumber(Long.parseLong(m.group(1)));
+			}
+			else {
+				episode.setShowEpisodeNumber(-1);
+			}
+			Element div1 = ParseHelper.findFirstElement(div, HTMLElementName.DIV, null);
+
+			Iterator it = div1.getNodeIterator();
+			String span = "";
+			List<Link>guestStars = new ArrayList<Link>();
+			List<Link>directors = new ArrayList<Link>();
+			List<Link>writers = new ArrayList<Link>();
+			while (it.hasNext()) {
+				Tag o = getNextStartTag(it);
+
+				if (o!=null) {
+					Tag el = o;
+					if (el.getName().equals("span")) {
+						Element spanEl = el.getElement();
+						span =  spanEl.getTextExtractor().toString().toLowerCase().trim();
+						Tag tag = getNextEndTag(it);
+						while ((tag = getNextTag(it)).getName().equals(HTMLElementName.A)) {
+							Element link = tag.getElement();
+							String href = link.getAttributeValue("href");
+							String title = link.getTextExtractor().toString().trim();
+							if (span.equals("global rating:")) {
+								episode.setRating(Float.parseFloat(title));
+							}
+							else if (span.equals("guest star:")) {
+								guestStars.add(new Link(href,title));
+							}
+							else if (span.equals("director:")) {
+								directors.add(new Link(href,title));
+							}
+							else if (span.equals("writer:")) {
+								writers.add(new Link(href,title));
+							}
+
+							tag = getNextTag(it);
+						}
+						span = "";
+					}
+				}
+			}
+			episode.setWriters(writers);
+			episode.setGuestStars(guestStars);
+			episode.setDirectors(directors);
+		}
+	}
+
 	private void parse(Season season, Source source)
 			throws MalformedURLException {
-		List<Element> elements = source.findAllElements("tbody");
-		Element tbody = elements.get(0);
-		List<Element> trs = tbody.findAllElements(HTMLElementName.TR);
-//		int epCount = 0;
-		List<Episode> specials = new ArrayList<Episode>();
-		List<Episode> episodes = new ArrayList<Episode>();
-		for (Element tr : trs) {
-			List<Element> tds = tr.findAllElements(HTMLElementName.TD);
-			int totalNum = -1;
+		List<Element> elements = ParseHelper.findAllElements(source, HTMLElementName.LI, new IFilterElement() {
+			@Override
+			public boolean accept(Element element) {
+				return element.getAttributeValue("class")!=null && element.getAttributeValue("class").startsWith("episode");
+			}
+		});
+
+		for (Element eposiodeLi : elements) {
 			String title = null;
 			Date airDate = null;
 			boolean special = false;
-			String specialName = null;
-			String episodeSiteId = null;
-			String prodCode = null;
-			String strUrl = null;
-
-			for (Element td : tds) {
-				if (td.getAttributeValue("class").equals("num")) {
-					episodeSiteId = td.getTextExtractor().toString();
-					try {
-						totalNum = Integer.parseInt(episodeSiteId);						
-					} catch (NumberFormatException e) {
-						special = true;
-						specialName = td.getTextExtractor().toString();
-					}
-				} else if (td.getAttributeValue("class").equals("ep_title")) {
-					for (Element child : (List<Element>) td
-							.findAllElements(HTMLElementName.A)) {
-						strUrl = child.getAttributeValue("href");
-						int queryPos = strUrl.lastIndexOf('?');
-						if (queryPos != -1) {
-							strUrl = strUrl.substring(0, queryPos);
-						}
-					}
-					title = td.getTextExtractor().toString();
-				} else if (td.getAttributeValue("class").equals("ep_air_date")) {
-					String sAirDate = td.getTextExtractor().toString();
-					DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-					try {
-						airDate = (Date) formatter.parse(sAirDate);
-					} catch (ParseException e) {
-						airDate = null;
-					}
-				} else if (td.getAttributeValue("class").equals("ep_prod_code")) {
-					prodCode = td.getTextExtractor().toString();
-				}
-			}
-			long episodeId = -1;
+			long episodeSiteId = -1;
+			int episodeNumber = -1;
 			URL url = null;
-			if (strUrl != null) {
-				url = new URL(strUrl);
-				Matcher m = EPISODE_ID_PATTERN.matcher(strUrl);
-				if (m.find()) {
-					episodeId = Long.parseLong(m.group(1));
+			String description = "";
+
+			Element div = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.DIV,true,new IFilterElement() {
+				@Override
+				public boolean accept(Element element) {
+					return element.getAttributeValue("class").equals("meta");
+				}
+			});
+
+			// Get the air date, episode number and findout if it's a special
+			if (div!=null) {
+				String text = div.getTextExtractor().toString();
+				Matcher m = EPISODE_EXTRACT_PATTERN.matcher(text);
+				int seasonNumber=-1;
+				if (m.matches()) {
+					special = false;
+					airDate = parseAirDate(m.group(3));
+					episodeNumber = Integer.parseInt(m.group(2));
+					seasonNumber = Integer.parseInt(m.group(1));
+				}
+				else {
+					m = SPECIAL_EXTRACT_PATTERN.matcher(text);
+					if (m.matches()) {
+						special = true;
+						airDate = parseAirDate(m.group(2));
+						seasonNumber = Integer.parseInt(m.group(1));
+					}
+				}
+				if (seasonNumber!=season.getSeasonNumber()) {
+					continue;
 				}
 			}
-			if (!special) {
-				Episode episode1 = createEpisode(totalNum, title, airDate, season, -1,
-						special, specialName, episodeSiteId, prodCode, url,
-						episodeId);
-				episodes.add(episode1);
-			} else {
-				Episode special1 = createEpisode(totalNum, title, airDate, season, -1,
-						special, specialName, episodeSiteId, prodCode, url,
-						episodeId);
-				specials.add(special1);
+
+			// Get the title, url and site id of the episode
+			Element h3 = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.H3,true,null);
+			if (h3!=null) {
+				List<Link> links = ParseHelper.getLinks("", h3, new IFilterLink() {
+					@Override
+					public boolean accept(Link link) {
+						Matcher m = EPISODE_ID_PATTERN.matcher(link.getURL());
+						return (m.matches());
+					}
+				});
+
+				if (links!=null && !links.isEmpty()) {
+					Link link = links.get(0);
+					title = link.getTitle();
+					url = new URL(link.getURL());
+					Matcher m = EPISODE_ID_PATTERN.matcher(link.getURL());
+					if (m.find()) {
+						episodeSiteId = Long.parseLong(m.group(1));
+					}
+				}
 			}
-		}
-		
-		int count = 1;
-//		for (int i=episodes.size()-1;i>=0;i--) {
-		for (int i=0;i<episodes.size();i++) {
-			episodes.get(i).setEpisodeNumber(count++);
-			season.addEpisode(episodes.get(i));
-		}
-		
-		count = 0;
-//		for (int i=specials.size()-1;i>=0;i--) {
-		for (int i=0;i<specials.size();i++) {
-			specials.get(i).setEpisodeNumber(count++);
-			season.addSepcial(specials.get(i));
+
+			Element p = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.P,true,new IFilterElement(){
+				@Override
+				public boolean accept(Element element) {
+					return element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("synopsis");
+				}
+			});
+
+			if (p!=null) {
+				description = p.getTextExtractor().toString();
+			}
+
+			if (!special) {
+				Episode episode1 = createEpisode(title, airDate,episodeNumber ,special,url, season,
+						episodeSiteId);
+				episode1.setSummary(description);
+				season.addEpisode(episode1);
+			} else {
+				Episode special1 = createEpisode(title, airDate,episodeNumber ,special,url, season,
+						episodeSiteId);
+				special1.setSummary(description);
+				season.addSepcial(special1);
+			}
+
 		}
 	}
 
-	private Episode createEpisode(int totalNum, String title, Date airDate,
-			Season season, int episodeNumber, boolean special,
-			String specialName, String episodeSiteId, String prodCode, URL url,
-			long episodeId) {
-
-		Episode episode = createEpisode(totalNum, title, airDate,
-				episodeNumber, special, specialName, episodeSiteId, prodCode,
-				url, season, episodeId);
-		return episode;
+	private Date parseAirDate(String dateString) {
+		Date airDate;
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			airDate = formatter.parse(dateString);
+		} catch (ParseException e) {
+			airDate = null;
+		}
+		return airDate;
 	}
 
-	private Episode createEpisode(int totalNum, String title, Date airDate,
-			int episodeNumber, boolean special, String specialName,
-			String episodeSiteId, String prodCode, URL url, Season season,
-			long episodeId) {
+
+
+
+	private Episode createEpisode(String title, Date airDate,
+			int episodeNumber, boolean special, URL url, Season season,long episodeSiteId) {
 		Episode episode = new Episode(episodeNumber, season);
-		episode.setTitle(title);		
+		episode.setTitle(title);
 		episode.setDate(airDate);
 		episode.setSpecial(special);
-		episode.setSpecialName(specialName);
-		episode.setSiteId(episodeSiteId);
-		episode.setProductionCode(prodCode);
 		episode.setSummaryUrl(url);
-		episode.setEpisodeId(episodeId);
+		episode.setEpisodeId(episodeSiteId);
 		return episode;
 	}
 
 	/**
-	 * This will get a show from the source. If the season can't be found, then it 
-	 * will return null. 	
+	 * This will get a show from the source. If the season can't be found, then it
+	 * will return null.
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -361,73 +391,82 @@ public class TVCOMSource implements ISource {
 		return show;
 	}
 
-	
-
-	@SuppressWarnings("unchecked")
 	private void parseShow(Source source, Show show)
 			throws MalformedURLException {
 
-		List<Element> elements = source.findAllElements(HTMLElementName.SPAN);
 		List<String> genres = new ArrayList<String>();
-		for (Element element : elements) {
-			String classValue = element.getAttributeValue("class");
-			if (classValue != null) {
-				if (classValue.equals("long")) {
-					show.setLongSummary(element.getTextExtractor().toString());
-				} else if (classValue.equals("short")) {
-					show.setShortSummary(element.getTextExtractor().toString());
-				} else if (classValue.equals("genres")) {
-					StringTokenizer tok = new StringTokenizer(element
-							.getTextExtractor().toString(), ",");
-					while (tok.hasMoreTokens()) {
-						genres.add(tok.nextToken().trim());
-					}
+		Element pShortSummary = ParseHelper.findFirstChild(source, HTMLElementName.P,true, new IFilterElement() {
+			@Override
+			public boolean accept(Element element) {
+				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("trunc_summ"));
+			}
+		});
+		if (pShortSummary!=null) {
+			show.setShortSummary(pShortSummary.getTextExtractor().toString());
+		}
+
+		Element pLongSummary = ParseHelper.findFirstChild(source, HTMLElementName.P,true, new IFilterElement() {
+			@Override
+			public boolean accept(Element element) {
+				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("whole_summ"));
+			}
+		});
+		if (pLongSummary!=null) {
+			String summary = pLongSummary.getTextExtractor().toString();
+			summary = summary.substring(0,summary.length()-6);
+			show.setLongSummary(summary);
+		}
+
+		Element buz =  ParseHelper.findFirstChild(source,HTMLElementName.DIV,true, new IFilterElement() {
+			@Override
+			public boolean accept(Element element) {
+				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("show_buzz_info"));
+			}
+		});
+		if (buz!=null) {
+			List<Link> genreLinks = ParseHelper.getLinks("", buz, new IFilterLink() {
+				@Override
+				public boolean accept(Link link) {
+					return (link.getURL().endsWith("today.html"));
 				}
+			});
+
+			for (Link link : genreLinks) {
+				genres.add(link.getTitle());
+			}
+		}
+
+		Element smallHead =  ParseHelper.findFirstChild(source,HTMLElementName.DIV,true, new IFilterElement() {
+			@Override
+			public boolean accept(Element element) {
+				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("smallhead"));
+			}
+		});
+		if (smallHead!=null) {
+			Element h1 =  ParseHelper.findFirstChild(source,HTMLElementName.H1,true,null);
+			if (h1!=null) {
+				show.setName(h1.getTextExtractor().toString());
 			}
 		}
 
 		if (show.getShortSummary() == null && show.getLongSummary() != null) {
-			String shortSummary = show.getLongSummary();
-			if (shortSummary.length() > 296) {
-				shortSummary = shortSummary.substring(0, 296);
-				if (!show.getLongSummary().equals(shortSummary)) {
-					shortSummary += "...";
-				}
-			}
+			show.setShortSummary(show.getLongSummary());
+		}
+
+		if (show.getShortSummary() !=null && show.getShortSummary().length()>296) {
+			String shortSummary = show.getShortSummary();
+			shortSummary = shortSummary.substring(0, 296);
+			shortSummary += "...";
 			show.setShortSummary(shortSummary);
 		}
 		show.setGenres(genres);
-
-		elements = source.findAllElements(HTMLElementName.DIV);
-		for (Element element : elements) {
-			String classValue = element.getAttributeValue("class");
-			String id = element.getAttributeValue("id");
-			if (classValue != null) {
-				if (classValue.equals("content_title")) {
-					String text = ((Element) element.getChildElements().get(0))
-							.getTextExtractor().toString();
-					show.setName(text.replaceAll(":.*$", ""));
-				}
-			}
-			if (id != null) {
-				if (id.equals("topslot")) {
-					for (Element e : (List<Element>) element.findAllElements()) {
-						if (e.getName().equals(HTMLElementName.IMG)) {							
-							String url = e.getAttributeValue("src");
-							if (url!=null) {
-								show.setImageURL(new URL(url));
-							}
-						}
-					}
-				}
-			}
-		}
+		show.setImageURL(new URL("http://image.com.com/tv/images/content_headers/program_new/"+show.getShowId()+".jpg"));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private EndTag getNextEndTag(Iterator it) {
 		Object o;
-		do {					 
+		do {
 			o = it.next();
 		} while ((!(o instanceof EndTag)) && it.hasNext()  );
 		if (o instanceof StartTag) {
@@ -437,11 +476,11 @@ public class TVCOMSource implements ISource {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Tag getNextTag(Iterator it) {
 		Object o;
-		do {					 
+		do {
 			o = it.next();
 		} while ((!(o instanceof Tag)) && it.hasNext()  );
 		if (o instanceof Tag) {
@@ -449,13 +488,13 @@ public class TVCOMSource implements ISource {
 		}
 		else {
 			return null;
-		}	
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private StartTag getNextStartTag(Iterator it) {
 		Object o;
-		do {					 
+		do {
 			o = it.next();
 		} while ((!(o instanceof StartTag)) && it.hasNext()  );
 		if (o instanceof StartTag) {
@@ -464,8 +503,8 @@ public class TVCOMSource implements ISource {
 		else {
 			return null;
 		}
-	}	
-	
+	}
+
 	private final static String getSummaryURL(String showId) {
 		return TVCOM_BASE_URL
 				+ URL_SUMMARY
@@ -474,7 +513,7 @@ public class TVCOMSource implements ISource {
 
 	private final static String getSeasonEposideListing(String showId,
 			int seasonNumber) {
-		String url = TVCOM_BASE_URL + URL_EPISODE_LISTING;
+		String url = TVCOM_BASE_URL + URL_EPISODE_LISTING_FULL;
 		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;
@@ -486,7 +525,7 @@ public class TVCOMSource implements ISource {
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;
 	}
-	
+
 	private String getShowSearchUrl(String query) {
 		String url = TVCOM_BASE_URL + URL_SHOW_SEARCH + query.replaceAll(" ", "+");
 		return url;
@@ -507,7 +546,7 @@ public class TVCOMSource implements ISource {
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @return The results of the search, or null if the show could not be found
-	 * @throws SourceException Thrown if their is a problem retrieving the data 
+	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
@@ -518,8 +557,8 @@ public class TVCOMSource implements ISource {
 			return null;
 		}
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));		
-		List<Element> elements = source.findAllElements(HTMLElementName.LI);		
+		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));
+		List<Element> elements = source.findAllElements(HTMLElementName.LI);
 		for (Element element : elements) {
 			if (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("result")) {
 				List<Element> elements2 = source.findAllElements(HTMLElementName.A);
@@ -529,12 +568,12 @@ public class TVCOMSource implements ISource {
 					if (m.find()) {
 						SearchResult result = new SearchResult(m.group(2),SOURCE_ID);
 						results.add(result);
-					}					
+					}
 				}
 			}
 		}
-		
-		if (results.size()>=1) {			
+
+		if (results.size()>=1) {
 			return results.get(0);
 		}
 		return null;
@@ -548,5 +587,5 @@ public class TVCOMSource implements ISource {
 	@Override
 	public Film getFilm(String filmId) {
 		return null;
-	}	
+	}
 }

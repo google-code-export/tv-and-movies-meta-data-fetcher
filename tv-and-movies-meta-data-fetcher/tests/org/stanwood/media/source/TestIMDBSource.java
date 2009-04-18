@@ -40,7 +40,7 @@ public class TestIMDBSource extends TestCase {
 
 	private final DateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
 	private final static String FILM_ID_IRON_MAN = "371746";
-	
+
 	/**
 	 * Used to test the searching of films
 	 * @throws Exception Thrown if the test produces any errors
@@ -49,16 +49,16 @@ public class TestIMDBSource extends TestCase {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
 		File dir = FileHelper.createTmpDir("films");
 		try {
-			File tmpFile = new File(dir,"Harvard Man.avi");						
+			File tmpFile = new File(dir,"Harvard Man.avi");
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals("0242508",result.getId());
-			assertEquals("imdb",result.getSourceId());			
+			assertEquals("imdb",result.getSourceId());
 		}
 		finally {
 			FileHelper.deleteDir(dir);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Used to test the searching of films
 	 * @throws Exception Thrown if the test produces any errors
@@ -67,26 +67,26 @@ public class TestIMDBSource extends TestCase {
 		IMDBSource source = getIMDBSource(FILM_ID_IRON_MAN);
 		File dir = FileHelper.createTmpDir("films");
 		try {
-			File tmpFile = new File(dir,"The iron man.avi");						
+			File tmpFile = new File(dir,"The iron man.avi");
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals("0772174",result.getId());
-			assertEquals("imdb",result.getSourceId());			
+			assertEquals("imdb",result.getSourceId());
 		}
 		finally {
 			FileHelper.deleteDir(dir);
-		}	
+		}
 	}
-		
+
 	/**
 	 * Test the HTML entity decoding
 	 */
-	public void testHTMLEntityDecode() {		
+	public void testHTMLEntityDecode() {
 		String result = SearchHelper.decodeHtmlEntities("Jam&#243;n, jam&#243;n.avi");
 		assertEquals("Check the result","Jamón, jamón.avi",result);
 		result = SearchHelper.decodeHtmlEntities("&#243;Jam&#243;n, jam&#243;n.avi&#243;&#243;");
 		assertEquals("Check the result","óJamón, jamón.avióó",result);
 	}
-	
+
 	/**
 	 * Test that film details are correctly read from the source
 	 * @throws Exception Thrown if the test produces any errors
@@ -100,62 +100,61 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check rating",8.0F,film.getRating());
 		assertEquals("Check the release date","00:00:00 2008-05-02",df.format(film.getDate()));
 		assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTM0MzgwNTAzNl5BMl5BanBnXkFtZTcwODkyNjg5MQ@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
-		
+
 		assertEquals("Check the country","USA",film.getCountry().getTitle());
 		assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
-		
+
 		List<String>genres = film.getGenres();
-		assertEquals(6,genres.size());
-		assertEquals("Action",genres.get(0));		
+		assertEquals(5,genres.size());
+		assertEquals("Action",genres.get(0));
 		assertEquals("Adventure",genres.get(1));
 		assertEquals("Crime",genres.get(2));
-		assertEquals("Drama",genres.get(3));
-		assertEquals("Sci-Fi",genres.get(4));
-		assertEquals("Thriller",genres.get(5));
-		
+		assertEquals("Sci-Fi",genres.get(3));
+		assertEquals("Thriller",genres.get(4));
+
 		List<Link>directors = film.getDirectors();
 		assertEquals(1,directors.size());
 		assertEquals("Jon Favreau",directors.get(0).getTitle());
 		assertEquals("http://www.imdb.com/name/nm0269463/",directors.get(0).getURL());
-		
+
 		List<Link>writers = film.getWriters();
 		assertEquals(2,writers.size());
 		assertEquals("Mark Fergus",writers.get(0).getTitle());
 		assertEquals("http://www.imdb.com/name/nm1318843/",writers.get(0).getURL());
 		assertEquals("Hawk Ostby",writers.get(1).getTitle());
 		assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getURL());
-		
+
 		List<Certification>certs = film.getCertifications();
 		assertEquals(33,certs.size());
 		assertEquals("12",certs.get(0).getCountry());
-		assertEquals("South Korea",certs.get(0).getCertification());		
+		assertEquals("South Korea",certs.get(0).getCertification());
 		assertEquals("12",certs.get(5).getCountry());
-		assertEquals("Netherlands",certs.get(5).getCertification());		
+		assertEquals("Netherlands",certs.get(5).getCertification());
 		assertEquals("IIA",certs.get(11).getCountry());
-		assertEquals("Hong Kong",certs.get(11).getCertification());		
+		assertEquals("Hong Kong",certs.get(11).getCertification());
 		assertEquals("M/12",certs.get(21).getCountry());
-		assertEquals("Portugal",certs.get(21).getCertification());	
+		assertEquals("Portugal",certs.get(21).getCertification());
 		assertEquals("12",certs.get(31).getCountry());
-		assertEquals("Austria",certs.get(31).getCertification());		
+		assertEquals("Austria",certs.get(31).getCertification());
 		assertEquals("PG",certs.get(32).getCountry());
 		assertEquals("Canada",certs.get(32).getCertification());
 	}
-	
+
 	private IMDBSource getIMDBSource(final String filmId) {
 		IMDBSource source = new IMDBSource() {
 			@Override
 			String getSource(URL url) throws IOException {
-			
+
 				String strFilmId = filmId;
 				while (strFilmId.length()<7) {
 					strFilmId="0"+strFilmId;
 				}
-				
-				String strUrl = url.toExternalForm();				
+
+				String strUrl = url.toExternalForm();
 				if (strUrl.equals("http://www.imdb.com/title/tt"+strFilmId+"/")) {
 					String file = "film-"+strFilmId+".html";
-					return FileHelper.readFileContents(Data.class.getResourceAsStream(file));					
-				}				
+					return FileHelper.readFileContents(Data.class.getResourceAsStream(file));
+				}
 				else if (strUrl.endsWith("find?q=the+iron+man")) {
 					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search.html"));
 				}
@@ -163,8 +162,8 @@ public class TestIMDBSource extends TestCase {
 					return FileHelper.readFileContents(Data.class.getResourceAsStream("imdb-search-excact.html"));
 				}
 				return null;
-			}			
+			}
 		};
 		return source;
-	}	
+	}
 }

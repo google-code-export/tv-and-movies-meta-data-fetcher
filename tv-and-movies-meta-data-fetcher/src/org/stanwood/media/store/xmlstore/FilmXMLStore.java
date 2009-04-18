@@ -58,15 +58,15 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class FilmXMLStore extends BaseXMLStore {
 
-	
+
 	private final static Log log = LogFactory.getLog(FilmXMLStore.class);
-	
+
 	private final static String FILENAME = ".films.xml";
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * This is used to write a film to the store.
-	 * 
+	 * @param rootMediaDir The root media directory
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -122,7 +122,7 @@ public class FilmXMLStore extends BaseXMLStore {
 			Element genre = doc.createElement("genre");
 			genre.setAttribute("name", value);
 			if (value.equals(film.getPreferredGenre())) {
-				genre.setAttribute("preferred", "true");	
+				genre.setAttribute("preferred", "true");
 			}
 			filmNode.appendChild(genre);
 		}
@@ -133,7 +133,7 @@ public class FilmXMLStore extends BaseXMLStore {
 			cert.setAttribute("certification", value.getCertification());
 			filmNode.appendChild(cert);
 		}
-		
+
 		for (Chapter chapter : film.getChapters()) {
 			Element chap = doc.createElement("chapter");
 			chap.setAttribute("number", String.valueOf(chapter.getNumber()));
@@ -162,7 +162,7 @@ public class FilmXMLStore extends BaseXMLStore {
 
 	/**
 	 * Used to get the details of a film with the given id. If it can't be found, then null is returned.
-	 * 
+	 * @param rootMediaDir The root media directory
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
 	 * @return The film details, or null if it can't be found
@@ -182,14 +182,14 @@ public class FilmXMLStore extends BaseXMLStore {
 				String title = getStringFromXML(filmNode, "@title");
 				String sourceId = getStringFromXML(filmNode, "@sourceId");
 				String summary = getStringFromXML(filmNode, "summary/text()");
-				
+
 				String description = null;
-				
+
 				try {
 					description = getStringFromXML(filmNode, "description/text()");
 				} catch (NotInStoreException e) {
 					// No description found, leave as null
-				}				
+				}
 				float rating = getFloatFromXML(filmNode, "@rating");
 				Date releaseDate = null;
 				try {
@@ -203,10 +203,10 @@ public class FilmXMLStore extends BaseXMLStore {
 				List<Chapter> chapters = readChaptersFromXML(filmNode);
 				List<Link> directors = getLinks(filmNode, "director");
 				List<Link> writers = getLinks(filmNode, "writer");
-				List<Link> guestStars = getLinks(filmNode, "guestStar");								
+				List<Link> guestStars = getLinks(filmNode, "guestStar");
 				List<Link> countries = getLinks(filmNode, "country");
 				String imageUrl = getStringFromXML(filmNode, "@imageUrl");
-				
+
 				Element preferredGenreNode = (Element) XPathAPI.selectSingleNode(filmNode, "genre[@preferred='true']");
 				if (preferredGenreNode!=null) {
 					film.setPreferredGenre(preferredGenreNode.getAttribute("name"));
@@ -265,7 +265,7 @@ public class FilmXMLStore extends BaseXMLStore {
 
 	/**
 	 * Used to read the certification from the XML document
-	 * 
+	 *
 	 * @param parent The parent node to read them from
 	 * @return A list of certification that were found
 	 * @throws TransformerException Thrown if their is a problem parsing the XML
@@ -321,13 +321,13 @@ public class FilmXMLStore extends BaseXMLStore {
 
 	/**
 	 * This will update all references of the old file to the new file
-	 * 
+	 * @param rootMediaDir The root media directory
 	 * @param oldFile The old file
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
 	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {
-		if (!isUnderParent(rootMediaDir,newFile)) {			
+		if (!isUnderParent(rootMediaDir,newFile)) {
 			log.error("Unable to update store with new file location due different not been under media directory");
 		} else {
 			Document doc = getCache(rootMediaDir,false);
@@ -338,7 +338,7 @@ public class FilmXMLStore extends BaseXMLStore {
 					for (int i = 0; i < nodes.getLength(); i++) {
 						nodes.item(i).setNodeValue(newFile.getAbsolutePath());
 					}
-	
+
 					File cacheFile = getCacheFile(oldFile.getParentFile(), FILENAME);
 					writeCache(cacheFile, doc);
 				} catch (TransformerException e) {
@@ -347,8 +347,8 @@ public class FilmXMLStore extends BaseXMLStore {
 			}
 		}
 	}
-	
-	public boolean isUnderParent(File parent,File dir) {		
+
+	private boolean isUnderParent(File parent,File dir) {
 		while (dir!=null) {
 			if (dir.equals(parent)) {
 				return true;
@@ -375,7 +375,7 @@ public class FilmXMLStore extends BaseXMLStore {
 	/**
 	 * This is called to search the store for a film Id. If it can't be found, then it will return null. The search is
 	 * done be reading the .films.xml file next to the film.
-	 * 
+	 * @param rootMediaDir The root media directory
 	 * @param filmFile The file the film is stored in
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store

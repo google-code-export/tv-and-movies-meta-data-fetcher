@@ -33,8 +33,8 @@ import org.stanwood.media.store.FakeStore;
 public class TestController extends TestCase {
 
 	private final static String LS = System.getProperty("line.separator");
-	
-	/** 
+
+	/**
 	 * Test that the store parameters can be read from the configuration and set
 	 * on the store.
 	 * @throws Exception Thrown if the test produces any errors
@@ -50,31 +50,33 @@ public class TestController extends TestCase {
 		testConfig.append("	     <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
 		testConfig.append("	   </store>"+LS);
 		testConfig.append("  </stores>"+LS);
-		testConfig.append("</config>"+LS);		
-		FakeStore.testParam1 = null; 
-			
+		testConfig.append("</config>"+LS);
+
+		FakeStore.testParam1 = null;
+
+
 		File configFile = createConfigFileWithContents(testConfig);
-		
+
 		ConfigReader configReader = new ConfigReader(configFile);
 		configReader.parse();
 		Controller.destoryController();
 		Controller.initFromConfigFile(configReader);
-		
+
 		assertEquals("/testPath/blah",FakeStore.testParam1);
-		
+
 		Controller.destoryController();
 	}
 
 	private File createConfigFileWithContents(StringBuilder testConfig) throws IOException, FileNotFoundException {
 		File configFile = File.createTempFile("config", ".xml");
-		configFile.deleteOnExit();		
-		PrintStream ps = null; 
+		configFile.deleteOnExit();
+		PrintStream ps = null;
 		try {
 			FileOutputStream os = new FileOutputStream(configFile);
 			ps = new PrintStream(os);
 			ps.print(testConfig.toString());
 		}
-		finally {			
+		finally {
 			ps.close();
 		}
 		return configFile;

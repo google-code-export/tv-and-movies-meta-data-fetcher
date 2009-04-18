@@ -17,6 +17,7 @@
 package org.stanwood.media.store.mp4;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,49 +40,51 @@ import org.stanwood.media.testdata.Data;
 public class TestAtomicParsley extends TestCase {
 
 	private SimpleDateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
-	
-	/** 
+
+	/**
 	 * Used to test reading atoms when the MP4 file has no atoms
 	 * @throws Exception Thrown if the test produces any errors
 	 */
-	public void testNoAtomsFound() throws Exception {		
+	public void testNoAtomsFound() throws Exception {
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/bin/AtomicParsley");
+		File apCmd = new File(File.separator+"usr"+File.separator+"bin"+File.separator+"AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
 		File mp4File = new File(url.toURI());
-		assertTrue(mp4File.exists());		
-		
+		assertTrue(mp4File.exists());
+
 		AtomicParsley ap = new AtomicParsley(apCmd);
 		List<Atom> atoms = ap.listAttoms(mp4File);
-		
-		assertEquals(0,atoms.size());	
+
+		assertEquals(0,atoms.size());
 	}
-	
-	/** 
+
+	/**
 	 * Used to test that the episode details can be written to the MP4 file.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testWriteEpsiode() throws Exception {
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/bin/AtomicParsley");
+		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
 		assertTrue(srcFile.exists());
-		
+
 		File mp4File = File.createTempFile("test", ".mp4");
-		mp4File.delete();
+		if (!mp4File.delete()) {
+			throw new IOException("Unable to delete file");
+		}
 		FileHelper.copy(srcFile, mp4File);
 		mp4File.deleteOnExit();
 		Episode episode = createTestEpisode();
 		AtomicParsley ap = new AtomicParsley(apCmd);
 		ap.updateEpsiode(mp4File, episode);
-		
+
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		System.out.println("Output: " +ap.getOutputStream());
 		System.out.println("Error: " +ap.getErrorStream());
@@ -105,38 +108,40 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("SciFi",atoms.get(8).getValue());
 		assertEquals("©gen",atoms.get(8).getName());
 		assertEquals("SciFi",atoms.get(9).getValue());
-		assertEquals("catg",atoms.get(9).getName());			
+		assertEquals("catg",atoms.get(9).getName());
 	}
-	
+
 	/**
 	 * Used to test that a film meta data can be written to a .mp4 file
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testWriteFilm() throws Exception {
 		AtomicParsley.updateImages = false;
-		File apCmd = new File("/usr/bin/AtomicParsley");
+		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
 		assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
 		assertTrue(srcFile.exists());
-		
+
 		File mp4File = File.createTempFile("test", ".mp4");
-		mp4File.delete();
+		if (!mp4File.delete()) {
+			throw new IOException("Unable to delete file");
+		}
 		FileHelper.copy(srcFile, mp4File);
 		mp4File.deleteOnExit();
 		Film film = createTestFilm();
-		
+
 		AtomicParsley ap = new AtomicParsley(apCmd);
 		ap.updateFilm(mp4File, film);
-		
+
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		System.out.println("Output: " +ap.getOutputStream());
 		System.out.println("Error: " +ap.getErrorStream());
 		assertEquals(7,atoms.size());
 		assertEquals("Movie",atoms.get(0).getValue());
-		assertEquals("stik",atoms.get(0).getName());		
+		assertEquals("stik",atoms.get(0).getName());
 		assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(1).getValue().replaceAll("0 ... ", "0 "));
 		assertEquals("©day",atoms.get(1).getName());
 		assertEquals("Test film name",atoms.get(2).getValue());
@@ -146,11 +151,11 @@ public class TestAtomicParsley extends TestCase {
 		assertEquals("SciFi",atoms.get(4).getValue());
 		assertEquals("©gen",atoms.get(4).getName());
 		assertEquals("SciFi",atoms.get(5).getValue());
-		assertEquals("catg",atoms.get(5).getName());	
+		assertEquals("catg",atoms.get(5).getName());
 		assertEquals("1 piece of artwork",atoms.get(6).getValue());
 		assertEquals("covr",atoms.get(6).getName());
 	}
-	
+
 	private Film createTestFilm() throws Exception {
 		Film film = new Film("123");
 		List<Certification> certifications= new ArrayList<Certification>();
@@ -196,24 +201,23 @@ public class TestAtomicParsley extends TestCase {
 		film.setImageURL(Data.class.getResource("test_image.jpeg"));
 		return film;
 	}
-	
-	private Episode createTestEpisode() throws Exception {		
+
+	private Episode createTestEpisode() throws Exception {
 		Show show = new Show("123");
 		show.setName("Test Show Name");
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");
 		genres.add("Drama");
 		show.setGenres(genres);
-		Season season = new Season(show,1);		
+		Season season = new Season(show,1);
 		Episode episode = new Episode(3,season);
 		episode.setDate(DF.parse("10-11-2005"));
 		episode.setEpisodeId(34567);
-		episode.setProductionCode("prod103");
 		episode.setRating(5.4F);
-		episode.setSiteId("103");
+		episode.setShowEpisodeNumber(103);
 		episode.setSummary("This is a test show summary");
 		episode.setTitle("Test Episode");
-		
+
 		return episode;
-	} 
+	}
 }
