@@ -231,7 +231,7 @@ public class Renamer {
 			} else {
 				Episode episode = Controller.getInstance().getEpisode(rootMediaDir,file, season, data.getEpisode(), refresh);
 				if (episode == null) {
-					log.error("Unable to find epsiode for file : " + file.getAbsolutePath());
+					log.error("Unable to find episode for file : " + file.getAbsolutePath());
 				} else {
 					String ext = oldFileName.substring(oldFileName.length() - 3);
 					File newName = getNewTVShowName(show, season, episode, ext);
