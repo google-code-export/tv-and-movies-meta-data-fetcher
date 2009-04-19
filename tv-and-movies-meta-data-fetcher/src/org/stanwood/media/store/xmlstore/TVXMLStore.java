@@ -175,7 +175,25 @@ public class TVXMLStore extends BaseXMLStore {
 		String title = getStringFromXML(episodeNode, "@title");
 		String airDate = getStringFromXML(episodeNode, "@firstAired");
 
-		long episodeSiteId = getLongFromXML(episodeNode, "@showEpisodeNumber");
+
+		long episodeSiteId = -1;
+		try {
+			episodeSiteId = getLongFromXML(episodeNode, "@showEpisodeNumber");
+		}
+		catch (NotInStoreException e) {
+			// Field not found, so try with the old name
+			try {
+				episodeSiteId = getLongFromXML(episodeNode, "@siteId");
+			}
+			catch (NotInStoreException e1) {
+				// Still not found, so throw original error
+				throw e;
+			}
+			catch (NumberFormatException e1) {
+				// Old field is not compatiable with new field, so throw original error
+				throw e;
+			}
+		}
 		long episodeId = getLongFromXML(episodeNode, "@episodeId");
 		float rating = getFloatFromXML(episodeNode, "@rating");
 		List<Link> directors = getLinks(episodeNode, "director");

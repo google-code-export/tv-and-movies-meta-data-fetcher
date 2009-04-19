@@ -78,17 +78,19 @@ public class FileNameParser {
  		}
 
 		Map<String,String> tokens = getTokens(rootMediaDir,renamePattern,file.getAbsolutePath());
-		String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);
-		String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);
-		if (episodeNumber!=null && seasonNumber!=null) {
-			ParsedFileName result = new ParsedFileName();
-			try {
-				result.setSeason(Integer.parseInt(seasonNumber));
-				result.setEpisode(Integer.parseInt(episodeNumber));
-				return result;
-			}
-			catch (NumberFormatException e) {
-				return null;
+		if (tokens!=null) {
+			String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);
+			String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);
+			if (episodeNumber!=null && seasonNumber!=null) {
+				ParsedFileName result = new ParsedFileName();
+				try {
+					result.setSeason(Integer.parseInt(seasonNumber));
+					result.setEpisode(Integer.parseInt(episodeNumber));
+					return result;
+				}
+				catch (NumberFormatException e) {
+					return null;
+				}
 			}
 		}
 		return null;

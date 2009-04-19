@@ -144,9 +144,9 @@ public class TVCOMSource implements ISource {
 
 	private void prarseSeasonEpisodes(Season season) throws IOException,
 			MalformedURLException {
-		Source source = getSource(season.getListingUrl());
+		Source source = getSource(  new URL(getSeasonEposideListing(season.getShow().getShowId(),season.getSeasonNumber())));
 		parse(season, source);
-		source = getSource(season.getDetailedUrl());
+		source = getSource( new URL(getSeasonEposideDetailed(season.getShow().getShowId(),season.getSeasonNumber())));
 		defailedParse(season, source);
 	}
 
