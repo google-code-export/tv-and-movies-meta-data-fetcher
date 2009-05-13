@@ -285,8 +285,7 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 
 		PreparedStatement stmt = null;
 
-		try {
-			connection = createConnection();
+		try {			
 			stmt = connection.prepareStatement(sql);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
