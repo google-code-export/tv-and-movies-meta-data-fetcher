@@ -1,0 +1,12 @@
+org.stanwood.media.database
+org.stanwood.media.logging
+org.stanwood.media.model
+org.stanwood.media.renamer
+org.stanwood.media.setup
+org.stanwood.media.source
+org.stanwood.media.store
+org.stanwood.media.store.memory
+org.stanwood.media.store.mp4
+org.stanwood.media.store.mythtv
+org.stanwood.media.store.xmlstore
+org.stanwood.media.util

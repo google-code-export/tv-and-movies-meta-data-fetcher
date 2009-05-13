@@ -2,12 +2,12 @@
 				This document describes usage of the application MediaInfoFetcher version 1.0
 			"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="N10001"></a>MediaInfoFetcher user guide</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">John-Paul</span> <span class="surname">Stanford</span></h3><div class="affiliation"><div class="address"><p><span style="white-space: pre;"><tt class="email">&lt;<a href="mailto:dev@stanwood.org.uk">dev@stanwood.org.uk</a>&gt;</tt></span></p></div></div></div></div></div><div><p class="copyright">Copyright &copy; 2007 John-Paul Stanford</p></div><div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
 				This document describes usage of the application MediaInfoFetcher version 1.0
-			</p></div></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="sect1"><a href="#N1001F">Features</a></span></dt><dt><span class="sect1"><a href="#N10041">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10046">org.stanwood.media.source.TVCOMSource</a></span></dt><dt><span class="sect2"><a href="#N1004B">org.stanwood.media.source.IMDBSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#N1005C">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10065">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#N1006A">org.stanwood.media.store.XMLStore</a></span></dt><dt><span class="sect2"><a href="#N1006F">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#N1008A">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#installation">2. Installation</a></span></dt><dd><dl><dt><span class="sect1"><a href="#N100AA">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#N100C8">2. Any platform static Jar Disturbution</a></span></dt></dl></dd><dt><span class="chapter"><a href="#usage">3. CLI Usage</a></span></dt><dd><dl><dt><span class="sect1"><a href="#mediarenamercmd">media-renamer</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10169">TV Mode</a></span></dt><dt><span class="sect2"><a href="#N10174">Film Mode</a></span></dt><dt><span class="sect2"><a href="#N1017D">Pattern</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#configuration">4. Configuration</a></span></dt><dt><span class="chapter"><a href="#credits-and-licenses">5. Credits and Licenses</a></span></dt></dl></div><div class="list-of-examples"><p><b>List of Examples</b></p><dl><dt>3.1. <a href="#N101AA">Examples:</a></dt><dt>4.1. <a href="#N101C8">The default configuration file</a></dt><dt>4.2. <a href="#N101D1">Configuration file using parameters</a></dt></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#N1001F">Features</a></span></dt><dt><span class="sect1"><a href="#N10041">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10046">org.stanwood.media.source.TVCOMSource</a></span></dt><dt><span class="sect2"><a href="#N1004B">org.stanwood.media.source.IMDBSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#N1005C">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10065">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#N1006A">org.stanwood.media.store.XMLStore</a></span></dt><dt><span class="sect2"><a href="#N1006F">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#N1008A">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt></dl></dd></dl></div><p>
+			</p></div></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="sect1"><a href="#N1001F">Features</a></span></dt><dt><span class="sect1"><a href="#N10041">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10046">org.stanwood.media.source.TVCOMSource</a></span></dt><dt><span class="sect2"><a href="#N1004B">org.stanwood.media.source.IMDBSource</a></span></dt><dt><span class="sect2"><a href="#N1005C">org.stanwood.media.source.HybridFilmSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#N1006D">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10076">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#N1007B">org.stanwood.media.store.XMLStore</a></span></dt><dt><span class="sect2"><a href="#N10080">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#N1009B">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt><dt><span class="sect2"><a href="#N100AE">org.stanwood.media.store.mythtv.MythTVStore</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#installation">2. Installation</a></span></dt><dd><dl><dt><span class="sect1"><a href="#N100EA">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#N10108">2. Any platform static Jar Disturbution</a></span></dt></dl></dd><dt><span class="chapter"><a href="#usage">3. CLI Usage</a></span></dt><dd><dl><dt><span class="sect1"><a href="#mediarenamercmd">media-renamer</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N101BB">TV Mode</a></span></dt><dt><span class="sect2"><a href="#N101C6">Film Mode</a></span></dt><dt><span class="sect2"><a href="#N101CF">Pattern</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#configuration">4. Configuration</a></span></dt><dt><span class="chapter"><a href="#credits-and-licenses">5. Credits and Licenses</a></span></dt></dl></div><div class="list-of-examples"><p><b>List of Examples</b></p><dl><dt>3.1. <a href="#N10202">Examples:</a></dt><dt>4.1. <a href="#N10220">The default configuration file</a></dt><dt>4.2. <a href="#N10229">Configuration file using parameters</a></dt></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#N1001F">Features</a></span></dt><dt><span class="sect1"><a href="#N10041">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10046">org.stanwood.media.source.TVCOMSource</a></span></dt><dt><span class="sect2"><a href="#N1004B">org.stanwood.media.source.IMDBSource</a></span></dt><dt><span class="sect2"><a href="#N1005C">org.stanwood.media.source.HybridFilmSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#N1006D">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10076">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#N1007B">org.stanwood.media.store.XMLStore</a></span></dt><dt><span class="sect2"><a href="#N10080">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#N1009B">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt><dt><span class="sect2"><a href="#N100AE">org.stanwood.media.store.mythtv.MythTVStore</a></span></dt></dl></dd></dl></div><p>
 			MediaInfoFetcher is a application and a API which can be used to retrieve TV show 
 			and movie meta data from Internet sources. This information is then stored 
 			locally and can be used to rename media files with the correct title.
 		</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1001F"></a>Features</h2></div></div><div></div></div><p>
-				<div class="itemizedlist"><ul type="disc"><li><p>Provides a CLI tool that renames media files with the correct names.</p></li><li><p>Fetches TV Show and Film meta data from the Internet.</p></li><li><p>Allows multiple sources and stores.</p></li><li><p>Caches information in XML.</p></li><li><p>Find film posters on the internet for each film.</p></li><li><p>Provides a API for accessing the information.</p></li><li><p>Provides a store that writes Sapphire XML files.</p></li><li><p>Provides a store that saves metadata into MP4/M4V files that iTunes can read.</p></li><li><p>Runs on any platform that supports Java 1.6.</p></li></ul></div>				
+				<div class="itemizedlist"><ul type="disc"><li><p>Provides a CLI tool that renames media files with the correct names.</p></li><li><p>Fetches TV Show and Film meta data from the Internet.</p></li><li><p>Allows multiple sources and stores.</p></li><li><p>Caches information in XML.</p></li><li><p>Find film posters on the Internet for each film.</p></li><li><p>Provides a API for accessing the information.</p></li><li><p>Provides a store that writes Sapphire XML files.</p></li><li><p>Provides a store that saves metadata into MP4/M4V files that iTunes can read.</p></li><li><p>Runs on any platform that supports Java 1.6.</p></li></ul></div>				
 			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10041"></a>Sources</h2></div></div><div></div></div><p>
 				Sources are the places that MediaInfoFetcher retrieves information from. Sources
 				are read only so it's not possible to information back too them. Their are two 
@@ -25,7 +25,18 @@
 				</p><p>
                       It has the following parameters:
                       <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">RegexpToReplace</tt> a regular expression, that when found in the filename, is removed</p></li></ul></div>
-				</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1005C"></a>Stores</h2></div></div><div></div></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1005C"></a>org.stanwood.media.source.HybridFilmSource</h3></div></div><div></div></div><p>
+				The HybridFilm Source is a bit different to the other sources. It uses the other sources to 
+				find the best information it can about a film. This is the preferred source to use when
+				fetching film information.
+				</p><p>
+				This source has the option parameter "RegexpToReplace", which is used when searching for a film
+                via the film's filename. The parameter is a regular expression, that when found in the filename,
+                is removed.   
+				</p><p>
+                      It has the following parameters:
+                      <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">RegexpToReplace</tt> a regular expression, that when found in the filename, is removed</p></li></ul></div>
+				</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1006D"></a>Stores</h2></div></div><div></div></div><p>
 				Stores are similar too sources, except that they are also writable. Once
 				information has been retrieved from a source, it is written too a store.
 				Next time the information is needed, it can be retrieved from the store.
@@ -38,17 +49,17 @@
 				Their are 4 stores that come with MediaInfoFetcher. Each of these has different
 				properties. Some of these stores can also be used by applications such as 
 				media centre's to display media metadata. 				
-			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10065"></a>org.stanwood.media.store.memory.MemoryStore</h3></div></div><div></div></div><p>
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10076"></a>org.stanwood.media.store.memory.MemoryStore</h3></div></div><div></div></div><p>
 				This store is used to store the show information in memory. This allows the tool
  				reuse the show information without having to fetch it from other stores or sources 
  				(which would be slower). This information will be lost once the application exits. 
-				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1006A"></a>org.stanwood.media.store.XMLStore</h3></div></div><div></div></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1007B"></a>org.stanwood.media.store.XMLStore</h3></div></div><div></div></div><p>
 				This store is used to store the show information in a XML called '.show.xml. ' 
                	This is located in the directory were the show is located. It can hold all
  				of the information of the Shows, Seasons, Episodes and Specials. This store
  				can be read and written too, and it's also possible too lookup the show id 
  				of the show in the current directory.
-				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1006F"></a>org.stanwood.media.store.SapphireStore</h3></div></div><div></div></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10080"></a>org.stanwood.media.store.SapphireStore</h3></div></div><div></div></div><p>
 				This is a write only store that is used to store information in a format that can 
  				be used by the <a href="http://appletv.nanopi.net/" target="_top">Sapphire</a> frontrow plugin. 
  				The details of the XML format can be found <a href="http://appletv.nanopi.net/manual/overriding-metadata/" target="_top">here</a>.
@@ -62,37 +73,51 @@
  				</p><p>
                       It has the following parameters:
                       <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">PreferredCertificationCounrty</tt> The preferred counties rating to use.</p></li></ul></div>
-				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1008A"></a>org.stanwood.media.store.mp4.MP4ITunesStore</h3></div></div><div></div></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1009B"></a>org.stanwood.media.store.mp4.MP4ITunesStore</h3></div></div><div></div></div><p>
                      This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
                      information can be read by iTunes. It does this by using the application <a href="http://atomicparsley.sourceforge.net/" target="_top">AtomicParsley</a>.  
                      </p><p>
                            It has the following parameters:
                            <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">AtomicParsleyPath</tt>The location of the AtomicParsley application</p></li></ul></div>
-                     </p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="installation"></a>Chapter&nbsp;2.&nbsp;Installation</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#N100AA">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#N100C8">2. Any platform static Jar Disturbution</a></span></dt></dl></div><p>
+                     </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N100AE"></a>org.stanwood.media.store.mythtv.MythTVStore</h3></div></div><div></div></div><p>
+             		This is a write only store that is used to store Film information in a 
+             		<a href="http://www.mythtv.org/" target="_top">Myth TV</a> database hosted in a 
+                    MySQL database. .
+             		</p><p>  				
+ 					Every time film information is fetched from a source, he film information is 
+ 					inserted/updated in the Myth TV database. Cover images are also fetched and 
+ 					placed in a directory (which is configured via a parameter). The location of 
+ 					these images is inserted with the film into the database.
+					</p><p>
+					This store has several required parameters:
+					  <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">DatabaseHost</tt>The host name of the database server</p></li><li><p><tt class="literal">DatabaseName</tt>The name of the Myth TV database</p></li><li><p><tt class="literal">DatabaseUser</tt>The user name used to access the Myth TV database</p></li><li><p><tt class="literal">DatabasePassword</tt>The password of the user used to access the Myth TV database</p></li></ul></div>
+					  This store has these optional parameters:
+					  <div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">CoversPath</tt>If set to a directory, then covers images are stored in the directory</p></li></ul></div>
+					</p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="installation"></a>Chapter&nbsp;2.&nbsp;Installation</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#N100EA">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#N10108">2. Any platform static Jar Disturbution</a></span></dt></dl></div><p>
 			Their are a few different ways to install MediaInfoFetcher. The different distributions 
 		    can be found at <a href="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/list" target="_top"><i class="citetitle">Downloads</i></a> 
 		</p><p>
 			All of the distributions will require a Java 1.6 compatible JRE.
-		</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N100AA"></a>1. Linux Binary Distribution Packages</h2></div></div><div></div></div><p>
+		</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N100EA"></a>1. Linux Binary Distribution Packages</h2></div></div><div></div></div><p>
 				Their are several linux distribution packages that can be found in the downloads section of the website.
 				If your distribution uses RPM packages, then following these instructions.
 				<div class="orderedlist"><ol type="1"><li><p>Pick the packages for your distribution</p></li><li><p>Download them to a directory</p></li><li><p>Change to that directory from the console</p></li><li><p>Log in as root and run the command <span><b class="command">rpm -Uvh *.rpm</b></span></p></li></ol></div>				
 			</p><p>
 				This will install the the application and a script too launch it. The script is located at <span><b class="command">/usr/bin/media-renamer</b></span>
-			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N100C8"></a>2. Any platform static Jar Disturbution</h2></div></div><div></div></div><p>
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10108"></a>2. Any platform static Jar Disturbution</h2></div></div><div></div></div><p>
 				Their is a static jar distribution avaliable on the downloads page. This will run on any platform with the
 				correct JRE. Simply download it too your system, and type the command:
 				<div class="cmdsynopsis"><p><tt class="command">java -jar MediaInfoFetcher-1.0-static-bin.jar </tt>  [options]</p></div>
 			    This can be used to rename media files and uses the same command line parameters 
 			    as the <a href="#mediarenamercmd" title="media-renamer">media-renamer</a> script.
-			</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="usage"></a>Chapter&nbsp;3.&nbsp;CLI Usage</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#mediarenamercmd">media-renamer</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N10169">TV Mode</a></span></dt><dt><span class="sect2"><a href="#N10174">Film Mode</a></span></dt><dt><span class="sect2"><a href="#N1017D">Pattern</a></span></dt></dl></dd></dl></div><p></p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediarenamercmd"></a>media-renamer</h2></div></div><div></div></div><p>
+			</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="usage"></a>Chapter&nbsp;3.&nbsp;CLI Usage</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#mediarenamercmd">media-renamer</a></span></dt><dd><dl><dt><span class="sect2"><a href="#N101BB">TV Mode</a></span></dt><dt><span class="sect2"><a href="#N101C6">Film Mode</a></span></dt><dt><span class="sect2"><a href="#N101CF">Pattern</a></span></dt></dl></dd></dl></div><p></p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediarenamercmd"></a>media-renamer</h2></div></div><div></div></div><p>
 				The media-renamer command is used to rename media files such as TV Shows in a directory with the correct names.
 				The information is fetched from sources and the information to when performing the renaming. In order that 
 				it does not have to fetch the data every time, the data is cached in stores.
-				<div class="cmdsynopsis"><p><tt class="command">media-renamer</tt>  [-h] [-s <i class="replaceable"><tt>showId</tt></i>] [-d <i class="replaceable"><tt>media directory</tt></i>] [-p <i class="replaceable"><tt>rename pattern</tt></i>] [-o <i class="replaceable"><tt>source id</tt></i>] [-r] [-c <i class="replaceable"><tt>config file</tt></i>] [-m <i class="replaceable"><tt>TV|FILM</tt></i>]</p></div>
+				<div class="cmdsynopsis"><p><tt class="command">media-renamer</tt>  [-h] [-s <i class="replaceable"><tt>showId</tt></i>] [-d <i class="replaceable"><tt>media directory</tt></i>] [-p <i class="replaceable"><tt>rename pattern</tt></i>] [-o <i class="replaceable"><tt>source id</tt></i>] [-r] [-c <i class="replaceable"><tt>config file</tt></i>] [-m <i class="replaceable"><tt>TV|FILM</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>]</p></div>
 			</p><p>
 				The command has the following options:
-				<div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-s, --showid</tt> The ID of the movie/show. If not present, then it will search for the show id. Only usable in TV mode.</p></li><li><p><tt class="literal">-d, --dir</tt> The directory to look for media. If not present use the current directory.</p></li><li><p><tt class="literal">-p, --pattern</tt> The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.</p></li><li><p><tt class="literal">-o, --source</tt> The id if the source too look up meta data in. Defaults too tvcom if not present.</p></li><li><p><tt class="literal">-r, --refresh</tt> If this option is present, it will make the stores get regenerated from source.</p></li><li><p><tt class="literal">-c, --config</tt> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</p></li><li><p><tt class="literal">-m, --mode</tt> The mode that the tool will work in. Either FILM or TV.</p></li></ul></div>				
+				<div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-s, --showid</tt> The ID of the movie/show. If not present, then it will search for the show id. Only usable in TV mode.</p></li><li><p><tt class="literal">-d, --dir</tt> The directory to look for media. If not present use the current directory.</p></li><li><p><tt class="literal">-p, --pattern</tt> The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.</p></li><li><p><tt class="literal">-o, --source</tt> The id if the source too look up meta data in. Defaults too tvcom if not present.</p></li><li><p><tt class="literal">-r, --refresh</tt> If this option is present, it will make the stores get regenerated from source.</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</p></li><li><p><tt class="literal">-m, --mode</tt> The mode that the tool will work in. Either FILM or TV.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li><li><p><tt class="literal">-R, --recursive</tt> Also process subdirectories</p></li></ul></div>				
 			</p><p>
 				The media-renamer command has two modes of operations. These are TV and Film modes.
 				If mode can be used by setting the <tt class="literal">--mode</tt> option on the command line.
@@ -109,7 +134,7 @@
 				looks for a configuration file located at <tt class="filename">/etc/mediafetcher-conf.xml</tt>.
 				If that can't be found, then it uses in built defaults. For more information on the configuration
 				files, see the <a href="#configuration" title="Chapter&nbsp;4.&nbsp;Configuration">Configuration section</a>.
-			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10169"></a>TV Mode</h3></div></div><div></div></div><p>
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N101BB"></a>TV Mode</h3></div></div><div></div></div><p>
 					The media-renamer command presumes that each TV show's media files are contained 
 					in a directory. It also has the ability to search for the TV Shows id by using the
 					directory name as the name of the show, so it would be beneficial if the media
@@ -119,19 +144,19 @@
 					the CLI. If you are using stores, they will store the show id (if they support
 					this functionality). This can then be used when searching for a show id instead
 					of the directory name.				
-				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10174"></a>Film Mode</h3></div></div><div></div></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N101C6"></a>Film Mode</h3></div></div><div></div></div><p>
 					When the media-renamer command is used in film mode, it will treat all the media
 					files it finds as Films. It looks up the ID's from the file names. First the file names
 					are tidied up, then stores and sources are searched using the file names. If the 
 					Film is found, then it is renamed using either the default pattern or the one given 
 					via the <tt class="literal">--pattern</tt> option.
-				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1017D"></a>Pattern</h3></div></div><div></div></div><p>Each of the files that is renamed is done according to a pattern. A pattern 
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N101CF"></a>Pattern</h3></div></div><div></div></div><p>Each of the files that is renamed is done according to a pattern. A pattern 
 				is a text string that contains tokens. These tokens are replaced by the
 				show/episode information.  
 				</p><p>
 					The following list contains the meaning for each token:
-					<div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">%h</tt> - show Id</p></li><li><p><tt class="literal">%s</tt> - series number</p></li><li><p><tt class="literal">%e</tt> - episode number</p></li><li><p><tt class="literal">%n</tt> - show name</p></li><li><p><tt class="literal">%t</tt> - episode title</p></li><li><p><tt class="literal">%x</tt> - extension (avi, mkv....)</p></li></ul></div>
-				</p><div class="example"><a name="N101AA"></a><p class="title"><b>Example&nbsp;3.1.&nbsp;Examples:</b></p><p>
+					<div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">%h</tt> - show Id</p></li><li><p><tt class="literal">%s</tt> - seaspn number</p></li><li><p><tt class="literal">%e</tt> - episode number</p></li><li><p><tt class="literal">%n</tt> - show name</p></li><li><p><tt class="literal">%t</tt> - episode title or film title</p></li><li><p><tt class="literal">%x</tt> - extension (avi, mkv....)</p></li><li><p><tt class="literal">%%</tt> - add a % char</p></li></ul></div>
+				</p><div class="example"><a name="N10202"></a><p class="title"><b>Example&nbsp;3.1.&nbsp;Examples:</b></p><p>
 						The following options show what happens when they are used to rename 
 					     the 4th episode of the 2nd season of the show heroes.
 					     <div class="itemizedlist"><ul type="disc"><li><p>"S%s E%e - %t.%x" = "S2 E04 - The Kindness of Strangers.avi"</p></li><li><p>"%sx%e.%n.%t.%x" = "2x04.Heroes.The Kindness of Strangers.avi"</p></li><li><p>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</p></li></ul></div>
@@ -144,7 +169,7 @@
 			it will fall back too using default settings.
 		</p><p>
 			
-			<div class="example"><a name="N101C8"></a><p class="title"><b>Example&nbsp;4.1.&nbsp;The default configuration file</b></p><pre class="programlisting">
+			<div class="example"><a name="N10220"></a><p class="title"><b>Example&nbsp;4.1.&nbsp;The default configuration file</b></p><pre class="programlisting">
 			&lt;config&gt;
        &lt;sources&gt;
               &lt;!-- www.tv.com TV Show information source --&gt;
@@ -166,7 +191,7 @@
 			Some of the stores and sources can also have parameters, the following example shows how to setup 
 			the MP4ITunesStore so that it can find the AtomicParsley command and use it to store
 			TV Show/Film information into .mp4 and .m4v files that iTunes can read.
-			<div class="example"><a name="N101D1"></a><p class="title"><b>Example&nbsp;4.2.&nbsp;Configuration file using parameters</b></p><pre class="programlisting">
+			<div class="example"><a name="N10229"></a><p class="title"><b>Example&nbsp;4.2.&nbsp;Configuration file using parameters</b></p><pre class="programlisting">
 			&lt;config&gt;
        &lt;sources&gt;
               &lt;!-- www.tv.com TV Show information source --&gt;
