@@ -125,7 +125,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getURL());
 
 		List<Certification>certs = film.getCertifications();
-		assertEquals(33,certs.size());
+		assertEquals(32,certs.size());
 		assertEquals("12",certs.get(0).getCountry());
 		assertEquals("South Korea",certs.get(0).getCertification());
 		assertEquals("12",certs.get(5).getCountry());
@@ -135,9 +135,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("M/12",certs.get(21).getCountry());
 		assertEquals("Portugal",certs.get(21).getCertification());
 		assertEquals("12",certs.get(31).getCountry());
-		assertEquals("Austria",certs.get(31).getCertification());
-		assertEquals("PG",certs.get(32).getCountry());
-		assertEquals("Canada",certs.get(32).getCertification());
+		assertEquals("Austria",certs.get(31).getCertification());		
 	}
 
 	private IMDBSource getIMDBSource(final String filmId) {

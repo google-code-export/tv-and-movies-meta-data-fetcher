@@ -63,9 +63,8 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals(SHOW_ID_EUREKA,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/show/58448/summary.html",show.getShowURL().toExternalForm());
-		assertEquals(2,show.getGenres().size());
-		assertEquals("Science-Fiction",show.getGenres().get(0));
-		assertEquals("Drama",show.getGenres().get(1));
+		assertEquals(1,show.getGenres().size());
+		assertEquals("Drama, Sci-Fi",show.getGenres().get(0));
 
 	}
 
@@ -195,9 +194,9 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://www.tv.com/Eureka/From+Fear+to+Eternity/episode/1203120/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1203120,episode.getEpisodeId());
 
-		assertNull(source.getEpisode(season, 9));
-		assertNull(source.getEpisode(season, 10));
-		assertNull(source.getEpisode(season, 11));
+		assertNull(source.getEpisode(season, 16));
+		assertNull(source.getEpisode(season, 17));
+		assertNull(source.getEpisode(season, 18));
 
 		season = source.getSeason(show, 4);
 		assertNull("Check that the last season was detected",season);
@@ -217,11 +216,8 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals(SHOW_ID_HEROES,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/17552.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/show/17552/summary.html",show.getShowURL().toExternalForm());
-		assertEquals(3,show.getGenres().size());
-		assertEquals("Drama",show.getGenres().get(0));
-		assertEquals("Science-Fiction",show.getGenres().get(1));
-		assertEquals("Action/Adventure",show.getGenres().get(2));
-	}
+		assertEquals(1,show.getGenres().size());
+		assertEquals("Drama, Sci-Fi",show.getGenres().get(0));	}
 
 	/**
 	 * Test that the special episode details are read correctly.

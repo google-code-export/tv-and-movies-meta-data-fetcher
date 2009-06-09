@@ -4,7 +4,7 @@
 		<source id="org.stanwood.media.source.TVCOMSource"/>
 		
 		<!-- www.imdb.com The film information source -->
-		<source id="org.stanwood.media.source.IMDBSource"/>
+		<source id="org.stanwood.media.source.HybridFilmSource"/>
 	</sources>
 	<stores>
 		<!-- Caches data in memory while the application is running -->

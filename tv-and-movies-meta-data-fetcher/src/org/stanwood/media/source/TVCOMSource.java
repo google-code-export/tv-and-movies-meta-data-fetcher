@@ -436,18 +436,16 @@ public class TVCOMSource implements ISource {
 			}
 		}
 
-		Element smallHead =  ParseHelper.findFirstChild(source,HTMLElementName.DIV,true, new IFilterElement() {
+		Element h1 =  ParseHelper.findFirstChild(source,HTMLElementName.H1,true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("smallhead"));
+				return (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("show_title"));
 			}
 		});
-		if (smallHead!=null) {
-			Element h1 =  ParseHelper.findFirstChild(source,HTMLElementName.H1,true,null);
-			if (h1!=null) {
-				show.setName(h1.getTextExtractor().toString());
-			}
+		if (h1!=null) {
+			show.setName(h1.getTextExtractor().toString());
 		}
+
 
 		if (show.getShortSummary() == null && show.getLongSummary() != null) {
 			show.setShortSummary(show.getLongSummary());

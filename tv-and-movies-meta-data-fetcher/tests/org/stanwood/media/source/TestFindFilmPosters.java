@@ -41,7 +41,9 @@ public class TestFindFilmPosters extends TestCase {
 		Film film = new Film("371746");
 		film.setTitle("Iron Man");
 		URL posterUrl = findPosters.findViaMoviePoster(film);
-		assertTrue("Check the url",posterUrl.toExternalForm().endsWith("movieposter.com/posters/archive/main/66/MPW-33160"));
+		if (!posterUrl.toExternalForm().endsWith("MPW-32744")) {
+			fail("Url ["+posterUrl.toExternalForm()+"] does not end with [MPW-32744]");
+		}
 	}
 
 	private FindFilmPosters getPosterFinder() {
