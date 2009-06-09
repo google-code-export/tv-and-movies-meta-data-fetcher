@@ -382,6 +382,9 @@ public class FilmXMLStore extends BaseXMLStore {
 	 */
 	public SearchResult searchForFilmId(File rootMediaDir,File filmFile) throws StoreException {
 		Document doc = getCache(rootMediaDir,false);
+		if (doc==null) {
+			return null;
+		}
 		String query = getQuery(filmFile);
 		try {
 			NodeList nodes = XPathAPI.selectNodeList(doc, "/films/film");
