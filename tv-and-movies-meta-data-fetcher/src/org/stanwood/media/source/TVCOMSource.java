@@ -50,15 +50,14 @@ import au.id.jericho.lib.html.Tag;
  */
 public class TVCOMSource implements ISource {
 
-	private final static Pattern EPISODE_ID_PATTERN = Pattern
-			.compile(".*episode\\/(.*)\\/summary.*");
+	private final static Pattern EPISODE_ID_PATTERN = Pattern.compile(".*episode\\/(.*)\\/summary.*");
 
-	private final static Pattern SHOW_ID_PATTERN = Pattern
-	.compile("\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
+	private final static Pattern SHOW_ID_PATTERN = Pattern.compile("\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
 
 	private final static Pattern PRINT_PAGE_TITLE_PATTERN = Pattern.compile(".*?(\\d+)\\..*");
 
-	private final static Pattern EPISODE_EXTRACT_PATTERN = Pattern.compile("Season (\\d+), Episode (\\d+).*Aired: (.*)");
+	private final static Pattern EPISODE_EXTRACT_PATTERN = Pattern
+			.compile("Season (\\d+), Episode (\\d+).*Aired: (.*)");
 	private final static Pattern SPECIAL_EXTRACT_PATTERN = Pattern.compile("Special\\. Season (\\d+).*Aired: (.*)");
 
 	private final static String TVCOM_BASE_URL = "http://www.tv.com/";
@@ -66,7 +65,7 @@ public class TVCOMSource implements ISource {
 
 	private final static String URL_EPISODE_LISTING_FULL = "show/$showId$/episode.html?season=$seasonNum$";
 	private final static String URL_EPISODES = "show/$showId$/episode_guide.html?printable=1";
-//	private final static String URL_EPISODE_LISTING = "show/$showId$/episode_listings.html?season=$seasonNum$";
+	// private final static String URL_EPISODE_LISTING = "show/$showId$/episode_listings.html?season=$seasonNum$";
 
 	private final static String URL_SHOW_SEARCH = "search.php?type=Search&stype=ajax_search&search_type=program&qs=";
 
@@ -74,9 +73,9 @@ public class TVCOMSource implements ISource {
 	public static final String SOURCE_ID = "tvcom";
 
 	/**
-	 * This gets a special episode from the source. If it can't be found, then it will
-	 * return null. It does this by accessing two different URL that are needed to
-	 * get all of the information.
+	 * This gets a special episode from the source. If it can't be found, then it will return null. It does this by
+	 * accessing two different URL that are needed to get all of the information.
+	 *
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
 	 * @return The special episode, or null if it can't be found
@@ -84,8 +83,7 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
-			throws MalformedURLException, IOException {
+	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException {
 		Episode special = season.getSpecial(specialNumber);
 		if (special == null) {
 			prarseSeasonEpisodes(season);
@@ -95,9 +93,9 @@ public class TVCOMSource implements ISource {
 	}
 
 	/**
-	 * This gets a episode from the source. If it can't be found, then it will
-	 * return null. It does this by accessing two different URL that are needed to
-	 * get all of the information.
+	 * This gets a episode from the source. If it can't be found, then it will return null. It does this by accessing
+	 * two different URL that are needed to get all of the information.
+	 *
 	 * @param season The season the special episode belongs too
 	 * @param episodeNum The number of the episode too get
 	 * @return The episode, or null if it can't be found
@@ -105,8 +103,7 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
-			throws MalformedURLException, IOException {
+	public Episode getEpisode(Season season, int episodeNum) throws MalformedURLException, IOException {
 		Episode episode = season.getEpisode(episodeNum);
 		if (episode == null) {
 			prarseSeasonEpisodes(season);
@@ -116,9 +113,9 @@ public class TVCOMSource implements ISource {
 	}
 
 	/**
-	 * This will get a season from the source. If the season can't be found,
-	 * then it will return null. This also gets all the episode data as well.
-	 * Ths is because the episodes and seasons are linked in this source.
+	 * This will get a season from the source. If the season can't be found, then it will return null. This also gets
+	 * all the episode data as well. Ths is because the episodes and seasons are linked in this source.
+	 *
 	 * @param show The show the season belongs too
 	 * @param seasonNum The number of the season that is to be fetched
 	 * @return The season if it can be found, otherwise null.
@@ -126,12 +123,10 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
-			IOException {
+	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException {
 		Season season = new Season(show, seasonNum);
-		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(),seasonNum)));
-		season.setDetailedUrl(new URL(getSeasonEposideDetailed(
-				show.getShowId(), seasonNum)));
+		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(), seasonNum)));
+		season.setDetailedUrl(new URL(getSeasonEposideDetailed(show.getShowId(), seasonNum)));
 
 		prarseSeasonEpisodes(season);
 
@@ -142,11 +137,11 @@ public class TVCOMSource implements ISource {
 		return season;
 	}
 
-	private void prarseSeasonEpisodes(Season season) throws IOException,
-			MalformedURLException {
-		Source source = getSource(  new URL(getSeasonEposideListing(season.getShow().getShowId(),season.getSeasonNumber())));
+	private void prarseSeasonEpisodes(Season season) throws IOException, MalformedURLException {
+		Source source = getSource(new URL(getSeasonEposideListing(season.getShow().getShowId(), season
+				.getSeasonNumber())));
 		parse(season, source);
-		source = getSource( new URL(getSeasonEposideDetailed(season.getShow().getShowId(),season.getSeasonNumber())));
+		source = getSource(new URL(getSeasonEposideDetailed(season.getShow().getShowId(), season.getSeasonNumber())));
 		defailedParse(season, source);
 	}
 
@@ -154,8 +149,7 @@ public class TVCOMSource implements ISource {
 		return new Source(detailedUrl);
 	}
 
-	private void defailedParse(Season season, Source source)
-			throws MalformedURLException {
+	private void defailedParse(Season season, Source source) throws MalformedURLException {
 		for (Episode episode : season.getEpisodes()) {
 			populateEpisodeWithDetail(source, episode);
 		}
@@ -167,9 +161,9 @@ public class TVCOMSource implements ISource {
 
 	private Link getDetailedPageEpisodeLink(Element div) {
 		Element h1 = ParseHelper.findFirstChild(div, HTMLElementName.H1, null);
-		if (h1!=null) {
-			List<Link> links = ParseHelper.getLinks(TVCOM_BASE_URL,h1,null);
-			if (links!=null && links.size()>0) {
+		if (h1 != null) {
+			List<Link> links = ParseHelper.getLinks(TVCOM_BASE_URL, h1, null);
+			if (links != null && links.size() > 0) {
 				return links.get(0);
 			}
 		}
@@ -195,30 +189,29 @@ public class TVCOMSource implements ISource {
 			}
 		});
 
-		if (div!=null) {
+		if (div != null) {
 			Link epLink = getDetailedPageEpisodeLink(div);
 			Matcher m = PRINT_PAGE_TITLE_PATTERN.matcher(epLink.getTitle());
 			if (m.matches()) {
 				episode.setShowEpisodeNumber(Long.parseLong(m.group(1)));
-			}
-			else {
+			} else {
 				episode.setShowEpisodeNumber(-1);
 			}
 			Element div1 = ParseHelper.findFirstElement(div, HTMLElementName.DIV, null);
 
 			Iterator it = div1.getNodeIterator();
 			String span = "";
-			List<Link>guestStars = new ArrayList<Link>();
-			List<Link>directors = new ArrayList<Link>();
-			List<Link>writers = new ArrayList<Link>();
+			List<Link> guestStars = new ArrayList<Link>();
+			List<Link> directors = new ArrayList<Link>();
+			List<Link> writers = new ArrayList<Link>();
 			while (it.hasNext()) {
 				Tag o = getNextStartTag(it);
 
-				if (o!=null) {
+				if (o != null) {
 					Tag el = o;
 					if (el.getName().equals("span")) {
 						Element spanEl = el.getElement();
-						span =  spanEl.getTextExtractor().toString().toLowerCase().trim();
+						span = spanEl.getTextExtractor().toString().toLowerCase().trim();
 						Tag tag = getNextEndTag(it);
 						while ((tag = getNextTag(it)).getName().equals(HTMLElementName.A)) {
 							Element link = tag.getElement();
@@ -226,15 +219,12 @@ public class TVCOMSource implements ISource {
 							String title = link.getTextExtractor().toString().trim();
 							if (span.equals("global rating:")) {
 								episode.setRating(Float.parseFloat(title));
-							}
-							else if (span.equals("guest star:")) {
-								guestStars.add(new Link(href,title));
-							}
-							else if (span.equals("director:")) {
-								directors.add(new Link(href,title));
-							}
-							else if (span.equals("writer:")) {
-								writers.add(new Link(href,title));
+							} else if (span.equals("guest star:")) {
+								guestStars.add(new Link(href, title));
+							} else if (span.equals("director:")) {
+								directors.add(new Link(href, title));
+							} else if (span.equals("writer:")) {
+								writers.add(new Link(href, title));
 							}
 
 							tag = getNextTag(it);
@@ -249,12 +239,12 @@ public class TVCOMSource implements ISource {
 		}
 	}
 
-	private void parse(Season season, Source source)
-			throws MalformedURLException {
+	private void parse(Season season, Source source) throws MalformedURLException {
 		List<Element> elements = ParseHelper.findAllElements(source, HTMLElementName.LI, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return element.getAttributeValue("class")!=null && element.getAttributeValue("class").startsWith("episode");
+				return element.getAttributeValue("class") != null
+						&& element.getAttributeValue("class").startsWith("episode");
 			}
 		});
 
@@ -267,7 +257,7 @@ public class TVCOMSource implements ISource {
 			URL url = null;
 			String description = "";
 
-			Element div = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.DIV,true,new IFilterElement() {
+			Element div = ParseHelper.findFirstChild(eposiodeLi, HTMLElementName.DIV, true, new IFilterElement() {
 				@Override
 				public boolean accept(Element element) {
 					return element.getAttributeValue("class").equals("meta");
@@ -275,17 +265,16 @@ public class TVCOMSource implements ISource {
 			});
 
 			// Get the air date, episode number and findout if it's a special
-			if (div!=null) {
+			if (div != null) {
 				String text = div.getTextExtractor().toString();
 				Matcher m = EPISODE_EXTRACT_PATTERN.matcher(text);
-				int seasonNumber=-1;
+				int seasonNumber = -1;
 				if (m.matches()) {
 					special = false;
 					airDate = parseAirDate(m.group(3));
 					episodeNumber = Integer.parseInt(m.group(2));
 					seasonNumber = Integer.parseInt(m.group(1));
-				}
-				else {
+				} else {
 					m = SPECIAL_EXTRACT_PATTERN.matcher(text);
 					if (m.matches()) {
 						special = true;
@@ -293,14 +282,14 @@ public class TVCOMSource implements ISource {
 						seasonNumber = Integer.parseInt(m.group(1));
 					}
 				}
-				if (seasonNumber!=season.getSeasonNumber()) {
+				if (seasonNumber != season.getSeasonNumber()) {
 					continue;
 				}
 			}
 
 			// Get the title, url and site id of the episode
-			Element h3 = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.H3,true,null);
-			if (h3!=null) {
+			Element h3 = ParseHelper.findFirstChild(eposiodeLi, HTMLElementName.H3, true, null);
+			if (h3 != null) {
 				List<Link> links = ParseHelper.getLinks("", h3, new IFilterLink() {
 					@Override
 					public boolean accept(Link link) {
@@ -309,7 +298,7 @@ public class TVCOMSource implements ISource {
 					}
 				});
 
-				if (links!=null && !links.isEmpty()) {
+				if (links != null && !links.isEmpty()) {
 					Link link = links.get(0);
 					title = link.getTitle();
 					url = new URL(link.getURL());
@@ -320,25 +309,24 @@ public class TVCOMSource implements ISource {
 				}
 			}
 
-			Element p = ParseHelper.findFirstChild(eposiodeLi,HTMLElementName.P,true,new IFilterElement(){
+			Element p = ParseHelper.findFirstChild(eposiodeLi, HTMLElementName.P, true, new IFilterElement() {
 				@Override
 				public boolean accept(Element element) {
-					return element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("synopsis");
+					return element.getAttributeValue("class") != null
+							&& element.getAttributeValue("class").equals("synopsis");
 				}
 			});
 
-			if (p!=null) {
+			if (p != null) {
 				description = p.getTextExtractor().toString();
 			}
 
 			if (!special) {
-				Episode episode1 = createEpisode(title, airDate,episodeNumber ,special,url, season,
-						episodeSiteId);
+				Episode episode1 = createEpisode(title, airDate, episodeNumber, special, url, season, episodeSiteId);
 				episode1.setSummary(description);
 				season.addEpisode(episode1);
 			} else {
-				Episode special1 = createEpisode(title, airDate,episodeNumber ,special,url, season,
-						episodeSiteId);
+				Episode special1 = createEpisode(title, airDate, episodeNumber, special, url, season, episodeSiteId);
 				special1.setSummary(description);
 				season.addSepcial(special1);
 			}
@@ -357,11 +345,8 @@ public class TVCOMSource implements ISource {
 		return airDate;
 	}
 
-
-
-
-	private Episode createEpisode(String title, Date airDate,
-			int episodeNumber, boolean special, URL url, Season season,long episodeSiteId) {
+	private Episode createEpisode(String title, Date airDate, int episodeNumber, boolean special, URL url,
+			Season season, long episodeSiteId) {
 		Episode episode = new Episode(episodeNumber, season);
 		episode.setTitle(title);
 		episode.setDate(airDate);
@@ -372,8 +357,8 @@ public class TVCOMSource implements ISource {
 	}
 
 	/**
-	 * This will get a show from the source. If the season can't be found, then it
-	 * will return null.
+	 * This will get a show from the source. If the season can't be found, then it will return null.
+	 *
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -381,9 +366,8 @@ public class TVCOMSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow( String showId)
-			throws SourceException, MalformedURLException, IOException {
-		Show show = new Show( showId);
+	public Show getShow(String showId) throws SourceException, MalformedURLException, IOException {
+		Show show = new Show(showId);
 		show.setShowURL(new URL(getSummaryURL(show.getShowId())));
 		show.setSourceId(SOURCE_ID);
 		Source source = getSource(show.getShowURL());
@@ -391,39 +375,39 @@ public class TVCOMSource implements ISource {
 		return show;
 	}
 
-	private void parseShow(Source source, Show show)
-			throws MalformedURLException {
+	private void parseShow(Source source, Show show) throws MalformedURLException {
 
 		List<String> genres = new ArrayList<String>();
-		Element pShortSummary = ParseHelper.findFirstChild(source, HTMLElementName.P,true, new IFilterElement() {
+		Element pShortSummary = ParseHelper.findFirstChild(source, HTMLElementName.P, true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("trunc_summ"));
+				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals("trunc_summ"));
 			}
 		});
-		if (pShortSummary!=null) {
+		if (pShortSummary != null) {
 			show.setShortSummary(pShortSummary.getTextExtractor().toString());
 		}
 
-		Element pLongSummary = ParseHelper.findFirstChild(source, HTMLElementName.P,true, new IFilterElement() {
+		Element pLongSummary = ParseHelper.findFirstChild(source, HTMLElementName.P, true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("whole_summ"));
+				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals("whole_summ"));
 			}
 		});
-		if (pLongSummary!=null) {
+		if (pLongSummary != null) {
 			String summary = pLongSummary.getTextExtractor().toString();
-			summary = summary.substring(0,summary.length()-6);
+			summary = summary.substring(0, summary.length() - 6);
 			show.setLongSummary(summary);
 		}
 
-		Element buz =  ParseHelper.findFirstChild(source,HTMLElementName.DIV,true, new IFilterElement() {
+		Element buz = ParseHelper.findFirstChild(source, HTMLElementName.DIV, true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("id")!=null && element.getAttributeValue("id").equals("show_buzz_info"));
+				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals(
+						"show_buzz_info"));
 			}
 		});
-		if (buz!=null) {
+		if (buz != null) {
 			List<Link> genreLinks = ParseHelper.getLinks("", buz, new IFilterLink() {
 				@Override
 				public boolean accept(Link link) {
@@ -436,29 +420,30 @@ public class TVCOMSource implements ISource {
 			}
 		}
 
-		Element h1 =  ParseHelper.findFirstChild(source,HTMLElementName.H1,true, new IFilterElement() {
+		Element h1 = ParseHelper.findFirstChild(source, HTMLElementName.H1, true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("show_title"));
+				return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals(
+						"show_title"));
 			}
 		});
-		if (h1!=null) {
+		if (h1 != null) {
 			show.setName(h1.getTextExtractor().toString());
 		}
-
 
 		if (show.getShortSummary() == null && show.getLongSummary() != null) {
 			show.setShortSummary(show.getLongSummary());
 		}
 
-		if (show.getShortSummary() !=null && show.getShortSummary().length()>296) {
+		if (show.getShortSummary() != null && show.getShortSummary().length() > 296) {
 			String shortSummary = show.getShortSummary();
 			shortSummary = shortSummary.substring(0, 296);
 			shortSummary += "...";
 			show.setShortSummary(shortSummary);
 		}
 		show.setGenres(genres);
-		show.setImageURL(new URL("http://image.com.com/tv/images/content_headers/program_new/"+show.getShowId()+".jpg"));
+		show.setImageURL(new URL("http://image.com.com/tv/images/content_headers/program_new/" + show.getShowId()
+				+ ".jpg"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -466,11 +451,10 @@ public class TVCOMSource implements ISource {
 		Object o;
 		do {
 			o = it.next();
-		} while ((!(o instanceof EndTag)) && it.hasNext()  );
+		} while ((!(o instanceof EndTag)) && it.hasNext());
 		if (o instanceof StartTag) {
-			return (EndTag)o;
-		}
-		else {
+			return (EndTag) o;
+		} else {
 			return null;
 		}
 	}
@@ -480,11 +464,10 @@ public class TVCOMSource implements ISource {
 		Object o;
 		do {
 			o = it.next();
-		} while ((!(o instanceof Tag)) && it.hasNext()  );
+		} while ((!(o instanceof Tag)) && it.hasNext());
 		if (o instanceof Tag) {
-			return (Tag)o;
-		}
-		else {
+			return (Tag) o;
+		} else {
 			return null;
 		}
 	}
@@ -494,23 +477,19 @@ public class TVCOMSource implements ISource {
 		Object o;
 		do {
 			o = it.next();
-		} while ((!(o instanceof StartTag)) && it.hasNext()  );
+		} while ((!(o instanceof StartTag)) && it.hasNext());
 		if (o instanceof StartTag) {
-			return (StartTag)o;
-		}
-		else {
+			return (StartTag) o;
+		} else {
 			return null;
 		}
 	}
 
 	private final static String getSummaryURL(String showId) {
-		return TVCOM_BASE_URL
-				+ URL_SUMMARY
-						.replaceAll("\\$showId\\$", showId);
+		return TVCOM_BASE_URL + URL_SUMMARY.replaceAll("\\$showId\\$", showId);
 	}
 
-	private final static String getSeasonEposideListing(String showId,
-			int seasonNumber) {
+	private final static String getSeasonEposideListing(String showId, int seasonNumber) {
 		String url = TVCOM_BASE_URL + URL_EPISODE_LISTING_FULL;
 		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
@@ -531,6 +510,7 @@ public class TVCOMSource implements ISource {
 
 	/**
 	 * This will return the ID of the source. @see org.stanwood.media.source.TVCOMSource#SOURCE_ID
+	 *
 	 * @returns The source ID
 	 */
 	@Override
@@ -539,8 +519,9 @@ public class TVCOMSource implements ISource {
 	}
 
 	/**
-	 * This will search for a show ID from the source. It uses the name of the show directory as the show name
-	 * when it does a search, and uses the first result it finds.
+	 * This will search for a show ID from the source. It uses the name of the show directory as the show name when it
+	 * does a search, and uses the first result it finds.
+	 *
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @return The results of the search, or null if the show could not be found
@@ -550,28 +531,30 @@ public class TVCOMSource implements ISource {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws SourceException, MalformedURLException, IOException {
-		if (mode!=Mode.TV_SHOW) {
+	public SearchResult searchForVideoId(Mode mode, File episodeFile) throws SourceException, MalformedURLException,
+			IOException {
+		if (mode != Mode.TV_SHOW) {
 			return null;
 		}
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);
 		for (Element element : elements) {
-			if (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("result")) {
+			if (element.getAttributeValue("class") != null
+					&& element.getAttributeValue("class").equals("result search_spotlight_new")) {
 				List<Element> elements2 = source.findAllElements(HTMLElementName.A);
 				for (Element element2 : elements2) {
-					String href =element2.getAttributeValue("href");
+					String href = element2.getAttributeValue("href");
 					Matcher m = SHOW_ID_PATTERN.matcher(href);
 					if (m.find()) {
-						SearchResult result = new SearchResult(m.group(2),SOURCE_ID);
+						SearchResult result = new SearchResult(m.group(2), SOURCE_ID);
 						results.add(result);
 					}
 				}
 			}
 		}
 
-		if (results.size()>=1) {
+		if (results.size() >= 1) {
 			return results.get(0);
 		}
 		return null;
@@ -579,6 +562,7 @@ public class TVCOMSource implements ISource {
 
 	/**
 	 * Films are not supported, so this will always return null.
+	 *
 	 * @param filmId The id of the film
 	 * @return Always returns null
 	 */
