@@ -1,3 +1,5 @@
+* Wed Jul 29 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.2 
+- Fixed the tv.com source so that searching works again
 * Wed Jun 10 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.1
 - FEATURE: Now able to rename subtitle files
 - BUGFIX: Fixed some null pointer issues
