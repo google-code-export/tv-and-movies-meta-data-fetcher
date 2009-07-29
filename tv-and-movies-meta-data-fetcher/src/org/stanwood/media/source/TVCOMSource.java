@@ -504,7 +504,10 @@ public class TVCOMSource implements ISource {
 	}
 
 	private String getShowSearchUrl(String query) {
-		String url = TVCOM_BASE_URL + URL_SHOW_SEARCH + query.replaceAll(" ", "+");
+		String fixedQuery = query;
+		fixedQuery = fixedQuery.replaceAll(" ", "+");
+		fixedQuery = fixedQuery.replaceAll("&", "%26");		
+		String url = TVCOM_BASE_URL + URL_SHOW_SEARCH + fixedQuery;
 		return url;
 	}
 
@@ -537,7 +540,8 @@ public class TVCOMSource implements ISource {
 			return null;
 		}
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		Source source = getSource(new URL(getShowSearchUrl(episodeFile.getParentFile().getName())));
+		URL url = new URL(getShowSearchUrl(episodeFile.getParentFile().getName()));
+		Source source = getSource(url);
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);
 		for (Element element : elements) {
 			if (element.getAttributeValue("class") != null
