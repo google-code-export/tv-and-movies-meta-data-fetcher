@@ -37,11 +37,11 @@ import org.apache.commons.logging.LogFactory;
 public class FileHelper {
 
 	private final static Log log = LogFactory.getLog(FileHelper.class);
-	private final static String LS = System.getProperty("line.separator");
+	public final static String LS = System.getProperty("line.separator");
 
 	/**
 	 * This will create a temporary directory using the given name.
-	 * 
+	 *
 	 * @param name The name of the directory to create
 	 * @return A file object pointing to the directory that was created
 	 * @throws IOException Thrown if their is a problme creating the directory
@@ -60,7 +60,7 @@ public class FileHelper {
 
 	/**
 	 * Used to copy a source file to a destination file.
-	 * 
+	 *
 	 * @param src The source file
 	 * @param dst The destination file
 	 * @throws IOException Thrown if their is a problem copying the file
@@ -68,7 +68,7 @@ public class FileHelper {
 	public static void copy(File src, File dst) throws IOException {
 		InputStream in = null;
 		OutputStream out = null;
-		
+
 		try {
 			in = new FileInputStream(src);
 			out = new FileOutputStream(dst);
@@ -98,7 +98,7 @@ public class FileHelper {
 
 	/**
 	 * Used to copy the contents of a input stream to a destination file.
-	 * 
+	 *
 	 * @param in The input stream
 	 * @param dst The destination file
 	 * @throws IOException Thrown if their is a problem copying the file
@@ -135,7 +135,7 @@ public class FileHelper {
 
 	/**
 	 * Used to copy the contents of a input stream to a destination file.
-	 * 
+	 *
 	 * @param in The input stream
 	 * @param dst The destination file
 	 * @param params Parameters which are replaced with values when the file is copied
@@ -167,7 +167,7 @@ public class FileHelper {
 
 	/**
 	 * Used to delete a directory and all it's children
-	 * 
+	 *
 	 * @param dir The directory to delete
 	 * @return True if successful, otherwise false
 	 */
@@ -188,7 +188,7 @@ public class FileHelper {
 
 	/**
 	 * Used to display the contents of a file
-	 * 
+	 *
 	 * @param file The file to display
 	 * @param os The output stream to display it to
 	 * @throws IOException Thrown if their is a problem reading or displaying the file
@@ -204,7 +204,7 @@ public class FileHelper {
 
 	/**
 	 * Used to read the contents of a file into a string
-	 * 
+	 *
 	 * @param file The file to read
 	 * @return The contents of the file
 	 * @throws IOException Thrown if their is a problem reading the file
@@ -222,7 +222,7 @@ public class FileHelper {
 
 	/**
 	 * Used to read the contents of a stream into a string
-	 * 
+	 *
 	 * @param inputStream The input stream
 	 * @return The contents of the file
 	 * @throws IOException Thrown if their is a problem reading the file

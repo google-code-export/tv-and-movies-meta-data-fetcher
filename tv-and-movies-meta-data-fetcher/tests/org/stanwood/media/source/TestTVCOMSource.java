@@ -59,7 +59,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("tvcom",show.getSourceId());
 		assertEquals("Eureka",show.getName());
 		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...",show.getShortSummary());
-		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.",show.getLongSummary());
+		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC Universal Cable Studio and filmed in the province of British Columbia, Canada.",show.getLongSummary());
 		assertEquals(SHOW_ID_EUREKA,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/show/58448/summary.html",show.getShowURL().toExternalForm());
@@ -194,9 +194,9 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://www.tv.com/Eureka/From+Fear+to+Eternity/episode/1203120/summary.html",episode.getSummaryUrl().toExternalForm());
 		assertEquals(1203120,episode.getEpisodeId());
 
-		assertNull(source.getEpisode(season, 16));
-		assertNull(source.getEpisode(season, 17));
-		assertNull(source.getEpisode(season, 18));
+		assertNull(source.getEpisode(season, 20));
+		assertNull(source.getEpisode(season, 21));
+		assertNull(source.getEpisode(season, 22));
 
 		season = source.getSeason(show, 4);
 		assertNull("Check that the last season was detected",season);
