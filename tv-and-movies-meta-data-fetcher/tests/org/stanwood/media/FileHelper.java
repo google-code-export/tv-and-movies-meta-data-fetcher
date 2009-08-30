@@ -37,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public class FileHelper {
 
 	private final static Log log = LogFactory.getLog(FileHelper.class);
+	/** A Line seperator property value */
 	public final static String LS = System.getProperty("line.separator");
 
 	/**
