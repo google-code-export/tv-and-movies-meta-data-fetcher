@@ -105,12 +105,11 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
 
 		List<String>genres = film.getGenres();
-		assertEquals(5,genres.size());
+		assertEquals(4,genres.size());
 		assertEquals("Action",genres.get(0));
 		assertEquals("Adventure",genres.get(1));
-		assertEquals("Crime",genres.get(2));
-		assertEquals("Sci-Fi",genres.get(3));
-		assertEquals("Thriller",genres.get(4));
+		assertEquals("Sci-Fi",genres.get(2));
+		assertEquals("Thriller",genres.get(3));
 
 		List<Link>directors = film.getDirectors();
 		assertEquals(1,directors.size());
@@ -135,7 +134,7 @@ public class TestIMDBSource extends TestCase {
 		assertEquals("M/12",certs.get(21).getCountry());
 		assertEquals("Portugal",certs.get(21).getCertification());
 		assertEquals("12",certs.get(31).getCountry());
-		assertEquals("Austria",certs.get(31).getCertification());		
+		assertEquals("Austria",certs.get(31).getCertification());
 	}
 
 	private IMDBSource getIMDBSource(final String filmId) {
