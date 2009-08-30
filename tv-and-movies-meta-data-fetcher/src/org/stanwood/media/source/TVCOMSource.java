@@ -52,7 +52,7 @@ public class TVCOMSource implements ISource {
 
 	private final static Pattern EPISODE_ID_PATTERN = Pattern.compile(".*episode\\/(.*)\\/summary.*");
 
-	private final static Pattern SHOW_ID_PATTERN = Pattern.compile(".*\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
+	private final static Pattern SHOW_ID_PATTERN = Pattern.compile(".*\\.com\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
 
 	private final static Pattern PRINT_PAGE_TITLE_PATTERN = Pattern.compile(".*?(\\d+)\\..*");
 
@@ -140,10 +140,19 @@ public class TVCOMSource implements ISource {
 		return season;
 	}
 
-	private String getShowTextId(Show show) throws SourceException {
+	private String getShowTextId(Show show) throws SourceException, MalformedURLException, IOException {
 		Matcher m = SHOW_ID_PATTERN.matcher(show.getShowURL().toExternalForm());
 		if (m.matches()) {
 			return m.group(1);
+		}
+		else {
+			SearchResult result = searchForTvShow(show.getName());
+			if (result!=null && result.getId().equals(show.getShowId())) {
+				m = SHOW_ID_PATTERN.matcher(result.getUrl());
+				if (m.matches()) {
+					return m.group(1);
+				}
+			}
 		}
 		throw new SourceException("Unable to work out the text id of the show: " + show.getShowId());
 	}
@@ -550,8 +559,12 @@ public class TVCOMSource implements ISource {
 		if (mode != Mode.TV_SHOW) {
 			return null;
 		}
+		return searchForTvShow(episodeFile.getParentFile().getName());
+	}
+
+	private SearchResult searchForTvShow(String name) throws MalformedURLException, IOException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		URL url = new URL(getShowSearchUrl(episodeFile.getParentFile().getName()));
+		URL url = new URL(getShowSearchUrl(name));
 		Source source = getSource(url);
 		List<Element> elements = source.findAllElements(HTMLElementName.LI);
 		for (Element element : elements) {
