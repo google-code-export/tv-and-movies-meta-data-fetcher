@@ -506,7 +506,7 @@ public class TVCOMSource implements ISource {
 	private String getShowSearchUrl(String query) {
 		String fixedQuery = query;
 		fixedQuery = fixedQuery.replaceAll(" ", "+");
-		fixedQuery = fixedQuery.replaceAll("&", "%26");		
+		fixedQuery = fixedQuery.replaceAll("&", "%26");
 		String url = TVCOM_BASE_URL + URL_SHOW_SEARCH + fixedQuery;
 		return url;
 	}
@@ -551,7 +551,7 @@ public class TVCOMSource implements ISource {
 					String href = element2.getAttributeValue("href");
 					Matcher m = SHOW_ID_PATTERN.matcher(href);
 					if (m.find()) {
-						SearchResult result = new SearchResult(m.group(2), SOURCE_ID);
+						SearchResult result = new SearchResult(m.group(2), SOURCE_ID,href.substring(0,href.indexOf('?')));
 						results.add(result);
 					}
 				}

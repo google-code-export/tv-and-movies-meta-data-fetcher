@@ -326,9 +326,10 @@ public class IMDBSource implements ISource {
 		List<Element> aEls = source.findAllElements(HTMLElementName.A);
 		for (Element a : aEls) {
 			if (a.getAttributeValue("class") != null && a.getAttributeValue("class").equals("linkasbutton-secondary")) {
-				Matcher m = EXTRACT_ID2_PATTERN.matcher(a.getAttributeValue("href"));
+				String url = a.getAttributeValue("href");
+				Matcher m = EXTRACT_ID2_PATTERN.matcher(url);
 				if (m.matches()) {
-					SearchResult result = new SearchResult(m.group(1), SOURCE_ID);
+					SearchResult result = new SearchResult(m.group(1), SOURCE_ID,getFilmURL(m.group(1)));
 					return result;
 				}
 
@@ -361,7 +362,7 @@ public class IMDBSource implements ISource {
 								if (url != null) {
 									Matcher m2 = EXTRACT_ID_PATTERN.matcher(url);
 									if (m2.matches()) {
-										SearchResult result = new SearchResult(m2.group(1), SOURCE_ID);
+										SearchResult result = new SearchResult(m2.group(1), SOURCE_ID,IMDB_BASE_URL+url);
 										return result;
 									}
 								}

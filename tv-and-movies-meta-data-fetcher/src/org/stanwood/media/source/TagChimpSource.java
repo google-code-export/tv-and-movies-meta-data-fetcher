@@ -51,7 +51,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
-	 * 
+	 *
 	 * @param filmId The id of the film
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
@@ -145,7 +145,7 @@ public class TagChimpSource implements ISource {
 			List<Certification> certs = new ArrayList<Certification>();
 			certs.add(new Certification(value, "USA"));
 			film.setCertifications(certs);
-		} else if (name.equals("category")) {			
+		} else if (name.equals("category")) {
 			List<String> genres = new ArrayList<String>();
 			genres.add(value);
 			film.setGenres(genres);
@@ -174,7 +174,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
-	 * 
+	 *
 	 * @param season The season the episode belongs to.
 	 * @param episodeNum The number of the episode to read
 	 */
@@ -185,7 +185,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
-	 * 
+	 *
 	 * @param show The show the season belongs to.
 	 * @param seasonNum The number of the season to read
 	 */
@@ -196,7 +196,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
-	 * 
+	 *
 	 * @param showId The id of the show to read
 	 */
 	@Override
@@ -206,7 +206,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
-	 * 
+	 *
 	 * @param season The season the episode belongs to.
 	 * @param specialNumber The number of the special episode to read
 	 */
@@ -217,7 +217,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * Get the id of the source.
-	 * 
+	 *
 	 * @return The id of the source
 	 */
 	@Override
@@ -228,7 +228,7 @@ public class TagChimpSource implements ISource {
 	/**
 	 * This will search the IMDB site for the film. It uses the last segment of the file name, converts it to lower
 	 * case, tidies up the name and performs the search.
-	 * 
+	 *
 	 * @param filmFile The file the film is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @return Always returns null
@@ -257,7 +257,7 @@ public class TagChimpSource implements ISource {
 						if (m.matches()) {
 							String id = m.group(1);
 							if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(query))) {
-								SearchResult result = new SearchResult(id, SOURCE_ID);
+								SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url);
 								return result;
 							}
 						}
@@ -275,7 +275,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * Get the "RegexpToReplace" parameter value.
-	 * 
+	 *
 	 * @return The "RegexpToReplace" parameter value.
 	 */
 	public String getRegexpToReplace() {
@@ -284,7 +284,7 @@ public class TagChimpSource implements ISource {
 
 	/**
 	 * Used to set the "RegexpToReplace" parameter value.
-	 * 
+	 *
 	 * @param regexpToReplace The value of the parameter been set.
 	 */
 	public void setRegexpToReplace(String regexpToReplace) {

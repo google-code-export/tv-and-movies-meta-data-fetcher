@@ -396,7 +396,7 @@ public class FilmXMLStore extends BaseXMLStore {
 						title = title.substring(0, title.length() - 1);
 					}
 					if (title.equals(query)) {
-						SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"));
+						SearchResult result = new SearchResult(el.getAttribute("id"), el.getAttribute("sourceId"),el.getAttribute("url"));
 						log.info("Found film '" + query + "' in XMLStore with id '" + result.getId() + "'");
 						return result;
 					}

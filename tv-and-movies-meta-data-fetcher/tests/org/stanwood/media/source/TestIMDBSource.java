@@ -53,6 +53,7 @@ public class TestIMDBSource extends TestCase {
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals("0242508",result.getId());
 			assertEquals("imdb",result.getSourceId());
+			assertEquals("http://www.imdb.com/title/tt0242508/",result.getUrl());
 		}
 		finally {
 			FileHelper.deleteDir(dir);
@@ -71,6 +72,7 @@ public class TestIMDBSource extends TestCase {
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals("0772174",result.getId());
 			assertEquals("imdb",result.getSourceId());
+			assertEquals("http://www.imdb.com/title/tt0772174/",result.getUrl());
 		}
 		finally {
 			FileHelper.deleteDir(dir);

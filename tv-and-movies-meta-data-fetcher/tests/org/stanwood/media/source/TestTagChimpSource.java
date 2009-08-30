@@ -39,12 +39,12 @@ import au.id.jericho.lib.html.Source;
 /**
  * Used to test the {@link TagChimpSource} class.
  */
-public class TestTagChimpSource extends TestCase {	
-	
+public class TestTagChimpSource extends TestCase {
+
 	private final static String FILM_ID_IRON_MAN = "iron-man-17";
-	
+
 	private final DateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
-	
+
 	/**
 	 * Used to test the searching of films
 	 * @throws Exception Thrown if the test produces any errors
@@ -53,16 +53,17 @@ public class TestTagChimpSource extends TestCase {
 		TagChimpSource source = getSource(FILM_ID_IRON_MAN);
 		File dir = FileHelper.createTmpDir("films");
 		try {
-			File tmpFile = new File(dir,"Iron man.avi");						
+			File tmpFile = new File(dir,"Iron man.avi");
 			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
 			assertEquals("39752",result.getId());
-			assertEquals("tagChimp",result.getSourceId());			
+			assertEquals("tagChimp",result.getSourceId());
+			assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());
 		}
 		finally {
 			FileHelper.deleteDir(dir);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Test that film details are correctly read from the source
 	 * @throws Exception Thrown if the test produces any errors
@@ -85,28 +86,28 @@ public class TestTagChimpSource extends TestCase {
 		expectedDesc.append("wounding Tony's chest. Tony is captured and recorded by a group of terrorists. ");
 		expectedDesc.append("A flashback sequence reveals Tony's history as a child prodigy before taking over his father's technology company at age 21. Colonel James Rhodes (Terrence Howard) attends a ceremony to present Tony Stark with an award for his work, but Stark is not in attendance. Tony's right-hand man (and his father's former partner) Obadiah Stane (Jeff Bridges) accepts the award in Tony's honor. Rhody later finds Tony partying in a casino. On his way out, a reporter named Christine (Leslie Bibb) approaches Stark with some questions regarding the ethics of his weapons business. Stark deflects her questions with some swift quips and the two end up spending the night together. Next morning, Christine is awakened by a voice on a computer monitor. It's JARVIS, the artificial intelligence program responsible for running Tony's house. Christine is greeted by Tony's assistant, \"Pepper\" Potts (Gwyneth Paltrow) as she leaves the house. Pepper helps Tony catch up on some business before Tony heads out to the airport where his plane is kept. In flight, Tony talks with Rhody. Rhody is unhappy about Tony's lax attitude, and Tony tries to get his old friend to relax. Before long they are drunk and leering at the stewardesses. Tony arrives at a military outpost in the Middle East to demonstrate his company's latest project - the Jericho, a super-missile system. After the demonstration, Tony gets a phone call from Obadiah and they are both pleased that the demonstration went well. Tony goes off with the convoy that is soon attacked by terrorists. Much later, Tony regains consciousness in a cave. His chest is hooked up to a strange device. Another captive, named Yinsen (Shaun Tomb), explains that he operated on Stark but was unable to remove all the shrapnel fragments from the bomb blast. Yinsen created a device - essentially a battery-powered magnet - that will keep the remaining fragments out of Tony's heart. The terrorists who captured Tony & Yinsen enter the room. Yinsen translates; they want Tony to build them a Jericho missile. Tony refuses, so they begin to torture Stark.");
 		assertEquals("Check film description",expectedDesc.toString(),film.getDescription());
-		
+
 		List<String>genres = film.getGenres();
 		assertEquals(1,genres.size());
-		assertEquals("Sci-Fi & Fantasy",genres.get(0));				
-		
+		assertEquals("Sci-Fi & Fantasy",genres.get(0));
+
 		List<Link>directors = film.getDirectors();
 		assertEquals(1,directors.size());
 		assertEquals("Jon Favreau",directors.get(0).getTitle());
 		assertEquals("",directors.get(0).getURL());
-		
+
 		List<Link>writers = film.getWriters();
 		assertEquals(2,writers.size());
 		assertEquals("Mark Fergus",writers.get(0).getTitle());
 		assertEquals("",writers.get(0).getURL());
 		assertEquals("Hawk Ostby",writers.get(1).getTitle());
 		assertEquals("",writers.get(1).getURL());
-		
+
 		List<Certification>certs = film.getCertifications();
 		assertEquals(1,certs.size());
 		assertEquals("USA",certs.get(0).getCountry());
 		assertEquals("PG-13",certs.get(0).getCertification());
-				
+
 		List<Chapter>chapters = film.getChapters();
 		assertEquals("Check chapter number", 1,chapters.get(0).getNumber());
 		assertEquals("Check chapter name", "Start",chapters.get(0).getName());
@@ -144,20 +145,20 @@ public class TestTagChimpSource extends TestCase {
 		assertEquals("Check chapter name", "End Credits",chapters.get(16).getName());
 	}
 
-	private TagChimpSource getSource(final String filmId) {		
+	private TagChimpSource getSource(final String filmId) {
 		TagChimpSource source = new TagChimpSource() {
 			@Override
-			Source getSource(URL url) throws IOException {						
-				String strUrl = url.toExternalForm();				
+			Source getSource(URL url) throws IOException {
+				String strUrl = url.toExternalForm();
 				if (strUrl.equals("http://www.tagchimp.com/tc/"+filmId+"/")) {
 					String file = "tagchimp-"+filmId+".html";
-					return new Source(Data.class.getResource(file));									
-				}						
+					return new Source(Data.class.getResource(file));
+				}
 				else if (strUrl.contains("/search/index.php?searchterm=")) {
 					return new Source(Data.class.getResource("tagchimp-search-ironman.html"));
 				}
 				return null;
-			}			
+			}
 		};
 		return source;
 	}

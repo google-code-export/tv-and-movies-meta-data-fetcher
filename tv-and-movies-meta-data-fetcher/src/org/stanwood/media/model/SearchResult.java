@@ -23,21 +23,24 @@ public class SearchResult {
 
 	private String id;
 	private String sourceId;
+	private String url;
 
 	/**
 	 * Constructor of the class
 	 * @param id The id of the show that was found
 	 * @param sourceId The id of the source that it was found in
+	 * @param url The url of the show
 	 */
-	public SearchResult(String id, String sourceId) {
+	public SearchResult(String id, String sourceId,String url) {
 		super();
 		this.id = id;
 		this.sourceId = sourceId;
+		this.url = url;
 	}
 
 	/**
 	 * The id of the show, or null if it can't be found
-	 * 
+	 *
 	 * @return The id of the show
 	 */
 	public String getId() {
@@ -46,12 +49,19 @@ public class SearchResult {
 
 	/**
 	 * The source if of the source that was used to find the show id.
-	 * 
+	 *
 	 * @return The id of the source associated with the show id
 	 */
 	public String getSourceId() {
 		return sourceId;
 	}
 
-	
+	/**
+	 * Used to get the url of the show that was found.
+	 * @return the url The show url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
 }
