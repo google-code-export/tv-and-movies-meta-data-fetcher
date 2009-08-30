@@ -17,12 +17,9 @@
 package org.stanwood.media.source;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -32,9 +29,6 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.testdata.Data;
-
-import au.id.jericho.lib.html.Source;
 
 /**
  * Used to test the {@link TVCOMSource} class.
@@ -44,8 +38,6 @@ public class TestTVCOMSource extends TestCase {
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String SHOW_ID_EUREKA = "58448";
 	private static final String SHOW_ID_HEROES = "17552";
-	private static final Pattern SEASON_PATTERN = Pattern.compile(".*/episode.html\\?season=(\\d+)");
-	private static final Pattern PRINT_GUIDE_PATTERN = Pattern.compile(".*/episode_guide.html\\?printable=(\\d+)");
 
 	/**
 	 * Test that the show details are read correctly.
@@ -285,30 +277,7 @@ public class TestTVCOMSource extends TestCase {
 	}
 
 	private TVCOMSource getTVCOMSource(final String showId) {
-		TVCOMSource source = new TVCOMSource() {
-			@Override
-			Source getSource(URL url) throws IOException {
-				String strUrl = url.toExternalForm();
-				Matcher seasonMatcher = SEASON_PATTERN.matcher(strUrl);
-				Matcher printGuideMatcher = PRINT_GUIDE_PATTERN.matcher(strUrl);
-
-
-				if (strUrl.contains("/show/"+showId+"/summary.html")) {
-					return new Source(Data.class.getResource(showId+"-summary.html"));
-				}
-				else if (seasonMatcher.matches()) {
-					return new Source(Data.class.getResource(showId+"-episode_listings-season="+seasonMatcher.group(1)+".html"));
-				}
-				else if (printGuideMatcher.matches()) {
-					return new Source(Data.class.getResource(showId+"-episode_guide-printable="+printGuideMatcher.group(1)+".html"));
-				}
-				else if (strUrl.indexOf("http://www.tv.com/search.php?type=Search&stype=ajax_search")!=-1) {
-					return new Source(Data.class.getResource("eureka-search.html"));
-				}
-				System.err.println("Unable to match url:" + strUrl);
-				return null;
-			}
-		};
+		TVCOMSource source = new DummyTVComSource();
 		return source;
 	}
 
