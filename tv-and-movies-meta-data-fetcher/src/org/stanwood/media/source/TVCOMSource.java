@@ -52,7 +52,7 @@ public class TVCOMSource implements ISource {
 
 	private final static Pattern EPISODE_ID_PATTERN = Pattern.compile(".*episode\\/(.*)\\/summary.*");
 
-	private final static Pattern SHOW_ID_PATTERN = Pattern.compile("\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
+	private final static Pattern SHOW_ID_PATTERN = Pattern.compile(".*\\/(.*)\\/show\\/(.*)\\/summary\\.html.*");
 
 	private final static Pattern PRINT_PAGE_TITLE_PATTERN = Pattern.compile(".*?(\\d+)\\..*");
 
@@ -61,11 +61,11 @@ public class TVCOMSource implements ISource {
 	private final static Pattern SPECIAL_EXTRACT_PATTERN = Pattern.compile("Special\\. Season (\\d+).*Aired: (.*)");
 
 	private final static String TVCOM_BASE_URL = "http://www.tv.com/";
-	private final static String URL_SUMMARY = "show/$showId$/summary.html";
+	private final static String URL_SUMMARY = "$textId$/show/$showId$/summary.html";
 
-	private final static String URL_EPISODE_LISTING_FULL = "show/$showId$/episode.html?season=$seasonNum$";
-	private final static String URL_EPISODES = "show/$showId$/episode_guide.html?printable=1";
-	// private final static String URL_EPISODE_LISTING = "show/$showId$/episode_listings.html?season=$seasonNum$";
+	private final static String URL_EPISODE_LISTING_FULL = "$textId$/show/$showId$/episode.html?season=$seasonNum$";
+	private final static String URL_EPISODES = "$textId$/show/$showId$/episode_guide.html?printable=1";
+	// private final static String URL_EPISODE_LISTING = "$textId$/show/$showId$/episode_listings.html?season=$seasonNum$";
 
 	private final static String URL_SHOW_SEARCH = "search.php?type=Search&stype=ajax_search&search_type=program&qs=";
 
@@ -81,9 +81,10 @@ public class TVCOMSource implements ISource {
 	 * @return The special episode, or null if it can't be found
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException {
+	public Episode getSpecial(Season season, int specialNumber) throws MalformedURLException, IOException, SourceException {
 		Episode special = season.getSpecial(specialNumber);
 		if (special == null) {
 			prarseSeasonEpisodes(season);
@@ -101,9 +102,10 @@ public class TVCOMSource implements ISource {
 	 * @return The episode, or null if it can't be found
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum) throws MalformedURLException, IOException {
+	public Episode getEpisode(Season season, int episodeNum) throws MalformedURLException, IOException, SourceException {
 		Episode episode = season.getEpisode(episodeNum);
 		if (episode == null) {
 			prarseSeasonEpisodes(season);
@@ -125,8 +127,9 @@ public class TVCOMSource implements ISource {
 	@Override
 	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException {
 		Season season = new Season(show, seasonNum);
-		season.setListingUrl(new URL(getSeasonEposideListing(show.getShowId(), seasonNum)));
-		season.setDetailedUrl(new URL(getSeasonEposideDetailed(show.getShowId(), seasonNum)));
+		String textId = getShowTextId(show);
+		season.setListingUrl(new URL(getSeasonEposideListing(textId,show.getShowId(), seasonNum)));
+		season.setDetailedUrl(new URL(getSeasonEposideDetailed(textId,show.getShowId(), seasonNum)));
 
 		prarseSeasonEpisodes(season);
 
@@ -137,11 +140,20 @@ public class TVCOMSource implements ISource {
 		return season;
 	}
 
-	private void prarseSeasonEpisodes(Season season) throws IOException, MalformedURLException {
-		Source source = getSource(new URL(getSeasonEposideListing(season.getShow().getShowId(), season
+	private String getShowTextId(Show show) throws SourceException {
+		Matcher m = SHOW_ID_PATTERN.matcher(show.getShowURL().toExternalForm());
+		if (m.matches()) {
+			return m.group(1);
+		}
+		throw new SourceException("Unable to work out the text id of the show: " + show.getShowId());
+	}
+
+	private void prarseSeasonEpisodes(Season season) throws IOException, MalformedURLException, SourceException {
+		String textId = getShowTextId(season.getShow());
+		Source source = getSource(new URL(getSeasonEposideListing(textId,season.getShow().getShowId(), season
 				.getSeasonNumber())));
 		parse(season, source);
-		source = getSource(new URL(getSeasonEposideDetailed(season.getShow().getShowId(), season.getSeasonNumber())));
+		source = getSource(new URL(getSeasonEposideDetailed(textId,season.getShow().getShowId(), season.getSeasonNumber())));
 		defailedParse(season, source);
 	}
 
@@ -360,15 +372,16 @@ public class TVCOMSource implements ISource {
 	 * This will get a show from the source. If the season can't be found, then it will return null.
 	 *
 	 * @param showId The id of the show to get.
+	 * @param url String url of the show
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(String showId) throws SourceException, MalformedURLException, IOException {
+	public Show getShow(String showId,URL url) throws SourceException, MalformedURLException, IOException {
 		Show show = new Show(showId);
-		show.setShowURL(new URL(getSummaryURL(show.getShowId())));
+		show.setShowURL(url);
 		show.setSourceId(SOURCE_ID);
 		Source source = getSource(show.getShowURL());
 		parseShow(source, show);
@@ -485,19 +498,17 @@ public class TVCOMSource implements ISource {
 		}
 	}
 
-	private final static String getSummaryURL(String showId) {
-		return TVCOM_BASE_URL + URL_SUMMARY.replaceAll("\\$showId\\$", showId);
-	}
-
-	private final static String getSeasonEposideListing(String showId, int seasonNumber) {
+	private final static String getSeasonEposideListing(String showTextId,String showId, int seasonNumber) {
 		String url = TVCOM_BASE_URL + URL_EPISODE_LISTING_FULL;
+		url = url.replaceAll("\\$textId\\$",showTextId);
 		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;
 	}
 
-	private String getSeasonEposideDetailed(String showId, int seasonNumber) {
+	private String getSeasonEposideDetailed(String showTextId,String showId, int seasonNumber) {
 		String url = TVCOM_BASE_URL + URL_EPISODES;
+		url = url.replaceAll("\\$textId\\$",showTextId);
 		url = url.replaceAll("\\$showId\\$", showId);
 		url = url.replaceAll("\\$seasonNum\\$", String.valueOf(seasonNumber));
 		return url;

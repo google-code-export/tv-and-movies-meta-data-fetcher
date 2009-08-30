@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,7 +196,7 @@ public class Controller {
 	 * @param rootMediaDir The root media directory
 	 * @param episodeFile The file the episode is stored in
 	 * @param sourceId The ID of the source too use
-	 * @param showId The id of the show
+	 * @param searchResult The search results from looking for a show
 	 * @param refresh If true, then the stores are ignored.
 	 * @return The show, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
@@ -203,25 +204,27 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File rootMediaDir,File episodeFile, String sourceId, String showId, boolean refresh) throws MalformedURLException,
+	public Show getShow(File rootMediaDir,File episodeFile, String sourceId, SearchResult searchResult, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
+
 		Show show = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				show = store.getShow(rootMediaDir,episodeFile, showId);
+				show = store.getShow(rootMediaDir,episodeFile, searchResult.getId());
 				if (show != null) {
 					break;
 				}
 			}
 		} else {
-			show = stores.get(0).getShow(rootMediaDir,episodeFile, showId);
+			show = stores.get(0).getShow(rootMediaDir,episodeFile, searchResult.getId());
 		}
 
 		if (show == null) {
 			log.info("Reading show from sources");
+			URL showUrl = new URL(searchResult.getUrl());
 			for (ISource source : sources) {
 				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
-					show = source.getShow(showId);
+					show = source.getShow(searchResult.getId(),showUrl);
 					if (show != null) {
 						for (IStore store : stores) {
 							store.cacheShow(rootMediaDir,episodeFile, show);

@@ -19,6 +19,7 @@ package org.stanwood.media.source;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -74,10 +75,11 @@ public class HybridFilmSource implements ISource {
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 *
+	 * @param url String url of the show
 	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(String showId) {
+	public Show getShow(String showId,URL url) {
 		return null;
 	}
 

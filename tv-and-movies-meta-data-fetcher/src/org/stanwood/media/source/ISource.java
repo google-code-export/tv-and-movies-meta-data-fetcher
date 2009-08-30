@@ -19,6 +19,7 @@ package org.stanwood.media.source;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -42,7 +43,7 @@ public interface ISource {
 	 * @throws IOException Throw if their is a IO related problem
 	 */
 	public Episode getEpisode(Season season, int episodeNum) throws SourceException, MalformedURLException, IOException;
-	
+
 	/**
 	 * This will get a season from the source. If the season can't be found,
 	 * then it will return null.
@@ -53,17 +54,18 @@ public interface ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException;
-	
+
 	/**
-	 * This will get a show from the source. If the show can't be found, then it 
+	 * This will get a show from the source. If the show can't be found, then it
 	 * will return null.
 	 * @param showId The id of the show to get.
+	 * @param url String url of the show
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(String showId) throws SourceException, MalformedURLException, IOException;
+	public Show getShow(String showId,URL url) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -74,7 +76,7 @@ public interface ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Film getFilm(String filmId) throws SourceException, MalformedURLException, IOException;
-	
+
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will
 	 * return null;
@@ -98,10 +100,10 @@ public interface ISource {
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @return The results of the search, or null if nothing was found
-	 * @throws SourceException Thrown if their is a problem retrieving the data 
+	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws SourceException, MalformedURLException, IOException;
-	
+
 }

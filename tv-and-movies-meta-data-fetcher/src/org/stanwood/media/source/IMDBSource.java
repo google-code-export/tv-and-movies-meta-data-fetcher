@@ -96,10 +96,11 @@ public class IMDBSource implements ISource {
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 *
+	 * @param url String url of the show
 	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(String showId) {
+	public Show getShow(String showId,URL url) {
 		return null;
 	}
 

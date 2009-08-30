@@ -215,7 +215,7 @@ public class Renamer {
 			return;
 		}
 
-		Show show =  Controller.getInstance().getShow(rootMediaDir,file,sourceId, id,refresh);
+		Show show =  Controller.getInstance().getShow(rootMediaDir,file,sourceId,result,refresh);
 		if (show == null) {
 			fatal("Unable to find show details");
 		}
