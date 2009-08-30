@@ -458,13 +458,14 @@ public class Controller {
 	 * @param rootMediaDir The root media directory
 	 * @param mode The mode that the search operation should be performed in
 	 * @param mediaFile The file the media is stored in
+	 * @param renamePattern The rename pattern been used, or null if one is not been used
 	 * @return The results of searching for the show, or null if it can't be found.
 	 * @throws SourceException Thrown if their is a problem reading from a source
 	 * @throws StoreException Thrown if their is a problem reading for a store
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File mediaFile) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File mediaFile,String renamePattern) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
@@ -475,7 +476,7 @@ public class Controller {
 		}
 
 		for (ISource source : sources) {
-			result = source.searchForVideoId(mode, mediaFile);
+			result = source.searchForVideoId(rootMediaDir,mode, mediaFile,renamePattern);
 			if (result != null) {
 				return result;
 			}

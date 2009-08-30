@@ -39,6 +39,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.search.SearchHelper;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
@@ -304,7 +305,7 @@ public class IMDBSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode, File filmFile) throws SourceException, MalformedURLException,
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File filmFile,String renamePattern) throws SourceException, MalformedURLException,
 			IOException {
 		if (mode != Mode.FILM) {
 			return null;

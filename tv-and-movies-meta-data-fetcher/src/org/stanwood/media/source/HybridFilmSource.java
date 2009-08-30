@@ -189,7 +189,7 @@ public class HybridFilmSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public SearchResult searchForVideoId(Mode mode, File filmFile) throws SourceException, MalformedURLException,
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File filmFile,String renamePattern) throws SourceException, MalformedURLException,
 			IOException {
 		if (mode != Mode.FILM) {
 			return null;
@@ -199,7 +199,7 @@ public class HybridFilmSource implements ISource {
 
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
-			SearchResult result = source.searchForVideoId(mode, filmFile);
+			SearchResult result = source.searchForVideoId(rootMediaDir,mode, filmFile,renamePattern);
 			if (result!=null) {
 				if (id.length()>0) {
 					id.append("|");

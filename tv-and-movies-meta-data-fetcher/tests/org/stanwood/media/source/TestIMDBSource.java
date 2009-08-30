@@ -31,6 +31,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.testdata.Data;
 
 /**
@@ -50,7 +51,7 @@ public class TestIMDBSource extends TestCase {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"Harvard Man.avi");
-			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
+			SearchResult result = source.searchForVideoId(tmpFile.getParentFile(),Mode.FILM,tmpFile,null);
 			assertEquals("0242508",result.getId());
 			assertEquals("imdb",result.getSourceId());
 			assertEquals("http://www.imdb.com/title/tt0242508/",result.getUrl());
@@ -69,7 +70,7 @@ public class TestIMDBSource extends TestCase {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"The iron man.avi");
-			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
+			SearchResult result = source.searchForVideoId(tmpFile.getParentFile(),Mode.FILM,tmpFile,null);
 			assertEquals("0772174",result.getId());
 			assertEquals("imdb",result.getSourceId());
 			assertEquals("http://www.imdb.com/title/tt0772174/",result.getUrl());

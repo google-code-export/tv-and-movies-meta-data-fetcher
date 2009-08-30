@@ -54,7 +54,7 @@ public class TestTagChimpSource extends TestCase {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"Iron man.avi");
-			SearchResult result = source.searchForVideoId(Mode.FILM,tmpFile);
+			SearchResult result = source.searchForVideoId(tmpFile.getAbsoluteFile(),Mode.FILM,tmpFile,null);
 			assertEquals("39752",result.getId());
 			assertEquals("tagChimp",result.getSourceId());
 			assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());

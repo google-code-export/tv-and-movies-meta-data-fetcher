@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.stanwood.media.model.Link;
+import org.stanwood.media.search.SearchHelper;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;

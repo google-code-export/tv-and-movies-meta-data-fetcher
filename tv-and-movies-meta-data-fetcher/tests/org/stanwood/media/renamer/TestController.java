@@ -67,7 +67,7 @@ public class TestController extends TestCase {
 		Controller.destoryController();
 	}
 
-	private File createConfigFileWithContents(StringBuilder testConfig) throws IOException, FileNotFoundException {
+	public static File createConfigFileWithContents(StringBuilder testConfig) throws IOException, FileNotFoundException {
 		File configFile = File.createTempFile("config", ".xml");
 		configFile.deleteOnExit();
 		PrintStream ps = null;

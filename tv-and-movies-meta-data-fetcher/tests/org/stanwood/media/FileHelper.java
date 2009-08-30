@@ -26,6 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -237,5 +240,45 @@ public class FileHelper {
 		}
 		in.close();
 		return results.toString();
+	}
+
+	/**
+	 * Used to list all the files in a directory and it's sub directiories.
+	 * @param dir The directory to list the files of
+	 * @return The files in the directory
+	 */
+	public static List<File> listFiles(File dir) {
+		List<File>files = new ArrayList<File>();
+		listFiles(dir,files);
+		Collections.sort(files);
+		return files;
+	}
+
+	/**
+	 * Used to list all the files in a directory and it's sub directiories.
+	 * File files are returned as a list of absolute paths.
+	 * @param dir The directory to list the files of
+	 * @return The files in the directory
+	 */
+	public static List<String> listFilesAsStrings(File dir) {
+		List<String>files = new ArrayList<String>();
+
+		List<File>files2 = listFiles(dir);
+		for (File f : files2) {
+			files.add(f.getAbsolutePath());
+		}
+
+		return files;
+	}
+
+	private static void listFiles(File dir, List<File> files) {
+		if (dir.isDirectory()) {
+			for (File d : dir.listFiles()) {
+				listFiles(d,files);
+			}
+		}
+		else {
+			files.add(dir);
+		}
 	}
 }

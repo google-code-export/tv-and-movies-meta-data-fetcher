@@ -266,7 +266,7 @@ public class TestTVCOMSource extends TestCase {
 		try {
 			File eurekaFile = new File(dir,"Eureka");
 			File episodeFile = new File(eurekaFile,"1 01 - Blah.avi");
-			SearchResult result = source.searchForVideoId(Mode.TV_SHOW,episodeFile);
+			SearchResult result = source.searchForVideoId(episodeFile.getParentFile(),Mode.TV_SHOW,episodeFile,null);
 			assertEquals("Check the show ID",SHOW_ID_EUREKA,result.getId());
 			assertEquals("Check the source ID","tvcom",result.getSourceId());
 			assertEquals("Check the URL","http://www.tv.com/eureka/show/58448/summary.html",result.getUrl());

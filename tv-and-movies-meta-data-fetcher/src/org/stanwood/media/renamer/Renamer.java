@@ -130,6 +130,7 @@ public class Renamer {
 
 		if (mode == Mode.TV_SHOW) {
 			for (File file : files) {
+				log.debug("RENAME:" + file.getAbsolutePath()+" : " + file.isDirectory());
 				renameTVShow(file);
 			}
 		} else if (mode == Mode.FILM) {
@@ -185,7 +186,7 @@ public class Renamer {
 	{
 		SearchResult result;
 		try {
-			result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file);
+			result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file,pattern);
 			return result;
 		} catch (SourceException e) {
 			e.printStackTrace();

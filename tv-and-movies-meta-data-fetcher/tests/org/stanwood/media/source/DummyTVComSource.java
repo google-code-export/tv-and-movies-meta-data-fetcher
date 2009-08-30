@@ -9,6 +9,10 @@ import org.stanwood.media.testdata.Data;
 
 import au.id.jericho.lib.html.Source;
 
+/**
+ * This is a dummy tv show source that pulls it's data from files within the test
+ * packages.
+ */
 public class DummyTVComSource extends TVCOMSource {
 
 	private static final Pattern SEASON_PATTERN = Pattern.compile(".*\\.com\\/(.*)\\/show\\/(.*)\\/episode.html\\?season=(\\d+)");

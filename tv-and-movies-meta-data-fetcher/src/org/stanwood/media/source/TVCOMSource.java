@@ -37,6 +37,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.search.ShowSearcher;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
@@ -554,12 +555,20 @@ public class TVCOMSource implements ISource {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForVideoId(Mode mode, File episodeFile) throws SourceException, MalformedURLException,
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws SourceException, MalformedURLException,
 			IOException {
 		if (mode != Mode.TV_SHOW) {
 			return null;
 		}
-		return searchForTvShow(episodeFile.getParentFile().getName());
+
+		ShowSearcher s = new ShowSearcher() {
+			@Override
+			public SearchResult doSearch(String name) throws MalformedURLException, IOException {
+				return searchForTvShow(name);
+			}
+		};
+
+		return s.search(episodeFile,rootMediaDir,renamePattern);
 	}
 
 	private SearchResult searchForTvShow(String name) throws MalformedURLException, IOException {

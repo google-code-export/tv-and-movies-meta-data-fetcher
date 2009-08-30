@@ -99,11 +99,13 @@ public interface ISource {
 	 * Used to search for a show within the source
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
+	 * @param rootMediaDir The root media directory
+	 * @param renamePattern The rename pattern been used, or null if one is not been used
 	 * @return The results of the search, or null if nothing was found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public SearchResult searchForVideoId(Mode mode,File episodeFile) throws SourceException, MalformedURLException, IOException;
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws SourceException, MalformedURLException, IOException;
 
 }
