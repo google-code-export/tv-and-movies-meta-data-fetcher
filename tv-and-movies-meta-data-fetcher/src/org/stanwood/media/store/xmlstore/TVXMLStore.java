@@ -447,13 +447,16 @@ public class TVXMLStore extends BaseXMLStore {
 	private void cacheEpisode(File rootMediaDir,File episodeFile,Document doc, Show show, Season season,
 			Episode episode) throws StoreException {
 		try {
-			Node node = XPathAPI.selectSingleNode(doc, "series[@id="
+			Node node = XPathAPI.selectSingleNode(doc, "show[@id="
 					+ show.getShowId() + "]/season[@number="
 					+ season.getSeasonNumber() + "]/episode[number="
 					+ episode.getEpisodeNumber() + "]");
 			if (node == null) {
 				node = doc.createElement("episode");
 				Node seasonNode = getSeasonNode(season, show, doc);
+				if (seasonNode==null) {
+					seasonNode = createSeasonNode(season,show,doc);
+				}
 				((Element) node).setAttribute("number", String.valueOf(episode
 						.getEpisodeNumber()));
 				seasonNode.appendChild(node);
@@ -538,22 +541,32 @@ public class TVXMLStore extends BaseXMLStore {
 
 			Node node = getSeasonNode(season, show, doc);
 			if (node == null) {
-				node = doc.createElement("season");
-				Node seriesNode = getSeriesNode(show, doc);
-				((Element) node).setAttribute("number", String.valueOf(season
-						.getSeasonNumber()));
-				seriesNode.appendChild(node);
+				node = createSeasonNode(season, show, doc);
 			}
 
 			((Element) node).setAttribute("detailedListingUrl", urlToText(season
 					.getDetailedUrl()));
 			((Element) node).setAttribute("listingUrl", urlToText(season.getListingUrl()));
+
 			File cacheFile = getCacheFile(episodeFile.getParentFile(),FILENAME);
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
+	}
+
+	private Node createSeasonNode(Season season, Show show, Document doc) throws TransformerException {
+		Node node;
+		node = doc.createElement("season");
+		Node seriesNode = getSeriesNode(show, doc);
+		((Element) node).setAttribute("number", String.valueOf(season
+				.getSeasonNumber()));
+		seriesNode.appendChild(node);
+		((Element) node).setAttribute("detailedListingUrl", urlToText(season
+				.getDetailedUrl()));
+		((Element) node).setAttribute("listingUrl", urlToText(season.getListingUrl()));
+		return node;
 	}
 
 	private Node getSeriesNode(Show show, Document doc)
