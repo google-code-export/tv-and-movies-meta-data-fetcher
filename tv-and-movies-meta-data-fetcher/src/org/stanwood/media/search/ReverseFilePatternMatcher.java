@@ -7,11 +7,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * This class provides methods that will take a file path and a search pattern, then
+ * parse the file path using the pattern. This is used to find the value of the tokens
+ * in the pattern when applyed to the file path.
+ */
 public class ReverseFilePatternMatcher {
 
 	private Map<String,String> values;
 
+	/**
+	 * Parse the file path using the rename pattern and find the tokens in the
+	 * pattern's values
+	 * @param path The file path
+	 * @param pattern The rename pattern
+	 */
 	public void parse(String path,String pattern) {
 		List<String> tokens = new ArrayList<String>();
 		StringBuilder regexp = new StringBuilder();
@@ -51,6 +61,10 @@ public class ReverseFilePatternMatcher {
 		}
 	}
 
+	/**
+	 * A map of tokens found when a file path was parsed using a rename pattern
+	 * @return The tokens
+	 */
 	public Map<String,String> getValues() {
 		return values;
 	}

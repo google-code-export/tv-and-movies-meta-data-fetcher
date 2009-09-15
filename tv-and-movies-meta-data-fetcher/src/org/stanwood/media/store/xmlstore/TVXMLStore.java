@@ -475,15 +475,14 @@ public class TVXMLStore extends BaseXMLStore {
 	private void cacheSpecial(File rootMediaDir,File episodeFile,Document doc, Show show, Season season,
 			Episode episode) throws StoreException {
 		try {
-			Node node = XPathAPI.selectSingleNode(doc, "show[@id="
-					+ show.getShowId() + "]/season[@number="
+			Node node = XPathAPI.selectSingleNode(doc, "show[@id='"
+					+ show.getShowId() + "']/season[@number="
 					+ season.getSeasonNumber() + "]/special[number="
 					+ episode.getEpisodeNumber() + "]");
 			if (node == null) {
 				node = doc.createElement("special");
 				Node seasonNode = getSeasonNode(season, show, doc);
-				((Element) node).setAttribute("number", String.valueOf(episode
-						.getEpisodeNumber()));
+				((Element) node).setAttribute("number", String.valueOf(episode.getEpisodeNumber()));
 				seasonNode.appendChild(node);
 			}
 
@@ -571,16 +570,14 @@ public class TVXMLStore extends BaseXMLStore {
 
 	private Node getSeriesNode(Show show, Document doc)
 			throws TransformerException {
-		Node seriesNode = XPathAPI.selectSingleNode(doc, "show[@id="
-				+ show.getShowId() + "]");
+		Node seriesNode = XPathAPI.selectSingleNode(doc, "show[@id='"+ show.getShowId() + "']");
 		return seriesNode;
 	}
 
 	private Node getSeasonNode(Season season, Show show, Document doc)
 			throws TransformerException {
-		Node node = XPathAPI.selectSingleNode(doc, "show[@id="
-				+ show.getShowId() + "]/season[@number="
-				+ season.getSeasonNumber() + "]");
+
+		Node node = XPathAPI.selectSingleNode(doc, "show[@id='"+ show.getShowId() + "']/season[@number="+ season.getSeasonNumber() + "]");
 		return node;
 	}
 

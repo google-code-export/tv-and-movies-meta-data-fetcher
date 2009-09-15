@@ -137,6 +137,7 @@ public class FileHelper {
 
 	}
 
+
 	/**
 	 * Used to copy the contents of a input stream to a destination file.
 	 *
@@ -202,6 +203,31 @@ public class FileHelper {
 		String str;
 		while ((str = in.readLine()) != null) {
 			os.println(str);
+		}
+		in.close();
+	}
+
+
+	/**
+	 * Used to display the contents of a file
+	 * @param file The file to display
+	 * @param startLine The line to start displaying from
+	 * @param endLine The line to finish displaying from
+	 * @param os The output stream used to print the file to
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static void displayFile(File file,int startLine, int endLine, PrintStream os)throws IOException {
+		if (startLine<0) {
+			startLine = 0;
+		}
+		int line = 1;
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
+		while ((str = in.readLine()) != null) {
+			if (line>=startLine && line <=endLine) {
+				os.println(line + ": " + str);
+			}
+			line++;
 		}
 		in.close();
 	}
@@ -281,4 +307,23 @@ public class FileHelper {
 			files.add(dir);
 		}
 	}
+
+	/**
+	 * Used to add contents to a file
+	 * @param file The file to add contetns to
+	 * @param contents The contents
+	 * @throws IOException Thrown if their is a IO problem
+	 */
+	public static void appendContentsToFile(File file,StringBuilder contents) throws IOException {
+		PrintStream ps = null;
+		try {
+			FileOutputStream os = new FileOutputStream(file);
+			ps = new PrintStream(os);
+			ps.print(contents.toString());
+		}
+		finally {
+			ps.close();
+		}
+	}
+
 }

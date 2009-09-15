@@ -1,0 +1,124 @@
+<!--
+	This is the DTD that describes MediaInfoFetcher 
+	(http://code.google.com/p/tv-and-movies-meta-data-fetcher/) 
+	XMLStore file format. 
+-->
+<!ELEMENT store (show|film)*>
+
+<!ELEMENT show (description?,genre*,season*)>
+
+<!ATTLIST show
+  id       NMTOKENS  #REQUIRED     
+  imageUrl CDATA     #IMPLIED
+  name     CDATA     #IMPLIED
+  sourceId CDATA     #REQUIRED
+  url      CDATA     #IMPLIED
+>
+
+<!ELEMENT description (short?,long?)>
+
+<!ELEMENT short (#PCDATA)>
+
+<!ELEMENT long (#PCDATA)>
+
+<!ELEMENT season (episode|special)*>
+
+<!ATTLIST season
+  detailedListingUrl  CDATA   #IMPLIED
+  listingUrl          CDATA   #IMPLIED
+  number              CDATA   #REQUIRED
+>
+
+<!ELEMENT episode (summary?,(director*|writer*|guestStar*|file*)*)>
+
+<!ATTLIST episode
+  episodeId          CDATA  #REQUIRED
+  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED
+  rating             CDATA  #IMPLIED
+  firstAired         CDATA  #IMPLIED
+  title              CDATA  #IMPLIED
+  url                CDATA  #IMPLIED
+  showEpisodeNumber  CDATA  #IMPLIED
+>
+
+<!ELEMENT special (summary?,(director*|writer*|guestStar*|file*)*)>
+
+<!ATTLIST special
+  episodeId          CDATA  #REQUIRED
+  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED
+  rating             CDATA  #IMPLIED
+  firstAired         CDATA  #IMPLIED
+  title              CDATA  #IMPLIED
+  url                CDATA  #IMPLIED
+  showEpisodeNumber  CDATA  #IMPLIED
+>
+
+<!ELEMENT summary (#PCDATA)>
+<!ELEMENT film (description?,country?,(genre*|certification*|guestStar*|director*|writer*|chapter*|file*)*)>
+
+<!ATTLIST film
+	id            NMTOKENS  #REQUIRED
+	imageUrl      CDATA     #IMPLIED 
+	rating        CDATA     #IMPLIED
+	releaseDate   CDATA     #IMPLIED
+	sourceId      CDATA     #IMPLIED
+	title         CDATA     #IMPLIED
+	url           CDATA     #IMPLIED
+>
+
+<!ELEMENT country EMPTY>
+
+<!ATTLIST country
+  name      CDATA              #REQUIRED
+  url      CDATA    #IMPLIED
+>
+
+<!ELEMENT genre EMPTY>
+
+<!ATTLIST genre
+  name      CDATA              #REQUIRED
+  preferred (true|false) "false"
+>
+
+<!ELEMENT director EMPTY>
+
+<!ATTLIST director
+  url      CDATA    #IMPLIED
+  name     CDATA    #REQUIRED
+>
+
+<!ELEMENT writer EMPTY>
+
+<!ATTLIST writer
+  url      CDATA    #IMPLIED
+  name     CDATA    #REQUIRED
+>
+
+<!ELEMENT guestStar EMPTY>
+
+<!ATTLIST guestStar
+  url      CDATA    #IMPLIED
+  name     CDATA    #REQUIRED
+>
+
+<!ELEMENT file EMPTY>
+
+<!ATTLIST file
+    location CDATA #REQUIRED
+>
+
+<!ELEMENT chapter EMPTY>
+
+<!ATTLIST chapter
+    name    CDATA    #REQUIRED
+	number  NMTOKENS #REQUIRED
+>
+
+<!ELEMENT certification EMPTY>
+
+<!ATTLIST certification
+  certification CDATA #REQUIRED
+  country CDATA       #REQUIRED
+>

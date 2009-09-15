@@ -95,7 +95,7 @@ public class FilmXMLStore extends BaseXMLStore {
 	}
 
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
-			throws TransformerException {
+			throws TransformerException, StoreException {
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
@@ -148,8 +148,8 @@ public class FilmXMLStore extends BaseXMLStore {
 			List<Link> countries = new ArrayList<Link>();
 			countries.add(film.getCountry());
 			writeEpsoideExtraInfo(doc, filmNode, "country",countries );
-			writeFilenames(doc, filmNode, filenames);
 		}
+		writeFilenames(doc, filmNode, filenames);
 
 		filmsNode.appendChild(filmNode);
 	}

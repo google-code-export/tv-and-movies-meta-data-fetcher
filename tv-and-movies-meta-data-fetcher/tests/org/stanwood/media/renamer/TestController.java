@@ -17,13 +17,11 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import junit.framework.TestCase;
 
+import org.stanwood.media.FileHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.store.FakeStore;
 
@@ -67,18 +65,10 @@ public class TestController extends TestCase {
 		Controller.destoryController();
 	}
 
-	public static File createConfigFileWithContents(StringBuilder testConfig) throws IOException, FileNotFoundException {
+	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {
 		File configFile = File.createTempFile("config", ".xml");
 		configFile.deleteOnExit();
-		PrintStream ps = null;
-		try {
-			FileOutputStream os = new FileOutputStream(configFile);
-			ps = new PrintStream(os);
-			ps.print(testConfig.toString());
-		}
-		finally {
-			ps.close();
-		}
+		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
 	}
 }

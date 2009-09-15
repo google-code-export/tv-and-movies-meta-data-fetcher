@@ -16,10 +16,284 @@
  */
 package org.stanwood.media.testdata;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.stanwood.media.model.Certification;
+import org.stanwood.media.model.Chapter;
+import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Link;
+import org.stanwood.media.model.Season;
+import org.stanwood.media.model.Show;
+import org.stanwood.media.source.IMDBSource;
+import org.stanwood.media.source.TVCOMSource;
+
 /**
  * This class in used to make it easier to find all the test resources. They can be found
  * relative to this class.
  */
 public class Data {
+
+	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+	/** A test show id */
+	public final static String SHOW_ID_EUREKA = "58448";
+	/** A test show id */
+	public static final String SHOW_ID_HEROES = "17552";
+
+	/**
+	 * Used to create test data for a film bject
+	 * @return The film test object
+	 * @throws Exception Thrown if their is a problem creating the film
+	 */
+	public static Film createFilm() throws Exception {
+		Film film = new Film("114814");
+		film.setImageURL(new URL("http://test/image.jpg"));
+		film.setTitle("The Usual Suspects");
+		List<String> genres = new ArrayList<String>();
+		genres.add("Crime");
+		genres.add("Drama");
+		genres.add("Mystery");
+		genres.add("Thriller");
+		film.setGenres(genres);
+
+		film.setPreferredGenre("Drama");
+		film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
+		List<Certification> certifications= new ArrayList<Certification>();
+		certifications.add(new Certification("16","Iceland"));
+		certifications.add(new Certification("R-18","Philippines"));
+		certifications.add(new Certification("16","Argentina"));
+		certifications.add(new Certification("MA","Australia"));
+		certifications.add(new Certification("16","Brazil"));
+		certifications.add(new Certification("14A","Canada"));
+		certifications.add(new Certification("18","Chile"));
+		certifications.add(new Certification("16","Denmark"));
+		certifications.add(new Certification("K-16","Finland"));
+		certifications.add(new Certification("U","France"));
+		certifications.add(new Certification("16","Germany"));
+		certifications.add(new Certification("IIB","Hong Kong"));
+		certifications.add(new Certification("16","Hungary"));
+		certifications.add(new Certification("18","Ireland"));
+		certifications.add(new Certification("T","Italy"));
+		certifications.add(new Certification("PG-12","Japan"));
+		certifications.add(new Certification("16","Netherlands"));
+		certifications.add(new Certification("R18","New Zealand"));
+		certifications.add(new Certification("15","Norway"));
+		certifications.add(new Certification("M/16","Portugal"));
+		certifications.add(new Certification("M18","Singapore"));
+		certifications.add(new Certification("PG (cut)","Singapore"));
+		certifications.add(new Certification("18","South Korea"));
+		certifications.add(new Certification("18","Spain"));
+		certifications.add(new Certification("15","Sweden"));
+		certifications.add(new Certification("18","UK"));
+		certifications.add(new Certification("R","USA"));
+		film.setCertifications(certifications);
+		film.setDate(df.parse("1995-08-25"));
+		List<Link> directors = new ArrayList<Link>();
+		directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
+		film.setDirectors(directors);
+		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
+		List<Link> guestStars = new ArrayList<Link>();
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001125/","Benicio Del Toro"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001629/","Kevin Pollak"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000228/","Kevin Spacey"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0001590/","Chazz Palminteri"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000592/","Pete Postlethwaite"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0002064/","Giancarlo Esposito"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000751/","Suzy Amis"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000445/","Dan Hedaya"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0000860/","Paul Bartel"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0107808/","Carl Bressler"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0800342/","Phillip Simon"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0790436/","Jack Shearer"));
+		guestStars.add(new Link("http://www.imdb.com/name/nm0261452/","Christine Estabrook"));
+		film.setGuestStars(guestStars);
+		film.setRating(8.7F);
+		film.setSourceId(IMDBSource.SOURCE_ID);
+		film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
+		film.setDescription("Test description of the film");
+		List<Link>writers = new ArrayList<Link>();
+		writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
+		film.setWriters(writers);
+
+		film.addChapter(new Chapter("The start",1));
+		film.addChapter(new Chapter("The end",3));
+		film.addChapter(new Chapter("Second Chapter",2));
+
+		return film;
+	}
+
+	/**
+	 * Used to create a test show that somewhat resembles eureka
+	 * @param eurekaDir The directory where the show is located
+	 * @return The episodes of the show
+	 * @throws IOException Throw if their is a problem creating shows files
+	 * @throws ParseException Thrown if their is a problem parsing a date
+	 */
+	public static List<EpisodeData> createEurekaShow(File eurekaDir) throws IOException, ParseException {
+		List<EpisodeData>result = new ArrayList<EpisodeData>();
+
+		Show show = new Show(SHOW_ID_EUREKA);
+		show.setSourceId(TVCOMSource.SOURCE_ID);
+		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
+		StringBuilder summary = new StringBuilder();
+		summary.append("Small town. Big secret.\n");
+		summary.append("\n");
+		summary.append("A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.\n");
+		summary.append("\n");
+		summary.append("Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.\n");
+		show.setLongSummary(summary.toString());
+		show.setName("Eureka");
+		show.setShortSummary("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...");
+		show.setShowURL(new URL("http://www.tv.com/show/58448/summary.html"));
+		List<String> genres = new ArrayList<String>();
+		genres.add("SCIFI");
+		genres.add("Drama");
+		show.setGenres(genres);
+
+		Season season = new Season(show,1);
+		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=1"));
+		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=1"));
+		show.addSeason(season);
+
+		File episodeFile = new File(eurekaDir,"1x01 - blah");
+		episodeFile.createNewFile();
+
+		Episode episode1 = new Episode(1,season);
+		episode1.setDate(df.parse("2006-10-10"));
+		episode1.setShowEpisodeNumber(1);
+		episode1.setSpecial(false);
+		episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
+		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
+		episode1.setTitle("Pilot");
+		episode1.setRating(1);
+		episode1.setDirectors(createLinks(new Link[]{new Link("http://test/","Harry")}));
+		episode1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot")}));
+		episode1.setGuestStars(createLinks(new Link[]{new Link("http://test/sally","sally"),new Link("http://test/cedric","Cedric")}));
+		episode1.setEpisodeId(784857);
+		season.addEpisode(episode1);
+		result.add(new EpisodeData(episode1,episodeFile));
+
+		episodeFile = new File(eurekaDir,"1x02 - blah");
+		episodeFile.createNewFile();
+		Episode episode2 = new Episode(2,season);
+		episode2.setDate(df.parse("2006-10-11"));
+		episode2.setShowEpisodeNumber(2);
+		episode2.setSpecial(false);
+		episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
+		episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
+		episode2.setTitle("Many Happy Returns");
+		episode2.setRating(9.5F);
+		episode2.setEpisodeId(800578);
+		season.addEpisode(episode2);
+		result.add(new EpisodeData(episode2,episodeFile));
+
+		season = new Season(show,2);
+		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=2"));
+		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=2"));
+		show.addSeason(season);
+
+		episodeFile = new File(eurekaDir,"2x13 - blah");
+		episodeFile.createNewFile();
+		episode1 = new Episode(2,season);
+		episode1.setDate(df.parse("2007-7-10"));
+		episode1.setShowEpisodeNumber(13);
+		episode1.setSpecial(false);
+		episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
+		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
+		episode1.setTitle("Phoenix Rising");
+		episode1.setEpisodeId(800578);
+		episode1.setRating(0.4F);
+		season.addEpisode(episode1);
+		result.add(new EpisodeData(episode1,episodeFile));
+
+		episodeFile = new File(eurekaDir,"000 - blah");
+		episodeFile.createNewFile();
+		Episode special1 = new Episode(0,season);
+		special1.setDate(df.parse("2007-7-09"));
+		special1.setShowEpisodeNumber(-1);
+		special1.setSpecial(true);
+		special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
+		special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
+		special1.setTitle("Countdown to the Premiere");
+		special1.setRating(0.4F);
+		special1.setEpisodeId(800578);
+		special1.setDirectors(createLinks(new Link[]{new Link("http://test/","JP")}));
+		special1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot"),new Link("http://test/b","Write a little")}));
+		special1.setGuestStars(createLinks(new Link[]{new Link("http://test/bob","bob"),new Link("http://test/fred","Write a little")}));
+		result.add(new EpisodeData(special1,episodeFile));
+
+		season.addSepcial(special1);
+
+
+		return result;
+	}
+
+	/**
+	 * Used to create a test show that somewhat resembles heroes
+	 * @param heroesDir The directory where the show is located
+	 * @return The episodes of the show
+	 * @throws IOException Throw if their is a problem creating shows files
+	 * @throws ParseException Thrown if their is a problem parsing a date
+	 */
+	public static List<EpisodeData> createHeroesShow(File heroesDir) throws IOException, ParseException {
+		List<EpisodeData>result = new ArrayList<EpisodeData>();
+		Show show = new Show(SHOW_ID_HEROES);
+		show.setSourceId(TVCOMSource.SOURCE_ID);
+		show.setImageURL(new URL("http://image.com.com/tv/images/content_headers/program_new/17552.jpg"));
+
+		StringBuilder summary = new StringBuilder();
+		summary.append("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint images of the future when he is high, Niki Sanders, a 33-year-old Las Vegas showgirl who begins seeing strange things in mirrors, Hiro Nakamura, a 24-year-old Japanese comic-book geek who literally makes time stand still, D.L. Hawkins, a 31-year-old inmate who can walk through walls, Matt Parkman, a beat cop who can hear other people's thoughts, and Claire Bennet, a 17-year-old cheerleader who defies death at every turn. As the viewing audience is discovering the nature of each hero's powers, the heroes themselves are discovering what having superpowers means to them as well as the larger picture of where their superpowers come from. Tune in each week to see how these heroes are drawn together by their common interest of evading the series' antagonist who wants to harvest their super-DNA for himself. Their ultimate destiny is nothing less than saving the world! The series will star Greg Grunberg (Alias), Leonard Roberts (Buffy the Vampire Slayer), Milo Ventimiglia (Gilmore Girls), and Hayden Panettiere (Ally McBeal, Guiding Light). Tim Kring (Crossing Jordan, Chicago Hope) is the series' creator. The pilot is set to be directed by Dave Semel (American Dreams, Buffy, the Vampire Slayer, Beverly Hills, 90210). Heroes will be produced by NBC/Universal/Tailwind. Summary revised with help from: space-cowboy");
+		show.setLongSummary(summary.toString());
+		show.setName("Heroes");
+		show.setShortSummary("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspect...");
+		show.setShowURL(new URL("http://www.tv.com/heroes/show/17552/summary.html"));
+		List<String> genres = new ArrayList<String>();
+		genres.add("SCIFI");
+		genres.add("Drama");
+		show.setGenres(genres);
+
+		File episodeFile = new File(heroesDir,"1x01 - hero");
+		episodeFile.createNewFile();
+
+		Season season = new Season(show,1);
+		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_guide.html?printable=1"));
+		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_listings.html?season=1"));
+		show.addSeason(season);
+
+		Episode episode1 = new Episode(1,season);
+		episode1.setDate(df.parse("2006-11-11"));
+		episode1.setShowEpisodeNumber(1);
+		episode1.setSpecial(false);
+		episode1.setSummary("After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.");
+		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
+		episode1.setTitle("Heroe, Pilot");
+		episode1.setRating(2);
+		episode1.setDirectors(createLinks(new Link[]{new Link("http://Whoever/","Whoever")}));
+		episode1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot")}));
+		episode1.setGuestStars(createLinks(new Link[]{new Link("http://test/sally","sally"),new Link("http://test/cedric","Cedric")}));
+		episode1.setEpisodeId(1181337);
+		season.addEpisode(episode1);
+		result.add(new EpisodeData(episode1,episodeFile));
+
+		return result;
+	}
+
+	private static List<Link>createLinks(Link[] links) {
+		List<Link> result = new ArrayList<Link>();
+		for (Link link : links ) {
+			result.add(link);
+		}
+		return result;
+	}
 
 }

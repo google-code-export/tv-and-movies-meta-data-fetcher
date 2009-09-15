@@ -62,7 +62,6 @@ public class TVCOMSource implements ISource {
 	private final static Pattern SPECIAL_EXTRACT_PATTERN = Pattern.compile("Special\\. Season (\\d+).*Aired: (.*)");
 
 	private final static String TVCOM_BASE_URL = "http://www.tv.com/";
-	private final static String URL_SUMMARY = "$textId$/show/$showId$/summary.html";
 
 	private final static String URL_EPISODE_LISTING_FULL = "$textId$/show/$showId$/episode.html?season=$seasonNum$";
 	private final static String URL_EPISODES = "$textId$/show/$showId$/episode_guide.html?printable=1";
@@ -553,7 +552,6 @@ public class TVCOMSource implements ISource {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws SourceException, MalformedURLException,
 			IOException {
@@ -571,6 +569,7 @@ public class TVCOMSource implements ISource {
 		return s.search(episodeFile,rootMediaDir,renamePattern);
 	}
 
+	@SuppressWarnings("unchecked")
 	private SearchResult searchForTvShow(String name) throws MalformedURLException, IOException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		URL url = new URL(getShowSearchUrl(name));

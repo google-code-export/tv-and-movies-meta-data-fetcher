@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <films>
-  <film id="114814" imageUrl="http://test/image.jpg" rating="8.7" releaseDate="1995-08-25"
-    sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
+  <film id="114814" imageUrl="http://test/image.jpg" rating="8.7"
+    releaseDate="1995-08-25" sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
     <summary>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</summary>
     <description>Test description of the film</description>
     <genre name="Crime"/>
@@ -38,24 +38,24 @@
     <chapter name="The start" number="1"/>
     <chapter name="Second Chapter" number="2"/>
     <chapter name="The end" number="3"/>
-    <director link="http://www.imdb.com/name/nm0001741/" name="Bryan Singer"/>
-    <writer link="http://www.imdb.com/name/nm0003160/" name="Christopher McQuarrie"/>
-    <guestStar link="http://www.imdb.com/name/nm0000286/" name="Stephen Baldwin"/>
-    <guestStar link="http://www.imdb.com/name/nm0000321/" name="Gabriel Byrne"/>
-    <guestStar link="http://www.imdb.com/name/nm0001125/" name="Benicio Del Toro"/>
-    <guestStar link="http://www.imdb.com/name/nm0001629/" name="Kevin Pollak"/>
-    <guestStar link="http://www.imdb.com/name/nm0000228/" name="Kevin Spacey"/>
-    <guestStar link="http://www.imdb.com/name/nm0001590/" name="Chazz Palminteri"/>
-    <guestStar link="http://www.imdb.com/name/nm0000592/" name="Pete Postlethwaite"/>
-    <guestStar link="http://www.imdb.com/name/nm0002064/" name="Giancarlo Esposito"/>
-    <guestStar link="http://www.imdb.com/name/nm0000751/" name="Suzy Amis"/>
-    <guestStar link="http://www.imdb.com/name/nm0000445/" name="Dan Hedaya"/>
-    <guestStar link="http://www.imdb.com/name/nm0000860/" name="Paul Bartel"/>
-    <guestStar link="http://www.imdb.com/name/nm0107808/" name="Carl Bressler"/>
-    <guestStar link="http://www.imdb.com/name/nm0800342/" name="Phillip Simon"/>
-    <guestStar link="http://www.imdb.com/name/nm0790436/" name="Jack Shearer"/>
-    <guestStar link="http://www.imdb.com/name/nm0261452/" name="Christine Estabrook"/>
-    <country link="http://www.imdb.com/Sections/Countries/USA/" name="USA"/>
+    <director name="Bryan Singer" url="http://www.imdb.com/name/nm0001741/"/>
+    <writer name="Christopher McQuarrie" url="http://www.imdb.com/name/nm0003160/"/>
+    <guestStar name="Stephen Baldwin" url="http://www.imdb.com/name/nm0000286/"/>
+    <guestStar name="Gabriel Byrne" url="http://www.imdb.com/name/nm0000321/"/>
+    <guestStar name="Benicio Del Toro" url="http://www.imdb.com/name/nm0001125/"/>
+    <guestStar name="Kevin Pollak" url="http://www.imdb.com/name/nm0001629/"/>
+    <guestStar name="Kevin Spacey" url="http://www.imdb.com/name/nm0000228/"/>
+    <guestStar name="Chazz Palminteri" url="http://www.imdb.com/name/nm0001590/"/>
+    <guestStar name="Pete Postlethwaite" url="http://www.imdb.com/name/nm0000592/"/>
+    <guestStar name="Giancarlo Esposito" url="http://www.imdb.com/name/nm0002064/"/>
+    <guestStar name="Suzy Amis" url="http://www.imdb.com/name/nm0000751/"/>
+    <guestStar name="Dan Hedaya" url="http://www.imdb.com/name/nm0000445/"/>
+    <guestStar name="Paul Bartel" url="http://www.imdb.com/name/nm0000860/"/>
+    <guestStar name="Carl Bressler" url="http://www.imdb.com/name/nm0107808/"/>
+    <guestStar name="Phillip Simon" url="http://www.imdb.com/name/nm0800342/"/>
+    <guestStar name="Jack Shearer" url="http://www.imdb.com/name/nm0790436/"/>
+    <guestStar name="Christine Estabrook" url="http://www.imdb.com/name/nm0261452/"/>
+    <country name="USA" url="http://www.imdb.com/Sections/Countries/USA/"/>
     <file name="$filmdir$/The Usual Suspects part1.avi"/>
     <file name="$filmdir$/The Usual Suspects part2.avi"/>
   </film>

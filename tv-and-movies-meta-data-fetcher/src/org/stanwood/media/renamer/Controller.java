@@ -44,6 +44,7 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.XMLStore;
 import org.stanwood.media.store.memory.MemoryStore;
+import org.stanwood.media.store.xmlstore.XMLStore2;
 
 /**
  * The controller is used to control access to the stores and and sources. This is a singleton class, and just first be
@@ -75,7 +76,7 @@ public class Controller {
 
 		stores = new ArrayList<IStore>();
 		stores.add(new MemoryStore());
-		stores.add(new XMLStore());
+		stores.add(new XMLStore2());
 		sources = new ArrayList<ISource>();
 		sources.add(new TVCOMSource());
 		sources.add(new IMDBSource());
@@ -128,6 +129,9 @@ public class Controller {
 			String storeClass = storeConfig.getID();
 			try {
 				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
+				if (c.equals(XMLStore.class)) {
+					log.warn("Store "+storeClass+" is depercated, try using "+XMLStore2.class.getName()+" instead.");
+				}
 				IStore store = c.newInstance();
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {

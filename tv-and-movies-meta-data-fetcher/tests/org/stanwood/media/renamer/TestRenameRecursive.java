@@ -13,7 +13,7 @@ import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.DummyTVComSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.store.IStore;
-import org.stanwood.media.store.XMLStore;
+import org.stanwood.media.store.xmlstore.XMLStore2;
 
 /**
  * This test class is used to test the rescrive renaming of media files
@@ -24,6 +24,10 @@ public class TestRenameRecursive {
 
 	protected static int exitCode;
 
+	/**
+	 * Used to setup the exit handler
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Before
 	public void setUp() throws Exception {
 		Main.doInit = false;
@@ -37,6 +41,10 @@ public class TestRenameRecursive {
 		exitCode = 0;
 	}
 
+	/**
+	 * Used to tidy up the controller before closing the test
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@After
 	public void tearDown() throws Exception {
 		Main.doInit = false;
@@ -49,7 +57,7 @@ public class TestRenameRecursive {
 	 */
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
-		setupTestController(DummyTVComSource.class,XMLStore.class);
+		setupTestController(DummyTVComSource.class,XMLStore2.class);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
@@ -78,25 +86,29 @@ public class TestRenameRecursive {
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
-			Assert.assertEquals(3,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(2));
+			System.out.println(files);
+			Assert.assertEquals(4,files.size());
+			// .show.xml
+			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(3));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			Controller.destoryController();
-			setupTestController(null,XMLStore.class);
+			setupTestController(null,XMLStore2.class);
 
 			// Do the renaming
 			Main.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
-			Assert.assertEquals(3,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(4,files.size());
+			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(3));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
@@ -162,7 +174,7 @@ public class TestRenameRecursive {
 		}
 	}
 
-	private void setupTestController(Class<? extends ISource> source,Class<? extends IStore> store) throws Exception{
+	public static void setupTestController(Class<? extends ISource> source,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
 		if (source!=null) {
@@ -178,12 +190,19 @@ public class TestRenameRecursive {
 
 		testConfig.append("</config>"+LS);
 
-		File configFile = TestController.createConfigFileWithContents(testConfig);
+		File configFile = createConfigFileWithContents(testConfig);
 
 		ConfigReader configReader = new ConfigReader(configFile);
 		configReader.parse();
 		Controller.destoryController();
 		Controller.initFromConfigFile(configReader);
+	}
+
+	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {
+		File configFile = File.createTempFile("config", ".xml");
+		configFile.deleteOnExit();
+		FileHelper.appendContentsToFile(configFile, testConfig);
+		return configFile;
 	}
 
 }

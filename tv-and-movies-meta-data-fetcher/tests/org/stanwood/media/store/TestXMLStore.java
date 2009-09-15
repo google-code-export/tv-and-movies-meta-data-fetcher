@@ -17,32 +17,22 @@
 package org.stanwood.media.store;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Assert;
 import org.stanwood.media.FileHelper;
-import org.stanwood.media.model.Certification;
-import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.source.IMDBSource;
-import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.testdata.Data;
-import org.xml.sax.InputSource;
+import org.stanwood.media.testdata.EpisodeData;
 
 /**
  * Used to test the {@link XMLStore} class.
@@ -234,7 +224,6 @@ public class TestXMLStore extends XMLTestCase {
 			assertTrue(!contents.contains(newFile.getAbsolutePath()));
 
 			xmlSource.renamedFile(dir,oldFile, newFile);
-
 			contents=FileHelper.readFileContents(filmCache);
 			assertTrue(!contents.contains(oldFile.getAbsolutePath()));
 			assertTrue(contents.contains(newFile.getAbsolutePath()));
@@ -252,99 +241,19 @@ public class TestXMLStore extends XMLTestCase {
 		File dir = FileHelper.createTmpDir("film");
 		try {
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
+			filmFile1.createNewFile();
 			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
-			Film film = new Film("114814");
-			film.setImageURL(new URL("http://test/image.jpg"));
-			film.setTitle("The Usual Suspects");
-			List<String> genres = new ArrayList<String>();
-			genres.add("Crime");
-			genres.add("Drama");
-			genres.add("Mystery");
-			genres.add("Thriller");
-			film.setGenres(genres);
+			filmFile2.createNewFile();
+			Film film = Data.createFilm();
 
-			film.setPreferredGenre("Drama");
-			film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
-			List<Certification> certifications= new ArrayList<Certification>();
-			certifications.add(new Certification("16","Iceland"));
-			certifications.add(new Certification("R-18","Philippines"));
-			certifications.add(new Certification("16","Argentina"));
-			certifications.add(new Certification("MA","Australia"));
-			certifications.add(new Certification("16","Brazil"));
-			certifications.add(new Certification("14A","Canada"));
-			certifications.add(new Certification("18","Chile"));
-			certifications.add(new Certification("16","Denmark"));
-			certifications.add(new Certification("K-16","Finland"));
-			certifications.add(new Certification("U","France"));
-			certifications.add(new Certification("16","Germany"));
-			certifications.add(new Certification("IIB","Hong Kong"));
-			certifications.add(new Certification("16","Hungary"));
-			certifications.add(new Certification("18","Ireland"));
-			certifications.add(new Certification("T","Italy"));
-			certifications.add(new Certification("PG-12","Japan"));
-			certifications.add(new Certification("16","Netherlands"));
-			certifications.add(new Certification("R18","New Zealand"));
-			certifications.add(new Certification("15","Norway"));
-			certifications.add(new Certification("M/16","Portugal"));
-			certifications.add(new Certification("M18","Singapore"));
-			certifications.add(new Certification("PG (cut)","Singapore"));
-			certifications.add(new Certification("18","South Korea"));
-			certifications.add(new Certification("18","Spain"));
-			certifications.add(new Certification("15","Sweden"));
-			certifications.add(new Certification("18","UK"));
-			certifications.add(new Certification("R","USA"));
-			film.setCertifications(certifications);
-			film.setDate(df.parse("1995-08-25"));
-			List<Link> directors = new ArrayList<Link>();
-			directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
-			film.setDirectors(directors);
-			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
-			List<Link> guestStars = new ArrayList<Link>();
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0001125/","Benicio Del Toro"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0001629/","Kevin Pollak"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000228/","Kevin Spacey"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0001590/","Chazz Palminteri"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000592/","Pete Postlethwaite"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0002064/","Giancarlo Esposito"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000751/","Suzy Amis"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000445/","Dan Hedaya"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0000860/","Paul Bartel"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0107808/","Carl Bressler"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0800342/","Phillip Simon"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0790436/","Jack Shearer"));
-			guestStars.add(new Link("http://www.imdb.com/name/nm0261452/","Christine Estabrook"));
-			film.setGuestStars(guestStars);
-			film.setRating(8.7F);
-			film.setSourceId(IMDBSource.SOURCE_ID);
-			film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
-			film.setDescription("Test description of the film");
-			List<Link>writers = new ArrayList<Link>();
-			writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
-			film.setWriters(writers);
-
-			film.addChapter(new Chapter("The start",1));
-			film.addChapter(new Chapter("The end",3));
-			film.addChapter(new Chapter("Second Chapter",2));
-
-			xmlSource.cacheFilm(dir,filmFile1, film);
-			xmlSource.cacheFilm(dir,filmFile2, film);
+			xmlSource.cacheFilm(dir, filmFile1, film);
+			xmlSource.cacheFilm(dir, filmFile2, film);
 
 			File actualFile = new File(dir,".films.xml");
-			assertTrue(actualFile.exists());
-			String contents = FileHelper.readFileContents(Data.class.getResourceAsStream("films.xml"));
-			contents = contents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());
-			Reader r = new StringReader(contents);
-
-//			System.out.println(">>>>>>> expected >>>>>>>>>>>>");
-//			System.out.println(contents);
-//			System.out.println("<<<<<<< epected <<<<<<<<<<<<");
-//			System.out.println(">>>>>>> actual >>>>>>>>>>>>");
-//			FileHelper.displayFile(actualFile, System.out);
-//			System.out.println("<<<<<<< actual <<<<<<<<<<<<");
-
-			assertXMLEqual(new InputSource(r),new InputSource(new FileInputStream(actualFile)));
+			String actualContents = FileHelper.readFileContents(actualFile);
+			String expectedContents = FileHelper.readFileContents(Data.class.getResourceAsStream("films.xml"));
+			expectedContents = expectedContents.replaceAll("\\$filmdir\\$", dir.getAbsolutePath());
+			Assert.assertEquals("Check the results",expectedContents,actualContents);
 
 		} finally {
 			FileHelper.deleteDir(dir);
@@ -364,117 +273,30 @@ public class TestXMLStore extends XMLTestCase {
 			if (!eurekaDir.mkdir()) {
 				throw new IOException("Unable to create directory: " + eurekaDir);
 			}
-			File episodeFile = new File(eurekaDir,"1x01 - blah");
 
-			Show show = createShow(eurekaDir);
-			xmlSource.cacheShow(eurekaDir,episodeFile,show);
+			List<EpisodeData> epsiodes = Data.createEurekaShow(eurekaDir);
+			for (EpisodeData ed : epsiodes) {
+				File episodeFile = ed.getFile();
+				Episode episode = ed.getEpisode();
+				Season season =  episode.getSeason();
+				Show show=  season.getShow();
 
-			Season season = new Season(show,1);
-			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
-			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
-			show.addSeason(season);
-			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
-			Episode episode1 = new Episode(1,season);
-			episode1.setDate(df.parse("2006-10-10"));
-			episode1.setShowEpisodeNumber(1);
-			episode1.setSpecial(false);
-			episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
-			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
-			episode1.setTitle("Pilot");
-			episode1.setRating(1);
-			episode1.setDirectors(createLinks(new Link[]{new Link("Harry","http://test/")}));
-			episode1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a")}));
-			episode1.setGuestStars(createLinks(new Link[]{new Link("sally","http://test/sally"),new Link("Cedric","http://test/cedric")}));
-			episode1.setEpisodeId(784857);
-			season.addEpisode(episode1);
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-
-			episodeFile = new File(eurekaDir,"1x02 - blah");
-			Episode episode2 = new Episode(2,season);
-			episode2.setDate(df.parse("2006-10-11"));
-			episode2.setShowEpisodeNumber(2);
-			episode2.setSpecial(false);
-			episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
-			episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
-			episode2.setTitle("Many Happy Returns");
-			episode2.setRating(9.5F);
-			episode2.setEpisodeId(800578);
-			season.addEpisode(episode2);
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
-
-			season = new Season(show,2);
-			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
-			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
-			show.addSeason(season);
-			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
-
-			episodeFile = new File(eurekaDir,"2x13 - blah");
-			episode1 = new Episode(2,season);
-			episode1.setDate(df.parse("2007-7-10"));
-			episode1.setShowEpisodeNumber(13);
-			episode1.setSpecial(false);
-			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
-			episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
-			episode1.setTitle("Phoenix Rising");
-			episode1.setEpisodeId(800578);
-			episode1.setRating(0.4F);
-			season.addEpisode(episode1);
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
-
-			episodeFile = new File(eurekaDir,"000 - blah");
-			Episode special1 = new Episode(0,season);
-			special1.setDate(df.parse("2007-7-09"));
-			special1.setShowEpisodeNumber(-1);
-			special1.setSpecial(true);
-			special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
-			special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
-			special1.setTitle("Countdown to the Premiere");
-			special1.setRating(0.4F);
-			special1.setEpisodeId(800578);
-			special1.setDirectors(createLinks(new Link[]{new Link("JP","http://test/")}));
-			special1.setWriters(createLinks(new Link[]{new Link("Write a lot","http://test/a"),new Link("Write a little","http://test/b")}));
-			special1.setGuestStars(createLinks(new Link[]{new Link("bob","http://test/bob"),new Link("Write a little","http://test/fred")}));
-
-			season.addSepcial(special1);
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
+				xmlSource.cacheShow(eurekaDir, episodeFile, show);
+				xmlSource.cacheSeason(eurekaDir, episodeFile, season);
+				xmlSource.cacheEpisode(eurekaDir, episodeFile, episode);
+			}
 
 			File actualFile = new File(eurekaDir,".show.xml");
-//			FileHelper.displayFile(actualFile,System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("eureka.xml")), new InputSource(new FileInputStream(actualFile)));
+			String actualContents = FileHelper.readFileContents(actualFile);
+			String expectedContents = FileHelper.readFileContents(Data.class.getResourceAsStream("eureka.xml"));
+			Assert.assertEquals("Check the results",expectedContents,actualContents);
 
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
 	}
 
-	private List<Link>createLinks(Link[] links) {
-		List<Link> result = new ArrayList<Link>();
-		for (Link link : links ) {
-			result.add(link);
-		}
-		return result;
-	}
 
-	private Show createShow(File eurekaDir) throws MalformedURLException {
-		Show show = new Show(SHOW_ID);
-		show.setSourceId(TVCOMSource.SOURCE_ID);
-		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
-		StringBuilder summary = new StringBuilder();
-		summary.append("Small town. Big secret.\n");
-		summary.append("\n");
-		summary.append("A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.\n");
-		summary.append("\n");
-		summary.append("Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.\n");
-		show.setLongSummary(summary.toString());
-		show.setName("Eureka");
-		show.setShortSummary("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...");
-		show.setShowURL(new URL("http://www.tv.com/show/58448/summary.html"));
-		List<String> genres = new ArrayList<String>();
-		genres.add("SCIFI");
-		genres.add("Drama");
-		show.setGenres(genres);
-		return show;
-	}
 
 
 }

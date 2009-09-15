@@ -1,16 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="2.0" encoding="UTF-8"?>
+<!DOCTYPE store SYSTEM "/home/jp/workspaces/Java/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd">
 <show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
   name="Eureka" sourceId="tvcom" url="http://www.tv.com/show/58448/summary.html">
+  <description>
+    <short><![CDATA[Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...]]></short>
+    <long><![CDATA[Small town. Big secret.
+
+A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.
+
+Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.
+]]></long>
+  </description>
+  <genre name="SCIFI"/>
+  <genre name="Drama"/>
   <season
     detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=1"
     listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
     <episode episodeId="784857" firstAired="2006-10-10" number="1"
       rating="1.0" showEpisodeNumber="1" title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">
-      <director name="Harry" url="http://test/"/>
-      <writers name="Write a lot" url="http://test/a"/>
-      <guestStars name="sally" url="http://test/sally"/>
-      <guestStars name="Cedric" url="http://test/cedric"/>
       <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
+      <director url="Harry" name="http://test/"/>      
+      <writer url="Write a lot" name="http://test/a"/>
+      <guestStar url="sally" name="http://test/sally"/>
+      <guestStar url="Cedric" name="http://test/cedric"/>       
     </episode>
     <episode episodeId="800578" firstAired="2006-10-11" number="2"
       rating="9.5" showEpisodeNumber="2" title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
@@ -27,23 +39,13 @@
     <special episodeId="800578" firstAired="2007-07-09" number="0"
       rating="0.4" showEpisodeNumber="-1"
       title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">
-      <director name="JP" url="http://test/"/>
-      <writers name="Write a lot" url="http://test/a"/>
-      <writers name="Write a little" url="http://test/b"/>
-      <guestStars name="bob" url="http://test/bob"/>
-      <guestStars name="Write a little" url="http://test/fred"/>
       <summary>Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.</summary>
+      <director url="JP" name="http://test/"/>
+      <writer url="Write a lot" name="http://test/a"/>
+      <writer url="Write a little" name="http://test/b"/>
+      <guestStar url="bob" name="http://test/bob"/>
+      <guestStar url="Write a little" name="http://test/fred"/>      
     </special>
   </season>
-  <description>
-    <short><![CDATA[Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...]]></short>
-    <long><![CDATA[Small town. Big secret.
-
-A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand.
-
-Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.
-]]></long>
-  </description>
-  <genre name="SCIFI"/>
-  <genre name="Drama"/>
 </show>
+

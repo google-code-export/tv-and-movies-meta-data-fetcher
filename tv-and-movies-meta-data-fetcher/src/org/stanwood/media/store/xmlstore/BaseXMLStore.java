@@ -30,6 +30,8 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Link;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
@@ -47,8 +49,10 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  * This is the base class for the XML Store classes. It has the methods which are common between
  * the different store classes.
  */
-public abstract class BaseXMLStore extends XMLParser {	
-	
+public abstract class BaseXMLStore extends XMLParser {
+
+	private final static Log log = LogFactory.getLog(BaseXMLStore.class);
+
 	/**
 	 * Used to write the case document to a file
 	 * @param file The file to write it to
@@ -61,9 +65,12 @@ public abstract class BaseXMLStore extends XMLParser {
 			format.setLineWidth(65);
 			format.setIndenting(true);
 			format.setIndent(2);
-			XMLSerializer serializer = new XMLSerializer(new FileOutputStream(
-					file), format);
+			XMLSerializer serializer = new XMLSerializer(new FileOutputStream(file), format);
 			serializer.serialize(doc);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Written cache to file : " + file.getAbsolutePath());
+			}
 		} catch (FileNotFoundException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
@@ -72,7 +79,7 @@ public abstract class BaseXMLStore extends XMLParser {
 					+ e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Used to get a file object which points to a cache file.
 	 * @param cacheDirectory The directory the cache is located in
@@ -83,7 +90,7 @@ public abstract class BaseXMLStore extends XMLParser {
 		File file = new File(cacheDirectory, filename);
 		return file;
 	}
-	
+
 	/**
 	 * This is used to add links to the cache document under the given node.
 	 * @param doc The document to add the links to
@@ -102,7 +109,7 @@ public abstract class BaseXMLStore extends XMLParser {
 			for (Link value : links) {
 				Element newNode = doc.createElement(tagLabel);
 				newNode.setAttribute("name", value.getTitle());
-				newNode.setAttribute("link", value.getURL());
+				newNode.setAttribute("url", value.getURL());
 				node.appendChild(newNode);
 			}
 		}
@@ -120,7 +127,7 @@ public abstract class BaseXMLStore extends XMLParser {
 		}
 		return url.toExternalForm();
 	}
-	
+
 	/**
 	 * Used to get a list of filenames under the parent node
 	 * @param parent The node to look under for filenames
@@ -129,30 +136,38 @@ public abstract class BaseXMLStore extends XMLParser {
 	 */
 	protected Set<String> getOldFilenames(Node parent) throws TransformerException {
 		Set<String> filenames = new HashSet<String>();
-		NodeList node = XPathAPI.selectNodeList(parent,"file/@name");
+		NodeList node = XPathAPI.selectNodeList(parent,"file/@location");
 		if (node!=null) {
-		for (int i=0;i<node.getLength();i++) {
-			filenames.add(node.item(i).getNodeValue());
+			for (int i=0;i<node.getLength();i++) {
+				filenames.add(node.item(i).getNodeValue());
+			}
 		}
+		node = XPathAPI.selectNodeList(parent,"file/@name");
+		if (node!=null) {
+			for (int i=0;i<node.getLength();i++) {
+				filenames.add(node.item(i).getNodeValue());
+			}
 		}
+
 		return filenames;
 	}
-	
+
 	/**
 	 * Used to append a set of filenames to the document under the given parent node
 	 * @param doc The document to append the filenames to
 	 * @param parent The parent node
 	 * @param filenames The filenames to append
+	 * @throws StoreException Thrown if their is a tore releated problem
 	 */
-	protected void writeFilenames(Document doc, Node filmNode, Set<String> filenames) {
+	protected void writeFilenames(Document doc, Node filmNode, Set<String> filenames) throws StoreException {
 		List<String> sorted = new ArrayList<String>(filenames);
 		Collections.sort(sorted,new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
-			}		
+			}
 		});
-		for (String filename : sorted) {			
+		for (String filename : sorted) {
 			Element fileNode = doc.createElement("file");
 			fileNode.setAttribute("name", filename);
 			filmNode.appendChild(fileNode);
@@ -182,7 +197,7 @@ public abstract class BaseXMLStore extends XMLParser {
 		}
 		return genres;
 	}
-	
+
 	/**
 	 * Used to read links from a node in a DOM document
 	 * @param node The node to read the links from
@@ -196,7 +211,12 @@ public abstract class BaseXMLStore extends XMLParser {
 		NodeList list = XPathAPI.selectNodeList(node, tagLabel);
 		for (int i = 0; i < list.getLength(); i++) {
 			Element element = (Element) list.item(i);
-			result.add(new Link(element.getAttribute("link"),element.getAttribute("name")));
+			String url = element.getAttribute("url");
+			if (url==null) {
+				// The old name for the attribute
+				url = element.getAttribute("link");
+			}
+			result.add(new Link(url,element.getAttribute("name")));
 		}
 		return result;
 	}
