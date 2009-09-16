@@ -672,6 +672,23 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
+		Document doc = getCache(rootMediaDir);
+		if (doc!=null) {
+			NodeList nodes;
+			try {
+				nodes = XPathAPI.selectNodeList(doc, "//file[@location='"+oldFile.getPath()+"']");
+
+				for (int i=0;i<nodes.getLength();i++) {
+					Element fileNode = (Element) nodes.item(i);
+					fileNode.setAttribute(";ocation", newFile.getAbsolutePath());
+				}
+
+				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
+				writeCache(cacheFile, doc);
+			} catch (TransformerException e) {
+				throw new StoreException("Unable to parse XML",e);
+			}
+		}
 	}
 
 	/**

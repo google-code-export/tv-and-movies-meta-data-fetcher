@@ -174,6 +174,12 @@ public class TestRenameRecursive {
 		}
 	}
 
+	/**
+	 * Create test controller
+	 * @param source The stource to use with the controller , or null if none
+	 * @param store The store to use with the controller, or null if none
+	 * @throws Exception Thrown if their are any problems
+	 */
 	public static void setupTestController(Class<? extends ISource> source,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
