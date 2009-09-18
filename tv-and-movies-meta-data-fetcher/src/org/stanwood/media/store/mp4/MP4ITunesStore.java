@@ -33,21 +33,21 @@ import org.stanwood.media.store.StoreException;
  * <p>
  * This store is used to store and retrieve film/TV show information from .mp4 files used
  * by iTunes. This allows iTuness to use the meta data retrieved by this tool and this tool
- * too use the meta data of iTunes. 
+ * too use the meta data of iTunes.
  * </p>
  * <p>
- * Reading and writing too the .mp4 files is done via the application AtomicParsley 
+ * Reading and writing too the .mp4 files is done via the application AtomicParsley
  * {@link "http://atomicparsley.sourceforge.net/"}. In order for this store to work, the AtomicParsley
  * command line tool must be installed. Use the method <code>setAtomicParsleyPath</code> too set the
- * of the application.  
+ * of the application.
  * </p>
  */
 public class MP4ITunesStore implements IStore {
 
-	private File atomicParsleyPath;	
-	
+	private File atomicParsleyPath;
+
 	/**
-	 * This is used to store episode information of a TVShow MP4 file into the 
+	 * This is used to store episode information of a TVShow MP4 file into the
 	 * file as meta data so that iTunes can read it.
 	 * @param episodeFile The mp4 episode file
 	 * @param episode The episode details
@@ -62,13 +62,13 @@ public class MP4ITunesStore implements IStore {
 		}
 	}
 
-	private void writeEpisode(File file, Episode episode) throws StoreException {		
+	private void writeEpisode(File file, Episode episode) throws StoreException {
 		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
 		try {
 			ap.updateEpsiode(file,episode);
 		} catch (AtomicParsleyException e) {
 			throw new StoreException(e.getMessage(),e);
-		} 
+		}
 	}
 
 	/**
@@ -132,16 +132,19 @@ public class MP4ITunesStore implements IStore {
 	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException {
 		validate();
 		return null;
-	}	
+	}
 
 	/**
-	 * This will always return null as this store does not support searching
-	 * @param episodeFile The file the episode is located in
+	 * This does nothing because this source does not support searching for show ID's.
+	 * @param episodeFile The file the episode is stored in
 	 * @param mode The mode that the search operation should be performed in
-	 * @return Always returns null
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
+	 * @return Will always return null.
+	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {		
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern)
+			throws StoreException {
 		return null;
 	}
 
@@ -191,7 +194,7 @@ public class MP4ITunesStore implements IStore {
 			ap.updateFilm(filmFile,film);
 		} catch (AtomicParsleyException e) {
 			throw new StoreException(e.getMessage(),e);
-		} 
+		}
 	}
 
 	/**
@@ -204,7 +207,7 @@ public class MP4ITunesStore implements IStore {
 	 */
 	@Override
 	public Episode getSpecial(File rootMediaDir,File episodeFile, Season season, int specialNumber) throws MalformedURLException,
-			IOException, StoreException {		
+			IOException, StoreException {
 		return null;
 	}
 
@@ -215,7 +218,7 @@ public class MP4ITunesStore implements IStore {
 	 */
 	@Override
 	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
-		
+
 	}
 
 	/**

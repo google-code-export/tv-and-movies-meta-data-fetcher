@@ -31,7 +31,7 @@ import org.stanwood.media.model.Show;
  * Stores are similar too sources, except that they are also writable. Once
  * information has been retrieved from a source, it is written too a store.
  * Next time the information is needed, it can be retrieved from the store.
- * This makes retrieving information a lot faster.  
+ * This makes retrieving information a lot faster.
  */
 public interface IStore  {
 
@@ -39,7 +39,7 @@ public interface IStore  {
 	 * This is used to write a episode or special too the store
 	 * @param episode The episode or special too write
 	 * @param episodeFile the file witch the episode is stored in
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
@@ -49,39 +49,39 @@ public interface IStore  {
 	 * This is used to write a season too the store.
 	 * @param season The season too write
 	 * @param episodeFile The file the episode is stored in
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException;
-	
+
 	/**
 	 * This is used to write a show too the store.
 	 * @param show The show too write
 	 * @param episodeFile The file the episode is stored in
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException;
-	
+
 	/**
 	 * This is used to write a film to the store.
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	public void cacheFilm(File rootMediaDir,File filmFile,Film film) throws StoreException;
-	
+
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will
 	 * return null;
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode too get
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The episode, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -89,27 +89,27 @@ public interface IStore  {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
-	
+
 	/**
 	 * This will get a season from the store. If the season can't be found,
 	 * then it will return null.
 	 * @param episodeFile the file which the episode is stored in
 	 * @param show The show the season belongs too
 	 * @param seasonNum The number of the season that is to be fetched
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The season if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException, IOException;
-	
+
 	/**
-	 * This will get a show from the store. If the season can't be found, then it 
-	 * will return null. 
+	 * This will get a show from the store. If the season can't be found, then it
+	 * will return null.
 	 * @param episodeFile the file which the episode is stored in
 	 * @param showId The id of the show to get.
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The show if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -117,14 +117,14 @@ public interface IStore  {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException;
-	
+
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
 	 * return null;
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The special episode, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -136,36 +136,37 @@ public interface IStore  {
 	/**
 	 * This is called to search the store for a show id. If it can't be found, then
 	 * it will return null.
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @param episodeFile The file the episode is stored in
 	 * @param mode The mode that the search operation should be performed in
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store  
+	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) throws StoreException;
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile, String renamePattern) throws StoreException;
 
 	/**
 	 * This is used when a file that holds a episode or film has been renamed
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @param oldFile The old file
 	 * @param newFile The new file
 	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
 	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException;
-	
+
 	/**
 	 * This will get a film from the store. If the film can't be found, then it will return null.
 	 * @param filmFile The file the film is located in.
 	 * @param filmId The id of the film
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if  
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The film, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.	
+	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
-		
+
 }

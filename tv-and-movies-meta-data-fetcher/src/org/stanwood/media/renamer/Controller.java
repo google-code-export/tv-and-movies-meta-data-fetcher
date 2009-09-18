@@ -473,7 +473,7 @@ public class Controller {
 			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
-			result = store.searchForVideoId(rootMediaDir,mode, mediaFile);
+			result = store.searchForVideoId(rootMediaDir,mode, mediaFile,renamePattern);
 			if (result != null) {
 				return result;
 			}

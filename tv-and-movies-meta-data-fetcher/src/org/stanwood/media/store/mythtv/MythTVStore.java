@@ -509,14 +509,16 @@ public class MythTVStore implements IStore {
 	}
 
 	/**
-	 * This will always return null as this store does not support searching
-	 *
-	 * @param episodeFile The file the episode is located in
+	 * This does nothing because this source does not support searching for show ID's.
+	 * @param episodeFile The file the episode is stored in
 	 * @param mode The mode that the search operation should be performed in
-	 * @return Always returns null
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
+	 * @return Will always return null.
+	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File episodeFile) throws StoreException {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern)
+			throws StoreException {
 		return null;
 	}
 

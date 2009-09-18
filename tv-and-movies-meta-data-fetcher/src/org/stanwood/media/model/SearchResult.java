@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.model;
 
+import java.security.InvalidParameterException;
+
 /**
  * This is used to hold the results of searching for a show id
  */
@@ -33,6 +35,16 @@ public class SearchResult {
 	 */
 	public SearchResult(String id, String sourceId,String url) {
 		super();
+		if (id == null || id.length()==0) {
+			throw new InvalidParameterException("Invalid id ["+id+"]");
+		}
+		if (sourceId == null || sourceId.length()==0) {
+			throw new InvalidParameterException("Invalid sourceId ["+sourceId+"]");
+		}
+		if (url != null && url.length()==0) {
+			throw new InvalidParameterException("Invalid url ["+url+"]");
+		}
+
 		this.id = id;
 		this.sourceId = sourceId;
 		this.url = url;

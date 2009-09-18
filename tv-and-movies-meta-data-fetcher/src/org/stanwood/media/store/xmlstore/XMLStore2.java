@@ -31,6 +31,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.search.ReverseFilePatternMatcher;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -695,11 +696,81 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir, Mode mode, File episodeFile) throws StoreException {
+	public SearchResult searchForVideoId(File rootMediaDir, Mode mode, File episodeFile,String renamePattern) throws StoreException {
+		Document doc = getCache(rootMediaDir);
+		if (doc!=null) {
+			Node store;
+			try {
+				store = getStoreNode(doc);
+				if (store!=null) {
+					if (mode==Mode.TV_SHOW) {
+						return searchForTVShow(store,episodeFile,renamePattern);
+					}
+					else {
+						return searchForFilm(store,episodeFile,renamePattern);
+					}
+				}
+			} catch (TransformerException e) {
+				throw new StoreException("Unable to parse Store XML",e);
+			}
+		}
 		return null;
 	}
 
+	private SearchResult searchForFilm(Node store, File episodeFile,String renamePattern) throws TransformerException {
+		SearchResult result = null;
 
+		// search for film by file name
+		NodeList filmNodes = XPathAPI.selectNodeList(store,"film[file/@location='"+episodeFile.getAbsolutePath()+"']");
+		for (int i=0;i<filmNodes.getLength();i++) {
+			Element filmEl = (Element)filmNodes.item(i);
+			result = new SearchResult(filmEl.getAttribute("id"), filmEl.getAttribute("url"), filmEl.getAttribute("sourceId"));
+		}
+
+		return result;
+	}
+
+	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern) throws TransformerException {
+		SearchResult result = null;
+
+		// search for show by file name
+		NodeList showNodes = XPathAPI.selectNodeList(store,"show[file/@location='"+episodeFile.getAbsolutePath()+"']");
+		if (showNodes!=null && showNodes.getLength()>0) {
+			Element showEl = (Element)showNodes.item(0);
+			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+		}
+
+		if (result==null) {
+			// attempt to extract the show name from the file name via the rename pattern,
+			// then search for the name in the store
+
+			ReverseFilePatternMatcher m = new ReverseFilePatternMatcher();
+			m.parse(episodeFile.getAbsolutePath(), renamePattern);
+
+			String id = m.getValues().get("h");
+			String name = m.getValues().get("n");
+			if (id!=null) {
+				showNodes = XPathAPI.selectNodeList(store,"show[@id='"+id+"']");
+				if (showNodes!=null && showNodes.getLength()>0) {
+					Element showEl = (Element)showNodes.item(0);
+					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+				}
+			}
+			else if (name!=null) {
+				showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
+				if (showNodes!=null && showNodes.getLength()>0) {
+					Element showEl = (Element)showNodes.item(0);
+					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+				}
+			}
+		}
+
+		if (result==null) {
+			// Search for the show name within the file name
+		}
+
+		return result;
+	}
 
 	private Document getCache(File rootMediaDirectory) throws StoreException {
 		File cacheFile = getCacheFile(rootMediaDirectory, FILENAME);

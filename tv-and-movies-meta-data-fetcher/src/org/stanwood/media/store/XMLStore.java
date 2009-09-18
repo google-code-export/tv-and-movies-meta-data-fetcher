@@ -30,7 +30,7 @@ import org.stanwood.media.store.xmlstore.FilmXMLStore;
 import org.stanwood.media.store.xmlstore.TVXMLStore;
 
 /**
- * This store is used to store the show and film information in a XML called .show.xml or .films.xml. 
+ * This store is used to store the show and film information in a XML called .show.xml or .films.xml.
  * This is located in the directory were the show or film is located. For more information see
  * {@link org.stanwood.media.store.xmlstore.TVXMLStore} and {@link org.stanwood.media.store.xmlstore.FilmXMLStore}.
  */
@@ -47,22 +47,22 @@ public class XMLStore implements IStore {
 		filmStore = new FilmXMLStore();
 	}
 
-	
+
 	/**
 	 * This will update all references of the old file to the new file
 	 * @param oldFile The old file
 	 * @param newFile The new file
-	 * @throws StoreException Thrown if their is a problem renaming files 
+	 * @throws StoreException Thrown if their is a problem renaming files
 	 */
 	@Override
-	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {	
-//			tvStore.renamedFile(rootMediaDir,oldFile,newFile);					
+	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException {
+//			tvStore.renamedFile(rootMediaDir,oldFile,newFile);
 		filmStore.renamedFile(rootMediaDir,oldFile,newFile);
 	}
-	
+
 	/**
 	 * This is used to write a film to the store.
-	 * 
+	 *
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -71,17 +71,17 @@ public class XMLStore implements IStore {
 	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		filmStore.cacheFilm(rootMediaDir,filmFile, film);
 	}
-	
+
 	/**
 	 * Used to get the details of a film with the given id. If it can't be found,
 	 * then null is returned.
-	 * 
+	 *
 	 * @param filmFile The file the film is stored in
 	 * @param filmId The id of the film
 	 * @return The film details, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem. 
+	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
@@ -93,18 +93,18 @@ public class XMLStore implements IStore {
 	 * @param episodeFile The file that contains the episode
 	 * @param episode The episode or special too write
 	 * @throws StoreException Thrown if their is a problem with the source
-	 */	
+	 */
 	@Override
 	public void cacheEpisode(File rootMediaDir,File episodeFile, Episode episode) throws StoreException {
 		tvStore.cacheEpisode(rootMediaDir,episodeFile, episode);
 	}
-	
+
 	/**
 	 * This is used to write a season too the store.
 	 * @param episodeFile The file that contains the episode
 	 * @param season The season too write
 	 * @throws StoreException Thrown if their is a problem with the source
-	 */	
+	 */
 	@Override
 	public void cacheSeason(File rootMediaDir,File episodeFile, Season season) throws StoreException {
 		tvStore.cacheSeason(rootMediaDir,episodeFile, season);
@@ -115,7 +115,7 @@ public class XMLStore implements IStore {
 	 * @param episodeFile The file that contains the episode
 	 * @param show The show too write
 	 * @throws StoreException Thrown if their is a problem with the source
-	 */	
+	 */
 	@Override
 	public void cacheShow(File rootMediaDir,File episodeFile, Show show) throws StoreException {
 		tvStore.cacheShow(rootMediaDir,episodeFile, show);
@@ -130,13 +130,13 @@ public class XMLStore implements IStore {
 	 * @return The episode, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem with the source
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 */	
+	 */
 	@Override
 	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum) throws StoreException,
 			MalformedURLException, IOException {
 		return tvStore.getEpisode(rootMediaDir,episodeFile, season, episodeNum);
 	}
-	
+
 	/**
 	 * This will get a season from the store. If the season can't be found,
 	 * then it will return null.
@@ -146,15 +146,15 @@ public class XMLStore implements IStore {
 	 * @return The season if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 */	
+	 */
 	@Override
-	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum) throws StoreException, IOException {	
+	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum) throws StoreException, IOException {
 		return tvStore.getSeason(rootMediaDir,episodeFile, show, seasonNum);
 	}
 
 	/**
-	 * This will get a show from the store. If the season can't be found, then it 
-	 * will return null. 
+	 * This will get a show from the store. If the season can't be found, then it
+	 * will return null.
 	 * @param episodeFile The file the episode is located in
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
@@ -163,7 +163,7 @@ public class XMLStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException {	
+	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException {
 		return tvStore.getShow(rootMediaDir,episodeFile, showId);
 	}
 
@@ -177,7 +177,7 @@ public class XMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
-	 */	
+	 */
 	@Override
 	public Episode getSpecial(File rootMediaDir,File specialFile, Season season, int specialNumber) throws MalformedURLException,
 			IOException, StoreException {
@@ -185,16 +185,17 @@ public class XMLStore implements IStore {
 	}
 
 	/**
-	 * This is called to search the store for a show id or film Id, depending on the mode. 
-	 * If it can't be found, then it will return null. The search is done be reading the 
-	 * .show.xml file within the shows directory  or the .films.xml file. 
+	 * This is called to search the store for a show id or film Id, depending on the mode.
+	 * If it can't be found, then it will return null. The search is done be reading the
+	 * .show.xml file within the shows directory  or the .films.xml file.
 	 * @param episodeFile The file the episode is stored in
-	 * @param mode The mode that the search operation should be performed in 
+	 * @param mode The mode that the search operation should be performed in
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store 
-	 */	
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) throws StoreException {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws StoreException {
 		if (mode==Mode.TV_SHOW) {
 			return tvStore.searchForShowId(rootMediaDir,episodeFile);
 		}

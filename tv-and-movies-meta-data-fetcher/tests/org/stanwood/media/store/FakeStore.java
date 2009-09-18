@@ -109,10 +109,11 @@ public class FakeStore implements IStore {
 	 * This will always return null as this store does not support searching
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePatter) {
 		return null;
 	}
 

@@ -36,22 +36,22 @@ import org.stanwood.media.store.StoreException;
 
 /**
  * This store is used to store the show information in memory. This allows the tool
- * reuse the show information without having to fetch it from other stores or sources 
- * (which would be slower). This information will be lost once the application exits. 
+ * reuse the show information without having to fetch it from other stores or sources
+ * (which would be slower). This information will be lost once the application exits.
  */
 public class MemoryStore implements IStore {
 
 	private List<Show> shows = new ArrayList<Show>();
 	private Map<File,Film> films = new HashMap<File,Film>();
-	
+
 	/**
 	 * This does nothing as it's all done by the cacheSeason and cacheShow methods
 	 * @param episodeFile the file witch the episode is stored in
 	 * @param episode The episode to write to the store
 	 */
-	@Override	
+	@Override
 	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) {
-		
+
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MemoryStore implements IStore {
 				}
 				cs.addSeason(season);
 			}
-		}		
+		}
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class MemoryStore implements IStore {
 	@Override
 	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
-		return season.getEpisode(episodeNum);		
+		return season.getEpisode(episodeNum);
 	}
-	
+
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
 	 * return null;
@@ -121,8 +121,8 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber)
-			throws MalformedURLException, IOException, StoreException {	
-		return season.getSpecial(specialNumber);	
+			throws MalformedURLException, IOException, StoreException {
+		return season.getSpecial(specialNumber);
 	}
 
 	/**
@@ -134,13 +134,13 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException,
-			IOException {		
+			IOException {
 		return show.getSeason(seasonNum);
 	}
 
 	/**
-	 * This will get a show from the store. If the season can't be found, then it 
-	 * will return null. 
+	 * This will get a show from the store. If the season can't be found, then it
+	 * will return null.
 	 * @param episodeFile The file the episode is stored in
 	 * @param showId The id of the show to get.
 	 * @return The show if it can be found, otherwise null.
@@ -150,7 +150,7 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public Show getShow(File rootMediaDir,File episodeFile, String showId)
-			throws StoreException, MalformedURLException, IOException {		
+			throws StoreException, MalformedURLException, IOException {
 		for (Show show : shows) {
 			if (show.getShowId().equals(showId)) {
 				return show;
@@ -158,17 +158,18 @@ public class MemoryStore implements IStore {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This does nothing because this source does not support searching for show ID's.
 	 * @param episodeFile The file the episode is stored in
 	 * @param mode The mode that the search operation should be performed in
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return Will always return null.
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile)
-			throws StoreException {		
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern)
+			throws StoreException {
 		return null;
 	}
 
@@ -182,7 +183,7 @@ public class MemoryStore implements IStore {
 	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
 		films.put(filmFile,film);
 	}
-	
+
 	/**
 	 * This will update all references of the old file to the new file
 	 * @param oldFile The old file
@@ -196,7 +197,7 @@ public class MemoryStore implements IStore {
 			films.put(newFile,film);
 		}
 	}
-	
+
 	/**
 	 * Used to read a film from the store.
 	 * @param filmFile The file the film is stored in

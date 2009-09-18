@@ -288,12 +288,16 @@ public class SapphireStore implements IStore {
 	}
 
 	/**
-	 * Always returns null as it is not implemented for this store.
-	 * @param mode The mode that the search operation should be performed in
+	 * This does nothing because this source does not support searching for show ID's.
 	 * @param episodeFile The file the episode is stored in
+	 * @param mode The mode that the search operation should be performed in
+	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
+	 * @return Will always return null.
+	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile) {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern)
+			throws StoreException {
 		return null;
 	}
 
