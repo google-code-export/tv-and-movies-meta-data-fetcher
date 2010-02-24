@@ -83,27 +83,35 @@ public class TagChimpSource implements ISource {
 		List<Element> trs = source.findAllElements(HTMLElementName.TR);
 		for (Element tr : trs) {
 			List<Element> tds = tr.getChildElements();
-			if (tds.size() == 2) {
-				String fieldName = tds.get(0).getTextExtractor().toString();
-				Element sub = (Element) tds.get(1).getChildElements().get(0);
-				String fieldValue = null;
-				if (sub.getName().equals(HTMLElementName.INPUT)) {
-					fieldValue = sub.getAttributeValue("value");
-				} else if (sub.getName().equals(HTMLElementName.SELECT)) {
-					List<Element> opts = sub.getChildElements();
-					for (Element opt : opts) {
-						if (opt.getAttributeValue("selected") != null
-								&& opt.getAttributeValue("selected").equals("selected")) {
-							fieldValue = opt.getAttributeValue("value");
-						}
-					}
-				} else if (sub.getName().equals(HTMLElementName.TEXTAREA)) {
-					fieldName = sub.getAttributeValue("name");
-					fieldValue = sub.getTextExtractor().toString();
+			if (tds.size() == 2 || tds.size() == 3) {
+				int index = 0;
+				if (tds.size()==3) {
+					index++;
 				}
-
-				if (fieldValue != null) {
-					handleField(film, fieldName, SearchHelper.decodeHtmlEntities(fieldValue).trim());
+				String fieldName = tds.get(index).getTextExtractor().toString();				
+				List elements = tds.get(index+1).getChildElements();
+				if (elements.size()>0) {
+					Element sub = (Element) elements.get(0);
+					String fieldValue = null;
+					if (sub.getName().equals(HTMLElementName.INPUT)) {
+						fieldValue = sub.getAttributeValue("value");
+					} else if (sub.getName().equals(HTMLElementName.SELECT)) {
+						List<Element> opts = sub.getChildElements();
+						for (Element opt : opts) {
+							if (opt.getAttributeValue("selected") != null
+									&& opt.getAttributeValue("selected").equals("selected")) {
+								fieldValue = opt.getAttributeValue("value");
+							}
+						}
+					} else if (sub.getName().equals(HTMLElementName.TEXTAREA)) {
+						fieldName = sub.getAttributeValue("name");
+						fieldValue = sub.getTextExtractor().toString();
+					}
+	
+					if (fieldValue != null) {
+						
+						handleField(film, fieldName, SearchHelper.decodeHtmlEntities(fieldValue).trim());
+					}
 				}
 			}
 		}
@@ -146,7 +154,7 @@ public class TagChimpSource implements ISource {
 			List<Certification> certs = new ArrayList<Certification>();
 			certs.add(new Certification(value, "USA"));
 			film.setCertifications(certs);
-		} else if (name.equals("category")) {
+		} else if (name.equals("genre")) {
 			List<String> genres = new ArrayList<String>();
 			genres.add(value);
 			film.setGenres(genres);
