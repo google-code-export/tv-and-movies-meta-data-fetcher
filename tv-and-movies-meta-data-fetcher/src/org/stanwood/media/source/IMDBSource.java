@@ -44,6 +44,7 @@ import org.stanwood.media.search.SearchHelper;
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
+import au.id.jericho.lib.html.Segment;
 import au.id.jericho.lib.html.Source;
 import au.id.jericho.lib.html.StartTag;
 import au.id.jericho.lib.html.Tag;
@@ -173,15 +174,33 @@ public class IMDBSource implements ISource {
 					}
 				}
 			}
+			else if (div.getAttributeValue("id")!=null && div.getAttributeValue("id").equals("tn15rating")) {
+				Element element = ParseHelper.findFirstChild(div, HTMLElementName.B, true,new IFilterElement() {							
+					@Override
+					public boolean accept(Element element) {
+						return true;
+					}
+				});						
+				String ratingStr = element.getTextExtractor().toString();
+				try {
+					float rating = Float.parseFloat(ratingStr.substring(0, ratingStr.indexOf('/')));
+					film.setRating(rating);
+				} catch (NumberFormatException e) {
+					log.error("Unable to parse rating from string: " + ratingStr);
+				}
+			}
 			else if (div.getAttributeValue("class") != null && div.getAttributeValue("class").equals("info")) {
 				Element h5 = ParseHelper.findFirstChild(div, HTMLElementName.H5,null);
 				if (h5 != null) {
 					if (getContents(h5).equals("Plot:")) {
-						film.setSummary(SearchHelper.decodeHtmlEntities(getSectionText(div)));
+						String str = getInfoContent(div);
+						if (str!=null) {
+							film.setSummary(str);
+						}
 					} else if (getContents(h5).equals("Director:")) {
 						List<Link> links = getLinks(div, "/name");
 						film.setDirectors(links);
-					} else if (getContents(h5).equals("Writers")) {
+					} else if (getContents(h5).startsWith("Writers")) {
 						List<Link> links = getLinks(div, "/name");
 						film.setWriters(links);
 					} else if (getContents(h5).equals("Genre:")) {
@@ -190,21 +209,16 @@ public class IMDBSource implements ISource {
 						for (Link link : links) {
 							film.addGenre(link.getTitle());
 						}
-					} else if (getContents(h5).equals("User Rating:")) {
-						List<StartTag> tags = div.findAllStartTags(HTMLElementName.B);
-						if (tags != null && tags.size() == 1) {
-							String ratingStr = tags.get(0).getElement().getTextExtractor().toString();
-							try {
-								float rating = Float.parseFloat(ratingStr.substring(0, ratingStr.indexOf('/')));
-								film.setRating(rating);
-							} catch (NumberFormatException e) {
-								log.error("Unable to parse rating from string: " + ratingStr);
-							}
-						}
 					} else if (getContents(h5).equals("Certification:")) {
+						Element element = ParseHelper.findFirstChild(div, HTMLElementName.DIV, new IFilterElement() {							
+							@Override
+							public boolean accept(Element element) {
+								return (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("info-content"));
+							}
+						});
 						List<Certification> certs = new ArrayList<Certification>();
 
-						List<Link> links = getLinks(div, "/List?certificates=");
+						List<Link> links = getLinks(element, "/search/title?certificates=");
 						for (Link link : links) {
 							int pos = link.getTitle().indexOf(':');
 							Certification cert = new Certification(SearchHelper.decodeHtmlEntities(link.getTitle()).substring(0, pos), link.getTitle()
@@ -212,8 +226,8 @@ public class IMDBSource implements ISource {
 							certs.add(cert);
 						}
 						film.setCertifications(certs);
-					} else if (getContents(h5).equals("Release Date:")) {
-						String str = getSectionText(div);
+					} else if (getContents(h5).equals("Release Date:")) {						
+						String str = getInfoContent(div);												
 						if (str != null) {
 							int pos = str.lastIndexOf(' ');
 							if (pos != -1) {
@@ -245,6 +259,28 @@ public class IMDBSource implements ISource {
 		if (film.getDate() == null) {
 			log.error("Unable to find a date of film with the id '" + film.getId()+"' and the title '"+film.getTitle()+"'");
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private String getInfoContent(Element div) {
+		String str = null;
+		Element infoContentDiv = ParseHelper.findFirstChild(div,HTMLElementName.DIV,false,new IFilterElement() {							
+			@Override
+			public boolean accept(Element element) {
+				return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("info-content"));								
+			}
+		});						
+		if (infoContentDiv!=null) {
+			Iterator it = infoContentDiv.getNodeIterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				if (o.getClass().equals(Segment.class)) {
+					str = SearchHelper.decodeHtmlEntities(((Segment)o).getTextExtractor().toString().trim());									
+					break;
+				}
+			}
+		}
+		return str;
 	}
 
 	private List<Link> getLinks(Element div, final String linkStart) {
