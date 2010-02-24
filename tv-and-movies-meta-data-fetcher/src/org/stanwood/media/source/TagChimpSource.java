@@ -258,17 +258,26 @@ public class TagChimpSource implements ISource {
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("main_mid")) {
-				List<Element> links = div.findAllElements(HTMLElementName.A);
-				for (Element link : links) {
-					String url = link.getAttributeValue("href");
-					String title = link.getTextExtractor().toString();
-					if (url != null) {
-						Matcher m = SEARCH_PATTERN.matcher(url);
-						if (m.matches()) {
-							String id = m.group(1);
-							if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(query))) {
-								SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url);
-								return result;
+				Element searchResultsDiv = ParseHelper.findFirstChild(div, HTMLElementName.DIV, new IFilterElement() {					
+					@Override
+					public boolean accept(Element element) {
+						return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("search_result"));
+					}
+				});				
+				
+				if (searchResultsDiv!=null) {
+					List<Element> links= ParseHelper.findAllElements(searchResultsDiv, HTMLElementName.A,null);
+					for (Element link : links) {
+						String url = link.getAttributeValue("href");
+						String title = link.getTextExtractor().toString();
+						if (url != null) {
+							Matcher m = SEARCH_PATTERN.matcher(url);
+							if (m.matches()) {
+								String id = m.group(1);
+								if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(query))) {
+									SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url);
+									return result;
+								}
 							}
 						}
 					}
