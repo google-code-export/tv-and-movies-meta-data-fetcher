@@ -33,7 +33,7 @@ import au.id.jericho.lib.html.Source;
  */
 public class FindFilmPosters {
 
-	private final static Pattern URL_PATTERN = Pattern.compile("http://eu.movieposter.com/poster/(MPW-\\d+)/.*");
+	private final static Pattern URL_PATTERN = Pattern.compile("http://.*movieposter.com/poster/(MPW-\\d+)/.*");
 	private final static Pattern IMG_PATTERN = Pattern.compile("/posters/archive/tiny/(.*)/(.*)");
 
 	/**
