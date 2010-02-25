@@ -681,7 +681,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 				for (int i=0;i<nodes.getLength();i++) {
 					Element fileNode = (Element) nodes.item(i);
-					fileNode.setAttribute(";ocation", newFile.getAbsolutePath());
+					fileNode.setAttribute("location", newFile.getAbsolutePath());
 				}
 
 				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
@@ -747,20 +747,22 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			ReverseFilePatternMatcher m = new ReverseFilePatternMatcher();
 			m.parse(episodeFile.getAbsolutePath(), renamePattern);
 
-			String id = m.getValues().get("h");
-			String name = m.getValues().get("n");
-			if (id!=null) {
-				showNodes = XPathAPI.selectNodeList(store,"show[@id='"+id+"']");
-				if (showNodes!=null && showNodes.getLength()>0) {
-					Element showEl = (Element)showNodes.item(0);
-					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+			if (m.getValues()!=null) {				
+				String id = m.getValues().get("h");
+				String name = m.getValues().get("n");
+				if (id!=null) {
+					showNodes = XPathAPI.selectNodeList(store,"show[@id='"+id+"']");
+					if (showNodes!=null && showNodes.getLength()>0) {
+						Element showEl = (Element)showNodes.item(0);
+						result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+					}
 				}
-			}
-			else if (name!=null) {
-				showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
-				if (showNodes!=null && showNodes.getLength()>0) {
-					Element showEl = (Element)showNodes.item(0);
-					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+				else if (name!=null) {
+					showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
+					if (showNodes!=null && showNodes.getLength()>0) {
+						Element showEl = (Element)showNodes.item(0);
+						result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+					}
 				}
 			}
 		}
