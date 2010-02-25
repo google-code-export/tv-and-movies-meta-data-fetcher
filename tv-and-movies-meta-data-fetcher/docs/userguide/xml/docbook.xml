@@ -109,11 +109,11 @@
 				Next time the information is needed, it can be retrieved from the store.
 				This makes retrieving information a lot faster.  
 			</para>
-                        <para>
-                                Stores can have parameters. These parameters are entered via the configuration file.
-                                The stores will validated their parameters when the store is access and report
-                                back any problems that are found.
-                        </para>
+             <para>
+                     Stores can have parameters. These parameters are entered via the configuration file.
+                     The stores will validated their parameters when the store is access and report
+                     back any problems that are found.
+             </para>
 			<para>
 				Their are 4 stores that come with &apptitle;. Each of these has different
 				properties. Some of these stores can also be used by applications such as 
@@ -128,9 +128,24 @@
 				</para>
 			</sect2>
 			<sect2>
+				<title>org.stanwood.media.store.xmlstore.XMLStore2</title>
+				<para>
+				This store is used to store the tv show and film information in a XML file called &apos;.mediaInfoFetcher-xmlStore.xml&apos;.
+ 				This file will be locationed in the root media directory and can store multiple films/tv shows. This
+ 				store can also be used when search for tv show and film ID's. 				
+				</para>
+				<para>
+				This store is intended to replace the older store &apos;org.stanwood.media.store.XMLStore&apos;. The main difference is a single XML to store 
+ 				all media details in and a better XML format with a DTD.
+				</para>
+			</sect2>
+			<sect2>
 				<title>org.stanwood.media.store.XMLStore</title>
 				<para>
-				This store is used to store the show information in a XML called &apos;.show.xml. &apos; 
+				This store has now been depercated. Please use the &apos;org.stanwood.media.store.xmlstore.XMLStore2&apos; instead.
+				</para>
+				<para>
+				This store is used to store the show information in a XML file called &apos;.show.xml. &apos;. 
                	This is located in the directory were the show is located. It can hold all
  				of the information of the Shows, Seasons, Episodes and Specials. This store
  				can be read and written too, and it's also possible too lookup the show id 
@@ -380,7 +395,7 @@
                <store id="org.stanwood.media.store.memory.MemoryStore"/>
 
                <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-                <store id="org.stanwood.media.store.XMLStore"/>
+                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
         </stores>
 </config>]]>			
 				</programlisting>
@@ -406,7 +421,7 @@
                <store id="org.stanwood.media.store.memory.MemoryStore"/>
 
                <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-                <store id="org.stanwood.media.store.XMLStore"/>
+                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
                 
                <!-- A Store for saving Show/Movies meta data into .mp4 and .m4v files so that
                     it can be read by iTunes. -->
