@@ -1,3 +1,6 @@
+* Wed Feb 25 2010 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.3
+- Added new org.stanwood.media.store.xmlstore.XMLStore2 store
+- Fixed all sources to work with website changes
 * Wed Jul 29 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.2 
 - Fixed the tv.com source so that searching works again
 * Wed Jun 10 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.1
