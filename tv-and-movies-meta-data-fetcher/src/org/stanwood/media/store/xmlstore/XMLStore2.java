@@ -814,7 +814,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		DocumentBuilder builder;
 		try {
 			builder = factory.newDocumentBuilder();
-			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "/home/jp/workspaces/Java/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd");
+			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd");
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
 //			doc.setXmlVersion(VERSION);
 			NodeList nodes = doc.getDocumentElement().getParentNode().getChildNodes();
