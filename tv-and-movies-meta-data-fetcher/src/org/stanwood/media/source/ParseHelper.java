@@ -81,10 +81,10 @@ public class ParseHelper {
 			Element child = it.next();
 			if (filter!=null && !filter.accept(child)) {
 				it.remove();
-			}
+			}			
 		}
 		return tags;
-	}
+	}	
 
 	/**
 	 * Find the first element under a parent (recursively check all it's children and their children),
@@ -127,5 +127,32 @@ public class ParseHelper {
 
 		}
 		return links;
+	}
+	
+	/**
+	 * This will find all the elements that match a tagName a below a parent element. If recursive is set
+	 * to true, then this will search out all children recursively also. If the filter is null, then no
+	 * filter will be used, otherwise a the returned elements are filtered with the filter 
+	 * @param elements The found elements that match the tag name and are accepted by the filter
+	 * @param parent The parent to start the search
+	 * @param tagName The name of the tag been looked for
+	 * @param recursive True to perform a recursive search
+	 * @param filter The filter or null if no filter is been used
+	 */
+	@SuppressWarnings("unchecked")
+	public static void findAllElements(List<Element> elements,Element parent, String tagName, boolean recursive, IFilterElement filter) {
+		for (Element child : (List<Element>)parent.getChildElements()) {
+			if (child.getName().equals(tagName)) {
+				if (filter==null || filter.accept(child)) {
+					elements.add(child);
+				}
+			}
+			
+			if (recursive) {
+				if (!child.getChildElements().isEmpty()) {
+					findAllElements(elements,child,tagName,recursive,filter);
+				}
+			}
+		}
 	}
 }

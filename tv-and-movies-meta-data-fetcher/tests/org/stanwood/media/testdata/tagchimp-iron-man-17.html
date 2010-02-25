@@ -72,6 +72,39 @@ $(document).ready(function(){
  
 });
 </script>
+
+<script language = "Javascript">
+/**
+ * DHTML textbox character counter script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
+ */
+
+maxL=255;
+var bName = navigator.appName;
+function taLimit(taObj) {
+	if (taObj.value.length==maxL) return false;
+	return true;
+}
+
+function taCount(taObj,Cnt) { 
+	objCnt=createObject(Cnt);
+	objVal=taObj.value;
+	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+	if (objCnt) {
+		if(bName == "Netscape"){	
+			objCnt.textContent=maxL-objVal.length;}
+		else{objCnt.innerText=maxL-objVal.length;}
+	}
+	return true;
+}
+function createObject(objId) {
+	if (document.getElementById) return document.getElementById(objId);
+	else if (document.layers) return eval("document." + objId);
+	else if (document.all) return eval("document.all." + objId);
+	else return eval("document." + objId);
+}
+</script>
+
+
 <!-- InstanceEndEditable -->
 <style type="text/css">
 <!--
@@ -139,7 +172,7 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 <table style="border-collapse:collapse;">
     <tr>
         <td align="right">
-            <input type="text" name="searchterm" value="search" class="tf_med default-value" style="float:left; display:block; width:180px" title="search movie title, show names, music videos, actors, directors, etc." />
+            <input type="text" name="s" value="search" class="tf_med default-value" style="float:left; display:block; width:180px" title="search movie title, show names, music videos, actors, directors, etc." />
             <input type="image" name="search" title="search" src="https://www.tagchimp.com/images/search.png" style="float:left; display:block; margin:2px 0 0 5px; border:0" />
         </td>
     </tr>
@@ -235,6 +268,14 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 			<div id="info">
 				<table class="tab_tbl">
 					                    <tr>
+                     	<td>&nbsp;</td>
+                        <td><div style="padding-bottom:10px"><strong><a href="http://www.tagchimp.com/search/index.php?s=Iron+Man&search.x=7&search.y=11&kind=mo1">Other entries with this title</a></strong></div></td>
+                     </tr>
+                     <tr>
+                    	<td><span class="ftd">Added by:</span></td>
+                        <td>no username</td>
+                     </tr>
+                                        <tr>
 						<td class="ftd">Kind</td>
 						<td>
                         <select name="kind" id="kind">
@@ -246,6 +287,58 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 					<tr>
 						<td>Movie Title</td>
 						<td><input type="text" name="title" id="title" value="Iron Man" class="tf_strong" /></td>
+					</tr>
+                    					<tr>
+						<td><label for="lang">Language</label></td>
+						<td><select name="lang" size="1"><option value="en" selected="selected">English</option>
+<option value="sq">Albanian</option>
+<option value="ar">Arabic</option>
+<option value="bg">Bulgarian</option>
+<option value="ca">Catalan</option>
+<option value="cn">Chinese (Simplified)</option>
+<option value="tw">Chinese (Traditional)</option>
+<option value="hr">Croatian</option>
+<option value="cs">Czech</option>
+<option value="da">Danish</option>
+<option value="nl">Dutch</option>
+<option value="et">Estonian</option>
+<option value="tl">Filipino</option>
+<option value="fi">Finnish</option>
+<option value="fr">French</option>
+<option value="gl">Galician</option>
+<option value="de">German</option>
+<option value="el">Greek</option>
+<option value="iw">Hebrew</option>
+<option value="hi">Hindi</option>
+<option value="hu">Hungarian</option>
+<option value="id">Indonesian</option>
+<option value="it">Italian</option>
+<option value="ja">Japanese</option>
+<option value="ko">Korean</option>
+<option value="lv">Latvian</option>
+<option value="lt">Lithuanian</option>
+<option value="mt">Maltese</option>
+<option value="no">Norwegian</option>
+<option value="pl">Polish</option>
+<option value="pt">Portuguese</option>
+<option value="ro">Romanian</option>
+<option value="ru">Russian</option>
+<option value="sr">Serbian</option>
+<option value="sk">Slovak</option>
+<option value="sl">Slovenian</option>
+<option value="es">Spanish</option>
+<option value="sv">Swedish</option>
+<option value="th">Thai</option>
+<option value="tr">Turkish</option>
+<option value="uk">Ukrainian</option>
+<option value="vi">Vietnamese</option>
+</select></td>
+					</tr>
+                                        <tr>
+						<td valign="top"><span class="ftf">Cover Art</span></td>
+						<td><input type="file" name="coverArt" id="coverArt" /><br />
+						<span class="small">tagChimp now accepts HD and square, iTunes-style cover art. SD versions will automatically be created from the HD source. Use this form to upload both versions!</span>
+						<p class="small"><input type="checkbox" name="img_square" value="1" style="float:left; margin-right:5px" /> force square (if your cover art is almost a square but not quite, you can force it into a square)</p></td>
 					</tr>
                     					                    <tr>
 						<td>Release Date</td>
@@ -260,31 +353,70 @@ function getElementsByClassName(oElm, strTagName, strClassName){
                         </td>
 					</tr>
 					<tr>
-						<td>Category</td>
+						<td>Genre</td>
 						<td>
-                        <select name="category" id="category">
-                                                        <option value="Action & Adventure">Action &amp; Adventure</option>
-                            <option value="Animation">Animation</option>
-                            <option value="Biography">Biography</option>
-                            <option value="Classics">Classics</option>
-                            <option value="Comedy">Comedy</option>
-                            <option value="Documentary">Documentary</option>
-                            <option value="Drama">Drama</option>
-                            <option value="Horror">Horror</option>
-                            <option value="Independent">Independent</option>
-                            <option value="Kids & Family">Kids &amp; Family</option>
-                            <option value="Military & War">Military &amp; War</option>
-                            <option value="Music">Music</option>
-                            <option value="Musical">Musical</option>
-                            <option value="Reality TV">Reality TV</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Sci-Fi & Fantasy"selected="selected">Sci-Fi &amp; Fantasy</option>
-                            <option value="Short Films">Short Films</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Thriller">Thriller</option>
-                            <option value="Western">Western</option>
-                                                    </select>
-                        </td>
+							<select name="category" id="category">
+		<option value="">Select a Genre...</option>
+	<option value="Action & Adventure">Action &amp; Adventure</option>
+	<option value="Animation">Animation</option>
+	<option value="Biography">Biography</option>
+	<option value="Classics">Classics</option>
+	<option value="Comedy">Comedy</option>
+	<option value="Concert">Concert</option>
+	<option value="Documentary">Documentary</option>
+	<option value="Drama">Drama</option>
+	<option value="Horror">Horror</option>
+	<option value="Independent">Independent</option>
+	<option value="Kids & Family">Kids &amp; Family</option>
+	<option value="Military & War">Military &amp; War</option>
+	<option value="Music">Music</option>
+	<option value="Musical">Musical</option>
+	<option value="Reality TV">Reality TV</option>
+	<option value="Romance">Romance</option>
+	<option value="Sci-Fi & Fantasy"selected="selected">Sci-Fi &amp; Fantasy</option>
+	<option value="Short Films">Short Films</option>
+	<option value="Sports">Sports</option>
+	<option value="Thriller">Thriller</option>
+	<option value="Western">Western</option>
+	</select>						</td>
+					</tr>
+					<tr>
+						<td class="genres">Additional Genres</td>
+						<td class="genres">
+							<div id="additional_genres">
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Action" /> Action</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Adult" /> Adult</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Adventure" /> Adventure</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Animation" /> Animation</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Biography" /> Biography</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Comedy" /> Comedy</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Classics" /> Classics</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Concert" /> Concert</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Crime" /> Crime</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Documentary" /> Documentary</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Drama" /> Drama</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Family" /> Family</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Fantasy" /> Fantasy</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Film-Noir" /> Film-Noir</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Game-Show" /> Game-Show</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="History" /> History</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Horror" /> Horror</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Independent" /> Independent</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Music" /> Music</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Musical" /> Musical</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Mystery" /> Mystery</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="News" /> News</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Reality-TV" /> Reality-TV</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Romance" /> Romance</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Sci-Fi" /> Sci-Fi</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Short" /> Short</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Sport" /> Sport</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Talk-Show" /> Talk-Show</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Thriller" /> Thriller</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="War" /> War</div>
+						<div class="genre"><input type="checkbox" name="mg_genre[]" value="Western" /> Western</div>
+					</div>
+						</td>
 					</tr>
 					<tr>
 						<td>Rating</td>
@@ -322,8 +454,8 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 						<td style="vertical-align:top"><textarea name="cast" id="cast" class="ta_sm">Robert Downey Jr., Gwyneth Paltrow</textarea></td>
 					</tr>
 					<tr>
-						<td style="vertical-align:top">Short<br />Description</td>
-						<td style="vertical-align:top"><textarea name="short_description" id="short_description" class="ta_sm">You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony</textarea></td>
+						<td style="vertical-align:top">Short<br />Description<br /><div class="sd_counter">256 character max. <span id="sd_counter">255</span> remaining.</div></td>
+						<td style="vertical-align:top"><textarea name="short_description" id="short_description" class="ta_sm" onKeyPress="return taLimit(this)" onKeyUp="return taCount(this,'sd_counter')" wrap="physical">You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony</textarea></td>
 					</tr>
                     <tr>
 						<td style="vertical-align:top">Long<br />Description</td>
@@ -339,7 +471,7 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 						<td><input type="text" name="show_name" id="show_name" value="" class="tf_lg" /></td>
 					</tr>
 					<tr>
-						<td>Season</td>
+						<td>Season #</td>
 						<td><span id="sprytextfield1">
                         <input type="text" name="season" id="season" value="" class="tf_lg" />
                         <span class="textfieldInvalidFormatMsg">numbers only</span></span></td>
@@ -353,6 +485,10 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 					<tr>
 						<td>Episode ID</td>
 						<td><input type="text" name="episode_id" id="episode_id" value="" class="tf_lg" /></td>
+					</tr>
+					<tr>
+						<td>Production<br />Code</td>
+						<td><input type="text" name="prod_code" id="prod_code" value="" class="tf_lg" /></td>
 					</tr>
 					<tr>
 						<td>TV Network</td>
@@ -422,70 +558,87 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 				</tr>
 				
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483037]" id="delete_selected_chapter" value="483037" /></td>
 							<td class="ftd">Chapter 1:</td>
 							<td><input type="text" name="chapter_title[1]" value="Start" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483038]" id="delete_selected_chapter" value="483038" /></td>
 							<td class="ftd">Chapter 2:</td>
 							<td><input type="text" name="chapter_title[2]" value="Las Vegas" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483039]" id="delete_selected_chapter" value="483039" /></td>
 							<td class="ftd">Chapter 3:</td>
 							<td><input type="text" name="chapter_title[3]" value="Puttering" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483040]" id="delete_selected_chapter" value="483040" /></td>
 							<td class="ftd">Chapter 4:</td>
 							<td><input type="text" name="chapter_title[4]" value="Survived" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483041]" id="delete_selected_chapter" value="483041" /></td>
 							<td class="ftd">Chapter 5:</td>
 							<td><input type="text" name="chapter_title[5]" value="The Plans" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483042]" id="delete_selected_chapter" value="483042" /></td>
 							<td class="ftd">Chapter 6:</td>
 							<td><input type="text" name="chapter_title[6]" value="What Progress" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483043]" id="delete_selected_chapter" value="483043" /></td>
 							<td class="ftd">Chapter 7:</td>
 							<td><input type="text" name="chapter_title[7]" value="Home" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483044]" id="delete_selected_chapter" value="483044" /></td>
 							<td class="ftd">Chapter 8:</td>
 							<td><input type="text" name="chapter_title[8]" value="Pundits" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483045]" id="delete_selected_chapter" value="483045" /></td>
 							<td class="ftd">Chapter 9:</td>
 							<td><input type="text" name="chapter_title[9]" value="Industry" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483046]" id="delete_selected_chapter" value="483046" /></td>
 							<td class="ftd">Chapter 10:</td>
 							<td><input type="text" name="chapter_title[10]" value="Morning After" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483047]" id="delete_selected_chapter" value="483047" /></td>
 							<td class="ftd">Chapter 11:</td>
 							<td><input type="text" name="chapter_title[11]" value="New Grids" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483048]" id="delete_selected_chapter" value="483048" /></td>
 							<td class="ftd">Chapter 12:</td>
 							<td><input type="text" name="chapter_title[12]" value="Allies" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483049]" id="delete_selected_chapter" value="483049" /></td>
 							<td class="ftd">Chapter 13:</td>
 							<td><input type="text" name="chapter_title[13]" value="Pepper:Accomplice" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483050]" id="delete_selected_chapter" value="483050" /></td>
 							<td class="ftd">Chapter 14:</td>
 							<td><input type="text" name="chapter_title[14]" value="Old Inventions" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483051]" id="delete_selected_chapter" value="483051" /></td>
 							<td class="ftd">Chapter 15:</td>
 							<td><input type="text" name="chapter_title[15]" value="Underpowered" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483052]" id="delete_selected_chapter" value="483052" /></td>
 							<td class="ftd">Chapter 16:</td>
 							<td><input type="text" name="chapter_title[16]" value="Official Statement" class="tf_lg" /></td>
 						</tr>
 						<tr>
+							<td><input type="checkbox" name="delete_selected_chapter[483053]" id="delete_selected_chapter" value="483053" /></td>
 							<td class="ftd">Chapter 17:</td>
 							<td><input type="text" name="chapter_title[17]" value="End Credits" class="tf_lg" /></td>
 						</tr>				</table>
@@ -495,8 +648,15 @@ function getElementsByClassName(oElm, strTagName, strClassName){
 			
 			<div id="image">
 				<div align="center">
-					                    <img src="/covers/large/39752.jpg" />					<input type="hidden" name="img_lg" value="39752.jpg" />
-					<input type="hidden" name="img_sm" value="39752.jpg" />
+					<img src="/covers/large/39752.jpg" /><p class="small" style="color:red">We still need you to upload the following versions:  HD DVD box, HD square, SD square</p>					
+					<p>
+						Search: 
+												<a href="http://images.google.com/images?hl=en&safe=off&client=safari&rls=en&um=1&sa=1&q=Iron Man&btnG=Search+images&aq=f&oq=&aqi=&start=0" target="_blank">Google Images</a> | 
+						<a href="http://www.impawards.com/googlesearch.html?cx=partner-pub-6811780361519631%3A48v46vdqqnk&cof=FORID%3A9&ie=ISO-8859-1&q=Iron Man&sa=Search" target="_blank">Search IMP Awards</a>
+					</p>
+						                    
+					<!--<input type="hidden" name="img_lg" value="" />-->
+					<!--<input type="hidden" name="img_sm" value="" />-->
                     <input type="hidden" name="total_chapters" value="17" />
                                         <input type="hidden" name="sort_album_artist_slug" value="" />
 				</div>
@@ -506,30 +666,27 @@ function getElementsByClassName(oElm, strTagName, strClassName){
                 <div style="padding:20px">
                     <table>
                         <tr>
-                            <td class="ftd">IMDB ID</td>
+                            														<td class="ftd"><div class="icn_search_tiny"></div><a href="http://imdb.com/find?q=Iron+Man" target="_blank" title="Find this Movie at The Internet Movie Database (IMDB) (in a new window)"><span style="color:red">IMDB ID</span></a></td>
                             <td><input type="text" name="imdb_id" id="imdb_id" value="" class="tf_med" title="Enter the unique IMDB 7 digit ID/Title Code" /></td>
                         </tr>
                         <tr>
-                            <td class="ftd">Netflix ID</td>
+                            														<td class="ftd"><div class="icn_search_tiny"></div><a href="http://www.netflix.com/Search?v1=Iron+Man&lnkce=acsEnhCk" target="_blank" title="Find this Movie at Netflix (in a new window)"><span style="color:red">Netflix ID</span></a></td>
                             <td><input type="text" name="netflix_id" id="netflix_id" value="" class="tf_med" title="Enter the unique Netflix 8 digit ID number" /></td>
                         </tr>
                         <tr>
-                            <td class="ftd">Amazon ASIN</td>
+                            														<td class="ftd"><div class="icn_search_tiny"></div><a href="http://www.amazon.com/s/ref=nb_ss_gw?url=search-alias%3Ddvd&field-keywords=Iron+Man&x=12&y=20" target="_blank" title="Find this Movie at Amazon (in a new window)"><span style="color:red">Amazon ASIN</span></a></td>
                             <td><input type="text" name="amazon_asin" id="amazon_asin" value="" class="tf_med" title="Enter the unique Amazon ASIN number" /></td>
                         </tr>
                         <tr>
-                            <td class="ftd">iTunes Link</td>
+                            														<td class="ftd"><div class="icn_search_tiny"></div><a href="itms://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=Iron+Man" target="_blank" title="Find this Movie in the iTunes Store (launches iTunes)"><span style="color:red;">iTunes Link</span></a></td>
                             <td><input type="text" name="itunes_url" id="itunes_url" value="" class="tf_lg" title="Enter the URL to this Movie in the iTunes store" /></td>
                         </tr>
                         <tr>
                         	<td colspan="2">
-                                                      <h3>Additional information is available at</h3>
-							<a href="http://imdb.com/find?q=Iron+Man" target="_blank">The Internet Movie Database (IMDB)</a><br />							                            
-                            <a href="http://www.netflix.com/Search?v1=Iron+Man&lnkce=acsEnhCk" target="_blank">Find this at Netflix</a><br />							                            
-							<a href="http://www.amazon.com/s/ref=nb_ss_gw?url=search-alias%3Ddvd&field-keywords=Iron+Man&x=12&y=20" target="_blank">Find this at Amazon</a>							
+							
                             <h3>Chapter information is available at</h3> 
-                            <a href="http://www.spun.com/search.jsp?page=1&type=movies.title.buy&query=Iron+Man&image.x=20&image.y=13" target="_blank">Spun.com</a><br />
-                            <a href="http://video.barnesandnoble.com/search/results.asp?quickSearchType=TTL&FRM=0&quickSearchText=Iron+Man" target="_blank">Barnes &amp; Noble</a>
+                            <div class="icn_search_tiny"></div><a href="http://www.spun.com/search.jsp?page=1&type=movies.title.buy&query=Iron+Man&image.x=20&image.y=13" target="_blank" title="Search Spun.com (in a new window)">Spun.com</a><br />
+                            <div class="icn_search_tiny"></div><a href="http://video.barnesandnoble.com/search/results.asp?quickSearchType=TTL&FRM=0&quickSearchText=Iron+Man" target="_blank" title="Search Barnes &amp; Noble (in a new window)">Barnes &amp; Noble</a>
                             <p class="small">Links open in a new browser window.</p></td>
                     	</tr>
                     </table>
@@ -558,7 +715,7 @@ function getElementsByClassName(oElm, strTagName, strClassName){
   <br />
   <div id="boxes">
   	<!-- InstanceBeginEditable name="box" -->
-    <div id="affiliate_banner"><a href="http://click.linksynergy.com/fs-bin/click?id=pTePyDR*FiI&offerid=146261.10001521&type=4&subid=0"><IMG alt="Apple iTunes" border="0" src="http://images.apple.com/itunesaffiliates/US/2006/11/07/sundance_468x60.jpg"></a><IMG border="0" width="1" height="1" src="http://ad.linksynergy.com/fs-bin/show?id=pTePyDR*FiI&bids=146261.10001521&type=4&subid=0"></div>
+    <div id="affiliate_banner"><a  href="http://click.linksynergy.com/fs-bin/click?id=pTePyDR*FiI&offerid=146261.10002935&type=4&subid=0"><IMG alt="Apple iTunes" border="0" src="http://images.apple.com/itunesaffiliates/US/2008/04/06/BBCAMERICA_468x60.jpg"></a><IMG border="0" width="1" height="1" src="http://ad.linksynergy.com/fs-bin/show?id=pTePyDR*FiI&bids=146261.10002935&type=4&subid=0"></div>
     <script type="text/javascript">
 <!--
 var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "integer", {isRequired:false});
@@ -576,7 +733,11 @@ var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "inte
     <div align="center">
 <table align="center">
   <tr>
-    <td>&copy; 2009 tagChimp</td>
+    <td colspan="14" align="center"><a href="http://www.facebook.com/pages/tagChimp/46052389006/"><img src="http://www.tagchimp.com/images/social_facebook_32.png" width="32" height="32" alt="Become me fan on Facebook" border="0" title="Become me fan on Facebook" /></a> <a href="http://twitter.com/tagChimp/"><img src="http://www.tagchimp.com/images/social_twitter_32.png" width="32" height="32" alt="Follow me on Twitter" border="0" title="Follow me on Twitter" /></a>
+	</td>
+  </tr>
+  <tr>
+    <td>&copy; 2010 tagChimp</td>
     <td> | </td>
     <td><a href="http://www.tagchimp.com" title="tagChimp home page">home</a></td>
     <td> | </td>
@@ -604,6 +765,20 @@ var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "inte
 </div>
   </div>
 </div>
+
+<!-- Start Quantcast tag -->
+<script type="text/javascript">
+_qoptions={
+qacct:"p-c5oSD_jTYonZ-"
+};
+</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-c5oSD_jTYonZ-.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+</noscript>
+<!-- End Quantcast tag -->
+
+<!-- google analytics-->
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -611,5 +786,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-2126511-2");
 pageTracker._trackPageview();
-</script></body>
+</script>
+</body>
 <!-- InstanceEnd --></html>

@@ -258,15 +258,8 @@ public class TagChimpSource implements ISource {
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("main_mid")) {
-				Element searchResultsDiv = ParseHelper.findFirstChild(div, HTMLElementName.DIV, new IFilterElement() {					
-					@Override
-					public boolean accept(Element element) {
-						return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("search_result"));
-					}
-				});				
-				
-				if (searchResultsDiv!=null) {
-					List<Element> links= ParseHelper.findAllElements(searchResultsDiv, HTMLElementName.A,null);
+					List<Element> links= new ArrayList<Element>();
+					ParseHelper.findAllElements(links,div, HTMLElementName.A,true,null);
 					for (Element link : links) {
 						String url = link.getAttributeValue("href");
 						String title = link.getTextExtractor().toString();
@@ -280,7 +273,7 @@ public class TagChimpSource implements ISource {
 								}
 							}
 						}
-					}
+//					}
 				}
 			}
 		}
@@ -289,7 +282,7 @@ public class TagChimpSource implements ISource {
 	}
 
 	private String getSearchUrl(String query) {
-		return BASE_URL + "/search/index.php?searchterm=" + query + "&search.x=0&search.y=0&kind=mo1";
+		return BASE_URL + "/search/index.php?s=" + query + "&search.x=0&search.y=0&kind=mo1";
 	}
 
 	/**

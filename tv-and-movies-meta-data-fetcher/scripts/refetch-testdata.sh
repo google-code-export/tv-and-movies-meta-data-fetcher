@@ -2,7 +2,7 @@
 
 TESTDIR="../tests/org/stanwood/media/testdata"
 
-wget -O $TESTDIR/tagchimp-search-ironman.html "http://www.tagchimp.com/search/index.php?searchterm=iron+man&search.x=0&search.y=0&kind=mo1"
+wget -O $TESTDIR/tagchimp-search-ironman.html "https://www.tagchimp.com/search/index.php?s=iron+man&search.x=0&search.y=0&kind=a"
 wget -O $TESTDIR/tagchimp-iron-man-17.html "http://www.tagchimp.com/tc/39752/"
 
 wget -O $TESTDIR/filmposters/movieposter-ironman.html "http://eu.movieposter.com/cgi-bin/mpw8/search.pl?ti=Iron+Man&pl=action&th=y&rs=12&size=any"
