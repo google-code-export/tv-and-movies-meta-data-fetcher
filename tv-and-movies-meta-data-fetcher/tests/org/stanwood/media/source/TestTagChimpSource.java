@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
@@ -33,6 +32,7 @@ import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.testdata.Data;
+import org.stanwood.media.util.FileHelper;
 
 import au.id.jericho.lib.html.Source;
 

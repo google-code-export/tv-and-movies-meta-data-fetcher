@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -18,6 +17,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to test the {@link XMLStore2} class.

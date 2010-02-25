@@ -8,12 +8,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.DummyTVComSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This test class is used to test the rescrive renaming of media files

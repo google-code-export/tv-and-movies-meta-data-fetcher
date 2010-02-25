@@ -25,9 +25,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.store.XMLStore;
 import org.stanwood.media.testdata.Data;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to test the {@link Renamer} class.

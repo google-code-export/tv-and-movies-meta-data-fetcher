@@ -21,9 +21,9 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.store.FakeStore;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to test the {@link Controller} class.

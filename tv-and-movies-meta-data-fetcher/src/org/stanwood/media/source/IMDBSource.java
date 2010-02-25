@@ -46,7 +46,6 @@ import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
 import au.id.jericho.lib.html.Segment;
 import au.id.jericho.lib.html.Source;
-import au.id.jericho.lib.html.StartTag;
 import au.id.jericho.lib.html.Tag;
 
 /**

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -37,6 +36,7 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.source.IMDBSource;
 import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.testdata.Data;
+import org.stanwood.media.util.FileHelper;
 import org.xml.sax.InputSource;
 
 /**

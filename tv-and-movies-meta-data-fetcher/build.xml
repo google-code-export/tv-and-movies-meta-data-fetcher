@@ -24,7 +24,7 @@
 	<property name="javac.target" value="1.6" />
 
 	<!-- Dist properties -->
-	<property name="project.version" value="1.2.2" />
+	<property name="project.version" value="1.2.3" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
@@ -106,6 +106,10 @@
             version="true"
             use="true"
             windowtitle="Media Renamer/Metadata Fetcher">
+        	<classpath>
+        		<path refid="runtime.libs"/>
+				<path refid="compile.libs"/>
+        	</classpath>
           <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
         </javadoc>
 	</target>

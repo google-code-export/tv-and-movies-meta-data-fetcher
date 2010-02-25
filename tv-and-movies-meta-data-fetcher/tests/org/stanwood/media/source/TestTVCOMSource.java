@@ -23,12 +23,12 @@ import java.text.SimpleDateFormat;
 
 import junit.framework.TestCase;
 
-import org.stanwood.media.FileHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to test the {@link TVCOMSource} class.
