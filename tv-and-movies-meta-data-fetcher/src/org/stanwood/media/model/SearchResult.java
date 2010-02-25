@@ -26,6 +26,7 @@ public class SearchResult {
 	private String id;
 	private String sourceId;
 	private String url;
+	private String title;
 
 	/**
 	 * Constructor of the class
@@ -74,6 +75,32 @@ public class SearchResult {
 	 */
 	public String getUrl() {
 		return url;
+	}
+
+	
+	/**
+	 * Returns a string representation of the result
+	 * @return string representation of the result
+	 */
+	@Override
+	public String toString() {
+		return id+":"+sourceId+" - [" + url+"] - ["+title+"]" ;
+	}
+
+	/**
+	 * Used to set the title of the URL if one could be found
+	 * @param title The title of the URL
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	/**
+	 * Used to get the title of the URL if one was found
+	 * @return The title
+	 */
+	public String getTitle() {
+		return title;
 	}
 
 }

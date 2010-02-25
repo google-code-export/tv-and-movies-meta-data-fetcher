@@ -50,13 +50,14 @@ public class TestTVCOMSource extends TestCase {
 
 		assertEquals("tvcom",show.getSourceId());
 		assertEquals("Eureka",show.getName());
-		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...",show.getShortSummary());
-		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC Universal Cable Studio and filmed in the province of British Columbia, Canada",show.getLongSummary());
+		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC Universal Cable Studio and filmed in the province of British Columbia, Canada.",show.getLongSummary());
+		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is...",show.getShortSummary());		
 		assertEquals(SHOW_ID_EUREKA,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/eureka/show/58448/summary.html",show.getShowURL().toExternalForm());
-		assertEquals(1,show.getGenres().size());
-		assertEquals("Drama, Sci-Fi",show.getGenres().get(0));
+		assertEquals(2,show.getGenres().size());
+		assertEquals("Science-Fiction",show.getGenres().get(0));
+		assertEquals("Drama",show.getGenres().get(1));
 
 	}
 
@@ -204,14 +205,18 @@ public class TestTVCOMSource extends TestCase {
 		Show show = source.getShow( SHOW_ID_HEROES,new URL("http://www.tv.com/heroes/show/17552/summary.html"));
 
 
-		assertEquals("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint images of the future when he is high, Niki Sanders, a 33-year-old Las Vegas showgirl who begins seeing strange things in mirrors, Hiro Nakamura, a 24-year-old Japanese comic-book geek who literally makes time stand still, D.L. Hawkins, a 31-year-old inmate who can walk through walls, Matt Parkman, a beat cop who can hear other people's thoughts, and Claire Bennet, a 17-year-old cheerleader who defies death at every turn. As the viewing audience is discovering the nature of each hero's powers, the heroes themselves are discovering what having superpowers means to them as well as the larger picture of where their superpowers come from. Tune in each week to see how these heroes are drawn together by their common interest of evading the series' antagonist who wants to harvest their super-DNA for himself. Their ultimate destiny is nothing less than saving the world! The series will star Greg Grunberg (Alias), Leonard Roberts (Buffy the Vampire Slayer), Milo Ventimiglia (Gilmore Girls), and Hayden Panettiere (Ally McBeal, Guiding Light). Tim Kring (Crossing Jordan, Chicago Hope) is the series' creator. The pilot is set to be directed by Dave Semel (American Dreams, Buffy, the Vampire Slayer, Beverly Hills, 90210). Heroes will be produced by NBC/Universal/Tailwind. Summary revised with help from: space-cowboy",show.getLongSummary());
+		assertEquals("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint images of the future when he is high, Niki Sanders, a 33-year-old Las Vegas showgirl who begins seeing strange things in mirrors, Hiro Nakamura, a 24-year-old Japanese comic-book geek who literally makes time stand still, D.L. Hawkins, a 31-year-old inmate who can walk through walls, Matt Parkman, a beat cop who can hear other people's thoughts, and Claire Bennet, a 17-year-old cheerleader who defies death at every turn. As the viewing audience is discovering the nature of each hero's powers, the heroes themselves are discovering what having superpowers means to them as well as the larger picture of where their superpowers come from. Tune in each week to see how these heroes are drawn together by their common interest of evading the series' antagonist who wants to harvest their super-DNA for himself. Their ultimate destiny is nothing less than saving the world! The series will star Greg Grunberg ( Alias ), Leonard Roberts ( Buffy the Vampire Slayer ), Milo Ventimiglia ( Gilmore Girls ), and Hayden Panettiere ( Ally McBeal , Guiding Light ). Tim Kring ( Crossing Jordan , Chicago Hope ) is the series' creator. The pilot is set to be directed by Dave Semel ( American Dreams , Buffy, the Vampire Slayer , Beverly Hills, 90210 ). Heroes will be produced by NBC/Universal/Tailwind. Summary revised with help from: space-cowboy.",show.getLongSummary());
 		assertEquals("Heroes",show.getName());
 		assertEquals("Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspect...",show.getShortSummary());
 		assertEquals(SHOW_ID_HEROES,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/17552.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/heroes/show/17552/summary.html",show.getShowURL().toExternalForm());
-		assertEquals(1,show.getGenres().size());
-		assertEquals("Drama, Sci-Fi",show.getGenres().get(0));	}
+		assertEquals(3,show.getGenres().size());
+		assertEquals("Drama",show.getGenres().get(0));
+		assertEquals("Action/Adventure",show.getGenres().get(1));
+		assertEquals("Science-Fiction",show.getGenres().get(2));
+		
+	}
 
 	/**
 	 * Test that the special episode details are read correctly.

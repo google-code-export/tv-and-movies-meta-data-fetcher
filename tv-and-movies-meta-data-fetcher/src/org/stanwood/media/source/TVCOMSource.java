@@ -400,31 +400,23 @@ public class TVCOMSource implements ISource {
 	private void parseShow(Source source, Show show) throws MalformedURLException {
 
 		List<String> genres = new ArrayList<String>();
-		Element pShortSummary = ParseHelper.findFirstChild(source, HTMLElementName.P, true, new IFilterElement() {
-			@Override
-			public boolean accept(Element element) {
-				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals("trunc_summ"));
-			}
-		});
-		if (pShortSummary != null) {
-			show.setShortSummary(pShortSummary.getTextExtractor().toString());
-		}
-
 		Element pLongSummary = ParseHelper.findFirstChild(source, HTMLElementName.P, true, new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals("whole_summ"));
+				return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("show_description MORE_LESS"));
 			}
 		});
 		if (pLongSummary != null) {
 			String summary = pLongSummary.getTextExtractor().toString();
-			summary = summary.substring(0, summary.length() - 6);
+			int pos = summary.indexOf("… More");
+			summary = summary.replaceAll("… More", "");
 			show.setLongSummary(summary);
+			show.setShortSummary(summary.substring(0,pos)+"...");
 		}
 
 		Element buz = ParseHelper.findFirstChild(source, HTMLElementName.DIV, true, new IFilterElement() {
 			@Override
-			public boolean accept(Element element) {
+			public boolean accept(Element element) {				
 				return (element.getAttributeValue("id") != null && element.getAttributeValue("id").equals(
 						"show_buzz_info"));
 			}
@@ -433,7 +425,7 @@ public class TVCOMSource implements ISource {
 			List<Link> genreLinks = ParseHelper.getLinks("", buz, new IFilterLink() {
 				@Override
 				public boolean accept(Link link) {
-					return (link.getURL().endsWith("today.html"));
+					return (link.getURL().contains("multibrowse/?genre="));
 				}
 			});
 
@@ -584,6 +576,7 @@ public class TVCOMSource implements ISource {
 					Matcher m = SHOW_ID_PATTERN.matcher(href);
 					if (m.find()) {
 						SearchResult result = new SearchResult(m.group(2), SOURCE_ID,href.substring(0,href.indexOf('?')));
+						result.setTitle(element2.getTextExtractor().toString());
 						results.add(result);
 					}
 				}
@@ -591,6 +584,12 @@ public class TVCOMSource implements ISource {
 		}
 
 		if (results.size() >= 1) {
+			// Look for best match
+			for (SearchResult result : results) {
+				if (result.getTitle().equalsIgnoreCase(name)) {
+					return result;
+				}
+			}
 			return results.get(0);
 		}
 		return null;
