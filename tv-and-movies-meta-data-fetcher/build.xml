@@ -106,9 +106,9 @@
             version="true"
             use="true"
             windowtitle="Media Renamer/Metadata Fetcher">
-        	<classpath>
-        		<path refid="runtime.libs"/>
-				<path refid="compile.libs"/>
+        	<classpath>        		
+        		<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>
         	</classpath>
           <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
         </javadoc>
