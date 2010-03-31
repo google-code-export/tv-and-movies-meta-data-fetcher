@@ -211,10 +211,9 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals(SHOW_ID_HEROES,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/17552.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/heroes/show/17552/summary.html",show.getShowURL().toExternalForm());
-		assertEquals(3,show.getGenres().size());
-		assertEquals("Drama",show.getGenres().get(0));
-		assertEquals("Action/Adventure",show.getGenres().get(1));
-		assertEquals("Science-Fiction",show.getGenres().get(2));
+		assertEquals(2,show.getGenres().size());
+		assertEquals("Drama",show.getGenres().get(0));		
+		assertEquals("Science-Fiction",show.getGenres().get(1));
 		
 	}
 
