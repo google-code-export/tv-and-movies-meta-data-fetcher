@@ -56,8 +56,9 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/eureka/show/58448/summary.html",show.getShowURL().toExternalForm());
 		assertEquals(2,show.getGenres().size());
-		assertEquals("Science-Fiction",show.getGenres().get(0));
-		assertEquals("Drama",show.getGenres().get(1));
+		assertEquals("Drama",show.getGenres().get(0));
+		assertEquals("Sci-Fi",show.getGenres().get(1));
+
 
 	}
 
@@ -213,7 +214,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://www.tv.com/heroes/show/17552/summary.html",show.getShowURL().toExternalForm());
 		assertEquals(2,show.getGenres().size());
 		assertEquals("Drama",show.getGenres().get(0));		
-		assertEquals("Science-Fiction",show.getGenres().get(1));
+		assertEquals("Sci-Fi",show.getGenres().get(1));
 		
 	}
 
