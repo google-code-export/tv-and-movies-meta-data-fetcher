@@ -179,13 +179,7 @@
                      <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
                      <para>
                      This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
-                     information can be read by iTunes. It does this by using the application <ulink url="http://atomicparsley.sourceforge.net/">AtomicParsley</ulink>.  
-                     </para>
-                     <para>
-                           It has the following parameters:
-                           <itemizedlist>
-                             <listitem><para><literal>AtomicParsleyPath</literal>The location of the AtomicParsley application</para></listitem>
-                           </itemizedlist>
+                     information can be read by iTunes.   
                      </para>
              </sect2>
              <sect2>
@@ -377,8 +371,7 @@
 			location <filename>/etc/mediafetcher-conf.xml</filename>. If this can't be found,
 			it will fall back too using default settings.
 		</para>
-		<para>
-			
+		<para>			
 			<example>		
 				<title>The default configuration file</title>
 				<programlisting>
@@ -403,8 +396,7 @@
 		</para>
 		<para>
 			Some of the stores and sources can also have parameters, the following example shows how to setup 
-			the MP4ITunesStore so that it can find the AtomicParsley command and use it to store
-			TV Show/Film information into .mp4 and .m4v files that iTunes can read.
+			the MythTVStore so that it can find the Database that it stores the metadata in.
 			<example>		
 				<title>Configuration file using parameters</title>
 				<programlisting>
@@ -423,10 +415,12 @@
                <!-- A Store for saving Show/Movies in a XML file in the current directory -->
                 <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
                 
-               <!-- A Store for saving Show/Movies meta data into .mp4 and .m4v files so that
-                    it can be read by iTunes. -->
-               <store id="org.stanwood.media.store.mp4.MP4ITunesStore">
-               		<param name="AtomicParsleyPath" value="/usr/local/bin/AtomicParsley"/>
+               <!-- A Store for saving Show/Movies meta data into in a mythtv database -->
+               <store id="org.stanwood.media.store.mythtv.MythTVStore">
+               		<param name="DatabaseHost" value="localhost"/>
+               		<param name="DatabaseName" value="mythtv"/>
+               		<param name="DatabaseUser" value="mythuser"/>
+               		<param name="DatabasePassword" value="secret"/>
                </store>      
         </stores>
 </config>]]>			
