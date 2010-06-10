@@ -10,6 +10,11 @@
 	<classpathentry kind="lib" path="libs/run-time/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry kind="lib" path="libs/test-time/hsqldb.jar"/>
+	<classpathentry kind="lib" path="libs/run-time/jaudiotagger-2.0.2.jar" sourcepath="/home/johsta01/source/jaudiotagger-2.0.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/johsta01/source/jaudiotagger-2.0.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

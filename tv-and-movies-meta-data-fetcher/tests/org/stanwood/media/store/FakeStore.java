@@ -113,7 +113,7 @@ public class FakeStore implements IStore {
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePatter) {
+	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) {
 		return null;
 	}
 

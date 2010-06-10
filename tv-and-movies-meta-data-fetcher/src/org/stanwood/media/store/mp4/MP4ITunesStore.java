@@ -44,8 +44,6 @@ import org.stanwood.media.store.StoreException;
  */
 public class MP4ITunesStore implements IStore {
 
-	private File atomicParsleyPath;
-
 	/**
 	 * This is used to store episode information of a TVShow MP4 file into the
 	 * file as meta data so that iTunes can read it.
@@ -63,10 +61,10 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeEpisode(File file, Episode episode) throws StoreException {
-		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
+		IMP4Manager ap = new MP4Manager();
 		try {
 			ap.updateEpsiode(file,episode);
-		} catch (AtomicParsleyException e) {
+		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
 	}
@@ -148,29 +146,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	/**
-	 * Used to set the store parameter used to find the atomic parsley application
-	 * @param atomicParsleyPath The path to the atomic parsley path
-	 */
-	public void setAtomicParsleyPath(String atomicParsleyPath) {
-		this.atomicParsleyPath = new File(atomicParsleyPath);
-	}
-
-	/**
-	 * Used to get the store parameter used to find the atomic parsley application
-	 * @return The path to the atomic parsley path
-	 */
-	public String getAtomicParsleyPath() {
-		return atomicParsleyPath.getAbsolutePath();
-	}
-
-	private void validate() throws StoreException {
-		if (atomicParsleyPath==null) {
-			throw new StoreException("The atomicParsleyPath property must be set before the store can be used");
-		}
-		if (!atomicParsleyPath.exists()) {
-			throw new StoreException("Unable to locate the AtomicParsley application at the path '"+atomicParsleyPath.getAbsolutePath()+"'.");
-		}
+	private void validate() throws StoreException {		
 	}
 
 	/**
@@ -189,10 +165,10 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeFilm(File filmFile, Film film) throws StoreException {
-		AtomicParsley ap = new AtomicParsley(atomicParsleyPath);
+		IMP4Manager ap = new MP4Manager();
 		try {
 			ap.updateFilm(filmFile,film);
-		} catch (AtomicParsleyException e) {
+		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
 	}

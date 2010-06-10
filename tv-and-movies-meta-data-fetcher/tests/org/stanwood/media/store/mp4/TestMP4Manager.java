@@ -1,19 +1,3 @@
-/*
- *  Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.stanwood.media.store.mp4;
 
 import java.io.File;
@@ -21,10 +5,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -35,9 +21,9 @@ import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * Used to test the {@link AtomicParsley} class.
+ * Used to test the {@link MP4Manager} class.
  */
-public class TestAtomicParsley extends TestCase {
+public class TestMP4Manager {
 
 	private SimpleDateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -45,35 +31,73 @@ public class TestAtomicParsley extends TestCase {
 	 * Used to test reading atoms when the MP4 file has no atoms
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testNoAtomsFound() throws Exception {
-		AtomicParsley.updateImages = false;
-		File apCmd = new File(File.separator+"usr"+File.separator+"bin"+File.separator+"AtomicParsley");
-//		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
-		assertTrue("Check atomic parsley command can be found",apCmd.exists());
-
 		URL url = Data.class.getResource("a_video.mp4");
 		File mp4File = new File(url.toURI());
-		assertTrue(mp4File.exists());
+		Assert.assertTrue(mp4File.exists());
 
-		AtomicParsley ap = new AtomicParsley(apCmd);
+		IMP4Manager ap = new MP4Manager();
 		List<Atom> atoms = ap.listAttoms(mp4File);
 
-		assertEquals(0,atoms.size());
+		Assert.assertEquals(0,atoms.size());
+	}
+	
+	/**
+	 * Used to test reading atoms when the MP4 has meta data
+	 * @throws Exception Thrown if the test produces any errors
+	 */
+	@Test
+	public void testAtomsFound() throws Exception {
+		URL url = Data.class.getResource("videoWithMetaData.mp4");
+		File mp4File = new File(url.toURI());
+		Assert.assertTrue(mp4File.exists());
+
+		IMP4Manager ap = new MP4Manager();
+		List<Atom> atoms = ap.listAttoms(mp4File);
+		Collections.sort(atoms, new Comparator<Atom>() {
+			@Override
+			public int compare(Atom o1, Atom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		Assert.assertEquals(10,atoms.size());
+		Assert.assertEquals(atoms.get(0).getName(), "catg");
+		Assert.assertEquals(atoms.get(0).getValue(), "SciFi");
+		Assert.assertEquals(atoms.get(1).getName(), "desc");
+		Assert.assertEquals(atoms.get(1).getValue(), "This is a test show summary");
+		Assert.assertEquals(atoms.get(2).getName(), "stik");
+		Assert.assertEquals(atoms.get(2).getValue(), "10");
+		Assert.assertEquals(atoms.get(3).getName(), "tven");
+		Assert.assertEquals(atoms.get(3).getValue(), "103");
+		Assert.assertEquals(atoms.get(4).getName(), "tves");
+		Assert.assertEquals(atoms.get(4).getValue(), "3");
+		Assert.assertEquals(atoms.get(5).getName(), "tvsh");
+		Assert.assertEquals(atoms.get(5).getValue(), "Test Show Name");
+		Assert.assertEquals(atoms.get(6).getName(), "tvsn");
+		Assert.assertEquals(atoms.get(6).getValue(), "1");
+		Assert.assertEquals(atoms.get(7).getName(), "©day");
+		Assert.assertEquals(atoms.get(7).getValue().replaceAll("0 ... ", "0 "), "Thu Nov 10 00:00:00 2005");
+		Assert.assertEquals(atoms.get(8).getName(), "©gen");
+		Assert.assertEquals(atoms.get(8).getValue(), "SciFi");
+		Assert.assertEquals(atoms.get(9).getName(), "©nam");
+		Assert.assertEquals(atoms.get(9).getValue(), "Test Episode");
 	}
 
 	/**
 	 * Used to test that the episode details can be written to the MP4 file.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testWriteEpsiode() throws Exception {
-		AtomicParsley.updateImages = false;
 		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
-		assertTrue("Check atomic parsley command can be found",apCmd.exists());
+		Assert.assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
-		assertTrue(srcFile.exists());
+		Assert.assertTrue(srcFile.exists());
 
 		File mp4File = File.createTempFile("test", ".mp4");
 		if (!mp4File.delete()) {
@@ -82,48 +106,46 @@ public class TestAtomicParsley extends TestCase {
 		FileHelper.copy(srcFile, mp4File);
 		mp4File.deleteOnExit();
 		Episode episode = createTestEpisode();
-		AtomicParsley ap = new AtomicParsley(apCmd);
+		IMP4Manager ap = new MP4Manager();
 		ap.updateEpsiode(mp4File, episode);
 
-		List<Atom> atoms = ap.listAttoms(mp4File);
-		System.out.println("Output: " +ap.getOutputStream());
-		System.out.println("Error: " +ap.getErrorStream());
-		assertEquals(10,atoms.size());
-		assertEquals("TV Show",atoms.get(0).getValue());
-		assertEquals("stik",atoms.get(0).getName());
-		assertEquals("103",atoms.get(1).getValue());
-		assertEquals("tven",atoms.get(1).getName());
-		assertEquals("Test Show Name",atoms.get(2).getValue());
-		assertEquals("tvsh",atoms.get(2).getName());
-		assertEquals("1",atoms.get(3).getValue());
-		assertEquals("tvsn",atoms.get(3).getName());
-		assertEquals("3",atoms.get(4).getValue());
-		assertEquals("tves",atoms.get(4).getName());
-		assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(5).getValue().replaceAll("0 ... ", "0 "));
-		assertEquals("©day",atoms.get(5).getName());
-		assertEquals("Test Episode",atoms.get(6).getValue());
-		assertEquals("©nam",atoms.get(6).getName());
-		assertEquals("This is a test show summary",atoms.get(7).getValue());
-		assertEquals("desc",atoms.get(7).getName());
-		assertEquals("SciFi",atoms.get(8).getValue());
-		assertEquals("©gen",atoms.get(8).getName());
-		assertEquals("SciFi",atoms.get(9).getValue());
-		assertEquals("catg",atoms.get(9).getName());
+		List<Atom> atoms = ap.listAttoms(mp4File);		
+		Assert.assertEquals(10,atoms.size());
+		Assert.assertEquals("TV Show",atoms.get(0).getValue());
+		Assert.assertEquals("stik",atoms.get(0).getName());
+		Assert.assertEquals("103",atoms.get(1).getValue());
+		Assert.assertEquals("tven",atoms.get(1).getName());
+		Assert.assertEquals("Test Show Name",atoms.get(2).getValue());
+		Assert.assertEquals("tvsh",atoms.get(2).getName());
+		Assert.assertEquals("1",atoms.get(3).getValue());
+		Assert.assertEquals("tvsn",atoms.get(3).getName());
+		Assert.assertEquals("3",atoms.get(4).getValue());
+		Assert.assertEquals("tves",atoms.get(4).getName());
+		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(5).getValue().replaceAll("0 ... ", "0 "));
+		Assert.assertEquals("©day",atoms.get(5).getName());
+		Assert.assertEquals("Test Episode",atoms.get(6).getValue());
+		Assert.assertEquals("©nam",atoms.get(6).getName());
+		Assert.assertEquals("This is a test show summary",atoms.get(7).getValue());
+		Assert.assertEquals("desc",atoms.get(7).getName());
+		Assert.assertEquals("SciFi",atoms.get(8).getValue());
+		Assert.assertEquals("©gen",atoms.get(8).getName());
+		Assert.assertEquals("SciFi",atoms.get(9).getValue());
+		Assert.assertEquals("catg",atoms.get(9).getName());
 	}
 
 	/**
 	 * Used to test that a film meta data can be written to a .mp4 file
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testWriteFilm() throws Exception {
-		AtomicParsley.updateImages = false;
 		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
 //		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
-		assertTrue("Check atomic parsley command can be found",apCmd.exists());
+		Assert.assertTrue("Check atomic parsley command can be found",apCmd.exists());
 
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
-		assertTrue(srcFile.exists());
+		Assert.assertTrue(srcFile.exists());
 
 		File mp4File = File.createTempFile("test", ".mp4");
 		if (!mp4File.delete()) {
@@ -133,27 +155,33 @@ public class TestAtomicParsley extends TestCase {
 		mp4File.deleteOnExit();
 		Film film = createTestFilm();
 
-		AtomicParsley ap = new AtomicParsley(apCmd);
+		IMP4Manager ap = new MP4Manager();
 		ap.updateFilm(mp4File, film);
 
 		List<Atom> atoms = ap.listAttoms(mp4File);
-		System.out.println("Output: " +ap.getOutputStream());
-		System.out.println("Error: " +ap.getErrorStream());
-		assertEquals(7,atoms.size());
-		assertEquals("Movie",atoms.get(0).getValue());
-		assertEquals("stik",atoms.get(0).getName());
-		assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(1).getValue().replaceAll("0 ... ", "0 "));
-		assertEquals("©day",atoms.get(1).getName());
-		assertEquals("Test film name",atoms.get(2).getValue());
-		assertEquals("©nam",atoms.get(2).getName());
-		assertEquals("A test description",atoms.get(3).getValue());
-		assertEquals("desc",atoms.get(3).getName());
-		assertEquals("SciFi",atoms.get(4).getValue());
-		assertEquals("©gen",atoms.get(4).getName());
-		assertEquals("SciFi",atoms.get(5).getValue());
-		assertEquals("catg",atoms.get(5).getName());
-		assertEquals("1 piece of artwork",atoms.get(6).getValue());
-		assertEquals("covr",atoms.get(6).getName());
+		Collections.sort(atoms, new Comparator<Atom>() {
+			@Override
+			public int compare(Atom o1, Atom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		
+		Assert.assertEquals(7,atoms.size());
+		
+		Assert.assertEquals("SciFi",atoms.get(0).getValue());
+		Assert.assertEquals("catg",atoms.get(0).getName());
+		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
+		Assert.assertEquals("covr",atoms.get(1).getName());
+		Assert.assertEquals("A test description",atoms.get(2).getValue());
+		Assert.assertEquals("desc",atoms.get(2).getName());
+		Assert.assertEquals("Movie",atoms.get(3).getValue());
+		Assert.assertEquals("stik",atoms.get(3).getName());		
+		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(4).getValue().replaceAll("0 ... ", "0 "));
+		Assert.assertEquals("©day",atoms.get(4).getName());
+		Assert.assertEquals("SciFi",atoms.get(5).getValue());
+		Assert.assertEquals("©gen",atoms.get(5).getName());
+		Assert.assertEquals("Test film name",atoms.get(6).getValue());
+		Assert.assertEquals("©nam",atoms.get(6).getName());
 	}
 
 	private Film createTestFilm() throws Exception {
