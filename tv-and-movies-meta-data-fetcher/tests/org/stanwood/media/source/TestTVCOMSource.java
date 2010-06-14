@@ -87,6 +87,11 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals(3,season.getSeasonNumber());
 
 		season = source.getSeason(show, 4);
+		assertEquals("http://www.tv.com/eureka/show/"+SHOW_ID_EUREKA+"/episode.html?season=4",season.getListingUrl().toExternalForm());
+		assertEquals("http://www.tv.com/eureka/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());
+		assertEquals(4,season.getSeasonNumber());
+		
+		season = source.getSeason(show, 5);
 		assertNull(season);
 	}
 

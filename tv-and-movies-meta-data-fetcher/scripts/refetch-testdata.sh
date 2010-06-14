@@ -2,7 +2,7 @@
 
 TESTDIR="../tests/org/stanwood/media/testdata"
 
-wget -O $TESTDIR/tagchimp-search-ironman.html "https://www.tagchimp.com/search/index.php?s=iron+man&search.x=0&search.y=0&kind=a"
+wget -O $TESTDIR/tagchimp-search-ironman.html "http://www.tagchimp.com/search/index.php?s=iron+man&search.x=0&search.y=0&kind=a"
 wget -O $TESTDIR/tagchimp-iron-man-17.html "http://www.tagchimp.com/tc/39752/"
 
 wget -O $TESTDIR/filmposters/movieposter-ironman.html "http://eu.movieposter.com/cgi-bin/mpw8/search.pl?ti=Iron+Man&pl=action&th=y&rs=12&size=any"
@@ -17,5 +17,6 @@ wget -O $TESTDIR/58448-episode_listings-season=1.html "http://www.tv.com/eureka/
 wget -O $TESTDIR/58448-episode_listings-season=2.html "http://www.tv.com/eureka/show/58448/episode.html?season=2"
 wget -O $TESTDIR/58448-episode_listings-season=3.html "http://www.tv.com/eureka/show/58448/episode.html?season=3"
 wget -O $TESTDIR/58448-episode_listings-season=4.html "http://www.tv.com/eureka/show/58448/episode.html?season=4"
+wget -O $TESTDIR/58448-episode_listings-season=5.html "http://www.tv.com/eureka/show/58448/episode.html?season=5"
 
 wget -O $TESTDIR/film-0371746.html "http://www.imdb.com/title/tt0371746"

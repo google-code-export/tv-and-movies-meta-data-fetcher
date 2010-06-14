@@ -106,7 +106,7 @@ public class TestIMDBSource {
 		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 		Assert.assertEquals("Check rating",8.0F,film.getRating(),0);
 		Assert.assertEquals("Check the release date","00:00:00 2008-05-02",df.format(film.getDate()));
-		Assert.assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTM0MzgwNTAzNl5BMl5BanBnXkFtZTcwODkyNjg5MQ@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
+		Assert.assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
 
 		Assert.assertEquals("Check the country","USA",film.getCountry().getTitle());
 		Assert.assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());

@@ -23,6 +23,7 @@ fi
 # Launch application.
 CLASSPATH=/usr/share/java/MediaInfoFetcher.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-cli.jar
+CLASSPATH=$CLASSPATH:/usr/share/java/jaudiotagger.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jericho-html.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-logging.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/log4j.jar
