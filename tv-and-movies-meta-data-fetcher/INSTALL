@@ -3,3 +3,4 @@ Requirements
 
 java >= 1.6
 jakarta-commons-cli (1.0)
+jaudiotagger >= 2.0.2
