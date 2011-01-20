@@ -16,6 +16,9 @@
  */
 package org.stanwood.media.util;
 
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -258,6 +263,9 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem reading the file
 	 */
 	public static String readFileContents(InputStream inputStream) throws IOException {
+		if (inputStream==null) {
+			throw new IOException("Input stream is null, probally unable to find file");
+		}
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
 		StringBuilder results = new StringBuilder();
 		String str;
@@ -324,6 +332,43 @@ public class FileHelper {
 		finally {
 			ps.close();
 		}
+	}
+
+	public static void unzip(InputStream is, File destDir) throws IOException {
+		ZipInputStream zis = null;
+        try {
+            zis = new ZipInputStream(is);
+            ZipEntry entry = null;
+            while ((entry = zis.getNextEntry())!=null) {
+                File file = new File(destDir,entry.getName());
+                if (entry.isDirectory()) {
+                    if (!file.mkdir() && file.exists()) {
+                        throw new IOException("Unable to create directory: " + file); //$NON-NLS-1$
+                    }                        
+                }
+                else {  
+                	BufferedOutputStream out = null;
+    				try  {
+    					int count;
+    					byte data[] = new byte[1000];
+    					out = new BufferedOutputStream(new FileOutputStream(new File(destDir,entry.getName())),1000);
+    					System.out.println("Unzipping " + entry.getName() +" with size " + entry.getSize());
+    					while ((count = zis.read(data,0,1000)) != -1)
+    		            {
+    						out.write(data,0,count);
+    		            }
+    					out.flush();
+    				}
+    				finally {		
+    					if (out!=null) {
+    						out.close();
+    					}
+    				}                    
+                }
+            }
+        } finally {
+            if (zis != null) zis.close();
+        }        	
 	}
 
 }

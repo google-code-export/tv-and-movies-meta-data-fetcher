@@ -16,10 +16,22 @@
  */
 package org.stanwood.media.util;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.stanwood.media.source.NotInStoreException;
+import org.stanwood.media.source.SourceException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
@@ -94,5 +106,43 @@ public class XMLParser {
 			return Float.parseFloat(node.getNodeValue());
 		}
 		throw new NotInStoreException();
+	}
+	
+	/**
+	 * Used to convert a XML string to a DOM document
+	 * @param str The string to convert
+	 * @return The DOM Document
+	 * @throws ParserConfigurationException Thrown if their is a parsing problem
+	 * @throws SAXException Thrown if their is a SAX problem
+	 * @throws IOException Thrown if their is a I/O releated problem
+	 */
+	public static Document strToDom(String str) throws ParserConfigurationException, SAXException, IOException {		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		InputSource is = new InputSource( new StringReader( str ) );
+		Document d = builder.parse( is );
+		return d;	
+	}
+	
+	protected Element getFirstChildElement(Node parent,String name) {
+		NodeList children =  parent.getChildNodes();
+		for (int i =0;i<children.getLength();i++) {
+			Node node = children.item(i);
+			if (node instanceof Element && node.getNodeValue().equals(name)) {
+				return (Element) node;
+			}
+		}
+		return null;
+	}
+	
+	protected Element firstChild(Element expressionEl) {
+		NodeList children =  expressionEl.getChildNodes();
+		for (int i =0;i<children.getLength();i++) {
+			Node node = children.item(i);
+			if (node instanceof Element) {
+				return (Element) node;
+			}
+		}
+		return null;
 	}
 }
