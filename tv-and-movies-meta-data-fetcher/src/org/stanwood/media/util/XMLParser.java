@@ -18,6 +18,8 @@ package org.stanwood.media.util;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +35,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
@@ -122,6 +126,25 @@ public class XMLParser {
 		InputSource is = new InputSource( new StringReader( str ) );
 		Document d = builder.parse( is );
 		return d;	
+	}
+	
+	/**
+	 * Used to convert a DOM document to a string
+	 * @param document The DOM document
+	 * @return The XML as a string
+	 * @throws IOException Thrown if their are any problems
+	 */
+	public static String domToStr(Document document) throws IOException {
+		OutputFormat format = new OutputFormat(document);
+        format.setLineWidth(65);
+        format.setIndenting(true);
+        format.setIndent(2);
+        
+        Writer out = new StringWriter();
+        XMLSerializer serializer = new XMLSerializer(out, format);
+        serializer.serialize(document);
+
+        return out.toString();        	
 	}
 	
 	protected Element getFirstChildElement(Node parent,String name) {

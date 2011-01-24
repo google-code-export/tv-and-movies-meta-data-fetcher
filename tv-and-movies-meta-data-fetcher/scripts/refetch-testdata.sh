@@ -21,7 +21,7 @@ TESTDIR="../tests/org/stanwood/media/testdata"
 
 #wget -O $TESTDIR/film-0371746.html "http://www.imdb.com/title/tt0371746"
 
-wget -O  $TESTDIR/tvdb-search.html http://www.thetvdb.com/api/GetSeries.php?seriesname=Iron Man&amp;language=en
+wget -O  "$TESTDIR/tvdb-search-heroes.html" "http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en"
 
 #TEMP_DIR=`mktemp -d`
 #git clone git://github.com/xbmc/xbmc.git $TEMP_DIR

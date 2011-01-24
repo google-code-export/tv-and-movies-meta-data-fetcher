@@ -12,9 +12,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
-import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.xmlstore.SimpleErrorHandler;
+import org.stanwood.media.util.XMLParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,6 +30,8 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class XBMCScraper {
 
+	private final static Log log = LogFactory.getLog(XBMCScraper.class);
+	
 	private final static String ROOT_NODE_NAME = "scraper";
 	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*\\])");
 	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*)\\]");
@@ -41,6 +45,7 @@ public class XBMCScraper {
 
 	/**
 	 * Used to create the class and set the scraper file
+	 * @param addon The addon been used
 	 * @param scraperFile The XML scraper file
 	 */
 	public XBMCScraper(XBMCAddon addon,File scraperFile) {
@@ -51,7 +56,7 @@ public class XBMCScraper {
 	/**
 	 * Used to get the mode contained within the scraper file
 	 * @return The mode of the scraper file
-	 * @throws SourceException Thrown if their is a problem parsing the scraper file
+	 * @throws XBMCException Thrown if their is a problem parsing the scraper file
 	 */
 	public Mode getMode() throws XBMCException  {
 		Element scraperNode;
@@ -75,30 +80,42 @@ public class XBMCScraper {
 	/**
 	 * Used to get the URL which should be used to search
 	 * @param searchTerm The search term to use
+	 * @param year The year to search for the result or empty string for any
 	 * @return The search URL XML result
-	 * @throws SourceException
-	 * @throws XBMCException 
+	 * @throws XBMCException Thrown if their are any problems creating the search URL
 	 */
-	public String getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
+	public Document getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
 		try {
 			Map<Integer,String>params = new HashMap<Integer,String>();
 			params.put(Integer.valueOf(1), searchTerm);
 			params.put(Integer.valueOf(2), year);
 					
-			return executeXBMCScraperFunction("CreateSearchUrl",params);
-		} catch (TransformerException e) {
+			String result = executeXBMCScraperFunction("CreateSearchUrl",params);
+			Document doc = XMLParser.strToDom(result);
+			return doc;
+		} catch (Exception e) {
 			throw new XBMCException("Unable to parse scrapper XML",e);
-		}
+		} 
 	}	
 	
-	public String getGetSearchResults(String rawHtml,String searchTerm) throws  XBMCException {
+	/**
+	 * This function is used to get a XML document of the search results. It takes as input the
+	 * webpage downloaded from the URL obtained with the @{link getCreateSearchUrl(String,String)} call. 
+	 * @param rawHtml The raw search results
+	 * @param searchTerm The term been searched for
+	 * @return The search results as a XML document
+	 * @throws XBMCException Thrown if their are any problems creating the search url
+	 */
+	public Document getGetSearchResults(String rawHtml,String searchTerm) throws  XBMCException {
 		try {
 			Map<Integer,String>params = new HashMap<Integer,String>();
 			params.put(Integer.valueOf(1), rawHtml);
 			params.put(Integer.valueOf(2),searchTerm);
 			
-			return executeXBMCScraperFunction("GetSearchResults",params);
-		} catch (TransformerException e) {
+			String result = executeXBMCScraperFunction("GetSearchResults",params);
+			Document doc = XMLParser.strToDom(result);
+			return doc;
+		} catch (Exception e) {
 			throw new XBMCException("Unable to parse scrapper XML",e);
 		}
 	}
@@ -136,7 +153,10 @@ public class XBMCScraper {
 		if (functionNode==null) {
 			throw new XBMCException("Unable to find scraper function '" + functionName+"'"); 
 		}
-		System.out.println("Executing function : " + functionName);		
+		if (log.isDebugEnabled()) {
+			log.debug("Executing function : " + functionName);
+		}
+			
 		executeChildNodes(functionNode,params);
 		int dest = getDestParam(functionNode);
 		if (dest!=-1) {
@@ -168,63 +188,80 @@ public class XBMCScraper {
 	private void performRegexp(Map<Integer, String> params, Element node) throws XBMCException {
 		String input = getInputAttr(params,node);
 		String orgOutput = getOutputAttr(params,node);
-		StringBuilder newOutput = new StringBuilder();
+		StringBuffer newOutput = new StringBuffer();
 		
 		int dest = getDestParam(node);		
 		XBMCExpression expression = getExpression(node);
-		if (expression!=null) {		
-			System.out.println("perform expr " + expression.getPattern().toString());
+		if (expression!=null) {
+			if (log.isDebugEnabled()) {
+				log.debug("perform expr " + expression.getPattern().toString() +" on [" + input+"]");
+			}
 			Matcher m = expression.getPattern().matcher(input);
 			boolean found = false;
+			
 			while (m.find()) {
 				String output = orgOutput;
 				found = true;
 				
 				for (int j=1;j<=m.groupCount();j++) {
 					String value = m.group(j);
-					if (expression.getClean()) {
-						value = value.replaceAll("\\<.*?\\>", "");
-					}
+					value = processValue(expression,value,j);					
 					output = output.replaceAll("\\\\"+(j), value);										
 				}
-				
 				if (found==false && expression.getClear()) {
 					output = "";
 				}
 				newOutput.append(output);
-			}
+			}				
 		}
 		else {			
 			newOutput.append(applyParams2(orgOutput,params));
+//			newOutput.append(input);
 		}
 					
 		String output = processInfoVars(newOutput.toString());					
 		if (dest!=-1) {
-			System.out.println("Put param " + dest + " - " + output);
+			if (log.isDebugEnabled()) {
+				log.debug("Put param " + dest + " - " + output);
+			}
 			params.put(Integer.valueOf(dest), output);			
 		}
+	}
+	
+	private String processValue(XBMCExpression expression,String value,int group) {
+		if (!expression.getNoClean(group)) {
+			value = value.replaceAll("\\<.*?\\>", "");
+		}
+		
+		if (expression.getTrim(group)) {
+			value = value.trim();
+		}
+		return value;
 	}
 
 	private XBMCExpression getExpression(Element node) {				
 		Element expNode = (Element) getChildNodeByName(node, "expression");
-		if (expNode !=null && expNode.getTextContent().length()>0) {
+		
+		if (expNode !=null) {
 			XBMCExpression expr = new XBMCExpression();
-			String regexp = expNode.getTextContent();			
+			String regexp = "(.+)";
+			if (expNode.getTextContent().length()>0) {
+				regexp = expNode.getTextContent();
+			}									
+						
 			Pattern p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
 			expr.setPattern(p);
+						
+			expr.setNoClean(expNode.getAttribute("noclean"));
 			
-			if (expNode.getAttribute("noclean").equals("1")){
-				expr.setClean(false);
-			}
 			
 			if (expNode.getAttribute("clear").equals("yes")){
 				expr.setClear(true);
 			}
-			
 			return expr;
 		}
 		
-		return null;
+		return null;		
 	}
 
 	private String applyParams(String output, Map<Integer, String> params) {
@@ -239,16 +276,6 @@ public class XBMCScraper {
 			}
 			out = m.replaceAll(value);
 		}
-		
-//		m = PARAM_PATTERN2.matcher(out);
-//		while (m.find()) {
-//			int num = Integer.parseInt(m.group().substring(1));
-//			String value = params.get(num);
-//			if (value==null) {
-//				value = "";
-//			}
-//			out = m.replaceAll(value);
-//		}
 		
 		return out;
 	}
@@ -314,43 +341,7 @@ public class XBMCScraper {
 		String value = node.getAttribute("output");
 		value = applyParams(value,params);
 		return value;
-	}
-	
-//	private String fillParams(String output,Map<Integer,String> params) {			
-//		
-//		int pos = -1;
-//		while ((pos = output.indexOf("\\"))!=-1) {		
-//			int paramNum = getParam(output,pos);
-//			String paramValue = params.get(paramNum);
-//			if (paramValue!=null) {			
-//				StringBuilder newOutput = new StringBuilder();
-//				newOutput.append(output.substring(0,pos));
-//				String paramIndex = String.valueOf(paramNum);					
-//				newOutput.append(paramValue);
-//				newOutput.append(output.substring(pos+1+paramIndex.length()));					
-//				output = newOutput.toString();
-//			}
-//			else {
-//				System.err.println("Did not find param : " + paramNum);
-//			}
-//		}				
-//		
-//		return output;
-//	}
-
-	private Integer getParam(String output, int pos) {
-		StringBuilder param = new StringBuilder();
-		pos++;
-		while (pos < output.length() && Character.isDigit(output.charAt(pos))) {
-			param.append(output.charAt(pos++));
-		}
-		
-		if (param.length()==0) {
-			return null;
-		}
-
-		return Integer.parseInt(param.toString());
-	}
+	}	
 
 	/**
 	 * Used to get the XML scraper file been used

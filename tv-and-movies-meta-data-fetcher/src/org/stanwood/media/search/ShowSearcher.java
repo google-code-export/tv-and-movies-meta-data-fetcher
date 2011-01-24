@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.source.SourceException;
 
 /**
  * This class is used to find a shows name using a series of different searching strategies
@@ -41,7 +42,7 @@ public abstract class ShowSearcher {
 		});
 	}
 
-	protected abstract SearchResult doSearch(String name) throws MalformedURLException, IOException;
+	protected abstract SearchResult doSearch(String name) throws MalformedURLException, IOException, SourceException;
 
 	/**
 	 * Usd to search for a show id
@@ -51,8 +52,9 @@ public abstract class ShowSearcher {
 	 * @return The results of the search, or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a problem construction URL's
 	 * @throws IOException Thrown if their is a IO problem
+	 * @throws SourceException 
 	 */
-	public final SearchResult search(File episodeFile, File rootMediaDir, String renamePattern) throws MalformedURLException, IOException {
+	public final SearchResult search(File episodeFile, File rootMediaDir, String renamePattern) throws MalformedURLException, IOException, SourceException {
 		for (ISearchStrategy strategy :strategies) {
 			String term = strategy.getSearchTerm(episodeFile,rootMediaDir,renamePattern);
 			if (term!=null) {

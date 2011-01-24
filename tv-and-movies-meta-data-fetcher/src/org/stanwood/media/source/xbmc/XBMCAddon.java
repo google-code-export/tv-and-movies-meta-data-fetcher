@@ -24,6 +24,7 @@ public class XBMCAddon extends XMLParser {
 	private File addonDir;
 	private Document doc;
 	private Locale locale;
+	private XBMCScraper scraper;
 
 	/**
 	 * Used to create a instance of the addon class
@@ -128,8 +129,11 @@ public class XBMCAddon extends XMLParser {
 	}
 	
 	public XBMCScraper getScraper() throws XBMCException {
-		String libName = getScraperLibName();
-		return new XBMCScraper(this,new File(addonDir,libName));
+		if (scraper ==null) {
+			String libName = getScraperLibName();			
+			scraper = new XBMCScraper(this,new File(addonDir,libName));; 
+		}
+		return scraper;
 	}
 	
 	/**
