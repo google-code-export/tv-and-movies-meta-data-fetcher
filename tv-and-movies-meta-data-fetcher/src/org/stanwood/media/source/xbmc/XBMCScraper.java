@@ -104,7 +104,7 @@ public class XBMCScraper {
 	 * @param rawHtml The raw search results
 	 * @param searchTerm The term been searched for
 	 * @return The search results as a XML document
-	 * @throws XBMCException Thrown if their are any problems creating the search url
+	 * @throws XBMCException Thrown if their are any problems creating the search urlXML
 	 */
 	public Document getGetSearchResults(String rawHtml,String searchTerm) throws  XBMCException {
 		try {
@@ -118,6 +118,31 @@ public class XBMCScraper {
 		} catch (Exception e) {
 			throw new XBMCException("Unable to parse scrapper XML",e);
 		}
+	}
+	
+	/**
+	 * Used to get the show/film details as a XML document. It takes as input the
+	 * 1 or more webpages downloaded from the URL obtained with the @{link getCreateSearchUrl(String,String)} call.
+	 * @param contents A list of webpage contents
+	 * @return The results as a XML document 
+	 * @throws XBMCException Thrown if their are any problems
+	 */
+	public Document getGetDetails(String... contents) throws  XBMCException {
+		try {
+			Map<Integer,String>params = new HashMap<Integer,String>();
+			if (contents.length>=9) {
+				throw new XBMCException("Not allowed more than 9 shows");
+			}
+			for (int i=0;i<contents.length;i++) {
+				params.put(i, contents[i]);
+			}
+			
+			String result = executeXBMCScraperFunction("GetDetails",params);
+			Document doc = XMLParser.strToDom(result);
+			return doc;
+		} catch (Exception e) {
+			throw new XBMCException("Unable to parse scrapper XML",e);
+		}		
 	}
 	
 	private Document getDocument() throws XBMCException  {
@@ -190,7 +215,8 @@ public class XBMCScraper {
 		String orgOutput = getOutputAttr(params,node);
 		StringBuffer newOutput = new StringBuffer();
 		
-		int dest = getDestParam(node);		
+		int dest = getDestParam(node);	
+		boolean appendToDest = shouldAppendToBuffer(node);
 		XBMCExpression expression = getExpression(node);
 		if (expression!=null) {
 			if (log.isDebugEnabled()) {
@@ -214,15 +240,17 @@ public class XBMCScraper {
 				newOutput.append(output);
 			}				
 		}
-		else {			
-			newOutput.append(applyParams2(orgOutput,params));
-//			newOutput.append(input);
+		else {						
+			newOutput.append(input);
 		}
 					
 		String output = processInfoVars(newOutput.toString());					
 		if (dest!=-1) {
 			if (log.isDebugEnabled()) {
 				log.debug("Put param " + dest + " - " + output);
+			}
+			if (appendToDest) {
+				output = params.get(Integer.valueOf(dest))+output;
 			}
 			params.put(Integer.valueOf(dest), output);			
 		}
@@ -278,23 +306,7 @@ public class XBMCScraper {
 		}
 		
 		return out;
-	}
-
-	private String applyParams2(String output, Map<Integer, String> params) {
-		String out = output;
-		
-		Matcher m = PARAM_PATTERN2.matcher(out);
-		while (m.find()) {
-			int num = Integer.parseInt(m.group().substring(1));
-			String value = params.get(num);
-			if (value==null) {
-				value = "";
-			}
-			out = m.replaceAll(value);
-		}
-		
-		return out;
-	}
+	}	
 	
 	private String processInfoVars(String output) throws XBMCException {
 		Matcher m = INFO_PATTERN1.matcher(output);
@@ -321,11 +333,18 @@ public class XBMCScraper {
 	private int getDestParam(Element node) {
 		int dest = -1;
 		String sDest = node.getAttribute("dest");
-		if (sDest!=null) {						
-			dest = Integer.parseInt(sDest);
-			
+		if (sDest!=null && sDest.length()>0) {
+			if (sDest.endsWith("+")) {
+				sDest = sDest.substring(0,sDest.length()-1);
+			}
+			dest = Integer.parseInt(sDest);					
 		}
 		return dest;
+	}
+	
+	private boolean shouldAppendToBuffer(Element node) {
+		String sDest = node.getAttribute("dest");
+		return (sDest.endsWith("+"));
 	}
 	
 	private String getInputAttr(Map<Integer, String> params, Element node) {
@@ -350,4 +369,6 @@ public class XBMCScraper {
 	public File getFile() {
 		return scraperFile;
 	}
+
+	
 }
