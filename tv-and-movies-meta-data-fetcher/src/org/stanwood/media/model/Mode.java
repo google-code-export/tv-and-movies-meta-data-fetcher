@@ -21,7 +21,17 @@ package org.stanwood.media.model;
  */
 public enum Mode {
 	/** When using FILM mode files are treated as films */
-	FILM,
+	FILM("Moves"),
 	/** When using TV_SHOW mode files are treated as tv show episodes */
-	TV_SHOW;
+	TV_SHOW("TV Shows");
+
+	private String displayName;
+
+	private Mode(String displayName) {
+		this.displayName = displayName;
+	}
+	
+	public String getDisplayName() {
+		return displayName;
+	}
 }

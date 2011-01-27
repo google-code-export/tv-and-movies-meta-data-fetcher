@@ -1,5 +1,6 @@
 package org.stanwood.media.store.xmlstore;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,6 +36,8 @@ import org.stanwood.media.search.ReverseFilePatternMatcher;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.util.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -132,28 +135,35 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile)
-	throws TransformerException,StoreException {
-		((Element) node).setAttribute("rating", String.valueOf(episode.getRating()));
-		((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
-		((Element) node).setAttribute("title", episode.getTitle());
-		((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
-		((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
-		((Element) node).setAttribute("episodeId", String.valueOf(episode.getEpisodeId()));
-
-		Node summaryNode = XPathAPI.selectSingleNode(node, "summary");
-		if (summaryNode != null) {
-			summaryNode.getParentNode().removeChild(summaryNode);
+	throws StoreException {
+		try {
+			((Element) node).setAttribute("rating", String.valueOf(episode.getRating()));
+			((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
+			((Element) node).setAttribute("title", episode.getTitle());
+			((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
+			((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
+			((Element) node).setAttribute("episodeId", String.valueOf(episode.getEpisodeId()));
+	
+			Node summaryNode = XPathAPI.selectSingleNode(node, "summary");
+			if (summaryNode != null) {
+				summaryNode.getParentNode().removeChild(summaryNode);
+			}
+			summaryNode = doc.createElement("summary");
+			node.appendChild(summaryNode);
+			summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
+	
+			writeEpsoideExtraInfo(doc, node, "director", episode.getDirectors());
+			writeEpsoideExtraInfo(doc, node, "writer", episode.getWriters());
+			writeEpsoideExtraInfo(doc, node, "guestStar", episode.getGuestStars());
+	
+			if (episodeFile!=null &&  episodeFile.exists()) {
+				appendFile(doc, node, episodeFile.getAbsolutePath());
+			}
 		}
-		summaryNode = doc.createElement("summary");
-		node.appendChild(summaryNode);
-		summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
-
-		writeEpsoideExtraInfo(doc, node, "director", episode.getDirectors());
-		writeEpsoideExtraInfo(doc, node, "writer", episode.getWriters());
-		writeEpsoideExtraInfo(doc, node, "guestStar", episode.getGuestStars());
-
-		if (episodeFile!=null &&  episodeFile.exists()) {
-			appendFile(doc, node, episodeFile.getAbsolutePath());
+		catch (TransformerException e) {
+			throw new StoreException("Unable to write episode data",e);	
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to write episode data",e);	
 		}
 	}
 
@@ -205,12 +215,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			writeCache(cacheFile, doc);
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		}
 
 	}
 
 	private void appendFilm(Document doc, Node filmsNode, Film film, Set<String> filenames)
-	throws TransformerException, StoreException {
+	throws XMLParserException, StoreException {
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
@@ -496,6 +508,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -522,12 +537,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache: "
+					+ e.getMessage(), e);
 		}
 	}
 
 	private void readCommonEpisodeInfo(Node episodeNode, Episode episode)
-	throws TransformerException, NotInStoreException,
-		MalformedURLException, ParseException {
+	throws XMLParserException, NotInStoreException,MalformedURLException, ParseException {
+		try {
 		String summary = getStringFromXML(episodeNode, "summary/text()");
 		URL url = new URL(getStringFromXML(episodeNode, "@url"));
 		String title = getStringFromXML(episodeNode, "@title");
@@ -538,12 +556,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			episodeSiteId = getLongFromXML(episodeNode, "@showEpisodeNumber");
 		}
-		catch (NotInStoreException e) {
+		catch (XMLParserNotFoundException e) {
 			// Field not found, so try with the old name
 			try {
 				episodeSiteId = getLongFromXML(episodeNode, "@siteId");
 			}
-			catch (NotInStoreException e1) {
+			catch (XMLParserNotFoundException e1) {
 				// Still not found, so throw original error
 				throw e;
 			}
@@ -568,6 +586,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		episode.setWriters(writers);
 		episode.setRating(rating);
 		episode.setDirectors(directors);
+		}
+		catch (XMLParserNotFoundException e) {
+			throw new NotInStoreException();
+		}
+		
 	}
 
 	private Season getSeasonFromCache(int seasonNum, Show show, Document doc)
@@ -583,6 +606,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			return season;
 
 		} catch (TransformerException e) {
+			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
 		}
 	}
@@ -617,7 +642,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			show.setGenres(genres);
 
 			return show;
+		} catch (XMLParserNotFoundException e) {
+			throw new NotInStoreException();
 		} catch (TransformerException e) {
+			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
 		}
 	}

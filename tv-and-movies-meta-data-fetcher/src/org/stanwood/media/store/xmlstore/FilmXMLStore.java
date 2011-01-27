@@ -43,6 +43,8 @@ import org.stanwood.media.model.Link;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.util.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -89,13 +91,15 @@ public class FilmXMLStore extends BaseXMLStore {
 
 			File cacheFile = getCacheFile(filmFile.getParentFile(), FILENAME);
 			writeCache(cacheFile, doc);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		}
 	}
 
 	private void appendFilm(Document doc, Element filmsNode, Film film, Set<String> filenames)
-			throws TransformerException, StoreException {
+			throws XMLParserException, StoreException {
 		Element filmNode = doc.createElement("film");
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
@@ -154,7 +158,7 @@ public class FilmXMLStore extends BaseXMLStore {
 		filmsNode.appendChild(filmNode);
 	}
 
-	private void removeOldCache(Node filmNode, Film film) throws TransformerException {
+	private void removeOldCache(Node filmNode, Film film) {
 		if (filmNode != null) {
 			filmNode.getParentNode().removeChild(filmNode);
 		}
@@ -187,14 +191,14 @@ public class FilmXMLStore extends BaseXMLStore {
 
 				try {
 					description = getStringFromXML(filmNode, "description/text()");
-				} catch (NotInStoreException e) {
+				} catch (XMLParserNotFoundException e) {
 					// No description found, leave as null
 				}
 				float rating = getFloatFromXML(filmNode, "@rating");
 				Date releaseDate = null;
 				try {
 					releaseDate = df.parse(getStringFromXML(filmNode, "@releaseDate"));
-				} catch (NotInStoreException e) {
+				} catch (XMLParserNotFoundException e) {
 					// No date found, leave as null
 				}
 
@@ -237,9 +241,14 @@ public class FilmXMLStore extends BaseXMLStore {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		} catch (ParseException e) {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
-		} catch (NotInStoreException e) {
+		} catch (XMLParserNotFoundException e) {
 			return null;
+		} catch (NotInStoreException e) {
+			return null;			
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		}
+		
 		return null;
 	}
 

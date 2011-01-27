@@ -2,6 +2,7 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -35,8 +36,7 @@ public class XBMCScraper {
 	private final static String ROOT_NODE_NAME = "scraper";
 	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*\\])");
 	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*)\\]");
-	private final static Pattern PARAM_PATTERN = Pattern.compile("\\$\\$\\d+");
-	private final static Pattern PARAM_PATTERN2 = Pattern.compile("\\\\\\d+");
+	private final static Pattern PARAM_PATTERN = Pattern.compile("\\$\\$\\d+");	
 	
 	private File scraperFile;
 	private Document doc;
@@ -54,30 +54,6 @@ public class XBMCScraper {
 	}
 	
 	/**
-	 * Used to get the mode contained within the scraper file
-	 * @return The mode of the scraper file
-	 * @throws XBMCException Thrown if their is a problem parsing the scraper file
-	 */
-	public Mode getMode() throws XBMCException  {
-		Element scraperNode;
-		try {
-			scraperNode = (Element) XPathAPI.selectSingleNode(getDocument(),ROOT_NODE_NAME);
-			String contentType = scraperNode.getAttribute("content");
-			if (contentType.equalsIgnoreCase("tvshows")) {
-				return Mode.TV_SHOW;
-			}
-			else if (contentType.equalsIgnoreCase("films")) {
-				return Mode.FILM;
-			}
-			else {
-				throw new XBMCException ("Unsupported scrapper content type: " + contentType);
-			}
-		} catch (TransformerException e) {
-			throw new XBMCException ("Unable to read content type");
-		}
-	}
-	
-	/**
 	 * Used to get the URL which should be used to search
 	 * @param searchTerm The search term to use
 	 * @param year The year to search for the result or empty string for any
@@ -87,7 +63,7 @@ public class XBMCScraper {
 	public Document getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
 		try {
 			Map<Integer,String>params = new HashMap<Integer,String>();
-			params.put(Integer.valueOf(1), searchTerm);
+			params.put(Integer.valueOf(1),URLEncoder.encode(searchTerm,"UTF-8"));
 			params.put(Integer.valueOf(2), year);
 					
 			String result = executeXBMCScraperFunction("CreateSearchUrl",params);
@@ -110,7 +86,7 @@ public class XBMCScraper {
 		try {
 			Map<Integer,String>params = new HashMap<Integer,String>();
 			params.put(Integer.valueOf(1), rawHtml);
-			params.put(Integer.valueOf(2),searchTerm);
+			params.put(Integer.valueOf(2),URLEncoder.encode(searchTerm,"UTF-8"));
 			
 			String result = executeXBMCScraperFunction("GetSearchResults",params);
 			Document doc = XMLParser.strToDom(result);
@@ -134,7 +110,7 @@ public class XBMCScraper {
 				throw new XBMCException("Not allowed more than 9 shows");
 			}
 			for (int i=0;i<contents.length;i++) {
-				params.put(i, contents[i]);
+				params.put(i+1, contents[i]);
 			}
 			
 			String result = executeXBMCScraperFunction("GetDetails",params);
@@ -217,10 +193,14 @@ public class XBMCScraper {
 		
 		int dest = getDestParam(node);	
 		boolean appendToDest = shouldAppendToBuffer(node);
-		XBMCExpression expression = getExpression(node);
+		XBMCExpression expression = getExpression(node,params);
 		if (expression!=null) {
 			if (log.isDebugEnabled()) {
-				log.debug("perform expr " + expression.getPattern().toString() +" on [" + input+"]");
+				String in = input;
+				if (in.length()>20) {
+					in = in.substring(0,20);
+				}
+				log.debug("perform expr " + expression.getPattern().toString() +" on [" + in+"]");
 			}
 			Matcher m = expression.getPattern().matcher(input);
 			boolean found = false;
@@ -238,6 +218,10 @@ public class XBMCScraper {
 					output = "";
 				}
 				newOutput.append(output);
+				
+				if (!expression.getRepeat()) {
+					break;
+				}
 			}				
 		}
 		else {						
@@ -267,7 +251,7 @@ public class XBMCScraper {
 		return value;
 	}
 
-	private XBMCExpression getExpression(Element node) {				
+	private XBMCExpression getExpression(Element node,Map<Integer, String> params) {				
 		Element expNode = (Element) getChildNodeByName(node, "expression");
 		
 		if (expNode !=null) {
@@ -277,6 +261,8 @@ public class XBMCScraper {
 				regexp = expNode.getTextContent();
 			}									
 						
+			regexp = applyParams(regexp, params);
+			
 			Pattern p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
 			expr.setPattern(p);
 						
@@ -286,6 +272,11 @@ public class XBMCScraper {
 			if (expNode.getAttribute("clear").equals("yes")){
 				expr.setClear(true);
 			}
+			
+			if (expNode.getAttribute("repeat").equals("yes")){
+				expr.setRepeat(true);
+			}
+			
 			return expr;
 		}
 		

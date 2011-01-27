@@ -18,8 +18,10 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is used to store and retrive information about shows
@@ -34,7 +36,7 @@ public class Show {
 	private URL imageURL;
 	private URL showURL;
 	private List<Season> seasons = new ArrayList<Season>();
-	private String sourceId;
+	private String sourceId;	
 
 	/**
 	 * The constructor used to create a instance of the class

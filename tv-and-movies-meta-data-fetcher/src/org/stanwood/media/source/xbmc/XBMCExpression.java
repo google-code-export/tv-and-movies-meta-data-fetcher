@@ -15,6 +15,7 @@ public class XBMCExpression {
 	private boolean clear = true;
 	private List<Integer>clean = new ArrayList<Integer>();
 	private List<Integer>trim = new ArrayList<Integer>();
+	private boolean repeat = false;
 	
 	/**
 	 * Used to get the pattern as a have REGEXP pattern
@@ -49,7 +50,7 @@ public class XBMCExpression {
 	public boolean getTrim(int field) {
 		return trim.contains(field);
 	}
-
+	
 	public boolean getClear() {
 		return clear;
 	}
@@ -76,7 +77,23 @@ public class XBMCExpression {
 				trim.add(num);
 			}			
 		}
-	}	
+	}
+
+	/**
+	 * Used to work out if the expression should match until it does not match
+	 * @return True to keep trying to match
+	 */
+	public boolean getRepeat() {
+		return repeat;
+	}
+
+	/**
+	 * Used to set if the expression should match until it does not match
+	 * @param repeat True to keep matching
+	 */
+	public void setRepeat(boolean repeat) {
+		this.repeat = repeat;
+	}
+
 		
-	
 }

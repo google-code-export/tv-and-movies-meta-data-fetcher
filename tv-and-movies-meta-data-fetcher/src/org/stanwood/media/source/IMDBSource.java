@@ -155,7 +155,7 @@ public class IMDBSource implements ISource {
 		Source source = new Source(html);
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {
-			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("tn15title")) {
+			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("main")) {
 				Element h1 = ParseHelper.findFirstChild(div, HTMLElementName.H1,null);
 				if (h1 != null) {
 					film.setTitle(SearchHelper.decodeHtmlEntities(getContents(h1)));

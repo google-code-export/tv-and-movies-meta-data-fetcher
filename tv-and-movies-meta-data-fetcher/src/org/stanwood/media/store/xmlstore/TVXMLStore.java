@@ -39,6 +39,8 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.util.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -164,12 +166,14 @@ public class TVXMLStore extends BaseXMLStore {
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache: "
+					+ e.getMessage(), e);
 		}
 	}
 
 	private void readCommonEpisodeInfo(Node episodeNode, Episode episode)
-			throws TransformerException, NotInStoreException,
-			MalformedURLException, ParseException {
+			throws XMLParserException, MalformedURLException, ParseException {
 		String summary = getStringFromXML(episodeNode, "summary/text()");
 		URL url = new URL(getStringFromXML(episodeNode, "@url"));
 		String title = getStringFromXML(episodeNode, "@title");
@@ -180,12 +184,12 @@ public class TVXMLStore extends BaseXMLStore {
 		try {
 			episodeSiteId = getLongFromXML(episodeNode, "@showEpisodeNumber");
 		}
-		catch (NotInStoreException e) {
+		catch (XMLParserNotFoundException e) {
 			// Field not found, so try with the old name
 			try {
 				episodeSiteId = getLongFromXML(episodeNode, "@siteId");
 			}
-			catch (NotInStoreException e1) {
+			catch (XMLParserNotFoundException e1) {
 				// Still not found, so throw original error
 				throw e;
 			}
@@ -235,6 +239,9 @@ public class TVXMLStore extends BaseXMLStore {
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse cache: "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -254,6 +261,9 @@ public class TVXMLStore extends BaseXMLStore {
 			return season;
 
 		} catch (TransformerException e) {
+			throw new StoreException("Unable to parse cache: "
+					+ e.getMessage(), e);
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		}
@@ -316,7 +326,8 @@ public class TVXMLStore extends BaseXMLStore {
 			show.setGenres(genres);
 
 			return show;
-		} catch (TransformerException e) {
+		} 
+		catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "
 					+ e.getMessage(), e);
 		}
@@ -469,6 +480,9 @@ public class TVXMLStore extends BaseXMLStore {
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to write cache: "
+					+ e.getMessage());
 		}
 	}
 
@@ -493,11 +507,14 @@ public class TVXMLStore extends BaseXMLStore {
 		} catch (TransformerException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to write cache: "
+					+ e.getMessage());
 		}
 	}
 
 	private void writeEpisodeCommonData(Document doc, Episode episode, Node node)
-			throws TransformerException {
+			throws XMLParserException {
 		((Element) node).setAttribute("rating", String.valueOf(episode
 				.getRating()));
 		((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
@@ -515,6 +532,7 @@ public class TVXMLStore extends BaseXMLStore {
 		writeEpsoideExtraInfo(doc, node, "guestStars", episode
 				.getGuestStars());
 
+		try {
 		Node summaryNode = XPathAPI.selectSingleNode(node, "summary");
 		if (summaryNode != null) {
 			summaryNode.getParentNode().removeChild(summaryNode);
@@ -522,6 +540,10 @@ public class TVXMLStore extends BaseXMLStore {
 		summaryNode = doc.createElement("summary");
 		node.appendChild(summaryNode);
 		summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
+		}
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to write episode data",e);
+		}
 	}
 
 

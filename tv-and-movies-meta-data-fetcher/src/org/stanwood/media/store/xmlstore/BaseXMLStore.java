@@ -36,6 +36,7 @@ import org.stanwood.media.model.Link;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.util.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -84,7 +85,7 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * Used to get a file object which points to a cache file.
 	 * @param cacheDirectory The directory the cache is located in
 	 * @param filename The filename of the cache
-	 * @return The file oject pointing to the cache file.
+	 * @return The file object pointing to the cache file.
 	 */
 	protected File getCacheFile(File cacheDirectory,String filename) {
 		File file = new File(cacheDirectory, filename);
@@ -97,21 +98,26 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * @param node The node in the document that the nodes should be appended to
 	 * @param tagLabel The name of the tag which the nodes will be created under
 	 * @param links The links to add to the document.
-	 * @throws TransformerException Thrown if their is a problem adding the links too the document
+	 * @throws XMLParserException Thrown if their is a problem adding the links too the document
 	 */
 	protected void writeEpsoideExtraInfo(Document doc, Node node, String tagLabel, List<Link> links)
-			throws TransformerException {
-		NodeList nodeList = XPathAPI.selectNodeList(node, tagLabel);
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-		}
-		if (links != null) {
-			for (Link value : links) {
-				Element newNode = doc.createElement(tagLabel);
-				newNode.setAttribute("name", value.getTitle());
-				newNode.setAttribute("url", value.getURL());
-				node.appendChild(newNode);
+			throws XMLParserException {
+		try {
+			NodeList nodeList = XPathAPI.selectNodeList(node, tagLabel);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
 			}
+			if (links != null) {
+				for (Link value : links) {
+					Element newNode = doc.createElement(tagLabel);
+					newNode.setAttribute("name", value.getTitle());
+					newNode.setAttribute("url", value.getURL());
+					node.appendChild(newNode);
+				}
+			}
+		}
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to write episode info",e);
 		}
 	}
 
@@ -132,24 +138,29 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * Used to get a list of filenames under the parent node
 	 * @param parent The node to look under for filenames
 	 * @return The filenames
-	 * @throws TransformerException Thrown if their is a problem parsing the XML
+	 * @throws XMLParserException Thrown if their is a problem parsing the XML
 	 */
-	protected Set<String> getOldFilenames(Node parent) throws TransformerException {
-		Set<String> filenames = new HashSet<String>();
-		NodeList node = XPathAPI.selectNodeList(parent,"file/@location");
-		if (node!=null) {
-			for (int i=0;i<node.getLength();i++) {
-				filenames.add(node.item(i).getNodeValue());
+	protected Set<String> getOldFilenames(Node parent) throws XMLParserException {
+		try {
+			Set<String> filenames = new HashSet<String>();
+			NodeList node = XPathAPI.selectNodeList(parent,"file/@location");
+			if (node!=null) {
+				for (int i=0;i<node.getLength();i++) {
+					filenames.add(node.item(i).getNodeValue());
+				}
 			}
-		}
-		node = XPathAPI.selectNodeList(parent,"file/@name");
-		if (node!=null) {
-			for (int i=0;i<node.getLength();i++) {
-				filenames.add(node.item(i).getNodeValue());
+			node = XPathAPI.selectNodeList(parent,"file/@name");
+			if (node!=null) {
+				for (int i=0;i<node.getLength();i++) {
+					filenames.add(node.item(i).getNodeValue());
+				}
 			}
+	
+			return filenames;
 		}
-
-		return filenames;
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parse old filenames from XML",e);
+		}
 	}
 
 	/**
@@ -172,30 +183,36 @@ public abstract class BaseXMLStore extends XMLParser {
 			fileNode.setAttribute("name", filename);
 			filmNode.appendChild(fileNode);
 		}
+		
 	}
 
 	/**
 	 * Used to read the genres from the XML document
 	 * @param parent The parent node to read them from
 	 * @return A list of genres that were found
-	 * @throws TransformerException Thrown if their is a problem parsing the XML
+	 * @throws XMLParserException Thrown if their is a problem parsing the XML
 	 * @throws NotInStoreException Thrown if the genres are not in the store
 	 */
 	protected List<String> readGenresFromXML(Node parent)
-			throws TransformerException, NotInStoreException {
-		List<String> genres = new ArrayList<String>();
-		NodeList nodeList = XPathAPI.selectNodeList(parent, "genre");
-		if (nodeList != null) {
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Element node = (Element) nodeList.item(i);
-				String genre = node.getAttribute("name");
-				if (genre == null) {
-					throw new NotInStoreException();
+			throws XMLParserException, NotInStoreException {
+		try {
+			List<String> genres = new ArrayList<String>();
+			NodeList nodeList = XPathAPI.selectNodeList(parent, "genre");
+			if (nodeList != null) {
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Element node = (Element) nodeList.item(i);
+					String genre = node.getAttribute("name");
+					if (genre == null) {
+						throw new NotInStoreException();
+					}
+					genres.add(genre);
 				}
-				genres.add(genre);
 			}
+			return genres;
 		}
-		return genres;
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parse genres from XML",e);
+		}		
 	}
 
 	/**
@@ -203,21 +220,26 @@ public abstract class BaseXMLStore extends XMLParser {
 	 * @param node The node to read the links from
 	 * @param tagLabel The parent tag of the links
 	 * @return A list of links
-	 * @throws TransformerException Thrown if their is a problem parsing the XML
+	 * @throws XMLParserException Thrown if their is a problem parsing the XML
 	 */
 	protected List<Link> getLinks(Node node, String tagLabel)
-			throws TransformerException {
-		List<Link> result = new ArrayList<Link>();
-		NodeList list = XPathAPI.selectNodeList(node, tagLabel);
-		for (int i = 0; i < list.getLength(); i++) {
-			Element element = (Element) list.item(i);
-			String url = element.getAttribute("url");
-			if (url==null) {
-				// The old name for the attribute
-				url = element.getAttribute("link");
+			throws XMLParserException {
+		try {
+			List<Link> result = new ArrayList<Link>();
+			NodeList list = XPathAPI.selectNodeList(node, tagLabel);
+			for (int i = 0; i < list.getLength(); i++) {
+				Element element = (Element) list.item(i);
+				String url = element.getAttribute("url");
+				if (url==null) {
+					// The old name for the attribute
+					url = element.getAttribute("link");
+				}
+				result.add(new Link(url,element.getAttribute("name")));
 			}
-			result.add(new Link(url,element.getAttribute("name")));
+			return result;
 		}
-		return result;
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parse links from XML",e);
+		}
 	}
 }

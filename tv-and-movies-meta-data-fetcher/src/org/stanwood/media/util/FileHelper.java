@@ -334,6 +334,12 @@ public class FileHelper {
 		}
 	}
 
+	/**
+	 * Used to unzip a file to a directory
+	 * @param is The input stream containing the file
+	 * @param destDir The directory to unzip to
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static void unzip(InputStream is, File destDir) throws IOException {
 		ZipInputStream zis = null;
         try {

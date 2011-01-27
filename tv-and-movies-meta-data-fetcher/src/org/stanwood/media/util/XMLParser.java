@@ -16,24 +16,19 @@
  */
 package org.stanwood.media.util;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.stanwood.media.source.NotInStoreException;
-import org.stanwood.media.source.SourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -49,16 +44,21 @@ public class XMLParser {
 	 * @param parent The parent node it's the path is to be used from
 	 * @param path The xpath location of the integer
 	 * @return The integer value
-	 * @throws TransformerException Thrown if their is a XML problem
-	 * @throws NotInStoreException Thrown if the value can't be read
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 * @throws XMLParserNotFoundException Thrown if the value can't be read
 	 */
 	protected Integer getIntegerFromXML(Node parent, String path)
-			throws TransformerException, NotInStoreException {
-		Node node = XPathAPI.selectSingleNode(parent, path);
-		if (node != null) {
-			return Integer.parseInt(node.getNodeValue());
+			throws XMLParserException {
+		try {
+			Node node = XPathAPI.selectSingleNode(parent, path);
+			if (node != null) {
+				return Integer.parseInt(node.getNodeValue());
+			}
 		}
-		throw new NotInStoreException();
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parser XML",e);
+		}
+		throw new XMLParserNotFoundException();
 	}
 
 	/**
@@ -66,16 +66,21 @@ public class XMLParser {
 	 * @param parent The parent node it's the path is to be used from
 	 * @param path The xpath location of the long
 	 * @return The long value
-	 * @throws TransformerException Thrown if their is a XML problem
-	 * @throws NotInStoreException Thrown if the value can't be read
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 * @throws XMLParserNotFoundException Thrown if the value can't be read
 	 */
 	protected Long getLongFromXML(Node parent, String path)
-			throws TransformerException, NotInStoreException {
-		Node node = XPathAPI.selectSingleNode(parent, path);
-		if (node != null) {
-			return Long.parseLong(node.getNodeValue());
+			throws XMLParserException {
+		try {
+			Node node = XPathAPI.selectSingleNode(parent, path);
+			if (node != null) {
+				return Long.parseLong(node.getNodeValue());
+			}
 		}
-		throw new NotInStoreException();
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parser XML",e);
+		}
+		throw new XMLParserNotFoundException();
 	}
 
 	/**
@@ -83,16 +88,21 @@ public class XMLParser {
 	 * @param parent The parent node it's the path is to be used from
 	 * @param path The xpath location of the string
 	 * @return The string value
-	 * @throws TransformerException Thrown if their is a XML problem
-	 * @throws NotInStoreException Thrown if the value can't be read
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 * @throws XMLParserNotFoundException Thrown if the value can't be read
 	 */
 	protected String getStringFromXML(Node parent, String path)
-			throws TransformerException, NotInStoreException {
-		Node node = XPathAPI.selectSingleNode(parent, path);
-		if (node != null) {
-			return node.getNodeValue();
+			throws XMLParserException {
+		try {
+			Node node = XPathAPI.selectSingleNode(parent, path);
+			if (node != null) {
+				return node.getNodeValue();
+			}
 		}
-		throw new NotInStoreException();
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parser XML",e);
+		}
+		throw new XMLParserNotFoundException();
 	}
 
 	/**
@@ -100,51 +110,64 @@ public class XMLParser {
 	 * @param parent The parent node it's the path is to be used from
 	 * @param path The xpath location of the float
 	 * @return The float value
-	 * @throws TransformerException Thrown if their is a XML problem
-	 * @throws NotInStoreException Thrown if the value can't be read
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 * @throws XMLParserNotFoundException Thrown if the value can't be read
 	 */
 	protected float getFloatFromXML(Node parent, String path)
-			throws TransformerException, NotInStoreException {
-		Node node = XPathAPI.selectSingleNode(parent, path);
-		if (node != null) {
-			return Float.parseFloat(node.getNodeValue());
+			throws XMLParserException {
+		try {
+			Node node = XPathAPI.selectSingleNode(parent, path);
+			if (node != null) {
+				return Float.parseFloat(node.getNodeValue());
+			}
 		}
-		throw new NotInStoreException();
+		catch (TransformerException e) {
+			throw new XMLParserException("Unable to parser XML",e);
+		}
+		throw new XMLParserNotFoundException();
 	}
 	
 	/**
 	 * Used to convert a XML string to a DOM document
 	 * @param str The string to convert
 	 * @return The DOM Document
-	 * @throws ParserConfigurationException Thrown if their is a parsing problem
-	 * @throws SAXException Thrown if their is a SAX problem
-	 * @throws IOException Thrown if their is a I/O releated problem
+	 * @throws XMLParserException Thrown if their is a parsing problem
 	 */
-	public static Document strToDom(String str) throws ParserConfigurationException, SAXException, IOException {		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		InputSource is = new InputSource( new StringReader( str ) );
-		Document d = builder.parse( is );
-		return d;	
+	public static Document strToDom(String str) throws XMLParserException {
+		try { 
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			InputSource is = new InputSource( new StringReader( str ) );
+			Document d = builder.parse( is );
+			return d;
+		}
+		catch (Exception e) {
+			throw new XMLParserException("Unable to convert string to XML DOM",e);
+		}
 	}
 	
 	/**
 	 * Used to convert a DOM document to a string
 	 * @param document The DOM document
 	 * @return The XML as a string
-	 * @throws IOException Thrown if their are any problems
+	 * @throws XMLParserException Thrown if their is a parsing problem
 	 */
-	public static String domToStr(Document document) throws IOException {
-		OutputFormat format = new OutputFormat(document);
-        format.setLineWidth(65);
-        format.setIndenting(true);
-        format.setIndent(2);
-        
-        Writer out = new StringWriter();
-        XMLSerializer serializer = new XMLSerializer(out, format);
-        serializer.serialize(document);
-
-        return out.toString();        	
+	public static String domToStr(Document document) throws XMLParserException {
+		try {
+			OutputFormat format = new OutputFormat(document);
+	        format.setLineWidth(65);
+	        format.setIndenting(true);
+	        format.setIndent(2);
+	        
+	        Writer out = new StringWriter();
+	        XMLSerializer serializer = new XMLSerializer(out, format);
+	        serializer.serialize(document);
+	
+	        return out.toString();
+		}
+		catch (Exception e) {
+			throw new XMLParserException("Unable to convert XML DOM to string",e);
+		}
 	}
 	
 	protected Element getFirstChildElement(Node parent,String name) {
@@ -167,5 +190,15 @@ public class XMLParser {
 			}
 		}
 		return null;
+	}
+	
+	protected IterableNodeList selectNodeList(Node contextNode,String path) throws XMLParserException {
+		try {
+			NodeList list = XPathAPI.selectNodeList(contextNode, path);					
+			return new IterableNodeList(list);
+		}
+		catch (Exception e) {
+			throw new XMLParserException("Unable to parser path " + path + " from XML DOM");
+		}
 	}
 }
