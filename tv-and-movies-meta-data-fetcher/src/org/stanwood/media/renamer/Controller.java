@@ -199,7 +199,6 @@ public class Controller {
 	 *
 	 * @param rootMediaDir The root media directory
 	 * @param episodeFile The file the episode is stored in
-	 * @param sourceId The ID of the source too use
 	 * @param searchResult The search results from looking for a show
 	 * @param refresh If true, then the stores are ignored.
 	 * @return The show, or null if it can't be found.
@@ -279,7 +278,7 @@ public class Controller {
 			URL url = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {					
+				if (source.getSourceId().equals(sourceId)) {
 					film = source.getFilm(searchResult.getId(),url);
 					if (film != null) {
 						for (IStore store : stores) {

@@ -176,12 +176,12 @@ public class IMDBSource implements ISource {
 				}
 			}
 			else if (div.getAttributeValue("id")!=null && div.getAttributeValue("id").equals("tn15rating")) {
-				Element element = ParseHelper.findFirstChild(div, HTMLElementName.B, true,new IFilterElement() {							
+				Element element = ParseHelper.findFirstChild(div, HTMLElementName.B, true,new IFilterElement() {
 					@Override
 					public boolean accept(Element element) {
 						return true;
 					}
-				});						
+				});
 				String ratingStr = element.getTextExtractor().toString();
 				try {
 					float rating = Float.parseFloat(ratingStr.substring(0, ratingStr.indexOf('/')));
@@ -211,7 +211,7 @@ public class IMDBSource implements ISource {
 							film.addGenre(link.getTitle());
 						}
 					} else if (getContents(h5).equals("Certification:")) {
-						Element element = ParseHelper.findFirstChild(div, HTMLElementName.DIV, new IFilterElement() {							
+						Element element = ParseHelper.findFirstChild(div, HTMLElementName.DIV, new IFilterElement() {
 							@Override
 							public boolean accept(Element element) {
 								return (element.getAttributeValue("class")!=null && element.getAttributeValue("class").equals("info-content"));
@@ -227,8 +227,8 @@ public class IMDBSource implements ISource {
 							certs.add(cert);
 						}
 						film.setCertifications(certs);
-					} else if (getContents(h5).equals("Release Date:")) {						
-						String str = getInfoContent(div);												
+					} else if (getContents(h5).equals("Release Date:")) {
+						String str = getInfoContent(div);
 						if (str != null) {
 							int pos = str.lastIndexOf(' ');
 							if (pos != -1) {
@@ -265,18 +265,18 @@ public class IMDBSource implements ISource {
 	@SuppressWarnings("unchecked")
 	private String getInfoContent(Element div) {
 		String str = null;
-		Element infoContentDiv = ParseHelper.findFirstChild(div,HTMLElementName.DIV,false,new IFilterElement() {							
+		Element infoContentDiv = ParseHelper.findFirstChild(div,HTMLElementName.DIV,false,new IFilterElement() {
 			@Override
 			public boolean accept(Element element) {
-				return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("info-content"));								
+				return (element.getAttributeValue("class") != null && element.getAttributeValue("class").equals("info-content"));
 			}
-		});						
+		});
 		if (infoContentDiv!=null) {
 			Iterator it = infoContentDiv.getNodeIterator();
 			while (it.hasNext()) {
 				Object o = it.next();
 				if (o.getClass().equals(Segment.class)) {
-					str = SearchHelper.decodeHtmlEntities(((Segment)o).getTextExtractor().toString().trim());									
+					str = SearchHelper.decodeHtmlEntities(((Segment)o).getTextExtractor().toString().trim());
 					break;
 				}
 			}
