@@ -54,7 +54,7 @@ public class Episode implements IVideo {
 	 * @param season The season it belongs too
 	 */
 	public Episode(int episodeNumber, Season season) {
-		this.episodeNumber = episodeNumber;
+		setEpisodeNumber(episodeNumber);
 		this.season = season;
 	}
 

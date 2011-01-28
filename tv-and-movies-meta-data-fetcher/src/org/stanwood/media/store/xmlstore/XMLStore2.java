@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,7 +58,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private static final String VERSION = "2.0";
 	//TODO add correct public DTD location
 	private String DTD_LOCATION = null;
-
+	private Pattern FILE_SEARCH_PATTERN1 = Pattern.compile("(.*)[Ss]\\d+[Ee]\\d+.*");
 
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
 
@@ -798,6 +800,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 		if (result==null) {
 			// Search for the show name within the file name
+			Matcher m = FILE_SEARCH_PATTERN1.matcher(episodeFile.getName());
+			if (m.matches()) {
+				String name = m.group(1);
+				showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
+				if (showNodes!=null && showNodes.getLength()>0) {
+					Element showEl = (Element)showNodes.item(0);
+					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
+				}
+			}
 		}
 
 		return result;

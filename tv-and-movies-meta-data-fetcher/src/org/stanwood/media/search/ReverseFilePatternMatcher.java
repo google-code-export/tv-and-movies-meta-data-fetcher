@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class ReverseFilePatternMatcher {
 
-	private Map<String,String> values;
+	private Map<String,String> values = new HashMap<String,String>();
 
 	/**
 	 * Parse the file path using the rename pattern and find the tokens in the
