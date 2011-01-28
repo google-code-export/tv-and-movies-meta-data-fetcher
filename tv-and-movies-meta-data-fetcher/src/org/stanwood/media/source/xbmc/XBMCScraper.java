@@ -34,8 +34,8 @@ public class XBMCScraper {
 	private final static Log log = LogFactory.getLog(XBMCScraper.class);
 	
 	private final static String ROOT_NODE_NAME = "scraper";
-	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*\\])");
-	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*)\\]");
+	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*?\\])");
+	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*?)\\]");
 	private final static Pattern PARAM_PATTERN = Pattern.compile("\\$\\$\\d+");	
 	
 	private File scraperFile;

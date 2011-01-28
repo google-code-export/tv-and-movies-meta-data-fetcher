@@ -208,7 +208,7 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File rootMediaDir,File episodeFile, String sourceId, SearchResult searchResult, boolean refresh) throws MalformedURLException,
+	public Show getShow(File rootMediaDir,File episodeFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 
 		Show show = null;
@@ -226,6 +226,7 @@ public class Controller {
 		if (show == null) {
 			log.info("Reading show from sources");
 			URL showUrl = new URL(searchResult.getUrl());
+			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
 					show = source.getShow(searchResult.getId(),showUrl);
@@ -251,8 +252,7 @@ public class Controller {
 	 *
 	 * @param rootMediaDir The root media directory
 	 * @param filmFile The file the film is stored in
-	 * @param sourceId The ID of the source too use
-	 * @param filmId The id of the film
+	 * @param searchResult The resulting film from a search
 	 * @param refresh If true, then the stores are ignored.
 	 * @return The film, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
@@ -260,25 +260,27 @@ public class Controller {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Film getFilm(File rootMediaDir,File filmFile, String sourceId, String filmId, boolean refresh) throws MalformedURLException,
+	public Film getFilm(File rootMediaDir,File filmFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		Film film = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				film = store.getFilm(rootMediaDir,filmFile, filmId);
+				film = store.getFilm(rootMediaDir,filmFile, searchResult.getId());
 				if (film != null) {
 					break;
 				}
 			}
 		} else {
-			film = stores.get(0).getFilm(rootMediaDir,filmFile, filmId);
+			film = stores.get(0).getFilm(rootMediaDir,filmFile, searchResult.getId());
 		}
 
 		if (film == null) {
 			log.info("Reading film from sources");
+			URL url = new URL(searchResult.getUrl());
+			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
-					film = source.getFilm(filmId);
+				if (source.getSourceId().equals(sourceId)) {					
+					film = source.getFilm(searchResult.getId(),url);
 					if (film != null) {
 						for (IStore store : stores) {
 							store.cacheFilm(rootMediaDir,filmFile, film);

@@ -599,10 +599,11 @@ public class TVCOMSource implements ISource {
 	 * Films are not supported, so this will always return null.
 	 *
 	 * @param filmId The id of the film
+	 * @param url The URL to use when looking up film details
 	 * @return Always returns null
 	 */
 	@Override
-	public Film getFilm(String filmId) {
+	public Film getFilm(String filmId,URL url) {
 		return null;
 	}
 }

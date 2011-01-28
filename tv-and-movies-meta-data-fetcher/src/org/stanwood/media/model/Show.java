@@ -18,15 +18,14 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This is used to store and retrive information about shows
  */
-public class Show {
+public class Show implements IVideoGenre {
 	private final String showId;
 
 	private String longSummary;
@@ -36,20 +35,20 @@ public class Show {
 	private URL imageURL;
 	private URL showURL;
 	private List<Season> seasons = new ArrayList<Season>();
-	private String sourceId;	
+	private String sourceId;
 
 	/**
 	 * The constructor used to create a instance of the class
-	 * 	
+	 *
 	 * @param showId The id of the show
 	 */
 	public Show(String showId) {
-		this.showId = showId;		
+		this.showId = showId;
 	}
 
 	/**
 	 * Used to set the long summary of the show
-	 * 
+	 *
 	 * @param longSummary The long summary of the show
 	 */
 	public void setLongSummary(String longSummary) {
@@ -58,7 +57,7 @@ public class Show {
 
 	/**
 	 * Used to set the show summary of the show
-	 * 
+	 *
 	 * @param shortSummary The short summary iof the show
 	 */
 	public void setShortSummary(String shortSummary) {
@@ -67,16 +66,17 @@ public class Show {
 
 	/**
 	 * Used to set the genres that the show belongs too
-	 * 
+	 *
 	 * @param genres The genres that the show belongs too
 	 */
+	@Override
 	public void setGenres(List<String> genres) {
 		this.genres = genres;
 	}
 
 	/**
 	 * Used to set the name/title of the show
-	 * 
+	 *
 	 * @param name The name of the show
 	 */
 	public void setName(String name) {
@@ -91,7 +91,7 @@ public class Show {
 		this.showURL = showURL;
 	}
 
-	
+
 	/**
 	 * Used to get a long summary of the show
 	 * @return The long summary of the show
@@ -112,6 +112,7 @@ public class Show {
 	 * Used to get the genres that the show belongs too
 	 * @return The genres the show belongs too
 	 */
+	@Override
 	public List<String> getGenres() {
 		return genres;
 	}
@@ -132,8 +133,8 @@ public class Show {
 	public String getShowId() {
 		return showId;
 	}
-	
-	/** 
+
+	/**
 	 * Used to get a URL which points too a image of the show
 	 * @return A URL which points too a image of the show
 	 */
@@ -208,5 +209,15 @@ public class Show {
 	 */
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
+	}
+
+	/**
+	 * Used to add a genre to the show
+	 * @param genre The genre
+	 */
+	@Override
+	public void addGenre(String genre) {
+		genres.add(genre);
+		Collections.sort(genres);
 	}
 }

@@ -130,14 +130,16 @@ public class IMDBSource implements ISource {
 	 * This will get a film from the source. If the film can't be found, then it will return null.
 	 *
 	 * @param filmId The id of the film
+	 * @param url The URL to use when looking up film details
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(String filmId) throws SourceException, MalformedURLException, IOException {
-		URL url = new URL(getFilmURL(filmId));
+	public Film getFilm(String filmId,URL url) throws SourceException, MalformedURLException, IOException {
+		//TODO is this needed? we now have a url in the params
+		url = new URL(getFilmURL(filmId));
 		Film film = new Film(filmId);
 		film.setFilmUrl(url);
 		film.setSourceId(SOURCE_ID);

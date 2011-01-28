@@ -72,7 +72,7 @@ public class TestTagChimpSource {
 	@Test
 	public void testIronManFilm() throws Exception {
 		TagChimpSource source = getSource(FILM_ID_IRON_MAN);
-		Film film = source.getFilm( FILM_ID_IRON_MAN);
+		Film film = source.getFilm( FILM_ID_IRON_MAN,null);
 		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
 		Assert.assertEquals("Check summary","You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony",film.getSummary());

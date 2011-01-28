@@ -2,6 +2,8 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,8 +34,8 @@ public class XBMCAddon extends XMLParser {
 	private Document doc;
 	private Locale locale;
 	private XBMCScraper scraper;
-	private Mode mode;
 	private String libScraperName;
+	private List<Mode> modes;
 
 	/**
 	 * Used to create a instance of the addon class
@@ -113,21 +115,18 @@ public class XBMCAddon extends XMLParser {
 		} 
 	}
 	
-	/**
-	 * Used to get the mode contained within the scraper file
-	 * @return The mode of the scraper file
-	 * @throws XBMCException Thrown if their is a problem parsing the scraper file
-	 */
-	public Mode getMode() throws XBMCException  {
-		if (mode==null) {
+	private List<Mode> getModes() throws XBMCException  {
+		if (modes==null) {
+			modes = new ArrayList<Mode>();
 			try {
 				for (int i=0;i<LIB_TYPES.length;i++) {
 					String type = LIB_TYPES[i];
 					try {		
 						System.out.println("Checking type: " + type);
 						getStringFromXML(getDocument(), "addon/extension[@point='"+type+"']/@library");
-						mode = MODE_TYPES[i];
-						break;
+						
+						// If we get here , then mode was found
+						modes.add(MODE_TYPES[i]);												
 					} catch (XMLParserNotFoundException e) {
 						// Do nothing
 					}
@@ -135,12 +134,19 @@ public class XBMCAddon extends XMLParser {
 			} 	
 			catch (XMLParserException e1) {
 				throw new XBMCException("Unable to find addon mode",e1);	
-			}
-			if (mode==null) {
-				throw new XBMCException("Unable to find the scrapper mode");
-			}
+			}			
 		}
-		return mode;
+		return modes;
+	}
+	
+	/**
+	 * Used o find out if the scraper supports a given mode
+	 * @param mode The mode to check
+	 * @return True if the mode is supported.
+	 * @throws XBMCException Thrown if their is any problems while checking
+	 */
+	public boolean supportsMode(Mode mode) throws XBMCException {
+		return getModes().contains(mode);
 	}
 	
 	private String getScraperLibName() throws XBMCException {

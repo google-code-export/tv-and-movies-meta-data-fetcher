@@ -170,7 +170,7 @@ public class Renamer {
 
 		String oldFileName = file.getName();
 
-		Film film = Controller.getInstance().getFilm(rootMediaDir, file,sourceId,id,refresh);
+		Film film = Controller.getInstance().getFilm(rootMediaDir, file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
 			return;
@@ -216,7 +216,7 @@ public class Renamer {
 			return;
 		}
 
-		Show show =  Controller.getInstance().getShow(rootMediaDir,file,sourceId,result,refresh);
+		Show show =  Controller.getInstance().getShow(rootMediaDir,file,result,refresh);
 		if (show == null) {
 			fatal("Unable to find show details");
 		}

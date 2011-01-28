@@ -108,13 +108,14 @@ public class HybridFilmSource implements ISource {
 	 * This will get a film from the source. If the film can't be found, then it will return null.
 	 *
 	 * @param filmId The id of the film
+	 * @param url The URL to use when looking up film details
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(String filmId) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(String filmId,URL url) throws SourceException, MalformedURLException, IOException {
 		Film tagChimpFilm = null;
 		Film imdbFilm = null;
 		StringTokenizer tok = new StringTokenizer(filmId,"|");
@@ -122,10 +123,10 @@ public class HybridFilmSource implements ISource {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
 			if (key.equals(IMDBSource.SOURCE_ID)) {
-				imdbFilm = imdbSource.getFilm(value);
+				imdbFilm = imdbSource.getFilm(value,url);
 			}
 			else if (key.equals(TagChimpSource.SOURCE_ID)) {
-				tagChimpFilm = tagChimpSource.getFilm(value);
+				tagChimpFilm = tagChimpSource.getFilm(value,url);
 			}
 		}
 

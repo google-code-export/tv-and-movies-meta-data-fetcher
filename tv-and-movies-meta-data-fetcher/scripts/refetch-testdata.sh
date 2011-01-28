@@ -24,7 +24,7 @@ TESTDIR="../tests/org/stanwood/media/testdata"
 wget -O "$TESTDIR/tvdb-search-heroes.html" "http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en"
 wget -O "$TESTDIR/tvdb-series-79501.zip" "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"
 wget -O "$TESTDIR/themoviedb-search-iron-man.html" "http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man"
-#wget -O "$TESTDIR/themoviedb-film-79501.zip" "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"
+wget -O "$TESTDIR/themoviedb-film-1726.html" "http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"
 
 #TEMP_DIR=`mktemp -d`
 #git clone git://github.com/xbmc/xbmc.git $TEMP_DIR

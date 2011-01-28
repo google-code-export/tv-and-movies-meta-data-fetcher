@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * This class is used to hold film related information
  */
-public class Film implements IVideo {
+public class Film implements IVideo,IVideoGenre {
 
 	private String id;
 	private String sourceId;
@@ -46,13 +46,16 @@ public class Film implements IVideo {
 	private String description;
 	private String preferredGenre;
 	private Link country;
-	
-	/** 
-	 * This is useful if the film belongs to more than one genres. It will returned the 
+
+	/**
+	 * This is useful if the film belongs to more than one genres. It will returned the
 	 * genre that is preferred.
 	 * @return The preferred genre or null if not or flagged as preferred.
 	 */
 	public String getPreferredGenre() {
+		if (preferredGenre==null && genres.size()>0) {
+			return genres.get(0);
+		}
 		return preferredGenre;
 	}
 
@@ -71,7 +74,7 @@ public class Film implements IVideo {
 	public Film(String id) {
 		setId(id);
 	}
-	
+
 	/**
 	 * Used to get the id of the film used by the source that it was read from.
 	 * @return The id of the film
@@ -79,7 +82,7 @@ public class Film implements IVideo {
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Used to set the id of the film used by the source that it was read from.
 	 * @param id The id of the film
@@ -87,8 +90,8 @@ public class Film implements IVideo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
+
+
 	/**
 	 * Used to get the source id of the source that was used to retrieve the film information.
 	 * @return The source id
@@ -109,22 +112,25 @@ public class Film implements IVideo {
 	 * Used to get the film title.
 	 * @return The film title.
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
-	
+
 	/**
 	 * Used to set the title of the film
 	 * @param title The title of the film
 	 */
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
-	}	
+	}
 
 	/**
 	 * Used to get a list of guest stars with links to web sites about them
 	 * @return A list of guest stars
 	 */
+	@Override
 	public List<Link> getGuestStars() {
 		return guestStars;
 	}
@@ -133,14 +139,16 @@ public class Film implements IVideo {
 	 * Used to set a list of guest stars in the film.
 	 * @param guestStars The guest stars
 	 */
+	@Override
 	public void setGuestStars(List<Link> guestStars) {
 		this.guestStars = guestStars;
 	}
 
-	/** 
+	/**
 	 * Used to get a list of directors for the film
 	 * @return A list of directors for the film
 	 */
+	@Override
 	public List<Link> getDirectors() {
 		return directors;
 	}
@@ -149,6 +157,7 @@ public class Film implements IVideo {
 	 * Used to set a list of directors for the episode
 	 * @param directors The list of directors for the episode
 	 */
+	@Override
 	public void setDirectors(List<Link> directors) {
 		this.directors = directors;
 	}
@@ -157,6 +166,7 @@ public class Film implements IVideo {
 	 * Used to get a list of writers for the film
 	 * @return Get a list of writers for the film
 	 */
+	@Override
 	public List<Link> getWriters() {
 		return writers;
 	}
@@ -165,6 +175,7 @@ public class Film implements IVideo {
 	 * Used to set a list of writers for the film
 	 * @param writers The list of writers
 	 */
+	@Override
 	public void setWriters(List<Link> writers) {
 		this.writers = writers;
 	}
@@ -173,18 +184,20 @@ public class Film implements IVideo {
 	 * Used to get a summary of the film
 	 * @return The summary of the film
 	 */
+	@Override
 	public String getSummary() {
 		return summary;
 	}
 
 	/**
-	 * Used to set the films summary 
+	 * Used to set the films summary
 	 * @param summary The films summary
 	 */
+	@Override
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
-	
+
 	/**
 	 * Used to set the URL used to get a summary of the film
 	 * @param url The summary URL
@@ -192,7 +205,7 @@ public class Film implements IVideo {
 	public void setFilmUrl(URL url) {
 		filmUrl = url;
 	}
-	
+
 	/**
 	 * Used to get the URL used to get a summary of the film
 	 * @return The summary URL
@@ -200,12 +213,13 @@ public class Film implements IVideo {
 	public URL getFilmUrl() {
 		return filmUrl;
 	}
-	
+
 	/**
 	 * Used to set the genres that the film belongs too
-	 * 
+	 *
 	 * @param genres The genres that the film belongs too
 	 */
+	@Override
 	public void setGenres(List<String> genres) {
 		this.genres = genres;
 	}
@@ -214,16 +228,19 @@ public class Film implements IVideo {
 	 * Used to get the genres that the film belongs too
 	 * @return The genres the film belongs too
 	 */
+	@Override
 	public List<String> getGenres() {
 		return genres;
 	}
-	
+
 	/**
 	 * Used to add a genre to the film
 	 * @param genre the genre to add
 	 */
+	@Override
 	public void addGenre(String genre) {
 		genres.add(genre);
+		Collections.sort(genres);
 	}
 
 	/**
@@ -312,18 +329,18 @@ public class Film implements IVideo {
 			if (chap.getNumber() == chapter.getNumber()) {
 				it.remove();
 			}
-		}		
+		}
 		chapters.add(chapter);
-		
-		
+
+
 		Collections.sort(chapters,new Comparator<Chapter>() {
 			@Override
 			public int compare(Chapter o1, Chapter o2) {
-				return Integer.valueOf(o1.getNumber()).compareTo(o2.getNumber());				
-			}			
+				return Integer.valueOf(o1.getNumber()).compareTo(o2.getNumber());
+			}
 		});
 	}
-	
+
 	/**
 	 * Used to get the chapters of the film
 	 * @return The chapters of the film
@@ -340,14 +357,14 @@ public class Film implements IVideo {
 		this.chapters = chapters;
 	}
 
-	/** 
+	/**
 	 * Used to set the films long description
 	 * @param description The films long description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}	
-	
+	}
+
 	/**
 	 * Used to get the films long description
 	 * @return the films long description
@@ -372,6 +389,6 @@ public class Film implements IVideo {
 	public void setCountry(Link country) {
 		this.country = country;
 	}
-	
-	
+
+
 }
