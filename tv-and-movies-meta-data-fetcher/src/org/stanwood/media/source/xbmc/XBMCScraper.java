@@ -1,6 +1,8 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -111,6 +114,10 @@ public class XBMCScraper extends XBMCExtension {
 				resolveChainNodes(doc,(Element) node);
 			}
 
+			for (Node node : selectNodeList(doc, "details/url")) {
+				resultUrlNodes(doc,(Element) node);
+			}
+
 			return doc;
 		} catch (Exception e) {
 			throw new XBMCException("Unable to parse scrapper XML",e);
@@ -131,6 +138,18 @@ public class XBMCScraper extends XBMCExtension {
 		for (Node n : selectNodeList(results, "details/*")) {
 			Node newNode = doc.importNode(n,true);
 			parent.appendChild(newNode);
+		}
+	}
+
+	private void resultUrlNodes(Document doc,Element node) throws DOMException, XMLParserException {
+		String functionName = node.getAttribute("function");
+		try {
+			URL url = new URL(node.getTextContent());
+		} catch (MalformedURLException e) {
+			throw new XMLParserException("Invalid URL '"+node.getTextContent()+"'");
+		}
+		if (!functionName.equals("")) {
+
 		}
 	}
 
