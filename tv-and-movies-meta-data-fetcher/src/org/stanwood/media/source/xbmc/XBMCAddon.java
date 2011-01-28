@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,15 +31,18 @@ public class XBMCAddon extends XMLParser {
 	private Document doc;
 	private Locale locale;
 	private List<XBMCExtension> extensions;
+	private XBMCAddonManager addonMgr;
+	private List<XBMCAddon> requiredAddons;
 
 	/**
 	 * Used to create a instance of the addon class
 	 * @param addonDir The directory contain the XBMC addons
 	 * @param locale The locale to use with the scrapers
 	 */
-	public XBMCAddon(File addonDir,Locale locale) {
+	public XBMCAddon(XBMCAddonManager addonMgr,File addonDir,Locale locale) {
 		this.addonDir = addonDir;
 		this.locale = locale;
+		this.addonMgr = addonMgr;
 	}
 
 	private Document getDocument() throws XBMCException {
@@ -81,6 +85,33 @@ public class XBMCAddon extends XMLParser {
 		} catch (Exception e) {
 			throw new XBMCException("Unable to find addon id",e);
 		}
+	}
+
+	public List<XBMCAddon>getRquiredAddons() throws XBMCException {
+		if (requiredAddons==null) {
+			requiredAddons = new ArrayList<XBMCAddon>();
+			try {
+				for (Node node : selectNodeList(getDocument(), "addon/requires/import")) {
+					String id = ((Element)node).getAttribute("addon");
+
+					XBMCAddon addon = addonMgr.getAddon(id);
+					if (addon==null) {
+						throw new XBMCException("Unable to find required addon '" + id);
+					}
+					//TODO check the version
+//					String version = ((Element)node).getAttribute("version");
+//					if (!addon.getVersion().equals(version)) {
+//						throw new XBMCException("Unable to find required addon '" + id+"' of version '"+version+"'");
+//					}
+
+					requiredAddons.add(addon);
+				}
+			}
+			catch (XMLParserException e1) {
+				throw new XBMCException("Unable to parse required addons",e1);
+			}
+		}
+		return requiredAddons;
 	}
 
 	/**
@@ -208,5 +239,39 @@ public class XBMCAddon extends XMLParser {
 
 	public File getFile(String path) {
 		return new File(addonDir,path);
+	}
+
+	public String executeFunction(String functionName,Map<Integer, String> params) throws XBMCException, XMLParserException {
+		String result = null;
+		for (XBMCExtension addon : getExtensions()) {
+			try {
+				result = addon.executeXBMCScraperFunction(functionName, params);
+				break;
+			}
+			catch (XBMCException e) {
+				System.out.println(e.getMessage());
+				// Ignore
+			}
+		}
+
+		if (result==null) {
+			for (XBMCAddon addon : getRquiredAddons()) {
+				try {
+					result = addon.executeFunction(functionName, params);
+					break;
+				}
+				catch (XBMCException e) {
+					System.out.println(e.getMessage());
+					// Ignore
+				}
+			}
+		}
+
+		if (result == null)
+		{
+			throw new XBMCException("Unable to find scraper function '" + functionName+"'");
+		}
+
+		return result;
 	}
 }

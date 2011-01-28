@@ -13,7 +13,7 @@ import org.stanwood.media.util.FileHelper;
 public class XBMCAddonTestBase {
 
 	private static File tmpDir;
-	private static XMBCAddonManager addonManager;
+	private static XBMCAddonManager addonManager;
 
 	/**
 	 * Used to setup the scraper for use within the test
@@ -23,7 +23,7 @@ public class XBMCAddonTestBase {
 	public static void setupTestFile() throws Exception {
 		tmpDir = FileHelper.createTmpDir("xbmc");
 		FileHelper.unzip(TestXMBCSourceTVDB.class.getResourceAsStream("xbmc-addons.zip"),tmpDir);
-		addonManager = new XMBCAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);	
+		addonManager = new XBMCAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);	
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class XBMCAddonTestBase {
 		FileHelper.deleteDir(tmpDir);
 	}		
 
-	protected XMBCAddonManager getAddonManager() {
+	protected XBMCAddonManager getAddonManager() {
 		return addonManager;
 	}
 }

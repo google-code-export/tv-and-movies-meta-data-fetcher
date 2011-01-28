@@ -13,6 +13,9 @@ public class XBMCExtenstionFactory {
 		else if (point.equals("xbmc.metadata.scraper.movies")) {
 			return new XBMCScraper(addon, addon.getFile(extensionNode.getAttribute("library")), point,Mode.FILM);
 		}
+		else if (point.equals("xbmc.metadata.scraper.library")) {
+			return new XBMCLibrary(addon, addon.getFile(extensionNode.getAttribute("library")), point);
+		}
 		return null;
 	}
 }

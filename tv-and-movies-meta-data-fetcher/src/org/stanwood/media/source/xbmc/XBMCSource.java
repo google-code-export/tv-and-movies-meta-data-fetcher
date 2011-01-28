@@ -37,7 +37,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private XBMCAddon addon;
 	private String id;
 
-	public XBMCSource(XMBCAddonManager mgr,String addonId) throws SourceException {
+	public XBMCSource(XBMCAddonManager mgr,String addonId) throws SourceException {
 		this.id = addonId;
 		addon = mgr.getAddon(addonId);
 	}
@@ -277,8 +277,5 @@ public class XBMCSource extends XMLParser implements ISource {
 			throw new SourceException("Scraper '"+addon.getId()+"' is not of type '"+mode.getDisplayName()+"'");
 		}
 	}
-
-
-
 
 }
