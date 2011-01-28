@@ -126,7 +126,7 @@ public class XMLParser {
 		}
 		throw new XMLParserNotFoundException();
 	}
-	
+
 	/**
 	 * Used to convert a XML string to a DOM document
 	 * @param str The string to convert
@@ -134,7 +134,7 @@ public class XMLParser {
 	 * @throws XMLParserException Thrown if their is a parsing problem
 	 */
 	public static Document strToDom(String str) throws XMLParserException {
-		try { 
+		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			InputSource is = new InputSource( new StringReader( str ) );
@@ -145,7 +145,7 @@ public class XMLParser {
 			throw new XMLParserException("Unable to convert string to XML DOM",e);
 		}
 	}
-	
+
 	/**
 	 * Used to convert a DOM document to a string
 	 * @param document The DOM document
@@ -158,18 +158,18 @@ public class XMLParser {
 	        format.setLineWidth(65);
 	        format.setIndenting(true);
 	        format.setIndent(2);
-	        
+
 	        Writer out = new StringWriter();
 	        XMLSerializer serializer = new XMLSerializer(out, format);
 	        serializer.serialize(document);
-	
+
 	        return out.toString();
 		}
 		catch (Exception e) {
 			throw new XMLParserException("Unable to convert XML DOM to string",e);
 		}
 	}
-	
+
 	protected Element getFirstChildElement(Node parent,String name) {
 		NodeList children =  parent.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
@@ -180,7 +180,7 @@ public class XMLParser {
 		}
 		return null;
 	}
-	
+
 	protected Element firstChild(Element expressionEl) {
 		NodeList children =  expressionEl.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
@@ -191,11 +191,20 @@ public class XMLParser {
 		}
 		return null;
 	}
-	
+
 	protected IterableNodeList selectNodeList(Node contextNode,String path) throws XMLParserException {
 		try {
-			NodeList list = XPathAPI.selectNodeList(contextNode, path);					
+			NodeList list = XPathAPI.selectNodeList(contextNode, path);
 			return new IterableNodeList(list);
+		}
+		catch (Exception e) {
+			throw new XMLParserException("Unable to parser path " + path + " from XML DOM");
+		}
+	}
+
+	protected Node selectSingleNode(Node contextNode,String path) throws XMLParserException {
+		try {
+			return XPathAPI.selectSingleNode(contextNode, path);
 		}
 		catch (Exception e) {
 			throw new XMLParserException("Unable to parser path " + path + " from XML DOM");

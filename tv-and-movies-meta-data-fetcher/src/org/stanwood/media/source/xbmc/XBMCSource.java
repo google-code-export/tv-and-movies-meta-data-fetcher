@@ -74,7 +74,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-	    			Document doc = addon.getScraper().getGetDetails(contents,showId);
+	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(contents,showId);
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);
@@ -145,13 +145,13 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-	    			Document doc = addon.getScraper().getGetDetails(contents,filmId);
-
-	    			film.setTitle(getStringFromXML(doc, "title/text()"));
-	    			film.setSummary(getStringFromXML(doc, "overview/text()"));
-	    			film.setRating(getFloatFromXML(doc, "rating/text()"));
-	    			parseGenres(film,doc);
+	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(contents,filmId);
 	    			System.out.println(domToStr(doc));
+	    			film.setTitle(getStringFromXML(doc, "details/title/text()"));
+	    			film.setSummary(getStringFromXML(doc, "details/overview/text()"));
+	    			film.setRating(getFloatFromXML(doc, "details/rating/text()"));
+	    			parseGenres(film,doc);
+
 				}
 				catch (XMLParserException e) {
 					throw new SourceException("Unable to parse show details",e);
@@ -184,7 +184,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	}
 
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir, Mode mode,
+	public SearchResult searchForVideoId(File rootMediaDir, final Mode mode,
 			File episodeFile, String renamePattern) throws SourceException,
 			MalformedURLException, IOException {
 		if (!addon.supportsMode(mode)) {
@@ -194,7 +194,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		ShowSearcher s = new ShowSearcher() {
 			@Override
 			public SearchResult doSearch(String name) throws MalformedURLException, IOException, SourceException {
-				return searchMedia(name);
+				return searchMedia(name,mode);
 			}
 		};
 
@@ -221,15 +221,15 @@ public class XBMCSource extends XMLParser implements ISource {
 		return stream;
 	}
 
-	protected SearchResult searchMedia(final String name) throws SourceException {
+	protected SearchResult searchMedia(final String name,final Mode mode) throws SourceException {
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
-			URL url = new URL(getURLFromScraper(name, ""));
+			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, ""));
 			StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {
-		    			Document doc = addon.getScraper().getGetSearchResults(contents, name);
+		    			Document doc = addon.getScraper(mode).getGetSearchResults(contents, name);
 						NodeList entities = XPathAPI.selectNodeList(doc, "*/entity");
 
 						for (int i=0;i<entities.getLength();i++) {
@@ -260,10 +260,10 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
-	private String getURLFromScraper(String name, String year)
+	private String getURLFromScraper(XBMCScraper scraper,String name, String year)
 			throws SourceException {
 		try {
-			Document doc = addon.getScraper().getCreateSearchUrl(name, year);
+			Document doc = scraper.getCreateSearchUrl(name, year);
 			String url = getStringFromXML(doc,"url/text()");
 			return url;
 		}
@@ -271,6 +271,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			throw new SourceException("Unable to parse search url",e);
 		}
 	}
+
 	private void checkMode(Mode mode) throws SourceException  {
 		if (!addon.supportsMode(mode)) {
 			throw new SourceException("Scraper '"+addon.getId()+"' is not of type '"+mode.getDisplayName()+"'");
