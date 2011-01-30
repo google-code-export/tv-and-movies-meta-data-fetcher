@@ -1,14 +1,11 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipInputStream;
 
 import javax.xml.transform.TransformerException;
 
@@ -22,7 +19,6 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.WebFile;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.stanwood.media.util.XMLParserNotFoundException;
@@ -36,9 +32,11 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private XBMCAddon addon;
 	private String id;
+	private XBMCAddonManager mgr;
 
 	public XBMCSource(XBMCAddonManager mgr,String addonId) throws SourceException {
 		this.id = addonId;
+		this.mgr = mgr;
 		addon = mgr.getAddon(addonId);
 	}
 
@@ -70,7 +68,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		final Show show = new Show(showId);
 		show.setShowURL(url);
 		show.setSourceId(getSourceId());
-		StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
@@ -141,7 +139,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private Film parseFilm(final String filmId,final URL url) throws IOException, SourceException {
 		final Film film = new Film(filmId);
 
-		StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
@@ -201,31 +199,11 @@ public class XBMCSource extends XMLParser implements ISource {
 		return s.search(episodeFile,rootMediaDir,renamePattern);
 	}
 
-	/* package for test */InputStream getSource(URL url) throws IOException {
-		WebFile page = new WebFile(url);
-		String MIME = page.getMIMEType();
-		byte[] content = (byte[]) page.getContent();
-		if (MIME.equals("zip")) {
-			return new ZipInputStream(new ByteArrayInputStream(content));
-		}
-		else {
-			return new ByteArrayInputStream(content);
-		}
-	}
-
-	private InputStream getStreamToURL(URL url) throws IOException, SourceException {
-		InputStream stream = getSource(url);
-		if (stream==null) {
-			throw new SourceException("Unable to get resource: " + url);
-		}
-		return stream;
-	}
-
 	protected SearchResult searchMedia(final String name,final Mode mode) throws SourceException {
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
 			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, ""));
-			StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {
@@ -277,5 +255,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			throw new SourceException("Scraper '"+addon.getId()+"' is not of type '"+mode.getDisplayName()+"'");
 		}
 	}
+
+
 
 }

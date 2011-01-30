@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -10,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.w3c.dom.DOMException;
@@ -27,6 +29,7 @@ public class XBMCScraper extends XBMCExtension {
 
 
 	private Mode mode;
+	private XBMCAddonManager addonMgr;
 
 	/**
 	 * Used to create the class and set the scraper file
@@ -35,6 +38,7 @@ public class XBMCScraper extends XBMCExtension {
 	 */
 	public XBMCScraper(XBMCAddon addon,File scraperFile,String point,Mode mode) {
 		super(addon,scraperFile,point);
+		addonMgr = addon.getManager();
 
 		this.mode = mode;
 	}
@@ -115,7 +119,7 @@ public class XBMCScraper extends XBMCExtension {
 			}
 
 			for (Node node : selectNodeList(doc, "details/url")) {
-				resultUrlNodes(doc,(Element) node);
+				resolveUrlNodes(doc,(Element) node);
 			}
 
 			return doc;
@@ -141,15 +145,37 @@ public class XBMCScraper extends XBMCExtension {
 		}
 	}
 
-	private void resultUrlNodes(Document doc,Element node) throws DOMException, XMLParserException {
-		String functionName = node.getAttribute("function");
+	private void resolveUrlNodes(final Document doc,final Element node) throws DOMException, XMLParserException, IOException, SourceException {
+		final String functionName = node.getAttribute("function");
 		try {
 			URL url = new URL(node.getTextContent());
+
+			if (!functionName.equals("")) {
+				StreamProcessor processor = new StreamProcessor(addonMgr.getStreamToURL(url)) {
+
+
+					@Override
+					public void processContents(String contents) throws SourceException {
+						Map<Integer, String> params = new HashMap<Integer,String>();
+						params.put(1, contents);
+						try {
+							Document results = strToDom(getAddon().executeFunction(functionName, params));
+							Node parent = node.getParentNode();
+							parent.removeChild(node);
+
+							for (Node n : selectNodeList(results, "details/*")) {
+								Node newNode = doc.importNode(n,true);
+								parent.appendChild(newNode);
+							}
+						} catch (XMLParserException e) {
+							throw new SourceException("Unable to execute function '"+functionName+"'");
+						}
+					}
+				};
+				processor.handleStream();
+			}
 		} catch (MalformedURLException e) {
 			throw new XMLParserException("Invalid URL '"+node.getTextContent()+"'");
-		}
-		if (!functionName.equals("")) {
-
 		}
 	}
 

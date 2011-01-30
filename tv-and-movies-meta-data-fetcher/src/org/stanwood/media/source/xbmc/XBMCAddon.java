@@ -169,9 +169,9 @@ public class XBMCAddon extends XMLParser {
 			catch (XMLParserException e1) {
 				throw new XBMCException("Unable to find scraper filename",e1);
 			}
-			if (extensions.size()==0) {
-				throw new XBMCException("Unable to find the scrapper filename");
-			}
+//			if (extensions.size()==0) {
+//				throw new XBMCException("Unable to find the scrapper filename of addon '" + getId()+"'");
+//			}
 		}
 
 		return extensions;
@@ -249,7 +249,6 @@ public class XBMCAddon extends XMLParser {
 				break;
 			}
 			catch (XBMCException e) {
-				System.out.println(e.getMessage());
 				// Ignore
 			}
 		}
@@ -261,7 +260,6 @@ public class XBMCAddon extends XMLParser {
 					break;
 				}
 				catch (XBMCException e) {
-					System.out.println(e.getMessage());
 					// Ignore
 				}
 			}
@@ -273,5 +271,9 @@ public class XBMCAddon extends XMLParser {
 		}
 
 		return result;
+	}
+
+	public XBMCAddonManager getManager() {
+		return addonMgr;
 	}
 }

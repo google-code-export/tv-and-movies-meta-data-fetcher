@@ -1,8 +1,10 @@
 package org.stanwood.media.source.xbmc;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
@@ -63,7 +65,13 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
-		XBMCSource source = new XBMCSource(getAddonManager(),id) {
+		XBMCSource source = new XBMCSource(getAddonManager(),id);
+		return source;
+	}
+
+	@Override
+	protected XBMCAddonManager createAddonManager(File addonDir, Locale locale) throws XBMCException {
+		return new XBMCAddonManager(addonDir,locale) {
 			@Override
 			InputStream getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();
@@ -82,7 +90,5 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 				throw new IOException("Unable to find test data for url: " + url);
 			}
 		};
-		return source;
 	}
-
 }

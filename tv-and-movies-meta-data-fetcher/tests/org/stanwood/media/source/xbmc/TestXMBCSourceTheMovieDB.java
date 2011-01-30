@@ -1,8 +1,12 @@
 package org.stanwood.media.source.xbmc;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +23,9 @@ import org.stanwood.media.util.XMLParser;
 
 public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
-	private static final Pattern FILM_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
+	private static final Pattern THE_MOVIE_DB_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
+	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(\\d+)");
+	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 
 	@Test
 	public void testTVDBAddonDetails() throws Exception {
@@ -57,8 +63,33 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertNotNull(film);
 	}
 
+	@Test
+	public void testParams() throws Exception {
+		XBMCAddon addon = getAddonManager().getAddon("metadata.themoviedb.org");
+		XBMCScraper scraper = addon.getScraper(Mode.FILM);
+		Map<Integer, String> params = new HashMap<Integer,String>();
+		params.put(1, "test");
+		String output = "$$1";
+		output = scraper.applyParams(output, params);
+
+		output = "aaa $$1 ccc $$2 eee $$3";
+		params.put(1, "bbbbb bb");
+		params.put(2, "ddd");
+		params.put(3, "fff");
+		output = scraper.applyParams(output, params);
+		Assert.assertEquals("aaa bbbbb bb ccc ddd eee fff",output);
+
+
+	}
+
 	private XBMCSource getXBMCSource(String id) throws SourceException{
-		XBMCSource source = new XBMCSource(getAddonManager(),id) {
+		XBMCSource source = new XBMCSource(getAddonManager(),id);
+		return source;
+	}
+
+	@Override
+	protected XBMCAddonManager createAddonManager(File addonDir, Locale locale) throws XBMCException {
+		return new XBMCAddonManager(addonDir,locale) {
 			@Override
 			InputStream getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();
@@ -67,16 +98,23 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 					return Data.class.getResourceAsStream(file);
 				}
 				else {
-					Matcher m = FILM_PATTERN.matcher(strUrl);
+					Matcher m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
 					if (m.matches()) {
 						return Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html");
+					}
+					m = THE_MOVIE_DB_IMAGES_PATTERN.matcher(strUrl);
+					if (m.matches()) {
+						return Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html");
+					}
+					m = IDBM_PATTERN.matcher(strUrl);
+					if (m.matches()) {
+						return Data.class.getResourceAsStream("imdb-"+m.group(1)+".html");
 					}
 				}
 
 				throw new IOException("Unable to find test data for url: " + url);
 			}
 		};
-		return source;
 	}
 
 }
