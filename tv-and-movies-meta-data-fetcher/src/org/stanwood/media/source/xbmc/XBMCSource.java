@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ import org.w3c.dom.NodeList;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 public class XBMCSource extends XMLParser implements ISource {
+
+	private static final SimpleDateFormat FILM_YEAH_DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
 
 	private XBMCAddon addon;
 	private String id;
@@ -138,6 +141,8 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private Film parseFilm(final String filmId,final URL url) throws IOException, SourceException {
 		final Film film = new Film(filmId);
+		film.setFilmUrl(url);
+		film.setSourceId(getSourceId());
 
 		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 			@Override
@@ -145,18 +150,33 @@ public class XBMCSource extends XMLParser implements ISource {
 				try {
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(contents,filmId);
 	    			System.out.println(domToStr(doc));
+
+//	    			film.setChapters(chapters);
+
+	    			film.setDate(FILM_YEAH_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()")));
+	    			film.setDescription(getStringFromXML(doc, "details/plot/text()"));
+	    			film.setId(filmId);
+	    			film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
 	    			film.setTitle(getStringFromXML(doc, "details/title/text()"));
 	    			film.setSummary(getStringFromXML(doc, "details/overview/text()"));
-	    			film.setRating(getFloatFromXML(doc, "details/rating/text()"));
+	    			//TODO finish this
+
+//	    			film.setRating(getFloatFromXML(doc, "details/rating/text()"));
+//	    			film.setCertifications(certifications);
+//	    			film.setCountry(country);
+//	    			film.setDirectors(directors);
+//	    			film.setGuestStars(guestStars);
+//	    			film.setWriters(writers);
+
 	    			parseGenres(film,doc);
 
 				}
 				catch (XMLParserException e) {
 					throw new SourceException("Unable to parse show details",e);
 				}
-//				catch (MalformedURLException e) {
-//					throw new SourceException("Unable to parse show details",e);
-//				}
+				catch (MalformedURLException e) {
+					throw new SourceException("Unable to parse show details",e);
+				}
 			}
 		};
 		processor.handleStream();

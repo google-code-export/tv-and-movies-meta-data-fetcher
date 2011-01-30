@@ -6,7 +6,7 @@ import java.util.List;
  * This should be implemented by videos that support genres
  */
 public interface IVideoGenre {
-	
+
 
 	/**
 	 * Used to set the genres that the film belongs too
@@ -26,4 +26,8 @@ public interface IVideoGenre {
 	 * @param genre the genre to add
 	 */
 	public void addGenre(String genre);
+
+	public String getPreferredGenre();
+
+	public void setPreferredGenre(String preferredGenre);
 }

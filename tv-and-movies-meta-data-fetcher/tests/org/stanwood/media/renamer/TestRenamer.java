@@ -25,7 +25,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.stanwood.media.store.XMLStore;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 

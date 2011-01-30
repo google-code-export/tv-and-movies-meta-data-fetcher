@@ -17,40 +17,34 @@
 package org.stanwood.media.model;
 
 /**
- * Used to hold a certification rating of a episode or film 
+ * Used to hold a certification rating of a episode or film
  */
 public class Certification {
-	
-	private String country;
-	private String certification;		
-	
+
+	private String certification;
+	private String type;
+
 	/**
 	 * Used to create a instance of the certification class that holds certification information
 	 * @param certification The certification
-	 * @param country The country the certification belongs too
+	 * @param type The type of certification
 	 */
-	public Certification(String certification, String country) {
+	public Certification(String certification, String type) {
 		super();
 		setCertification(certification);
-		setCountry(country);
+		setType(type);
 	}
-	
-	/**
-	 * Used to get a free text string of the county name that the certification is associated with
-	 * @return a free text string of the county name that the certification is associated with
-	 */
-	public String getCountry() {
-		return country;
+
+
+	public String getType() {
+		return type;
 	}
-	
-	/**
-	 * Used to set the free text string of the county name that the certification is associated with
-	 * @param country free text string of the county name that the certification is associated with
-	 */
-	public void setCountry(String country) {
-		this.country = country;
+
+
+	public void setType(String type) {
+		this.type = type;
 	}
-	
+
 	/**
 	 * Used to get a free text string of the certification
 	 * @return The certification
@@ -58,7 +52,7 @@ public class Certification {
 	public String getCertification() {
 		return certification;
 	}
-	
+
 	/**
 	 * Used to set the certification as a free text string
 	 * @param certification The certification
@@ -66,6 +60,6 @@ public class Certification {
 	public void setCertification(String certification) {
 		this.certification = certification;
 	}
-	
-	
+
+
 }

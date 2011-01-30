@@ -144,17 +144,15 @@ public class TestXMLStore2 {
 	        Assert.assertEquals("Pilot",episode.getTitle());
 	        Assert.assertEquals("2006-10-10",df.format(episode.getDate()));
 	        Assert.assertEquals(1, episode.getDirectors().size());
-	        Assert.assertEquals("Harry", episode.getDirectors().get(0).getTitle());
-	        Assert.assertEquals("http://test/", episode.getDirectors().get(0).getURL());
-	        Assert.assertEquals(2, episode.getGuestStars().size());
-	        Assert.assertEquals("sally", episode.getGuestStars().get(0).getTitle());
-	        Assert.assertEquals("http://test/sally", episode.getGuestStars().get(0).getURL());
-	        Assert.assertEquals("Cedric", episode.getGuestStars().get(1).getTitle());
-	        Assert.assertEquals("http://test/cedric", episode.getGuestStars().get(1).getURL());
+	        Assert.assertEquals("Harry", episode.getDirectors().get(0));
+	        Assert.assertEquals(2, episode.getActors().size());
+	        Assert.assertEquals("http://test/cedric", episode.getActors().get(0).getRole());
+	        Assert.assertEquals("http://test/cedric", episode.getActors().get(0).getName());
+	        Assert.assertEquals("http://test/cedric", episode.getActors().get(1).getRole());
+	        Assert.assertEquals("http://test/cedric", episode.getActors().get(1).getName());
 	        Assert.assertEquals(1, episode.getWriters().size());
-	        Assert.assertEquals("Write a lot", episode.getWriters().get(0).getTitle());
-	        Assert.assertEquals("http://test/a", episode.getWriters().get(0).getURL());
-	        Assert.assertEquals(1.0F,episode.getRating(),0);
+	        Assert.assertEquals("Write a lot", episode.getWriters().get(0));
+	        Assert.assertEquals(1.0F,episode.getRating().getRating(),0);
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");

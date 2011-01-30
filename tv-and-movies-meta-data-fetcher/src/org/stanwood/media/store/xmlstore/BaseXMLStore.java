@@ -33,7 +33,6 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Link;
-import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
@@ -155,7 +154,7 @@ public abstract class BaseXMLStore extends XMLParser {
 					filenames.add(node.item(i).getNodeValue());
 				}
 			}
-	
+
 			return filenames;
 		}
 		catch (TransformerException e) {
@@ -183,37 +182,10 @@ public abstract class BaseXMLStore extends XMLParser {
 			fileNode.setAttribute("name", filename);
 			filmNode.appendChild(fileNode);
 		}
-		
+
 	}
 
-	/**
-	 * Used to read the genres from the XML document
-	 * @param parent The parent node to read them from
-	 * @return A list of genres that were found
-	 * @throws XMLParserException Thrown if their is a problem parsing the XML
-	 * @throws NotInStoreException Thrown if the genres are not in the store
-	 */
-	protected List<String> readGenresFromXML(Node parent)
-			throws XMLParserException, NotInStoreException {
-		try {
-			List<String> genres = new ArrayList<String>();
-			NodeList nodeList = XPathAPI.selectNodeList(parent, "genre");
-			if (nodeList != null) {
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					Element node = (Element) nodeList.item(i);
-					String genre = node.getAttribute("name");
-					if (genre == null) {
-						throw new NotInStoreException();
-					}
-					genres.add(genre);
-				}
-			}
-			return genres;
-		}
-		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parse genres from XML",e);
-		}		
-	}
+
 
 	/**
 	 * Used to read links from a node in a DOM document

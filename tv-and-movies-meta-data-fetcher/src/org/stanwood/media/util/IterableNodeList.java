@@ -12,21 +12,24 @@ public class IterableNodeList implements org.w3c.dom.NodeList, Iterable<Node> {
 	public IterableNodeList(org.w3c.dom.NodeList list) {
 		this.list = list;
 	}
-		
+
 	@Override
 	public Iterator<Node> iterator() {
 		return new Iterator<Node>() {
 			@Override
 			public boolean hasNext() {
-				return pos < list.getLength();		
+				if (list==null) {
+					return false;
+				}
+				return pos < list.getLength();
 			}
-	
+
 			@Override
 			public Node next() {
 				return list.item(pos++);
 			}
-	
-			
+
+
 			/**
 			 * This does nothing
 			 */

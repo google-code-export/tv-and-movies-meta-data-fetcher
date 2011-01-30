@@ -27,25 +27,25 @@ import java.util.List;
 /**
  * This class is used to hold film related information
  */
-public class Film implements IVideo,IVideoGenre {
+public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 
 	private String id;
 	private String sourceId;
 	private String title;
 	private String summary;
-	private List<Link>guestStars;
-	private List<Link>directors;
-	private List<Link>writers;
+	private List<String>directors;
+	private List<String>writers;
 	private List<String> genres = new ArrayList<String>();
 	private List<Certification> certifications = new ArrayList<Certification>();
 	private URL filmUrl;
-	private Float rating;
+	private Rating rating;
 	private Date date;
 	private URL imageURL;
 	private List<Chapter> chapters = new ArrayList<Chapter>();
 	private String description;
 	private String preferredGenre;
-	private Link country;
+	private String country;
+	private List<Actor> actors;
 
 	/**
 	 * This is useful if the film belongs to more than one genres. It will returned the
@@ -126,22 +126,14 @@ public class Film implements IVideo,IVideoGenre {
 		this.title = title;
 	}
 
-	/**
-	 * Used to get a list of guest stars with links to web sites about them
-	 * @return A list of guest stars
-	 */
 	@Override
-	public List<Link> getGuestStars() {
-		return guestStars;
+	public List<Actor> getActors() {
+		return actors;
 	}
 
-	/**
-	 * Used to set a list of guest stars in the film.
-	 * @param guestStars The guest stars
-	 */
 	@Override
-	public void setGuestStars(List<Link> guestStars) {
-		this.guestStars = guestStars;
+	public void setActors(List<Actor> actors) {
+		this.actors = actors;
 	}
 
 	/**
@@ -149,7 +141,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * @return A list of directors for the film
 	 */
 	@Override
-	public List<Link> getDirectors() {
+	public List<String> getDirectors() {
 		return directors;
 	}
 
@@ -158,7 +150,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * @param directors The list of directors for the episode
 	 */
 	@Override
-	public void setDirectors(List<Link> directors) {
+	public void setDirectors(List<String> directors) {
 		this.directors = directors;
 	}
 
@@ -167,7 +159,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * @return Get a list of writers for the film
 	 */
 	@Override
-	public List<Link> getWriters() {
+	public List<String> getWriters() {
 		return writers;
 	}
 
@@ -176,7 +168,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * @param writers The list of writers
 	 */
 	@Override
-	public void setWriters(List<Link> writers) {
+	public void setWriters(List<String> writers) {
 		this.writers = writers;
 	}
 
@@ -263,7 +255,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * Used to get the global user rating of the film
 	 * @return The global user rating of the show
 	 */
-	public Float getRating() {
+	public Rating getRating() {
 		return rating;
 	}
 
@@ -271,7 +263,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * Used to set the global user rating of the film
 	 * @param rating The global user rating of the show
 	 */
-	public void setRating(Float rating) {
+	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
 
@@ -378,7 +370,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * null if it's not known.
 	 * @return the country the film was made in.
 	 */
-	public Link getCountry() {
+	public String getCountry() {
 		return country;
 	}
 
@@ -386,7 +378,7 @@ public class Film implements IVideo,IVideoGenre {
 	 * Used to set the country the film was made in.
 	 * @param country the country to set
 	 */
-	public void setCountry(Link country) {
+	public void setCountry(String country) {
 		this.country = country;
 	}
 

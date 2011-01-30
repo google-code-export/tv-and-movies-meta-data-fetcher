@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * This is used to store episode information
  */
-public class Episode implements IVideo {
+public class Episode implements IVideo,IVideoActors,IVideoRating {
 
 	private Season season;
 
@@ -43,10 +43,11 @@ public class Episode implements IVideo {
 	/** Episode number counting since the show started */
 	private long showEpisodeNumber;
 
-	private List<Link>guestStars;
-	private List<Link>directors;
-	private List<Link>writers;
-	private float rating = -1;
+	private List<Actor> actors;
+	private List<String>directors;
+	private List<String>writers;
+
+	private Rating rating;
 
 	/**
 	 * The constructor used to create a episode instance
@@ -195,27 +196,21 @@ public class Episode implements IVideo {
 		this.episodeId = episodeId;
 	}
 
-	/**
-	 * Used to get a list of guest stars with links to web sites about them
-	 * @return A list of guest stars
-	 */
-	public List<Link> getGuestStars() {
-		return guestStars;
+	@Override
+	public List<Actor> getActors() {
+		return actors;
 	}
 
-	/**
-	 * Used to set a list of guest stars in the episode.
-	 * @param guestStars The guest stars
-	 */
-	public void setGuestStars(List<Link> guestStars) {
-		this.guestStars = guestStars;
+	@Override
+	public void setActors(List<Actor> actors) {
+		this.actors = actors;
 	}
 
 	/**
 	 * Used to get a list of directors for the episode
 	 * @return A list of directors for the episode
 	 */
-	public List<Link> getDirectors() {
+	public List<String> getDirectors() {
 		return directors;
 	}
 
@@ -223,7 +218,7 @@ public class Episode implements IVideo {
 	 * Used to set a list of directors for the episode
 	 * @param directors The list of directors for the episode
 	 */
-	public void setDirectors(List<Link> directors) {
+	public void setDirectors(List<String> directors) {
 		this.directors = directors;
 	}
 
@@ -231,7 +226,7 @@ public class Episode implements IVideo {
 	 * Used to get a list of writers for the episode
 	 * @return Get a list of writers for the episode
 	 */
-	public List<Link> getWriters() {
+	public List<String> getWriters() {
 		return writers;
 	}
 
@@ -239,23 +234,18 @@ public class Episode implements IVideo {
 	 * Used to set a list of writers for the episode
 	 * @param writers The list of writers
 	 */
-	public void setWriters(List<Link> writers) {
+	public void setWriters(List<String> writers) {
 		this.writers = writers;
 	}
 
-	/**
-	 * Used to get the overall rating for the show
-	 * @return The rating of the show
-	 */
-	public float getRating() {
+	@Override
+	public Rating getRating() {
 		return rating;
 	}
 
-	/**
-	 * Used to set the rating of the show
-	 * @param rating The rating of the show
-	 */
-	public void setRating(float rating) {
+	@Override
+	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
+
 }

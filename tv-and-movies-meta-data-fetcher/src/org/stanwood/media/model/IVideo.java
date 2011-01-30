@@ -29,7 +29,7 @@ public interface IVideo {
 	 * @return The video title.
 	 */
 	public String getTitle();
-	
+
 	/**
 	 * Used to set the title of the video
 	 * @param title The title of the video
@@ -37,39 +37,27 @@ public interface IVideo {
 	public void setTitle(String title);
 
 	/**
-	 * Used to get a list of guest stars with links to web sites about them
-	 * @return A list of guest stars
-	 */
-	public List<Link> getGuestStars();
-
-	/**
-	 * Used to set a list of guest stars in the film.
-	 * @param guestStars The guest stars
-	 */
-	public void setGuestStars(List<Link> guestStars);
-
-	/** 
 	 * Used to get a list of directors for the video
 	 * @return A list of directors for the video
 	 */
-	public List<Link> getDirectors();
+	public List<String> getDirectors();
 
 	/**
 	 * Used to set a list of directors for the episode
 	 * @param directors The list of directors for the episode
 	 */
-	public void setDirectors(List<Link> directors);
+	public void setDirectors(List<String> directors);
 	/**
 	 * Used to get a list of writers for the video
 	 * @return Get a list of writers for the video
 	 */
-	public List<Link> getWriters();
+	public List<String> getWriters();
 
 	/**
 	 * Used to set a list of writers for the video
 	 * @param writers The list of writers
 	 */
-	public void setWriters(List<Link> writers);
+	public void setWriters(List<String> writers);
 
 	/**
 	 * Used to get a summary of the video
@@ -78,7 +66,7 @@ public interface IVideo {
 	public String getSummary();
 
 	/**
-	 * Used to set the films summary 
+	 * Used to set the films summary
 	 * @param summary The films summary
 	 */
 	public void setSummary(String summary);

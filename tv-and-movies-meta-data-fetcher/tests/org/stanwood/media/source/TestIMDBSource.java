@@ -27,7 +27,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.search.SearchHelper;
@@ -104,12 +103,11 @@ public class TestIMDBSource {
 		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
 		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
-		Assert.assertEquals("Check rating",8.0F,film.getRating(),0);
+		Assert.assertEquals("Check rating",8.0F,film.getRating().getRating(),0);
 		Assert.assertEquals("Check the release date","00:00:00 2008-05-02",df.format(film.getDate()));
 		Assert.assertEquals("Check the image url","http://ia.media-imdb.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1._SX284_SY400_.jpg",film.getImageURL().toExternalForm());
 
-		Assert.assertEquals("Check the country","USA",film.getCountry().getTitle());
-		Assert.assertEquals("Check the country","http://www.imdb.com/Sections/Countries/USA/",film.getCountry().getURL());
+		Assert.assertEquals("Check the country","USA",film.getCountry());
 
 		List<String>genres = film.getGenres();
 		Assert.assertEquals(4,genres.size());
@@ -118,30 +116,27 @@ public class TestIMDBSource {
 		Assert.assertEquals("Sci-Fi",genres.get(2));
 		Assert.assertEquals("Thriller",genres.get(3));
 
-		List<Link>directors = film.getDirectors();
+		List<String>directors = film.getDirectors();
 		Assert.assertEquals(1,directors.size());
-		Assert.assertEquals("Jon Favreau",directors.get(0).getTitle());
-		Assert.assertEquals("http://www.imdb.com/name/nm0269463/",directors.get(0).getURL());
+		Assert.assertEquals("Jon Favreau",directors.get(0));
 
-		List<Link>writers = film.getWriters();
+		List<String>writers = film.getWriters();
 		Assert.assertEquals(2,writers.size());
-		Assert.assertEquals("Mark Fergus",writers.get(0).getTitle());
-		Assert.assertEquals("http://www.imdb.com/name/nm1318843/",writers.get(0).getURL());
-		Assert.assertEquals("Hawk Ostby",writers.get(1).getTitle());
-		Assert.assertEquals("http://www.imdb.com/name/nm1319757/",writers.get(1).getURL());
+		Assert.assertEquals("Mark Fergus",writers.get(0));
+		Assert.assertEquals("Hawk Ostby",writers.get(1));
 
 		List<Certification>certs = film.getCertifications();
 		Assert.assertEquals(32,certs.size());
-		Assert.assertEquals("12",certs.get(0).getCountry());
-		Assert.assertEquals("South Korea",certs.get(0).getCertification());
-		Assert.assertEquals("12",certs.get(5).getCountry());
-		Assert.assertEquals("Netherlands",certs.get(5).getCertification());
-		Assert.assertEquals("IIA",certs.get(11).getCountry());
-		Assert.assertEquals("Hong Kong",certs.get(11).getCertification());
-		Assert.assertEquals("M/12",certs.get(21).getCountry());
-		Assert.assertEquals("Portugal",certs.get(21).getCertification());
-		Assert.assertEquals("12",certs.get(31).getCountry());
-		Assert.assertEquals("Austria",certs.get(31).getCertification());
+		Assert.assertEquals("12",certs.get(0).getCertification());
+		Assert.assertEquals("South Korea",certs.get(0).getType());
+		Assert.assertEquals("12",certs.get(5).getCertification());
+		Assert.assertEquals("Netherlands",certs.get(5).getType());
+		Assert.assertEquals("IIA",certs.get(11).getCertification());
+		Assert.assertEquals("Hong Kong",certs.get(11).getType());
+		Assert.assertEquals("M/12",certs.get(21).getCertification());
+		Assert.assertEquals("Portugal",certs.get(21).getType());
+		Assert.assertEquals("12",certs.get(31).getCertification());
+		Assert.assertEquals("Austria",certs.get(31).getType());
 	}
 
 	private IMDBSource getIMDBSource(final String filmId) {

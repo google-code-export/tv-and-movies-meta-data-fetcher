@@ -21,16 +21,20 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
+import org.stanwood.media.model.IVideo;
+import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoGenre;
+import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -46,8 +50,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
  * This store is used to store the show and film information in a XML called .mediaInfoFetcher-xmlStore.xml.
@@ -94,7 +96,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			log.debug("cache episode");
 		}
 		try {
-			Node node = XPathAPI.selectSingleNode(seasonNode, "episode[number="+ episode.getEpisodeNumber() + "]");
+			Node node = selectSingleNode(seasonNode, "episode[number="+ episode.getEpisodeNumber() + "]");
 			if (node == null) {
 				node = doc.createElement("episode");
 				((Element) node).setAttribute("number", String.valueOf(episode.getEpisodeNumber()));
@@ -105,7 +107,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
@@ -118,7 +120,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 
 		try {
-			Node node = XPathAPI.selectSingleNode(seasonNode, "special[number="+ episode.getEpisodeNumber() + "]");
+			Node node = selectSingleNode(seasonNode, "special[number="+ episode.getEpisodeNumber() + "]");
 			if (node == null) {
 				node = doc.createElement("special");
 				((Element) node).setAttribute("number", String.valueOf(episode
@@ -130,7 +132,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to write cache: "
 					+ e.getMessage());
 		}
@@ -139,47 +141,67 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile)
 	throws StoreException {
 		try {
-			((Element) node).setAttribute("rating", String.valueOf(episode.getRating()));
+			writeRating(episode,((Element) node));
+
 			((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
 			((Element) node).setAttribute("title", episode.getTitle());
 			((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
 			((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
 			((Element) node).setAttribute("episodeId", String.valueOf(episode.getEpisodeId()));
-	
-			Node summaryNode = XPathAPI.selectSingleNode(node, "summary");
+
+			Node summaryNode = selectSingleNode(node, "summary");
 			if (summaryNode != null) {
 				summaryNode.getParentNode().removeChild(summaryNode);
 			}
 			summaryNode = doc.createElement("summary");
 			node.appendChild(summaryNode);
 			summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
-	
-			writeEpsoideExtraInfo(doc, node, "director", episode.getDirectors());
-			writeEpsoideExtraInfo(doc, node, "writer", episode.getWriters());
-			writeEpsoideExtraInfo(doc, node, "guestStar", episode.getGuestStars());
-	
+
+			writeDirectors((Element)node,episode);
+			writeWriters((Element)node,episode);
+			writeActors(node,episode);
+
 			if (episodeFile!=null &&  episodeFile.exists()) {
 				appendFile(doc, node, episodeFile.getAbsolutePath());
 			}
 		}
-		catch (TransformerException e) {
-			throw new StoreException("Unable to write episode data",e);	
-		} catch (XMLParserException e) {
-			throw new StoreException("Unable to write episode data",e);	
+		catch (XMLParserException e) {
+			throw new StoreException("Unable to write episode data",e);
 		}
+	}
+
+	private void writeActors(Node node, IVideoActors episode) {
+		Document doc =  node.getOwnerDocument();
+		Element actors = doc.createElement("actors");
+		for (Actor actor : episode.getActors()) {
+			Element actorNode = doc.createElement("actor");
+			actorNode.setAttribute("name", actor.getName());
+			actorNode.setAttribute("role", actor.getRole());
+			actors.appendChild(actorNode);
+		}
+		node.appendChild(actors);
+	}
+
+	private void readActors(Node node,IVideoActors episode) throws XMLParserException {
+		List<Actor> actors = new ArrayList<Actor>();
+		for (Node n : selectNodeList(node, "actors/actor")) {
+			Element e  = (Element) n;
+			actors.add(new Actor(e.getAttribute("name"),e.getAttribute("role")));
+		}
+		episode.setActors(actors);
 	}
 
 	private void appendFile(Document doc, Node parent, String filename) throws StoreException {
 		if (filename!=null /*&&  filename.exists()*/) {
 			try {
-				Node fileNode = XPathAPI.selectSingleNode(parent, "file[@location='"+filename+"']");
+				Node fileNode = selectSingleNode(parent, "file[@location='"+filename+"']");
 				if (fileNode==null) {
 					fileNode = doc.createElement("file");
 					((Element)fileNode).setAttribute("location", filename);
 					parent.appendChild(fileNode);
 
 				}
-			} catch (TransformerException e) {
+			} catch (XMLParserException e) {
 				throw new StoreException("Unable to read xml",e);
 			}
 		}
@@ -201,7 +223,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
-			Node filmNode = XPathAPI.selectSingleNode(storeNode,"film[@id='" + film.getId()+"']");
+			Node filmNode = selectSingleNode(storeNode,"film[@id='" + film.getId()+"']");
 			Set<String> filenames = null;
 			if (filmNode != null) {
 				filenames = getOldFilenames(filmNode);
@@ -215,8 +237,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			File cacheFile = getCacheFile(rootMediaDir, FILENAME);
 			writeCache(cacheFile, doc);
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache file: " + e.getMessage(), e);
 		}
@@ -229,7 +249,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
 		filmNode.setAttribute("sourceId", film.getSourceId());
-		filmNode.setAttribute("rating", String.valueOf(film.getRating()));
+		writeRating(film,filmNode);
 		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));
 		Date date = film.getDate();
 		if (date != null) {
@@ -241,41 +261,142 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		appendDescription(doc,film.getSummary(),film.getDescription(),filmNode);
 
 		if (film.getCountry()!=null) {
-			List<Link> countries = new ArrayList<Link>();
-			countries.add(film.getCountry());
-			writeEpsoideExtraInfo(doc, filmNode, "country",countries );
+			Element country = doc.createElement("country");
+			country.appendChild(doc.createTextNode(film.getCountry()));
+			filmNode.appendChild(country);
 		}
 
-		for (String value : film.getGenres()) {
-			Element genre = doc.createElement("genre");
-			genre.setAttribute("name", value);
-			if (value.equals(film.getPreferredGenre())) {
-				genre.setAttribute("preferred", "true");
-			}
-			filmNode.appendChild(genre);
-		}
+		writeGenres(film, filmNode);
 
-		for (Certification value : film.getCertifications()) {
-			Element cert = doc.createElement("certification");
-			cert.setAttribute("country", value.getCountry());
-			cert.setAttribute("certification", value.getCertification());
-			filmNode.appendChild(cert);
-		}
+		writeChapters(film, filmNode);
+		writeCertifications(film,filmNode);
 
+		writeDirectors(filmNode, film);
+		writeWriters(filmNode, film);
+		writeActors(filmNode,film);
+		writeFilenames(doc, filmNode, filenames);
+
+		filmsNode.appendChild(filmNode);
+	}
+
+	private void writeChapters( Film film, Element filmNode) {
+		Document doc = filmNode.getOwnerDocument();
+		Element chaptersNode = doc.createElement("chapters");
 		for (Chapter chapter : film.getChapters()) {
 			Element chap = doc.createElement("chapter");
 			chap.setAttribute("number", String.valueOf(chapter.getNumber()));
 			chap.setAttribute("name", chapter.getName());
-			filmNode.appendChild(chap);
+			chaptersNode.appendChild(chap);
 		}
+		filmNode.appendChild(chaptersNode);
+	}
 
-		writeEpsoideExtraInfo(doc, filmNode, "director", film.getDirectors());
-		writeEpsoideExtraInfo(doc, filmNode, "writer", film.getWriters());
-		writeEpsoideExtraInfo(doc, filmNode, "guestStar", film.getGuestStars());
+	private void readChapters( Film film, Element filmNode) throws XMLParserException {
+		List<Chapter>chapters = new ArrayList<Chapter>();
+		for (Node n : selectNodeList(filmNode, "chapters/chapter")) {
+			Element chapNode = (Element)n;
 
-		writeFilenames(doc, filmNode, filenames);
+			Chapter chapter = new Chapter(chapNode.getAttribute("name"),Integer.parseInt(chapNode.getAttribute("number")));
+			chapters.add(chapter);
+		}
+		film.setChapters(chapters);
+	}
 
-		filmsNode.appendChild(filmNode);
+	protected void readWriters(IVideo video,Node videoNode)
+	throws XMLParserException, NotInStoreException {
+		List<String> writers = new ArrayList<String>();
+		for (Node node : selectNodeList(videoNode, "writers/writer/text()")) {
+			String writer = node.getTextContent();
+			writers.add(writer);
+		}
+		video.setWriters(writers);
+	}
+
+	private void writeWriters(Element node, IVideo video) {
+		Document doc = node.getOwnerDocument();
+		Element writersNode = doc.createElement("writers");
+		for (String value : video.getWriters()) {
+			Element writerNode = doc.createElement("writer");
+			doc.createTextNode(value);
+			writerNode.appendChild(writerNode);
+			writersNode.appendChild(writerNode);
+		}
+		node.appendChild(writersNode);
+	}
+
+	protected void readDirectors(IVideo video,Node videoNode)
+	throws XMLParserException, NotInStoreException {
+		List<String> directors = new ArrayList<String>();
+		for (Node node : selectNodeList(videoNode, "directors/director/text()")) {
+			String director = node.getTextContent();
+			directors.add(director);
+		}
+		video.setDirectors(directors);
+	}
+
+	private void writeDirectors(Element node, IVideo video) {
+		Document doc = node.getOwnerDocument();
+		Element directorsNode = doc.createElement("directors");
+		for (String value : video.getDirectors()) {
+			Element director = doc.createElement("director");
+			doc.createTextNode(value);
+			director.appendChild(director);
+			directorsNode.appendChild(director);
+		}
+		node.appendChild(directorsNode);
+	}
+
+	protected void readCertifications(Film video,Node videoNode)
+	throws XMLParserException, NotInStoreException {
+
+		List<Certification>certifications = new ArrayList<Certification>();
+		for (Node node : selectNodeList(videoNode, "certifications/certification")) {
+			Element certificationEl = (Element)node;
+			certifications.add(new Certification(certificationEl.getAttribute("certification"), certificationEl.getAttribute("type")));
+		}
+		video.setCertifications(certifications);
+	}
+
+	private void writeCertifications(Film film, Element node) {
+		Document doc = node.getOwnerDocument();
+		Element certificationsNode = doc.createElement("certifications");
+		for (Certification cert : film.getCertifications()) {
+			Element certificationNode = node.getOwnerDocument().createElement("certification");
+			certificationNode.setAttribute("type", cert.getType());
+			certificationNode.setAttribute("certification", cert.getCertification());
+			certificationsNode.appendChild(certificationNode);
+		}
+	}
+
+	private void writeGenres(IVideoGenre video, Element node) {
+		Document doc = node.getOwnerDocument();
+		Element genresNode = doc.createElement("genres");
+		for (String value : video.getGenres()) {
+			Element genre = node.getOwnerDocument().createElement("genre");
+			genre.setAttribute("name", value);
+			if (value.equals(video.getPreferredGenre())) {
+				genre.setAttribute("preferred", "true");
+			}
+			genresNode.appendChild(genre);
+		}
+		node.appendChild(genresNode);
+	}
+
+
+	protected void readGenres(IVideoGenre video,Node videoNode)
+			throws XMLParserException, NotInStoreException {
+
+		List<String>genres = new ArrayList<String>();
+		for (Node node : selectNodeList(videoNode, "genres/genre")) {
+			Element genreEl = (Element)node;
+			String genre = genreEl.getAttribute("name");
+			String preferred = genreEl.getAttribute("preferred");
+			if (preferred.equals("true")) {
+				video.setPreferredGenre(genre);
+			}
+			genres.add(genre);
+		}
+		video.setGenres(genres);
 	}
 
 	/**
@@ -299,7 +420,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void removeOldCache(Node filmNode, Film film) throws TransformerException {
+	private void removeOldCache(Node filmNode, Film film) {
 		if (filmNode != null) {
 			filmNode.getParentNode().removeChild(filmNode);
 		}
@@ -351,8 +472,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 		Node node;
 		try {
-			node = XPathAPI.selectSingleNode(showNode, "season[@number="+ season.getSeasonNumber() + "]");
-		} catch (TransformerException e) {
+			node = selectSingleNode(showNode, "season[@number="+ season.getSeasonNumber() + "]");
+		} catch (XMLParserException e) {
 			throw new StoreException(e.getMessage(),e);
 		}
 		return node;
@@ -378,8 +499,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		writeCache(cacheFile, doc);
 	}
 
-	private Node getStoreNode(Document doc) throws TransformerException, StoreException {
-		Node node = XPathAPI.selectSingleNode(doc,"store");
+	private Node getStoreNode(Document doc) throws XMLParserException, StoreException {
+		Node node = selectSingleNode(doc,"store");
 		if (node==null) {
 			throw new StoreException("Unable to find the store node");
 		}
@@ -389,7 +510,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private Element getShowNode(Document doc, Show show) throws StoreException {
 		try {
 			Node storeNode = getStoreNode(doc);
-			Node node = XPathAPI.selectSingleNode(storeNode,"show[@id='"+show.getShowId()+"']");
+			Node node = selectSingleNode(storeNode,"show[@id='"+show.getShowId()+"']");
 			if (node==null) {
 				Element showElement = doc.createElement("show");
 				showElement.setAttribute("id", String.valueOf(show.getShowId()));
@@ -398,29 +519,20 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				showElement.setAttribute("imageUrl", urlToText(show.getImageURL()));
 				showElement.setAttribute("sourceId", show.getSourceId());
 
-				Node descriptionNode = XPathAPI.selectSingleNode(showElement, "description");
+				Node descriptionNode = selectSingleNode(showElement, "description");
 				if (descriptionNode != null) {
 					showElement.removeChild(descriptionNode);
 				}
 
 				appendDescription(doc, show.getShortSummary(),show.getLongSummary(), showElement);
 
-				NodeList nodeList = XPathAPI.selectNodeList(showElement, "genre");
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-				}
-
-				for (String value : show.getGenres()) {
-					Element genre = doc.createElement("genre");
-					genre.setAttribute("name", value);
-					showElement.appendChild(genre);
-				}
+				writeGenres(show, showElement);
 
 				storeNode.appendChild(showElement);
 				node = showElement;
 			}
 			return (Element) node;
-		} catch (TransformerException e) {
+		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse the XML",e);
 		}
 
@@ -460,13 +572,60 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Film getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException,
 			IOException {
-		return null;
+		Document doc = getCache(rootMediaDir);
+		if (doc==null) {
+			return null;
+		}
+		// TODO allow films to be retived
+		Film film = new Film(filmId);
+
+		try {
+			Element filmNode = (Element) selectSingleNode(doc, "film[@id='"+filmId+"']");
+			readGenres(film, filmNode);
+			film.setCountry(getStringFromXML(filmNode, "country/text()"));
+			film.setDate(df.parse(getStringFromXML(filmNode, "@releaseDate")));
+			film.setFilmUrl(new URL(getStringFromXML(filmNode,"url")));
+			film.setDescription(getStringFromXML(filmNode,"description/long/text()"));
+			film.setSummary(getStringFromXML(filmNode,"description/short/text()"));
+			film.setImageURL(new URL(getStringFromXML(filmNode, "@imageUrl")));
+			film.setTitle(getStringFromXML(filmNode, "@title"));
+			parseRating(film,filmNode);
+			readActors(filmNode,film);
+			readWriters(film, filmNode);
+			readDirectors(film, filmNode);
+			film.setSourceId(getStringFromXML(filmNode, "@sourceId"));
+			readChapters(film, filmNode);
+
+			readCertifications(film, filmNode);
+		}
+		catch (XMLParserException e) {
+			throw new StoreException("Unable to read film from store",e);
+		}
+		catch (NotInStoreException e) {
+			throw new StoreException("Unable to read film from store",e);
+		} catch (ParseException e) {
+			throw new StoreException("Unable to read film from store",e);
+		}
+
+		return film;
+	}
+
+	private Rating parseRating(IVideoRating film, Element node) throws XMLParserException {
+		int numberOfVotes = getIntegerFromXML(node, "rating/@numberOfVotes");
+		float rating = getFloatFromXML(node, "rating/@value");
+
+		return new Rating(rating,numberOfVotes);
+	}
+
+	private void writeRating(IVideoRating film, Element node) {
+		Element ratingNode = node.getOwnerDocument().createElement("rating");
+		ratingNode.setAttribute("value", String.valueOf(film.getRating().getRating()));
+		ratingNode.setAttribute("numberOfVotes", String.valueOf(film.getRating().getNumberOfVotes()));
+		node.appendChild(ratingNode);
 	}
 
 	/**
@@ -493,7 +652,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			MalformedURLException {
 		try {
 			Show show = season.getShow();
-			Node episodeNode = XPathAPI.selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" +
+			Node episodeNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" +
 					"season[@number="+ season.getSeasonNumber() + "]/episode[@number="+ episodeNum + "]");
 			if (episodeNode == null) {
 				throw new NotInStoreException();
@@ -504,9 +663,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			episode.setSpecial(false);
 
 			return episode;
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
+
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
@@ -521,7 +678,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			MalformedURLException {
 		try {
 			Show show = season.getShow();
-			Node episodeNode = XPathAPI.selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" +
+			Node episodeNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" +
 					"season[@number="+ season.getSeasonNumber() + "]/special[@number="+ specialNum + "]");
 			if (episodeNode == null) {
 				throw new NotInStoreException();
@@ -533,9 +690,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			episode.setSpecial(true);
 			return episode;
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "
-					+ e.getMessage(), e);
+
 		} catch (ParseException e) {
 			throw new StoreException(
 					"Unable to parse date: " + e.getMessage(), e);
@@ -573,10 +728,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 		}
 		long episodeId = getLongFromXML(episodeNode, "@episodeId");
-		float rating = getFloatFromXML(episodeNode, "@rating");
-		List<Link> directors = getLinks(episodeNode, "director");
-		List<Link> writers = getLinks(episodeNode, "writer");
-		List<Link> guestStars = getLinks(episodeNode, "guestStar");
+
 
 		episode.setSummaryUrl(url);
 		episode.setSummary(summary);
@@ -584,21 +736,21 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		episode.setDate(df.parse(airDate));
 		episode.setShowEpisodeNumber(episodeSiteId);
 		episode.setEpisodeId(episodeId);
-		episode.setGuestStars(guestStars);
-		episode.setWriters(writers);
-		episode.setRating(rating);
-		episode.setDirectors(directors);
+		readActors(episodeNode,episode);
+		readWriters(episode, (Element)episodeNode);
+		parseRating(episode,(Element)episodeNode);
+		readDirectors(episode, (Element)episodeNode);
 		}
 		catch (XMLParserNotFoundException e) {
 			throw new NotInStoreException();
 		}
-		
+
 	}
 
 	private Season getSeasonFromCache(int seasonNum, Show show, Document doc)
 	throws StoreException, NotInStoreException, MalformedURLException {
 		try {
-			Node seasonNode = XPathAPI.selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/season[@number=" + seasonNum + "]");
+			Node seasonNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/season[@number=" + seasonNum + "]");
 			if (seasonNode == null) {
 				throw new NotInStoreException();
 			}
@@ -606,29 +758,27 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			season.setDetailedUrl(new URL(getStringFromXML(seasonNode,"@detailedListingUrl")));
 			season.setListingUrl(new URL(getStringFromXML(seasonNode,"@listingUrl")));
 			return season;
-
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
-		} catch (XMLParserException e) {
+		}
+		 catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
 		}
 	}
 
-	private Show getShowFromCache( Document doc)
+	private Show getShowFromCache( Document doc, String showId)
 	throws StoreException, NotInStoreException, MalformedURLException {
 		try {
 			Node storeNode = getStoreNode(doc);
+			Element showNode = (Element) selectSingleNode(storeNode, "show[@id='"+showId+"']");
+			String imageURL = showNode.getAttribute("imageUrl");
+			String showURL = showNode.getAttribute("url");
+			String name = showNode.getAttribute("name");
+			String sourceId = showNode.getAttribute("sourceId");
+			String longSummary = getStringFromXML(showNode,"description/long/text()");
+			String shortSummary = getStringFromXML(showNode,"description/short/text()");
 
-			String showId = getStringFromXML(storeNode, "show/@id");
-			String imageURL = getStringFromXML(storeNode, "show/@imageUrl");
-			String showURL = getStringFromXML(storeNode, "show/@url");
-			String name = getStringFromXML(storeNode, "show/@name");
-			String sourceId = getStringFromXML(storeNode, "show/@sourceId");
-			String longSummary = getStringFromXML(storeNode,"show/description/long/text()");
-			String shortSummary = getStringFromXML(storeNode,"show/description/short/text()");
-			List<String> genres = readGenresFromXML(storeNode);
 
 			Show show = new Show(showId);
+			readGenres(show, showNode);
 			show.setName(name);
 			try {
 				show.setImageURL(new URL(imageURL));
@@ -641,13 +791,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			show.setShortSummary(shortSummary);
 			show.setShowURL(new URL(showURL));
 			show.setSourceId(sourceId);
-			show.setGenres(genres);
 
 			return show;
 		} catch (XMLParserNotFoundException e) {
 			throw new NotInStoreException();
-		} catch (TransformerException e) {
-			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse cache: "+ e.getMessage(), e);
 		}
@@ -673,7 +820,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 		Show show = null;
 		try {
-			show =getShowFromCache(doc);
+			show =getShowFromCache(doc,showId);
 			return show;
 		} catch (NotInStoreException e) {
 			return null;
@@ -708,7 +855,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (doc!=null) {
 			NodeList nodes;
 			try {
-				nodes = XPathAPI.selectNodeList(doc, "//file[@location='"+oldFile.getPath()+"']");
+				nodes = selectNodeList(doc, "//file[@location='"+oldFile.getPath()+"']");
 
 				for (int i=0;i<nodes.getLength();i++) {
 					Element fileNode = (Element) nodes.item(i);
@@ -717,7 +864,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 				writeCache(cacheFile, doc);
-			} catch (TransformerException e) {
+			} catch (XMLParserException e) {
 				throw new StoreException("Unable to parse XML",e);
 			}
 		}
@@ -741,31 +888,30 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 						return searchForFilm(store,episodeFile,renamePattern);
 					}
 				}
-			} catch (TransformerException e) {
+			} catch (XMLParserException e) {
 				throw new StoreException("Unable to parse Store XML",e);
 			}
 		}
 		return null;
 	}
 
-	private SearchResult searchForFilm(Node store, File episodeFile,String renamePattern) throws TransformerException {
+	private SearchResult searchForFilm(Node store, File episodeFile,String renamePattern) throws XMLParserException {
 		SearchResult result = null;
 
 		// search for film by file name
-		NodeList filmNodes = XPathAPI.selectNodeList(store,"film[file/@location='"+episodeFile.getAbsolutePath()+"']");
-		for (int i=0;i<filmNodes.getLength();i++) {
-			Element filmEl = (Element)filmNodes.item(i);
+		for (Node node : selectNodeList(store,"film[file/@location='"+episodeFile.getAbsolutePath()+"']")) {
+			Element filmEl = (Element)node;
 			result = new SearchResult(filmEl.getAttribute("id"), filmEl.getAttribute("url"), filmEl.getAttribute("sourceId"));
 		}
 
 		return result;
 	}
 
-	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern) throws TransformerException {
+	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern) throws XMLParserException {
 		SearchResult result = null;
 
 		// search for show by file name
-		NodeList showNodes = XPathAPI.selectNodeList(store,"show[file/@location='"+episodeFile.getAbsolutePath()+"']");
+		NodeList showNodes = selectNodeList(store,"show[file/@location='"+episodeFile.getAbsolutePath()+"']");
 		if (showNodes!=null && showNodes.getLength()>0) {
 			Element showEl = (Element)showNodes.item(0);
 			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
@@ -778,18 +924,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			ReverseFilePatternMatcher m = new ReverseFilePatternMatcher();
 			m.parse(episodeFile.getAbsolutePath(), renamePattern);
 
-			if (m.getValues()!=null) {				
+			if (m.getValues()!=null) {
 				String id = m.getValues().get("h");
 				String name = m.getValues().get("n");
 				if (id!=null) {
-					showNodes = XPathAPI.selectNodeList(store,"show[@id='"+id+"']");
+					showNodes = selectNodeList(store,"show[@id='"+id+"']");
 					if (showNodes!=null && showNodes.getLength()>0) {
 						Element showEl = (Element)showNodes.item(0);
 						result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
 					}
 				}
 				else if (name!=null) {
-					showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
+					showNodes = selectNodeList(store,"show[@name='"+name+"']");
 					if (showNodes!=null && showNodes.getLength()>0) {
 						Element showEl = (Element)showNodes.item(0);
 						result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));
@@ -803,7 +949,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			Matcher m = FILE_SEARCH_PATTERN1.matcher(episodeFile.getName());
 			if (m.matches()) {
 				String name = m.group(1);
-				showNodes = XPathAPI.selectNodeList(store,"show[@name='"+name+"']");
+				showNodes = selectNodeList(store,"show[@name='"+name+"']");
 				if (showNodes!=null && showNodes.getLength()>0) {
 					Element showEl = (Element)showNodes.item(0);
 					result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));

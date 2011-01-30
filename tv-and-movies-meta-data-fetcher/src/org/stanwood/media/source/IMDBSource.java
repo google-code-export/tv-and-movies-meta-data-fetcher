@@ -250,7 +250,7 @@ public class IMDBSource implements ISource {
 					else if (getContents(h5).equals("Country:")) {
 						List<Link> countries = getLinks(div, "/Sections/Countries");
 						if (countries!=null && countries.size()==1) {
-							film.setCountry(countries.get(0));
+							film.setCountry(countries.get(0).getTitle());
 						}
 					}
 				}

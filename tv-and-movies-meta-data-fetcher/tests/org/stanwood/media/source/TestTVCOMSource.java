@@ -51,7 +51,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("tvcom",show.getSourceId());
 		assertEquals("Eureka",show.getName());
 		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC Universal Cable Studio and filmed in the province of British Columbia, Canada.",show.getLongSummary());
-		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is...",show.getShortSummary());		
+		assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is...",show.getShortSummary());
 		assertEquals(SHOW_ID_EUREKA,show.getShowId());
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/58448.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/eureka/show/58448/summary.html",show.getShowURL().toExternalForm());
@@ -90,7 +90,7 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://www.tv.com/eureka/show/"+SHOW_ID_EUREKA+"/episode.html?season=4",season.getListingUrl().toExternalForm());
 		assertEquals("http://www.tv.com/eureka/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());
 		assertEquals(4,season.getSeasonNumber());
-		
+
 		season = source.getSeason(show, 5);
 		assertNull(season);
 	}
@@ -114,22 +114,21 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals(784857,episode.getEpisodeId());
 		assertEquals(8.9F,episode.getRating());
 		assertEquals(1,episode.getDirectors().size());
-		assertEquals("Peter O'Fallon",episode.getDirectors().get(0).getTitle());
-		assertEquals("http://www.tv.com/peter-ofallon/person/45550/summary.html",episode.getDirectors().get(0).getURL());
+		assertEquals("Peter O'Fallon",episode.getDirectors().get(0));
 		assertEquals(2,episode.getWriters().size());
-		assertEquals("Andrew Cosby",episode.getWriters().get(0).getTitle());
-		assertEquals("http://www.tv.com/andrew-cosby/person/125361/summary.html",episode.getWriters().get(0).getURL());
-		assertEquals("Jaime Paglia",episode.getWriters().get(1).getTitle());
-		assertEquals("http://www.tv.com/jaime-paglia/person/437702/summary.html",episode.getWriters().get(1).getURL());
-		assertEquals(14,episode.getGuestStars().size());
-		assertEquals("Christopher Gauthier",episode.getGuestStars().get(1).getTitle());
-		assertEquals("http://www.tv.com/christopher-gauthier/person/265916/summary.html",episode.getGuestStars().get(1).getURL());
-		assertEquals("Maury Chaykin",episode.getGuestStars().get(2).getTitle());
-		assertEquals("http://www.tv.com/maury-chaykin/person/24799/summary.html",episode.getGuestStars().get(2).getURL());
-		assertEquals("Benjamin B. Smith",episode.getGuestStars().get(6).getTitle());
-		assertEquals("http://www.tv.com/benjamin-b.-smith/person/361574/summary.html",episode.getGuestStars().get(6).getURL());
-		assertEquals("Garry Chalk",episode.getGuestStars().get(13).getTitle());
-		assertEquals("http://www.tv.com/garry-chalk/person/33903/summary.html",episode.getGuestStars().get(13).getURL());
+		assertEquals("Andrew Cosby",episode.getWriters().get(0));
+		assertEquals("Jaime Paglia",episode.getWriters().get(1));
+
+		assertEquals(14,episode.getActors().size());
+		assertEquals("Christopher Gauthier",episode.getActors().get(1).getName());
+		assertEquals("Christopher Gauthier",episode.getActors().get(1).getRole());
+		assertEquals("Maury Chaykin",episode.getActors().get(2).getName());
+		assertEquals("Maury Chaykin",episode.getActors().get(2).getRole());
+		assertEquals("Benjamin B. Smith",episode.getActors().get(6).getName());
+		assertEquals("Benjamin B. Smith",episode.getActors().get(6).getRole());
+		assertEquals("Garry Chalk",episode.getActors().get(13).getName());
+		assertEquals("Garry Chalk",episode.getActors().get(13).getRole());
+
 
 		episode = source.getEpisode(season, 2);
 		assertEquals(2,episode.getEpisodeNumber());
@@ -218,9 +217,9 @@ public class TestTVCOMSource extends TestCase {
 		assertEquals("http://image.com.com/tv/images/content_headers/program_new/17552.jpg",show.getImageURL().toExternalForm());
 		assertEquals("http://www.tv.com/heroes/show/17552/summary.html",show.getShowURL().toExternalForm());
 		assertEquals(2,show.getGenres().size());
-		assertEquals("Drama",show.getGenres().get(0));		
+		assertEquals("Drama",show.getGenres().get(0));
 		assertEquals("Sci-Fi",show.getGenres().get(1));
-		
+
 	}
 
 	/**

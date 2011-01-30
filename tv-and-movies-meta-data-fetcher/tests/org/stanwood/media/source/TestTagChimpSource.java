@@ -107,7 +107,7 @@ public class TestTagChimpSource {
 
 		List<Certification>certs = film.getCertifications();
 		Assert.assertEquals(1,certs.size());
-		Assert.assertEquals("USA",certs.get(0).getCountry());
+		Assert.assertEquals("USA",certs.get(0).getType());
 		Assert.assertEquals("PG-13",certs.get(0).getCertification());
 
 		List<Chapter>chapters = film.getChapters();

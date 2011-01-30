@@ -27,10 +27,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -105,7 +105,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
-				ps.println("     <userStarRating>" + Math.round((episode.getRating() / 10) * 5) + "</userStarRating>");
+				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>");
 				// ps.println("     <rating>TV-PG</rating>");
 				ps.println("     <seriesName>" + episode.getSeason().getShow().getName() + "</seriesName>");
 				// ps.println("     <broadcaster>The CW</broadcaster>");
@@ -119,9 +119,9 @@ public class SapphireStore implements IStore {
 					ps.println("        <genre>" + genre + "</genre>");
 				}
 				ps.println("     </genres>");
-				if (episode.getGuestStars() != null) {
+				if (episode.getActors() != null) {
 					ps.println("     <cast>");
-					for (Link cast : episode.getGuestStars()) {
+					for (Actor cast : episode.getActors()) {
 						ps.println("        <name>" + cast + "</name>");
 					}
 					ps.println("     </cast>");
@@ -132,7 +132,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     </producers>");
 				if (episode.getDirectors() != null) {
 					ps.println("     <directors>");
-					for (Link director : episode.getDirectors()) {
+					for (String director : episode.getDirectors()) {
 						ps.println("       <name>" + director + "</name>");
 					}
 					ps.println("     </directors>");
@@ -167,7 +167,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
-				ps.println("     <userStarRating>" + Math.round((film.getRating() / 10) * 5) + "</userStarRating>");
+				ps.println("     <userStarRating>" + Math.round((film.getRating().getRating() / 10) * 5) + "</userStarRating>");
 				ps.println("     <rating>" + findCert(film.getCertifications())+"</rating>");
 				// ps.println("     <broadcaster>The CW</broadcaster>");
 				ps.println("     <published>" + df.format(film.getDate()) + "</published>");
@@ -181,10 +181,10 @@ public class SapphireStore implements IStore {
 					}
 				}
 				ps.println("     </genres>");
-				if (film.getGuestStars() != null) {
+				if (film.getActors() != null) {
 					ps.println("     <cast>");
-					for (Link cast : film.getGuestStars()) {
-						ps.println("        <name>" + cast + "</name>");
+					for (Actor cast : film.getActors()) {
+						ps.println("        <name>" + cast.getName() + "</name>");
 					}
 					ps.println("     </cast>");
 				}
@@ -193,7 +193,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     </producers>");
 				if (film.getDirectors() != null) {
 					ps.println("     <directors>");
-					for (Link director : film.getDirectors()) {
+					for (String director : film.getDirectors()) {
 						ps.println("       <name>" + director + "</name>");
 					}
 				}
@@ -211,7 +211,7 @@ public class SapphireStore implements IStore {
 	private String findCert(List<Certification> certifications) {
 		if (preferedRating!=null) {
 			for (Certification cert : certifications) {
-				if (cert.getCountry().toLowerCase().trim().equals(preferedRating.toLowerCase().trim())) {
+				if (cert.getType().toLowerCase().trim().equals(preferedRating.toLowerCase().trim())) {
 					return cert.getCertification();
 				}
 			}

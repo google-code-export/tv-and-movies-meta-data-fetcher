@@ -25,11 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
+import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.IMDBSource;
@@ -65,7 +67,7 @@ public class Data {
 		film.setGenres(genres);
 
 		film.setPreferredGenre("Drama");
-		film.setCountry(new Link("http://www.imdb.com/Sections/Countries/USA/","USA"));
+		film.setCountry("USA");
 		List<Certification> certifications= new ArrayList<Certification>();
 		certifications.add(new Certification("16","Iceland"));
 		certifications.add(new Certification("R-18","Philippines"));
@@ -97,33 +99,31 @@ public class Data {
 		film.setCertifications(certifications);
 		film.setDate(df.parse("1995-08-25"));
 		List<Link> directors = new ArrayList<Link>();
-		directors.add(new Link("http://www.imdb.com/name/nm0001741/","Bryan Singer"));
-		film.setDirectors(directors);
+		film.setDirectors(createStringList(new String[] {"Bryan Singer"}));
 		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
-		List<Link> guestStars = new ArrayList<Link>();
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000286/","Stephen Baldwin"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000321/","Gabriel Byrne"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0001125/","Benicio Del Toro"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0001629/","Kevin Pollak"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000228/","Kevin Spacey"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0001590/","Chazz Palminteri"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000592/","Pete Postlethwaite"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0002064/","Giancarlo Esposito"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000751/","Suzy Amis"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000445/","Dan Hedaya"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0000860/","Paul Bartel"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0107808/","Carl Bressler"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0800342/","Phillip Simon"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0790436/","Jack Shearer"));
-		guestStars.add(new Link("http://www.imdb.com/name/nm0261452/","Christine Estabrook"));
-		film.setGuestStars(guestStars);
-		film.setRating(8.7F);
+		List<Actor> guestStars = new ArrayList<Actor>();
+		guestStars.add(new Actor("Stephen Baldwin",""));
+		guestStars.add(new Actor("Gabriel Byrne",""));
+		guestStars.add(new Actor("Benicio Del Toro",""));
+		guestStars.add(new Actor("Kevin Pollak",""));
+		guestStars.add(new Actor("Kevin Spacey",""));
+		guestStars.add(new Actor("Chazz Palminteri",""));
+		guestStars.add(new Actor("Pete Postlethwaite",""));
+		guestStars.add(new Actor("Giancarlo Esposito",""));
+		guestStars.add(new Actor("Suzy Amis",""));
+		guestStars.add(new Actor("Dan Hedaya",""));
+		guestStars.add(new Actor("Paul Bartel",""));
+		guestStars.add(new Actor("Carl Bressler",""));
+		guestStars.add(new Actor("Phillip Simon",""));
+		guestStars.add(new Actor("Jack Shearer",""));
+		guestStars.add(new Actor("Christine Estabrook",""));
+		film.setActors(guestStars);
+		film.setRating(new Rating(8.7F,35));
 		film.setSourceId(IMDBSource.SOURCE_ID);
 		film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
 		film.setDescription("Test description of the film");
 		List<Link>writers = new ArrayList<Link>();
-		writers.add(new Link("http://www.imdb.com/name/nm0003160/","Christopher McQuarrie"));
-		film.setWriters(writers);
+		film.setWriters(createStringList(new String[] {"Christopher McQuarrie"}));
 
 		film.addChapter(new Chapter("The start",1));
 		film.addChapter(new Chapter("The end",3));
@@ -175,10 +175,10 @@ public class Data {
 		episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
 		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
 		episode1.setTitle("Pilot");
-		episode1.setRating(1);
-		episode1.setDirectors(createLinks(new Link[]{new Link("http://test/","Harry")}));
-		episode1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot")}));
-		episode1.setGuestStars(createLinks(new Link[]{new Link("http://test/sally","sally"),new Link("http://test/cedric","Cedric")}));
+		episode1.setRating(new Rating(1,1));
+		episode1.setDirectors(createStringList(new String[] {"Harry"}));
+		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
+		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 		episode1.setEpisodeId(784857);
 		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
@@ -192,7 +192,7 @@ public class Data {
 		episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
 		episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 		episode2.setTitle("Many Happy Returns");
-		episode2.setRating(9.5F);
+		episode2.setRating(new Rating(9.5F,2355));
 		episode2.setEpisodeId(800578);
 		season.addEpisode(episode2);
 		result.add(new EpisodeData(episode2,episodeFile));
@@ -212,7 +212,7 @@ public class Data {
 		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 		episode1.setTitle("Phoenix Rising");
 		episode1.setEpisodeId(800578);
-		episode1.setRating(0.4F);
+		episode1.setRating(new Rating(0.4F,12354));
 		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
 
@@ -225,17 +225,37 @@ public class Data {
 		special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
 		special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 		special1.setTitle("Countdown to the Premiere");
-		special1.setRating(0.4F);
+		special1.setRating(new Rating(0.4F,3000));
 		special1.setEpisodeId(800578);
-		special1.setDirectors(createLinks(new Link[]{new Link("http://test/","JP")}));
-		special1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot"),new Link("http://test/b","Write a little")}));
-		special1.setGuestStars(createLinks(new Link[]{new Link("http://test/bob","bob"),new Link("http://test/fred","Write a little")}));
+		special1.setDirectors(createStringList(new String[]{"JP"}));
+		special1.setWriters(createStringList(new String[]{"Write a lot","Write a little"}));
+		List<Actor> actors = new ArrayList<Actor>();
+		actors.add(new Actor("bob","fred"));
+		actors.add(new Actor("Write a little","blah"));
+		special1.setActors(actors);
 		result.add(new EpisodeData(special1,episodeFile));
 
 		season.addSepcial(special1);
 
 
 		return result;
+	}
+
+
+	private static List<Actor> createActorsList(Actor values[]) {
+		List<Actor> list = new ArrayList<Actor>() ;
+		for (Actor s : values) {
+			list.add(s);
+		}
+		return list;
+	}
+
+	private static List<String> createStringList(String values[]) {
+		List<String> list = new ArrayList<String>() ;
+		for (String s : values) {
+			list.add(s);
+		}
+		return list;
 	}
 
 	/**
@@ -277,10 +297,10 @@ public class Data {
 		episode1.setSummary("After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.");
 		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
 		episode1.setTitle("Heroe, Pilot");
-		episode1.setRating(2);
-		episode1.setDirectors(createLinks(new Link[]{new Link("http://Whoever/","Whoever")}));
-		episode1.setWriters(createLinks(new Link[]{new Link("http://test/a","Write a lot")}));
-		episode1.setGuestStars(createLinks(new Link[]{new Link("http://test/sally","sally"),new Link("http://test/cedric","Cedric")}));
+		episode1.setRating(new Rating(2,2345));
+		episode1.setDirectors(createStringList(new String[]{"Whoever"}));
+		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
+		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 		episode1.setEpisodeId(1181337);
 		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));

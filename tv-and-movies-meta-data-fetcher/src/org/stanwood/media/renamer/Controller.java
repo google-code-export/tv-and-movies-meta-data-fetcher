@@ -42,7 +42,6 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.XMLStore;
 import org.stanwood.media.store.memory.MemoryStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 
@@ -129,9 +128,6 @@ public class Controller {
 			String storeClass = storeConfig.getID();
 			try {
 				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
-				if (c.equals(XMLStore.class)) {
-					log.warn("Store "+storeClass+" is depercated, try using "+XMLStore2.class.getName()+" instead.");
-				}
 				IStore store = c.newInstance();
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
