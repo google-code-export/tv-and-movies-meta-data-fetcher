@@ -28,7 +28,7 @@ public abstract class XBMCExtension extends XMLParser {
 
 	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*?\\])");
 	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*?)\\]");
-	private final static Pattern PARAM_PATTERN = Pattern.compile("\\$\\$\\d+");
+	private final static Pattern PARAM_PATTERN = Pattern.compile("(\\$\\$\\d+)");
 
 	private Document doc = null;
 	private String point;
@@ -200,20 +200,22 @@ public abstract class XBMCExtension extends XMLParser {
 		return null;
 	}
 
-	private String applyParams(String output, Map<Integer, String> params) {
-		String out = output;
+	/* package for test*/ String applyParams(String output, Map<Integer, String> params) {
+		StringBuffer buf = new StringBuffer();
 
-		Matcher m = PARAM_PATTERN.matcher(out);
+		Matcher m = PARAM_PATTERN.matcher(output);
 		while (m.find()) {
 			int num = Integer.parseInt(m.group().substring(2));
 			String value = params.get(num);
 			if (value==null) {
 				value = "";
 			}
-			out = m.replaceAll(value);
-		}
 
-		return out;
+			m.appendReplacement(buf, Matcher.quoteReplacement(value));
+		}
+		m.appendTail(buf);
+
+		return buf.toString();
 	}
 
 	private String processInfoVars(String output) throws XBMCException {
