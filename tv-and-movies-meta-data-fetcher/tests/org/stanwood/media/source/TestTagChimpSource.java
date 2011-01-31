@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.testdata.Data;
@@ -93,17 +92,14 @@ public class TestTagChimpSource {
 		Assert.assertEquals(1,genres.size());
 		Assert.assertEquals("Sci-Fi & Fantasy",genres.get(0));
 
-		List<Link>directors = film.getDirectors();
+		List<String>directors = film.getDirectors();
 		Assert.assertEquals(1,directors.size());
-		Assert.assertEquals("Jon Favreau",directors.get(0).getTitle());
-		Assert.assertEquals("",directors.get(0).getURL());
+		Assert.assertEquals("Jon Favreau",directors.get(0));
 
-		List<Link>writers = film.getWriters();
+		List<String>writers = film.getWriters();
 		Assert.assertEquals(2,writers.size());
-		Assert.assertEquals("Mark Fergus",writers.get(0).getTitle());
-		Assert.assertEquals("",writers.get(0).getURL());
-		Assert.assertEquals("Hawk Ostby",writers.get(1).getTitle());
-		Assert.assertEquals("",writers.get(1).getURL());
+		Assert.assertEquals("Mark Fergus",writers.get(0));
+		Assert.assertEquals("Hawk Ostby",writers.get(1));
 
 		List<Certification>certs = film.getCertifications();
 		Assert.assertEquals(1,certs.size());

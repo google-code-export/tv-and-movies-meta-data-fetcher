@@ -34,8 +34,6 @@ import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.source.IMDBSource;
-import org.stanwood.media.source.TVCOMSource;
 
 /**
  * This class in used to make it easier to find all the test resources. They can be found
@@ -44,6 +42,9 @@ import org.stanwood.media.source.TVCOMSource;
 public class Data {
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+	public final static String TEST_FILM_SOURCE_ID = "xmbc-metadata.themoviedb.org";
+	public final static String TEST_TV_SOURCE_ID = "metadata.tvdb.com";
 
 	/** A test show id */
 	public final static String SHOW_ID_EUREKA = "58448";
@@ -119,7 +120,7 @@ public class Data {
 		guestStars.add(new Actor("Christine Estabrook",""));
 		film.setActors(guestStars);
 		film.setRating(new Rating(8.7F,35));
-		film.setSourceId(IMDBSource.SOURCE_ID);
+		film.setSourceId(TEST_FILM_SOURCE_ID);
 		film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
 		film.setDescription("Test description of the film");
 		List<Link>writers = new ArrayList<Link>();
@@ -143,7 +144,7 @@ public class Data {
 		List<EpisodeData>result = new ArrayList<EpisodeData>();
 
 		Show show = new Show(SHOW_ID_EUREKA);
-		show.setSourceId(TVCOMSource.SOURCE_ID);
+		show.setSourceId(TEST_TV_SOURCE_ID);
 		show.setImageURL(new URL("http://image.com.com/tv/images/b.gif"));
 		StringBuilder summary = new StringBuilder();
 		summary.append("Small town. Big secret.\n");
@@ -242,7 +243,7 @@ public class Data {
 	}
 
 
-	private static List<Actor> createActorsList(Actor values[]) {
+	public static List<Actor> createActorsList(Actor values[]) {
 		List<Actor> list = new ArrayList<Actor>() ;
 		for (Actor s : values) {
 			list.add(s);
@@ -250,7 +251,7 @@ public class Data {
 		return list;
 	}
 
-	private static List<String> createStringList(String values[]) {
+	public static List<String> createStringList(String values[]) {
 		List<String> list = new ArrayList<String>() ;
 		for (String s : values) {
 			list.add(s);
@@ -268,7 +269,7 @@ public class Data {
 	public static List<EpisodeData> createHeroesShow(File heroesDir) throws IOException, ParseException {
 		List<EpisodeData>result = new ArrayList<EpisodeData>();
 		Show show = new Show(SHOW_ID_HEROES);
-		show.setSourceId(TVCOMSource.SOURCE_ID);
+		show.setSourceId(TEST_TV_SOURCE_ID);
 		show.setImageURL(new URL("http://image.com.com/tv/images/content_headers/program_new/17552.jpg"));
 
 		StringBuilder summary = new StringBuilder();

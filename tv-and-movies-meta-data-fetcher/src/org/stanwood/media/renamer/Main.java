@@ -34,9 +34,7 @@ import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.source.IMDBSource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.TVCOMSource;
 import org.stanwood.media.store.StoreException;
 
 /**
@@ -47,12 +45,12 @@ public class Main {
 
 	@SuppressWarnings("unused")
 	private final static Log log = LogFactory.getLog(Main.class);
-	
+
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
-	private final static String HELP_OPTION = "h"; 
+	private final static String HELP_OPTION = "h";
 	private final static String SHOWID_OPTION = "s";
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String RENAME_PATTERN = "p";
@@ -74,7 +72,7 @@ public class Main {
 	/* package for test */ static IExitHandler exitHandler = null;
 	/* package for test */ static boolean doInit = true;
 	private static boolean recursive = false;
-	
+
 	static {
 		OPTIONS = new Options();
 		OPTIONS.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
@@ -88,16 +86,16 @@ public class Main {
 		OPTIONS.addOption(new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]"));
 		OPTIONS.addOption(new Option(RECURSIVE_OPTION,"recursive",false,"Also process subdirectories"));
 	}
-	
+
 	/**
-	 * The main method used to rename files. It looks for files in a directory, 
+	 * The main method used to rename files. It looks for files in a directory,
 	 * works out the correct episode numbers and season numbers, then renames then
-	 * too the correct name. 
-	 * 
+	 * too the correct name.
+	 *
 	 * The following command line syntax is passed too this method:
-	 * <pre> 
+	 * <pre>
 	 * media-renamer [-h| [OPTIONS]...]
-	 * 
+	 *
      * -d, --dir         The directory to look for media. If not present use the current directory
      * -s, --showid      The ID of the show that episodes in the media directory belong to. Only usable with TV mode.
      * -p, --pattern     The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.
@@ -108,14 +106,14 @@ public class Main {
      * -l, --log_config  The log configuration mode [<INFO>|<DEBUG>|<log4j configuration file>], defaults to INFO
      * -h, --help        Show the help
 	 * </pre>
-	 * 
+	 *
 	 * The pattern is used to work out what the format of the renamed file should be. See
 	 * @see org.stanwood.media.renamer.Renamer for more information on the pattern.
-	 * 
+	 *
 	 * When looking up files to rename, it needs to work out the episode and season number
 	 * of each file. See @see org.stanwood.media.renamer.FileNameParser for more information
 	 * on the patterns it matches todo this.
-	 * 
+	 *
 	 * @param args The command line arguments.
 	 */
 	public static void main(String[] args) {
@@ -126,19 +124,19 @@ public class Main {
 		refresh = false;
 		configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
 		mode = null;
-		
+
 		if (exitHandler==null) {
 			exitHandler = new IExitHandler() {
 				@Override
 				public void exit(int exitCode) {
 					System.exit(exitCode);
 				}
-				
+
 			};
 		}
-		
+
 		// create Options object
-		
+
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd;
 		try {
@@ -208,11 +206,11 @@ public class Main {
 				return false;
 			}
 		}
-				
+
 		if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
-			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION)); 
+			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));
 		}
-		
+
 		if (configFile==null || !configFile.exists()) {
 			warn("Unable to find config file '" +configFile+"' so using defaults.");
 			if (doInit) {
@@ -226,11 +224,11 @@ public class Main {
 				Controller.initFromConfigFile(reader);
 			}
 		}
-		
-		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) { 
+
+		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) {
 			sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
-		}		
-		
+		}
+
 		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory() && dir.canWrite()) {
@@ -238,13 +236,13 @@ public class Main {
 			} else {
 				fatal("Show directory must be a writable directory");
 				return false;
-			}					
+			}
 		}
 		if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
 			fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
 			return false;
 		}
-		
+
 		if (cmd.hasOption(SHOWID_OPTION)
 				&& cmd.getOptionValue(SHOWID_OPTION) != null) {
 			if (mode==Mode.FILM) {
@@ -257,15 +255,15 @@ public class Main {
 				fatal("Invalid command line parameters");
 				return false;
 			}
-		} 
-				
-		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {			
+		}
+
+		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {
 			pattern = cmd.getOptionValue(RENAME_PATTERN);
 		}
 
-		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));		
+		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
 		recursive = (cmd.hasOption(RECURSIVE_OPTION));
-		
+
 		if (mode == null) {
 			if (cmd.hasOption(SHOWID_OPTION)) {
 				mode = Mode.TV_SHOW;
@@ -274,7 +272,7 @@ public class Main {
 				mode = getDefaultMode();
 			}
 		}
-		
+
 		if (showId==null) {
 			if (mode==Mode.TV_SHOW) {
 				info("No id given, will search for id");
@@ -283,16 +281,16 @@ public class Main {
 		else {
 			info("Using show id " + sourceId+":" + showId);
 		}
-		
+
 		if (sourceId==null) {
 			if (mode==Mode.TV_SHOW) {
-				sourceId = TVCOMSource.SOURCE_ID;
+				sourceId = Controller.DEFAULT_TV_SOURCE;
 			}
 			else {
-				sourceId = IMDBSource.SOURCE_ID;
+				sourceId = Controller.DEFAULT_FILM_SOURCE;
 			}
 		}
-		
+
 		if (pattern==null) {
 			if (mode==Mode.TV_SHOW) {
 				pattern = DEFAULT_TV_FILE_PATTERN;
@@ -300,13 +298,13 @@ public class Main {
 			else {
 				pattern = DEFAULT_FILM_FILE_PATTERN;
 			}
-		}			
-		
+		}
+
 		return true;
-	}	
+	}
 
 	private static boolean initLogging(String logConfig) {
-		if (logConfig!=null) {			
+		if (logConfig!=null) {
 			if (logConfig.toLowerCase().equals("info")) {
 				LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 			}
@@ -322,40 +320,40 @@ public class Main {
 					fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath());
 					return false;
 				}
-				
+
 			}
 		}
 		else {
 			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		}
-		
+
 		return true;
 	}
 
 	private static Mode getDefaultMode() {
-		StringTokenizer tok = new StringTokenizer(rootMediaDirectory.getAbsolutePath(),File.separator);		
+		StringTokenizer tok = new StringTokenizer(rootMediaDirectory.getAbsolutePath(),File.separator);
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken().toLowerCase();
 			if (token.equals("films") || token.equals("movies")) {
 				return Mode.FILM;
-			}			
+			}
 		}
 		return Mode.TV_SHOW;
 	}
 
-	
+
 
 	@SuppressWarnings("unchecked")
 	private static void displayHelp() {
-		info("media-renamer [-"+HELP_OPTION+"|-"+SHOWID_OPTION+"=<showid> [OPTIONS]...]\n");		
-		
+		info("media-renamer [-"+HELP_OPTION+"|-"+SHOWID_OPTION+"=<showid> [OPTIONS]...]\n");
+
 		for (Option option : (Collection<Option>)OPTIONS.getOptions()) {
 			String opt = "-"+option.getOpt()+", --" + option.getLongOpt();
 			while (opt.length()<15) {
 				opt+=" ";
 			}
 			info(opt+ option.getDescription());
-		}		
+		}
 	}
 
 	/**
@@ -369,15 +367,15 @@ public class Main {
 	private static void warn(String msg) {
 		System.out.println(msg);
 	}
-	
+
 	private static void fatal(String msg) {
 		System.err.println(msg);
 		displayHelp();
-		doExit(1);		
+		doExit(1);
 	}
-	
+
 	private static void info(String msg) {
 		System.out.println(msg);
 	}
-	
+
 }

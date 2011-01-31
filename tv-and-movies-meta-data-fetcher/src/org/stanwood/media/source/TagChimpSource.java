@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -90,7 +90,7 @@ public class TagChimpSource implements ISource {
 				if (tds.size()==3) {
 					index++;
 				}
-				String fieldName = tds.get(index).getTextExtractor().toString();				
+				String fieldName = tds.get(index).getTextExtractor().toString();
 				List elements = tds.get(index+1).getChildElements();
 				if (elements.size()>0) {
 					Element sub = (Element) elements.get(0);
@@ -109,9 +109,9 @@ public class TagChimpSource implements ISource {
 						fieldName = sub.getAttributeValue("name");
 						fieldValue = sub.getTextExtractor().toString();
 					}
-	
+
 					if (fieldValue != null) {
-						
+
 						handleField(film, fieldName, SearchHelper.decodeHtmlEntities(fieldValue).trim());
 					}
 				}
@@ -137,17 +137,17 @@ public class TagChimpSource implements ISource {
 				log.error("Unable to parse date '" + value + "' of film with id '" + film.getId() + "'");
 			}
 		} else if (name.equals("director")) {
-			List<Link> directors = new ArrayList<Link>();
+			List<String> directors = new ArrayList<String>();
 			for (String director : value.split(",")) {
-				directors.add(new Link("", director.trim()));
+				directors.add(director.trim());
 			}
 			film.setDirectors(directors);
 		} else if (name.equals("producer")) {
 
 		} else if (name.equals("screenwriter")) {
-			List<Link> writers = new ArrayList<Link>();
+			List<String> writers = new ArrayList<String>();
 			for (String writer : value.split(",")) {
-				writers.add(new Link("", writer.trim()));
+				writers.add(writer.trim());
 			}
 			film.setWriters(writers);
 		} else if (name.equals("copyright")) {
@@ -162,11 +162,11 @@ public class TagChimpSource implements ISource {
 			film.setGenres(genres);
 			film.setPreferredGenre(value);
 		} else if (name.equals("artist")) {
-			List<Link> guestStars = new ArrayList<Link>();
+			List<Actor> guestStars = new ArrayList<Actor>();
 			for (String artist : value.split(",")) {
-				guestStars.add(new Link("", artist.trim()));
+				guestStars.add(new Actor(artist.trim(),""));
 			}
-			film.setGuestStars(guestStars);
+			film.setActors(guestStars);
 		} else if (name.equals("short_description")) {
 			film.setSummary(value);
 		} else if (name.equals("long_description")) {

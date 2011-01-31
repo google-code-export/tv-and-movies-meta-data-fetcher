@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private String id;
 	private XBMCAddonManager mgr;
 
-	public XBMCSource(XBMCAddonManager mgr,String addonId) throws SourceException {
+	public XBMCSource(XBMCAddonManager mgr,String addonId) throws XBMCException {
 		this.id = addonId;
 		this.mgr = mgr;
 		addon = mgr.getAddon(addonId);
@@ -175,6 +176,8 @@ public class XBMCSource extends XMLParser implements ISource {
 					throw new SourceException("Unable to parse show details",e);
 				}
 				catch (MalformedURLException e) {
+					throw new SourceException("Unable to parse show details",e);
+				} catch (ParseException e) {
 					throw new SourceException("Unable to parse show details",e);
 				}
 			}

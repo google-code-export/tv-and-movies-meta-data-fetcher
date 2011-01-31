@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.source.DummyTVComSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
@@ -57,7 +56,7 @@ public class TestRenameRecursive {
 	 */
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
-		setupTestController(DummyTVComSource.class,XMLStore2.class);
+		setupTestController(DummyTVSource.class,XMLStore2.class);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
@@ -122,7 +121,7 @@ public class TestRenameRecursive {
 	 */
 //	@Test
 	public void testRecursiveSourceRename() throws Exception {
-		setupTestController(DummyTVComSource.class,null);
+		setupTestController(DummyTVSource.class,null);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {

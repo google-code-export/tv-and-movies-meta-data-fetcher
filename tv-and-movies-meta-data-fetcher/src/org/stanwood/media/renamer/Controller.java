@@ -23,7 +23,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,10 +38,11 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.SourceConfig;
 import org.stanwood.media.setup.StoreConfig;
-import org.stanwood.media.source.IMDBSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.TVCOMSource;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.memory.MemoryStore;
@@ -52,14 +55,27 @@ import org.stanwood.media.store.xmlstore.XMLStore2;
  */
 public class Controller {
 
+	public final static String DEFAULT_TV_SOURCE = "xbmc-metadata.tvdb.com";
+	public final static String DEFAULT_FILM_SOURCE = "xmbc-metadata.themoviedb.org";
+
 	private final static Log log = LogFactory.getLog(Controller.class);
 
 	private static Controller instance = null;
 
 	private static List<ISource> sources = null;
 	private static ArrayList<IStore> stores = null;
+	private static XBMCAddonManager xbmcMgr;
+
+	static {
+		try {
+			xbmcMgr = new XBMCAddonManager();
+		} catch (XBMCException e) {
+			log.error(e.getMessage(),e);
+		}
+	}
 
 	private Controller() {
+
 	}
 
 	/**
@@ -76,9 +92,10 @@ public class Controller {
 		stores = new ArrayList<IStore>();
 		stores.add(new MemoryStore());
 		stores.add(new XMLStore2());
+
 		sources = new ArrayList<ISource>();
-		sources.add(new TVCOMSource());
-		sources.add(new IMDBSource());
+		sources.add(getSource(DEFAULT_TV_SOURCE));
+		sources.add(getSource(DEFAULT_FILM_SOURCE));
 	}
 
 	/**
@@ -102,14 +119,44 @@ public class Controller {
 			String sourceClass = sourceConfig.getID();
 			try {
 				Class<? extends ISource> c = Class.forName(sourceClass).asSubclass(ISource.class);
-				ISource source = c.newInstance();
-				if (sourceConfig.getParams() != null) {
-					for (String key : sourceConfig.getParams().keySet()) {
-						String value = sourceConfig.getParams().get(key);
-						setParamOnSource(c, source, key, value);
+				if (c.equals(XBMCSource.class)) {
+					List<ISource> xbmcSources = xbmcMgr.getSources();
+					if (sourceConfig.getParams() != null) {
+						for (String key : sourceConfig.getParams().keySet()) {
+							String value = sourceConfig.getParams().get(key);
+							List<String>addons = null;
+							if (key.equals("scrapers")) {
+								addons = new ArrayList<String>();
+								StringTokenizer tok = new StringTokenizer(value,",");
+								while (tok.hasMoreTokens()) {
+									addons.add("xbmc-"+tok.nextToken());
+								}
+							}
+
+							Iterator<ISource> it = xbmcSources.iterator();
+							while (it.hasNext()) {
+								ISource source = it.next();
+								if (addons!=null && !addons.contains(source.getSourceId())) {
+									it.remove();
+								}
+								else {
+									setParamOnSource(c, source, key, value);
+								}
+							}
+						}
 					}
+					sources.addAll(xbmcSources);
 				}
-				sources.add(source);
+				else {
+					ISource source = c.newInstance();
+					if (sourceConfig.getParams() != null) {
+						for (String key : sourceConfig.getParams().keySet()) {
+							String value = sourceConfig.getParams().get(key);
+							setParamOnSource(c, source, key, value);
+						}
+					}
+					sources.add(source);
+				}
 			} catch (ClassNotFoundException e) {
 				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (InstantiationException e) {
@@ -500,9 +547,20 @@ public class Controller {
 		}
 	}
 
+	public static ISource getSource(String sourceId) {
+		for (ISource source : sources) {
+			if (source.getSourceId().equals(sourceId)) {
+				return source;
+			}
+		}
+		return null;
+	}
+
 	/* package for test */final static void destoryController() {
 		instance = null;
 		stores = null;
 		sources = null;
 	}
+
+
 }

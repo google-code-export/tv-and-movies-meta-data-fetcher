@@ -25,6 +25,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
@@ -60,7 +61,7 @@ public class TestRenamer extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testRenamerUsingXMLSourceTV() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore.class);
+		TestRenameRecursive.setupTestController(null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
@@ -113,7 +114,7 @@ public class TestRenamer extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testRecursiveRenamerUsingXMLSourceTV() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore.class);
+		TestRenameRecursive.setupTestController(null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
@@ -191,7 +192,7 @@ public class TestRenamer extends TestCase {
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	public void testRecursiveRenamerUsingXMLSourceTVAndDirPattern() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore.class);
+		TestRenameRecursive.setupTestController(null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Meida");

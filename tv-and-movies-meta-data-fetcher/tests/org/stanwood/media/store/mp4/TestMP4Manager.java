@@ -11,10 +11,12 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Link;
+import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
@@ -42,7 +44,7 @@ public class TestMP4Manager {
 
 		Assert.assertEquals(0,atoms.size());
 	}
-	
+
 	/**
 	 * Used to test reading atoms when the MP4 has meta data
 	 * @throws Exception Thrown if the test produces any errors
@@ -109,7 +111,7 @@ public class TestMP4Manager {
 		IMP4Manager ap = new MP4Manager();
 		ap.updateEpsiode(mp4File, episode);
 
-		List<Atom> atoms = ap.listAttoms(mp4File);		
+		List<Atom> atoms = ap.listAttoms(mp4File);
 		Assert.assertEquals(10,atoms.size());
 		Assert.assertEquals("TV Show",atoms.get(0).getValue());
 		Assert.assertEquals("stik",atoms.get(0).getName());
@@ -165,9 +167,9 @@ public class TestMP4Manager {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
-		
+
 		Assert.assertEquals(7,atoms.size());
-		
+
 		Assert.assertEquals("SciFi",atoms.get(0).getValue());
 		Assert.assertEquals("catg",atoms.get(0).getName());
 		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
@@ -175,7 +177,7 @@ public class TestMP4Manager {
 		Assert.assertEquals("A test description",atoms.get(2).getValue());
 		Assert.assertEquals("desc",atoms.get(2).getName());
 		Assert.assertEquals("Movie",atoms.get(3).getValue());
-		Assert.assertEquals("stik",atoms.get(3).getName());		
+		Assert.assertEquals("stik",atoms.get(3).getName());
 		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(4).getValue().replaceAll("0 ... ", "0 "));
 		Assert.assertEquals("©day",atoms.get(4).getName());
 		Assert.assertEquals("SciFi",atoms.get(5).getValue());
@@ -204,27 +206,27 @@ public class TestMP4Manager {
 		certifications.add(new Certification("T","Italy"));
 		film.setCertifications(certifications);
 		film.setDate(DF.parse("10-11-2005"));
-		List<Link> directors = new ArrayList<Link>();
-		directors.add(new Link("Bryan Singer","http://www.imdb.com/name/nm0001741/"));
+		List<String> directors = new ArrayList<String>();
+		directors.add("Bryan Singer");
 		film.setDirectors(directors);
 		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");
 		genres.add("Drama");
 		film.setGenres(genres);
-		List<Link> guestStars = new ArrayList<Link>();
-		guestStars.add(new Link("Stephen Baldwin","http://www.imdb.com/name/nm0000286/"));
-		guestStars.add(new Link("Gabriel Byrne","http://www.imdb.com/name/nm0000321/"));
-		guestStars.add(new Link("Benicio Del Toro","http://www.imdb.com/name/nm0001125/"));
-		guestStars.add(new Link("Kevin Pollak","http://www.imdb.com/name/nm0001629/"));
-		film.setGuestStars(guestStars);
-		film.setRating(8.4F);
+		List<Actor> guestStars = new ArrayList<Actor>();
+		guestStars.add(new Actor("Stephen Baldwin",""));
+		guestStars.add(new Actor("Gabriel Byrne",""));
+		guestStars.add(new Actor("Benicio Del Toro",""));
+		guestStars.add(new Actor("Kevin Pollak",""));
+		film.setActors(guestStars);
+		film.setRating(new Rating(8.4F,345));
 		film.setSourceId("imdb");
 		film.setSummary("A test summary");
 		film.setDescription("A test description");
 		film.setTitle("Test film name");
-		List<Link>writers = new ArrayList<Link>();
-		writers.add(new Link("Christopher McQuarrie","http://www.imdb.com/name/nm0003160/"));
+		List<String>writers = new ArrayList<String>();
+		writers.add("Christopher McQuarrie");
 		film.setWriters(writers);
 		film.setImageURL(Data.class.getResource("test_image.jpeg"));
 		return film;
@@ -241,7 +243,7 @@ public class TestMP4Manager {
 		Episode episode = new Episode(3,season);
 		episode.setDate(DF.parse("10-11-2005"));
 		episode.setEpisodeId(34567);
-		episode.setRating(5.4F);
+		episode.setRating(new Rating(5.4F,345));
 		episode.setShowEpisodeNumber(103);
 		episode.setSummary("This is a test show summary");
 		episode.setTitle("Test Episode");

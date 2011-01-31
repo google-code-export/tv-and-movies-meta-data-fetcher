@@ -36,6 +36,7 @@ public class Show implements IVideoGenre {
 	private URL showURL;
 	private List<Season> seasons = new ArrayList<Season>();
 	private String sourceId;
+	private String preferredGenre;
 
 	/**
 	 * The constructor used to create a instance of the class
@@ -220,4 +221,27 @@ public class Show implements IVideoGenre {
 		genres.add(genre);
 		Collections.sort(genres);
 	}
+
+	/**
+	 * This is useful if the film belongs to more than one genres. It will returned the
+	 * genre that is preferred.
+	 * @return The preferred genre or null if not or flagged as preferred.
+	 */
+	@Override
+	public String getPreferredGenre() {
+		if (preferredGenre==null && genres.size()>0) {
+			return genres.get(0);
+		}
+		return preferredGenre;
+	}
+
+	/**
+	 * Used to set the genre that is preferred in the list of genres.
+	 * @param preferredGenre The preferred genre
+	 */
+	@Override
+	public void setPreferredGenre(String preferredGenre) {
+		this.preferredGenre = preferredGenre;
+	}
+
 }

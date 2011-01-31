@@ -276,4 +276,13 @@ public class XBMCAddon extends XMLParser {
 	public XBMCAddonManager getManager() {
 		return addonMgr;
 	}
+
+	public boolean hasScrapers() throws XBMCException {
+		for (XBMCExtension ext : getExtensions()) {
+			if (ext instanceof XBMCScraper) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

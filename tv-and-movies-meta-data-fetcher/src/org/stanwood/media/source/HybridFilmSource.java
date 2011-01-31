@@ -29,6 +29,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Controller;
 
 /**
  * This class is a source used to retrieve the best film information it can. It
@@ -39,8 +40,8 @@ import org.stanwood.media.model.Show;
  */
 public class HybridFilmSource implements ISource {
 
-	private IMDBSource imdbSource = new IMDBSource();
-	private TagChimpSource tagChimpSource = new TagChimpSource();
+	private ISource imdbSource;
+	private ISource tagChimpSource = new TagChimpSource();
 
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "hybridFilm";
@@ -49,6 +50,11 @@ public class HybridFilmSource implements ISource {
 
 	/** Used to disable fetching of posters at test time */
 	/* package private for test */ boolean fetchPosters = true;
+
+	public HybridFilmSource() {
+		imdbSource =Controller.getInstance().getSource("xmbc-metadata.themoviedb.org");
+	}
+
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
@@ -122,10 +128,10 @@ public class HybridFilmSource implements ISource {
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
-			if (key.equals(IMDBSource.SOURCE_ID)) {
+			if (key.equals(imdbSource.getSourceId())) {
 				imdbFilm = imdbSource.getFilm(value,url);
 			}
-			else if (key.equals(TagChimpSource.SOURCE_ID)) {
+			else if (key.equals(tagChimpSource.getSourceId())) {
 				tagChimpFilm = tagChimpSource.getFilm(value,url);
 			}
 		}
@@ -229,13 +235,13 @@ public class HybridFilmSource implements ISource {
 		return regexpToReplace;
 	}
 
-	/**
-	 * Used to set the "RegexpToReplace" parameter value.
-	 * @param regexpToReplace The value of the parameter been set.
-	 */
-	public void setRegexpToReplace(String regexpToReplace) {
-		imdbSource.setRegexpToReplace(regexpToReplace);
-		tagChimpSource.setRegexpToReplace(regexpToReplace);
-		this.regexpToReplace = regexpToReplace;
-	}
+//	/**
+//	 * Used to set the "RegexpToReplace" parameter value.
+//	 * @param regexpToReplace The value of the parameter been set.
+//	 */
+//	public void setRegexpToReplace(String regexpToReplace) {
+//		imdbSource.setRegexpToReplace(regexpToReplace);
+//		tagChimpSource.setRegexpToReplace(regexpToReplace);
+//		this.regexpToReplace = regexpToReplace;
+//	}
 }
