@@ -2,14 +2,20 @@ package org.stanwood.media.renamer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
+import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.util.FileHelper;
@@ -17,7 +23,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This test class is used to test the rescrive renaming of media files
  */
-public class TestRenameRecursive {
+public class TestRenameRecursive extends XBMCAddonTestBase {
 
 	private final static String LS = System.getProperty("line.separator");
 
@@ -56,7 +62,8 @@ public class TestRenameRecursive {
 	 */
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
-		setupTestController(DummyTVSource.class,XMLStore2.class);
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		setupTestController(XBMCSource.class,new HashMap<String,String>(),XMLStore2.class);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
@@ -96,7 +103,7 @@ public class TestRenameRecursive {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			Controller.destoryController();
-			setupTestController(null,XMLStore2.class);
+			setupTestController(null,null,XMLStore2.class);
 
 			// Do the renaming
 			Main.main(args);
@@ -119,9 +126,9 @@ public class TestRenameRecursive {
 	 * Used to test recursive renaming of media using a source, but no stores.
 	 * @throws Exception Thrown if their are any errors
 	 */
-//	@Test
+	@Test
 	public void testRecursiveSourceRename() throws Exception {
-		setupTestController(DummyTVSource.class,null);
+		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
@@ -179,12 +186,19 @@ public class TestRenameRecursive {
 	 * @param store The store to use with the controller, or null if none
 	 * @throws Exception Thrown if their are any problems
 	 */
-	public static void setupTestController(Class<? extends ISource> source,Class<? extends IStore> store) throws Exception{
+	public static void setupTestController(Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
 		if (source!=null) {
 			testConfig.append("    <sources>"+LS);
-			testConfig.append("  <source id=\""+source.getName()+"\"/>"+LS);
+			testConfig.append("  <source id=\""+source.getName()+"\">"+LS);
+			if (sourceParams!=null) {
+				for (Entry<String,String> e : sourceParams.entrySet()) {
+					testConfig.append("    <param key=\""+e.getKey()+"\" value=\""+e.getValue()+"\">"+LS);
+				}
+			}
+
+			testConfig.append("  </source>"+LS);
 			testConfig.append("  </sources>"+LS);
 		}
 		if (store!=null) {

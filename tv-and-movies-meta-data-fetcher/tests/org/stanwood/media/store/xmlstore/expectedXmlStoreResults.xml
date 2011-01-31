@@ -2,7 +2,7 @@
 <!DOCTYPE store SYSTEM "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd">
 <store>
   <show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
-    name="Eureka" sourceId="tvcom" url="http://www.tv.com/show/58448/summary.html">
+    name="Eureka" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/show/58448/summary.html">
     <description>
       <short><![CDATA[Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...]]></short>
       <long><![CDATA[Small town. Big secret.
@@ -12,23 +12,36 @@ A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northw
 Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.
 ]]></long>
     </description>
-    <genre name="SCIFI"/>
-    <genre name="Drama"/>
+    <genres>
+	  <genre name="SCIFI" preferred="true"/>
+	  <genre name="Drama"/>
+    </genres>
     <season
       detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=1"
       listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
       <episode episodeId="784857" firstAired="2006-10-10" number="1"
-        rating="1.0" showEpisodeNumber="1" title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">
+         showEpisodeNumber="1" title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
-        <director name="Harry" url="http://test/"/>
-        <writer name="Write a lot" url="http://test/a"/>
-        <guestStar name="sally" url="http://test/sally"/>
-        <guestStar name="Cedric" url="http://test/cedric"/>
+        <rating numberOfVotes="1" value="1.0"/>
+        <directors>
+          <director>Harry</director> 
+        </directors>        
+        <writers>
+          <writer>Write a lot</writer>
+        </writers>        
+        <actors>
+          <actor name="sally" role="betty"/>
+          <actor name="Cedric" role="steve"/>	        
+        </actors>
         <file location="$rootMedia$/Eureka/1x01 - blah"/>
       </episode>
       <episode episodeId="800578" firstAired="2006-10-11" number="2"
-        rating="9.5" showEpisodeNumber="2" title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
+        showEpisodeNumber="2" title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
         <summary>Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!</summary>
+        <rating numberOfVotes="2355" value="9.5"/>
+        <directors/>
+        <writers/>
+        <actors/>
         <file location="$rootMedia$/Eureka/1x02 - blah"/>
       </episode>
     </season>
@@ -36,104 +49,138 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
       detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=2"
       listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=2" number="2">
       <episode episodeId="800578" firstAired="2007-07-10" number="2"
-        rating="0.4" showEpisodeNumber="13" title="Phoenix Rising" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">
-        <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>
+        showEpisodeNumber="13" title="Phoenix Rising" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">        
+        <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>        
+        <rating numberOfVotes="12354" value="0.4"/>
+        <directors/>
+        <writers/>
+        <actors/>
         <file location="$rootMedia$/Eureka/2x13 - blah"/>
       </episode>
       <special episodeId="800578" firstAired="2007-07-09" number="0"
-        rating="0.4" showEpisodeNumber="-1"
-        title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">
+        showEpisodeNumber="-1"
+        
+        title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">        
         <summary>Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.</summary>
-        <director name="JP" url="http://test/"/>
-        <writer name="Write a lot" url="http://test/a"/>
-        <writer name="Write a little" url="http://test/b"/>
-        <guestStar name="bob" url="http://test/bob"/>
-        <guestStar name="Write a little" url="http://test/fred"/>
+        <rating numberOfVotes="3000" value="0.4"/>
+        <directors>
+        	<director>JP</director>
+        </directors>        
+        <writers>
+	        <writer>Write a lot</writer>
+	        <writer>Write a little</writer>
+        </writers>        
+        <actors>
+        	<actor name="bob" role="fred"/>
+          	<actor name="Write a little" role="blah"/> 
+        </actors>        
         <file location="$rootMedia$/Eureka/000 - blah"/>
       </special>
     </season>
   </show>
   <show id="17552"
     imageUrl="http://image.com.com/tv/images/content_headers/program_new/17552.jpg"
-    name="Heroes" sourceId="tvcom" url="http://www.tv.com/heroes/show/17552/summary.html">
+    name="Heroes" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/heroes/show/17552/summary.html">
     <description>
       <short><![CDATA[Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspect...]]></short>
       <long><![CDATA[Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint images of the future when he is high, Niki Sanders, a 33-year-old Las Vegas showgirl who begins seeing strange things in mirrors, Hiro Nakamura, a 24-year-old Japanese comic-book geek who literally makes time stand still, D.L. Hawkins, a 31-year-old inmate who can walk through walls, Matt Parkman, a beat cop who can hear other people's thoughts, and Claire Bennet, a 17-year-old cheerleader who defies death at every turn. As the viewing audience is discovering the nature of each hero's powers, the heroes themselves are discovering what having superpowers means to them as well as the larger picture of where their superpowers come from. Tune in each week to see how these heroes are drawn together by their common interest of evading the series' antagonist who wants to harvest their super-DNA for himself. Their ultimate destiny is nothing less than saving the world! The series will star Greg Grunberg (Alias), Leonard Roberts (Buffy the Vampire Slayer), Milo Ventimiglia (Gilmore Girls), and Hayden Panettiere (Ally McBeal, Guiding Light). Tim Kring (Crossing Jordan, Chicago Hope) is the series' creator. The pilot is set to be directed by Dave Semel (American Dreams, Buffy, the Vampire Slayer, Beverly Hills, 90210). Heroes will be produced by NBC/Universal/Tailwind. Summary revised with help from: space-cowboy]]></long>
     </description>
-    <genre name="SCIFI"/>
-    <genre name="Drama"/>
+    <genres>
+	    <genre name="SCIFI" preferred="true"/>
+	    <genre name="Drama"/>
+    </genres>    
     <season
       detailedListingUrl="http://www.tv.com/show/17552/episode_guide.html?printable=1"
       listingUrl="http://www.tv.com/show/17552/episode_listings.html?season=1" number="1">
       <episode episodeId="1181337" firstAired="2006-11-11" number="1"
-        rating="2.0" showEpisodeNumber="1" title="Heroe, Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">
+        showEpisodeNumber="1" title="Heroe, Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.</summary>
-        <director name="Whoever" url="http://Whoever/"/>
-        <writer name="Write a lot" url="http://test/a"/>
-        <guestStar name="sally" url="http://test/sally"/>
-        <guestStar name="Cedric" url="http://test/cedric"/>
+        <rating numberOfVotes="2345" value="2.0"/>
+        <directors>
+        	<director>Whoever</director>
+        </directors>
+        <writers>
+        	<writer>Write a lot</writer>
+        </writers>
+        <actors>
+        	<actor name="sally" role="betty"/>
+          	<actor name="Cedric" role="steve"/>
+        </actors>        
         <file location="$rootMedia$/Heroes/1x01 - hero"/>
       </episode>
     </season>
   </show>
-  <film id="114814" imageUrl="http://test/image.jpg" rating="8.7"
-    releaseDate="1995-08-25" sourceId="imdb" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">
+  <film id="114814" imageUrl="http://test/image.jpg"
+    releaseDate="1995-08-25" sourceId="xbmc-metadata.themoviedb.org" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">    
     <description>
       <short><![CDATA[A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.]]></short>
       <long><![CDATA[Test description of the film]]></long>
     </description>
-    <country name="USA" url="http://www.imdb.com/Sections/Countries/USA/"/>
-    <genre name="Crime"/>
-    <genre name="Drama" preferred="true"/>
-    <genre name="Mystery"/>
-    <genre name="Thriller"/>
-    <certification certification="16" country="Iceland"/>
-    <certification certification="R-18" country="Philippines"/>
-    <certification certification="16" country="Argentina"/>
-    <certification certification="MA" country="Australia"/>
-    <certification certification="16" country="Brazil"/>
-    <certification certification="14A" country="Canada"/>
-    <certification certification="18" country="Chile"/>
-    <certification certification="16" country="Denmark"/>
-    <certification certification="K-16" country="Finland"/>
-    <certification certification="U" country="France"/>
-    <certification certification="16" country="Germany"/>
-    <certification certification="IIB" country="Hong Kong"/>
-    <certification certification="16" country="Hungary"/>
-    <certification certification="18" country="Ireland"/>
-    <certification certification="T" country="Italy"/>
-    <certification certification="PG-12" country="Japan"/>
-    <certification certification="16" country="Netherlands"/>
-    <certification certification="R18" country="New Zealand"/>
-    <certification certification="15" country="Norway"/>
-    <certification certification="M/16" country="Portugal"/>
-    <certification certification="M18" country="Singapore"/>
-    <certification certification="PG (cut)" country="Singapore"/>
-    <certification certification="18" country="South Korea"/>
-    <certification certification="18" country="Spain"/>
-    <certification certification="15" country="Sweden"/>
-    <certification certification="18" country="UK"/>
-    <certification certification="R" country="USA"/>
-    <chapter name="The start" number="1"/>
-    <chapter name="Second Chapter" number="2"/>
-    <chapter name="The end" number="3"/>
-    <director name="Bryan Singer" url="http://www.imdb.com/name/nm0001741/"/>
-    <writer name="Christopher McQuarrie" url="http://www.imdb.com/name/nm0003160/"/>
-    <guestStar name="Stephen Baldwin" url="http://www.imdb.com/name/nm0000286/"/>
-    <guestStar name="Gabriel Byrne" url="http://www.imdb.com/name/nm0000321/"/>
-    <guestStar name="Benicio Del Toro" url="http://www.imdb.com/name/nm0001125/"/>
-    <guestStar name="Kevin Pollak" url="http://www.imdb.com/name/nm0001629/"/>
-    <guestStar name="Kevin Spacey" url="http://www.imdb.com/name/nm0000228/"/>
-    <guestStar name="Chazz Palminteri" url="http://www.imdb.com/name/nm0001590/"/>
-    <guestStar name="Pete Postlethwaite" url="http://www.imdb.com/name/nm0000592/"/>
-    <guestStar name="Giancarlo Esposito" url="http://www.imdb.com/name/nm0002064/"/>
-    <guestStar name="Suzy Amis" url="http://www.imdb.com/name/nm0000751/"/>
-    <guestStar name="Dan Hedaya" url="http://www.imdb.com/name/nm0000445/"/>
-    <guestStar name="Paul Bartel" url="http://www.imdb.com/name/nm0000860/"/>
-    <guestStar name="Carl Bressler" url="http://www.imdb.com/name/nm0107808/"/>
-    <guestStar name="Phillip Simon" url="http://www.imdb.com/name/nm0800342/"/>
-    <guestStar name="Jack Shearer" url="http://www.imdb.com/name/nm0790436/"/>
-    <guestStar name="Christine Estabrook" url="http://www.imdb.com/name/nm0261452/"/>
+    <rating numberOfVotes="35" value="8.7"/>
+    <country>USA</country>
+    <genres>
+	    <genre name="Crime"/>
+	    <genre name="Drama" preferred="true"/>
+	    <genre name="Mystery"/>
+	    <genre name="Thriller"/>
+    </genres>
+    <certifications>
+	    <certification certification="16" type="Iceland"/>
+	    <certification certification="R-18" type="Philippines"/>
+	    <certification certification="16" type="Argentina"/>
+	    <certification certification="MA" type="Australia"/>
+	    <certification certification="16" type="Brazil"/>
+	    <certification certification="14A" type="Canada"/>
+	    <certification certification="18" type="Chile"/>
+	    <certification certification="16" type="Denmark"/>
+	    <certification certification="K-16" type="Finland"/>
+	    <certification certification="U" type="France"/>
+	    <certification certification="16" type="Germany"/>
+	    <certification certification="IIB" type="Hong Kong"/>
+	    <certification certification="16" type="Hungary"/>
+	    <certification certification="18" type="Ireland"/>
+	    <certification certification="T" type="Italy"/>
+	    <certification certification="PG-12" type="Japan"/>
+	    <certification certification="16" type="Netherlands"/>
+	    <certification certification="R18" type="New Zealand"/>
+	    <certification certification="15" type="Norway"/>
+	    <certification certification="M/16" type="Portugal"/>
+	    <certification certification="M18" type="Singapore"/>
+	    <certification certification="PG (cut)" type="Singapore"/>
+	    <certification certification="18" type="South Korea"/>
+	    <certification certification="18" type="Spain"/>
+	    <certification certification="15" type="Sweden"/>
+	    <certification certification="18" type="UK"/>
+	    <certification certification="R" type="USA"/>
+    </certifications>    
+    <directors>
+    	<director>Bryan Singer</director>
+    </directors>
+    <writers>
+    	<writer>Christopher McQuarrie</writer>
+    </writers>
+    <actors>    
+	    <actor name="Stephen Baldwin" role="Michael McManus"/>
+	    <actor name="Gabriel Byrne" role="Dean Keaton"/>
+	    <actor name="Benicio Del Toro" role="Fred Fenster"/>
+	    <actor name="Kevin Pollak" role="Todd Hockney"/>
+	    <actor name="Kevin Spacey" role="Roger 'Verbal' Kint"/>
+	    <actor name="Chazz Palminteri" role="Dave Kujan, US Customs"/>
+	    <actor name="Pete Postlethwaite" role="Kobayashi"/>
+	    <actor name="Giancarlo Esposito" role="Jack Baer, FBI"/>
+	    <actor name="Suzy Amis" role="Edie Finneran"/>
+	    <actor name="Dan Hedaya" role="Sgt. Jeffrey 'Jeff' Rabin"/>
+	    <actor name="Paul Bartel" role="Smuggler"/>
+	    <actor name="Carl Bressler" role="Saul Berg"/>
+	    <actor name="Phillip Simon" role="Fortier"/>
+	    <actor name="Jack Shearer" role="Renault"/>
+	    <actor name="Christine Estabrook" role="Dr. Plummer"/>
+    </actors>
+    <chapters>
+	    <chapter name="The start" number="1"/>
+	    <chapter name="Second Chapter" number="2"/>
+	    <chapter name="The end" number="3"/>
+    </chapters>
     <file location="$rootMedia$/The Usual Suspects part1.avi"/>
     <file location="$rootMedia$/The Usual Suspects part2.avi"/>
   </film>

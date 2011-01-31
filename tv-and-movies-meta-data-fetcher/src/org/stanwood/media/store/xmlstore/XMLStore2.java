@@ -42,6 +42,7 @@ import org.stanwood.media.search.ReverseFilePatternMatcher;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.stanwood.media.util.XMLParserNotFoundException;
 import org.w3c.dom.Document;
@@ -141,8 +142,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile)
 	throws StoreException {
 		try {
-			writeRating(episode,((Element) node));
-
 			((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
 			((Element) node).setAttribute("title", episode.getTitle());
 			((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
@@ -156,6 +155,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			summaryNode = doc.createElement("summary");
 			node.appendChild(summaryNode);
 			summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
+			writeRating(episode,((Element) node));
 
 			writeDirectors((Element)node,episode);
 			writeWriters((Element)node,episode);
@@ -173,11 +173,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeActors(Node node, IVideoActors episode) {
 		Document doc =  node.getOwnerDocument();
 		Element actors = doc.createElement("actors");
-		for (Actor actor : episode.getActors()) {
-			Element actorNode = doc.createElement("actor");
-			actorNode.setAttribute("name", actor.getName());
-			actorNode.setAttribute("role", actor.getRole());
-			actors.appendChild(actorNode);
+		if (episode.getActors()!=null) {
+			for (Actor actor : episode.getActors()) {
+				Element actorNode = doc.createElement("actor");
+				actorNode.setAttribute("name", actor.getName());
+				actorNode.setAttribute("role", actor.getRole());
+				actors.appendChild(actorNode);
+			}
 		}
 		node.appendChild(actors);
 	}
@@ -249,7 +251,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		filmNode.setAttribute("id", film.getId());
 		filmNode.setAttribute("title", film.getTitle());
 		filmNode.setAttribute("sourceId", film.getSourceId());
-		writeRating(film,filmNode);
 		filmNode.setAttribute("url", urlToText(film.getFilmUrl()));
 		Date date = film.getDate();
 		if (date != null) {
@@ -259,6 +260,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		filmNode.setAttribute("imageUrl", urlToText(film.getImageURL()));
 
 		appendDescription(doc,film.getSummary(),film.getDescription(),filmNode);
+		writeRating(film,filmNode);
 
 		if (film.getCountry()!=null) {
 			Element country = doc.createElement("country");
@@ -267,13 +269,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 
 		writeGenres(film, filmNode);
-
-		writeChapters(film, filmNode);
 		writeCertifications(film,filmNode);
-
 		writeDirectors(filmNode, film);
 		writeWriters(filmNode, film);
 		writeActors(filmNode,film);
+		writeChapters(film, filmNode);
 		writeFilenames(doc, filmNode, filenames);
 
 		filmsNode.appendChild(filmNode);
@@ -315,11 +315,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeWriters(Element node, IVideo video) {
 		Document doc = node.getOwnerDocument();
 		Element writersNode = doc.createElement("writers");
-		for (String value : video.getWriters()) {
-			Element writerNode = doc.createElement("writer");
-			doc.createTextNode(value);
-			writerNode.appendChild(writerNode);
-			writersNode.appendChild(writerNode);
+		if (video.getWriters()!=null) {
+			for (String value : video.getWriters()) {
+				Element writerNode = doc.createElement("writer");
+				writerNode.appendChild(doc.createTextNode(value));
+				writersNode.appendChild(writerNode);
+			}
 		}
 		node.appendChild(writersNode);
 	}
@@ -337,11 +338,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeDirectors(Element node, IVideo video) {
 		Document doc = node.getOwnerDocument();
 		Element directorsNode = doc.createElement("directors");
-		for (String value : video.getDirectors()) {
-			Element director = doc.createElement("director");
-			doc.createTextNode(value);
-			director.appendChild(director);
-			directorsNode.appendChild(director);
+		if (video.getDirectors()!=null) {
+			for (String value : video.getDirectors()) {
+				Element director = doc.createElement("director");
+				director.appendChild(doc.createTextNode(value));
+				directorsNode.appendChild(director);
+			}
 		}
 		node.appendChild(directorsNode);
 	}
@@ -360,12 +362,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeCertifications(Film film, Element node) {
 		Document doc = node.getOwnerDocument();
 		Element certificationsNode = doc.createElement("certifications");
-		for (Certification cert : film.getCertifications()) {
-			Element certificationNode = node.getOwnerDocument().createElement("certification");
-			certificationNode.setAttribute("type", cert.getType());
-			certificationNode.setAttribute("certification", cert.getCertification());
-			certificationsNode.appendChild(certificationNode);
+		if (film.getCertifications()!=null) {
+			for (Certification cert : film.getCertifications()) {
+				Element certificationNode = node.getOwnerDocument().createElement("certification");
+				certificationNode.setAttribute("type", cert.getType());
+				certificationNode.setAttribute("certification", cert.getCertification());
+				certificationsNode.appendChild(certificationNode);
+			}
 		}
+		node.appendChild(certificationsNode);
 	}
 
 	private void writeGenres(IVideoGenre video, Element node) {
@@ -584,11 +589,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Film film = new Film(filmId);
 
 		try {
-			Element filmNode = (Element) selectSingleNode(doc, "film[@id='"+filmId+"']");
+			Element filmNode = (Element) selectSingleNode(doc, "store/film[@id='"+filmId+"']");
+			if (filmNode==null) {
+				throw new StoreException("Unable to find film with id '"+ filmId+"'");
+			}
 			readGenres(film, filmNode);
 			film.setCountry(getStringFromXML(filmNode, "country/text()"));
 			film.setDate(df.parse(getStringFromXML(filmNode, "@releaseDate")));
-			film.setFilmUrl(new URL(getStringFromXML(filmNode,"url")));
+			film.setFilmUrl(new URL(getStringFromXML(filmNode,"@url")));
 			film.setDescription(getStringFromXML(filmNode,"description/long/text()"));
 			film.setSummary(getStringFromXML(filmNode,"description/short/text()"));
 			film.setImageURL(new URL(getStringFromXML(filmNode, "@imageUrl")));
@@ -599,7 +607,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			readDirectors(film, filmNode);
 			film.setSourceId(getStringFromXML(filmNode, "@sourceId"));
 			readChapters(film, filmNode);
-
 			readCertifications(film, filmNode);
 		}
 		catch (XMLParserException e) {
@@ -614,11 +621,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return film;
 	}
 
-	private Rating parseRating(IVideoRating film, Element node) throws XMLParserException {
+	private void parseRating(IVideoRating film, Element node) throws XMLParserException {
 		int numberOfVotes = getIntegerFromXML(node, "rating/@numberOfVotes");
 		float rating = getFloatFromXML(node, "rating/@value");
 
-		return new Rating(rating,numberOfVotes);
+		film.setRating(new Rating(rating,numberOfVotes));
 	}
 
 	private void writeRating(IVideoRating film, Element node) {
@@ -969,7 +976,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			// Create the builder and parse the file
 			try {
-				DocumentBuilder builder = factory.newDocumentBuilder();
+				DocumentBuilder builder = XMLParser.createDocBuilder(factory);
 				SimpleErrorHandler errorHandler = new SimpleErrorHandler(cacheFile);
 				builder.setErrorHandler(errorHandler);
 				doc = builder.parse(cacheFile);
@@ -999,9 +1006,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);
-		DocumentBuilder builder;
 		try {
-			builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = createDocBuilder(factory);
+
 			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd");
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
 //			doc.setXmlVersion(VERSION);
@@ -1016,4 +1023,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		return doc;
 	}
+
+
 }

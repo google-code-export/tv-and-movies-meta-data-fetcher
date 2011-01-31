@@ -30,7 +30,6 @@ import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -43,8 +42,8 @@ public class Data {
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-	public final static String TEST_FILM_SOURCE_ID = "xmbc-metadata.themoviedb.org";
-	public final static String TEST_TV_SOURCE_ID = "metadata.tvdb.com";
+	public final static String TEST_FILM_SOURCE_ID = "xbmc-metadata.themoviedb.org";
+	public final static String TEST_TV_SOURCE_ID = "xbmc-metadata.tvdb.com";
 
 	/** A test show id */
 	public final static String SHOW_ID_EUREKA = "58448";
@@ -99,31 +98,30 @@ public class Data {
 		certifications.add(new Certification("R","USA"));
 		film.setCertifications(certifications);
 		film.setDate(df.parse("1995-08-25"));
-		List<Link> directors = new ArrayList<Link>();
 		film.setDirectors(createStringList(new String[] {"Bryan Singer"}));
 		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 		List<Actor> guestStars = new ArrayList<Actor>();
-		guestStars.add(new Actor("Stephen Baldwin",""));
-		guestStars.add(new Actor("Gabriel Byrne",""));
-		guestStars.add(new Actor("Benicio Del Toro",""));
-		guestStars.add(new Actor("Kevin Pollak",""));
-		guestStars.add(new Actor("Kevin Spacey",""));
-		guestStars.add(new Actor("Chazz Palminteri",""));
-		guestStars.add(new Actor("Pete Postlethwaite",""));
-		guestStars.add(new Actor("Giancarlo Esposito",""));
-		guestStars.add(new Actor("Suzy Amis",""));
-		guestStars.add(new Actor("Dan Hedaya",""));
-		guestStars.add(new Actor("Paul Bartel",""));
-		guestStars.add(new Actor("Carl Bressler",""));
-		guestStars.add(new Actor("Phillip Simon",""));
-		guestStars.add(new Actor("Jack Shearer",""));
-		guestStars.add(new Actor("Christine Estabrook",""));
+		guestStars.add(new Actor("Stephen Baldwin","Michael McManus"));
+		guestStars.add(new Actor("Gabriel Byrne","Dean Keaton"));
+		guestStars.add(new Actor("Benicio Del Toro","Fred Fenster"));
+		guestStars.add(new Actor("Kevin Pollak","Todd Hockney"));
+		guestStars.add(new Actor("Kevin Spacey","Roger 'Verbal' Kint"));
+		guestStars.add(new Actor("Chazz Palminteri","Dave Kujan, US Customs"));
+		guestStars.add(new Actor("Pete Postlethwaite","Kobayashi"));
+		guestStars.add(new Actor("Giancarlo Esposito","Jack Baer, FBI"));
+		guestStars.add(new Actor("Suzy Amis","Edie Finneran"));
+		guestStars.add(new Actor("Dan Hedaya","Sgt. Jeffrey 'Jeff' Rabin"));
+		guestStars.add(new Actor("Paul Bartel","Smuggler"));
+		guestStars.add(new Actor("Carl Bressler","Saul Berg"));
+		guestStars.add(new Actor("Phillip Simon","Fortier"));
+		guestStars.add(new Actor("Jack Shearer","Renault"));
+		guestStars.add(new Actor("Christine Estabrook","Dr. Plummer"));
 		film.setActors(guestStars);
 		film.setRating(new Rating(8.7F,35));
 		film.setSourceId(TEST_FILM_SOURCE_ID);
 		film.setSummary("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.");
 		film.setDescription("Test description of the film");
-		List<Link>writers = new ArrayList<Link>();
+
 		film.setWriters(createStringList(new String[] {"Christopher McQuarrie"}));
 
 		film.addChapter(new Chapter("The start",1));
@@ -306,14 +304,6 @@ public class Data {
 		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
 
-		return result;
-	}
-
-	private static List<Link>createLinks(Link[] links) {
-		List<Link> result = new ArrayList<Link>();
-		for (Link link : links ) {
-			result.add(link);
-		}
 		return result;
 	}
 

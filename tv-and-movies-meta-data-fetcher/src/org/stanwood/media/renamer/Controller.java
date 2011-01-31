@@ -55,23 +55,24 @@ import org.stanwood.media.store.xmlstore.XMLStore2;
  */
 public class Controller {
 
-	public final static String DEFAULT_TV_SOURCE = "xbmc-metadata.tvdb.com";
-	public final static String DEFAULT_FILM_SOURCE = "xmbc-metadata.themoviedb.org";
-
 	private final static Log log = LogFactory.getLog(Controller.class);
 
 	private static Controller instance = null;
 
 	private static List<ISource> sources = null;
 	private static ArrayList<IStore> stores = null;
-	private static XBMCAddonManager xbmcMgr;
+	public static XBMCAddonManager xbmcMgr;
 
 	static {
 		try {
-			xbmcMgr = new XBMCAddonManager();
+			setManager(new XBMCAddonManager());
 		} catch (XBMCException e) {
 			log.error(e.getMessage(),e);
 		}
+	}
+
+	public static void setManager(XBMCAddonManager mgr) {
+		xbmcMgr = mgr;
 	}
 
 	private Controller() {
@@ -82,7 +83,7 @@ public class Controller {
 	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
 	 * Once the store has been initialised, it can't be Initialised again.
 	 */
-	public static void initWithDefaults() {
+	public static void initWithDefaults() throws SourceException {
 		synchronized (Controller.class) {
 			if (stores != null || sources != null) {
 				throw new IllegalStateException("Controller allready initialized");
@@ -94,8 +95,13 @@ public class Controller {
 		stores.add(new XMLStore2());
 
 		sources = new ArrayList<ISource>();
-		sources.add(getSource(DEFAULT_TV_SOURCE));
-		sources.add(getSource(DEFAULT_FILM_SOURCE));
+		for (Mode mode : Mode.values()) {
+			sources.add(getXBMCSource(getDefaultSourceID(mode)));
+		}
+	}
+
+	public static String getDefaultSourceID(Mode mode) throws SourceException {
+		return xbmcMgr.getDefaultSourceID(mode);
 	}
 
 	/**
@@ -547,7 +553,20 @@ public class Controller {
 		}
 	}
 
+	public static ISource getXBMCSource(String sourceId) {
+		for (ISource source : xbmcMgr.getSources()) {
+			if (source.getSourceId().equals(sourceId)) {
+				return source;
+			}
+		}
+		return null;
+	}
+
 	public static ISource getSource(String sourceId) {
+		if (sourceId == null) {
+			return null;
+		}
+
 		for (ISource source : sources) {
 			if (source.getSourceId().equals(sourceId)) {
 				return source;

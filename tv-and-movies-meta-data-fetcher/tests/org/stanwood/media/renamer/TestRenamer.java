@@ -23,8 +23,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
@@ -32,12 +35,12 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the {@link Renamer} class.
  */
-public class TestRenamer extends TestCase {
+public class TestRenamer extends XBMCAddonTestBase {
 
 	protected static int exitCode;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		Main.doInit = false;
 		Main.exitHandler = new IExitHandler() {
 			@Override
@@ -50,8 +53,8 @@ public class TestRenamer extends TestCase {
 		Controller.initWithDefaults();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		Main.doInit = false;
 		Controller.destoryController();
 	}
@@ -60,8 +63,9 @@ public class TestRenamer extends TestCase {
 	 * Test the media TV files are correctly renamed using the details stored in the source.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testRenamerUsingXMLSourceTV() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore2.class);
+		TestRenameRecursive.setupTestController(null,null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
@@ -97,13 +101,13 @@ public class TestRenamer extends TestCase {
 
 			Collections.sort(files);
 
-			assertEquals(4,files.size());
-			assertEquals(".show.xml",files.get(0));
-			assertEquals("1 01 - Pilot.avi",files.get(1));
-			assertEquals("1 02 - Many Happy Returns.mkv",files.get(2));
-			assertEquals("2 02 - Phoenix Rising.mpg",files.get(3));
+			Assert.assertEquals(4,files.size());
+			Assert.assertEquals(".show.xml",files.get(0));
+			Assert.assertEquals("1 01 - Pilot.avi",files.get(1));
+			Assert.assertEquals("1 02 - Many Happy Returns.mkv",files.get(2));
+			Assert.assertEquals("2 02 - Phoenix Rising.mpg",files.get(3));
 
-			assertEquals("Check exit code",0,exitCode);
+			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
@@ -113,8 +117,9 @@ public class TestRenamer extends TestCase {
 	 * Test the media TV files are correctly renamed using the details stored in the source.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testRecursiveRenamerUsingXMLSourceTV() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore2.class);
+		TestRenameRecursive.setupTestController(null,null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Eureka");
@@ -171,17 +176,17 @@ public class TestRenamer extends TestCase {
 				System.out.println("Found file : " + file);
 			}
 
-			assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 03 - Before I Forget.avi").getAbsolutePath(),files.get(3).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"1 04 - Alienated.mkv").getAbsolutePath(),files.get(4).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"2 02 - Try, Try Again.mpg").getAbsolutePath(),files.get(5).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"2 03 - Unpredictable.mpg").getAbsolutePath(),files.get(6).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"Eureka"+File.separator+".show.xml").getAbsolutePath(),files.get(7).getAbsolutePath());
-			assertEquals(8,files.size());
+			Assert.assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"1 01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"1 02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"1 03 - Before I Forget.avi").getAbsolutePath(),files.get(3).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"1 04 - Alienated.mkv").getAbsolutePath(),files.get(4).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"2 02 - Try, Try Again.mpg").getAbsolutePath(),files.get(5).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"2 03 - Unpredictable.mpg").getAbsolutePath(),files.get(6).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"Eureka"+File.separator+".show.xml").getAbsolutePath(),files.get(7).getAbsolutePath());
+			Assert.assertEquals(8,files.size());
 
-			assertEquals("Check exit code",0,exitCode);
+			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
@@ -191,8 +196,9 @@ public class TestRenamer extends TestCase {
 	 * Test the media TV files are correctly renamed using the details stored in the source.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testRecursiveRenamerUsingXMLSourceTVAndDirPattern() throws Exception {
-		TestRenameRecursive.setupTestController(null,XMLStore2.class);
+		TestRenameRecursive.setupTestController(null,null,XMLStore2.class);
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Meida");
@@ -224,13 +230,13 @@ public class TestRenamer extends TestCase {
 			listRecursively(eurekaDir,files);
 			sortFiles(files);
 
-			assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
-			assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 2"+File.separator+"02 - Phoenix Rising.mpg").getAbsolutePath(),files.get(3).getAbsolutePath());
-			assertEquals(4,files.size());
+			Assert.assertEquals(new File(eurekaDir,".show.xml").getAbsolutePath(),files.get(0).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2).getAbsolutePath());
+			Assert.assertEquals(new File(eurekaDir,"Eureka"+File.separator+"Season 2"+File.separator+"02 - Phoenix Rising.mpg").getAbsolutePath(),files.get(3).getAbsolutePath());
+			Assert.assertEquals(4,files.size());
 
-			assertEquals("Check exit code",0,exitCode);
+			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}

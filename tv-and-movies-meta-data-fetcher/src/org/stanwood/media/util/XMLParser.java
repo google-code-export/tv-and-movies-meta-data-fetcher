@@ -16,19 +16,25 @@
  */
 package org.stanwood.media.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -136,7 +142,8 @@ public class XMLParser {
 	public static Document strToDom(String str) throws XMLParserException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = XMLParser.createDocBuilder(factory);
+
 			InputSource is = new InputSource( new StringReader( str ) );
 			Document d = builder.parse( is );
 			return d;
@@ -198,7 +205,7 @@ public class XMLParser {
 			return new IterableNodeList(list);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parser path " + path + " from XML DOM");
+			throw new XMLParserException("Unable to parser path " + path + " from XML DOM",e);
 		}
 	}
 
@@ -207,7 +214,29 @@ public class XMLParser {
 			return XPathAPI.selectSingleNode(contextNode, path);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parser path " + path + " from XML DOM");
+			throw new XMLParserException("Unable to parser path " + path + " from XML DOM",e);
 		}
 	}
+
+	public static DocumentBuilder createDocBuilder(DocumentBuilderFactory factory)
+	throws ParserConfigurationException {
+		DocumentBuilder builder;
+		builder = factory.newDocumentBuilder();
+		builder.setEntityResolver(new EntityResolver() {
+		    @Override
+		    public InputSource resolveEntity(String publicId, String systemId)
+		            throws SAXException, IOException {
+		        if (systemId.endsWith("MediaInfoFetcher-XmlStore.dtd")) {
+		        	File currentDir = new File(System.getProperty("user.dir"));
+		        	File dtd = new File(currentDir,"etc"+File.separator+"MediaInfoFetcher-XmlStore.dtd");
+		        	if (dtd.exists()) {
+		        		return new InputSource(new FileInputStream(dtd));
+		        	}
+		        }
+		        return null;
+		    }
+		});
+		return builder;
+	}
+
 }

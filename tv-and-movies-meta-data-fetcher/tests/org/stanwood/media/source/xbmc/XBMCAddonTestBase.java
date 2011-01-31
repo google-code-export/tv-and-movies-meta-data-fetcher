@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -29,6 +30,7 @@ public class XBMCAddonTestBase {
 	@Before
 	public void setup() throws XBMCException {
 		addonManager = createAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);
+		Controller.setManager(addonManager);
 	}
 
 	/**
@@ -40,7 +42,7 @@ public class XBMCAddonTestBase {
 	}
 
 	protected XBMCAddonManager createAddonManager(File addonDir,Locale locale) throws XBMCException {
-		return new XBMCAddonManager(addonDir,locale);
+		return new DummyXBMCAddonManager(addonDir,locale);
 	}
 
 	protected XBMCAddonManager getAddonManager() {

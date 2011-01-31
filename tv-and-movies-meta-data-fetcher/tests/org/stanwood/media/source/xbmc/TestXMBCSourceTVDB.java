@@ -1,13 +1,6 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipInputStream;
 
 import junit.framework.Assert;
 
@@ -16,12 +9,9 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.XMLParser;
 
 public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
-
-	private static final Pattern SERIES_PATTERN = Pattern.compile(".*thetvdb.*/series/(\\d+)/all.*");
 
 	@Test
 	public void testTVDBAddonDetails() throws Exception {
@@ -67,28 +57,5 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 	private XBMCSource getXBMCSource(String id) throws SourceException{
 		XBMCSource source = new XBMCSource(getAddonManager(),id);
 		return source;
-	}
-
-	@Override
-	protected XBMCAddonManager createAddonManager(File addonDir, Locale locale) throws XBMCException {
-		return new XBMCAddonManager(addonDir,locale) {
-			@Override
-			InputStream getSource(URL url) throws IOException {
-				String strUrl = url.toExternalForm();
-				if (strUrl.contains("GetSeries")) {
-					String file = "tvdb-search-heroes.html";
-					return Data.class.getResourceAsStream(file);
-				}
-				else {
-					Matcher m = SERIES_PATTERN.matcher(strUrl);
-					if (m.matches()) {
-
-						return new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip"));
-					}
-				}
-
-				throw new IOException("Unable to find test data for url: " + url);
-			}
-		};
 	}
 }

@@ -2,6 +2,8 @@ package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -18,6 +20,12 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.util.XMLParserException;
+import org.w3c.dom.Document;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Used to test the {@link XMLStore2} class.
@@ -75,12 +83,29 @@ public class TestXMLStore2 {
 			String actualContents = FileHelper.readFileContents(actualFile);
 			String expectedContents = FileHelper.readFileContents(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"));
 			expectedContents = expectedContents.replaceAll("\\$rootMedia\\$", dir.getAbsolutePath());
-			Assert.assertEquals("Check the results",expectedContents,actualContents);
+			Assert.assertEquals("Check the results",formatXML(expectedContents),formatXML(actualContents));
 //			FileHelper.displayFile(actualFile, System.out);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
+
+
 	}
+
+	private String formatXML(String xml) throws XMLParserException, IOException {
+		Document document = XMLParser.strToDom(xml);
+		OutputFormat format = new OutputFormat(document);
+        format.setLineWidth(65);
+        format.setIndenting(true);
+        format.setIndent(2);
+        Writer out = new StringWriter();
+        XMLSerializer serializer = new XMLSerializer(out, format);
+        serializer.serialize(document);
+
+		return out.toString();
+	}
+
+
 
 	/**
 	 * Used to test that data can be read back from the store
@@ -122,7 +147,7 @@ public class TestXMLStore2 {
 			summary.append("\n");
 			summary.append("Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.\n");
 			Assert.assertEquals(summary.toString(), show.getLongSummary());
-			Assert.assertEquals("tvcom",show.getSourceId());
+			Assert.assertEquals("xbmc-metadata.tvdb.com",show.getSourceId());
 			Assert.assertEquals("http://image.com.com/tv/images/b.gif", show.getImageURL().toExternalForm());
 			Assert.assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());
 			Assert.assertEquals("58448", show.getShowId());
@@ -146,10 +171,10 @@ public class TestXMLStore2 {
 	        Assert.assertEquals(1, episode.getDirectors().size());
 	        Assert.assertEquals("Harry", episode.getDirectors().get(0));
 	        Assert.assertEquals(2, episode.getActors().size());
-	        Assert.assertEquals("http://test/cedric", episode.getActors().get(0).getRole());
-	        Assert.assertEquals("http://test/cedric", episode.getActors().get(0).getName());
-	        Assert.assertEquals("http://test/cedric", episode.getActors().get(1).getRole());
-	        Assert.assertEquals("http://test/cedric", episode.getActors().get(1).getName());
+	        Assert.assertEquals("betty", episode.getActors().get(0).getRole());
+	        Assert.assertEquals("sally", episode.getActors().get(0).getName());
+	        Assert.assertEquals("steve", episode.getActors().get(1).getRole());
+	        Assert.assertEquals("Cedric", episode.getActors().get(1).getName());
 	        Assert.assertEquals(1, episode.getWriters().size());
 	        Assert.assertEquals("Write a lot", episode.getWriters().get(0));
 	        Assert.assertEquals(1.0F,episode.getRating().getRating(),0);
@@ -196,6 +221,51 @@ public class TestXMLStore2 {
 	        Assert.assertEquals("Countdown to the Premiere",episode.getTitle());
 	        Assert.assertEquals("2007-07-09",df.format(episode.getDate()));
 	        Assert.assertTrue(episode.isSpecial());
+
+	        File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
+	        Film film = xmlSource.getFilm(dir, filmFile1, "114814");
+	        Assert.assertNotNull(film);
+	        Assert.assertEquals(15,film.getActors().size());
+			Assert.assertEquals("Stephen Baldwin",film.getActors().get(0).getName());
+			Assert.assertEquals("Michael McManus",film.getActors().get(0).getRole());
+			Assert.assertEquals("Chazz Palminteri",film.getActors().get(5).getName());
+			Assert.assertEquals("Dave Kujan, US Customs",film.getActors().get(5).getRole());
+			Assert.assertEquals("Christine Estabrook",film.getActors().get(14).getName());
+			Assert.assertEquals("Dr. Plummer",film.getActors().get(14).getRole());
+			Assert.assertEquals(27,film.getCertifications().size());
+			Assert.assertEquals("Iceland",film.getCertifications().get(0).getType());
+			Assert.assertEquals("16",film.getCertifications().get(0).getCertification());
+			Assert.assertEquals("Germany",film.getCertifications().get(10).getType());
+			Assert.assertEquals("16",film.getCertifications().get(10).getCertification());
+			Assert.assertEquals("USA",film.getCertifications().get(26).getType());
+			Assert.assertEquals("R",film.getCertifications().get(26).getCertification());
+			Assert.assertEquals(3,film.getChapters().size());
+			Assert.assertEquals(1,film.getChapters().get(0).getNumber());
+			Assert.assertEquals("The start",film.getChapters().get(0).getName());
+			Assert.assertEquals(2,film.getChapters().get(1).getNumber());
+			Assert.assertEquals("Second Chapter",film.getChapters().get(1).getName());
+			Assert.assertEquals(3,film.getChapters().get(2).getNumber());
+			Assert.assertEquals("The end",film.getChapters().get(2).getName());
+			Assert.assertEquals("USA",film.getCountry());
+			Assert.assertEquals("Test description of the film",film.getDescription());
+			Assert.assertEquals(1,film.getDirectors().size());
+			Assert.assertEquals("Bryan Singer",film.getDirectors().get(0));
+			Assert.assertEquals("http://www.imdb.com/title/tt0114814/",film.getFilmUrl().toExternalForm());
+			Assert.assertEquals(4,film.getGenres().size());
+			Assert.assertEquals("Crime",film.getGenres().get(0));
+			Assert.assertEquals("Drama",film.getGenres().get(1));
+			Assert.assertEquals("Mystery",film.getGenres().get(2));
+			Assert.assertEquals("Thriller",film.getGenres().get(3));
+			Assert.assertEquals("114814",film.getId());
+			Assert.assertEquals("http://test/image.jpg",film.getImageURL().toExternalForm());
+			Assert.assertEquals("Drama",film.getPreferredGenre());
+			Assert.assertEquals(8.7F,film.getRating().getRating(),0);
+			Assert.assertEquals(35,film.getRating().getNumberOfVotes());
+			Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
+			Assert.assertEquals("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.",film.getSummary());
+			Assert.assertEquals("The Usual Suspects",film.getTitle());
+			Assert.assertEquals(1,film.getWriters().size());
+			Assert.assertEquals("Christopher McQuarrie",film.getWriters().get(0));
 
 		} finally {
 			FileHelper.deleteDir(dir);

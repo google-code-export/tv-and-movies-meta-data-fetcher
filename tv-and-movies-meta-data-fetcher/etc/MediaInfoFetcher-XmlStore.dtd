@@ -5,7 +5,9 @@
 -->
 <!ELEMENT store (show|film)*>
 
-<!ELEMENT show (description?,genre*,season*)>
+<!ELEMENT show (description?,genres?,season*)>
+
+<!ELEMENT genres (genre*)>
 
 <!ATTLIST show
   id       NMTOKENS  #REQUIRED     
@@ -29,26 +31,24 @@
   number              CDATA   #REQUIRED
 >
 
-<!ELEMENT episode (summary?,(director*|writer*|guestStar*|file*)*)>
+<!ELEMENT episode (summary?,rating?,directors?,writers?,actors?,file*)>
 
 <!ATTLIST episode
   episodeId          CDATA  #REQUIRED
   firstAired         CDATA  #IMPLIED
-  number             CDATA  #REQUIRED
-  rating             CDATA  #IMPLIED
+  number             CDATA  #REQUIRED  
   firstAired         CDATA  #IMPLIED
   title              CDATA  #IMPLIED
   url                CDATA  #IMPLIED
   showEpisodeNumber  CDATA  #IMPLIED
 >
 
-<!ELEMENT special (summary?,(director*|writer*|guestStar*|file*)*)>
+<!ELEMENT special (summary?,rating?,directors?,writers?,actors?,file*)>
 
 <!ATTLIST special
   episodeId          CDATA  #REQUIRED
   firstAired         CDATA  #IMPLIED
   number             CDATA  #REQUIRED
-  rating             CDATA  #IMPLIED
   firstAired         CDATA  #IMPLIED
   title              CDATA  #IMPLIED
   url                CDATA  #IMPLIED
@@ -56,7 +56,7 @@
 >
 
 <!ELEMENT summary (#PCDATA)>
-<!ELEMENT film (description?,country?,(genre*|certification*|guestStar*|director*|writer*|chapter*|file*)*)>
+<!ELEMENT film (description?,rating?,country?,genres?,certifications?,directors?,writers?,actors?,chapters?,file*)>
 
 <!ATTLIST film
 	id            NMTOKENS  #REQUIRED
@@ -68,12 +68,7 @@
 	url           CDATA     #IMPLIED
 >
 
-<!ELEMENT country EMPTY>
-
-<!ATTLIST country
-  name      CDATA              #REQUIRED
-  url      CDATA    #IMPLIED
->
+<!ELEMENT country (#PCDATA)>
 
 <!ELEMENT genre EMPTY>
 
@@ -82,25 +77,28 @@
   preferred (true|false) "false"
 >
 
-<!ELEMENT director EMPTY>
+<!ELEMENT directors (director*)>
 
-<!ATTLIST director
-  url      CDATA    #IMPLIED
-  name     CDATA    #REQUIRED
+<!ELEMENT director (#PCDATA)>
+
+<!ELEMENT writers (writer*)>
+
+<!ELEMENT writer (#PCDATA)>
+
+<!ELEMENT actors (actor*)>
+
+<!ELEMENT rating EMPTY>
+
+<!ATTLIST rating
+  numberOfVotes  NMTOKENS    #REQUIRED
+  value          CDATA       #REQUIRED
 >
 
-<!ELEMENT writer EMPTY>
+<!ELEMENT actor EMPTY>
 
-<!ATTLIST writer
-  url      CDATA    #IMPLIED
+<!ATTLIST actor
   name     CDATA    #REQUIRED
->
-
-<!ELEMENT guestStar EMPTY>
-
-<!ATTLIST guestStar
-  url      CDATA    #IMPLIED
-  name     CDATA    #REQUIRED
+  role     CDATA    #IMPLIED
 >
 
 <!ELEMENT file EMPTY>
@@ -109,6 +107,8 @@
     location CDATA #REQUIRED
 >
 
+<!ELEMENT chapters (chapter*)>
+
 <!ELEMENT chapter EMPTY>
 
 <!ATTLIST chapter
@@ -116,9 +116,11 @@
 	number  NMTOKENS #REQUIRED
 >
 
+<!ELEMENT certifications (certification*)>
+
 <!ELEMENT certification EMPTY>
 
 <!ATTLIST certification
   certification CDATA #REQUIRED
-  country CDATA       #REQUIRED
+  type CDATA          #REQUIRED
 >

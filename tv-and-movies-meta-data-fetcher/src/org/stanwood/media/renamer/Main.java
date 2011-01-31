@@ -186,121 +186,121 @@ public class Main {
 	}
 
 	private static boolean processOptions(CommandLine cmd) throws ConfigException {
-		String logConfig = null;
-		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
-			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
-		}
-		if (!initLogging(logConfig)) {
-			return false;
-		}
-		if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
-			String cliMode = cmd.getOptionValue(MODE_OPTION);
-			if (cliMode.toLowerCase().equals("film")) {
-				mode = Mode.FILM;
+		try {
+			String logConfig = null;
+			if (cmd.hasOption(LOG_CONFIG_OPTION)) {
+				logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
 			}
-			else if (cliMode.toLowerCase().equals("tv")) {
-				mode = Mode.TV_SHOW;
-			}
-			else {
-				fatal("Unkown rename mode: " + cliMode);
+			if (!initLogging(logConfig)) {
 				return false;
 			}
-		}
-
-		if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
-			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));
-		}
-
-		if (configFile==null || !configFile.exists()) {
-			warn("Unable to find config file '" +configFile+"' so using defaults.");
-			if (doInit) {
-				Controller.initWithDefaults();
+			if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
+				String cliMode = cmd.getOptionValue(MODE_OPTION);
+				if (cliMode.toLowerCase().equals("film")) {
+					mode = Mode.FILM;
+				}
+				else if (cliMode.toLowerCase().equals("tv")) {
+					mode = Mode.TV_SHOW;
+				}
+				else {
+					fatal("Unkown rename mode: " + cliMode);
+					return false;
+				}
 			}
-		}
-		else {
-			ConfigReader reader = new ConfigReader(configFile);
-			reader.parse();
-			if (doInit) {
-				Controller.initFromConfigFile(reader);
+
+			if (cmd.hasOption(CONFIG_FILE_OPTION) && cmd.getOptionValue(CONFIG_FILE_OPTION) != null) {
+				configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));
 			}
-		}
 
-		if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) {
-			sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
-		}
-
-		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
-			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
-			if (dir.isDirectory() && dir.canWrite()) {
-				rootMediaDirectory = dir;
-			} else {
-				fatal("Show directory must be a writable directory");
-				return false;
-			}
-		}
-		if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
-			fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
-			return false;
-		}
-
-		if (cmd.hasOption(SHOWID_OPTION)
-				&& cmd.getOptionValue(SHOWID_OPTION) != null) {
-			if (mode==Mode.FILM) {
-				fatal("Show id is not a valid option when used with Film mode");
-				return false;
-			}
-			try {
-				showId = cmd.getOptionValue(SHOWID_OPTION);
-			} catch (NumberFormatException e) {
-				fatal("Invalid command line parameters");
-				return false;
-			}
-		}
-
-		if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {
-			pattern = cmd.getOptionValue(RENAME_PATTERN);
-		}
-
-		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
-		recursive = (cmd.hasOption(RECURSIVE_OPTION));
-
-		if (mode == null) {
-			if (cmd.hasOption(SHOWID_OPTION)) {
-				mode = Mode.TV_SHOW;
+			if (configFile==null || !configFile.exists()) {
+				warn("Unable to find config file '" +configFile+"' so using defaults.");
+				if (doInit) {
+					Controller.initWithDefaults();
+				}
 			}
 			else {
-				mode = getDefaultMode();
+				ConfigReader reader = new ConfigReader(configFile);
+				reader.parse();
+				if (doInit) {
+					Controller.initFromConfigFile(reader);
+				}
 			}
-		}
 
-		if (showId==null) {
-			if (mode==Mode.TV_SHOW) {
-				info("No id given, will search for id");
+			if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) {
+				sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
 			}
-		}
-		else {
-			info("Using show id " + sourceId+":" + showId);
-		}
 
-		if (sourceId==null) {
-			if (mode==Mode.TV_SHOW) {
-				sourceId = Controller.DEFAULT_TV_SOURCE;
+			if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
+				File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
+				if (dir.isDirectory() && dir.canWrite()) {
+					rootMediaDirectory = dir;
+				} else {
+					fatal("Show directory must be a writable directory");
+					return false;
+				}
+			}
+			if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
+				fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
+				return false;
+			}
+
+			if (cmd.hasOption(SHOWID_OPTION)
+					&& cmd.getOptionValue(SHOWID_OPTION) != null) {
+				if (mode==Mode.FILM) {
+					fatal("Show id is not a valid option when used with Film mode");
+					return false;
+				}
+				try {
+					showId = cmd.getOptionValue(SHOWID_OPTION);
+				} catch (NumberFormatException e) {
+					fatal("Invalid command line parameters");
+					return false;
+				}
+			}
+
+			if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {
+				pattern = cmd.getOptionValue(RENAME_PATTERN);
+			}
+
+			refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
+			recursive = (cmd.hasOption(RECURSIVE_OPTION));
+
+			if (mode == null) {
+				if (cmd.hasOption(SHOWID_OPTION)) {
+					mode = Mode.TV_SHOW;
+				}
+				else {
+					mode = getDefaultMode();
+				}
+			}
+
+			if (showId==null) {
+				if (mode==Mode.TV_SHOW) {
+					info("No id given, will search for id");
+				}
 			}
 			else {
-				sourceId = Controller.DEFAULT_FILM_SOURCE;
+				info("Using show id " + sourceId+":" + showId);
 			}
-		}
 
-		if (pattern==null) {
-			if (mode==Mode.TV_SHOW) {
-				pattern = DEFAULT_TV_FILE_PATTERN;
+			if (sourceId==null) {
+				sourceId = Controller.getDefaultSourceID(mode);
 			}
-			else {
-				pattern = DEFAULT_FILM_FILE_PATTERN;
-			}
-		}
 
-		return true;
+			if (pattern==null) {
+				if (mode==Mode.TV_SHOW) {
+					pattern = DEFAULT_TV_FILE_PATTERN;
+				}
+				else {
+					pattern = DEFAULT_FILM_FILE_PATTERN;
+				}
+			}
+
+			return true;
+		}
+		catch (SourceException e) {
+			throw new ConfigException("Unable to create sources",e);
+		}
 	}
 
 	private static boolean initLogging(String logConfig) {

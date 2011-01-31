@@ -1,14 +1,9 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -18,14 +13,9 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.XMLParser;
 
 public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
-
-	private static final Pattern THE_MOVIE_DB_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
-	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(\\d+)");
-	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 
 	@Test
 	public void testTVDBAddonDetails() throws Exception {
@@ -61,6 +51,45 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
 		Film film = source.getFilm("1726",new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"));
 		Assert.assertNotNull(film);
+		Assert.assertEquals(14,film.getActors().size());
+		Assert.assertEquals("Robert Downey Jr",film.getActors().get(0).getName());
+		Assert.assertEquals("Tony Stark",film.getActors().get(0).getRole());
+		Assert.assertEquals("Faran Tahir",film.getActors().get(5).getName());
+		Assert.assertEquals("Raza",film.getActors().get(5).getRole());
+		Assert.assertEquals("Shaun Toub",film.getActors().get(13).getName());
+		Assert.assertEquals("Yinsin",film.getActors().get(13).getRole());
+		Assert.assertEquals(1,film.getCertifications().size());
+		Assert.assertEquals("mpaa",film.getCertifications().get(0).getType());
+		Assert.assertEquals("PG-13",film.getCertifications().get(0).getCertification());
+		Assert.assertEquals(0,film.getChapters().size());
+		Assert.assertEquals("United States of America",film.getCountry());
+		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getDescription());
+		Assert.assertEquals(1,film.getDirectors().size());
+		Assert.assertEquals("Jon Favreau",film.getDirectors().get(0));
+		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726",film.getFilmUrl().toExternalForm());
+		Assert.assertEquals(6,film.getGenres().size());
+		Assert.assertEquals("Action",film.getGenres().get(0));
+		Assert.assertEquals("Adventure",film.getGenres().get(1));
+		Assert.assertEquals("Drama",film.getGenres().get(2));
+		Assert.assertEquals("Fantasy",film.getGenres().get(3));
+		Assert.assertEquals("Science Fiction",film.getGenres().get(4));
+		Assert.assertEquals("Thriller",film.getGenres().get(5));
+		Assert.assertEquals("1726",film.getId());
+		Assert.assertEquals("http://cf1.themoviedb.org/posters/eae/4bc912a2017a3c57fe006eae/iron-man-original.jpg",film.getImageURL().toExternalForm());
+		Assert.assertEquals("Action",film.getPreferredGenre());
+		Assert.assertEquals(8.4F,film.getRating().getRating());
+		Assert.assertEquals(59,film.getRating().getNumberOfVotes());
+		Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
+		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getSummary());
+		Assert.assertEquals("Iron Man",film.getTitle());
+		Assert.assertEquals(2,film.getWriters().size());
+		Assert.assertEquals("Art Marcum",film.getWriters().get(0));
+		Assert.assertEquals("Matt Holloway",film.getWriters().get(1));
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(film.getDate());
+
+		Assert.assertEquals(2008,cal.get(Calendar.YEAR));
 	}
 
 	@Test
@@ -78,43 +107,11 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		params.put(3, "fff");
 		output = scraper.applyParams(output, params);
 		Assert.assertEquals("aaa bbbbb bb ccc ddd eee fff",output);
-
-
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
 		XBMCSource source = new XBMCSource(getAddonManager(),id);
 		return source;
-	}
-
-	@Override
-	protected XBMCAddonManager createAddonManager(File addonDir, Locale locale) throws XBMCException {
-		return new XBMCAddonManager(addonDir,locale) {
-			@Override
-			InputStream getSource(URL url) throws IOException {
-				String strUrl = url.toExternalForm();
-				if (strUrl.contains("Movie.search")) {
-					String file = "themoviedb-search-iron-man.html";
-					return Data.class.getResourceAsStream(file);
-				}
-				else {
-					Matcher m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
-					if (m.matches()) {
-						return Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html");
-					}
-					m = THE_MOVIE_DB_IMAGES_PATTERN.matcher(strUrl);
-					if (m.matches()) {
-						return Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html");
-					}
-					m = IDBM_PATTERN.matcher(strUrl);
-					if (m.matches()) {
-						return Data.class.getResourceAsStream("imdb-"+m.group(1)+".html");
-					}
-				}
-
-				throw new IOException("Unable to find test data for url: " + url);
-			}
-		};
 	}
 
 }

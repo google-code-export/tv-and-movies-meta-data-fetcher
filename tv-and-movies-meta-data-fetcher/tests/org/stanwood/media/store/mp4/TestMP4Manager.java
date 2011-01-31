@@ -15,7 +15,6 @@ import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;

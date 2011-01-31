@@ -31,7 +31,6 @@ import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -250,14 +249,6 @@ public class TestSapphireStore extends XMLTestCase {
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
-	}
-
-	private List<Link>createLinks(Link[] links) {
-		List<Link> result = new ArrayList<Link>();
-		for (Link link : links ) {
-			result.add(link);
-		}
-		return result;
 	}
 
 	private Show createShow(File eurekaDir) throws MalformedURLException {

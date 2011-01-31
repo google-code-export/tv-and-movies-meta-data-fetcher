@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.WebFile;
@@ -91,5 +93,14 @@ public class XBMCAddonManager implements IContentFetcher {
 
 	public List<ISource> getSources() {
 		return sources;
+	}
+
+	public String getDefaultSourceID(Mode mode) throws XBMCException {
+		for (Entry<String,XBMCAddon> e : addons.entrySet()) {
+			if (e.getValue().supportsMode(mode)) {
+				return "xbmc-" + e.getKey();
+			}
+		}
+		return null;
 	}
 }

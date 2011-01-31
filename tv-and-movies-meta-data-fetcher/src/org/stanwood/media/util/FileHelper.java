@@ -17,7 +17,6 @@
 package org.stanwood.media.util;
 
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -113,6 +112,9 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem copying the file
 	 */
 	public static void copy(InputStream in, File dst) throws IOException {
+		if (in==null) {
+			throw new NullPointerException("Stream is null");
+		}
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(dst);
@@ -350,9 +352,9 @@ public class FileHelper {
                 if (entry.isDirectory()) {
                     if (!file.mkdir() && file.exists()) {
                         throw new IOException("Unable to create directory: " + file); //$NON-NLS-1$
-                    }                        
+                    }
                 }
-                else {  
+                else {
                 	BufferedOutputStream out = null;
     				try  {
     					int count;
@@ -365,16 +367,18 @@ public class FileHelper {
     		            }
     					out.flush();
     				}
-    				finally {		
+    				finally {
     					if (out!=null) {
     						out.close();
     					}
-    				}                    
+    				}
                 }
             }
         } finally {
-            if (zis != null) zis.close();
-        }        	
+            if (zis != null) {
+				zis.close();
+			}
+        }
 	}
 
 }

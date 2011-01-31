@@ -32,7 +32,6 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.model.Link;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
@@ -91,34 +90,6 @@ public abstract class BaseXMLStore extends XMLParser {
 		return file;
 	}
 
-	/**
-	 * This is used to add links to the cache document under the given node.
-	 * @param doc The document to add the links to
-	 * @param node The node in the document that the nodes should be appended to
-	 * @param tagLabel The name of the tag which the nodes will be created under
-	 * @param links The links to add to the document.
-	 * @throws XMLParserException Thrown if their is a problem adding the links too the document
-	 */
-	protected void writeEpsoideExtraInfo(Document doc, Node node, String tagLabel, List<Link> links)
-			throws XMLParserException {
-		try {
-			NodeList nodeList = XPathAPI.selectNodeList(node, tagLabel);
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
-			}
-			if (links != null) {
-				for (Link value : links) {
-					Element newNode = doc.createElement(tagLabel);
-					newNode.setAttribute("name", value.getTitle());
-					newNode.setAttribute("url", value.getURL());
-					node.appendChild(newNode);
-				}
-			}
-		}
-		catch (TransformerException e) {
-			throw new XMLParserException("Unable to write episode info",e);
-		}
-	}
 
 	/**
 	 * Used to convert a URL into text. If the URL is null, then a empty string is returned.
@@ -187,31 +158,4 @@ public abstract class BaseXMLStore extends XMLParser {
 
 
 
-	/**
-	 * Used to read links from a node in a DOM document
-	 * @param node The node to read the links from
-	 * @param tagLabel The parent tag of the links
-	 * @return A list of links
-	 * @throws XMLParserException Thrown if their is a problem parsing the XML
-	 */
-	protected List<Link> getLinks(Node node, String tagLabel)
-			throws XMLParserException {
-		try {
-			List<Link> result = new ArrayList<Link>();
-			NodeList list = XPathAPI.selectNodeList(node, tagLabel);
-			for (int i = 0; i < list.getLength(); i++) {
-				Element element = (Element) list.item(i);
-				String url = element.getAttribute("url");
-				if (url==null) {
-					// The old name for the attribute
-					url = element.getAttribute("link");
-				}
-				result.add(new Link(url,element.getAttribute("name")));
-			}
-			return result;
-		}
-		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parse links from XML",e);
-		}
-	}
 }
