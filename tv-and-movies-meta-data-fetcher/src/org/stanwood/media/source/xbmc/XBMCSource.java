@@ -58,10 +58,39 @@ public class XBMCSource extends XMLParser implements ISource {
 	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
 		checkMode(Mode.TV_SHOW);
-		return null;
+		return parseSeason(show,seasonNum);
 	}
 
+	private Season parseSeason(final Show show, int seasonNum) throws SourceException {
 
+		try {
+
+			URL url = new URL(show.getExtraInfo().get("episodeGuideURL"));
+			System.out.println("URL : " + url);
+			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
+				@Override
+				public void processContents(String contents) throws SourceException {
+					Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeList(contents,show.getShowURL());
+	    			try {
+						System.out.println(domToStr(doc));
+					} catch (XMLParserException e) {
+						throw new SourceException("Unable to parse season",e);
+					}
+				}
+			};
+
+			processor.handleStream();
+
+			Season season = new Season(show,seasonNum);
+
+			return season;
+
+		} catch (MalformedURLException e) {
+			throw new SourceException("Unable to parse season",e);
+		} catch (IOException e) {
+			throw new SourceException("Unable to parse season",e);
+		}
+	}
 
 	@Override
 	public Show getShow(final String showId, URL url) throws SourceException,
@@ -80,6 +109,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(contents,showId);
+	    			System.out.println(domToStr(doc));
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);
@@ -108,6 +138,8 @@ public class XBMCSource extends XMLParser implements ISource {
 							// Ignore
 						}
 					}
+
+					show.getExtraInfo().put("episodeGuideURL", getStringFromXML(doc, "details/episodeguide/url/text()"));
 
 				}
 				catch (XMLParserException e) {

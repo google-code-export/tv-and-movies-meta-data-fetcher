@@ -30,6 +30,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	@Override
 	InputStream getSource(URL url) throws IOException {
 		String strUrl = url.toExternalForm();
+		System.out.println("Fetching URL: " + strUrl);
 		Matcher m = TVDB_SEARCH_PATTERN.matcher(strUrl);
 		if (m.matches()) {
 			return Data.class.getResourceAsStream("tvdb-search-"+getSearchName(m.group(1))+".html");

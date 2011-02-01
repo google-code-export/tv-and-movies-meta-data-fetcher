@@ -16,6 +16,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
 	  <genre name="SCIFI" preferred="true"/>
 	  <genre name="Drama"/>
     </genres>
+    <extra/>
     <season
       detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=1"
       listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
@@ -87,8 +88,11 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     </description>
     <genres>
 	    <genre name="SCIFI" preferred="true"/>
-	    <genre name="Drama"/>
+	    <genre name="Drama"/>	    
     </genres>    
+    <extra>
+    	<param key="url" value="http://sdfsdfsdf/sdfsd/fsdfsd/"/>
+    </extra>
     <season
       detailedListingUrl="http://www.tv.com/show/17552/episode_guide.html?printable=1"
       listingUrl="http://www.tv.com/show/17552/episode_listings.html?season=1" number="1">

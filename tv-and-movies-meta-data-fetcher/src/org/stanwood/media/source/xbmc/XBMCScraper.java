@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,17 +58,11 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems creating the search URL
 	 */
 	public Document getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
-		try {
-			Map<Integer,String>params = new HashMap<Integer,String>();
-			params.put(Integer.valueOf(1),URLEncoder.encode(searchTerm,"UTF-8"));
-			params.put(Integer.valueOf(2), year);
+		return executeFunctionByName("CreateSearchUrl",searchTerm,year);
+	}
 
-			String result = executeXBMCScraperFunction("CreateSearchUrl",params);
-			Document doc = XMLParser.strToDom(result);
-			return doc;
-		} catch (Exception e) {
-			throw new XBMCException("Unable to parse scrapper XML",e);
-		}
+	public Document getEpisodeGuideUrl(String rawHtml) throws XBMCException {
+		return executeFunctionByName("EpisodeGuideUrl",rawHtml);
 	}
 
 	/**
@@ -81,17 +74,7 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems creating the search urlXML
 	 */
 	public Document getGetSearchResults(String rawHtml,String searchTerm) throws  XBMCException {
-		try {
-			Map<Integer,String>params = new HashMap<Integer,String>();
-			params.put(Integer.valueOf(1), rawHtml);
-			params.put(Integer.valueOf(2),URLEncoder.encode(searchTerm,"UTF-8"));
-
-			String result = executeXBMCScraperFunction("GetSearchResults",params);
-			Document doc = XMLParser.strToDom(result);
-			return doc;
-		} catch (Exception e) {
-			throw new XBMCException("Unable to parse scrapper XML",e);
-		}
+		return executeFunctionByName("GetSearchResults",rawHtml,searchTerm);
 	}
 
 	/**
@@ -102,30 +85,52 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public Document getGetDetails(String... contents) throws  XBMCException {
+		return executeFunctionByName("GetDetails",contents);
+	}
+
+	public Document getGetEpisodeDetails(String... contents) throws  XBMCException {
+		return executeFunctionByName("GetEpisodeDetails",contents);
+	}
+
+	private Document executeFunctionByName(String funcName,String... contents) throws  XBMCException {
 		try {
-			Map<Integer,String>params = new HashMap<Integer,String>();
-			if (contents.length>=9) {
-				throw new XBMCException("Not allowed more than 9 shows");
-			}
-			for (int i=0;i<contents.length;i++) {
-				params.put(i+1, contents[i]);
-			}
+			Map<Integer, String> params = convertParams(contents);
 
-			String result = executeXBMCScraperFunction("GetDetails",params);
+			String result = executeXBMCScraperFunction(funcName,params);
+			System.out.println(result);
 			Document doc = XMLParser.strToDom(result);
-
-			for (Node node : selectNodeList(doc, "details/chain")) {
-				resolveChainNodes(doc,(Element) node);
-			}
-
-			for (Node node : selectNodeList(doc, "details/url")) {
-				resolveUrlNodes(doc,(Element) node);
-			}
-
+			resolveElements(doc);
 			return doc;
 		} catch (Exception e) {
 			throw new XBMCException("Unable to parse scrapper XML",e);
 		}
+	}
+
+	public Document getGetEpisodeList(String html, URL showURL) throws XBMCException {
+		return executeFunctionByName("GetEpisodeList",html,showURL.toExternalForm());
+	}
+
+	private void resolveElements(Document doc) throws XMLParserException,
+			XBMCException, IOException, SourceException {
+		for (Node node : selectNodeList(doc, "details/chain")) {
+			resolveChainNodes(doc,(Element) node);
+		}
+
+		for (Node node : selectNodeList(doc, "details/url")) {
+			resolveUrlNodes(doc,(Element) node);
+		}
+	}
+
+	private Map<Integer, String> convertParams(String... contents)
+			throws XBMCException {
+		Map<Integer,String>params = new HashMap<Integer,String>();
+		if (contents.length>=9) {
+			throw new XBMCException("Not allowed more than 9 params");
+		}
+		for (int i=0;i<contents.length;i++) {
+			params.put(i+1, contents[i]);
+		}
+		return params;
 	}
 
 	private void resolveChainNodes(Document doc,Element node) throws XMLParserException,
@@ -187,6 +192,5 @@ public class XBMCScraper extends XBMCExtension {
 		}
 		return executeXBMCFunction(functionNode,params);
 	}
-
 
 }

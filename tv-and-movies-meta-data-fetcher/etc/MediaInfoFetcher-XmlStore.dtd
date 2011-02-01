@@ -5,7 +5,7 @@
 -->
 <!ELEMENT store (show|film)*>
 
-<!ELEMENT show (description?,genres?,season*)>
+<!ELEMENT show (description?,genres?,extra,season*)>
 
 <!ELEMENT genres (genre*)>
 
@@ -86,6 +86,15 @@
 <!ELEMENT writer (#PCDATA)>
 
 <!ELEMENT actors (actor*)>
+
+<!ELEMENT extra (param*)>
+
+<!ELEMENT param EMPTY>
+
+<!ATTLIST param
+  key            CDATA    #REQUIRED
+  value          CDATA    #REQUIRED
+>
 
 <!ELEMENT rating EMPTY>
 

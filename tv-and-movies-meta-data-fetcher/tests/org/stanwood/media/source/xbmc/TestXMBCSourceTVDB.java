@@ -5,8 +5,10 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
@@ -31,7 +33,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
 	public void testSource() throws Exception {
-//		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 		SearchResult result = source.searchMedia("Heroes",Mode.TV_SHOW);
 		Assert.assertEquals("79501",result.getId());
@@ -51,6 +53,11 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("79501",show.getShowId());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",show.getShowURL().toExternalForm());
 		Assert.assertEquals("xbmc-metadata.tvdb.com",show.getSourceId());
+		Assert.assertEquals(show.getExtraInfo().get("episodeGuideURL"), "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
+
+		Season season = source.getSeason(show, 1);
+		Assert.assertNotNull(season);
+
 
 	}
 

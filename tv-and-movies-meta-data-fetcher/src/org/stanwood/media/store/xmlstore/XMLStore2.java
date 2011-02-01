@@ -12,8 +12,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +34,7 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoExtra;
 import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Mode;
@@ -376,17 +380,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeGenres(IVideoGenre video, Element node) {
 		Document doc = node.getOwnerDocument();
 		Element genresNode = doc.createElement("genres");
-		for (String value : video.getGenres()) {
-			Element genre = node.getOwnerDocument().createElement("genre");
-			genre.setAttribute("name", value);
-			if (value.equals(video.getPreferredGenre())) {
-				genre.setAttribute("preferred", "true");
+		if (video.getGenres()!=null) {
+			for (String value : video.getGenres()) {
+				Element genre = node.getOwnerDocument().createElement("genre");
+				genre.setAttribute("name", value);
+				if (value.equals(video.getPreferredGenre())) {
+					genre.setAttribute("preferred", "true");
+				}
+				genresNode.appendChild(genre);
 			}
-			genresNode.appendChild(genre);
 		}
 		node.appendChild(genresNode);
 	}
-
 
 	protected void readGenres(IVideoGenre video,Node videoNode)
 			throws XMLParserException, NotInStoreException {
@@ -403,6 +408,33 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		video.setGenres(genres);
 	}
+
+	private void writeExtraParams(IVideoExtra video, Element node) {
+		Document doc = node.getOwnerDocument();
+		Element extraNode = doc.createElement("extra");
+		if (video.getExtraInfo()!=null) {
+			for (Entry<String, String> e : video.getExtraInfo().entrySet()) {
+				Element param = node.getOwnerDocument().createElement("param");
+				param.setAttribute("key",e.getKey());
+				param.setAttribute("value", e.getValue());
+				extraNode.appendChild(param);
+			}
+		}
+		node.appendChild(extraNode);
+	}
+
+	protected void readExtraParams(IVideoExtra video,Node videoNode)
+	throws XMLParserException, NotInStoreException {
+		Map<String,String>params = new HashMap<String,String>();
+		for (Node node : selectNodeList(videoNode, "extra/param")) {
+			Element extraEl = (Element)node;
+			String value = extraEl.getAttribute("value");
+			String key = extraEl.getAttribute("key");
+			params.put(key,value);
+		}
+		video.setExtraInfo(params);
+	}
+
 
 	/**
 	 * Used to append a set of filenames to the document under the given parent node
@@ -532,6 +564,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				appendDescription(doc, show.getShortSummary(),show.getLongSummary(), showElement);
 
 				writeGenres(show, showElement);
+				writeExtraParams(show,showElement);
 
 				storeNode.appendChild(showElement);
 				node = showElement;
@@ -542,6 +575,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 
 	}
+
+
 
 	private void appendDescription(Document doc, String shortSummary,String longSummary, Element parent) {
 		Element description = doc.createElement("description");
@@ -783,9 +818,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			String longSummary = getStringFromXML(showNode,"description/long/text()");
 			String shortSummary = getStringFromXML(showNode,"description/short/text()");
 
-
 			Show show = new Show(showId);
 			readGenres(show, showNode);
+			readExtraParams(show,showNode);
 			show.setName(name);
 			try {
 				show.setImageURL(new URL(imageURL));

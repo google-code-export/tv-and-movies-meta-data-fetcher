@@ -19,13 +19,15 @@ package org.stanwood.media.model;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is used to store and retrive information about shows
  */
-public class Show implements IVideoGenre {
+public class Show implements IVideoGenre,IVideoExtra {
 	private final String showId;
 
 	private String longSummary;
@@ -37,6 +39,7 @@ public class Show implements IVideoGenre {
 	private List<Season> seasons = new ArrayList<Season>();
 	private String sourceId;
 	private String preferredGenre;
+	private Map<String,String>extraInfo = new HashMap<String,String>();
 
 	/**
 	 * The constructor used to create a instance of the class
@@ -242,6 +245,16 @@ public class Show implements IVideoGenre {
 	@Override
 	public void setPreferredGenre(String preferredGenre) {
 		this.preferredGenre = preferredGenre;
+	}
+
+	@Override
+	public Map<String, String> getExtraInfo() {
+		return extraInfo;
+	}
+
+	@Override
+	public void setExtraInfo(Map<String, String> params) {
+		this.extraInfo = params;
 	}
 
 }
