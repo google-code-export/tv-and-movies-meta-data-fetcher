@@ -129,7 +129,7 @@ public abstract class XBMCExtension extends XMLParser {
 				for (int j=1;j<=m.groupCount();j++) {
 					String value = m.group(j);
 					value = processValue(expression,value,j);
-					output = output.replaceAll("\\\\"+(j), value);
+					output = output.replaceAll("\\\\"+(j), Matcher.quoteReplacement(value));
 				}
 				if (found==false && expression.getClear()) {
 					output = "";

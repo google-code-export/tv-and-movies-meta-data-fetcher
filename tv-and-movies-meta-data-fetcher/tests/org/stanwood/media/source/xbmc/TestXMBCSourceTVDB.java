@@ -33,7 +33,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
 	public void testSource() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 		SearchResult result = source.searchMedia("Heroes",Mode.TV_SHOW);
 		Assert.assertEquals("79501",result.getId());
