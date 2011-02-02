@@ -11,6 +11,7 @@ import org.hsqldb.lib.StringInputStream;
 
 
 public class ExpressionEval {
+//http://stackoverflow.com/questions/2042353/extending-simple-antlr-grammer-to-support-input-variables
 
 	private Map<String,Value> variables = new HashMap<String,Value>();
 
