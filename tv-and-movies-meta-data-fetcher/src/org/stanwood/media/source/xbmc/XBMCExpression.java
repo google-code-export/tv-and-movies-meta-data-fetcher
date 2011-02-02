@@ -16,7 +16,7 @@ public class XBMCExpression {
 	private List<Integer>clean = new ArrayList<Integer>();
 	private List<Integer>trim = new ArrayList<Integer>();
 	private boolean repeat = false;
-	
+
 	/**
 	 * Used to get the pattern as a have REGEXP pattern
 	 * @return the pattern as a have REGEXP pattern
@@ -40,17 +40,17 @@ public class XBMCExpression {
 	 */
 	public boolean getNoClean(int field) {
 		return clean.contains(field);
-	}	
-	
+	}
+
 	/**
-	 * Used to find out if a field should be trimmed. 
+	 * Used to find out if a field should be trimmed.
 	 * @param field The field to check
 	 * @return True if whitespace should be trimmed from a field.
 	 */
 	public boolean getTrim(int field) {
 		return trim.contains(field);
 	}
-	
+
 	public boolean getClear() {
 		return clear;
 	}
@@ -65,7 +65,7 @@ public class XBMCExpression {
 			while (tok.hasMoreTokens()) {
 				int num = Integer.parseInt(tok.nextToken());
 				clean.add(num);
-			}			
+			}
 		}
 	}
 
@@ -75,7 +75,7 @@ public class XBMCExpression {
 			while (tok.hasMoreTokens()) {
 				int num = Integer.parseInt(tok.nextToken());
 				trim.add(num);
-			}			
+			}
 		}
 	}
 
@@ -95,5 +95,10 @@ public class XBMCExpression {
 		this.repeat = repeat;
 	}
 
-		
+	@Override
+	public String toString() {
+		return pattern.toString();
+	}
+
+
 }

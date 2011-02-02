@@ -106,6 +106,7 @@ public abstract class XBMCExtension extends XMLParser {
 	private void performRegexp(Map<Integer, String> params, Element node) throws XBMCException {
 		String input = getInputAttr(params,node);
 		String orgOutput = getOutputAttr(params,node);
+//		String conditional = node.getAttribute("conditional");
 		StringBuffer newOutput = new StringBuffer();
 
 		int dest = getDestParam(node);
@@ -114,10 +115,10 @@ public abstract class XBMCExtension extends XMLParser {
 		if (expression!=null) {
 			if (log.isDebugEnabled()) {
 				String in = input;
-				if (in.length()>20) {
-					in = in.substring(0,20);
+				if (in.length()>50) {
+					in = in.substring(0,50);
 				}
-				log.debug("perform expr " + expression.getPattern().toString() +" on [" + in+"]");
+				log.debug("perform expr " + expression.toString() +" on [" + in+"]");
 			}
 			Matcher m = expression.getPattern().matcher(input);
 			boolean found = false;
@@ -168,7 +169,7 @@ public abstract class XBMCExtension extends XMLParser {
 		return value;
 	}
 
-	private XBMCExpression getExpression(Element node,Map<Integer, String> params) {
+	private XBMCExpression getExpression(Element node,Map<Integer, String> params) throws XBMCException {
 		Element expNode = (Element) getChildNodeByName(node, "expression");
 
 		if (expNode !=null) {
@@ -179,6 +180,7 @@ public abstract class XBMCExtension extends XMLParser {
 			}
 
 			regexp = applyParams(regexp, params);
+			regexp = processInfoVars(regexp);
 
 			Pattern p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
 			expr.setPattern(p);

@@ -1,6 +1,8 @@
 package org.stanwood.media.source.xbmc;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -16,7 +18,7 @@ import org.stanwood.media.util.XMLParser;
 public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
-	public void testTVDBAddonDetails() throws Exception {
+	public void testAddon() throws Exception {
 		XBMCAddon addon = getAddonManager().getAddon("metadata.tvdb.com");
 		Assert.assertEquals("metadata.tvdb.com", addon.getId());
 		Assert.assertEquals("The TVDB", addon.getName());
@@ -32,8 +34,8 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 	}
 
 	@Test
-	public void testSource() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+	public void testShow() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 		SearchResult result = source.searchMedia("Heroes",Mode.TV_SHOW);
 		Assert.assertEquals("79501",result.getId());
@@ -54,11 +56,22 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",show.getShowURL().toExternalForm());
 		Assert.assertEquals("xbmc-metadata.tvdb.com",show.getSourceId());
 		Assert.assertEquals(show.getExtraInfo().get("episodeGuideURL"), "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
+	}
+
+	@Test
+	public void testSeason() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		XBMCSource source = getXBMCSource("metadata.tvdb.com");
+
+		Show show = new Show("79501");
+		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+		show.setSourceId(source.getSourceId());
+		Map<String, String> params = new HashMap<String,String>();
+		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
+		show.setExtraInfo(params);
 
 		Season season = source.getSeason(show, 1);
 		Assert.assertNotNull(season);
-
-
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

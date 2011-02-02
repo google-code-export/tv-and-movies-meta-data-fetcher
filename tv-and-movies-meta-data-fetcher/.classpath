@@ -15,6 +15,7 @@
 			<attribute name="javadoc_location" value="jar:file:/home/johsta01/source/jaudiotagger-2.0.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/run-time/antlr-runtime-3.1.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
