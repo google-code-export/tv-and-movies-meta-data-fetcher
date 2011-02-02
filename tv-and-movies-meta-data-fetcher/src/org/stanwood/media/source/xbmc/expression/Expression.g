@@ -8,50 +8,69 @@ options {
 package org.stanwood.media.source.xbmc.expression;
 
 import java.util.HashMap;
+import java.util.Map;
 }
 
 @lexer::header {
 package org.stanwood.media.source.xbmc.expression;
 
 import java.util.HashMap;
+import java.util.Map;
 }
 
 @members {
-/** Map variable name to Integer object holding value */
-HashMap memory = new HashMap();
+
+/** Map Value name to Integer object holding value */
+private Map<String,Value> variables;
+
+private Value result = null;
+
+public Value getResult() {
+  return result;
 }
 
-prog:   stat+ ;
-                
-stat:   expr NEWLINE {System.out.println($expr.value);}
-    |   ID '=' expr NEWLINE
-        {memory.put($ID.text, new Integer($expr.value));}
-    |   NEWLINE
+public Map<String,Value> getVariables() {
+  return variables;
+}
+
+public void setVariables(Map<String,Value> variables) {
+  variables = variables;
+}
+    
+}
+
+parse returns [Value value]
+    :    exp=additionExp {$value = $exp.value;}
     ;
 
-expr returns [int value]
-    :   e=multExpr {$value = $e.value;}
-        (   '+' e=multExpr {$value += $e.value;}
-        |   '-' e=multExpr {$value -= $e.value;}
-        )*
+additionExp returns [Value value]
+    :    m1=multiplyExp      {$value =  $m1.value;} 
+        ( '+' m2=multiplyExp {$value = OperationHelper.performOperation(Operation.ADDITION,$value,$m2.value);} 
+        | '-' m2=multiplyExp {$value = OperationHelper.performOperation(Operation.SUBTRACTION,$value,$m2.value);}
+        )*  
     ;
 
-multExpr returns [int value]
-    :   e=atom {$value = $e.value;} ('*' e=atom {$value *= $e.value;})*
-    ; 
-
-atom returns [int value]
-    :   INT {$value = Integer.parseInt($INT.text);}
-    |   ID
-        {
-        Integer v = (Integer)memory.get($ID.text);
-        if ( v!=null ) $value = v.intValue();
-        else System.err.println("undefined variable "+$ID.text);
-        }
-    |   '(' expr ')' {$value = $expr.value;}
+multiplyExp returns [Value value]
+    :   a1=atomExp       {$value = $a1.value;}
+        ( '*' a2=atomExp {$value = OperationHelper.performOperation(Operation.MULTIPLY,$value,$a2.value);} 
+        | '/' a2=atomExp {$value = OperationHelper.performOperation(Operation.DIVIDE,$value,$a2.value);}
+        )*  
     ;
 
-ID  :   ('a'..'z'|'A'..'Z')+ ;
-INT :   '0'..'9'+ ;
-NEWLINE:'\r'? '\n' ;
-WS  :   (' '|'\t')+ {skip();} ;
+atomExp returns [Value value]
+    :    n=Number                {$value = Double.parseDouble($n.text);}
+    |    i=Identifier            {$value = variables.get($i.text);}
+    |    '(' exp=additionExp ')' {$value = $exp.value;}
+    ;
+
+Identifier
+    :    ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*
+    ;
+
+Number
+    :    ('0'..'9')+ ('.' ('0'..'9')+)?
+    ;
+
+WS  
+    :   (' ' | '\t' | '\r'| '\n') {$channel=HIDDEN;}
+    ;
