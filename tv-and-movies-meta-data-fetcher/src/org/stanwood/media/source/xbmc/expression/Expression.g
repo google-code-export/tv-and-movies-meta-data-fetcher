@@ -31,11 +31,11 @@ public Value getResult() {
 }
 
 public Map<String,Value> getVariables() {
-  return variables;
+  return this.variables;
 }
 
 public void setVariables(Map<String,Value> variables) {
-  variables = variables;
+  this.variables = variables;
 }
     
 }
@@ -60,18 +60,21 @@ multiplyExp returns [Value value]
 
 atomExp returns [Value value]
     :    n=Integer                {$value = ValueFactory.createValue(ValueType.INTEGER,$n.text);}
-    |    i=Identifier            {$value = variables.get($i.text);}
+    |    i=Identifier            { System.out.println($i.text); $value = getVariables().get($i.text); }
     |    '(' exp=additionExp ')' {$value = $exp.value;}
     ;
 
-Identifier
-    :    ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*
+fragment DIGIT : ('0'..'9') ;
+
+fragment LETTER : ('a'..'z'|'A'..'Z') ;
+
+Identifier         
+    :    (LETTER | '_') (LETTER | '_' |DIGIT)*
     ;
 
 Integer
-    :    ('0'..'9')+
+    :    '-'? DIGIT+
     ;
-
-WS  
-    :   (' ' | '\t' | '\r'| '\n') {$channel=HIDDEN;}
-    ;
+  
+WHITESPACE : (' '|'\t')+ { skip(); } ;
+NEWLINE : ('\r'|'\n')+ { skip(); } ;
