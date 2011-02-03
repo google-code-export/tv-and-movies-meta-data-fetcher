@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.antlr.runtime.ANTLRInputStream;
+import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.hsqldb.lib.StringInputStream;
 
 
 public class ExpressionEval {
@@ -24,11 +23,10 @@ public class ExpressionEval {
 	}
 
 	public Value eval(String expression) throws IOException, RecognitionException {
-		ANTLRInputStream input = new ANTLRInputStream(new StringInputStream(expression+"\n"));
-		ExpressionLexer lexer = new ExpressionLexer(input);
+		ExpressionLexer lexer = new ExpressionLexer(new ANTLRStringStream(expression));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ExpressionParser parser = new ExpressionParser(tokens);
         parser.setVariables(variables);
-        return parser.parse();
+        return parser.parse().value;
    }
 }

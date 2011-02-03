@@ -43,5 +43,10 @@ public class Value {
 	}
 
 
+	public Value not() {
+		throw new ExpressionParserException("Operation '!' unspported on types of " + type);
+	}
+
+
 }
 

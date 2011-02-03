@@ -12,21 +12,28 @@ public class IntegerValue extends Value {
 
 	@Override
 	public Value addition(Value value) throws ExpressionParserException {
-		return new Value(getType(),intValue()+((IntegerValue)value).intValue());
+		return new IntegerValue(getType(),intValue()+((IntegerValue)value).intValue());
 	}
 
 	@Override
 	public Value divide(Value value) throws ExpressionParserException {
-		return new Value(getType(),intValue()/((IntegerValue)value).intValue());
+		return new IntegerValue(getType(),intValue()/((IntegerValue)value).intValue());
 	}
 
 	@Override
 	public Value multiply(Value value) throws ExpressionParserException {
-		return new Value(getType(),intValue()*((IntegerValue)value).intValue());
+		return new IntegerValue(getType(),intValue()*((IntegerValue)value).intValue());
 	}
 
 	@Override
 	public Value subtract(Value value) throws ExpressionParserException {
-		return new Value(getType(),intValue()-((IntegerValue)value).intValue());
+		return new IntegerValue(getType(),intValue()-((IntegerValue)value).intValue());
 	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(intValue());
+	}
+
+
 }

@@ -9,4 +9,14 @@ public class BooleanValue extends Value {
 	public boolean booleanValue() {
 		return ((Boolean)getValue()).booleanValue();
 	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(booleanValue());
+	}
+
+	@Override
+	public Value not() {
+		return new BooleanValue(getType(), Boolean.valueOf(!booleanValue()));
+	}
 }

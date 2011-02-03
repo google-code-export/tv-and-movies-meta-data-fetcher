@@ -15,9 +15,18 @@ public class OperationHelper {
 			case SUBTRACTION:
 				return value1.subtract(value2);
 			}
+			throw new ExpressionParserException("Unsupported operation "+ op + " on " + value1.getType() + " types");
 		}
 
 		throw new ExpressionParserException("Can only perform operation on values of same type");
+	}
+
+	public static Value performOperation(Operation op, Value value) {
+		switch (op) {
+		case NOT:
+			return value.not();
+		}
+		throw new ExpressionParserException("Unsupported operation "+ op + " on " + value.getType() + " types");
 	}
 
 }
