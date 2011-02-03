@@ -26,6 +26,22 @@ public class Value {
 		this.type = type;
 	}
 
+	public Value addition(Value value) throws ExpressionParserException {
+		throw new ExpressionParserException("Operation '+' unspported on types of " + type);
+	}
+
+	public Value divide(Value value) throws ExpressionParserException {
+		throw new ExpressionParserException("Operation '/' unspported on types of " + type);
+	}
+
+	public Value multiply(Value value) throws ExpressionParserException {
+		throw new ExpressionParserException("Operation '*' unspported on types of " + type);
+	}
+
+	public Value subtract(Value value) throws ExpressionParserException {
+		throw new ExpressionParserException("Operation '-' unspported on types of " + type);
+	}
+
 
 }
 

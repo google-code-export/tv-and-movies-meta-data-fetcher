@@ -29,8 +29,6 @@ public class ExpressionEval {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ExpressionParser parser = new ExpressionParser(tokens);
         parser.setVariables(variables);
-        parser.prog();
-
-        return parser.getResult();
-	}
+        return parser.parse();
+   }
 }

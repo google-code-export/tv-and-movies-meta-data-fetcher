@@ -19,6 +19,7 @@ import java.util.Map;
 }
 
 @members {
+@SuppressWarnings("all")
 
 /** Map Value name to Integer object holding value */
 private Map<String,Value> variables;
@@ -58,7 +59,7 @@ multiplyExp returns [Value value]
     ;
 
 atomExp returns [Value value]
-    :    n=Number                {$value = Double.parseDouble($n.text);}
+    :    n=Integer                {$value = ValueFactory.createValue(ValueType.INTEGER,$n.text);}
     |    i=Identifier            {$value = variables.get($i.text);}
     |    '(' exp=additionExp ')' {$value = $exp.value;}
     ;
@@ -67,8 +68,8 @@ Identifier
     :    ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*
     ;
 
-Number
-    :    ('0'..'9')+ ('.' ('0'..'9')+)?
+Integer
+    :    ('0'..'9')+
     ;
 
 WS  

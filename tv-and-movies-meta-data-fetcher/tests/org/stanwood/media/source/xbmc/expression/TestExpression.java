@@ -12,9 +12,9 @@ public class TestExpression {
 
 		Value result = eval.eval("4+5");
 		Assert.assertEquals(ValueType.INTEGER, result.getType());
-		Assert.assertEquals(9, result.getValue());
+		Assert.assertEquals(Integer.valueOf(9), result.getValue());
 
-		eval.getVariables().put("test", new Value(ValueType.INTEGER,10));
+		eval.getVariables().put("test", ValueFactory.createValue(ValueType.INTEGER,"10"));
 		result = eval.eval("12+test");
 		Assert.assertEquals(ValueType.INTEGER, result.getType());
 		Assert.assertEquals(22, result.getValue());
