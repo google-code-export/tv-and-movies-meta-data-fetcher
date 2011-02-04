@@ -48,15 +48,15 @@ additionExp returns [Value value]
     ;
 
 multiplyExp returns [Value value]
-    :   a1=unaryExpression       {$value = $a1.value;}
-        ( MULT a2=unaryExpression {$value = OperationHelper.performOperation(Operation.MULTIPLY,$value,$a2.value);} 
-        | DIV a2=unaryExpression {$value = OperationHelper.performOperation(Operation.DIVIDE,$value,$a2.value);}
+    :   a1=atomExp       {$value = $a1.value;}
+        ( MULT a2=atomExp {$value = OperationHelper.performOperation(Operation.MULTIPLY,$value,$a2.value);} 
+        | DIV a2=atomExp {$value = OperationHelper.performOperation(Operation.DIVIDE,$value,$a2.value);}
         )*  
     ;
     
-unaryExpression returns [Value value]
-    :   NOT atomExp {$value = OperationHelper.performOperation(Operation.NOT,$value); }
-       ;
+//unaryExpression returns [Value value]
+//    :   NOT atomExp {$value = OperationHelper.performOperation(Operation.NOT,$value); }
+//       ;
 
 atomExp returns [Value value]
     :    v=INTEGER               { $value = ValueFactory.createValue(ValueType.INTEGER,$v.text);}
