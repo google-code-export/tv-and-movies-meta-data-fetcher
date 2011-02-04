@@ -1,6 +1,5 @@
 package org.stanwood.media.source.xbmc.expression;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import org.antlr.runtime.RecognitionException;
 
 
 public class ExpressionEval {
-//http://stackoverflow.com/questions/2042353/extending-simple-antlr-grammer-to-support-input-variables
 
 	private Map<String,Value> variables = new HashMap<String,Value>();
 
@@ -22,14 +20,16 @@ public class ExpressionEval {
 		return variables;
 	}
 
-	public Value eval(String expression) throws IOException, RecognitionException {
-		ExpressionLexer lexer = new ExpressionLexer(new ANTLRStringStream(expression));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ExpressionParser parser = new ExpressionParser(tokens);
-        parser.setVariables(variables);
-//        CommonTree tree = (CommonTree)parser.parse().getTree();
-//        System.out.println("["+tree.toStringTree()+"]");
-//        return null;
-        return parser.parse().value;
+	public Value eval(String expression) throws ExpressionParserException {
+		try {
+			ExpressionLexer lexer = new ExpressionLexer(new ANTLRStringStream(expression));
+	        CommonTokenStream tokens = new CommonTokenStream(lexer);
+	        ExpressionParser parser = new ExpressionParser(tokens);
+	        parser.setVariables(variables);
+	        return parser.parse().value;
+		}
+		catch (RecognitionException e) {
+			throw new ExpressionParserException("Unable to parse expression '" + expression +"'",e);
+		}
    }
 }

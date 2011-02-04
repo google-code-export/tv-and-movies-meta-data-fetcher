@@ -5,6 +5,10 @@ public enum Operation {
 	SUBTRACTION,
 	MULTIPLY,
 	DIVIDE,
-	NOT
+	NOT,
+	EQUALS,
+	NOTEQUALS,
+	AND,
+	OR
 
 }

@@ -37,6 +37,13 @@ public class TestExpression {
 		Assert.assertEquals(22, result.getValue());
 		Assert.assertEquals("22", result.getValue().toString());
 
+		result = eval.eval("12+test == 22");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+		result = eval.eval("12+test != 400");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+		result = eval.eval("12+test == 400");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
+
 		result = eval.eval("5*10");
 		Assert.assertEquals(ValueType.INTEGER, result.getType());
 		Assert.assertEquals(50, result.getValue());
@@ -79,8 +86,33 @@ public class TestExpression {
 		result = eval.eval("!false");
 		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
 
+		result = eval.eval("false == false");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
+		result = eval.eval("true == true");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
+		result = eval.eval("true != false");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
+		result = eval.eval("false != true");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
+		result = eval.eval("false == true");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
+
+		result = eval.eval("true == false");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
+
 		result = eval.eval("!true");
 		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
 
+		eval.getVariables().put("dummy", ValueFactory.createValue(ValueType.BOOLEAN,"false"));
+		result = eval.eval("!dummy");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
+		eval.getVariables().put("dummy", ValueFactory.createValue(ValueType.BOOLEAN,"true"));
+		result = eval.eval("!dummy");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
 	}
 }

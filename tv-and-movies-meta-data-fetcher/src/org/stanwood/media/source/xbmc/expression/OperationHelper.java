@@ -14,6 +14,14 @@ public class OperationHelper {
 				return value1.multiply(value2);
 			case SUBTRACTION:
 				return value1.subtract(value2);
+			case AND:
+				return value1.and(value2);
+			case OR:
+				return value1.or(value2);
+			case EQUALS:
+				return value1.equals(value2);
+			case NOTEQUALS:
+				return value1.notequals(value2);
 			}
 			throw new ExpressionParserException("Unsupported operation "+ op + " on " + value1.getType() + " types");
 		}

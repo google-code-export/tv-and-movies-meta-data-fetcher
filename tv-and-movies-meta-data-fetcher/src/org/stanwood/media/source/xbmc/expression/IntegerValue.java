@@ -35,5 +35,14 @@ public class IntegerValue extends Value {
 		return String.valueOf(intValue());
 	}
 
+	@Override
+	public Value notequals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() != ((IntegerValue)value).intValue()));
+	}
+
+	@Override
+	public Value equals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() == ((IntegerValue)value).intValue()));
+	}
 
 }

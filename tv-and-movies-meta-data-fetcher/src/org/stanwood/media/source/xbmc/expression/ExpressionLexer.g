@@ -57,11 +57,10 @@ DIV   :    '/';
 LBRACKET : '(';
 RBRACKET : ')';
 NOT      : '!';
-
+EQUALS   : '==';
+NOTEQUALS: '!=';
 //OR       : '||';
 //AND      : '&&';
-//EQUALS   : '==';
-//NOTEQUALS: '!=';
 //LT    :    '<';
 //LTEQ  :    '<=';
 //GT    :    '>';

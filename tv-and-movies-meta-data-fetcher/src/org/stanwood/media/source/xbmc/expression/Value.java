@@ -42,11 +42,24 @@ public class Value {
 		throw new ExpressionParserException("Operation '-' unspported on types of " + type);
 	}
 
-
 	public Value not() {
 		throw new ExpressionParserException("Operation '!' unspported on types of " + type);
 	}
 
+	public Value and(Value value) {
+		throw new ExpressionParserException("Operation '&&' unspported on types of " + type);
+	}
 
+	public Value or(Value value) {
+		throw new ExpressionParserException("Operation '||' unspported on types of " + type);
+	}
+
+	public Value notequals(Value value) {
+		throw new ExpressionParserException("Operation '!=' unspported on types of " + type);
+	}
+
+	public Value equals(Value value) {
+		throw new ExpressionParserException("Operation '==' unspported on types of " + type);
+	}
 }
 

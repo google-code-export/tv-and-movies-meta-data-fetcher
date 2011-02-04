@@ -19,4 +19,24 @@ public class BooleanValue extends Value {
 	public Value not() {
 		return new BooleanValue(getType(), Boolean.valueOf(!booleanValue()));
 	}
+
+	@Override
+	public Value and(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(booleanValue() && ((BooleanValue)value).booleanValue()));
+	}
+
+	@Override
+	public Value or(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(booleanValue() || ((BooleanValue)value).booleanValue()));
+	}
+
+	@Override
+	public Value notequals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(booleanValue() != ((BooleanValue)value).booleanValue()));
+	}
+
+	@Override
+	public Value equals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(booleanValue() == ((BooleanValue)value).booleanValue()));
+	}
 }

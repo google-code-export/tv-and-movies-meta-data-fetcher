@@ -13,6 +13,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.source.xbmc.expression.ExpressionEval;
+import org.stanwood.media.source.xbmc.expression.Value;
+import org.stanwood.media.source.xbmc.expression.ValueType;
 import org.stanwood.media.store.xmlstore.SimpleErrorHandler;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
@@ -31,7 +34,7 @@ public class XBMCAddon extends XMLParser {
 	private List<XBMCExtension> extensions;
 	private XBMCAddonManager addonMgr;
 	private List<XBMCAddon> requiredAddons;
-	private Map<String,XBMCSetting> settings = new HashMap<String,XBMCSetting>();
+	private Map<String,Value> settings = new HashMap<String,Value>();
 	private File addonFile;
 	private Map<File, Document> docs = new HashMap<File,Document>();
 
@@ -54,12 +57,35 @@ public class XBMCAddon extends XMLParser {
 		try {
 			Document doc = getDocument(settingsFile);
 			for (Node node : selectNodeList(doc, "settings/setting")) {
-				XBMCSetting setting = XBMCSettingsFactory.createSetting((Element)node);
+				addSetting((Element)node);
 			}
 		}
 		catch (XMLParserException e) {
 			throw new XBMCException("Unable to parse the settigs file: " + settingsFile,e);
 		}
+	}
+
+	private void addSetting(Element node) throws XBMCException {
+		String type = node.getAttribute("type");
+		String defaultValue = node.getAttribute("default");
+		String id = node.getAttribute("id");
+
+		if (type.equals("bool")) {
+			ExpressionEval eval = new ExpressionEval();
+			Value value = eval.eval(defaultValue);
+			if (value.getType()!=ValueType.BOOLEAN) {
+				throw new XBMCException("Unable to get the default value for setting '"+id+"'");
+			}
+			settings.put(id,value);
+		}
+		else if (type.equals("labelenum")) {
+
+		}
+		throw new XBMCException("Unkown setting type '"+type+"' of setting '"+id+"'");
+	}
+
+	public Value getSetting(String id) {
+		return settings.get(id);
 	}
 
 	private Document getDocument(File file) throws XBMCException {

@@ -54,14 +54,33 @@ multiplyExp returns [Value value]
         )*  
     ;
     
+logicalExpression returns [Value value]
+    :    b1=booleanAndExpression  {$value = $b1.value;}
+         ( OR b2=booleanAndExpression {$value = OperationHelper.performOperation(Operation.OR,$value,$b2.value);} 
+         )*
+    ;    
+    
+booleanAndExpression returns [Value value]
+    :    b1=equalityExpression {$value = $b1.value;}
+         ( AND b2=equalityExpression {$value = OperationHelper.performOperation(Operation.AND,$value,$b2.value);}
+         )*
+    ;
+
+equalityExpression returns [Value value]
+    :    b1=additiveExpression  {$value = $b1.value;}
+         ( EQUALS a2=additiveExpression {$value = OperationHelper.performOperation(Operation.EQUALS,$value,$a2.value);} 
+         | NOTEQUALS a2=additiveExpression {$value = OperationHelper.performOperation(Operation.NOTEQUALS,$value,$a2.value);}
+         )*
+    ;        
+    
 unaryExpression returns [Value value]
-    :   u1=additiveExpression { $value = $u1.value; }      
-    |   NOT u1=additiveExpression { $value = OperationHelper.performOperation(Operation.NOT,$u1.value); }
+    :   u1=logicalExpression { $value = $u1.value; }      
+    |   NOT u1=logicalExpression { $value = OperationHelper.performOperation(Operation.NOT,$u1.value); }
     ;
 
 atomExp returns [Value value]
     :    v=INTEGER               { $value = ValueFactory.createValue(ValueType.INTEGER,$v.text);}
     |    v=BOOLEAN               { $value = ValueFactory.createValue(ValueType.BOOLEAN,$v.text);}             
     |    i=IDENTIFIER            { $value = getVariables().get($i.text); }
-    |    LBRACKET exp=additiveExpression RBRACKET {$value = $exp.value;}
+    |    LBRACKET exp=logicalExpression RBRACKET {$value = $exp.value;}
     ;
