@@ -27,6 +27,9 @@ public class ExpressionEval {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ExpressionParser parser = new ExpressionParser(tokens);
         parser.setVariables(variables);
+//        CommonTree tree = (CommonTree)parser.parse().getTree();
+//        System.out.println("["+tree.toStringTree()+"]");
+//        return null;
         return parser.parse().value;
    }
 }

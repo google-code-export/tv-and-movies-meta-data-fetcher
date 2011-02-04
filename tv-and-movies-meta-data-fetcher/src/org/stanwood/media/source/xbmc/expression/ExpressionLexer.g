@@ -58,5 +58,13 @@ LBRACKET : '(';
 RBRACKET : ')';
 NOT      : '!';
 
-
+//OR       : '||';
+//AND      : '&&';
+//EQUALS   : '==';
+//NOTEQUALS: '!=';
+//LT    :    '<';
+//LTEQ  :    '<=';
+//GT    :    '>';
+//GTEQ  :    '>=';
+//MOD   :    '%';
  

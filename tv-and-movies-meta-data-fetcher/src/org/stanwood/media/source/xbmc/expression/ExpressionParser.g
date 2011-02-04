@@ -37,10 +37,10 @@ public void setVariables(Map<String,Value> variables) {
 }
 
 parse returns [Value value]
-    :    exp=additionExp { $value = $exp.value;}
+    :    exp=unaryExpression { $value = $exp.value;}
     ;
 
-additionExp returns [Value value]
+additiveExpression returns [Value value]
     :    m1=multiplyExp      {$value =  $m1.value;} 
         ( PLUS m2=multiplyExp {$value = OperationHelper.performOperation(Operation.ADDITION,$value,$m2.value);} 
         | MINUS m2=multiplyExp {$value = OperationHelper.performOperation(Operation.SUBTRACTION,$value,$m2.value);}
@@ -54,14 +54,14 @@ multiplyExp returns [Value value]
         )*  
     ;
     
-//unaryExpression returns [Value value]
-//    :   NOT atomExp {$value = OperationHelper.performOperation(Operation.NOT,$value); }
-//       ;
+unaryExpression returns [Value value]
+    :   u1=additiveExpression { $value = $u1.value; }      
+    |   NOT u1=additiveExpression { $value = OperationHelper.performOperation(Operation.NOT,$u1.value); }
+    ;
 
 atomExp returns [Value value]
     :    v=INTEGER               { $value = ValueFactory.createValue(ValueType.INTEGER,$v.text);}
     |    v=BOOLEAN               { $value = ValueFactory.createValue(ValueType.BOOLEAN,$v.text);}             
     |    i=IDENTIFIER            { $value = getVariables().get($i.text); }
-    |    LBRACKET exp=additionExp RBRACKET {$value = $exp.value;}
+    |    LBRACKET exp=additiveExpression RBRACKET {$value = $exp.value;}
     ;
-
