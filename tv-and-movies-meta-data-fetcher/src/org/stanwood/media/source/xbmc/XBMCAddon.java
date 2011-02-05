@@ -12,11 +12,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.source.xbmc.expression.BooleanValue;
 import org.stanwood.media.source.xbmc.expression.ExpressionEval;
+import org.stanwood.media.source.xbmc.expression.ExpressionParserException;
 import org.stanwood.media.source.xbmc.expression.Value;
 import org.stanwood.media.source.xbmc.expression.ValueType;
 import org.stanwood.media.store.xmlstore.SimpleErrorHandler;
+import org.stanwood.media.util.IterableNodeList;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.w3c.dom.Document;
@@ -29,14 +34,16 @@ import org.xml.sax.SAXException;
  */
 public class XBMCAddon extends XMLParser {
 
+	private final static Log log = LogFactory.getLog(XMLParser.class);
+
 	private File addonDir;
 	private Locale locale;
 	private List<XBMCExtension> extensions;
 	private XBMCAddonManager addonMgr;
 	private List<XBMCAddon> requiredAddons;
-	private Map<String,Value> settings = new HashMap<String,Value>();
 	private File addonFile;
 	private Map<File, Document> docs = new HashMap<File,Document>();
+	private ExpressionEval eval = new ExpressionEval();
 
 	/**
 	 * Used to create a instance of the addon class
@@ -49,19 +56,28 @@ public class XBMCAddon extends XMLParser {
 		this.locale = locale;
 		this.addonMgr = addonMgr;
 		this.addonFile = new File(addonDir,"addon.xml");
+
 		parseSettings();
 	}
 
 	private void parseSettings() throws XBMCException {
-		File settingsFile = new File(addonDir,"resources"+File.separator+"settings.xml");
-		try {
-			Document doc = getDocument(settingsFile);
-			for (Node node : selectNodeList(doc, "settings/setting")) {
-				addSetting((Element)node);
+
+		File settingsFile = getFile("resources"+File.separator+"settings.xml");
+		if (settingsFile.exists()) {
+			System.out.println("Parsing settings: " + settingsFile);
+			try {
+				Document doc = getDocument(settingsFile);
+				if (log.isDebugEnabled()) {
+					log.debug("Loading settings file: " + settingsFile);
+				}
+				IterableNodeList settings = selectNodeList(doc, "/settings/setting");
+				for (Node node : settings) {
+					addSetting((Element)node);
+				}
 			}
-		}
-		catch (XMLParserException e) {
-			throw new XBMCException("Unable to parse the settigs file: " + settingsFile,e);
+			catch (XMLParserException e) {
+				throw new XBMCException("Unable to parse the settigs file: " + settingsFile,e);
+			}
 		}
 	}
 
@@ -76,7 +92,8 @@ public class XBMCAddon extends XMLParser {
 			if (value.getType()!=ValueType.BOOLEAN) {
 				throw new XBMCException("Unable to get the default value for setting '"+id+"'");
 			}
-			settings.put(id,value);
+			eval.getVariables().put(id,value);
+			return;
 		}
 		else if (type.equals("labelenum")) {
 
@@ -84,8 +101,13 @@ public class XBMCAddon extends XMLParser {
 		throw new XBMCException("Unkown setting type '"+type+"' of setting '"+id+"'");
 	}
 
+	/**
+	 * Used to get the value of a addon setting
+	 * @param id The id of the addon setting
+	 * @return The value of the addon setting
+	 */
 	public Value getSetting(String id) {
-		return settings.get(id);
+		return eval.getVariables().get(id);
 	}
 
 	private Document getDocument(File file) throws XBMCException {
@@ -224,6 +246,7 @@ public class XBMCAddon extends XMLParser {
 
 	/**
 	 * Used to get the scraper class that will read data using the XBMC XML scraper files
+	 * @param mode The mode that the scraper is been used for
 	 * @return The scraper
 	 * @throws XBMCException Thrown if their are any problems
 	 */
@@ -275,6 +298,12 @@ public class XBMCAddon extends XMLParser {
 		}
 	}
 
+	/**
+	 * Used to get the value of a info setting
+	 * @param key The info setting name
+	 * @return The info setting value
+	 * @throws XBMCException Thrown if not able to find the setting
+	 */
 	public String getInfoSetting(String key) throws XBMCException {
 		if (key.equals("language")) {
 			return locale.getLanguage();
@@ -282,11 +311,23 @@ public class XBMCAddon extends XMLParser {
 		throw new XBMCException("Unknown info key '"+key+"'");
 	}
 
+	/**
+	 * Used to get a reference to one of the addons files
+	 * @param path The Path relative to the addon directory
+	 * @return The file object referencing the file
+	 */
 	public File getFile(String path) {
 		return new File(addonDir,path);
 	}
 
-	public String executeFunction(String functionName,Map<Integer, String> params) throws XBMCException, XMLParserException {
+	/**
+	 * Used to execute a scraper function
+	 * @param functionName The function name
+	 * @param params The parameters given to the function
+	 * @return The results from the function
+	 * @throws XBMCException Thrown if their are any problems
+	 */
+	public String executeFunction(String functionName,Map<Integer, String> params) throws XBMCException {
 		String result = null;
 		for (XBMCExtension addon : getExtensions()) {
 			try {
@@ -295,6 +336,9 @@ public class XBMCAddon extends XMLParser {
 			}
 			catch (XBMCException e) {
 				// Ignore
+			}
+			catch (XMLParserException e) {
+				throw new XBMCException("Unable to execute scraper function",e);
 			}
 		}
 
@@ -318,10 +362,19 @@ public class XBMCAddon extends XMLParser {
 		return result;
 	}
 
+	/**
+	 * Used to get the addon manager
+	 * @return The addon manager
+	 */
 	public XBMCAddonManager getManager() {
 		return addonMgr;
 	}
 
+	/**
+	 * Used to find out if the extension has scrappers
+	 * @return True if the extension has scrapers
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public boolean hasScrapers() throws XBMCException {
 		for (XBMCExtension ext : getExtensions()) {
 			if (ext instanceof XBMCScraper) {
@@ -329,5 +382,26 @@ public class XBMCAddon extends XMLParser {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Used to evaluate a expression making use of the addon settings. The expression
+	 * must evaluate to a boolean type.
+	 * @param expression The expression
+	 * @return The value the expresion evaluates to
+	 * @throws XBMCException Thrown if their are any problems
+	 */
+	public boolean checkCondition(String expression) throws XBMCException {
+		System.out.println(expression);
+		try {
+			Value value = eval.eval(expression);
+			if (value.getType() == ValueType.BOOLEAN) {
+				return ((BooleanValue)value).booleanValue();
+			}
+			throw new XBMCException("Expression '"+expression+"' did not evaulate to a boolean type");
+		}
+		catch (ExpressionParserException e) {
+			throw new XBMCException("Unable to evaluate expression '"+expression+"'",e);
+		}
 	}
 }
