@@ -9,6 +9,10 @@ public enum Operation {
 	EQUALS,
 	NOTEQUALS,
 	AND,
-	OR
+	OR,
+	LESS,
+	LESS_EQUALS,
+	GREATER,
+	GREATER_EQUALS
 
 }

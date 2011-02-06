@@ -59,11 +59,11 @@ RBRACKET : ')';
 NOT      : '!';
 EQUALS   : '==';
 NOTEQUALS: '!=';
-//OR       : '||';
-//AND      : '&&';
-//LT    :    '<';
-//LTEQ  :    '<=';
-//GT    :    '>';
-//GTEQ  :    '>=';
-//MOD   :    '%';
+OR       : '||';
+AND      : '&&';
+LT    :    '<';
+LTEQ  :    '<=';
+GT    :    '>';
+GTEQ  :    '>=';
+MOD   :    '%';
  
