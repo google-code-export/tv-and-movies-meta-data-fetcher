@@ -83,7 +83,26 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 //		Assert.assertEquals(season.getEpisodeCount());
 //		Assert.assertEquals(season.getEpisode(episodeNum));
 
+		season = source.getSeason(show, 2);
+		Assert.assertNotNull(season);
+		Assert.assertEquals(2,season.getSeasonNumber());
+		Assert.assertEquals(show,season.getShow());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",season.getURL().toExternalForm());
 
+		season = source.getSeason(show, 3);
+		Assert.assertNotNull(season);
+		Assert.assertEquals(3,season.getSeasonNumber());
+		Assert.assertEquals(show,season.getShow());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",season.getURL().toExternalForm());
+
+		season = source.getSeason(show, 4);
+		Assert.assertNotNull(season);
+		Assert.assertEquals(4,season.getSeasonNumber());
+		Assert.assertEquals(show,season.getShow());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",season.getURL().toExternalForm());
+
+		season = source.getSeason(show, 5);
+		Assert.assertNull(season);
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
