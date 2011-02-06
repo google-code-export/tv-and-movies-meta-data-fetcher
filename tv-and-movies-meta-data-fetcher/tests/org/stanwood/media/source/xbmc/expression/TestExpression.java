@@ -44,6 +44,17 @@ public class TestExpression {
 		result = eval.eval("12+test == 400");
 		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
 
+		result = eval.eval("12>5");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+		result = eval.eval("12<5");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
+		result = eval.eval("12<12");
+		Assert.assertEquals(Boolean.valueOf(false), result.getValue());
+		result = eval.eval("12<=12");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+		result = eval.eval("12>=12");
+		Assert.assertEquals(Boolean.valueOf(true), result.getValue());
+
 		result = eval.eval("5*10");
 		Assert.assertEquals(ValueType.INTEGER, result.getType());
 		Assert.assertEquals(50, result.getValue());

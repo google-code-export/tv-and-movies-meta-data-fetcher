@@ -45,4 +45,25 @@ public class IntegerValue extends Value {
 		return new BooleanValue(getType(), Boolean.valueOf(intValue() == ((IntegerValue)value).intValue()));
 	}
 
+	@Override
+	public Value greater(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() > ((IntegerValue)value).intValue()));
+	}
+
+	@Override
+	public Value greaterEquals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() >= ((IntegerValue)value).intValue()));
+	}
+
+	@Override
+	public Value less(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() < ((IntegerValue)value).intValue()));
+	}
+
+	@Override
+	public Value lessEquals(Value value) {
+		return new BooleanValue(getType(), Boolean.valueOf(intValue() <= ((IntegerValue)value).intValue()));
+	}
+
+
 }
