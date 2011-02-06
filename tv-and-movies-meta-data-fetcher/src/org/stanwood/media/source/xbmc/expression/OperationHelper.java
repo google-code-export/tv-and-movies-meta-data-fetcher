@@ -22,7 +22,16 @@ public class OperationHelper {
 				return value1.equals(value2);
 			case NOTEQUALS:
 				return value1.notequals(value2);
+			case GREATER:
+				return value1.greater(value2);
+			case GREATER_EQUALS:
+				return value1.greaterEquals(value2);
+			case LESS:
+				return value1.less(value2);
+			case LESS_EQUALS:
+				return value1.lessEquals(value2);
 			}
+
 			throw new ExpressionParserException("Unsupported operation "+ op + " on " + value1.getType() + " types");
 		}
 
