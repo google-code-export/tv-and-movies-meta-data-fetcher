@@ -160,8 +160,7 @@ public class Data {
 		show.setGenres(genres);
 
 		Season season = new Season(show,1);
-		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=1"));
-		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=1"));
+		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=1"));
 		show.addSeason(season);
 
 		File episodeFile = new File(eurekaDir,"1x01 - blah");
@@ -197,8 +196,7 @@ public class Data {
 		result.add(new EpisodeData(episode2,episodeFile));
 
 		season = new Season(show,2);
-		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_guide.html?printable=2"));
-		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=2"));
+		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=2"));
 		show.addSeason(season);
 
 		episodeFile = new File(eurekaDir,"2x13 - blah");
@@ -286,8 +284,7 @@ public class Data {
 		episodeFile.createNewFile();
 
 		Season season = new Season(show,1);
-		season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_guide.html?printable=1"));
-		season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_listings.html?season=1"));
+		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_listings.html?season=1"));
 		show.addSeason(season);
 
 		Episode episode1 = new Episode(1,season);

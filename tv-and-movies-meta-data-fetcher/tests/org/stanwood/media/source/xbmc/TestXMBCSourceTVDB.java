@@ -74,6 +74,16 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Season season = source.getSeason(show, 1);
 		Assert.assertNotNull(season);
+		Assert.assertEquals(1,season.getSeasonNumber());
+		Assert.assertEquals(show,season.getShow());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",season.getURL().toExternalForm());
+//		season.getSpecial(specialNumber)
+//		season.getSpecials()
+//		season.getEpisodes()
+//		Assert.assertEquals(season.getEpisodeCount());
+//		Assert.assertEquals(season.getEpisode(episodeNum));
+
+
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

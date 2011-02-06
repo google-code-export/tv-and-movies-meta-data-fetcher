@@ -154,8 +154,7 @@ public class TestXMLStore2 {
 			Assert.assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
 
 			Season season = xmlSource.getSeason(dir,episodeFile,show, 1);
-			Assert.assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=1",season.getDetailedUrl().toExternalForm());
-			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getListingUrl().toExternalForm());
+			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getURL().toExternalForm());
 			Assert.assertEquals(1,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
@@ -194,8 +193,7 @@ public class TestXMLStore2 {
 
 	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
 			season = xmlSource.getSeason(dir,episodeFile,show, 2);
-			Assert.assertEquals("http://www.tv.com/show/58448/episode_guide.html?printable=2",season.getDetailedUrl().toExternalForm());
-			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getListingUrl().toExternalForm());
+			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getURL().toExternalForm());
 			Assert.assertEquals(2,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 

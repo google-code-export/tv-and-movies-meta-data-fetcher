@@ -155,8 +155,7 @@ public class TestSapphireStore extends XMLTestCase {
 			xmlSource.cacheShow(eurekaDir,episodeFile,show);
 
 			Season season = new Season(show,1);
-			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=1"));
-			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
+			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
 			show.addSeason(season);
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 			Episode episode1 = new Episode(1,season);
@@ -188,8 +187,7 @@ public class TestSapphireStore extends XMLTestCase {
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
 
 			season = new Season(show,2);
-			season.setDetailedUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_guide.html?printable=2"));
-			season.setListingUrl(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
+			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
 			show.addSeason(season);
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 

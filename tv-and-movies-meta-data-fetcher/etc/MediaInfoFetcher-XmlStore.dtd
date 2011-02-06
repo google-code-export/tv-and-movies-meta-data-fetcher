@@ -26,9 +26,8 @@
 <!ELEMENT season (episode|special)*>
 
 <!ATTLIST season
-  detailedListingUrl  CDATA   #IMPLIED
-  listingUrl          CDATA   #IMPLIED
-  number              CDATA   #REQUIRED
+  url          CDATA   #IMPLIED
+  number       CDATA   #REQUIRED
 >
 
 <!ELEMENT episode (summary?,rating?,directors?,writers?,actors?,file*)>
