@@ -61,15 +61,14 @@ public class XBMCAddon extends XMLParser {
 	}
 
 	private void parseSettings() throws XBMCException {
-
 		File settingsFile = getFile("resources"+File.separator+"settings.xml");
-		if (settingsFile.exists()) {
-			System.out.println("Parsing settings: " + settingsFile);
+		if (!settingsFile.getAbsolutePath().contains("visualization.projectm") && settingsFile.exists()) {
 			try {
-				Document doc = getDocument(settingsFile);
 				if (log.isDebugEnabled()) {
 					log.debug("Loading settings file: " + settingsFile);
 				}
+				Document doc = getDocument(settingsFile);
+
 				IterableNodeList settings = selectNodeList(doc, "/settings/setting");
 				for (Node node : settings) {
 					addSetting((Element)node);
@@ -87,27 +86,32 @@ public class XBMCAddon extends XMLParser {
 		String id = node.getAttribute("id");
 
 		if (type.equals("bool")) {
-			ExpressionEval eval = new ExpressionEval();
 			Value value = eval.eval(defaultValue);
 			if (value.getType()!=ValueType.BOOLEAN) {
 				throw new XBMCException("Unable to get the default value for setting '"+id+"'");
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("Adding setting: " + id + " : " + type + " = " + value);
+			}
 			eval.getVariables().put(id,value);
 			return;
 		}
-		else if (type.equals("labelenum")) {
-
-		}
-		throw new XBMCException("Unkown setting type '"+type+"' of setting '"+id+"'");
+		return;
 	}
 
 	/**
 	 * Used to get the value of a addon setting
 	 * @param id The id of the addon setting
 	 * @return The value of the addon setting
+	 * @throws XBMCException Thrown if their is a problem getting the setting
 	 */
-	public Value getSetting(String id) {
-		return eval.getVariables().get(id);
+	public Value getSetting(String id) throws XBMCException {
+		try {
+			return eval.getVariables().get(id);
+		}
+		catch (ExpressionParserException e) {
+			throw new XBMCException("Unable to get setting '"+id+"' for addon '"+getId()+"'",e);
+		}
 	}
 
 	private Document getDocument(File file) throws XBMCException {
@@ -131,11 +135,11 @@ public class XBMCAddon extends XMLParser {
 					throw new XBMCException("Unable to parse  XMBC addon, errors found in file: " + file);
 				}
 			} catch (SAXException e) {
-				throw new XBMCException("Unable to parse XMBC addon: " + e.getMessage(), e);
+				throw new XBMCException("Unable to parse file: " + file, e);
 			} catch (IOException e) {
-				throw new XBMCException("Unable to read XMBC addon: " + e.getMessage(), e);
+				throw new XBMCException("Unable to read file: " + file, e);
 			} catch (ParserConfigurationException e) {
-				throw new XBMCException("Unable to parse  XMBC addon: " + e.getMessage(), e);
+				throw new XBMCException("Unable to parse file: " + file, e);
 			}
 		}
 		return doc;
@@ -392,16 +396,25 @@ public class XBMCAddon extends XMLParser {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public boolean checkCondition(String expression) throws XBMCException {
-		System.out.println(expression);
+
 		try {
 			Value value = eval.eval(expression);
 			if (value.getType() == ValueType.BOOLEAN) {
-				return ((BooleanValue)value).booleanValue();
+				boolean result = ((BooleanValue)value).booleanValue();
+			    System.out.println(expression + " = " + result);
+				return result;
 			}
 			throw new XBMCException("Expression '"+expression+"' did not evaulate to a boolean type");
 		}
 		catch (ExpressionParserException e) {
-			throw new XBMCException("Unable to evaluate expression '"+expression+"'",e);
+			throw new XBMCException("Unable to evaluate expression '"+expression+"' in addon " + getId(),e);
 		}
+	}
+
+	public void setSetting(String key, String value) throws XBMCException {
+		if (!eval.getVariables().containsKey(key)) {
+			throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
+		}
+		eval.eval(key+"="+value);
 	}
 }

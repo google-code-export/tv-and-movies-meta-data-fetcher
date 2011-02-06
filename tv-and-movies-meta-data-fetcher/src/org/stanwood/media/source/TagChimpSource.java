@@ -31,8 +31,8 @@ import au.id.jericho.lib.html.Source;
 /**
  * This class is a source used to retrieve information about films from {@link "www.tagchimp.com"}. This source has the
  * option parameter "regexpToReplace". This is used when searching for a film via the film's filename. The parameter is
- * a regular expression, that when found in the filename, is removed. Use the method <code>setRegexpToReplace</code> to
- * set the regular expression.
+ * a regular expression, that when found in the filename, is removed. Use the method <code>{@link #setParameter(String, String)}</code>
+ * to set the regular expression.
  */
 public class TagChimpSource implements ISource {
 
@@ -288,21 +288,41 @@ public class TagChimpSource implements ISource {
 	}
 
 	/**
-	 * Get the "RegexpToReplace" parameter value.
-	 *
-	 * @return The "RegexpToReplace" parameter value.
+	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * <p>Supported parameters:
+	 * <ul>
+	 * 	<li>RegexpToReplace -The parameter is a regular expression, that when found in the filename, is removed.</li>
+	 * </ul>
+	 * </p>
+	 * @param key The key of the parameter
+	 * @param value The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
-	public String getRegexpToReplace() {
-		return regexpToReplace;
+	@Override
+	public void setParameter(String key,String value) throws SourceException {
+		if (key.equalsIgnoreCase("RegexpToReplace")) {
+			regexpToReplace = value;
+		}
+		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
 
 	/**
-	 * Used to set the "RegexpToReplace" parameter value.
-	 *
-	 * @param regexpToReplace The value of the parameter been set.
+	 * <p>Used to get the value of a source parameter. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * <p>Supported parameters:
+	 * <ul>
+	 * 	<li>RegexpToReplace -The parameter is a regular expression, that when found in the filename, is removed.</li>
+	 * </ul>
+	 * </p>
+	 * @param key The key of the parameter
+	 * @return The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
-	public void setRegexpToReplace(String regexpToReplace) {
-		this.regexpToReplace = regexpToReplace;
+	@Override
+	public String getParameter(String key) throws SourceException {
+		if (key.equalsIgnoreCase("RegexpToReplace")) {
+			return regexpToReplace;
+		}
+		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
 
 	/* package for test */Source getSource(URL url) throws IOException {

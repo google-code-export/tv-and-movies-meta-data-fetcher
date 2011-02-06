@@ -333,6 +333,16 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
+	@Override
+	public void setParameter(String key, String value) throws SourceException {
+		addon.setSetting(key,value);
+	}
+
+	@Override
+	public String getParameter(String key) throws SourceException {
+		return addon.getSetting(key).toString();
+	}
+
 
 
 }
