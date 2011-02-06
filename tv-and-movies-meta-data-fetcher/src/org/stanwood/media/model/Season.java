@@ -27,55 +27,38 @@ import java.util.Map;
  * This is used to hold information on a season within a show
  */
 public class Season {
-	
-	private int seasonNumber;	
+
+	private int seasonNumber;
 	private Map<Integer,Episode>episodes = new HashMap<Integer,Episode>();
 	private List<Episode> specials = new ArrayList<Episode>();
-	
-	private URL listingUrl;
-	private URL detailedUrl;
-	private Show show;	
-	
+
+	private URL url;
+	private Show show;
+
 	/**
 	 * The constructor used to create a instance of the season.
 	 * @param show The show the season belongs too
 	 * @param seasonNumber The season number
 	 */
-	public Season(Show show,int seasonNumber) {		
+	public Season(Show show,int seasonNumber) {
 		this.seasonNumber = seasonNumber;
 		this.show = show;
-	}	
-	
+	}
+
 	/**
 	 * Used to get the episode listing URL for the season
 	 * @return The episode listing URL for the season
 	 */
-	public URL getListingUrl() {
-		return listingUrl;
+	public URL getURL() {
+		return url;
 	}
 
 	/**
 	 * Sets the episode listing URL for the season
 	 * @param seasonListingUrl The episode listing URL for the season
 	 */
-	public void setListingUrl(URL seasonListingUrl) {
-		this.listingUrl = seasonListingUrl;
-	}
-
-	/**
-	 * Gets the detailed episode listing URL for the season
-	 * @return The detailed episode listing URL for the season
-	 */
-	public URL getDetailedUrl() {
-		return detailedUrl;
-	}
-
-	/**
-	 * Sets the detailed episode listing URL for the season
-	 * @param seasonDetailedUrl The detailed episode listing URL for the season
-	 */
-	public void setDetailedUrl(URL seasonDetailedUrl) {
-		this.detailedUrl = seasonDetailedUrl;
+	public void setURL(URL url) {
+		this.url = url;
 	}
 
 	/**
@@ -85,7 +68,7 @@ public class Season {
 	public void addEpisode(Episode episode) {
 		episodes.put(episode.getEpisodeNumber(),episode);
 	}
-		
+
 	/**
 	 * Gets the number of episode's in the season
 	 * @return The number of episodes in the season
@@ -93,23 +76,23 @@ public class Season {
 	public int getEpisodeCount() {
 		return episodes.size();
 	}
-	
+
 	/**
 	 * Used to get a episode with a given episode number
 	 * @param episodeNum The episode number of the episode to fetch
 	 * @return The episode
 	 */
 	public Episode getEpisode(int episodeNum) {
-		Episode episode =episodes.get(episodeNum);		
+		Episode episode =episodes.get(episodeNum);
 		return episode;
 	}
-	
+
 	/**
 	 * Used to get a special episode with a given episode number
 	 * @param specialNumber The special episode number of the episode to fetch
 	 * @return The special episode
 	 */
-	public Episode getSpecial(int specialNumber) {		
+	public Episode getSpecial(int specialNumber) {
 		return specials.get(specialNumber-1);
 	}
 
@@ -120,15 +103,15 @@ public class Season {
 	public Collection<Episode> getEpisodes() {
 		return episodes.values();
 	}
-		
+
 	/**
-	 * Get the number of the season 
+	 * Get the number of the season
 	 * @return The season number
 	 */
 	public int getSeasonNumber() {
 		return seasonNumber;
 	}
-	
+
 	/**
 	 * Get the show the season belongs too
 	 * @return The show the season belongs too
@@ -141,7 +124,7 @@ public class Season {
 	 * Add a special episode too the season
 	 * @param episode The special episode too add
 	 */
-	public void addSepcial(Episode episode) {		
+	public void addSepcial(Episode episode) {
 		specials.add(episode);
 	}
 

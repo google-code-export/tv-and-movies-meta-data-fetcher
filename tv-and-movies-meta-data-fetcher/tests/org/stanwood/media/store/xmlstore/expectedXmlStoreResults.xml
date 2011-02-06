@@ -17,9 +17,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
 	  <genre name="Drama"/>
     </genres>
     <extra/>
-    <season
-      detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=1"
-      listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
+    <season      
+      url="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
       <episode episodeId="784857" firstAired="2006-10-10" number="1"
          showEpisodeNumber="1" title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
@@ -46,9 +45,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         <file location="$rootMedia$/Eureka/1x02 - blah"/>
       </episode>
     </season>
-    <season
-      detailedListingUrl="http://www.tv.com/show/58448/episode_guide.html?printable=2"
-      listingUrl="http://www.tv.com/show/58448/episode_listings.html?season=2" number="2">
+    <season      
+      url="http://www.tv.com/show/58448/episode_listings.html?season=2" number="2">
       <episode episodeId="800578" firstAired="2007-07-10" number="2"
         showEpisodeNumber="13" title="Phoenix Rising" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">        
         <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>        
@@ -93,9 +91,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     <extra>
     	<param key="url" value="http://sdfsdfsdf/sdfsd/fsdfsd/"/>
     </extra>
-    <season
-      detailedListingUrl="http://www.tv.com/show/17552/episode_guide.html?printable=1"
-      listingUrl="http://www.tv.com/show/17552/episode_listings.html?season=1" number="1">
+    <season      
+      url="http://www.tv.com/show/17552/episode_listings.html?season=1" number="1">
       <episode episodeId="1181337" firstAired="2006-11-11" number="1"
         showEpisodeNumber="1" title="Heroe, Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.</summary>

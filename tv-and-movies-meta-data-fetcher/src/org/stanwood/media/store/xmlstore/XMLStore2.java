@@ -488,8 +488,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		Document doc = getCache(rootMediaDir);
 		Element node = getSeasonNode(rootMediaDir,season,doc);
-		node.setAttribute("detailedListingUrl", urlToText(season.getDetailedUrl()));
-		node.setAttribute("listingUrl", urlToText(season.getListingUrl()));
+		node.setAttribute("url", urlToText(season.getURL()));
 
 		File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 		writeCache(cacheFile, doc);
@@ -500,8 +499,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Element seasonEl = doc.createElement("season");
 		seasonEl.setAttribute("number", String.valueOf(season.getSeasonNumber()));
 		showNode.appendChild(seasonEl);
-		seasonEl.setAttribute("detailedListingUrl", urlToText(season.getDetailedUrl()));
-		seasonEl.setAttribute("listingUrl", urlToText(season.getListingUrl()));
+		seasonEl.setAttribute("url", urlToText(season.getURL()));
 		return seasonEl;
 	}
 
@@ -797,8 +795,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				throw new NotInStoreException();
 			}
 			Season season = new Season(show, seasonNum);
-			season.setDetailedUrl(new URL(getStringFromXML(seasonNode,"@detailedListingUrl")));
-			season.setListingUrl(new URL(getStringFromXML(seasonNode,"@listingUrl")));
+			season.setURL(new URL(getStringFromXML(seasonNode,"@url")));
 			return season;
 		}
 		 catch (XMLParserException e) {

@@ -145,8 +145,14 @@ public class XMLParser {
 			DocumentBuilder builder = XMLParser.createDocBuilder(factory);
 
 			InputSource is = new InputSource( new StringReader( str ) );
-			Document d = builder.parse( is );
-			return d;
+			if (str.trim().length()==0) {
+				return builder.newDocument();
+			}
+			else {
+				builder.newDocument();
+				Document d = builder.parse( is );
+				return d;
+			}
 		}
 		catch (Exception e) {
 			throw new XMLParserException("Unable to convert string to XML DOM",e);

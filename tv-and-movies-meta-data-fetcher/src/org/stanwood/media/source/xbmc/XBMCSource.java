@@ -47,6 +47,15 @@ public class XBMCSource extends XMLParser implements ISource {
 		addon = mgr.getAddon(addonId);
 	}
 
+	/**
+	 * Called to retrieve the information on a episode
+	 * @param season The season the episode belongs too
+	 * @param episodeNum The number of the episode
+	 * @return The episode
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Throw if their is a IO related problem
+	 */
 	@Override
 	public Episode getEpisode(Season season, int episodeNum)
 			throws SourceException, MalformedURLException, IOException {
@@ -54,6 +63,15 @@ public class XBMCSource extends XMLParser implements ISource {
 		return null;
 	}
 
+	/**
+	 * This will get a season from the source. If the season can't be found,
+	 * then it will return null.
+	 * @param show The show the season belongs too
+	 * @param seasonNum The number of the season that is to be fetched
+	 * @return The season if it can be found, otherwise null.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Season getSeason(Show show, int seasonNum) throws SourceException,
 			IOException {
@@ -61,18 +79,22 @@ public class XBMCSource extends XMLParser implements ISource {
 		return parseSeason(show,seasonNum);
 	}
 
-	private Season parseSeason(final Show show, int seasonNum) throws SourceException {
+	private Season parseSeason(final Show show, final int seasonNum) throws SourceException {
 
 		try {
-
-			URL url = new URL(show.getExtraInfo().get("episodeGuideURL"));
-			System.out.println("URL : " + url);
+			final List<Season>seasons = new ArrayList<Season>();
+			final URL url = new URL(show.getExtraInfo().get("episodeGuideURL"));
 			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 				@Override
 				public void processContents(String contents) throws SourceException {
 					Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeList(contents,show.getShowURL());
 	    			try {
-						System.out.println(domToStr(doc));
+						if (selectSingleNode(doc,"episodeguide/episode/season[text()='"+seasonNum+"']")!=null) {
+							Season season = new Season(show,seasonNum);
+							season.setURL(url);
+
+							seasons.add(season);
+						}
 					} catch (XMLParserException e) {
 						throw new SourceException("Unable to parse season",e);
 					}
@@ -81,9 +103,10 @@ public class XBMCSource extends XMLParser implements ISource {
 
 			processor.handleStream();
 
-			Season season = new Season(show,seasonNum);
-
-			return season;
+			if (seasons.size()==0) {
+				return null;
+			}
+			return seasons.get(0);
 
 		} catch (MalformedURLException e) {
 			throw new SourceException("Unable to parse season",e);
