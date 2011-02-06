@@ -37,23 +37,9 @@ public void setVariables(Map<String,Value> variables) {
 }
 
 parse returns [Value value]
-    :    exp=unaryExpression { $value = $exp.value;}
+    :    exp=logicalExpression { $value = $exp.value;}
     ;
 
-additiveExpression returns [Value value]
-    :    m1=multiplyExp      {$value =  $m1.value;} 
-        ( PLUS m2=multiplyExp {$value = OperationHelper.performOperation(Operation.ADDITION,$value,$m2.value);} 
-        | MINUS m2=multiplyExp {$value = OperationHelper.performOperation(Operation.SUBTRACTION,$value,$m2.value);}
-        )*  
-    ;
-
-multiplyExp returns [Value value]
-    :   a1=atomExp       {$value = $a1.value;}
-        ( MULT a2=atomExp {$value = OperationHelper.performOperation(Operation.MULTIPLY,$value,$a2.value);} 
-        | DIV a2=atomExp {$value = OperationHelper.performOperation(Operation.DIVIDE,$value,$a2.value);}
-        )*  
-    ;
-    
 logicalExpression returns [Value value]
     :    b1=booleanAndExpression  {$value = $b1.value;}
          ( OR b2=booleanAndExpression {$value = OperationHelper.performOperation(Operation.OR,$value,$b2.value);} 
@@ -65,20 +51,43 @@ booleanAndExpression returns [Value value]
          ( AND b2=equalityExpression {$value = OperationHelper.performOperation(Operation.AND,$value,$b2.value);}
          )*
     ;
-
-equalityExpression returns [Value value]
-    :    b1=additiveExpression  {$value = $b1.value;}
-         ( EQUALS a2=additiveExpression {$value = OperationHelper.performOperation(Operation.EQUALS,$value,$a2.value);} 
-         | NOTEQUALS a2=additiveExpression {$value = OperationHelper.performOperation(Operation.NOTEQUALS,$value,$a2.value);}
-         )*
-    ;        
     
-unaryExpression returns [Value value]
-    :   u1=logicalExpression { $value = $u1.value; }      
-    |   NOT u1=logicalExpression { $value = OperationHelper.performOperation(Operation.NOT,$u1.value); }
+equalityExpression returns [Value value]
+    :    b1=relationalExpression  {$value = $b1.value;}
+         ( EQUALS a2=relationalExpression {$value = OperationHelper.performOperation(Operation.EQUALS,$value,$a2.value);} 
+         | NOTEQUALS a2=relationalExpression {$value = OperationHelper.performOperation(Operation.NOTEQUALS,$value,$a2.value);}
+         )*
+    ; 
+    
+relationalExpression returns [Value value]
+    :    b1=additiveExpression  {$value = $b1.value;}
+         (LT b2=additiveExpression {$value = OperationHelper.performOperation(Operation.LESS,$value,$b2.value);} 
+         | LTEQ b2=additiveExpression {$value = OperationHelper.performOperation(Operation.LESS_EQUALS,$value,$b2.value);}        
+        | GT b2=additiveExpression {$value = OperationHelper.performOperation(Operation.GREATER,$value,$b2.value);}
+         | GTEQ b2=additiveExpression {$value = OperationHelper.performOperation(Operation.GREATER_EQUALS,$value,$b2.value);}
+         )*   
+    ;    
+
+additiveExpression returns [Value value]
+    :    m1=multiplicativeExpression      {$value =  $m1.value;} 
+        ( PLUS m2=multiplicativeExpression {$value = OperationHelper.performOperation(Operation.ADDITION,$value,$m2.value);} 
+        | MINUS m2=multiplicativeExpression {$value = OperationHelper.performOperation(Operation.SUBTRACTION,$value,$m2.value);}
+        )*  
     ;
 
-atomExp returns [Value value]
+multiplicativeExpression returns [Value value]
+    :   a1=unaryExpression       {$value = $a1.value;}
+        ( MULT a2=unaryExpression {$value = OperationHelper.performOperation(Operation.MULTIPLY,$value,$a2.value);} 
+        | DIV a2=unaryExpression {$value = OperationHelper.performOperation(Operation.DIVIDE,$value,$a2.value);}
+        )*  
+    ;          
+    
+unaryExpression returns [Value value]
+    :   u1=primaryExpression { $value = $u1.value; }      
+    |   NOT u1=primaryExpression { $value = OperationHelper.performOperation(Operation.NOT,$u1.value); }
+    ;
+
+primaryExpression returns [Value value]
     :    v=INTEGER               { $value = ValueFactory.createValue(ValueType.INTEGER,$v.text);}
     |    v=BOOLEAN               { $value = ValueFactory.createValue(ValueType.BOOLEAN,$v.text);}             
     |    i=IDENTIFIER            { Value value1 = getVariables().get($i.text);
