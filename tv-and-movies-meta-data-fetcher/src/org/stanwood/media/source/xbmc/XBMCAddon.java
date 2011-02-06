@@ -392,7 +392,7 @@ public class XBMCAddon extends XMLParser {
 	 * Used to evaluate a expression making use of the addon settings. The expression
 	 * must evaluate to a boolean type.
 	 * @param expression The expression
-	 * @return The value the expresion evaluates to
+	 * @return The value the expression evaluates to
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public boolean checkCondition(String expression) throws XBMCException {
@@ -401,7 +401,6 @@ public class XBMCAddon extends XMLParser {
 			Value value = eval.eval(expression);
 			if (value.getType() == ValueType.BOOLEAN) {
 				boolean result = ((BooleanValue)value).booleanValue();
-			    System.out.println(expression + " = " + result);
 				return result;
 			}
 			throw new XBMCException("Expression '"+expression+"' did not evaulate to a boolean type");
@@ -411,10 +410,22 @@ public class XBMCAddon extends XMLParser {
 		}
 	}
 
-	public void setSetting(String key, String value) throws XBMCException {
-		if (!eval.getVariables().containsKey(key)) {
-			throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
+	/**
+	 * Used to assign a value to a variable which are used as settings. The expression is evaluated and stored
+	 * in the setting variable.
+	 * @param key The name of the setting
+	 * @param expression The expression to evaluate and store in the setting
+	 * @throws XBMCException Thrown if their are any problems.
+	 */
+	public void setSetting(String key, String expression) throws XBMCException {
+		try {
+			if (!eval.getVariables().containsKey(key)) {
+				throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
+			}
+			eval.getVariables().put(key, eval.eval(expression));
 		}
-		eval.eval(key+"="+value);
+		catch (ExpressionParserException e) {
+			throw new XBMCException("Unable to evaluate expression '"+expression+"' in addon " + getId(),e);
+		}
 	}
 }
