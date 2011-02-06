@@ -81,6 +81,10 @@ unaryExpression returns [Value value]
 atomExp returns [Value value]
     :    v=INTEGER               { $value = ValueFactory.createValue(ValueType.INTEGER,$v.text);}
     |    v=BOOLEAN               { $value = ValueFactory.createValue(ValueType.BOOLEAN,$v.text);}             
-    |    i=IDENTIFIER            { $value = getVariables().get($i.text); }
+    |    i=IDENTIFIER            { Value value1 = getVariables().get($i.text);
+                                   if (value1==null) {
+                                      throw new ExpressionParserException("Unable to find variable "+$i.text);
+                                   }
+                                   $value = value1; }
     |    LBRACKET exp=logicalExpression RBRACKET {$value = $exp.value;}
     ;

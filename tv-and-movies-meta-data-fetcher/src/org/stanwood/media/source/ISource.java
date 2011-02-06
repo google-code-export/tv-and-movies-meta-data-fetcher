@@ -109,4 +109,19 @@ public interface ISource {
 	 */
 	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws SourceException, MalformedURLException, IOException;
 
+	/**
+	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @param value The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
+	 */
+	public void setParameter(String key,String value) throws SourceException;
+
+	/**
+	 * <p>Used to get the value of a source parameter. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @return The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
+	 */
+	public String getParameter(String key) throws SourceException;
 }

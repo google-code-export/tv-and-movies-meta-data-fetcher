@@ -110,6 +110,7 @@ public abstract class XBMCExtension extends XMLParser {
 		if ( (!conditional.equals("")) && !addon.checkCondition(conditional)) {
 			return;
 		}
+
 		StringBuffer newOutput = new StringBuffer();
 
 		int dest = getDestParam(node);
@@ -155,7 +156,10 @@ public abstract class XBMCExtension extends XMLParser {
 				log.debug("Put param " + dest + " - " + output);
 			}
 			if (appendToDest) {
-				output = params.get(Integer.valueOf(dest))+output;
+				String orgValue = params.get(Integer.valueOf(dest));
+				if (orgValue!=null) {
+					output = orgValue+output;
+				}
 			}
 			params.put(Integer.valueOf(dest), output);
 		}

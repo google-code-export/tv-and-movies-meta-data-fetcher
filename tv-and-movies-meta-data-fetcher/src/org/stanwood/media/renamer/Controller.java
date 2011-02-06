@@ -146,7 +146,7 @@ public class Controller {
 									it.remove();
 								}
 								else {
-									setParamOnSource(c, source, key, value);
+									setParamOnSource( source, key, value);
 								}
 							}
 						}
@@ -158,7 +158,7 @@ public class Controller {
 					if (sourceConfig.getParams() != null) {
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
-							setParamOnSource(c, source, key, value);
+							setParamOnSource( source, key, value);
 						}
 					}
 					sources.add(source);
@@ -169,7 +169,7 @@ public class Controller {
 				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
 				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
-			} catch (InvocationTargetException e) {
+			} catch (SourceException e) {
 				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			}
 		}
@@ -203,14 +203,9 @@ public class Controller {
 		}
 	}
 
-	private static void setParamOnSource(Class<? extends ISource> c, ISource source, String key, String value)
-			throws IllegalAccessException, InvocationTargetException {
-		for (Method method : c.getMethods()) {
-			if (method.getName().toLowerCase().equals("set" + key.toLowerCase())) {
-				method.invoke(source, value);
-				break;
-			}
-		}
+	private static void setParamOnSource(ISource source, String key, String value)
+			throws  SourceException {
+		source.setParameter(key, value);
 	}
 
 	private static void setParamOnStore(Class<? extends IStore> c, IStore store, String key, String value)
