@@ -67,9 +67,22 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private Episode parseEpisode(Season season, int episodeNum) throws SourceException, IOException {
 		List<Episode> episodes = getEpisodeList(season.getShow(), season);
-		for (Episode episode : episodes) {
+		for (final Episode episode : episodes) {
 			if (episode.getEpisodeNumber() == episodeNum) {
-
+				StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getSummaryUrl())) {
+					@Override
+					public void processContents(String contents) throws SourceException {
+						Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents);
+						try {
+							System.out.println(domToStr(doc));
+						} catch (XMLParserException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				};
+				processor.handleStream();
+				return episode;
 			}
 		}
 		return null;
