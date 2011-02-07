@@ -97,7 +97,6 @@ public class XBMCScraper extends XBMCExtension {
 			Map<Integer, String> params = convertParams(contents);
 
 			String result = executeXBMCScraperFunction(funcName,params);
-			System.out.println("Result: [" + result+"]");
 			Document doc = XMLParser.strToDom(result);
 			resolveElements(doc);
 			return doc;

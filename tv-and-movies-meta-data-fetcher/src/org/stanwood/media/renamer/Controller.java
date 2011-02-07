@@ -377,16 +377,16 @@ public class Controller {
 					if (season != null) {
 						for (IStore store : stores) {
 							store.cacheSeason(rootMediaDir,episodeFile, season);
-							if (season.getEpisodes() != null) {
-								for (Episode episode : season.getEpisodes()) {
-									store.cacheEpisode(rootMediaDir,episodeFile, episode);
-								}
-							}
-							if (season.getSpecials() != null) {
-								for (Episode episode : season.getSpecials()) {
-									store.cacheEpisode(rootMediaDir,episodeFile, episode);
-								}
-							}
+//							if (season.getEpisodes() != null) {
+//								for (Episode episode : season.getEpisodes()) {
+//									store.cacheEpisode(rootMediaDir,episodeFile, episode);
+//								}
+//							}
+//							if (season.getSpecials() != null) {
+//								for (Episode episode : season.getSpecials()) {
+//									store.cacheEpisode(rootMediaDir,episodeFile, episode);
+//								}
+//							}
 						}
 						break;
 					}

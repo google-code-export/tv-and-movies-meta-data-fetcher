@@ -17,11 +17,6 @@
 package org.stanwood.media.model;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This is used to hold information on a season within a show
@@ -29,8 +24,6 @@ import java.util.Map;
 public class Season {
 
 	private int seasonNumber;
-	private Map<Integer,Episode>episodes = new HashMap<Integer,Episode>();
-	private List<Episode> specials = new ArrayList<Episode>();
 
 	private URL url;
 	private Show show;
@@ -62,49 +55,6 @@ public class Season {
 	}
 
 	/**
-	 * Adds a episode to the season
-	 * @param episode The episode to add to the season
-	 */
-	public void addEpisode(Episode episode) {
-		episodes.put(episode.getEpisodeNumber(),episode);
-	}
-
-	/**
-	 * Gets the number of episode's in the season
-	 * @return The number of episodes in the season
-	 */
-	public int getEpisodeCount() {
-		return episodes.size();
-	}
-
-	/**
-	 * Used to get a episode with a given episode number
-	 * @param episodeNum The episode number of the episode to fetch
-	 * @return The episode
-	 */
-	public Episode getEpisode(int episodeNum) {
-		Episode episode =episodes.get(episodeNum);
-		return episode;
-	}
-
-	/**
-	 * Used to get a special episode with a given episode number
-	 * @param specialNumber The special episode number of the episode to fetch
-	 * @return The special episode
-	 */
-	public Episode getSpecial(int specialNumber) {
-		return specials.get(specialNumber-1);
-	}
-
-	/**
-	 * Get all the episodes in the season
-	 * @return The episodes in the season
-	 */
-	public Collection<Episode> getEpisodes() {
-		return episodes.values();
-	}
-
-	/**
 	 * Get the number of the season
 	 * @return The season number
 	 */
@@ -120,19 +70,4 @@ public class Season {
 		return show;
 	}
 
-	/**
-	 * Add a special episode too the season
-	 * @param episode The special episode too add
-	 */
-	public void addSepcial(Episode episode) {
-		specials.add(episode);
-	}
-
-	/**
-	 * Get all the special episodes in the season
-	 * @return The special episodes in the season
-	 */
-	public List<Episode> getSpecials() {
-		return specials;
-	}
 }

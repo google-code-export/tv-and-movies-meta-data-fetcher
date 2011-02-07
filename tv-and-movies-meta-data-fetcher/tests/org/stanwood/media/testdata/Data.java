@@ -161,7 +161,6 @@ public class Data {
 
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=1"));
-		show.addSeason(season);
 
 		File episodeFile = new File(eurekaDir,"1x01 - blah");
 		episodeFile.createNewFile();
@@ -178,7 +177,6 @@ public class Data {
 		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
 		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 		episode1.setEpisodeId(784857);
-		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"1x02 - blah");
@@ -192,12 +190,10 @@ public class Data {
 		episode2.setTitle("Many Happy Returns");
 		episode2.setRating(new Rating(9.5F,2355));
 		episode2.setEpisodeId(800578);
-		season.addEpisode(episode2);
 		result.add(new EpisodeData(episode2,episodeFile));
 
 		season = new Season(show,2);
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=2"));
-		show.addSeason(season);
 
 		episodeFile = new File(eurekaDir,"2x13 - blah");
 		episodeFile.createNewFile();
@@ -210,7 +206,6 @@ public class Data {
 		episode1.setTitle("Phoenix Rising");
 		episode1.setEpisodeId(800578);
 		episode1.setRating(new Rating(0.4F,12354));
-		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"000 - blah");
@@ -231,9 +226,6 @@ public class Data {
 		actors.add(new Actor("Write a little","blah"));
 		special1.setActors(actors);
 		result.add(new EpisodeData(special1,episodeFile));
-
-		season.addSepcial(special1);
-
 
 		return result;
 	}
@@ -285,7 +277,6 @@ public class Data {
 
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_listings.html?season=1"));
-		show.addSeason(season);
 
 		Episode episode1 = new Episode(1,season);
 		episode1.setDate(df.parse("2006-11-11"));
@@ -299,7 +290,6 @@ public class Data {
 		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
 		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 		episode1.setEpisodeId(1181337);
-		season.addEpisode(episode1);
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		return result;

@@ -24,6 +24,7 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.IterableNodeList;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.stanwood.media.util.XMLParserNotFoundException;
@@ -36,6 +37,7 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 public class XBMCSource extends XMLParser implements ISource {
 
 	private static final SimpleDateFormat FILM_YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
+	private static final SimpleDateFormat EPISODE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	private XBMCAddon addon;
 	private String id;
@@ -60,6 +62,16 @@ public class XBMCSource extends XMLParser implements ISource {
 	public Episode getEpisode(Season season, int episodeNum)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
+		return parseEpisode(season,episodeNum);
+	}
+
+	private Episode parseEpisode(Season season, int episodeNum) throws SourceException, IOException {
+		List<Episode> episodes = getEpisodeList(season.getShow(), season);
+		for (Episode episode : episodes) {
+			if (episode.getEpisodeNumber() == episodeNum) {
+
+			}
+		}
 		return null;
 	}
 
@@ -79,40 +91,59 @@ public class XBMCSource extends XMLParser implements ISource {
 		return parseSeason(show,seasonNum);
 	}
 
-	private Season parseSeason(final Show show, final int seasonNum) throws SourceException {
-
+	private Season parseSeason(final Show show, final int seasonNum) throws SourceException, IOException {
+		Season season = new Season(show,seasonNum);
 		try {
-			final List<Season>seasons = new ArrayList<Season>();
-			final URL url = new URL(show.getExtraInfo().get("episodeGuideURL"));
-			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
-				@Override
-				public void processContents(String contents) throws SourceException {
-					Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeList(contents,show.getShowURL());
-	    			try {
-						if (selectSingleNode(doc,"episodeguide/episode/season[text()='"+seasonNum+"']")!=null) {
-							Season season = new Season(show,seasonNum);
-							season.setURL(url);
-
-							seasons.add(season);
-						}
-					} catch (XMLParserException e) {
-						throw new SourceException("Unable to parse season",e);
-					}
-				}
-			};
-
-			processor.handleStream();
-
-			if (seasons.size()==0) {
-				return null;
+			URL url = new URL(show.getExtraInfo().get("episodeGuideURL"));
+			season.setURL(url);
+			if (getEpisodeList(show, season).size()>0) {
+				return season;
 			}
-			return seasons.get(0);
-
+			return null;
 		} catch (MalformedURLException e) {
 			throw new SourceException("Unable to parse season",e);
-		} catch (IOException e) {
-			throw new SourceException("Unable to parse season",e);
 		}
+	}
+
+	private List<Episode>getEpisodeList(final Show show,final Season season) throws SourceException, IOException {
+		final List<Episode>episodes = new ArrayList<Episode>();
+
+		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(season.getURL())) {
+			@Override
+			public void processContents(String contents) throws SourceException {
+				Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeList(contents,show.getShowURL());
+				try {
+    				IterableNodeList episodesList = selectNodeList(doc,"/episodeguide/episode");
+    				if (episodesList!=null) {
+    					for (Node episodeNode : episodesList) {
+    						try {
+	    						if (getIntegerFromXML(episodeNode, "season/text()")==season.getSeasonNumber()) {
+		    						Episode ep = new Episode(getIntegerFromXML(episodeNode, "epnum/text()"), season);
+		    						ep.setTitle(getStringFromXML(episodeNode, "title/text()"));
+		    						ep.setSummaryUrl(new URL(getStringFromXML(episodeNode, "url/text()")));
+		    						ep.setEpisodeId(getIntegerFromXML(episodeNode, "id/text()"));
+		    						ep.setDate(EPISODE_DATE_FORMAT.parse(getStringFromXML(episodeNode, "aired/text()")));
+		    						episodes.add(ep);
+	    						}
+    						}
+    						catch (XMLParserNotFoundException e) {
+    							// Ignore
+    						}
+    					}
+    				}
+				} catch (XMLParserException e) {
+					throw new SourceException("Unable to parse season",e);
+				} catch (MalformedURLException e) {
+					throw new SourceException("Unable to parse season",e);
+				} catch (ParseException e) {
+					throw new SourceException("Unable to parse season",e);
+				}
+			}
+		};
+
+		processor.handleStream();
+		return episodes;
+
 	}
 
 	@Override
