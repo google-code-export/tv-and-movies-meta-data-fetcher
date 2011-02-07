@@ -8,6 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
+import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -77,11 +78,6 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals(1,season.getSeasonNumber());
 		Assert.assertEquals(show,season.getShow());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",season.getURL().toExternalForm());
-//		season.getSpecial(specialNumber)
-//		season.getSpecials()
-//		season.getEpisodes()
-//		Assert.assertEquals(season.getEpisodeCount());
-//		Assert.assertEquals(season.getEpisode(episodeNum));
 
 		season = source.getSeason(show, 2);
 		Assert.assertNotNull(season);
@@ -103,6 +99,24 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		season = source.getSeason(show, 5);
 		Assert.assertNull(season);
+	}
+
+	@Test
+	public void testEpisode() throws Exception {
+		XBMCSource source = getXBMCSource("metadata.tvdb.com");
+
+		Show show = new Show("79501");
+		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+		show.setSourceId(source.getSourceId());
+		Map<String, String> params = new HashMap<String,String>();
+		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
+		show.setExtraInfo(params);
+
+		Season season = new Season(show,1);
+		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+
+		Episode ep = source.getEpisode(season, 1);
+		Assert.assertNotNull(ep);
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
