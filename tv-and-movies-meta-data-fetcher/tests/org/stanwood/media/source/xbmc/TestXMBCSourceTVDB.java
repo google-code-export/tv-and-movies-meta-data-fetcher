@@ -62,7 +62,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
 	public void testSeason() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 
 		Show show = new Show("79501");

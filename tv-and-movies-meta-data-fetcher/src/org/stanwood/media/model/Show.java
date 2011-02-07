@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ public class Show implements IVideoGenre,IVideoExtra {
 	private String name;
 	private URL imageURL;
 	private URL showURL;
-	private List<Season> seasons = new ArrayList<Season>();
 	private String sourceId;
 	private String preferredGenre;
 	private Map<String,String>extraInfo = new HashMap<String,String>();
@@ -160,43 +158,6 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 */
 	public URL getShowURL() {
 		return showURL;
-	}
-
-	/**
-	 * Used to get a season from the show with the given season number.
-	 * If the season can't be found, then it will return null.
-	 * @param seasonNum The number of the season too fetch.
-	 * @return The season, or null if it can't be found
-	 */
-	public Season getSeason(int seasonNum) {
-		for (Season season : seasons) {
-			if (season.getSeasonNumber() == seasonNum) {
-				return season;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Used to remove a season with the given season number from the show.
-	 * @param seasonNumber The season number of the season to remove
-	 */
-	public void removeSeason(int seasonNumber) {
-		Iterator<Season> it = seasons.iterator();
-		while (it.hasNext()) {
-			Season foundSeason = it.next();
-			if (foundSeason.getSeasonNumber() == seasonNumber) {
-				it.remove();
-			}
-		}
-	}
-
-	/**
-	 * Used to add a season to the show.
-	 * @param season The season to add to the show.
-	 */
-	public void addSeason(Season season) {
-		seasons.add(season);
 	}
 
 	/**

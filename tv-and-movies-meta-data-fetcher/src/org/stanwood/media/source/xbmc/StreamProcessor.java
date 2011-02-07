@@ -63,8 +63,9 @@ public abstract class StreamProcessor {
 			            }
 	                }
 
-
-	                processContents(contents.toString());
+	                if (contents.length()>0) {
+	                	processContents(contents.toString());
+	                }
 	            }
 			}
 			else {
@@ -77,7 +78,9 @@ public abstract class StreamProcessor {
 						sw.write(buffer, 0, n);
 					}
 					String str = sw.toString();
-					processContents(str);
+					if (str.length()>0) {
+						processContents(str);
+					}
 				}
 				finally {
 					if (sw!=null) {

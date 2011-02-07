@@ -156,7 +156,7 @@ public class TestSapphireStore extends XMLTestCase {
 
 			Season season = new Season(show,1);
 			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
-			show.addSeason(season);
+
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 			Episode episode1 = new Episode(1,season);
 			episode1.setDate(df.parse("2006-10-10"));
@@ -170,7 +170,6 @@ public class TestSapphireStore extends XMLTestCase {
 			episode1.setWriters(Data.createStringList(new String[]{"Write a lot"}));
 			episode1.setActors(Data.createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 			episode1.setEpisodeId(784857);
-			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 
 			episodeFile = new File(eurekaDir,"1x02 - blah.avi");
@@ -183,12 +182,11 @@ public class TestSapphireStore extends XMLTestCase {
 			episode2.setTitle("Many Happy Returns");
 			episode2.setRating(new Rating(9.5F,12345));
 			episode2.setEpisodeId(800578);
-			season.addEpisode(episode2);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
 
 			season = new Season(show,2);
 			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
-			show.addSeason(season);
+
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 
 			episodeFile = new File(eurekaDir,"2x13 - blah.avi");
@@ -201,7 +199,6 @@ public class TestSapphireStore extends XMLTestCase {
 			episode1.setTitle("Phoenix Rising");
 			episode1.setEpisodeId(800578);
 			episode1.setRating(new Rating(0.4F,3434));
-			season.addEpisode(episode1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 
 			episodeFile = new File(eurekaDir,"000 - blah.avi");
@@ -221,7 +218,6 @@ public class TestSapphireStore extends XMLTestCase {
 			actors.add(new Actor("Write a little","blah"));
 			special1.setActors(actors);
 
-			season.addSepcial(special1);
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
 
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
