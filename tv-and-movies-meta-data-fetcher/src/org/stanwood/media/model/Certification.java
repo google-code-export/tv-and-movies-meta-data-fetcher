@@ -35,12 +35,18 @@ public class Certification {
 		setType(type);
 	}
 
-
+	/**
+	 * Used to get the type of certification
+	 * @return the type of certification
+	 */
 	public String getType() {
 		return type;
 	}
 
-
+	/**
+	 * Used to set the type of certification
+	 * @param type the type of certification
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
