@@ -48,7 +48,7 @@ public class Season {
 
 	/**
 	 * Sets the episode listing URL for the season
-	 * @param seasonListingUrl The episode listing URL for the season
+	 * @param url The episode listing URL for the season
 	 */
 	public void setURL(URL url) {
 		this.url = url;
