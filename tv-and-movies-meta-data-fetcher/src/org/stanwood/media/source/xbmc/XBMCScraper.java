@@ -88,8 +88,8 @@ public class XBMCScraper extends XBMCExtension {
 		return executeFunctionByName("GetDetails",contents);
 	}
 
-	public Document getGetEpisodeDetails(String... contents) throws  XBMCException {
-		return executeFunctionByName("GetEpisodeDetails",contents);
+	public Document getGetEpisodeDetails(String contents,String episodeId) throws  XBMCException {
+		return executeFunctionByName("GetEpisodeDetails",contents,episodeId);
 	}
 
 	private Document executeFunctionByName(String funcName,String... contents) throws  XBMCException {

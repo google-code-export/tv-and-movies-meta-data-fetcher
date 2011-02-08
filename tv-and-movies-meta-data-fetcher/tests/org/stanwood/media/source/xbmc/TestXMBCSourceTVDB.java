@@ -103,6 +103,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
 	public void testEpisode() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 
 		Show show = new Show("79501");
@@ -117,6 +118,10 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Episode ep = source.getEpisode(season, 1);
 		Assert.assertNotNull(ep);
+
+		Assert.assertNotNull(ep.getActors());
+
+
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
