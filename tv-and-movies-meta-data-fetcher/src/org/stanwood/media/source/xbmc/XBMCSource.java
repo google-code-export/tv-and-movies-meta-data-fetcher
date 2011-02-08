@@ -15,6 +15,8 @@ import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
+import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.Rating;
@@ -72,12 +74,19 @@ public class XBMCSource extends XMLParser implements ISource {
 				StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getSummaryUrl())) {
 					@Override
 					public void processContents(String contents) throws SourceException {
-						Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents);
+						Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents,String.valueOf(episode.getEpisodeId()));
 						try {
-							System.out.println(domToStr(doc));
+							episode.setSummary(getStringFromXML(doc, "details/plot/text()"));
+							parseWriters(episode, doc);
+							parseDirectors(episode, doc);
+							parseActors(episode, doc);
+							getIntegerFromXML(doc, "details/episode/text()");
+							getStringFromXML(doc, "details/thumb/text()");
+							getStringFromXML(doc, "details/aired/text()");
+							getFloatFromXML(doc, "details/rating/text()");
+//							System.out.println(domToStr(doc));
 						} catch (XMLParserException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							throw new SourceException("Unable to parse episode details",e);
 						}
 					}
 				};
@@ -261,21 +270,9 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
 	    			film.setCountry(getStringFromXML(doc, "details/country/text()"));
 
-	    			List<String>directors = new ArrayList<String>();
-	    			for (Node director : selectNodeList(doc, "details/director/text()")) {
-	    				directors.add(director.getTextContent());
-	    			}
-	    			film.setDirectors(directors);
-	    			List<Actor>actors = new ArrayList<Actor>();
-	    			for (Node actor : selectNodeList(doc, "details/actor")) {
-	    				actors.add(new Actor(getStringFromXML(actor, "name/text()"),getStringFromXML(actor, "role/text()")));
-	    			}
-	    			film.setActors(actors);
-	    			List<String>writers = new ArrayList<String>();
-	    			for (Node writer : selectNodeList(doc, "details/credits/text()")) {
-	    				writers.add(writer.getTextContent());
-	    			}
-	    			film.setWriters(writers);
+	    			parseDirectors(film, doc);
+	    			parseActors(film, doc);
+	    			parseWriters(film, doc);
 
 	    			parseGenres(film,doc);
 	    			parseCertification(film,doc);
@@ -291,7 +288,8 @@ public class XBMCSource extends XMLParser implements ISource {
 					throw new SourceException("Unable to parse show details",e);
 				}
 			}
-		};
+
+					};
 		processor.handleStream();
 
 //		if (show.getName() == null || show.getLongSummary()==null) {
@@ -300,6 +298,34 @@ public class XBMCSource extends XMLParser implements ISource {
 
 
 		return film;
+	}
+
+	private void parseWriters(final IVideo viode, Document doc)
+			throws XMLParserException {
+		List<String> writers = new ArrayList<String>();
+		for (Node writer : selectNodeList(doc, "details/credits/text()")) {
+			writers.add(writer.getTextContent());
+		}
+		viode.setWriters(writers);
+	}
+
+	private void parseDirectors(final IVideo video, Document doc)
+			throws XMLParserException {
+		List<String> directors = new ArrayList<String>();
+		for (Node director : selectNodeList(doc, "details/director/text()")) {
+			directors.add(director.getTextContent());
+		}
+		video.setDirectors(directors);
+	}
+
+	private void parseActors(final IVideoActors video, Document doc)
+			throws XMLParserException {
+		List<Actor> actors = new ArrayList<Actor>();
+		for (Node actor : selectNodeList(doc, "details/actor")) {
+			actors.add(new Actor(getStringFromXML(actor, "name/text()"),
+					getStringFromXML(actor, "role/text()")));
+		}
+		video.setActors(actors);
 	}
 
 	protected void parseCertification(Film film, Document doc) throws XMLParserException {

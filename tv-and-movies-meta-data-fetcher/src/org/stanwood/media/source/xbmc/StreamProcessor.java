@@ -43,7 +43,6 @@ public abstract class StreamProcessor {
 				ZipInputStream zis = (ZipInputStream) stream;
 				ZipEntry entry = null;
 	            while ((entry = zis.getNextEntry())!=null) {
-	            	System.out.println("Processing zip entry: " + entry.getName());
 	            	StringBuilder contents = new StringBuilder();
 	                if (!entry.isDirectory()) {
 						int count;
