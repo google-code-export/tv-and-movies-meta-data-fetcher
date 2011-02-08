@@ -41,7 +41,7 @@ import org.stanwood.media.store.StoreException;
  */
 public class MemoryStore implements IStore {
 
-	private List<MemoryShow> shows = new ArrayList<MemoryShow>();
+	private List<CacheShow> shows = new ArrayList<CacheShow>();
 	private Map<File,Film> films = new HashMap<File,Film>();
 
 	/**
@@ -63,12 +63,12 @@ public class MemoryStore implements IStore {
 	@Override
 	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
 		Show show = season.getShow();
-		for (MemoryShow cs : shows) {
+		for (CacheShow cs : shows) {
 			if (cs.equals(show)) {
 				if (cs.getSeason(season.getSeasonNumber())!=null) {
 					cs.removeSeason(season.getSeasonNumber());
 				}
-				cs.addSeason(new MemorySeason(cs,season));
+				cs.addSeason(new CacheSeason(cs,season));
 			}
 		}
 	}
@@ -81,14 +81,14 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
-		Iterator<MemoryShow> it = shows.iterator();
+		Iterator<CacheShow> it = shows.iterator();
 		while (it.hasNext()) {
-			MemoryShow foundShow = it.next();
+			CacheShow foundShow = it.next();
 			if (foundShow.getShowId().equals(show.getShowId()) && foundShow.getSourceId().equals(show.getSourceId())) {
 				it.remove();
 			}
 		}
-		shows.add(new MemoryShow(show));
+		shows.add(new CacheShow(show));
 	}
 
 	/**
@@ -105,12 +105,12 @@ public class MemoryStore implements IStore {
 	@Override
 	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
-		if (!(season instanceof MemorySeason)) {
+		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
 		}
 
-		if (season instanceof MemorySeason) {
-			return ((MemorySeason)season).getEpisode(episodeNum);
+		if (season instanceof CacheSeason) {
+			return ((CacheSeason)season).getEpisode(episodeNum);
 		}
 		return null;
 	}
@@ -129,12 +129,12 @@ public class MemoryStore implements IStore {
 	@Override
 	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {
-		if (!(season instanceof MemorySeason)) {
+		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
 		}
 
-		if (season instanceof MemorySeason) {
-			return ((MemorySeason)season).getSpecial(specialNumber);
+		if (season instanceof CacheSeason) {
+			return ((CacheSeason)season).getSpecial(specialNumber);
 		}
 		return null;
 	}
@@ -149,11 +149,11 @@ public class MemoryStore implements IStore {
 	@Override
 	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException,
 			IOException {
-		if (show instanceof MemoryShow) {
-			((MemoryShow)show).getSeason(seasonNum);
+		if (show instanceof CacheShow) {
+			((CacheShow)show).getSeason(seasonNum);
 		}
 		else {
-			for (MemoryShow cs : shows) {
+			for (CacheShow cs : shows) {
 				if (cs.getShowId().equals(show.getShowId()) && cs.getSourceId().equals(show.getSourceId())) {
 					return cs.getSeason(seasonNum);
 				}
@@ -175,7 +175,7 @@ public class MemoryStore implements IStore {
 	@Override
 	public Show getShow(File rootMediaDir,File episodeFile, String showId)
 			throws StoreException, MalformedURLException, IOException {
-		for (MemoryShow show : shows) {
+		for (CacheShow show : shows) {
 			if (show.getShowId().equals(showId)) {
 				return show;
 			}

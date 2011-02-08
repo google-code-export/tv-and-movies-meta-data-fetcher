@@ -11,7 +11,7 @@ public class Rating {
 	/**
 	 * The constructor used to create a instance of the rating class
 	 * @param rating The value of the rating
-	 * @param numberOfVotes The number of votes the rating got
+	 * @param numberOfVotes the number of votes the thing been rated had
 	 */
 	public Rating(float rating, int numberOfVotes) {
 		super();
@@ -19,10 +19,18 @@ public class Rating {
 		this.numberOfVotes = numberOfVotes;
 	}
 
+	/**
+	 * Used to get the rating value
+	 * @return the rating value
+	 */
 	public float getRating() {
 		return rating;
 	}
 
+	/**
+	 * Used to get the number of votes the thing been rated had
+	 * @return the number of votes the thing been rated had
+	 */
 	public int getNumberOfVotes() {
 		return numberOfVotes;
 	}

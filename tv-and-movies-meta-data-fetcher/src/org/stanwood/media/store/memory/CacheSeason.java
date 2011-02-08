@@ -11,13 +11,13 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 
-public class MemorySeason extends Season {
+public class CacheSeason extends Season {
 
 	private Map<Integer,Episode>episodes = new HashMap<Integer,Episode>();
 	private List<Episode> specials = new ArrayList<Episode>();
 	private Season season;
 
-	public MemorySeason(MemoryShow show,Season season) {
+	public CacheSeason(CacheShow show,Season season) {
 		super(show,season.getSeasonNumber());
 		this.season = season;
 	}

@@ -93,7 +93,6 @@ public class Show implements IVideoGenre,IVideoExtra {
 		this.showURL = showURL;
 	}
 
-
 	/**
 	 * Used to get a long summary of the show
 	 * @return The long summary of the show
@@ -208,11 +207,19 @@ public class Show implements IVideoGenre,IVideoExtra {
 		this.preferredGenre = preferredGenre;
 	}
 
+	/**
+	 * Used to get extra information to a show that their are no getters/setters for in the regular fields
+	 * @return The extra information in a map of key value pairs
+	 */
 	@Override
 	public Map<String, String> getExtraInfo() {
 		return extraInfo;
 	}
 
+	/**
+	 * Used to add extra information to a show that their are no getters/setters for in the regular fields
+	 * @param params The extra information in a map of key value pairs
+	 */
 	@Override
 	public void setExtraInfo(Map<String, String> params) {
 		this.extraInfo = params;
