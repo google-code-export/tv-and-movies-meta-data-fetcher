@@ -92,10 +92,6 @@ public class TestMP4Manager {
 	 */
 	@Test
 	public void testWriteEpsiode() throws Exception {
-		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
-//		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
-		Assert.assertTrue("Check atomic parsley command can be found",apCmd.exists());
-
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
@@ -140,16 +136,12 @@ public class TestMP4Manager {
 	 */
 	@Test
 	public void testWriteFilm() throws Exception {
-		File apCmd = new File(File.separatorChar+"usr"+File.separatorChar+"bin"+File.separatorChar+"AtomicParsley");
-//		File apCmd = new File("c:\\AtomicParsley-win32-0.9.0\\AtomicParsley.exe");
-		Assert.assertTrue("Check atomic parsley command can be found",apCmd.exists());
-
 		URL url = Data.class.getResource("a_video.mp4");
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
 
 		File mp4File = File.createTempFile("test", ".mp4");
-		if (!mp4File.delete()) {
+		if (!mp4File.delete() && mp4File.exists()) {
 			throw new IOException("Unable to delete file");
 		}
 		FileHelper.copy(srcFile, mp4File);
