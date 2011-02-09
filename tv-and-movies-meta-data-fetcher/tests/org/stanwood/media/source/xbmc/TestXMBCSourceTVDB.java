@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
 
 public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
+
+	private static final SimpleDateFormat EPISODE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Test
 	public void testAddon() throws Exception {
@@ -103,7 +106,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	@Test
 	public void testEpisode() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 
 		Show show = new Show("79501");
@@ -116,12 +119,62 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
 
-		Episode ep = source.getEpisode(season, 1);
-		Assert.assertNotNull(ep);
+		Episode episode = source.getEpisode(season, 1);
+		Assert.assertNotNull(episode);
 
-		Assert.assertNotNull(ep.getActors());
+		Assert.assertEquals(10,episode.getActors().size());
+		Assert.assertEquals("John Prosky",episode.getActors().get(0).getName());
+		Assert.assertEquals("",episode.getActors().get(0).getRole());
+		Assert.assertEquals("Claudia Difolco",episode.getActors().get(5).getName());
+		Assert.assertEquals("",episode.getActors().get(5).getRole());
+		Assert.assertEquals("Shishir Kurup",episode.getActors().get(9).getName());
+		Assert.assertEquals("",episode.getActors().get(9).getRole());
+		Assert.assertEquals(1,episode.getDirectors().size());
+		Assert.assertEquals("David Semel",episode.getDirectors().get(0));
+		Assert.assertEquals(1,episode.getWriters().size());
+		Assert.assertEquals("Tim Kring",episode.getWriters().get(0));
+		Assert.assertEquals("2006-09-25",EPISODE_DATE_FORMAT.format(episode.getDate()));
+		Assert.assertEquals("308906",episode.getEpisodeId());
+		Assert.assertEquals(1,episode.getEpisodeNumber());
+		Assert.assertEquals(8.3F,episode.getRating().getRating(),0);
+		Assert.assertEquals(1,episode.getRating().getNumberOfVotes());
+		Assert.assertEquals(season,episode.getSeason());
+		Assert.assertEquals("In this episode, we are introduced to Peter Petrelli, a young man who dreams of flying, and his brother Nathan, a ruthless politician who thinks that Peter is dreaming his life away. Meanwhile, ordinary people from all around the world are starting to suspect that they have abilities beyond those of normal humans. Artist Isaac Mendez believes that he is painting the future, high school cheerleader Claire Bennet is suddenly able to recover from any wound almost instantly, Japanese businessman Hiro Nakamura tries to convince a friend that he can bend space and time, and single mother Niki Sanders starts seeing strange things in mirrors.Upon learning of his father's death, genetics Professor Mohinder Suresh begins to look into his research for a clue to why he was killed. When he follows his father's trail to New York City, however, Mohinder learns that someone else is on the trail of the same research.  Someone who may kill to protect the secrets of the next step in human evolution.",episode.getSummary());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",episode.getUrl().toExternalForm());
+		Assert.assertEquals("Genesis",episode.getTitle());
+		Assert.assertEquals("http://thetvdb.com/banners/episodes/79501/308906.jpg",episode.getImageURL().toExternalForm());
+	}
 
+	@Test
+	public void testSpecial() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 
+		Show show = new Show("79501");
+		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+		show.setSourceId(source.getSourceId());
+		Map<String, String> params = new HashMap<String,String>();
+		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
+		show.setExtraInfo(params);
+
+		Season season = new Season(show,3);
+		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+		Episode special = source.getSpecial(season,1);
+		Assert.assertNotNull(special);
+
+		Assert.assertEquals(0,special.getActors().size());
+		Assert.assertEquals(0,special.getDirectors().size());
+		Assert.assertEquals(0,special.getWriters().size());
+		Assert.assertEquals("2008-09-22",EPISODE_DATE_FORMAT.format(special.getDate()));
+		Assert.assertEquals("389760",special.getEpisodeId());
+		Assert.assertEquals(1,special.getEpisodeNumber());
+		Assert.assertEquals(8.0F,special.getRating().getRating(),0);
+		Assert.assertEquals(1,special.getRating().getNumberOfVotes());
+		Assert.assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",special.getSummary());
+		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",special.getUrl().toExternalForm());
+		Assert.assertEquals("Countdown to Season 3",special.getTitle());
+		Assert.assertEquals("http://thetvdb.com/banners/episodes/79501/389760.jpg",special.getImageURL().toExternalForm());
+		Assert.assertEquals(season,special.getSeason());
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

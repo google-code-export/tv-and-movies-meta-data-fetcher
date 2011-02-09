@@ -146,11 +146,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile)
 	throws StoreException {
 		try {
-			((Element) node).setAttribute("showEpisodeNumber", String.valueOf(episode.getShowEpisodeNumber()));
 			((Element) node).setAttribute("title", episode.getTitle());
-			((Element) node).setAttribute("url", urlToText(episode.getSummaryUrl()));
+			((Element) node).setAttribute("url", urlToText(episode.getUrl()));
 			((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
-			((Element) node).setAttribute("episodeId", String.valueOf(episode.getEpisodeId()));
+			((Element) node).setAttribute("episodeId", episode.getEpisodeId());
+			((Element) node).setAttribute("imageUrl", urlToText(episode.getImageURL()));
 
 			Node summaryNode = selectSingleNode(node, "summary");
 			if (summaryNode != null) {
@@ -610,7 +610,17 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-
+	/**
+	 * This will get a film from the store. If the film can't be found, then it will return null.
+	 * @param filmFile The file the film is located in.
+	 * @param filmId The id of the film
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
+	 *         it was not specified on the command line.
+	 * @return The film, or null if it can't be found
+	 * @throws StoreException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Film getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException,
 			IOException {
@@ -618,7 +628,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (doc==null) {
 			return null;
 		}
-		// TODO allow films to be retived
+
 		Film film = new Film(filmId);
 
 		try {
@@ -747,35 +757,16 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		URL url = new URL(getStringFromXML(episodeNode, "@url"));
 		String title = getStringFromXML(episodeNode, "@title");
 		String airDate = getStringFromXML(episodeNode, "@firstAired");
+		String episodeId = getStringFromXML(episodeNode, "@episodeId");
+		URL imageUrl = new URL(getStringFromXML(episodeNode, "@imageUrl"));
 
 
-		long episodeSiteId = -1;
-		try {
-			episodeSiteId = getLongFromXML(episodeNode, "@showEpisodeNumber");
-		}
-		catch (XMLParserNotFoundException e) {
-			// Field not found, so try with the old name
-			try {
-				episodeSiteId = getLongFromXML(episodeNode, "@siteId");
-			}
-			catch (XMLParserNotFoundException e1) {
-				// Still not found, so throw original error
-				throw e;
-			}
-			catch (NumberFormatException e1) {
-				// Old field is not compatiable with new field, so throw original error
-				throw e;
-			}
-		}
-		long episodeId = getLongFromXML(episodeNode, "@episodeId");
-
-
-		episode.setSummaryUrl(url);
+		episode.setUrl(url);
 		episode.setSummary(summary);
 		episode.setTitle(title);
 		episode.setDate(df.parse(airDate));
-		episode.setShowEpisodeNumber(episodeSiteId);
 		episode.setEpisodeId(episodeId);
+		episode.setImageURL(imageUrl);
 		readActors(episodeNode,episode);
 		readWriters(episode, (Element)episodeNode);
 		parseRating(episode,(Element)episodeNode);

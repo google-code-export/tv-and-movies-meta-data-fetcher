@@ -167,29 +167,27 @@ public class Data {
 
 		Episode episode1 = new Episode(1,season);
 		episode1.setDate(df.parse("2006-10-10"));
-		episode1.setShowEpisodeNumber(1);
 		episode1.setSpecial(false);
 		episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
-		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
+		episode1.setUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
 		episode1.setTitle("Pilot");
 		episode1.setRating(new Rating(1,1));
 		episode1.setDirectors(createStringList(new String[] {"Harry"}));
 		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
 		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
-		episode1.setEpisodeId(784857);
+		episode1.setEpisodeId("784857");
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"1x02 - blah");
 		episodeFile.createNewFile();
 		Episode episode2 = new Episode(2,season);
 		episode2.setDate(df.parse("2006-10-11"));
-		episode2.setShowEpisodeNumber(2);
 		episode2.setSpecial(false);
 		episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
-		episode2.setSummaryUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
+		episode2.setUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 		episode2.setTitle("Many Happy Returns");
 		episode2.setRating(new Rating(9.5F,2355));
-		episode2.setEpisodeId(800578);
+		episode2.setEpisodeId("800578");
 		result.add(new EpisodeData(episode2,episodeFile));
 
 		season = new Season(show,2);
@@ -199,12 +197,11 @@ public class Data {
 		episodeFile.createNewFile();
 		episode1 = new Episode(2,season);
 		episode1.setDate(df.parse("2007-7-10"));
-		episode1.setShowEpisodeNumber(13);
 		episode1.setSpecial(false);
 		episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
-		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
+		episode1.setUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 		episode1.setTitle("Phoenix Rising");
-		episode1.setEpisodeId(800578);
+		episode1.setEpisodeId("800578");
 		episode1.setRating(new Rating(0.4F,12354));
 		result.add(new EpisodeData(episode1,episodeFile));
 
@@ -212,13 +209,12 @@ public class Data {
 		episodeFile.createNewFile();
 		Episode special1 = new Episode(0,season);
 		special1.setDate(df.parse("2007-7-09"));
-		special1.setShowEpisodeNumber(-1);
 		special1.setSpecial(true);
 		special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
-		special1.setSummaryUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
+		special1.setUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 		special1.setTitle("Countdown to the Premiere");
 		special1.setRating(new Rating(0.4F,3000));
-		special1.setEpisodeId(800578);
+		special1.setEpisodeId("800578");
 		special1.setDirectors(createStringList(new String[]{"JP"}));
 		special1.setWriters(createStringList(new String[]{"Write a lot","Write a little"}));
 		List<Actor> actors = new ArrayList<Actor>();
@@ -273,23 +269,24 @@ public class Data {
 		show.setGenres(genres);
 
 		File episodeFile = new File(heroesDir,"1x01 - hero");
-		episodeFile.createNewFile();
+		if (!episodeFile.createNewFile() && !episodeFile.exists()) {
+			throw new IOException("Unable to create file: " + episodeFile.getAbsolutePath());
+		}
 
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_HEROES+"/episode_listings.html?season=1"));
 
 		Episode episode1 = new Episode(1,season);
 		episode1.setDate(df.parse("2006-11-11"));
-		episode1.setShowEpisodeNumber(1);
 		episode1.setSpecial(false);
 		episode1.setSummary("After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.");
-		episode1.setSummaryUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
+		episode1.setUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
 		episode1.setTitle("Heroe, Pilot");
 		episode1.setRating(new Rating(2,2345));
 		episode1.setDirectors(createStringList(new String[]{"Whoever"}));
 		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
 		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
-		episode1.setEpisodeId(1181337);
+		episode1.setEpisodeId("1181337");
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		return result;

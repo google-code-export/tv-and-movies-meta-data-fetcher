@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -40,6 +42,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private static final SimpleDateFormat FILM_YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat EPISODE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	private final static Log log = LogFactory.getLog(XBMCSource.class);
 
 	private XBMCAddon addon;
 	private String id;
@@ -68,26 +71,14 @@ public class XBMCSource extends XMLParser implements ISource {
 	}
 
 	private Episode parseEpisode(Season season, int episodeNum) throws SourceException, IOException {
-		List<Episode> episodes = getEpisodeList(season.getShow(), season);
-		for (final Episode episode : episodes) {
+		List<XBMCEpisode> episodes = getEpisodeList(season.getShow(), season);
+		for (final XBMCEpisode episode : episodes) {
 			if (episode.getEpisodeNumber() == episodeNum) {
-				StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getSummaryUrl())) {
+				StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getUrl())) {
 					@Override
 					public void processContents(String contents) throws SourceException {
 						Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents,String.valueOf(episode.getEpisodeId()));
-						try {
-							episode.setSummary(getStringFromXML(doc, "details/plot/text()"));
-							parseWriters(episode, doc);
-							parseDirectors(episode, doc);
-							parseActors(episode, doc);
-							getIntegerFromXML(doc, "details/episode/text()");
-							getStringFromXML(doc, "details/thumb/text()");
-							getStringFromXML(doc, "details/aired/text()");
-							getFloatFromXML(doc, "details/rating/text()");
-//							System.out.println(domToStr(doc));
-						} catch (XMLParserException e) {
-							throw new SourceException("Unable to parse episode details",e);
-						}
+						parseEpisode(episode, doc);
 					}
 				};
 				processor.handleStream();
@@ -127,8 +118,8 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
-	private List<Episode>getEpisodeList(final Show show,final Season season) throws SourceException, IOException {
-		final List<Episode>episodes = new ArrayList<Episode>();
+	private List<XBMCEpisode>getEpisodeList(final Show show,final Season season) throws SourceException, IOException {
+		final List<XBMCEpisode>episodes = new ArrayList<XBMCEpisode>();
 
 		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(season.getURL())) {
 			@Override
@@ -140,11 +131,18 @@ public class XBMCSource extends XMLParser implements ISource {
     					for (Node episodeNode : episodesList) {
     						try {
 	    						if (getIntegerFromXML(episodeNode, "season/text()")==season.getSeasonNumber()) {
-		    						Episode ep = new Episode(getIntegerFromXML(episodeNode, "epnum/text()"), season);
+	    							XBMCEpisode ep = new XBMCEpisode(getIntegerFromXML(episodeNode, "epnum/text()"), season);
 		    						ep.setTitle(getStringFromXML(episodeNode, "title/text()"));
-		    						ep.setSummaryUrl(new URL(getStringFromXML(episodeNode, "url/text()")));
-		    						ep.setEpisodeId(getIntegerFromXML(episodeNode, "id/text()"));
-		    						ep.setDate(EPISODE_DATE_FORMAT.parse(getStringFromXML(episodeNode, "aired/text()")));
+		    						ep.setUrl(new URL(getStringFromXML(episodeNode, "url/text()")));
+		    						ep.setEpisodeId(getStringFromXML(episodeNode, "id/text()"));
+		    						try {
+		    							ep.setDate(EPISODE_DATE_FORMAT.parse(getStringFromXML(episodeNode, "aired/text()")));
+		    						}
+		    						catch (XMLParserNotFoundException e) {
+		    							if (log.isDebugEnabled()) {
+		    								log.debug("No date for episode: " + ep.getEpisodeId());
+		    							}
+		    						}
 		    						episodes.add(ep);
 	    						}
     						}
@@ -185,7 +183,6 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(contents,showId);
-	    			System.out.println(domToStr(doc));
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);
@@ -321,9 +318,20 @@ public class XBMCSource extends XMLParser implements ISource {
 	private void parseActors(final IVideoActors video, Document doc)
 			throws XMLParserException {
 		List<Actor> actors = new ArrayList<Actor>();
-		for (Node actor : selectNodeList(doc, "details/actor")) {
-			actors.add(new Actor(getStringFromXML(actor, "name/text()"),
-					getStringFromXML(actor, "role/text()")));
+		try {
+			for (Node actor : selectNodeList(doc, "details/actor")) {
+				String role = "";
+				try {
+					 role = getStringFromXML(actor, "role/text()");
+				}
+				catch (XMLParserNotFoundException e) {
+					// Ignore
+				}
+				actors.add(new Actor(getStringFromXML(actor, "name/text()"),role));
+			}
+		}
+		catch (XMLParserNotFoundException e) {
+			// Ignore, no actors
 		}
 		video.setActors(actors);
 	}
@@ -343,8 +351,78 @@ public class XBMCSource extends XMLParser implements ISource {
 	public Episode getSpecial(Season season, int specialNumber)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
+		return parseSpecial(season,specialNumber);
+	}
+
+	private List<XBMCEpisode> getSpecialList(Show show) throws SourceException, IOException {
+		Season specialSeason = getSeason(show, 0);
+		List<XBMCEpisode> episodes = getEpisodeList(show, specialSeason);
+		for (final XBMCEpisode episode : episodes) {
+			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getUrl())) {
+				@Override
+				public void processContents(String contents) throws SourceException {
+					Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents,String.valueOf(episode.getEpisodeId()));
+					parseEpisode(episode, doc);
+				}
+			};
+
+			processor.handleStream();
+		}
+		return episodes;
+	}
+
+	private Episode parseSpecial(Season season, int specialNumber) throws SourceException, IOException {
+		List<XBMCEpisode> episodes = getSpecialList(season.getShow());
+		for (final XBMCEpisode episode : episodes) {
+			if (episode.getDisplayEpisode() == specialNumber && episode.getDisplaySeason() == season.getSeasonNumber()) {
+				episode.setSeason(season);
+				return episode;
+			}
+		}
 		return null;
 	}
+
+	private void parseEpisode(final XBMCEpisode episode,
+			Document doc) throws SourceException {
+		try {
+			episode.setSummary(getStringFromXML(doc, "details/plot/text()"));
+			parseWriters(episode, doc);
+			parseDirectors(episode, doc);
+			parseActors(episode, doc);
+			episode.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
+			try {
+				episode.setDate(EPISODE_DATE_FORMAT.parse(getStringFromXML(doc, "details/aired/text()")));
+			}
+			catch (XMLParserNotFoundException e) {
+				// Ignore as their is no date for this episode. Probally never shown
+			}
+			episode.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),1));
+
+			try {
+				int displaySeason = getIntegerFromXML(doc, "details/displayseason/text()");
+				int displayEpisode = getIntegerFromXML(doc, "details/displayepisode/text()");
+				// This is a special
+				episode.setSpecial(true);
+				episode.setDisplaySeason(displaySeason);
+				episode.setDisplayEpisode(displayEpisode);
+				episode.setEpisodeNumber(displayEpisode);
+			}
+			catch (XMLParserNotFoundException e) {
+				// This is not a special
+			}
+		}
+		catch (XMLParserNotFoundException e) {
+			// Ignore
+		} catch (XMLParserException e) {
+			throw new SourceException("Unable to parse episode details",e);
+		} catch (ParseException e) {
+			throw new SourceException("Unable to parse episode details",e);
+		} catch (MalformedURLException e) {
+			throw new SourceException("Unable to parse episode details",e);
+		}
+	}
+
+
 
 	@Override
 	public String getSourceId() {

@@ -27,7 +27,16 @@ public interface IVideoGenre {
 	 */
 	public void addGenre(String genre);
 
+	/**
+	 * This is useful if the video belongs to more than one genres. It will returned the
+	 * genre that is preferred.
+	 * @return The preferred genre or null if not or flagged as preferred.
+	 */
 	public String getPreferredGenre();
 
+	/**
+	 * Used to set the genre that is preferred in the list of genres.
+	 * @param preferredGenre The preferred genre
+	 */
 	public void setPreferredGenre(String preferredGenre);
 }

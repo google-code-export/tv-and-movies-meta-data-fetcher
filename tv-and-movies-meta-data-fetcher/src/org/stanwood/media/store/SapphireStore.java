@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -57,8 +58,10 @@ public class SapphireStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(SapphireStore.class);
 
-	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private final static DecimalFormat EPISODE_FORMAT = new DecimalFormat("00");
+	private final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	private String preferedRating = null;
+
 
 
 	/**
@@ -97,6 +100,8 @@ public class SapphireStore implements IStore {
 			PrintStream ps = null;
 			try {
 				ps = new PrintStream(new FileOutputStream(xmlFile));
+				Season season  = episode.getSeason();
+				Show show = episode.getSeason().getShow();
 
 				ps.println("<media>");
 				ps.println("  <title>" + episode.getTitle() + "</title>");
@@ -106,17 +111,21 @@ public class SapphireStore implements IStore {
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
 				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>");
-				// ps.println("     <rating>TV-PG</rating>");
-				ps.println("     <seriesName>" + episode.getSeason().getShow().getName() + "</seriesName>");
+//				ps.println("     <rating>"+episode+"</rating>");
+				ps.println("     <seriesName>" + show.getName() + "</seriesName>");
 				// ps.println("     <broadcaster>The CW</broadcaster>");
-				ps.println("     <episodeNumber>" + episode.getShowEpisodeNumber() + "</episodeNumber>");
-				ps.println("     <season>" + episode.getSeason().getSeasonNumber() + "</season>");
+				ps.println("     <episodeNumber>" + season.getSeasonNumber()+EPISODE_FORMAT.format(episode.getEpisodeNumber()) + "</episodeNumber>");
+				ps.println("     <season>" + season.getSeasonNumber() + "</season>");
 				ps.println("     <episode>" + episode.getEpisodeNumber() + "</episode>");
-				ps.println("     <published>" + df.format(episode.getDate()) + "</published>");
+				ps.println("     <published>" + DF.format(episode.getDate()) + "</published>");
 				ps.println("     <genres>");
-				for (String genre : episode.getSeason().getShow().getGenres()) {
-					// ps.println("        <genre primary="true">Mystery</genre>");
-					ps.println("        <genre>" + genre + "</genre>");
+				for (String genre : show.getGenres()) {
+					if (show.getPreferredGenre().equals(genre)) {
+						ps.println("        <genre primary=\"true\">" + genre + "</genre>");
+					}
+					else {
+						ps.println("        <genre>" + genre + "</genre>");
+					}
 				}
 				ps.println("     </genres>");
 				if (episode.getActors() != null) {
@@ -170,7 +179,7 @@ public class SapphireStore implements IStore {
 				ps.println("     <userStarRating>" + Math.round((film.getRating().getRating() / 10) * 5) + "</userStarRating>");
 				ps.println("     <rating>" + findCert(film.getCertifications())+"</rating>");
 				// ps.println("     <broadcaster>The CW</broadcaster>");
-				ps.println("     <published>" + df.format(film.getDate()) + "</published>");
+				ps.println("     <published>" + DF.format(film.getDate()) + "</published>");
 				ps.println("     <genres>");
 				for (String genre : film.getGenres()) {
 					if (genre.equals(film.getPreferredGenre())) {

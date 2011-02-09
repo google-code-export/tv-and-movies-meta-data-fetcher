@@ -162,9 +162,8 @@ public class TestXMLStore2 {
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
 	        Assert.assertEquals(784857,episode.getEpisodeId());
-	        Assert.assertEquals(1,episode.getShowEpisodeNumber());
 	        Assert.assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.",episode.getSummary());
-	        Assert.assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getSummaryUrl().toExternalForm());
+	        Assert.assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Pilot",episode.getTitle());
 	        Assert.assertEquals("2006-10-10",df.format(episode.getDate()));
 	        Assert.assertEquals(1, episode.getDirectors().size());
@@ -184,9 +183,8 @@ public class TestXMLStore2 {
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals(800578,episode.getEpisodeId());
-	        Assert.assertEquals(2,episode.getShowEpisodeNumber());
 	        Assert.assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
-	        Assert.assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getSummaryUrl().toExternalForm());
+	        Assert.assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Many Happy Returns",episode.getTitle());
 	        Assert.assertEquals("2006-10-11",df.format(episode.getDate()));
 	        Assert.assertFalse(episode.isSpecial());
@@ -201,10 +199,9 @@ public class TestXMLStore2 {
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals(800578,episode.getEpisodeId());
-	        Assert.assertEquals(13,episode.getShowEpisodeNumber());
 	        Assert.assertFalse(episode.isSpecial());
 	        Assert.assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
-	        Assert.assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getSummaryUrl().toExternalForm());
+	        Assert.assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Phoenix Rising",episode.getTitle());
 	        Assert.assertEquals("2007-07-10",df.format(episode.getDate()));
 
@@ -213,9 +210,8 @@ public class TestXMLStore2 {
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
 	        Assert.assertEquals(800578,episode.getEpisodeId());
-	        Assert.assertEquals(-1,episode.getShowEpisodeNumber());
 	        Assert.assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
-	        Assert.assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getSummaryUrl().toExternalForm());
+	        Assert.assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Countdown to the Premiere",episode.getTitle());
 	        Assert.assertEquals("2007-07-09",df.format(episode.getDate()));
 	        Assert.assertTrue(episode.isSpecial());
