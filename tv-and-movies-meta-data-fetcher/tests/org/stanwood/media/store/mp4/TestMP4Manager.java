@@ -241,9 +241,8 @@ public class TestMP4Manager {
 		Season season = new Season(show,1);
 		Episode episode = new Episode(3,season);
 		episode.setDate(DF.parse("10-11-2005"));
-		episode.setEpisodeId(34567);
+		episode.setEpisodeId("34567");
 		episode.setRating(new Rating(5.4F,345));
-		episode.setShowEpisodeNumber(103);
 		episode.setSummary("This is a test show summary");
 		episode.setTitle("Test Episode");
 

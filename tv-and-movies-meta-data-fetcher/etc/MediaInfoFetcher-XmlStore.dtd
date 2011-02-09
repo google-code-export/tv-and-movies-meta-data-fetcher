@@ -35,10 +35,10 @@
 <!ATTLIST episode
   episodeId          CDATA  #REQUIRED
   firstAired         CDATA  #IMPLIED
-  number             CDATA  #REQUIRED  
-  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED    
   title              CDATA  #IMPLIED
   url                CDATA  #IMPLIED
+  imageUrl           CDATA  #IMPLIED
   showEpisodeNumber  CDATA  #IMPLIED
 >
 
@@ -47,10 +47,10 @@
 <!ATTLIST special
   episodeId          CDATA  #REQUIRED
   firstAired         CDATA  #IMPLIED
-  number             CDATA  #REQUIRED
-  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED  
   title              CDATA  #IMPLIED
   url                CDATA  #IMPLIED
+  imageUrl           CDATA  #IMPLIED
   showEpisodeNumber  CDATA  #IMPLIED
 >
 

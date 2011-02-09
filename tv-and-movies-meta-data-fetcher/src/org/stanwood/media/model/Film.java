@@ -52,6 +52,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * genre that is preferred.
 	 * @return The preferred genre or null if not or flagged as preferred.
 	 */
+	@Override
 	public String getPreferredGenre() {
 		if (preferredGenre==null && genres.size()>0) {
 			return genres.get(0);
@@ -63,6 +64,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the genre that is preferred in the list of genres.
 	 * @param preferredGenre The preferred genre
 	 */
+	@Override
 	public void setPreferredGenre(String preferredGenre) {
 		this.preferredGenre = preferredGenre;
 	}
@@ -126,11 +128,19 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 		this.title = title;
 	}
 
+	/**
+	 * Used to get a list of actors in the video
+	 * @return The list of actors in the video
+	 */
 	@Override
 	public List<Actor> getActors() {
 		return actors;
 	}
 
+	/**
+	 * Used to set the list of actors in the film
+	 * @param actors The list of actors in the film
+	 */
 	@Override
 	public void setActors(List<Actor> actors) {
 		this.actors = actors;
@@ -255,6 +265,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the global user rating of the film
 	 * @return The global user rating of the show
 	 */
+	@Override
 	public Rating getRating() {
 		return rating;
 	}
@@ -263,6 +274,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the global user rating of the film
 	 * @param rating The global user rating of the show
 	 */
+	@Override
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}

@@ -35,19 +35,18 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	private Date airDate;
 	private boolean special;
 
-	private URL summaryUrl;
+	private URL url;
 
 	/** The id of the show as found on the source site */
-	private long episodeId;
-
-	/** Episode number counting since the show started */
-	private long showEpisodeNumber;
+	private String episodeId;
 
 	private List<Actor> actors;
 	private List<String>directors;
 	private List<String>writers;
 
 	private Rating rating;
+
+	private URL imageURL;
 
 	/**
 	 * The constructor used to create a episode instance
@@ -87,6 +86,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Get a summary of the episode
 	 * @return The summary of the episode
 	 */
+	@Override
 	public String getSummary() {
 		return summary;
 	}
@@ -95,6 +95,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Sets the summary of the episode
 	 * @param summary The summary of the episode
 	 */
+	@Override
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
@@ -103,6 +104,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Sets the title of the episode
 	 * @param title The title of the episode
 	 */
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -119,6 +121,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Gets the title of the show
 	 * @return The title of the show
 	 */
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -140,22 +143,6 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	}
 
 	/**
-	 * Sets the episode count since the show started
-	 * @param showEpisodeNumber The episode number since the show started
-	 */
-	public void setShowEpisodeNumber(long showEpisodeNumber) {
-		this.showEpisodeNumber = showEpisodeNumber;
-	}
-
-	/**
-	 * Gets the episode number since the show started
-	 * @return The episode number since the show started
-	 */
-	public long getShowEpisodeNumber() {
-		return this.showEpisodeNumber;
-	}
-
-	/**
 	 * Gets the first air date of the episode
 	 * @return The first air date of the episode
 	 */
@@ -168,23 +155,23 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to set the URL used to get a summary of the show
 	 * @param url The summary URL
 	 */
-	public void setSummaryUrl(URL url) {
-		summaryUrl = url;
+	public void setUrl(URL url) {
+		this.url = url;
 	}
 
 	/**
 	 * Used to get the URL used to get a summary of the show
 	 * @return The summary URL
 	 */
-	public URL getSummaryUrl() {
-		return summaryUrl;
+	public URL getUrl() {
+		return url;
 	}
 
 	/**
 	 * Used to get the numeric unique episode id used by the source
 	 * @return the numeric unique episode id used by the source
 	 */
-	public long getEpisodeId() {
+	public String getEpisodeId() {
 		return episodeId;
 	}
 
@@ -192,15 +179,23 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to set the numeric unique episode id used by the source
 	 * @param episodeId The numeric unique episode id used by the source
 	 */
-	public void setEpisodeId(long episodeId) {
+	public void setEpisodeId(String episodeId) {
 		this.episodeId = episodeId;
 	}
 
+	/**
+	 * Used to get a list of actors in the episode
+	 * @return a list of actors in the episode
+	 */
 	@Override
 	public List<Actor> getActors() {
 		return actors;
 	}
 
+	/**
+	 * Used to set a list of actors in the episode
+	 * @param actors A list of actors in the episode
+	 */
 	@Override
 	public void setActors(List<Actor> actors) {
 		this.actors = actors;
@@ -210,6 +205,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to get a list of directors for the episode
 	 * @return A list of directors for the episode
 	 */
+	@Override
 	public List<String> getDirectors() {
 		return directors;
 	}
@@ -218,6 +214,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to set a list of directors for the episode
 	 * @param directors The list of directors for the episode
 	 */
+	@Override
 	public void setDirectors(List<String> directors) {
 		this.directors = directors;
 	}
@@ -226,6 +223,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to get a list of writers for the episode
 	 * @return Get a list of writers for the episode
 	 */
+	@Override
 	public List<String> getWriters() {
 		return writers;
 	}
@@ -234,18 +232,53 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * Used to set a list of writers for the episode
 	 * @param writers The list of writers
 	 */
+	@Override
 	public void setWriters(List<String> writers) {
 		this.writers = writers;
 	}
 
+	/**
+	 * Used to get the episode rating
+	 * @return the episode rating
+	 */
 	@Override
 	public Rating getRating() {
 		return rating;
 	}
 
+	/**
+	 * Used to set the episode rating
+	 * @param rating The episode rating
+	 */
 	@Override
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
+
+	/**
+	 * Used to get a URL which points to a image of the episode
+	 * @return A URL which points too a image of the episode
+	 */
+	public URL getImageURL() {
+		return imageURL;
+	}
+
+	/**
+	 * Used to set a URL which points too a image of the episode
+	 * @param imageURL A URL which points too a image of the episode
+	 */
+	public void setImageURL(URL imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	/**
+	 * Returns a string summary of this classes contents. Mainly intended for use when debugging.
+	 * @return string summary of this classes contents
+	 */
+	@Override
+	public String toString() {
+		return "Episode - ID:" + getEpisodeId() +" Num: " + getEpisodeNumber()+" Title: " + getTitle();
+	}
+
 
 }

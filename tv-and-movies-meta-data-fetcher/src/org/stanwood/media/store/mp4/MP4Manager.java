@@ -37,8 +37,10 @@ import org.stanwood.media.model.Film;
  */
 public class MP4Manager implements IMP4Manager {
 
+	// http://help.mp3tag.de/main_tags.html
+
 	private final static Log log = LogFactory.getLog(MP4Manager.class);
-	
+
 	/**
 	 * Used to get a list of atoms in the MP4 file.
 	 *
@@ -55,7 +57,7 @@ public class MP4Manager implements IMP4Manager {
 			Tag tag = mp4.getTag();
 			Iterator<TagField> it = tag.getFields();
 			while (it.hasNext()) {
-				TagField field = it.next();							
+				TagField field = it.next();
 				Atom atom = new Atom(field.getId(),getAtomTextValue(field));
 				atoms.add(atom);
 			}
@@ -70,9 +72,9 @@ public class MP4Manager implements IMP4Manager {
 			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
 		} catch (IOException e) {
 			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
-		}	
+		}
 	}
-	
+
 	private String getAtomTextValue(TagField field) throws UnsupportedEncodingException,MP4Exception {
 		if (field instanceof Mp4TagTextField) {
 			return ((Mp4TagTextField)field).getContent();
@@ -81,7 +83,7 @@ public class MP4Manager implements IMP4Manager {
 			return ((Mp4TagByteField)field).getContent();
 		}
 		else if (field instanceof Mp4TagCoverField) {
-			Mp4TagCoverField cover = (Mp4TagCoverField)field; 
+			Mp4TagCoverField cover = (Mp4TagCoverField)field;
 			return "Artwork of type " + cover.getFieldType() +" and size " + cover.getDataSize();
 		}
 		throw new MP4Exception("Unsupported field type "+field.getClass()+" of field '" + field.getId());
@@ -95,16 +97,18 @@ public class MP4Manager implements IMP4Manager {
 	 * @param episode The episode details
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
+	@Override
 	public void updateEpsiode(File mp4File, Episode episode) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(new Atom("stik", "TV Show"));
-		atoms.add(new Atom("tven", String.valueOf(episode.getShowEpisodeNumber())));
+		atoms.add(new Atom("tven", episode.getEpisodeId()));
 		atoms.add(new Atom("tvsh", episode.getSeason().getShow().getName()));
 		atoms.add(new Atom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
 		atoms.add(new Atom("tves", String.valueOf(episode.getEpisodeNumber())));
 		atoms.add(new Atom("©day", episode.getDate().toString()));
 		atoms.add(new Atom("©nam", episode.getTitle()));
 		atoms.add(new Atom("desc", episode.getSummary()));
+//		atoms.add(new Atom("rtng", ));
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
 			atoms.add(new Atom("©gen", episode.getSeason().getShow().getGenres().get(0)));
@@ -118,7 +122,7 @@ public class MP4Manager implements IMP4Manager {
 		try {
 			MP4VideoFileReader reader = new MP4VideoFileReader();
 			AudioFile mp4 = reader.read(mp4File);
-			Mp4Tag tag = (Mp4Tag) mp4.getTag();			
+			Mp4Tag tag = (Mp4Tag) mp4.getTag();
 			for (Atom atom : atoms) {
 				if (atom.getName().equals("covr")) {
 					Artwork art = new Artwork();
@@ -155,6 +159,7 @@ public class MP4Manager implements IMP4Manager {
 	 * @param film The film details
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
+	@Override
 	public void updateFilm(File mp4File, Film film) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(new Atom("stik", "Movie"));
@@ -182,7 +187,7 @@ public class MP4Manager implements IMP4Manager {
 		}
 		update(mp4File, atoms);
 	}
-	
+
 	private File downloadToTempFile(URL url) throws IOException {
 		File file = File.createTempFile("artwork", ".jpg");
 		if (!file.delete()) {
