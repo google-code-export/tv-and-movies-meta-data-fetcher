@@ -114,7 +114,7 @@ public class TestMP4Manager {
 		Assert.assertEquals(10,atoms.size());
 		Assert.assertEquals("TV Show",atoms.get(0).getValue());
 		Assert.assertEquals("stik",atoms.get(0).getName());
-		Assert.assertEquals("103",atoms.get(1).getValue());
+		Assert.assertEquals("34567",atoms.get(1).getValue());
 		Assert.assertEquals("tven",atoms.get(1).getName());
 		Assert.assertEquals("Test Show Name",atoms.get(2).getValue());
 		Assert.assertEquals("tvsh",atoms.get(2).getName());

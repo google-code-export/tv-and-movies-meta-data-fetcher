@@ -74,7 +74,7 @@ public class TestTagChimpSource {
 		Film film = source.getFilm( FILM_ID_IRON_MAN,null);
 		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
-		Assert.assertEquals("Check summary","You know you're going to get a different kind of superhero when you cast Robert Downey Jr. in the lead role. And Iron Man is different, in welcome ways. Cleverly updated from Marvel Comics' longstanding series, Iron Man puts billionaire industrialist Tony",film.getSummary());
+		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark (Robert Downey Jr.) is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 		Assert.assertNull("Check rating",film.getRating());
 		Assert.assertEquals("Check the release date","00:00:00 2008-05-09",df.format(film.getDate()));
 		Assert.assertEquals("Check image url","http://www.tagchimp.com/covers/large/39752.jpg",film.getImageURL().toExternalForm());

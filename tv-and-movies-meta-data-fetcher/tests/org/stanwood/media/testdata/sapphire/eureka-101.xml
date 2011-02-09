@@ -3,19 +3,19 @@
      <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
      <userStarRating>1</userStarRating>
      <seriesName>Eureka</seriesName>
-     <episodeNumber>1</episodeNumber>
-     <season>1</season>
-     <episode>1</episode>
-     <published>2006-10-10</published>
-     <genres>
-        <genre>SCIFI</genre>
-        <genre>Drama</genre>
-     </genres>
-     <cast>
-        <name><a href="sally">http://test/sally</a></name>
-        <name><a href="Cedric">http://test/cedric</a></name>
-     </cast>
-     <directors>
-       <name><a href="Harry">http://test/</a></name>
-     </directors>
+     <episodeNumber>101</episodeNumber>
+	  <season>1</season>
+	  <episode>1</episode>
+	  <published>2006-10-10</published>
+	  <genres>
+	    <genre primary="true">SCIFI</genre>
+	    <genre>Drama</genre>
+	  </genres>
+	  <cast>
+	    <name>org.stanwood.media.model.Actor@c39a20</name>
+	    <name>org.stanwood.media.model.Actor@1bbd23f</name>
+	  </cast>
+	  <directors>
+	    <name>Harry</name>
+	  </directors>
 </media>

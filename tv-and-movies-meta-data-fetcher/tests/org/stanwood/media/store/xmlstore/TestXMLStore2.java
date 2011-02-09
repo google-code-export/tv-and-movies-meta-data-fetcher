@@ -71,9 +71,13 @@ public class TestXMLStore2 {
 			}
 
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
-			filmFile1.createNewFile();
+			if (!filmFile1.createNewFile() && !filmFile1.exists()) {
+				throw new IOException("Unable to create temp file: " + filmFile1);
+			}
 			File filmFile2 = new File(dir,"The Usual Suspects part2.avi");
-			filmFile2.createNewFile();
+			if (!filmFile2.createNewFile() && !filmFile2.exists()) {
+				throw new IOException("Unable to create temp file: " + filmFile2);
+			}
 			Film film = Data.createFilm();
 
 			xmlSource.cacheFilm(dir, filmFile1, film);
@@ -105,8 +109,6 @@ public class TestXMLStore2 {
 		return out.toString();
 	}
 
-
-
 	/**
 	 * Used to test that data can be read back from the store
 	 * @throws Exception Thrown if their is a problem in the test
@@ -133,7 +135,9 @@ public class TestXMLStore2 {
 
 //			File episodeFile = new File(eurekaDir,"1x01 - blah");
 			File episodeFile = new File(eurekaDir,"1x02 - blah");
-			episodeFile.createNewFile();
+			if (!episodeFile.createNewFile() && !episodeFile.exists()) {
+				throw new IOException("Unable to create temp file: " + episodeFile);
+			}
 //			episodeFile = new File(eurekaDir,"2x13 - blah");
 //			episodeFile = new File(eurekaDir,"000 - blah");
 

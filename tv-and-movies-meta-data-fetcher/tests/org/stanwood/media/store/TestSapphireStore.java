@@ -26,7 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.custommonkey.xmlunit.XMLTestCase;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -34,14 +40,19 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.store.xmlstore.XMLErrorHandler;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.util.XMLParserException;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Used to test the {@link SapphireStore} class.
  */
-public class TestSapphireStore extends XMLTestCase {
+public class TestSapphireStore  {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String SHOW_ID = "58448";
@@ -50,10 +61,12 @@ public class TestSapphireStore extends XMLTestCase {
 	 * Test that the film is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testCacheFilm() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		SapphireStore xmlSource = new SapphireStore();
 		xmlSource.setPreferredCertificationCounrty("UK");
-		assertEquals("UK",xmlSource.getPreferredCertificationCounrty());
+		Assert.assertEquals("UK",xmlSource.getPreferredCertificationCounrty());
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File filmFile = new File(dir,"The Usual Suspects.avi");
@@ -127,7 +140,7 @@ public class TestSapphireStore extends XMLTestCase {
 			xmlSource.cacheFilm(dir,filmFile, film);
 
 			File actualFile = new File(dir,"The Usual Suspects.xml");
-			assertTrue(actualFile.exists());
+			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/film-0114814.xml")), new InputSource(new FileInputStream(actualFile)));
 
@@ -140,7 +153,9 @@ public class TestSapphireStore extends XMLTestCase {
 	 * Test that the show is cached correctly
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testCacheShow() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		SapphireStore xmlSource = new SapphireStore();
 
 		File dir = FileHelper.createTmpDir("show");
@@ -188,7 +203,7 @@ public class TestSapphireStore extends XMLTestCase {
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 
 			episodeFile = new File(eurekaDir,"2x13 - blah.avi");
-			episode1 = new Episode(2,season);
+			episode1 = new Episode(13,season);
 			episode1.setDate(df.parse("2007-7-10"));
 			episode1.setSpecial(false);
 			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
@@ -217,28 +232,49 @@ public class TestSapphireStore extends XMLTestCase {
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
 
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
-			assertTrue(actualFile.exists());
+			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-101.xml")), new InputSource(new FileInputStream(actualFile)));
 
 			actualFile = new File(eurekaDir,"1x02 - blah.xml");
-			assertTrue(actualFile.exists());
+			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-102.xml")), new InputSource(new FileInputStream(actualFile)));
 
 			actualFile = new File(eurekaDir,"2x13 - blah.xml");
-			assertTrue(actualFile.exists());
+			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-213.xml")), new InputSource(new FileInputStream(actualFile)));
 
 			actualFile = new File(eurekaDir,"000 - blah.xml");
-			assertTrue(actualFile.exists());
+			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
 			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-000.xml")), new InputSource(new FileInputStream(actualFile)));
 
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
+	}
+
+	private String getXML(InputSource is) throws XMLParserException, ParserConfigurationException, SAXException, IOException {
+		Document doc = null;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+
+		// Create the builder and parse the file
+		DocumentBuilder builder = XMLParser.createDocBuilder(factory);
+		XMLErrorHandler errorHandler = new XMLErrorHandler();
+		builder.setErrorHandler(errorHandler);
+		doc = builder.parse(is);
+		if (errorHandler.hasErrors()) {
+			throw new XMLParserException("Unable to parse xml, errors found in file");
+		}
+
+		return XMLParser.domToStr(doc);
+	}
+
+	private void assertXMLEqual(InputSource inputSource1,InputSource inputSource2) throws XMLParserException, ParserConfigurationException, SAXException, IOException {
+		Assert.assertEquals(getXML(inputSource1), getXML(inputSource2));
 	}
 
 	private Show createShow(File eurekaDir) throws MalformedURLException {

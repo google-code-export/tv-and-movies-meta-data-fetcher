@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <media>
   <title>Phoenix Rising</title>
-     <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>
-     <userStarRating>0</userStarRating>
-     <seriesName>Eureka</seriesName>
-     <episodeNumber>13</episodeNumber>
-     <season>2</season>
-     <episode>2</episode>
-     <published>2007-07-10</published>
-     <genres>
-        <genre>SCIFI</genre>
-        <genre>Drama</genre>
-     </genres>
+  <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>
+  <userStarRating>0</userStarRating>
+  <seriesName>Eureka</seriesName>
+  <episodeNumber>213</episodeNumber>
+  <season>2</season>
+  <episode>13</episode>
+  <published>2007-07-10</published>
+  <genres>
+    <genre primary="true">SCIFI</genre>
+    <genre>Drama</genre>
+  </genres>
 </media>
