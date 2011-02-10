@@ -46,6 +46,10 @@ end
 
 ################## Main ##################
 
+## TODO: 
+##   * Perform build of a the project
+##   * Use location of this script to work out the projectDir
+
 projectDir=Dir.getwd()+"/.."
 date=Time.new.strftime("%Y%m%d%H%M%S")
 version=readVersion(projectDir)
