@@ -21,7 +21,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 /**
  * A helper class for tests
  */
-public class TestHelper {
+public class Helper {
 
 	/**
 	 * Used to compare XML files

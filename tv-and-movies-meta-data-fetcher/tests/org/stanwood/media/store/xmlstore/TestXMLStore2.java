@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.TestHelper;
+import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -80,7 +80,7 @@ public class TestXMLStore2 {
 			File actualFile = new File(dir,".mediaInfoFetcher-xmlStore.xml");
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("rootMedia",dir.getAbsolutePath());
-			TestHelper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"),new FileInputStream(actualFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"),new FileInputStream(actualFile),params);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}

@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.stanwood.media.TestHelper;
+import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
@@ -105,7 +105,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("rootMediaDir", dir.getAbsolutePath());
-			TestHelper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
+			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			Controller.destoryController();
 			setupTestController(null,null,XMLStore2.class);
@@ -121,7 +121,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
 
-			TestHelper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
+			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {

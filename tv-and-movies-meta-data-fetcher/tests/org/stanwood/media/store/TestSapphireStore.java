@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.TestHelper;
+import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -133,7 +133,7 @@ public class TestSapphireStore  {
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/film-0114814.xml"), new FileInputStream(actualFile));
+			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/film-0114814.xml"), new FileInputStream(actualFile));
 
 		} finally {
 			FileHelper.deleteDir(dir);
@@ -225,22 +225,22 @@ public class TestSapphireStore  {
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-101.xml"), new FileInputStream(actualFile));
+			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-101.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"1x02 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-102.xml"), new FileInputStream(actualFile));
+			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-102.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"2x13 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-213.xml"), new FileInputStream(actualFile));
+			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-213.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"000 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-000.xml"), new FileInputStream(actualFile));
+			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-000.xml"), new FileInputStream(actualFile));
 
 		} finally {
 			FileHelper.deleteDir(dir);

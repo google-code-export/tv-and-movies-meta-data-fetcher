@@ -54,6 +54,28 @@
     	<classpath refid="compile-time.libs.classpath"/>	                    
     </taskdef>
 	
+	<target name="antlr">				
+			<java classname="org.antlr.Tool" fork="true">	
+				<classpath>				
+					<path refid="runtime.libs"/>
+					<path refid="compile.libs"/>	
+				</classpath>
+				<arg value="-fo"/>
+				<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+				<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionLexer.g"/>			
+			</java>
+			
+			<java classname="org.antlr.Tool" fork="true">	
+				<classpath>				
+					<path refid="runtime.libs"/>
+					<path refid="compile.libs"/>	
+				</classpath>
+				<arg value="-fo"/>
+				<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+				<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionParser.g"/>			
+			</java>
+		</target>
+	
 	<target name="init">
 		<!-- Create the time stamp -->
 		<tstamp />
