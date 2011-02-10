@@ -18,9 +18,10 @@ def copyAndUpdateFile(src,dest,params)
     File.open(dest, 'w') { |out|  
         File.open(src).each_line { |line|
             params.each { |key, value|
-                line=line.gsub("@@#{key}@@",value)
-                out.puts(line)
+                line=line.gsub("%%#{key}%%",value)
             }
+            puts(line)
+            out.puts(line)
         }
     }
     system("osc add #{dest}")
@@ -56,7 +57,7 @@ Dir.mktmpdir("osc") { |dir|
     Dir.chdir("home:sunny007/MediaInfoFetcher-nightlybuild")
 
     copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params); 
-    copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-nightly-#{date}-src.zip"); 
+    copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip"); 
 
     system("osc commit")
 }
