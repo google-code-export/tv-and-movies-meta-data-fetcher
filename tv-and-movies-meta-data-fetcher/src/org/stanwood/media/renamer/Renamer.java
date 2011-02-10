@@ -20,6 +20,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -128,13 +132,24 @@ public class Renamer {
 			}
 		});
 
+		List<File> sortedFiles = new ArrayList<File>();
+		for (File file : files) {
+			sortedFiles.add(file);
+		}
+		Collections.sort(sortedFiles,new Comparator<File>() {
+			@Override
+			public int compare(File arg0, File arg1) {
+				return arg0.getAbsolutePath().compareTo(arg0.getAbsolutePath());
+			}
+		});
+
 		if (mode == Mode.TV_SHOW) {
-			for (File file : files) {
+			for (File file : sortedFiles) {
 				log.debug("RENAME:" + file.getAbsolutePath()+" : " + file.isDirectory());
 				renameTVShow(file);
 			}
 		} else if (mode == Mode.FILM) {
-			for (File file : files) {
+			for (File file : sortedFiles) {
 				renameFilm(file);
 			}
 		} else {

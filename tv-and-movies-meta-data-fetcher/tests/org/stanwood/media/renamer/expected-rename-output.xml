@@ -17,6 +17,31 @@
       <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"/>
     </extra>
     <season number="1" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
+      <episode episodeId="308906" firstAired="2006-09-25"
+        imageUrl="http://thetvdb.com/banners/episodes/79501/308906.jpg"
+        number="1" title="Genesis" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
+        <summary>In this episode, we are introduced to Peter Petrelli, a young man who dreams of flying, and his brother Nathan, a ruthless politician who thinks that Peter is dreaming his life away. Meanwhile, ordinary people from all around the world are starting to suspect that they have abilities beyond those of normal humans. Artist Isaac Mendez believes that he is painting the future, high school cheerleader Claire Bennet is suddenly able to recover from any wound almost instantly, Japanese businessman Hiro Nakamura tries to convince a friend that he can bend space and time, and single mother Niki Sanders starts seeing strange things in mirrors.Upon learning of his father's death, genetics Professor Mohinder Suresh begins to look into his research for a clue to why he was killed. When he follows his father's trail to New York City, however, Mohinder learns that someone else is on the trail of the same research.  Someone who may kill to protect the secrets of the next step in human evolution.</summary>
+        <rating numberOfVotes="1" value="8.3"/>
+        <directors>
+          <director>David Semel</director>
+        </directors>
+        <writers>
+          <writer>Tim Kring</writer>
+        </writers>
+        <actors>
+          <actor name="John Prosky" role=""/>
+          <actor name="Tohoru Masamune" role=""/>
+          <actor name="Greg Wrangler" role=""/>
+          <actor name="David Ury" role=""/>
+          <actor name="Milos Milicevic" role=""/>
+          <actor name="Claudia Difolco" role=""/>
+          <actor name="Max Amini" role=""/>
+          <actor name="Brian Tarantina" role=""/>
+          <actor name="Richard Roundtree" role=""/>
+          <actor name="Shishir Kurup" role=""/>
+        </actors>
+        <file location="$rootMediaDir$/Heroes/Season 1/01 - Genesis.avi"/>
+      </episode>
       <episode episodeId="308907" firstAired="2006-10-02"
         imageUrl="http://thetvdb.com/banners/episodes/79501/308907.jpg"
         number="2" title="Don't Look Back" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
@@ -43,32 +68,7 @@
           <actor name="Matt Lander" role=""/>
         </actors>
         <file location="$rootMediaDir$/Heroes/Season 1/02 - Don't Look Back.mkv"/>
-      </episode>
-      <episode episodeId="308906" firstAired="2006-09-25"
-        imageUrl="http://thetvdb.com/banners/episodes/79501/308906.jpg"
-        number="1" title="Genesis" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
-        <summary>In this episode, we are introduced to Peter Petrelli, a young man who dreams of flying, and his brother Nathan, a ruthless politician who thinks that Peter is dreaming his life away. Meanwhile, ordinary people from all around the world are starting to suspect that they have abilities beyond those of normal humans. Artist Isaac Mendez believes that he is painting the future, high school cheerleader Claire Bennet is suddenly able to recover from any wound almost instantly, Japanese businessman Hiro Nakamura tries to convince a friend that he can bend space and time, and single mother Niki Sanders starts seeing strange things in mirrors.Upon learning of his father's death, genetics Professor Mohinder Suresh begins to look into his research for a clue to why he was killed. When he follows his father's trail to New York City, however, Mohinder learns that someone else is on the trail of the same research.  Someone who may kill to protect the secrets of the next step in human evolution.</summary>
-        <rating numberOfVotes="1" value="8.3"/>
-        <directors>
-          <director>David Semel</director>
-        </directors>
-        <writers>
-          <writer>Tim Kring</writer>
-        </writers>
-        <actors>
-          <actor name="John Prosky" role=""/>
-          <actor name="Tohoru Masamune" role=""/>
-          <actor name="Greg Wrangler" role=""/>
-          <actor name="David Ury" role=""/>
-          <actor name="Milos Milicevic" role=""/>
-          <actor name="Claudia Difolco" role=""/>
-          <actor name="Max Amini" role=""/>
-          <actor name="Brian Tarantina" role=""/>
-          <actor name="Richard Roundtree" role=""/>
-          <actor name="Shishir Kurup" role=""/>
-        </actors>
-        <file location="$rootMediaDir$/Heroes/Season 1/01 - Genesis.avi"/>
-      </episode>
+      </episode>      
     </season>
     <season number="2" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
       <episode episodeId="335417" firstAired="2007-10-01"

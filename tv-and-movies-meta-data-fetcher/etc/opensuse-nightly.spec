@@ -122,3 +122,4 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %ghost %doc %{_javadocdir}/%{name}
  
 %changelog
+%%changelog%%

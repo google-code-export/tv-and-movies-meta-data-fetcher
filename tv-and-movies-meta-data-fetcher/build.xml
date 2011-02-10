@@ -52,6 +52,7 @@
 	<!-- Fop setup -->
   	<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">        
     	<classpath refid="compile-time.libs.classpath"/>	                    
+  		<classpath refid="run-time.libs.classpath"/>
     </taskdef>
 	
 	<target name="antlr">				
@@ -343,5 +344,5 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 	</target>
 		
 
-	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,rpms"/>
+	<target name="dist" depends="clean,run-tests,javadoc,docs,jars"/>
 </project>
