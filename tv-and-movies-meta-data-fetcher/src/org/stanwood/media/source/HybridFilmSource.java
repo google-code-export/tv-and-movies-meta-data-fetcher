@@ -149,12 +149,7 @@ public class HybridFilmSource implements ISource {
 			else if (imdbFilm.getImageURL()!=null) {
 				film.setImageURL(imdbFilm.getImageURL());
 			}
-			else {
-				if (fetchPosters) {
-					FindFilmPosters posterFinder = new FindFilmPosters();
-					film.setImageURL(posterFinder.findViaMoviePoster(imdbFilm));
-				}
-			}
+
 			film.setPreferredGenre(tagChimpFilm.getPreferredGenre());
 			List<String> genres = imdbFilm.getGenres();
 			if (tagChimpFilm.getPreferredGenre()!=null && !genres.contains(tagChimpFilm.getPreferredGenre())) {

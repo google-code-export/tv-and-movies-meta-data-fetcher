@@ -1,9 +1,8 @@
 package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.TestHelper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -20,12 +20,6 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.XMLParser;
-import org.stanwood.media.util.XMLParserException;
-import org.w3c.dom.Document;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Used to test the {@link XMLStore2} class.
@@ -84,29 +78,14 @@ public class TestXMLStore2 {
 			xmlSource.cacheFilm(dir, filmFile2, film);
 
 			File actualFile = new File(dir,".mediaInfoFetcher-xmlStore.xml");
-			String actualContents = FileHelper.readFileContents(actualFile);
-			String expectedContents = FileHelper.readFileContents(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"));
-			expectedContents = expectedContents.replaceAll("\\$rootMedia\\$", dir.getAbsolutePath());
-			Assert.assertEquals("Check the results",formatXML(expectedContents),formatXML(actualContents));
-//			FileHelper.displayFile(actualFile, System.out);
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("rootMedia",dir.getAbsolutePath());
+			TestHelper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"),new FileInputStream(actualFile),params);
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
 
 
-	}
-
-	private String formatXML(String xml) throws XMLParserException, IOException {
-		Document document = XMLParser.strToDom(xml);
-		OutputFormat format = new OutputFormat(document);
-        format.setLineWidth(65);
-        format.setIndenting(true);
-        format.setIndent(2);
-        Writer out = new StringWriter();
-        XMLSerializer serializer = new XMLSerializer(out, format);
-        serializer.serialize(document);
-
-		return out.toString();
 	}
 
 	/**
@@ -165,7 +144,7 @@ public class TestXMLStore2 {
 	        Episode episode = xmlSource.getEpisode(dir,episodeFile,season, 1);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
-	        Assert.assertEquals(784857,episode.getEpisodeId());
+	        Assert.assertEquals("784857",episode.getEpisodeId());
 	        Assert.assertEquals("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.",episode.getSummary());
 	        Assert.assertEquals("http://www.tv.com/eureka/pilot/episode/784857/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Pilot",episode.getTitle());
@@ -180,17 +159,19 @@ public class TestXMLStore2 {
 	        Assert.assertEquals(1, episode.getWriters().size());
 	        Assert.assertEquals("Write a lot", episode.getWriters().get(0));
 	        Assert.assertEquals(1.0F,episode.getRating().getRating(),0);
+	        Assert.assertEquals("http://blah/image.jpg",episode.getImageURL().toExternalForm());
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
 	        episode = xmlSource.getEpisode(dir,episodeFile,season, 2);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
-	        Assert.assertEquals(800578,episode.getEpisodeId());
+	        Assert.assertEquals("800578",episode.getEpisodeId());
 	        Assert.assertEquals("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!",episode.getSummary());
 	        Assert.assertEquals("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Many Happy Returns",episode.getTitle());
 	        Assert.assertEquals("2006-10-11",df.format(episode.getDate()));
+	        Assert.assertNull(episode.getImageURL());
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
@@ -202,7 +183,7 @@ public class TestXMLStore2 {
 	        episode = xmlSource.getEpisode(dir,episodeFile,season, 2);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
-	        Assert.assertEquals(800578,episode.getEpisodeId());
+	        Assert.assertEquals("800578",episode.getEpisodeId());
 	        Assert.assertFalse(episode.isSpecial());
 	        Assert.assertEquals("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.",episode.getSummary());
 	        Assert.assertEquals("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html",episode.getUrl().toExternalForm());
@@ -213,7 +194,7 @@ public class TestXMLStore2 {
 	        episode = xmlSource.getSpecial(dir,episodeFile,season, 0);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
-	        Assert.assertEquals(800578,episode.getEpisodeId());
+	        Assert.assertEquals("800578",episode.getEpisodeId());
 	        Assert.assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",episode.getSummary());
 	        Assert.assertEquals("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html",episode.getUrl().toExternalForm());
 	        Assert.assertEquals("Countdown to the Premiere",episode.getTitle());

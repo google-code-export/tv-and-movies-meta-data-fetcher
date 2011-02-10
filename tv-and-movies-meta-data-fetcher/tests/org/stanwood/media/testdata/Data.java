@@ -176,6 +176,7 @@ public class Data {
 		episode1.setWriters(createStringList(new String[]{"Write a lot"}));
 		episode1.setActors(createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 		episode1.setEpisodeId("784857");
+		episode1.setImageURL(new URL("http://blah/image.jpg"));
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"1x02 - blah");
