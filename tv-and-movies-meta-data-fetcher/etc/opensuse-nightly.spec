@@ -30,12 +30,12 @@ BuildRequires:  fop >= 0.95
 BuildRequires:  ant-trax
 BuildRequires:  xalan-j2
 Summary:        A application for correcting the name of TV shows and films
-Version:        @@version@@
-Release:        @@release@@
+Version:        %%version%%
+Release:        %%release%%
 License:        GPL
 Group:          Applications/Internet
 URL:            http://code.google.com/p/tv-and-movies-meta-data-fetcher/
-Source:         http://tv-and-movies-meta-data-fetcher.googlecode.com/files/MediaInfoFetcher-%{version}-src.zip
+Source:         http://tv-and-movies-meta-data-fetcher.googlecode.com/files/MediaInfoFetcher-%{version}-%{release}-src.zip
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
  
