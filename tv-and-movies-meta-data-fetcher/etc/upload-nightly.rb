@@ -28,7 +28,7 @@ end
 
 def readVersion(projectDir) 
    File.open(projectDir+"/VERSION").each_line { |line| 
-      if /^.* (\d+\.\d+)$/ =~ line
+      if /^.* (.*)$/ =~ line
         return $1
       end
    }
