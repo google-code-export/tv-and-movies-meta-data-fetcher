@@ -39,7 +39,7 @@ end
 def readChangeLog(projectDir)
     changeLog = ""
     File.open(projectDir+"/Changelog").each_line { |line|
-        changeLog = changeLog+line+"\n"
+        changeLog = changeLog+line
     }
     return changeLog
 end
@@ -64,12 +64,14 @@ Dir.mktmpdir("osc") { |dir|
     checkoutProject()
     Dir.chdir("home:sunny007/MediaInfoFetcher-nightlybuild")
     
-    Dir.glob("*.zip")
+    Dir.glob("*.zip").each { |file|
+        system("osc delete #{file}")
+    }
 
     copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params); 
     copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip"); 
 
-    system("osc commit -m nightly upload #{version}-#{date}")
+    system("osc commit -m \"nightly upload #{version}-#{date}\"")
 }
 
 exit(0)
