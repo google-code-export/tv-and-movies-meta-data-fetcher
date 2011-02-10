@@ -28,12 +28,20 @@ def copyAndUpdateFile(src,dest,params)
 end
 
 def readVersion(projectDir) 
-   File.open(projectDir+"/VERSION").each_line { |line| 
-      if /^.* (.*)$/ =~ line
-        return $1
-      end
-   }
-   return nil
+    File.open(projectDir+"/VERSION").each_line { |line| 
+        if /^.* (.*)$/ =~ line
+            return $1
+        end
+    }
+    return nil
+end
+
+def readChangeLog(projectDir)
+    changeLog = ""
+    File.open(projectDir+"/Changelog").each_line { |line|
+        changeLog = changeLog+line+"\n"
+    }
+    return changeLog
 end
 
 ################## Main ##################
@@ -42,7 +50,7 @@ projectDir=Dir.getwd()+"/.."
 date=Time.new.strftime("%Y%m%d%H%M%S")
 version=readVersion(projectDir)
 
-params=Hash["version" => version, "release" => date]
+params=Hash["version" => version, "release" => date,"changelog" => readChangeLog(projectDir)]
 
 if (version==nil)
     $stderr.puts("Unable to read project version")
@@ -55,11 +63,13 @@ Dir.mktmpdir("osc") { |dir|
     Dir.chdir(dir)
     checkoutProject()
     Dir.chdir("home:sunny007/MediaInfoFetcher-nightlybuild")
+    
+    Dir.glob("*.zip")
 
     copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params); 
     copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip"); 
 
-    system("osc commit")
+    system("osc commit -m nightly upload #{version}-#{date}")
 }
 
 exit(0)
