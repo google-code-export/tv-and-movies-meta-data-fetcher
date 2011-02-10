@@ -758,7 +758,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		String title = getStringFromXML(episodeNode, "@title");
 		String airDate = getStringFromXML(episodeNode, "@firstAired");
 		String episodeId = getStringFromXML(episodeNode, "@episodeId");
-		URL imageUrl = new URL(getStringFromXML(episodeNode, "@imageUrl"));
+		String urlStr = getStringFromXML(episodeNode, "@imageUrl");
+		URL imageUrl = null;
+		if (urlStr.length()>0) {
+			imageUrl = new URL(urlStr);
+		}
 
 
 		episode.setUrl(url);
@@ -799,6 +803,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			Node storeNode = getStoreNode(doc);
 			Element showNode = (Element) selectSingleNode(storeNode, "show[@id='"+showId+"']");
+			if (showNode==null) {
+				throw new NotInStoreException();
+			}
 			String imageURL = showNode.getAttribute("imageUrl");
 			String showURL = showNode.getAttribute("url");
 			String name = showNode.getAttribute("name");

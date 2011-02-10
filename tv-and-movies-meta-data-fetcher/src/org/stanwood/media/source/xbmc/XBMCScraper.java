@@ -2,8 +2,10 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +60,11 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems creating the search URL
 	 */
 	public Document getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
+		try {
+			searchTerm = URLEncoder.encode(searchTerm,"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new XBMCException("Unable to encode search term to URL format",e);
+		}
 		return executeFunctionByName("CreateSearchUrl",searchTerm,year);
 	}
 

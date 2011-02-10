@@ -131,7 +131,7 @@ public class SapphireStore implements IStore {
 				if (episode.getActors() != null) {
 					ps.println("     <cast>");
 					for (Actor cast : episode.getActors()) {
-						ps.println("        <name>" + cast + "</name>");
+						ps.println("        <name>" + cast.getName() + "</name>");
 					}
 					ps.println("     </cast>");
 				}

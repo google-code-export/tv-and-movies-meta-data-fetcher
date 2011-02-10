@@ -26,12 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.TestHelper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -40,14 +37,8 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.store.xmlstore.XMLErrorHandler;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.XMLParser;
-import org.stanwood.media.util.XMLParserException;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * Used to test the {@link SapphireStore} class.
@@ -142,7 +133,7 @@ public class TestSapphireStore  {
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/film-0114814.xml")), new InputSource(new FileInputStream(actualFile)));
+			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/film-0114814.xml"), new FileInputStream(actualFile));
 
 		} finally {
 			FileHelper.deleteDir(dir);
@@ -234,47 +225,26 @@ public class TestSapphireStore  {
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-101.xml")), new InputSource(new FileInputStream(actualFile)));
+			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-101.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"1x02 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-102.xml")), new InputSource(new FileInputStream(actualFile)));
+			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-102.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"2x13 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-213.xml")), new InputSource(new FileInputStream(actualFile)));
+			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-213.xml"), new FileInputStream(actualFile));
 
 			actualFile = new File(eurekaDir,"000 - blah.xml");
 			Assert.assertTrue(actualFile.exists());
 //			FileHelper.displayFile(actualFile, System.out);
-			assertXMLEqual(new InputSource(Data.class.getResourceAsStream("sapphire/eureka-000.xml")), new InputSource(new FileInputStream(actualFile)));
+			TestHelper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-000.xml"), new FileInputStream(actualFile));
 
 		} finally {
 			FileHelper.deleteDir(dir);
 		}
-	}
-
-	private String getXML(InputSource is) throws XMLParserException, ParserConfigurationException, SAXException, IOException {
-		Document doc = null;
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-
-		// Create the builder and parse the file
-		DocumentBuilder builder = XMLParser.createDocBuilder(factory);
-		XMLErrorHandler errorHandler = new XMLErrorHandler();
-		builder.setErrorHandler(errorHandler);
-		doc = builder.parse(is);
-		if (errorHandler.hasErrors()) {
-			throw new XMLParserException("Unable to parse xml, errors found in file");
-		}
-
-		return XMLParser.domToStr(doc);
-	}
-
-	private void assertXMLEqual(InputSource inputSource1,InputSource inputSource2) throws XMLParserException, ParserConfigurationException, SAXException, IOException {
-		Assert.assertEquals(getXML(inputSource1), getXML(inputSource2));
 	}
 
 	private Show createShow(File eurekaDir) throws MalformedURLException {

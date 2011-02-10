@@ -19,8 +19,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     <extra/>
     <season      
       url="http://www.tv.com/show/58448/episode_listings.html?season=1" number="1">
-      <episode episodeId="784857" firstAired="2006-10-10" number="1"
-         showEpisodeNumber="1" title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
+      <episode episodeId="784857" firstAired="2006-10-10" number="1" imageUrl="http://blah/image.jpg"
+         title="Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.</summary>
         <rating numberOfVotes="1" value="1.0"/>
         <directors>
@@ -35,8 +35,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         </actors>
         <file location="$rootMedia$/Eureka/1x01 - blah"/>
       </episode>
-      <episode episodeId="800578" firstAired="2006-10-11" number="2"
-        showEpisodeNumber="2" title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
+      <episode episodeId="800578" firstAired="2006-10-11" number="2" imageUrl=""
+        title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
         <summary>Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!</summary>
         <rating numberOfVotes="2355" value="9.5"/>
         <directors/>
@@ -47,8 +47,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     </season>
     <season      
       url="http://www.tv.com/show/58448/episode_listings.html?season=2" number="2">
-      <episode episodeId="800578" firstAired="2007-07-10" number="2"
-        showEpisodeNumber="13" title="Phoenix Rising" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">        
+      <episode episodeId="800578" firstAired="2007-07-10" number="2" imageUrl=""
+        title="Phoenix Rising" url="http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html">        
         <summary>Reaccustoming to the timeline restored in "Once in a Lifetime", Sheriff Carter investigates a series of sudden deaths.</summary>        
         <rating numberOfVotes="12354" value="0.4"/>
         <directors/>
@@ -56,9 +56,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         <actors/>
         <file location="$rootMedia$/Eureka/2x13 - blah"/>
       </episode>
-      <special episodeId="800578" firstAired="2007-07-09" number="0"
-        showEpisodeNumber="-1"
-        
+      <special episodeId="800578" firstAired="2007-07-09" number="0" imageUrl=""                
         title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">        
         <summary>Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.</summary>
         <rating numberOfVotes="3000" value="0.4"/>
@@ -93,8 +91,8 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     </extra>
     <season      
       url="http://www.tv.com/show/17552/episode_listings.html?season=1" number="1">
-      <episode episodeId="1181337" firstAired="2006-11-11" number="1"
-        showEpisodeNumber="1" title="Heroe, Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
+      <episode episodeId="1181337" firstAired="2006-11-11" number="1" imageUrl=""
+        title="Heroe, Pilot" url="http://www.tv.com/eureka/pilot/episode/784857/summary.html">        
         <summary>After a look into the future, Nathan's shooter is revealed. Matt chases him and winds up in a desert. Hiro receives an important message from his father. Sylar visits Claire. Maya gives Mohinder an idea for his research. Nathan recovers and gets a visit from Linderman.</summary>
         <rating numberOfVotes="2345" value="2.0"/>
         <directors>

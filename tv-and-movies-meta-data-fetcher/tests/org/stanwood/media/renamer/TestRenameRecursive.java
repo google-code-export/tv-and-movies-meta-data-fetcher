@@ -1,6 +1,7 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.stanwood.media.TestHelper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
@@ -39,7 +41,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		Main.exitHandler = new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
-				TestRenamer.exitCode = exitCode;
+				TestRenameRecursive.exitCode = exitCode;
 			}
 		};
 
@@ -67,7 +69,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
-			File eurekaDir = new File(dir, "Eureka");
+			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
 				throw new IOException("Unable to create directoru : " + eurekaDir.getAbsolutePath());
 			}
@@ -96,11 +98,14 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals(4,files.size());
 			// .show.xml
 			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(3));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("rootMediaDir", dir.getAbsolutePath());
+			TestHelper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			Controller.destoryController();
 			setupTestController(null,null,XMLStore2.class);
@@ -112,9 +117,11 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
 			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(2));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(3));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
+
+			TestHelper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
@@ -128,11 +135,12 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveSourceRename() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
-			File eurekaDir = new File(dir, "Eureka");
+			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
 				throw new IOException("Unable to create directoru : " + eurekaDir.getAbsolutePath());
 			}
@@ -152,15 +160,15 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Do the renaming
 			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
-			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","DEBUG"};
+			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			Main.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(3,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(2));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
@@ -170,9 +178,9 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(3,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"01 - Pilot.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 1"+File.separator+"02 - Many Happy Returns.mkv").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Eureka"+File.separator+"Season 2"+File.separator+"02 - Try, Try Again.mpg").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(2));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
@@ -182,11 +190,12 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 	/**
 	 * Create test controller
-	 * @param source The stource to use with the controller , or null if none
+	 * @param source The source to use with the controller , or null if none
 	 * @param store The store to use with the controller, or null if none
+	 * @param sourceParams Parameters that should be added to the source
 	 * @throws Exception Thrown if their are any problems
 	 */
-	public static void setupTestController(Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
+	private static void setupTestController(Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
 		if (source!=null) {
