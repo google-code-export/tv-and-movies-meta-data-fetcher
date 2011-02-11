@@ -125,7 +125,7 @@ public class Controller {
 			String sourceClass = sourceConfig.getID();
 			try {
 				Class<? extends ISource> c = Class.forName(sourceClass).asSubclass(ISource.class);
-				if (c.equals(XBMCSource.class)) {
+				if (XBMCSource.class.isAssignableFrom(c)) {
 					List<ISource> xbmcSources = xbmcMgr.getSources();
 					if (sourceConfig.getParams() != null) {
 						for (String key : sourceConfig.getParams().keySet()) {

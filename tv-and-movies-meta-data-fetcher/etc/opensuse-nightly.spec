@@ -35,25 +35,12 @@ Release:        %%release%%
 License:        GPL
 Group:          Applications/Internet
 URL:            http://code.google.com/p/tv-and-movies-meta-data-fetcher/
-Source:         http://tv-and-movies-meta-data-fetcher.googlecode.com/files/MediaInfoFetcher-%{version}-%{release}-src.zip
+Source:         http://tv-and-movies-meta-data-fetcher.googlecode.com/files/%%sourcefile%%
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
  
 %description
-TV/Movies Metadata Fetcher
---------------------------
- 
-This is a application that can be used to fetch tv show and movie information from the
-Internet. This information is then used to rename media files with the correct name.
- 
-The application as the concept of sources and stores. Sources are places where information
-is retrieved. Currently only TV.com is support, though others would not be hard too add.
-Stored are used to store the retrieved information. Currently their is a XML Store and
-a memory store.
- 
-The application has been created mostly to rename directories of TV Shows with the correct
-titles (Which can be specified via a pattern). This means each TV Show should have it's
-own directory.
+%%description%%
  
 Authors
 -------
