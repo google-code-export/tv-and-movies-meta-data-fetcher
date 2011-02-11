@@ -139,13 +139,12 @@ public class Renamer {
 		Collections.sort(sortedFiles,new Comparator<File>() {
 			@Override
 			public int compare(File arg0, File arg1) {
-				return arg0.getAbsolutePath().compareTo(arg0.getAbsolutePath());
+				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
 			}
 		});
 
 		if (mode == Mode.TV_SHOW) {
 			for (File file : sortedFiles) {
-				log.debug("RENAME:" + file.getAbsolutePath()+" : " + file.isDirectory());
 				renameTVShow(file);
 			}
 		} else if (mode == Mode.FILM) {

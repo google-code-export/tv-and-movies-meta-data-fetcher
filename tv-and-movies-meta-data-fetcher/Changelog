@@ -1,3 +1,11 @@
+* Fri Feb 11 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Added support for XMBC Sources
+- Removed tv.com source (Now using XBMC source for tv info)
+- Removed imdb source (Now using XBMC source)
+- Removed FilmPosters source
+- Removed old XMLStore store
+- Added new XMLStore2 store which store all media info in one file
+- API has changed quite a bit
 * Wed Feb 25 2010 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2.3
 - Added new org.stanwood.media.store.xmlstore.XMLStore2 store
 - Fixed all sources to work with website changes

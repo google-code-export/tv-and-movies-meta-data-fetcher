@@ -71,7 +71,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
-				throw new IOException("Unable to create directoru : " + eurekaDir.getAbsolutePath());
+				throw new IOException("Unable to create directory : " + eurekaDir.getAbsolutePath());
 			}
 
 			File f = new File(eurekaDir,"101 - Blah Blah Blah.avi");
@@ -124,6 +124,133 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			Assert.assertEquals("Check exit code",0,exitCode);
+		} finally {
+			FileHelper.deleteDir(dir);
+		}
+	}
+
+	/**
+	 * This test makes sure that the store is used and not the source
+	 * @throws Exception If their are problems
+	 */
+	@Test
+	public void testRecursiveStoreRename() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		setupTestController(FakeSource.class,new HashMap<String,String>(),XMLStore2.class);
+
+		// Create test files
+		File dir = FileHelper.createTmpDir("show");
+		try {
+			File eurekaDir = new File(dir, "Heroes");
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir.getAbsolutePath());
+			}
+
+			File f = new File(eurekaDir,"101 - Blah Blah Blah.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			f = new File(eurekaDir,"S01E02 - Hello this is a test.mkv");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			f = new File(eurekaDir,"s02e02 - Hello this is a test.mpg");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			// Do the renaming
+			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
+			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			Main.main(args);
+
+			// Check that things were renamed correctly
+			List<String>files = FileHelper.listFilesAsStrings(dir);
+			System.out.println(files);
+			Assert.assertEquals(4,files.size());
+			// .show.xml
+			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("rootMediaDir", dir.getAbsolutePath());
+			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
+
+			Controller.destoryController();
+			setupTestController(null,null,XMLStore2.class);
+
+			// Do the renaming
+			Main.main(args);
+
+			// Check things are still correct
+			files = FileHelper.listFilesAsStrings(dir);
+			Assert.assertEquals(4,files.size());
+			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
+
+			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+		} finally {
+			FileHelper.deleteDir(dir);
+		}
+
+	}
+
+	@Test
+	public void testRecursiveFilmRename() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
+		// Create test files
+		File dir = FileHelper.createTmpDir("movies");
+		try {
+			File filmsDir = new File(dir, "Films");
+			if (!filmsDir.mkdir() && !filmsDir.exists()) {
+				throw new IOException("Unable to create dir: " + filmsDir);
+			}
+			File f = new File(filmsDir,"Iron.man.cd1.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			File subDir = new File(filmsDir, "blah");
+			if (!subDir.mkdir() && !subDir.exists()) {
+				throw new IOException("Unable to create dir: " + filmsDir);
+			}
+			f = new File(filmsDir,"Iron man.cd2.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			// Do the renaming
+			String args[] = new String[] {"-R","-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
+			Main.main(args);
+
+			// Check that things were renamed correctly
+			List<String>files = FileHelper.listFilesAsStrings(dir);
+			Assert.assertEquals(2,files.size());
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(0));
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+
+			// Do the renaming
+			Main.main(args);
+
+			// Check things are still correct
+			files = FileHelper.listFilesAsStrings(dir);
+			Assert.assertEquals(2,files.size());
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(2));
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+
 		} finally {
 			FileHelper.deleteDir(dir);
 		}

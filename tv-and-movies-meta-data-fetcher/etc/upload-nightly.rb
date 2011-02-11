@@ -11,7 +11,6 @@ end
 
 def copyFileToProject(src,dest)
     FileUtils.cp(src,dest)
-    system("osc add #{dest}")
 end
 
 def copyAndUpdateFile(src,dest,params)
@@ -36,25 +35,34 @@ def readVersion(projectDir)
     return nil
 end
 
-def readChangeLog(projectDir)
+def readFile(projectDir,filename)
     changeLog = ""
-    File.open(projectDir+"/Changelog").each_line { |line|
+    File.open(projectDir+"/"+filename).each_line { |line|
         changeLog = changeLog+line
     }
     return changeLog
 end
 
+def doBuild(projectDir)
+     Dir.chdir(projectDir)
+     
+     system("ant dist")
+end
+
 ################## Main ##################
 
-## TODO: 
-##   * Perform build of a the project
-##   * Use location of this script to work out the projectDir
 
-projectDir=Dir.getwd()+"/.."
+projectDir=File.expand_path(File.dirname(__FILE__))+"/.."
 date=Time.new.strftime("%Y%m%d%H%M%S")
 version=readVersion(projectDir)
 
-params=Hash["version" => version, "release" => date,"changelog" => readChangeLog(projectDir)]
+params=Hash[
+  "version" => version, 
+  "release" => date,
+  "changelog" => readFile(projectDir,"Changelog"),
+  "sourcefile" => "MediaInfoFetcher-#{version}-#{date}-src.zip",
+  "description" => readFile(projectDir,"Description")
+]
 
 if (version==nil)
     $stderr.puts("Unable to read project version")
@@ -63,19 +71,23 @@ else
     puts "Uploading version: #{version}"
 end
 
+doBuild(projectDir)
+
 Dir.mktmpdir("osc") { |dir|
     Dir.chdir(dir)
     checkoutProject()
     Dir.chdir("home:sunny007/MediaInfoFetcher-nightlybuild")
     
     Dir.glob("*.zip").each { |file|
-        system("osc delete #{file}")
+        File.delete(file)
     }
 
-    copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params); 
-    copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip"); 
+    copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params) 
+    copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip") 
 
+    system("osc addremove")
     system("osc commit -m \"nightly upload #{version}-#{date}\"")
+    system("osc rebuild home:sunny007/MediaInfoFetcher-nightlybuild")
 }
 
 exit(0)
