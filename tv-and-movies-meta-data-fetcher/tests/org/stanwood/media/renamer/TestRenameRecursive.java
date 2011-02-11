@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
@@ -202,6 +203,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 	}
 
+	@Ignore
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
