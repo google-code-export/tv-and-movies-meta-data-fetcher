@@ -5,8 +5,16 @@ require 'fileutils'
 
 ################# Functions ##############
 
+def executeCmd(cmd)
+    system(cmd)
+    if ($?.exitstatus!=0)
+        $stderr.puts("Unable to execute command #{cmd}")
+        exit(2)
+    end
+end
+
 def checkoutProject()
-    system("osc checkout home:sunny007/MediaInfoFetcher-nightlybuild")
+    executeCmd("osc checkout home:sunny007/MediaInfoFetcher-nightlybuild")
 end
 
 def copyFileToProject(src,dest)
@@ -18,12 +26,10 @@ def copyAndUpdateFile(src,dest,params)
         File.open(src).each_line { |line|
             params.each { |key, value|
                 line=line.gsub("%%#{key}%%",value)
-            }
-            puts(line)
+            }            
             out.puts(line)
         }
-    }
-    system("osc add #{dest}")
+    }    
 end
 
 def readVersion(projectDir) 
@@ -44,9 +50,9 @@ def readFile(projectDir,filename)
 end
 
 def doBuild(projectDir)
-     Dir.chdir(projectDir)
+    Dir.chdir(projectDir)
      
-     system("ant dist")
+    executeCmd("ant dist")
 end
 
 ################## Main ##################
@@ -85,9 +91,9 @@ Dir.mktmpdir("osc") { |dir|
     copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params) 
     copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip") 
 
-    system("osc addremove")
-    system("osc commit -m \"nightly upload #{version}-#{date}\"")
-    system("osc rebuild home:sunny007/MediaInfoFetcher-nightlybuild")
+    executeCmd("osc addremove")
+    executeCmd("osc commit -m \"nightly upload #{version}-#{date}\"")
+    executeCmd("osc rebuild home:sunny007/MediaInfoFetcher-nightlybuild")
 }
 
 exit(0)
