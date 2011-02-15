@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE store SYSTEM "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd">
+<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.0//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore-2.0.dtd">
 <store>
   <show id="79501" imageUrl="" name="Heroes"
     sourceId="xbmc-metadata.tvdb.com" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
