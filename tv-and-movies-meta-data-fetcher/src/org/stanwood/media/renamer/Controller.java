@@ -18,14 +18,10 @@ package org.stanwood.media.renamer;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,14 +31,10 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.setup.SourceConfig;
-import org.stanwood.media.setup.StoreConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.xbmc.XBMCAddonManager;
-import org.stanwood.media.source.xbmc.XBMCException;
-import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.memory.MemoryStore;
@@ -60,20 +52,9 @@ public class Controller {
 	private static Controller instance = null;
 
 	private static List<ISource> sources = null;
-	private static ArrayList<IStore> stores = null;
-	public static XBMCAddonManager xbmcMgr;
-
-	static {
-		try {
-			setManager(new XBMCAddonManager());
-		} catch (XBMCException e) {
-			log.error(e.getMessage(),e);
-		}
-	}
-
-	public static void setManager(XBMCAddonManager mgr) {
-		xbmcMgr = mgr;
-	}
+	private static List<IStore> stores = null;
+//	private static XBMCAddonManager xbmcMgr;
+	private static ConfigReader configReader = null;
 
 	private Controller() {
 
@@ -82,6 +63,7 @@ public class Controller {
 	/**
 	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
 	 * Once the store has been initialised, it can't be Initialised again.
+	 * @throws SourceException Thrown if their is a problem
 	 */
 	public static void initWithDefaults() throws SourceException {
 		synchronized (Controller.class) {
@@ -96,12 +78,12 @@ public class Controller {
 
 		sources = new ArrayList<ISource>();
 		for (Mode mode : Mode.values()) {
-			sources.add(getXBMCSource(getDefaultSourceID(mode)));
+			sources.add(configReader.getDefaultSource(mode));
 		}
 	}
 
 	public static String getDefaultSourceID(Mode mode) throws SourceException {
-		return xbmcMgr.getDefaultSourceID(mode);
+		return configReader.getDefaultSourceID(mode);
 	}
 
 	/**
@@ -114,109 +96,17 @@ public class Controller {
 		if (stores != null || sources != null) {
 			throw new IllegalStateException("Controller allready initialized");
 		}
+		configReader = config;
 
-		loadStoresFromConfigFile(config);
-		loadSourcesFromConfigFile(config);
-	}
-
-	private static void loadSourcesFromConfigFile(ConfigReader config) {
-		sources = new ArrayList<ISource>();
-		for (SourceConfig sourceConfig : config.getSources()) {
-			String sourceClass = sourceConfig.getID();
-			try {
-				Class<? extends ISource> c = Class.forName(sourceClass).asSubclass(ISource.class);
-				if (XBMCSource.class.isAssignableFrom(c)) {
-					List<ISource> xbmcSources = xbmcMgr.getSources();
-					if (sourceConfig.getParams() != null) {
-						for (String key : sourceConfig.getParams().keySet()) {
-							String value = sourceConfig.getParams().get(key);
-							List<String>addons = null;
-							if (key.equals("scrapers")) {
-								addons = new ArrayList<String>();
-								StringTokenizer tok = new StringTokenizer(value,",");
-								while (tok.hasMoreTokens()) {
-									addons.add("xbmc-"+tok.nextToken());
-								}
-							}
-
-							Iterator<ISource> it = xbmcSources.iterator();
-							while (it.hasNext()) {
-								ISource source = it.next();
-								if (addons!=null && !addons.contains(source.getSourceId())) {
-									it.remove();
-								}
-								else {
-									setParamOnSource( source, key, value);
-								}
-							}
-						}
-					}
-					sources.addAll(xbmcSources);
-				}
-				else {
-					ISource source = c.newInstance();
-					if (sourceConfig.getParams() != null) {
-						for (String key : sourceConfig.getParams().keySet()) {
-							String value = sourceConfig.getParams().get(key);
-							setParamOnSource( source, key, value);
-						}
-					}
-					sources.add(source);
-				}
-			} catch (ClassNotFoundException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
-			} catch (InstantiationException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
-			} catch (IllegalAccessException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
-			} catch (SourceException e) {
-				log.fatal("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
-			}
+		try {
+			stores = config.loadStoresFromConfigFile();
+			sources = config.loadSourcesFromConfigFile();
+		} catch (ConfigException e) {
+			log.fatal(e.getMessage(),e);
 		}
 	}
 
-	private static void loadStoresFromConfigFile(ConfigReader config) {
-		stores = new ArrayList<IStore>();
-		for (StoreConfig storeConfig : config.getStores()) {
-			String storeClass = storeConfig.getID();
-			try {
-				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
-				IStore store = c.newInstance();
-				if (storeConfig.getParams() != null) {
-					for (String key : storeConfig.getParams().keySet()) {
-						String value = storeConfig.getParams().get(key);
-						setParamOnStore(c, store, key, value);
-					}
-				}
-				stores.add(store);
-			} catch (ClassNotFoundException e) {
-				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			} catch (InstantiationException e) {
-				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			} catch (IllegalAccessException e) {
-				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			} catch (IllegalArgumentException e) {
-				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			} catch (InvocationTargetException e) {
-				log.fatal("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			}
-		}
-	}
 
-	private static void setParamOnSource(ISource source, String key, String value)
-			throws  SourceException {
-		source.setParameter(key, value);
-	}
-
-	private static void setParamOnStore(Class<? extends IStore> c, IStore store, String key, String value)
-			throws IllegalAccessException, InvocationTargetException {
-		for (Method method : c.getMethods()) {
-			if (method.getName().toLowerCase().equals("set" + key.toLowerCase())) {
-				method.invoke(store, value);
-				break;
-			}
-		}
-	}
 
 	/**
 	 * Get a instance of the controller.
@@ -548,14 +438,14 @@ public class Controller {
 		}
 	}
 
-	public static ISource getXBMCSource(String sourceId) {
-		for (ISource source : xbmcMgr.getSources()) {
-			if (source.getSourceId().equals(sourceId)) {
-				return source;
-			}
-		}
-		return null;
-	}
+//	private static ISource getXBMCSource(String sourceId) {
+//		for (ISource source : xbmcMgr.getSources()) {
+//			if (source.getSourceId().equals(sourceId)) {
+//				return source;
+//			}
+//		}
+//		return null;
+//	}
 
 	public static ISource getSource(String sourceId) {
 		if (sourceId == null) {

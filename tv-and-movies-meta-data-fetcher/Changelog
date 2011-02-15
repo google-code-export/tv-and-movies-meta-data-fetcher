@@ -1,3 +1,5 @@
+* Mon Feb 14 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Added a version to XML Store DTD
 * Fri Feb 12 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - No longer depends on AtomicParsely for MP4 support, now using java library jaudiotag
 * Fri Feb 11 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
