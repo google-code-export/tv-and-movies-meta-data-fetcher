@@ -6,7 +6,7 @@ import java.util.Locale;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -30,7 +30,7 @@ public class XBMCAddonTestBase {
 	@Before
 	public void setup() throws XBMCException {
 		addonManager = createAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);
-		Controller.setManager(addonManager);
+		ConfigReader.setManager(addonManager);
 	}
 
 	/**

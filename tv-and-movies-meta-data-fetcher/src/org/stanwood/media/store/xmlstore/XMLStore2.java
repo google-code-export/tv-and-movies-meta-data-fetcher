@@ -62,9 +62,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private static final String VERSION = "2.0";
-	//TODO add correct public DTD location
-	private String DTD_LOCATION = null;
+	private String DTD_LOCATION = "-//STANWOOD//DTD XMLStore 2.0//EN";
 	private Pattern FILE_SEARCH_PATTERN1 = Pattern.compile("(.*)[Ss]\\d+[Ee]\\d+.*");
 
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
@@ -1010,7 +1008,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				SimpleErrorHandler errorHandler = new SimpleErrorHandler(cacheFile);
 				builder.setErrorHandler(errorHandler);
 				doc = builder.parse(cacheFile);
-//				doc.setXmlVersion(VERSION);
 				if (errorHandler.hasErrors()) {
 					throw new StoreException("Unable to parse xml, errors found in file: " + cacheFile);
 				}
@@ -1039,9 +1036,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			DocumentBuilder builder = createDocBuilder(factory);
 
-			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore.dtd");
+			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore-2.0.dtd");
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
-//			doc.setXmlVersion(VERSION);
 			NodeList nodes = doc.getDocumentElement().getParentNode().getChildNodes();
 			for (int i=0;i<nodes.getLength();i++) {
 				System.out.println(nodes.item(i).getNodeName() + " : " + nodes.item(i).getNodeValue() + " : " + nodes.item(i).getClass());

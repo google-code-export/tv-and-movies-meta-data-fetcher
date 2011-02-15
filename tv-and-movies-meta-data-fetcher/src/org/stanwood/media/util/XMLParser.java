@@ -232,13 +232,15 @@ public class XMLParser {
 		    @Override
 		    public InputSource resolveEntity(String publicId, String systemId)
 		            throws SAXException, IOException {
-		        if (systemId.endsWith("MediaInfoFetcher-XmlStore.dtd")) {
-		        	File currentDir = new File(System.getProperty("user.dir"));
-		        	File dtd = new File(currentDir,"etc"+File.separator+"MediaInfoFetcher-XmlStore.dtd");
-		        	if (dtd.exists()) {
-		        		return new InputSource(new FileInputStream(dtd));
-		        	}
-		        }
+		    	if (publicId!=null) {
+			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) {
+			        	File currentDir = new File(System.getProperty("user.dir"));
+			        	File dtd = new File(currentDir,"etc"+File.separator+"MediaInfoFetcher-XmlStore-2.0.dtd");
+			        	if (dtd.exists()) {
+			        		return new InputSource(new FileInputStream(dtd));
+			        	}
+			        }
+		    	}
 		        return null;
 		    }
 		});

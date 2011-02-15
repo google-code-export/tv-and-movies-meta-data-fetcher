@@ -48,8 +48,8 @@ public class HybridFilmSource implements ISource {
 	/** Used to disable fetching of posters at test time */
 	/* package private for test */ boolean fetchPosters = true;
 
-	public HybridFilmSource() {
-		imdbSource =Controller.getInstance().getSource("xmbc-metadata.themoviedb.org");
+	public HybridFilmSource() throws SourceException {
+		imdbSource =Controller.getInstance().getSource(Controller.getInstance().getDefaultSourceID(Mode.TV_SHOW));
 	}
 
 
