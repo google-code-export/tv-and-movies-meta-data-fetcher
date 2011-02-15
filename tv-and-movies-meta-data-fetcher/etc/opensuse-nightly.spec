@@ -16,7 +16,8 @@ Requires:       log4j >= 1.2.15
 Requires:       jakarta-commons-logging >= 1.0.4
 Requires:       mysql-connector-java >= 5.1.6
 Requires:       jericho-html >= 2.6
-Requires:		antlr-java >= 2.7.7
+Requires:		antlr-java >= 3.1.3
+Requires:		jaudiotagger >= 1.0.9
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  jericho-html >= 2.6
@@ -29,7 +30,8 @@ BuildRequires:  ant
 BuildRequires:  fop >= 0.95
 BuildRequires:  ant-trax
 BuildRequires:  xalan-j2
-BuildRequires:	antlr-java >= 2.7.7
+BuildRequires:	antlr-java >= 3.1.3
+BuildRequires:	jaudiotagger >= 1.0.9
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        %%release%%

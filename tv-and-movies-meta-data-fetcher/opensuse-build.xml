@@ -33,6 +33,7 @@
         <pathelement location="${lib.dir}/commons-cli.jar"/>
         <pathelement location="${lib.dir}/log4j.jar"/>
     	<pathelement location="${lib.dir}/antlr.jar"/>
+    	<pathelement location="${lib.dir}/jaudiotagger.jar"/>
     </path>
 
     <path id="compile-time.libs.classpath">
@@ -56,20 +57,19 @@
     </target>
 	
 	<target name="antlr">				
-		<java classname="org.antlr.Tool" fork="true">	
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
 			<classpath>				
-				<path refid="runtime.libs"/>
-				<path refid="compile.libs"/>	
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
 			</classpath>
 			<arg value="-fo"/>
 			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
 			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionLexer.g"/>			
 		</java>
-		
-		<java classname="org.antlr.Tool" fork="true">	
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
 			<classpath>				
-				<path refid="runtime.libs"/>
-				<path refid="compile.libs"/>	
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
 			</classpath>
 			<arg value="-fo"/>
 			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
