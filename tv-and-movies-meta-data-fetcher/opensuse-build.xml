@@ -77,7 +77,7 @@
 		</java>
 	</target>
 
-    <target name="compile" depends="init" description="compile the source ">
+    <target name="compile" depends="init,antlr" description="compile the source ">
         <property name="cp" refid="run-time.libs.classpath" />
         <echo message="Classpath is ${cp}" />
 
