@@ -2,7 +2,6 @@ TODO
 ----
 
 Add DTD to config files
-Make sure that the XMLStore2 is versioned
 Make the XBMCManager check for updated plugins and download them
 Add --test_run command line option
 Add back the RegExpToReplace command line option

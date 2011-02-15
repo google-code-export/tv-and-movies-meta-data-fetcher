@@ -47,6 +47,7 @@ public class XBMCAddon extends XMLParser {
 
 	/**
 	 * Used to create a instance of the addon class
+	 * @param addonMgr The XBMC addon manager
 	 * @param addonDir The directory contain the XBMC addons
 	 * @param locale The locale to use with the scrapers
 	 * @throws XBMCException Thrown if anable to parse the settings
@@ -158,6 +159,11 @@ public class XBMCAddon extends XMLParser {
 		}
 	}
 
+	/**
+	 * Used to get a list of required addons by this addon
+	 * @return gets a list of required addons by this addon
+	 * @throws XBMCException Thrown if their is a problem
+	 */
 	public List<XBMCAddon>getRquiredAddons() throws XBMCException {
 		if (requiredAddons==null) {
 			requiredAddons = new ArrayList<XBMCAddon>();

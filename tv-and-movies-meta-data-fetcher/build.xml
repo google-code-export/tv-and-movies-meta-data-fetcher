@@ -218,7 +218,10 @@
 		</jar>
 		
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-src.zip" compress="true">
-			<zipfileset dir="${src.dir}" prefix="${ant.project.name}-${project.version}/src"/>
+			<zipfileset dir="${src.dir}" prefix="${ant.project.name}-${project.version}/src">
+				<exclude name="**/ExpressionParser.java"/>
+				<exclude name="**/ExpressionLexer.java"/>
+			</zipfileset>
 			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
 			<zipfileset dir="scripts" prefix="${ant.project.name}-${project.version}/scripts"/>

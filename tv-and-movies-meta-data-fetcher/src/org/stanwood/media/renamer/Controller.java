@@ -82,6 +82,12 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Used to get the default source ID
+	 * @param mode The mode that were looking for a source id in
+	 * @return The default source ID for a given mode
+	 * @throws SourceException Thrown if their is a problem getting the default source ID
+	 */
 	public static String getDefaultSourceID(Mode mode) throws SourceException {
 		return configReader.getDefaultSourceID(mode);
 	}
@@ -437,15 +443,6 @@ public class Controller {
 			store.renamedFile(rootMediaDir,oldFile, newFile);
 		}
 	}
-
-//	private static ISource getXBMCSource(String sourceId) {
-//		for (ISource source : xbmcMgr.getSources()) {
-//			if (source.getSourceId().equals(sourceId)) {
-//				return source;
-//			}
-//		}
-//		return null;
-//	}
 
 	public static ISource getSource(String sourceId) {
 		if (sourceId == null) {
