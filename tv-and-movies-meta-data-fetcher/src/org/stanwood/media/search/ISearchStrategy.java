@@ -10,12 +10,12 @@ public interface ISearchStrategy {
 
 
 	/**
-	 * This method should be implemented to find a shows name
-	 * @param episodeFile The episode file that is been processed
+	 * This method should be implemented to find a media from a source
+	 * @param mediaFile The media file that is been processed
 	 * @param rootMediaDir The root media directory
 	 * @param renamePattern The pattern that is been used to rename media files
-	 * @return The shows name
+	 * @return The search details
 	 */
-	public String getSearchTerm(File episodeFile, File rootMediaDir, String renamePattern);
+	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern);
 
 }
