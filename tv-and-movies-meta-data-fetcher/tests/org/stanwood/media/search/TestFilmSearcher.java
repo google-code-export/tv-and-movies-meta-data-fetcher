@@ -11,7 +11,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
@@ -19,7 +18,6 @@ import org.stanwood.media.util.FileHelper;
 
 public class TestFilmSearcher {
 
-	@Ignore
 	@Test
 	public void testSearch() throws Exception {
 		File filmsDir = createFilmFiles();
@@ -39,8 +37,8 @@ public class TestFilmSearcher {
 			Assert.assertEquals(73,names.size());
 			Assert.assertEquals("A Movie.m4v",names.get(0).getTerm());
 			Assert.assertEquals("\"Movie\".avi",names.get(1).getTerm());
-			Assert.assertEquals("Movie.avi",names.get(2).getTerm());
 			Assert.assertEquals("1995",names.get(2).getYear());
+			Assert.assertEquals("Movie.avi",names.get(2).getTerm());
 			Assert.assertEquals("1111- A movie.avi",names.get(3).getTerm());
 			Assert.assertEquals("1111- A movie.avi",names.get(4).getTerm());
 			Assert.assertEquals("1111- A movie.avi",names.get(5).getTerm());
