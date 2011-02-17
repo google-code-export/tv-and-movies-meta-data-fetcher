@@ -439,7 +439,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 		ShowSearcher s = new ShowSearcher() {
 			@Override
-			public SearchResult doSearch(String name,String year) throws MalformedURLException, IOException, SourceException {
+			public SearchResult doSearch(File mediaFile,String name,String year) throws MalformedURLException, IOException, SourceException {
 				return searchMedia(name,mode);
 			}
 		};
