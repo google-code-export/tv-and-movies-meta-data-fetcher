@@ -27,14 +27,15 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 
 	/**
 	 * Used todo a search on the term and the year and return the result
-	 * @param term The term to search for (Usally a film name or tv show name).
+	 * @param term The term to search for (Usually a film name or tv show name).
 	 * @param year The year of the media or null if not to be used in the search
+	 * @param mediaFile The media file we are searching for
 	 * @return The search result or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a URL construction problem
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their is a problem searching via a source
 	 */
-	protected abstract SearchResult doSearch(String term,String year) throws MalformedURLException, IOException, SourceException;
+	protected abstract SearchResult doSearch(File mediaFile,String term,String year) throws MalformedURLException, IOException, SourceException;
 
 	/**
 	 * Usd to search for a show id
@@ -51,10 +52,11 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 		for (ISearchStrategy strategy :strategies) {
 			SearchDetails searchDetails = strategy.getSearch(mediaFile,rootMediaDir,renamePattern);
 			if (searchDetails!=null) {
-				SearchResult result = doSearch(searchDetails.getTerm(),searchDetails.getYear());
+				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear());
 				if (result!=null) {
 					return result;
 				}
+				return null;
 			}
 		}
 		return null;

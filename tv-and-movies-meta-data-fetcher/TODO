@@ -1,7 +1,10 @@
 TODO
 ----
 
-Add DTD to config files
 Make the XBMCManager check for updated plugins and download them
 Add --test_run command line option
 Add back the RegExpToReplace command line option
+  - Instead, allow ignore tokens to be configured
+Store original filenames before rename within Store XML files
+Add concept of actions, and make rename a action  
+  
