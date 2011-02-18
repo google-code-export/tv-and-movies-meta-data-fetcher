@@ -1,5 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,15 +10,23 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.XMLParser;
 
+/**
+ * This test is used to test that film information can be correctly retrieved from XBMC sources
+ */
 public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
+	/**
+	 * Used to the addon works correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testTVDBAddonDetails() throws Exception {
 		XBMCAddon addon = getAddonManager().getAddon("metadata.themoviedb.org");
@@ -34,16 +44,21 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<url>http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man</url>\n",XMLParser.domToStr(scraper.getCreateSearchUrl("Iron Man","2009")));
 	}
 
+	/**
+	 * Used to test that the source returns the correct film information
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testSource() throws Exception {
-//		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
 		SearchResult result = source.searchMedia("Iron Man",Mode.FILM);
 		Assert.assertEquals("1726",result.getId());
 		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726", result.getUrl());
 
 		try {
-			Show show = source.getShow("1726", new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"));
+			source.getShow("1726", new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"));
+			Assert.fail("Did not detected the exception");
 		}
 		catch (SourceException e) {
 			Assert.assertEquals("Scraper 'metadata.themoviedb.org' is not of type 'TV Shows'",e.getMessage());
@@ -75,10 +90,10 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("Science Fiction",film.getGenres().get(4));
 		Assert.assertEquals("Thriller",film.getGenres().get(5));
 		Assert.assertEquals("1726",film.getId());
-		Assert.assertEquals("http://cf1.themoviedb.org/posters/eae/4bc912a2017a3c57fe006eae/iron-man-original.jpg",film.getImageURL().toExternalForm());
+		Assert.assertEquals("http://cf1.imgobject.com/posters/eae/4bc912a2017a3c57fe006eae/iron-man-original.jpg",film.getImageURL().toExternalForm());
 		Assert.assertEquals("Action",film.getPreferredGenre());
 		Assert.assertEquals(8.4F,film.getRating().getRating());
-		Assert.assertEquals(59,film.getRating().getNumberOfVotes());
+		Assert.assertEquals(60,film.getRating().getNumberOfVotes());
 		Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
 		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getSummary());
 		Assert.assertEquals("Iron Man",film.getTitle());
@@ -92,6 +107,10 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals(2008,cal.get(Calendar.YEAR));
 	}
 
+	/**
+	 * Used to test that the scrapers applyParams method works correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testParams() throws Exception {
 		XBMCAddon addon = getAddonManager().getAddon("metadata.themoviedb.org");
@@ -107,6 +126,38 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		params.put(3, "fff");
 		output = scraper.applyParams(output, params);
 		Assert.assertEquals("aaa bbbbb bb ccc ddd eee fff",output);
+	}
+
+	/**
+	 * Used to test that we can get a URL from a NFO file
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testNFOFile() throws Exception {
+		File tmpDir = FileHelper.createTmpDir("tmp");
+		try {
+			XBMCSource source = getXBMCSource("metadata.themoviedb.org");
+
+			File nfoDir = new File(tmpDir,"Iron.Man.UNRATED.DC.DVDRip.XviD-BLAH");
+			if (!nfoDir.mkdir() && !nfoDir.exists()) {
+				throw new IOException("Unable to create directory: " + nfoDir);
+			}
+			File dummyFile = new File(nfoDir,"blah.nfo");
+			if (!dummyFile.createNewFile() && !dummyFile.exists()) {
+				throw new IOException("Unable to create file: " + dummyFile);
+			}
+
+			URL url = source.getUrlFromNFOFile(Mode.FILM, dummyFile);
+			Assert.assertNull(url);
+
+			File nfoFile = new File(nfoDir,"arw-iron.man.dvdrip.xvid.nfo");
+			NFOHelper.createNFO(nfoFile, new URL("http://www.imdb.com/title/tt0371746/"));
+			url = source.getUrlFromNFOFile(Mode.FILM, nfoFile);
+			Assert.assertEquals("", url.toString());
+		}
+		finally {
+			FileHelper.deleteDir(tmpDir);
+		}
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

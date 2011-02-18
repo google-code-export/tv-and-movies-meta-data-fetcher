@@ -9,8 +9,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
@@ -25,7 +23,6 @@ import org.w3c.dom.Node;
  */
 public class XBMCScraper extends XBMCExtension {
 
-	private final static Log log = LogFactory.getLog(XBMCScraper.class);
 	private final static String ROOT_NODE_NAME = "scraper";
 
 
@@ -35,6 +32,8 @@ public class XBMCScraper extends XBMCExtension {
 	/**
 	 * Used to create the class and set the scraper file
 	 * @param addon The addon been used
+	 * @param point The addon extension point for this scraper
+	 * @param mode The mode this scraper is to be used for
 	 * @param scraperFile The XML scraper file
 	 */
 	public XBMCScraper(XBMCAddon addon,File scraperFile,String point,Mode mode) {
@@ -68,9 +67,7 @@ public class XBMCScraper extends XBMCExtension {
 		return executeFunctionByName("CreateSearchUrl",searchTerm,year);
 	}
 
-	public Document getEpisodeGuideUrl(String rawHtml) throws XBMCException {
-		return executeFunctionByName("EpisodeGuideUrl",rawHtml);
-	}
+
 
 	/**
 	 * This function is used to get a XML document of the search results. It takes as input the
@@ -95,8 +92,36 @@ public class XBMCScraper extends XBMCExtension {
 		return executeFunctionByName("GetDetails",contents);
 	}
 
+	/**
+	 * Used to get the episode guide URL
+	 * @param rawHtml The show weppage
+	 * @return The XML doc containg the URL
+	 * @throws XBMCException Thrown if their are any problem
+	 */
+	public Document getEpisodeGuideUrl(String rawHtml) throws XBMCException {
+		return executeFunctionByName("EpisodeGuideUrl",rawHtml);
+	}
+
+	/**
+	 * Used to get the details of the a episode. The <code>contents</code> argument contains the downloaded
+	 * weppage of the episode details. The episode details URL is obtained by calling {@link getEpisodeList(String , URL)}
+	 * @param contents The downloaded HTML of the episode guide
+	 * @param episodeId The ID of the episode to get the details for
+	 * @return episode details XML
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public Document getGetEpisodeDetails(String contents,String episodeId) throws  XBMCException {
 		return executeFunctionByName("GetEpisodeDetails",contents,episodeId);
+	}
+
+	/**
+	 * Used to get a Show or film URL from the contents of a NFO file.
+	 * @param contents The contents of a NFO file
+	 * @return The XML containing a URL
+	 * @throws XBMCException Thrown if their are any problems
+	 */
+	public Document getNfoUrl(String contents) throws XBMCException {
+		return executeFunctionByName("NfoUrl",contents);
 	}
 
 	private Document executeFunctionByName(String funcName,String... contents) throws  XBMCException {
@@ -112,6 +137,13 @@ public class XBMCScraper extends XBMCExtension {
 		}
 	}
 
+	/**
+	 * Used to get a list of the the episodes in a show
+	 * @param html The contents of the episode list
+	 * @param showURL The URL used to fetch show info
+	 * @return The XML document containing the episode list
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public Document getGetEpisodeList(String html, URL showURL) throws XBMCException {
 		return executeFunctionByName("GetEpisodeList",html,showURL.toExternalForm());
 	}
@@ -170,7 +202,8 @@ public class XBMCScraper extends XBMCExtension {
 						Map<Integer, String> params = new HashMap<Integer,String>();
 						params.put(1, contents);
 						try {
-							Document results = strToDom(getAddon().executeFunction(functionName, params));
+							String s = getAddon().executeFunction(functionName, params) ;
+							Document results = strToDom(s);
 							Node parent = node.getParentNode();
 							parent.removeChild(node);
 
@@ -190,6 +223,12 @@ public class XBMCScraper extends XBMCExtension {
 		}
 	}
 
+	/**
+	 * Used to execute a scraper function
+	 * @param functionName The name of the function to execute
+	 * @param params Numbered parameters passed to the function
+	 * @return The result retured by the function
+	 */
 	@Override
 	public String executeXBMCScraperFunction(String functionName,Map<Integer,String> params) throws  XBMCException, XMLParserException {
 		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName);

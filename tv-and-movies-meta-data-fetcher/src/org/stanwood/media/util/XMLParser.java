@@ -224,6 +224,13 @@ public class XMLParser {
 		}
 	}
 
+	/**
+	 * Create a XML document builder. This takes care of fetching DTD's locally instead of downloading
+	 * them from the Internet.
+	 * @param factory The document builder factory
+	 * @return The document builder
+	 * @throws ParserConfigurationException Thrown if their are any problems
+	 */
 	public static DocumentBuilder createDocBuilder(DocumentBuilderFactory factory)
 	throws ParserConfigurationException {
 		DocumentBuilder builder;

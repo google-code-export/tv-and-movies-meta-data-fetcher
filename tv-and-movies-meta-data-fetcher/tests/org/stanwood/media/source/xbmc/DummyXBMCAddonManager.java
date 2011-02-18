@@ -11,17 +11,27 @@ import java.util.zip.ZipInputStream;
 
 import org.stanwood.media.testdata.Data;
 
+/**
+ * This is a dummy XBMCAddonManager that fetches data from the test source tree instead of from the web. This
+ * allows tests to run agaist a known set of data
+ */
 public class DummyXBMCAddonManager extends XBMCAddonManager {
-
-	// http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man
 
 	private static final Pattern TVDB_SEARCH_PATTERN = Pattern.compile(".*thetvdb.*GetSeries.*seriesname\\=(.+?)\\&.*");
 	private static final Pattern TVDB_SERIES_PATTERN = Pattern.compile(".*thetvdb.*/series/(\\d+)/all.*");
 	private static final Pattern THE_MOVIE_DB_SEARCH = Pattern.compile(".*themoviedb.*/Movie.search/.*/(.+)");
 	private static final Pattern THE_MOVIE_DB_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
+	private static final Pattern THE_MOVIE_DB_IMDB_LOOKUP = Pattern.compile(".*themoviedb.*/Movie\\.imdbLookup/.*/(tt\\d+)");
 	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(\\d+)");
 	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 
+
+	/**
+	 * Used to create a instance of the class
+	 * @param addonDir The directory the addon's data is stored in
+	 * @param locale The language been used
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public DummyXBMCAddonManager(File addonDir, Locale locale)
 			throws XBMCException {
 		super(addonDir, locale);
@@ -38,6 +48,10 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		m = THE_MOVIE_DB_SEARCH.matcher(strUrl);
 		if (m.matches()) {
 			return Data.class.getResourceAsStream("themoviedb-search-"+getSearchName(m.group(1))+".html");
+		}
+		m = THE_MOVIE_DB_IMDB_LOOKUP.matcher(strUrl);
+		if (m.matches()) {
+			return Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html");
 		}
 		m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
 		if (m.matches()) {

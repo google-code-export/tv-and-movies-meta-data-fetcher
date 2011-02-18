@@ -27,6 +27,10 @@ public class XBMCAddonTestBase {
 		FileHelper.unzip(TestXMBCSourceTVDB.class.getResourceAsStream("xbmc-addons.zip"),tmpDir);
 	}
 
+	/**
+	 * Make sure that the addon manage been used is the {@link DummyXBMCAddonManager}
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	@Before
 	public void setup() throws XBMCException {
 		addonManager = createAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);
