@@ -97,7 +97,7 @@ public interface ISource {
 	public String getSourceId();
 
 	/**
-	 * Used to search for a show within the source
+	 * Used to search for a media details within the source
 	 * @param episodeFile The file the episode is located in
 	 * @param mode The mode that the search operation should be performed in
 	 * @param rootMediaDir The root media directory
@@ -124,4 +124,13 @@ public interface ISource {
 	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
 	public String getParameter(String key) throws SourceException;
+
+	/**
+	 * This method can be used to get a URL from a nfo file.
+	 * @param file The NFO file
+	 * @param mode The mode that the YRL is been looked up in
+	 * @return The URL, or null if one could not be found
+	 * @throws SourceException Thrown if their are any problems
+	 */
+	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException;
 }

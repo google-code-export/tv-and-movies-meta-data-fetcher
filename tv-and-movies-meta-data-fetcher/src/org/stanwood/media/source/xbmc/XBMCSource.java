@@ -28,6 +28,7 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.IterableNodeList;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
@@ -38,6 +39,11 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
+/**
+ * This is a source that reads the details using XBMC addons. It is capable of reading both TV Show and Film
+ * information if the XBMC Scraper supports it. Any parameters set on this source are passed through to the XBMC
+ * scrapers.
+ */
 public class XBMCSource extends XMLParser implements ISource {
 
 	private static final SimpleDateFormat FILM_YEAR_DATE_FORMAT = new SimpleDateFormat("yyyy");
@@ -48,6 +54,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	private String id;
 	private XBMCAddonManager mgr;
 
+	/**
+	 * Used to create a instance of this class
+	 * @param mgr The addon manager
+	 * @param addonId The ID of the sources XBMC addon
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public XBMCSource(XBMCAddonManager mgr,String addonId) throws XBMCException {
 		this.id = addonId;
 		this.mgr = mgr;
@@ -166,6 +178,16 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	}
 
+	/**
+	 * This will get a show from the source. If the show can't be found, then it
+	 * will return null.
+	 * @param showId The id of the show to get.
+	 * @param url String url of the show
+	 * @return The show if it can be found, otherwise null.
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Show getShow(final String showId, URL url) throws SourceException,
 			MalformedURLException, IOException {
@@ -240,6 +262,15 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
+	/**
+	 * This will get a film from the source. If the film can't be found, then it will return null.
+	 * @param filmId The id of the film
+	 * @param url The URL used to lookup the film
+	 * @return The film, or null if it can't be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Film getFilm(String filmId,URL url) throws SourceException,
 			MalformedURLException, IOException {
@@ -286,12 +317,8 @@ public class XBMCSource extends XMLParser implements ISource {
 				}
 			}
 
-					};
+		};
 		processor.handleStream();
-
-//		if (show.getName() == null || show.getLongSummary()==null) {
-//			throw new SourceException("Show details parsing was incomplete");
-//		}
 
 
 		return film;
@@ -347,6 +374,16 @@ public class XBMCSource extends XMLParser implements ISource {
 		film.setCertifications(certs);
 	}
 
+	/**
+	 * This gets a special episode from the source. If it can't be found, then it will
+	 * return null;
+	 * @param season The season the special episode belongs too
+	 * @param specialNumber The number of the special episode too get
+	 * @return The special episode, or null if it can't be found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public Episode getSpecial(Season season, int specialNumber)
 			throws SourceException, MalformedURLException, IOException {
@@ -424,11 +461,26 @@ public class XBMCSource extends XMLParser implements ISource {
 
 
 
+	/**
+	 * Get the id of the source
+	 * @return The id of the source
+	 */
 	@Override
 	public String getSourceId() {
 		return "xbmc-"+id;
 	}
 
+	/**
+	 * Used to search for a media details within the source
+	 * @param episodeFile The file the episode is located in
+	 * @param mode The mode that the search operation should be performed in
+	 * @param rootMediaDir The root media directory
+	 * @param renamePattern The rename pattern been used, or null if one is not been used
+	 * @return The results of the search, or null if nothing was found
+	 * @throws SourceException Thrown if their is a problem retrieving the data
+	 * @throws MalformedURLException Thrown if their is a problem creating URL's
+	 * @throws IOException Thrown if their is a I/O related problem.
+	 */
 	@Override
 	public SearchResult searchForVideoId(File rootMediaDir, final Mode mode,
 			File episodeFile, String renamePattern) throws SourceException,
@@ -504,16 +556,49 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
+	/**
+	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @param value The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
+	 */
+
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
 		addon.setSetting(key,value);
 	}
 
+	/**
+	 * <p>Used to get the value of a source parameter. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @return The value of the parameter
+	 * @throws SourceException Throw if the key is not supported by this source.
+	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
 		return addon.getSetting(key).toString();
 	}
 
-
+	/**
+	 * This method can be used to get a URL from a nfo file.
+	 * @param file The NFO file
+	 * @param mode The mode that the YRL is been looked up in
+	 * @return The URL, or null if one could not be found
+	 * @throws SourceException Thrown if their are any problems
+	 */
+	@Override
+	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException {
+		try {
+			String contents = FileHelper.readFileContents(file);
+			Document doc = addon.getScraper(mode).getNfoUrl(contents);
+			return new URL(getStringFromXML(doc,"url/text()"));
+		}
+		catch (XMLParserNotFoundException e) {
+			return null;
+		}
+		catch (Exception e) {
+			throw new SourceException("Unable to get URL from NFO file",e);
+		}
+	}
 
 }

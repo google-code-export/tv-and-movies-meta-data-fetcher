@@ -91,6 +91,7 @@ public class TagChimpSource implements ISource {
 					index++;
 				}
 				String fieldName = tds.get(index).getTextExtractor().toString();
+				@SuppressWarnings("rawtypes")
 				List elements = tds.get(index+1).getChildElements();
 				if (elements.size()>0) {
 					Element sub = (Element) elements.get(0);
@@ -336,6 +337,18 @@ public class TagChimpSource implements ISource {
 		}
 
 		return BASE_URL + MOVIES_URL.replaceAll("\\$filmId\\$", strFilmId);
+	}
+
+	/**
+	 * This method can be used to get a URL from a nfo file.
+	 * @param mode The mode that the YRL is been looked up in
+	 * @param file The NFO file
+	 * @return The URL, or null if one could not be found
+	 * @throws SourceException Thrown if their are any problems
+	 */
+	@Override
+	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException {
+		return null;
 	}
 
 }

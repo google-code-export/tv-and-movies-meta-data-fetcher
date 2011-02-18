@@ -27,6 +27,7 @@ wget -O "$TESTDIR/themoviedb-search-iron-man.html" "http://api.themoviedb.org/2.
 wget -O "$TESTDIR/themoviedb-film-1726.html" "http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"
 wget -O "$TESTDIR/imdb-tt0371746.html" "http://akas.imdb.com/title/tt0371746/"
 wget -O "$TESTDIR/themoviedb-images-1726.html"  "http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726"
+wget -O "$TESTDIR/themoviedb-imdbLookup-tt0371746.html" "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746"
 
 #TEMP_DIR=`mktemp -d`
 #git clone git://github.com/xbmc/xbmc.git $TEMP_DIR

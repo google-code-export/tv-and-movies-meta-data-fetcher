@@ -43,13 +43,12 @@ public class HybridFilmSource implements ISource {
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "hybridFilm";
 
-	private String regexpToReplace = null;
-
-	/** Used to disable fetching of posters at test time */
-	/* package private for test */ boolean fetchPosters = true;
-
+	/**
+	 * Used to create a instance of the source
+	 * @throws SourceException Thrown if their are any problems
+	 */
 	public HybridFilmSource() throws SourceException {
-		imdbSource =Controller.getInstance().getSource(Controller.getInstance().getDefaultSourceID(Mode.TV_SHOW));
+		imdbSource =Controller.getSource(Controller.getDefaultSourceID(Mode.TV_SHOW));
 	}
 
 
@@ -218,15 +217,6 @@ public class HybridFilmSource implements ISource {
 		return null;
 	}
 
-
-	/**
-	 * Get the "RegexpToReplace" parameter value.
-	 * @return The "RegexpToReplace" parameter value.
-	 */
-	public String getRegexpToReplace() {
-		return regexpToReplace;
-	}
-
 	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
 	 * <p>This source does not support any parameters.</p>
@@ -251,6 +241,18 @@ public class HybridFilmSource implements ISource {
 	@Override
 	public String getParameter(String key) throws SourceException {
 		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+	}
+
+	/**
+	 * This method can be used to get a URL from a nfo file.
+	 * @param file The NFO file
+	 * @param mode The mode that the YRL is been looked up in
+	 * @return The URL, or null if one could not be found
+	 * @throws SourceException Thrown if their are any problems
+	 */
+	@Override
+	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException {
+		return imdbSource.getUrlFromNFOFile(mode,file);
 	}
 
 }

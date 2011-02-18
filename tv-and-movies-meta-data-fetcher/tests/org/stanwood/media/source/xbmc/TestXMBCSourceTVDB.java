@@ -17,10 +17,17 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
 
+/**
+ * This test is used to test that TV show information can be correctly retrieved from XBMC sources
+ */
 public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	private static final SimpleDateFormat EPISODE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * Used to the addon works correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testAddon() throws Exception {
 		XBMCAddon addon = getAddonManager().getAddon("metadata.tvdb.com");
@@ -37,6 +44,10 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<url>http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes%20(2009)&amp;language=en</url>\n",XMLParser.domToStr(scraper.getCreateSearchUrl("Heroes","2009")));
 	}
 
+	/**
+	 * Used to test that show information is correctly retrieved from the XBMC source
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testShow() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -64,6 +75,10 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("http://thetvdb.com/banners/posters/79501-2.jpg",show.getImageURL().toExternalForm());
 	}
 
+	/**
+	 * Used to test that season information is correctly retrieved from the XBMC source
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testSeason() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -104,6 +119,10 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertNull(season);
 	}
 
+	/**
+	 * Used to test that episode information is correctly retrieved from the XBMC source
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testEpisode() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -145,6 +164,10 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("http://thetvdb.com/banners/episodes/79501/308906.jpg",episode.getImageURL().toExternalForm());
 	}
 
+	/**
+	 * Used to test that special episode information is correctly retrieved from the XBMC source
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testSpecial() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
