@@ -34,7 +34,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	 */
 	public DummyXBMCAddonManager(File addonDir, Locale locale)
 			throws XBMCException {
-		super(addonDir, locale);
+		super(new ZipUpdater(),addonDir, locale);
 	}
 
 	@Override

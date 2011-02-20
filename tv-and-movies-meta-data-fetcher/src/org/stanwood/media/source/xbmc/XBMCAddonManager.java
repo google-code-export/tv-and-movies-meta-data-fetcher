@@ -29,14 +29,23 @@ public class XBMCAddonManager implements IContentFetcher {
 	private List<ISource>sources = new ArrayList<ISource>();
 	private Locale locale;
 
-	public XBMCAddonManager(File addonDir,Locale locale) throws XBMCException {
+	XBMCAddonManager(IXBMCUpdater updater,File addonDir,Locale locale) throws XBMCException {
 		this.addonDir = addonDir;
 		this.locale = locale;
+		checkUptoDate(updater);
 		registerAddons();
 	}
 
+	private void checkUptoDate(IXBMCUpdater updater) {
+
+	}
+
+	/**
+	 * Used to create a instance of the addon manager
+	 * @throws XBMCException Thrown if thier is a problem creating the addon manager
+	 */
 	public XBMCAddonManager() throws XBMCException {
-		this(getDefaultAddonDir(),getDefaultLocale());
+		this(new XBMCWebUpdater(),getDefaultAddonDir(),getDefaultLocale());
 	}
 
 	private static File getDefaultAddonDir() throws XBMCException {
