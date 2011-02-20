@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.XMLParser;
@@ -24,7 +26,7 @@ import org.w3c.dom.Node;
 public class XBMCScraper extends XBMCExtension {
 
 	private final static String ROOT_NODE_NAME = "scraper";
-
+	private final static Log log = LogFactory.getLog(XBMCScraper.class);
 
 	private Mode mode;
 	private XBMCAddonManager addonMgr;
@@ -120,15 +122,37 @@ public class XBMCScraper extends XBMCExtension {
 	 * @return The XML containing a URL
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public Document getNfoUrl(String contents) throws XBMCException {
-		return executeFunctionByName("NfoUrl",contents);
+	public boolean getNfoUrl(String contents) throws XBMCException {
+		if (log.isDebugEnabled()) {
+			log.debug("executing scraper function with name: NfoUrl");
+		}
+		try {
+			Map<Integer, String> params = convertParams(contents);
+
+			String result = executeXBMCScraperFunction("NfoUrl",params);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Got result: " + result);
+			}
+
+			return (result.length()>0);
+		} catch (Exception e) {
+			throw new XBMCException("Unable to execute scraper function 'NfoUrl' in addon '"+getAddon().getId()+"'",e);
+		}
 	}
 
 	private Document executeFunctionByName(String funcName,String... contents) throws  XBMCException {
+		if (log.isDebugEnabled()) {
+			log.debug("executing scraper function with name: " + funcName);
+		}
 		try {
 			Map<Integer, String> params = convertParams(contents);
 
 			String result = executeXBMCScraperFunction(funcName,params);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Got result: " + result);
+			}
 			Document doc = XMLParser.strToDom(result);
 			resolveElements(doc);
 			return doc;
@@ -238,4 +262,13 @@ public class XBMCScraper extends XBMCExtension {
 		return executeXBMCFunction(functionNode,params);
 	}
 
+	/**
+	 * This method is used to check if the scraper can be used for the episode details URL
+	 * @param url The NFO file
+	 * @return True of the scraper is compatible with the URL
+	 * @throws SourceException Thrown if their are any problems
+	 */
+	public boolean supportsURL(URL url) throws SourceException {
+		return getNfoUrl(url.toExternalForm());
+	}
 }

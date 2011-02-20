@@ -196,25 +196,12 @@ public class Renamer {
 		doRename(file, newName);
 	}
 
-	private SearchResult searchForId(File file)
+	private SearchResult searchForId(File file) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
-		try {
-			result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file,pattern);
-			return result;
-		} catch (SourceException e) {
-			e.printStackTrace();
-			return null;
-		} catch (StoreException e) {
-			e.printStackTrace();
-			return null;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file,pattern);
+		return result;
+
 	}
 
 

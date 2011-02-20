@@ -200,6 +200,20 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals(season,special.getSeason());
 	}
 
+	/**
+	 * Used to test that we can get a URL from a NFO file
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testNFOFile() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		XBMCAddon addon = getAddonManager().getAddon("metadata.tvdb.com");
+
+		Assert.assertFalse(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://blah")));
+		Assert.assertTrue(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://www.thetvdb.com/index.php?tab=series&id=79501")));
+	}
+
 	private XBMCSource getXBMCSource(String id) throws SourceException{
 		XBMCSource source = new XBMCSource(getAddonManager(),id);
 		return source;

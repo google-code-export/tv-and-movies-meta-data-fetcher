@@ -22,7 +22,10 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 					ReverseFilePatternMatcher rfpm = new ReverseFilePatternMatcher();
 					rfpm.parse(fileName, renamePattern);
 					if (rfpm.getValues()!=null) {
-						return new SearchDetails(rfpm.getValues().get("n"),null);
+						String term =rfpm.getValues().get("n");
+						if (term!=null) {
+							return new SearchDetails(term,null);
+						}
 					}
 				}
 				return null;
