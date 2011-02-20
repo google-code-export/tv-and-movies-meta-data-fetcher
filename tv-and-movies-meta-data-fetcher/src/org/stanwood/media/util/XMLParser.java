@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.regex.Matcher;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -211,7 +212,7 @@ public class XMLParser {
 			return new IterableNodeList(list);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parser path " + path + " from XML DOM",e);
+			throw new XMLParserException("Unable to parse path '" + path + "' from XML DOM",e);
 		}
 	}
 
@@ -220,7 +221,7 @@ public class XMLParser {
 			return XPathAPI.selectSingleNode(contextNode, path);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parser path " + path + " from XML DOM",e);
+			throw new XMLParserException("Unable to parse path '" + path + "' from XML DOM",e);
 		}
 	}
 
@@ -252,6 +253,20 @@ public class XMLParser {
 		    }
 		});
 		return builder;
+	}
+
+	/**
+	 * This is used to make sure a value can be written to a XML document by encoding the characters that should be XML entities.
+	 * @param value The value to encode
+	 * @return The encoded value
+	 */
+	public static String encodeAttributeValue(String value) {
+		String result = value.replaceAll("'", Matcher.quoteReplacement("&apos;"));
+		result = result.replaceAll("\\&", Matcher.quoteReplacement("&amp;"));
+		result = result.replaceAll("\\<", Matcher.quoteReplacement("&lt;"));
+		result = result.replaceAll("\\>", Matcher.quoteReplacement("&gt;"));
+		result = result.replaceAll("\"", Matcher.quoteReplacement("&quot;"));
+		return result;
 	}
 
 }

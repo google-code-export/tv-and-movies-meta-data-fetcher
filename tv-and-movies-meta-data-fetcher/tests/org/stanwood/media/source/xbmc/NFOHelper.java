@@ -15,10 +15,10 @@ public class NFOHelper {
 	/**
 	 * Used to create a NFO file
 	 * @param nfoFile The file to create
-	 * @param imdbURL The IDBM film URL
+	 * @param url The media URL
 	 * @throws IOException Thrown if their are any problems
 	 */
-	public static void createNFO(File nfoFile,URL imdbURL) throws IOException {
+	public static void createNFO(File nfoFile,URL url) throws IOException {
 		OutputStream os = null;
 		PrintStream ps = null;
 		try {
@@ -28,7 +28,7 @@ public class NFOHelper {
 			ps.println("");
 			ps.println("           "+nfoFile.getParent());
 			ps.println("");
-			ps.println("        IMDB: " + imdbURL.toExternalForm());
+			ps.println("        URL: " + url.toExternalForm());
 			ps.println("");
 			ps.println("Too long of a plot summary to write here");
 			ps.println(" go to the above url and read it :)");

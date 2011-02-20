@@ -134,6 +134,9 @@ public class Main {
 
 			};
 		}
+		if (log.isDebugEnabled()) {
+			log.debug("Main called with args: " + args);
+		}
 
 		// create Options object
 
@@ -174,13 +177,13 @@ public class Main {
 			renamer.tidyShowNames();
 			return true;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (SourceException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (StoreException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		return false;
 	}

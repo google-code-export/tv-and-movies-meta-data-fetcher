@@ -946,7 +946,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		SearchResult result = null;
 
 		// search for show by file name
-		NodeList showNodes = selectNodeList(store,"show[file/@location='"+episodeFile.getAbsolutePath()+"']");
+		NodeList showNodes = selectNodeList(store,"show[file/@location='"+XMLParser.encodeAttributeValue(episodeFile.getAbsolutePath())+"']");
 		if (showNodes!=null && showNodes.getLength()>0) {
 			Element showEl = (Element)showNodes.item(0);
 			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"));

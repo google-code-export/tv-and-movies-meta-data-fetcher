@@ -1,7 +1,5 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -15,7 +13,6 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.XMLParser;
 
 /**
@@ -134,30 +131,12 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testNFOFile() throws Exception {
-		File tmpDir = FileHelper.createTmpDir("tmp");
-		try {
-			XBMCSource source = getXBMCSource("metadata.themoviedb.org");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
-			File nfoDir = new File(tmpDir,"Iron.Man.UNRATED.DC.DVDRip.XviD-BLAH");
-			if (!nfoDir.mkdir() && !nfoDir.exists()) {
-				throw new IOException("Unable to create directory: " + nfoDir);
-			}
-			File dummyFile = new File(nfoDir,"blah.nfo");
-			if (!dummyFile.createNewFile() && !dummyFile.exists()) {
-				throw new IOException("Unable to create file: " + dummyFile);
-			}
+		XBMCAddon addon = getAddonManager().getAddon("metadata.themoviedb.org");
 
-			URL url = source.getUrlFromNFOFile(Mode.FILM, dummyFile);
-			Assert.assertNull(url);
-
-			File nfoFile = new File(nfoDir,"arw-iron.man.dvdrip.xvid.nfo");
-			NFOHelper.createNFO(nfoFile, new URL("http://www.imdb.com/title/tt0371746/"));
-			url = source.getUrlFromNFOFile(Mode.FILM, nfoFile);
-			Assert.assertEquals("", url.toString());
-		}
-		finally {
-			FileHelper.deleteDir(tmpDir);
-		}
+		Assert.assertFalse(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://blah")));
+		Assert.assertTrue(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://www.imdb.com/title/tt0371746/")));
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

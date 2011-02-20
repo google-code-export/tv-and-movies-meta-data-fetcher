@@ -21,12 +21,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Used to swallow the contents of a stream. This is a thread based
- * class, so {@link #start()} should be called to start the thread. {@link #getResult()} 
+ * class, so {@link #start()} should be called to start the thread. {@link #getResult()}
  * can be called to get the contents of the swallowed stream.
  */
 public class StreamGobbler extends Thread {
+
+	private final static Log log = LogFactory.getLog(StreamGobbler.class);
 
 	private InputStream is;
 	private StringBuilder result;
@@ -42,21 +47,22 @@ public class StreamGobbler extends Thread {
 	}
 
 	/**
-	 * This is executed when the thread is started. It will swallow the 
-	 * input stream. 
+	 * This is executed when the thread is started. It will swallow the
+	 * input stream.
 	 */
+	@Override
 	public void run() {
 		try {
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
-			done = false;			
-			
+			done = false;
+
 			while (!done && (line = br.readLine()) != null) {
 				result.append(line + "\n");
-			}			
+			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			log.error(ioe.getMessage(),ioe);
 		}
 		finally {
 			done = true;
@@ -70,7 +76,7 @@ public class StreamGobbler extends Thread {
 	public String getResult() {
 		return result.toString();
 	}
-	
+
 	/**
 	 * This will return true when the string has been gobbled.
 	 * @return True if the stream has been completly gobbled, otherwise false.

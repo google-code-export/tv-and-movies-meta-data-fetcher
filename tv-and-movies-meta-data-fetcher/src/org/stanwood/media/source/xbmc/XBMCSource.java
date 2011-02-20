@@ -28,7 +28,6 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.IterableNodeList;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
@@ -64,6 +63,9 @@ public class XBMCSource extends XMLParser implements ISource {
 		this.id = addonId;
 		this.mgr = mgr;
 		addon = mgr.getAddon(addonId);
+		if (addon==null) {
+			throw new XBMCException("Unable to find add: " + addonId);
+		}
 	}
 
 	/**
@@ -492,6 +494,9 @@ public class XBMCSource extends XMLParser implements ISource {
 		ShowSearcher s = new ShowSearcher() {
 			@Override
 			public SearchResult doSearch(File mediaFile,String name,String year) throws MalformedURLException, IOException, SourceException {
+				if (name==null) {
+					return null;
+				}
 				return searchMedia(name,mode);
 			}
 		};
@@ -577,28 +582,6 @@ public class XBMCSource extends XMLParser implements ISource {
 	@Override
 	public String getParameter(String key) throws SourceException {
 		return addon.getSetting(key).toString();
-	}
-
-	/**
-	 * This method can be used to get a URL from a nfo file.
-	 * @param file The NFO file
-	 * @param mode The mode that the YRL is been looked up in
-	 * @return The URL, or null if one could not be found
-	 * @throws SourceException Thrown if their are any problems
-	 */
-	@Override
-	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException {
-		try {
-			String contents = FileHelper.readFileContents(file);
-			Document doc = addon.getScraper(mode).getNfoUrl(contents);
-			return new URL(getStringFromXML(doc,"url/text()"));
-		}
-		catch (XMLParserNotFoundException e) {
-			return null;
-		}
-		catch (Exception e) {
-			throw new SourceException("Unable to get URL from NFO file",e);
-		}
 	}
 
 }

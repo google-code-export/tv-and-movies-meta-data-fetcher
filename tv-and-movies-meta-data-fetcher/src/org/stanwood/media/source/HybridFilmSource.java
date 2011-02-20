@@ -243,16 +243,6 @@ public class HybridFilmSource implements ISource {
 		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
 
-	/**
-	 * This method can be used to get a URL from a nfo file.
-	 * @param file The NFO file
-	 * @param mode The mode that the YRL is been looked up in
-	 * @return The URL, or null if one could not be found
-	 * @throws SourceException Thrown if their are any problems
-	 */
-	@Override
-	public URL getUrlFromNFOFile(Mode mode,File file) throws SourceException {
-		return imdbSource.getUrlFromNFOFile(mode,file);
-	}
+
 
 }
