@@ -21,6 +21,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,10 +29,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -46,6 +51,8 @@ public class FileHelper {
 	private final static Log log = LogFactory.getLog(FileHelper.class);
 	/** A Line separator property value */
 	public final static String LS = System.getProperty("line.separator");
+
+	private final static char HEX_DIGITS[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/**
 	 * This will create a temporary directory using the given name.
@@ -67,33 +74,37 @@ public class FileHelper {
 	}
 
 	/**
-	 * Used to copy a source file to a destination file.
+	 * Used to copy a source file or a directory to a destination file or directory.
 	 *
-	 * @param src The source file
-	 * @param dst The destination file
-	 * @throws IOException Thrown if their is a problem copying the file
+	 * @param src The source file or directory
+	 * @param dst The destination file or directory
+	 * @throws IOException Thrown if their is a problem copying the file or directory
 	 */
 	public static void copy(File src, File dst) throws IOException {
-		InputStream in = null;
-		OutputStream out = null;
+		if (dst.exists()) {
+			throw new IOException("Unable to copy " + src +" to " + dst +" as the destination already exists");
+		}
+		if (src.isDirectory()) {
+			if (!dst.mkdir() && !dst.exists()) {
+				throw new IOException("Unable to create directory: " + dst);
+			}
+			File[] files = src.listFiles();
+			for (File f : files) {
+				copy(f,new File(dst,f.getName()));
+			}
+		}
+		else {
+			copyFile(src, dst);
+		}
+	}
 
+	private static void copyFile(File src, File dst)
+			throws FileNotFoundException, IOException {
+		InputStream in = null;
 		try {
 			in = new FileInputStream(src);
-			out = new FileOutputStream(dst);
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
+			copy(in,dst);
 		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					log.error("Unable to close output stream", e);
-				}
-			}
 			if (in != null) {
 				try {
 					in.close();
@@ -103,6 +114,7 @@ public class FileHelper {
 			}
 		}
 	}
+
 
 	/**
 	 * Used to copy the contents of a input stream to a destination file.
@@ -161,8 +173,8 @@ public class FileHelper {
 			bin = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while ((line = bin.readLine()) != null) {
-				for (String key : params.keySet()) {
-					line = line.replaceAll("\\$" + key + "\\$", params.get(key));
+				for (Entry<String,String>e : params.entrySet()) {
+					line = line.replaceAll("\\$" + e.getKey() + "\\$", e.getValue());
 				}
 				out.println(line);
 			}
@@ -178,12 +190,96 @@ public class FileHelper {
 	}
 
 	/**
+	 * This will copy a file from the web to a destination file on the local system
+	 * @param url The url to read from the file from
+	 * @param dest The file to be created on the location system
+	 * @return A MD5 sum of the file
+	 * @throws IOException Thrown if their is a problem reading or wring the file
+	 */
+	public static String copy(URL url,File dest) throws IOException {
+		if (log.isInfoEnabled()) {
+			log.info("Fetching: " + url);
+		}
+		try {
+			OutputStream out = null;
+			InputStream is = null;
+			try {
+				out = new FileOutputStream(dest);
+				is = new WebFileInputStream(url);
+				MessageDigest md = MessageDigest.getInstance("MD5");
+
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = is.read(buf)) > 0) {
+					out.write(buf, 0, len);
+					md.update(buf, 0 , len);
+				}
+
+				out.flush();
+				return bytesToHexString(md.digest());
+			}
+			finally {
+				if (is!=null) {
+					is.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			}
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new IOException("Unable to download url: " + url,e);
+		}
+	}
+
+	public static String getMD5Checksum(File file) throws IOException {
+		try {
+			InputStream is = null;
+			try {
+				is = new FileInputStream(file);
+				MessageDigest md = MessageDigest.getInstance("MD5");
+
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = is.read(buf)) > 0) {
+					md.update(buf, 0 , len);
+				}
+
+				return bytesToHexString(md.digest());
+			}
+			finally {
+				if (is!=null) {
+					is.close();
+				}
+			}
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new IOException("Unable to get checksum for file: " + file,e);
+		}
+	}
+
+
+	private static String bytesToHexString(byte data[]) {
+
+        StringBuilder sb = new StringBuilder(data.length * 2);
+        for(int buc = 0; buc < data.length; buc++)
+        {
+            sb.append(HEX_DIGITS[(data[buc] >> 4) & 0x0F]);
+            sb.append(HEX_DIGITS[data[buc] & 0x0F]);
+        }
+
+        return sb.toString();
+	}
+
+	/**
 	 * Used to delete a directory and all it's children
 	 *
 	 * @param dir The directory to delete
 	 * @return True if successful, otherwise false
 	 */
-	public static boolean deleteDir(File dir) {
+	private static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (int i = 0; i < children.length; i++) {
@@ -360,7 +456,9 @@ public class FileHelper {
     					int count;
     					byte data[] = new byte[1000];
     					out = new BufferedOutputStream(new FileOutputStream(new File(destDir,entry.getName())),1000);
-    					System.out.println("Unzipping " + entry.getName() +" with size " + entry.getSize());
+    					if (log.isDebugEnabled()) {
+    						log.debug("Unzipping " + entry.getName() +" with size " + entry.getSize());
+    					}
     					while ((count = zis.read(data,0,1000)) != -1)
     		            {
     						out.write(data,0,count);
@@ -379,6 +477,28 @@ public class FileHelper {
 				zis.close();
 			}
         }
+	}
+
+	public static void move(File from, File to) throws IOException {
+		if (!from.exists()) {
+			throw new IOException("Unable to move file " + from +" to " + to +" as the source file does not exist");
+		}
+		if (to.exists()) {
+			throw new IOException("Unable to move file " + from +" to " + to +" the destination file already exists");
+		}
+		copy(from, to);
+		delete(from);
+	}
+
+	public static void delete(File file) throws IOException {
+		if (file.isDirectory()) {
+			FileHelper.deleteDir(file);
+		}
+		else {
+			if (!file.delete() || file.exists()) {
+				throw new IOException("Unable to delete file: " +file);
+			}
+		}
 	}
 
 }

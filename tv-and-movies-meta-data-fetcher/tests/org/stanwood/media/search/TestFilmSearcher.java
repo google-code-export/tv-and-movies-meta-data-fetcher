@@ -96,7 +96,7 @@ public class TestFilmSearcher {
 			assertSearchDetails("á movié",null,names.get(index++));
 		}
 		finally {
-			FileHelper.deleteDir(filmsDir);
+			FileHelper.delete(filmsDir);
 		}
 	}
 

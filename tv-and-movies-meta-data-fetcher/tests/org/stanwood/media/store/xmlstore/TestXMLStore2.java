@@ -82,7 +82,7 @@ public class TestXMLStore2 {
 			params.put("rootMedia",dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"),new FileInputStream(actualFile),params);
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 
 
@@ -247,7 +247,7 @@ public class TestXMLStore2 {
 			Assert.assertEquals("Christopher McQuarrie",film.getWriters().get(0));
 
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 

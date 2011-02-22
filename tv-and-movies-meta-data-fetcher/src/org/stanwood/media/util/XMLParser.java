@@ -161,6 +161,35 @@ public class XMLParser {
 	}
 
 	/**
+	 * Used to convert a XML string to a DOM document
+	 * @param str The string to convert
+	 * @return The DOM Document
+	 * @throws XMLParserException Thrown if their is a parsing problem
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static Document strToDom(File file) throws XMLParserException, IOException {
+		FileInputStream fis = null;
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = XMLParser.createDocBuilder(factory);
+
+			fis = new FileInputStream( file );
+			InputSource is = new InputSource( fis );
+			builder.newDocument();
+			Document d = builder.parse( is );
+			return d;
+		}
+		catch (Exception e) {
+			throw new XMLParserException("Unable to convert string to XML DOM",e);
+		}
+		finally {
+			if (fis!=null) {
+				fis.close();
+			}
+		}
+	}
+
+	/**
 	 * Used to convert a DOM document to a string
 	 * @param document The DOM document
 	 * @return The XML as a string

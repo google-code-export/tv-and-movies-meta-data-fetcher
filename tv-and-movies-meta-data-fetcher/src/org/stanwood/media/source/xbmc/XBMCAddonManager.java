@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.WebFile;
 
 public class XBMCAddonManager implements IContentFetcher {
@@ -32,6 +33,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	XBMCAddonManager(IXBMCUpdater updater,File addonDir,Locale locale) throws XBMCException {
 		this.addonDir = addonDir;
 		this.locale = locale;
+		updater.setAddonManager(this);
 		checkUptoDate(updater);
 		registerAddons();
 	}
@@ -46,6 +48,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	 */
 	public XBMCAddonManager() throws XBMCException {
 		this(new XBMCWebUpdater(),getDefaultAddonDir(),getDefaultLocale());
+
 	}
 
 	private static File getDefaultAddonDir() throws XBMCException {
@@ -111,5 +114,9 @@ public class XBMCAddonManager implements IContentFetcher {
 			}
 		}
 		return null;
+	}
+
+	String downloadFile(URL url, File newAddon) throws IOException {
+		return FileHelper.copy(url,newAddon);
 	}
 }

@@ -5,4 +5,13 @@ package org.stanwood.media.util;
  */
 public class XMLParserNotFoundException extends XMLParserException {
 
+	public XMLParserNotFoundException() {
+		super();
+	}
+
+	public XMLParserNotFoundException(String message) {
+		super(message);
+	}
+
+
 }

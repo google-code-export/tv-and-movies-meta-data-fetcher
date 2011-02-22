@@ -136,7 +136,7 @@ public class TestSapphireStore  {
 			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/film-0114814.xml"), new FileInputStream(actualFile));
 
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 
@@ -243,7 +243,7 @@ public class TestSapphireStore  {
 			Helper.assertXMLEquals(Data.class.getResourceAsStream("sapphire/eureka-000.xml"), new FileInputStream(actualFile));
 
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 
