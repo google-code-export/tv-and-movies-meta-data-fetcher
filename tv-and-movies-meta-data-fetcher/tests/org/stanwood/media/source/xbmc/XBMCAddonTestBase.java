@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import org.junit.AfterClass;
@@ -39,10 +40,11 @@ public class XBMCAddonTestBase {
 
 	/**
 	 * Used to clean up after the tests in the class have finished
+	 * @throws IOException Thrown if their is a problem
 	 */
 	@AfterClass
-	public static void cleanup() {
-		FileHelper.deleteDir(tmpDir);
+	public void cleanup() throws IOException {
+		FileHelper.delete(tmpDir);
 	}
 
 	protected XBMCAddonManager createAddonManager(File addonDir,Locale locale) throws XBMCException {

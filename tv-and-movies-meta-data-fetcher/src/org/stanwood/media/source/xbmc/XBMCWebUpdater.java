@@ -1,27 +1,29 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.WebFile;
+import org.stanwood.media.util.Version;
+import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.util.XMLParserNotFoundException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 
-public class XBMCWebUpdater implements IXBMCUpdater {
+public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private final static Log log = LogFactory.getLog(XBMCWebUpdater.class);
 
@@ -29,68 +31,195 @@ public class XBMCWebUpdater implements IXBMCUpdater {
 	private final static String UPDATE_SITE_MD5 = "http://mirrors.xbmc.org/addons/dharma/addons.xml.md5";
 	private final static String UPDATE_SITE_DATA_DIR = "http://mirrors.xbmc.org/addons/dharma";
 
+	private XBMCAddonManager mgr;
+
+	public XBMCWebUpdater() {
+	}
+
+	@Override
+	public void setAddonManager(XBMCAddonManager mgr) {
+		this.mgr =mgr;
+	}
+
 	@Override
 	public void update(File addonsDir) throws XBMCUpdaterException {
 		try {
 			File newAddon = new File(addonsDir,"addon.xml.new");
 			File oldAddon = new File(addonsDir,"addon.xml");
+
 			String actualMD5;
 			try {
-				actualMD5 = downloadFile(new URL(UPDATE_SITE_URL),newAddon);
-			}
-			catch (MalformedURLException e) {
-				throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
-			}
-			File newAddonMD5 = new File(addonsDir,"addon.md5.new");
-			String expectedMD5;
-			try {
-				downloadFile(new URL(UPDATE_SITE_MD5),newAddonMD5);
-				expectedMD5 = FileHelper.readFileContents(newAddonMD5);
+				actualMD5 = mgr.downloadFile(new URL(UPDATE_SITE_URL),newAddon);
+
 			}
 			catch (MalformedURLException e) {
 				throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
 			}
 
+			String expectedMD5 = readMD5(addonsDir);
 			if (!expectedMD5.equals(actualMD5)) {
+				if (log.isDebugEnabled()) {
+					log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]");
+				}
 				throw new XBMCUpdaterException("Unable to check for XBMC Scraper updates, MD5 checksum failed.");
 			}
 
-			List<String>pluginList;
-			if (!oldAddon.exists()) {
-				pluginList = getDefaultPlugins();
-			}
-			else {
-				if (checkFilesSame(oldAddon,newAddon)) {
-					log.info("No XBMC Scraper updates found.");
-					return;
-				}
-			 	pluginList = getDownloadedPlugins();
+			List<String> pluginList = getListOfPluginsToUpdate(addonsDir,newAddon, oldAddon);
+
+			Document newAddonDoc = XMLParser.strToDom(newAddon);
+			Document oldAddonDoc = null;
+			if (oldAddon.exists()) {
+				oldAddonDoc = XMLParser.strToDom(oldAddon);
 			}
 
 			File newPluginsDir = new File(addonsDir,"newplugins");
-			for (String plugin : pluginList) {
-//				if (newVersion avaliable) {
-//					donwload to newPluginsDir
-//
-//					reversivly check all the depended plugins and download them if they are
-//					not already downloaded and at the correct version
-//				}
+			if (!newPluginsDir.mkdir() || !newPluginsDir.exists()) {
+				throw new XBMCUpdaterException("Unable to create working directory: " +newPluginsDir);
 			}
 
-			// move all the new downloaded plugins into place of the old ones
-			// replace old addon.xml wiht new addon.xml
+			updatePlugins(newAddonDoc,oldAddonDoc,pluginList,addonsDir,newPluginsDir);
+
+			for (File f : newPluginsDir.listFiles()) {
+				if (f.isDirectory()) {
+					File oldPluginDir = new File(addonsDir,f.getName());
+					if (oldPluginDir.exists()) {
+						FileHelper.delete(oldPluginDir);
+					}
+					FileHelper.move(f, oldPluginDir);
+				}
+			}
+
+			if (oldAddon.exists()) {
+				FileHelper.delete(oldAddon);
+			}
+			FileHelper.move(newAddon, oldAddon);
 		}
 		catch (IOException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+		} catch (XMLParserException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
 		}
 	}
 
-	private List<String> getDownloadedPlugins() {
-		return null;
+	private List<String> getListOfPluginsToUpdate(File addonsDir,
+			File newAddon, File oldAddon) throws IOException {
+		List<String>pluginList;
+		if (!oldAddon.exists()) {
+			pluginList = getDefaultPlugins();
+		}
+		else {
+			if (checkFilesSame(oldAddon,newAddon)) {
+				log.info("No XBMC Scraper updates found.");
+				pluginList = new ArrayList<String>();
+				return pluginList;
+			}
+		 	pluginList = getDownloadedPlugins(addonsDir);
+		}
+		return pluginList;
+	}
+
+	private String readMD5(File addonsDir) throws XBMCUpdaterException,
+			IOException {
+		File newAddonMD5 = new File(addonsDir,"addon.md5.new");
+		String expectedMD5;
+		try {
+			mgr.downloadFile(new URL(UPDATE_SITE_MD5),newAddonMD5);
+			expectedMD5 = FileHelper.readFileContents(newAddonMD5).trim();
+			FileHelper.delete(newAddonMD5);
+		}
+		catch (MalformedURLException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
+		}
+		return expectedMD5;
+	}
+
+	private void updatePlugins(Document newAddonDoc, Document oldAddonDoc,
+			List<String> pluginList, File addonsDir, File newPluginsDir) throws XMLParserException, XBMCUpdaterException {
+		for (String plugin : pluginList) {
+			for (Node addon : selectNodeList(newAddonDoc, "/addons/addon[@id='"+plugin+"']")) {
+				 String version = ((Element)addon).getAttribute("version");
+				 if (version.length()==0) {
+					 throw new XMLParserNotFoundException("Unable to find version attribute of plugin '"+plugin+"'");
+				 }
+
+				 Version newVersion = new Version(version);
+				 Version oldVersion = null;
+				 if (oldAddonDoc!=null) {
+					 oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
+				 }
+				 if (oldVersion == null || newVersion.compareTo(oldVersion)>0) {
+					 downloadNewPlugin(plugin,newPluginsDir,newVersion);
+				 }
+			}
+
+			List<String> requiredPlugins = getRequiredPlugins(newAddonDoc, plugin);
+			updatePlugins(newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
+		}
+	}
+
+	private List<String> getRequiredPlugins(Document newAddonDoc, String plugin)
+			throws XMLParserException {
+		List<String>requiredPlugins = new ArrayList<String>();
+		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon[@id='"+plugin+"']/requires/import/@addon")) {
+			requiredPlugins.add(addon.getNodeValue());
+		}
+		return requiredPlugins;
+	}
+
+	private void downloadNewPlugin(String plugin,File newPluginsDir,Version version) throws XBMCUpdaterException {
+		try {
+			if (new File(newPluginsDir,plugin).exists()) {
+				return ;
+			}
+
+			String filename = plugin+"-"+version.toString()+".zip";
+			URL url = new URL(UPDATE_SITE_DATA_DIR+"/"+plugin+"/"+filename);
+			File zipFile = new File(newPluginsDir,filename);
+			mgr.downloadFile(url,zipFile);
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(zipFile);
+				FileHelper.unzip(fis, newPluginsDir);
+				if (!new File(newPluginsDir,plugin).exists()) {
+					throw new XBMCUpdaterException("Failed to unzip plugin '"+zipFile.getName()+"'");
+				}
+				FileHelper.delete(zipFile);
+			}
+			finally {
+				if (fis!=null) {
+					fis.close();
+				}
+			}
+			log.info("Downloaded new plugin '"+plugin+"' version="+version.toString());
+		}
+		catch (IOException e) {
+			throw new XBMCUpdaterException("Unable to download new pluign : " + plugin,e);
+		}
+	}
+
+	private List<String> getDownloadedPlugins(File addonsDir) {
+		File[] dirs = addonsDir.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.isDirectory();
+			}
+		});
+
+		List<String>plugins = new ArrayList<String>();
+		for (File dir : dirs) {
+			if (new File(dir,"addon.xml").exists()) {
+				plugins.add(dir.getName());
+			}
+		}
+
+		return plugins;
 	}
 
 	private List<String> getDefaultPlugins() {
-		return null;
+		List<String>defaultPlugins = new ArrayList<String>();
+		defaultPlugins.add("metadata.themoviedb.org");
+		defaultPlugins.add("metadata.tvdb.com");
+		return defaultPlugins;
 	}
 
 	private boolean checkFilesSame(File file1, File file2) throws IOException {
@@ -119,7 +248,7 @@ public class XBMCWebUpdater implements IXBMCUpdater {
 
 	}
 
-	public static boolean inputStreamEquals(InputStream is1, InputStream is2) {
+	private static boolean inputStreamEquals(InputStream is1, InputStream is2) {
 		int bufsize = 1024;
 		byte buff1[] = new byte[bufsize];
 		byte buff2[] = new byte[bufsize];
@@ -169,50 +298,6 @@ public class XBMCWebUpdater implements IXBMCUpdater {
 			return false;
 		}
 	}
-
-	private String downloadFile(URL url,File to) throws XBMCUpdaterException {
-		OutputStream out = null;
-		InputStream is = null;
-		try {
-			out = new FileOutputStream(to);
-			WebFile page = new WebFile(url);
-
-//			String MIME = page.getMIMEType();
-			byte[] content = (byte[]) page.getContent();
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			is = new DigestInputStream(new ByteArrayInputStream(content),md);
-
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = is.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-
-			FileHelper.copy(is,to);
-			return md.toString();
-		} catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to download file " + url.toExternalForm(),e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new XBMCUpdaterException("Unable to download file " + url.toExternalForm(),e);
-		} finally {
-			if (is!=null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					throw new XBMCUpdaterException("Unable to close input stream");
-				}
-			}
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					throw new XBMCUpdaterException("Unable to close output stream");
-				}
-			}
-		}
-	}
-
 
 
 }

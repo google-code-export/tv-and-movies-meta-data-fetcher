@@ -6,19 +6,6 @@ TESTDIR="../tests/org/stanwood/media/testdata"
 #wget -O $TESTDIR/tagchimp-iron-man-17.html "http://www.tagchimp.com/tc/39752/"
 
 #wget -O $TESTDIR/filmposters/movieposter-ironman.html "http://eu.movieposter.com/cgi-bin/mpw8/search.pl?ti=Iron+Man&pl=action&th=y&rs=12&size=any"
-#wget -O $TESTDIR/xbmc-eureka-search.html "http://www.tv.com/search.php?type=Search&stype=ajax_search&qs=Eureka&search_type=program&pg_results=0&sort="
-#wget -O $TESTDIR/eureka-search.html "http://www.tv.com/search.php?type=Search&stype=ajax_search&search_type=program&qs=eureka"
-#wget -O $TESTDIR/17552-summary.html "http://www.tv.com/heroes/show/17552/summary.html"
-#wget -O $TESTDIR/17552-episode_guide-printable=1.html "http://www.tv.com/heroes/show/17552/episode_guide.html?printable=1"
-#wget -O $TESTDIR/17552-episode_listings-season=3.html "http://www.tv.com/heroes/show/17552/episode.html?season=3"
-#wget -O $TESTDIR/58448-summary.html "http://www.tv.com/heroes/eureka/show/58448/summary.html"
-#wget -O $TESTDIR/58448-episode_guide-printable=1.html "http://www.tv.com/eureka/show/58448/episode_guide.html?printable=1"
-#wget -O $TESTDIR/58448-episode_listings-season=1.html "http://www.tv.com/eureka/show/58448/episode.html?season=1"
-#wget -O $TESTDIR/58448-episode_listings-season=2.html "http://www.tv.com/eureka/show/58448/episode.html?season=2"
-#wget -O $TESTDIR/58448-episode_listings-season=3.html "http://www.tv.com/eureka/show/58448/episode.html?season=3"
-#wget -O $TESTDIR/58448-episode_listings-season=4.html "http://www.tv.com/eureka/show/58448/episode.html?season=4"
-#wget -O $TESTDIR/58448-episode_listings-season=5.html "http://www.tv.com/eureka/show/58448/episode.html?season=5"
-
 #wget -O $TESTDIR/film-0371746.html "http://www.imdb.com/title/tt0371746"
 
 wget -O "$TESTDIR/tvdb-search-heroes.html" "http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en"
@@ -28,6 +15,19 @@ wget -O "$TESTDIR/themoviedb-film-1726.html" "http://api.themoviedb.org/2.1/Movi
 wget -O "$TESTDIR/imdb-tt0371746.html" "http://akas.imdb.com/title/tt0371746/"
 wget -O "$TESTDIR/themoviedb-images-1726.html"  "http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726"
 wget -O "$TESTDIR/themoviedb-imdbLookup-tt0371746.html" "http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746"
+
+TEMP_DIR=`mktemp -d`
+cd $TEMP_DIR
+mkdir addons
+wget -O "$TEMP_DIR/addons/addons.xm" "http://mirrors.xbmc.org/addons/dharma/addons.xml"
+wget -O "$TEMP_DIR/addons/addons.xml.md5" "http://mirrors.xbmc.org/addons/dharma/addons.xml.md5"
+wget -O "$TEMP_DIR/addons/metadata.themoviedb.org/metadata.themoviedb.org-1.2.4.zip" "http://mirrors.xbmc.org/addons/dharma/metadata.themoviedb.org/metadata.themoviedb.org-1.2.4.zip"
+wget -O "$TEMP_DIR/addons/metadata.common.hdtrailers.net/metadata.common.hdtrailers.net-1.0.6.zip" "http://mirrors.xbmc.org/addons/dharma/metadata.common.hdtrailers.net/metadata.common.hdtrailers.net-1.0.6.zip"
+wget -O "$TEMP_DIR/addons/metadata.common.imdb.com/metadata.common.imdb.com-2.0.7.zip" "http://mirrors.xbmc.org/addons/dharma/metadata.common.imdb.com/metadata.common.imdb.com-2.0.7.zip"
+wget -O "$TEMP_DIR/addons/metadata.tvdb.com/metadata.tvdb.com-1.1.0.zip" "http://mirrors.xbmc.org/addons/dharma/metadata.tvdb.com/metadata.tvdb.com-1.1.0.zip"
+wget -O "$TEMP_DIR/addons/metadata.common.themoviedb.org/metadata.common.themoviedb.org-1.0.7.zip" "http://mirrors.xbmc.org/addons/dharma/metadata.common.themoviedb.org/metadata.common.themoviedb.org-1.0.7.zip"
+zip -r9 "../tests/org/stanwood/media/source/xbmc/updates.zip" addons
+rm -rf $TEMP_DIR
 
 #TEMP_DIR=`mktemp -d`
 #git clone git://github.com/xbmc/xbmc.git $TEMP_DIR

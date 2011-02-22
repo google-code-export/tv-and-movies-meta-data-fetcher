@@ -126,7 +126,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 
 	}
@@ -254,7 +254,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 
@@ -313,7 +313,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 		} finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 

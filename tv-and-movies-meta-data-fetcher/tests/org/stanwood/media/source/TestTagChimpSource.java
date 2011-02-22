@@ -60,7 +60,7 @@ public class TestTagChimpSource {
 			Assert.assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());
 		}
 		finally {
-			FileHelper.deleteDir(dir);
+			FileHelper.delete(dir);
 		}
 	}
 
