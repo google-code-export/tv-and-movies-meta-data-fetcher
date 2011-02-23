@@ -181,7 +181,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				fis = new FileInputStream(zipFile);
 				FileHelper.unzip(fis, newPluginsDir);
 				if (!new File(newPluginsDir,plugin).exists()) {
-					throw new XBMCUpdaterException("Failed to unzip plugin '"+zipFile.getName()+"'");
+					throw new XBMCUpdaterException("Failed to unzip plugin '"+zipFile+"'");
 				}
 				FileHelper.delete(zipFile);
 			}
