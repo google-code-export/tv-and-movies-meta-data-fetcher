@@ -85,6 +85,9 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		Matcher m = UPDATE_SIZE.matcher(url.toExternalForm());
 		if (m.matches()) {
 			File f = new File(updateSite,m.group(1));
+			if (!f.exists()) {
+				throw new IOException("Unable to find file: " +f);
+			}
 			System.out.println("Fetching URL: " + url + " from " + f.getAbsolutePath());
 			FileHelper.copy(f,newAddon);
 			return FileHelper.getMD5Checksum(newAddon);
