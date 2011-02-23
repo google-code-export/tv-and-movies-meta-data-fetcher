@@ -446,7 +446,6 @@ public class FileHelper {
             while ((entry = zis.getNextEntry())!=null) {
                 File file = new File(destDir,entry.getName());
                 if (entry.isDirectory()) {
-                	System.out.println("Create dir: " + file);
                     if (!file.mkdir() && file.exists()) {
                         throw new IOException("Unable to create directory: " + file); //$NON-NLS-1$
                     }
@@ -457,7 +456,6 @@ public class FileHelper {
     					int count;
     					byte data[] = new byte[1000];
     					out = new BufferedOutputStream(new FileOutputStream(new File(destDir,entry.getName())),1000);
-    					System.out.println("Create file: " + file);
     					if (log.isDebugEnabled()) {
     						log.debug("Unzipping " + entry.getName() +" with size " + entry.getSize());
     					}
