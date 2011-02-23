@@ -22,6 +22,7 @@ import org.stanwood.media.source.xbmc.expression.Value;
 import org.stanwood.media.source.xbmc.expression.ValueType;
 import org.stanwood.media.store.xmlstore.SimpleErrorHandler;
 import org.stanwood.media.util.IterableNodeList;
+import org.stanwood.media.util.Version;
 import org.stanwood.media.util.XMLParser;
 import org.stanwood.media.util.XMLParserException;
 import org.w3c.dom.Document;
@@ -196,9 +197,9 @@ public class XBMCAddon extends XMLParser {
 	 * @return the version of the addon
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public String getVersion() throws XBMCException {
+	public Version getVersion() throws XBMCException {
 		try {
-			return getStringFromXML(getDocument(addonFile), "addon/@version");
+			return new Version(getStringFromXML(getDocument(addonFile), "addon/@version"));
 		} catch (Exception e) {
 			throw new XBMCException("Unable to find addon id",e);
 		}

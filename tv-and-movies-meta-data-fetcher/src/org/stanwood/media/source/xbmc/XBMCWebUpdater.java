@@ -42,7 +42,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	@Override
-	public void update(File addonsDir) throws XBMCUpdaterException {
+	public int update(File addonsDir) throws XBMCUpdaterException {
 		try {
 			File newAddon = new File(addonsDir,"addon.xml.new");
 			File oldAddon = new File(addonsDir,"addon.xml");
@@ -73,12 +73,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 
 			File newPluginsDir = new File(addonsDir,"newplugins");
-			if (!newPluginsDir.mkdir() || !newPluginsDir.exists()) {
+			if (!newPluginsDir.mkdir() && !newPluginsDir.exists()) {
 				throw new XBMCUpdaterException("Unable to create working directory: " +newPluginsDir);
 			}
 
 			updatePlugins(newAddonDoc,oldAddonDoc,pluginList,addonsDir,newPluginsDir);
 
+			int count = 0;
 			for (File f : newPluginsDir.listFiles()) {
 				if (f.isDirectory()) {
 					File oldPluginDir = new File(addonsDir,f.getName());
@@ -86,13 +87,17 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 						FileHelper.delete(oldPluginDir);
 					}
 					FileHelper.move(f, oldPluginDir);
+					count++;
 				}
 			}
+
+			FileHelper.delete(newPluginsDir);
 
 			if (oldAddon.exists()) {
 				FileHelper.delete(oldAddon);
 			}
 			FileHelper.move(newAddon, oldAddon);
+			return count;
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);

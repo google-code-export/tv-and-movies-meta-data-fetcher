@@ -19,17 +19,19 @@ package org.stanwood.media.logging;
 import java.io.File;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.RootLogger;
 
 /**
- * This class is used to help with setting up the logging. 
+ * This class is used to help with setting up the logging.
  */
-public class LogSetupHelper {	
-	
+public class LogSetupHelper {
+
 	/**
 	 * Initialise the logging using the given configuration file
 	 * @param logConfigFile The logging configuration file
 	 */
 	public static void initLogingFromConfigFile(File logConfigFile) {
+		RootLogger.getRootLogger().removeAllAppenders();
 		PropertyConfigurator.configure(logConfigFile.getAbsolutePath());
 	}
 
@@ -38,6 +40,7 @@ public class LogSetupHelper {
 	 * @param configName The name of the configuration file stored in the same package as this class.
 	 */
 	public static void initLogingInternalConfigFile(String configName) {
+		RootLogger.getRootLogger().removeAllAppenders();
 		PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
 	}
 

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
@@ -26,20 +27,30 @@ public class XBMCAddonManager implements IContentFetcher {
 	private final static Log log = LogFactory.getLog(XBMCAddonManager.class);
 
 	private File addonDir;
-	private Map<String,XBMCAddon> addons = new HashMap<String,XBMCAddon>();
+	private Map<String,XBMCAddon> addons = null;
 	private List<ISource>sources = new ArrayList<ISource>();
 	private Locale locale;
 
+	private IXBMCUpdater updater;
+
 	XBMCAddonManager(IXBMCUpdater updater,File addonDir,Locale locale) throws XBMCException {
+		init(updater, addonDir, locale);
+	}
+
+	protected void init(IXBMCUpdater updater, File addonDir, Locale locale) throws XBMCException {
 		this.addonDir = addonDir;
 		this.locale = locale;
 		updater.setAddonManager(this);
-		checkUptoDate(updater);
-		registerAddons();
+		this.updater = updater;
+		updatePlugins();
 	}
 
-	private void checkUptoDate(IXBMCUpdater updater) {
 
+	public int updatePlugins() throws XBMCException {
+		addons = new HashMap<String,XBMCAddon>();
+		int count = updater.update(addonDir);
+		registerAddons();
+		return count;
 	}
 
 	/**
@@ -49,6 +60,11 @@ public class XBMCAddonManager implements IContentFetcher {
 	public XBMCAddonManager() throws XBMCException {
 		this(new XBMCWebUpdater(),getDefaultAddonDir(),getDefaultLocale());
 
+	}
+
+	XBMCAddonManager(File addonDir, Locale locale) {
+		this.addonDir = addonDir;
+		this.locale = locale;
 	}
 
 	private static File getDefaultAddonDir() throws XBMCException {
@@ -74,10 +90,12 @@ public class XBMCAddonManager implements IContentFetcher {
 
 	private void registerAddons() throws XBMCException {
 		for (File f : addonDir.listFiles()) {
-			XBMCAddon addon = new XBMCAddon(this,f,locale);
-			addons.put(addon.getId(),addon);
-			if (addon.hasScrapers()) {
-				sources.add(new XBMCSource(this, addon.getId()));
+			if (f.isDirectory()) {
+				XBMCAddon addon = new XBMCAddon(this,f,locale);
+				addons.put(addon.getId(),addon);
+				if (addon.hasScrapers()) {
+					sources.add(new XBMCSource(this, addon.getId()));
+				}
 			}
 		}
 	}
@@ -118,5 +136,9 @@ public class XBMCAddonManager implements IContentFetcher {
 
 	String downloadFile(URL url, File newAddon) throws IOException {
 		return FileHelper.copy(url,newAddon);
+	}
+
+	public Set<String> listAddons() {
+		return addons.keySet();
 	}
 }

@@ -31,17 +31,16 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 
 	/**
 	 * Used to create a instance of the class
+	 * @param updateSite The location of the dummy update site
 	 * @param addonDir The directory the addon's data is stored in
 	 * @param locale The language been used
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public DummyXBMCAddonManager(File addonDir, Locale locale)
-			throws XBMCException {
-		super(new XBMCWebUpdater(),addonDir, locale);
-	}
-
-	public void setUpdateSite(File updateSite) {
+	public DummyXBMCAddonManager(File updateSite,File addonDir, Locale locale) throws XBMCException {
+		super(addonDir,locale);
+		XBMCWebUpdater updater = new XBMCWebUpdater();
 		this.updateSite = updateSite;
+		init(updater,addonDir, locale);
 	}
 
 	@Override
@@ -100,5 +99,9 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		value = value.replaceAll("[ |+]", "-");
 		return value;
 	}
+
+
+
+
 
 }

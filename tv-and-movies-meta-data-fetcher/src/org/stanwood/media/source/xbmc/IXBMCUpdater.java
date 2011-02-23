@@ -7,7 +7,7 @@ import java.io.File;
  */
 public interface IXBMCUpdater {
 
-	public void update(File addonsDir) throws XBMCUpdaterException;
+	public int update(File addonsDir) throws XBMCUpdaterException;
 
 	public void setAddonManager(XBMCAddonManager xbmcAddonManager);
 }
