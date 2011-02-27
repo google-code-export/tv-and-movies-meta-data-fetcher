@@ -1,4 +1,4 @@
-package org.stanwood.media.util;
+package org.stanwood.media.xml;
 
 /**
  * Thrown if their are problems parsing XML

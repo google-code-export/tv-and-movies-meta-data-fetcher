@@ -13,7 +13,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.xml.XMLParser;
 
 /**
  * This test is used to test that film information can be correctly retrieved from XBMC sources

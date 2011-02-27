@@ -11,8 +11,8 @@ import java.util.regex.Matcher;
 
 import org.junit.Assert;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.XMLParser;
-import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.xml.XMLParser;
+import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
