@@ -15,7 +15,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.xml.XMLParser;
 
 /**
  * This test is used to test that TV show information can be correctly retrieved from XBMC sources

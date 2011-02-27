@@ -27,7 +27,6 @@ import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,13 +37,12 @@ import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
-import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.xml.XMLParser;
+import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
  * This is used to parse the XML configuration files. These are used to tell the
@@ -82,52 +80,37 @@ public class ConfigReader extends XMLParser {
 	 * @throws ConfigException Thrown if their is a problem parsing the file
 	 */
 	public void parse() throws ConfigException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
 		if (file.exists()) {
 			try {
-				Document doc = createDocBuilder(factory).parse(file);;
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setValidating(true);
+				factory.setSchema(XMLParser.getSchema("MediaInfoFetcher-Config-1.0.xsd"));
+				Document doc = createDocBuilder(factory).parse(file);
 
-				NodeList stores = XPathAPI.selectNodeList(doc, "config/stores/store");
-				for (int i=0;i<stores.getLength();i++) {
-					Element storeElement = (Element) stores.item(i);
-					if (storeElement!=null) {
-						StoreConfig store = new StoreConfig();
-						String id = storeElement.getAttribute("id");
-						if (id.equals("org.stanwood.media.store.MemoryStore")) {
-							id = "org.stanwood.media.store.memory.MemoryStore";
-						}
-						store.setID(id);
+				for (Node storeElement : selectNodeList(doc, "config/stores/store")) {
+					StoreConfig store = new StoreConfig();
+					store.setID(((Element)storeElement).getAttribute("id"));
 
-						NodeList params = XPathAPI.selectNodeList(storeElement, "param");
-						for (int j=0;j<params.getLength();j++) {
-							Element paramNode = (Element) params.item(j);
-							String name = paramNode.getAttribute("name");
-							String value = paramNode.getAttribute("value");
-							store.addParam(name, value);
-						}
-
-						this.stores.add(store);
+					for (Node paramNode : selectNodeList(storeElement, "param")) {
+						String name = ((Element)paramNode).getAttribute("name");
+						String value = ((Element)paramNode).getAttribute("value");
+						store.addParam(name, value);
 					}
+
+					this.stores.add(store);
 				}
 
 
-				NodeList sources = XPathAPI.selectNodeList(doc, "config/sources/source");
-				for (int i=0;i<sources.getLength();i++) {
-					Element sourceElement = (Element) sources.item(i);
-					if (sourceElement!=null) {
-						SourceConfig source = new SourceConfig();
-						source.setID(sourceElement.getAttribute("id"));
-						NodeList params = XPathAPI.selectNodeList(sourceElement, "param");
-						for (int j=0;j<params.getLength();j++) {
-							Element paramNode = (Element) params.item(j);
-							String name = paramNode.getAttribute("name");
-							String value = paramNode.getAttribute("value");
-							source.addParam(name, value);
-						}
-
-						this.sources.add(source);
+				for (Node sourceElement : selectNodeList(doc, "config/sources/source")) {
+					SourceConfig source = new SourceConfig();
+					source.setID(((Element)sourceElement).getAttribute("id"));
+					for (Node paramNode : selectNodeList(sourceElement, "param")) {
+						String name = ((Element)paramNode).getAttribute("name");
+						String value = ((Element)paramNode).getAttribute("value");
+						source.addParam(name, value);
 					}
+
+					this.sources.add(source);
 				}
 
 			} catch (SAXException e) {
@@ -136,7 +119,7 @@ public class ConfigReader extends XMLParser {
 				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 			} catch (ParserConfigurationException e) {
 				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
-			} catch (TransformerException e) {
+			} catch (XMLParserException e) {
 				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 			}
 		}

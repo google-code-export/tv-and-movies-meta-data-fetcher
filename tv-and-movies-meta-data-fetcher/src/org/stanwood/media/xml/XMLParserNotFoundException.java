@@ -1,4 +1,4 @@
-package org.stanwood.media.util;
+package org.stanwood.media.xml;
 
 /**
  * This is thrown if a attempt was made to get a XML node that does not exist.

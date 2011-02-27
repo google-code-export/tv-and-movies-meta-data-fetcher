@@ -1,0 +1,13 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="config">  
+  		<xs:complexType>
+  			<xs:sequence>
+  				<xs:element name="stores">
+  					<xs:element name="store"/>
+  				</xs:element>
+  				<xs:element name="sources">
+  				</xs:element>
+  			</xs:sequence>
+  		</xs:complexType>    	
+  	</xs:element>
+</xs:schema>

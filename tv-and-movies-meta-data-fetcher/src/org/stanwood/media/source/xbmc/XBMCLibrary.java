@@ -3,7 +3,7 @@ package org.stanwood.media.source.xbmc;
 import java.io.File;
 import java.util.Map;
 
-import org.stanwood.media.util.XMLParserException;
+import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Element;
 
 public class XBMCLibrary extends XBMCExtension {

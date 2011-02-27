@@ -9,7 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.stanwood.media.store.xmlstore.SimpleErrorHandler;
-import org.stanwood.media.util.XMLParser;
+import org.stanwood.media.xml.XMLParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;

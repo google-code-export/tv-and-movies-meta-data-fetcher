@@ -1,4 +1,4 @@
-package org.stanwood.media.util;
+package org.stanwood.media.xml;
 
 import java.util.Iterator;
 
@@ -9,7 +9,7 @@ public class IterableNodeList implements org.w3c.dom.NodeList, Iterable<Node> {
 	private org.w3c.dom.NodeList list;
 	private int pos = 0;
 
-	public IterableNodeList(org.w3c.dom.NodeList list) {
+	IterableNodeList(org.w3c.dom.NodeList list) {
 		this.list = list;
 	}
 

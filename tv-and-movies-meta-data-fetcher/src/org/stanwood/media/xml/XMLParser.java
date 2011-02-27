@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.util;
+package org.stanwood.media.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,10 +24,14 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -271,17 +275,29 @@ public class XMLParser {
 		            throws SAXException, IOException {
 		    	if (publicId!=null) {
 			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) {
-			        	File currentDir = new File(System.getProperty("user.dir"));
-			        	File dtd = new File(currentDir,"etc"+File.separator+"MediaInfoFetcher-XmlStore-2.0.dtd");
-			        	if (dtd.exists()) {
-			        		return new InputSource(new FileInputStream(dtd));
-			        	}
+			    		return new InputSource(XMLParser.class.getResourceAsStream("dtd/MediaInfoFetcher.XmlStore-2.0.dtd"));
 			        }
 		    	}
 		        return null;
 		    }
 		});
 		return builder;
+	}
+
+	/**
+	 * Used to create a Schema that can be used to validate XML documents
+	 * @param name The name of the schema
+	 * @return The schema
+	 * @throws XMLParserException Thrown if their are any problems
+	 */
+	public static Schema getSchema(String name) throws XMLParserException {
+		try {
+			String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(language);
+			return schemaFactory.newSchema(new StreamSource(XMLParser.class.getResourceAsStream("schema/"+name)));
+		} catch (SAXException e) {
+			throw new XMLParserException("Unable to get schema: " + name,e);
+		}
 	}
 
 	/**
