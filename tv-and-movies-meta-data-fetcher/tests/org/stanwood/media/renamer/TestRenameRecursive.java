@@ -264,7 +264,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveSourceRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");

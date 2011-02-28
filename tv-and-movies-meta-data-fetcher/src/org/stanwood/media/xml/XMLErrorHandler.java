@@ -1,4 +1,4 @@
-package org.stanwood.media.store.xmlstore;
+package org.stanwood.media.xml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -97,19 +97,16 @@ public class Controller {
 	 * again.
 	 *
 	 * @param config The parsed configuration file.
+	 * @throws ConfigException Thrown if their is a problem reading the configuration file
 	 */
-	public static void initFromConfigFile(ConfigReader config) {
+	public static void initFromConfigFile(ConfigReader config) throws ConfigException {
 		if (stores != null || sources != null) {
 			throw new IllegalStateException("Controller allready initialized");
 		}
 		configReader = config;
 
-		try {
-			stores = config.loadStoresFromConfigFile();
-			sources = config.loadSourcesFromConfigFile();
-		} catch (ConfigException e) {
-			log.fatal(e.getMessage(),e);
-		}
+		stores = config.loadStoresFromConfigFile();
+		sources = config.loadSourcesFromConfigFile();
 	}
 
 

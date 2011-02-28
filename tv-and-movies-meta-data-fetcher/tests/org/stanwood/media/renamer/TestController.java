@@ -19,16 +19,19 @@ package org.stanwood.media.renamer;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
+import org.junit.Test;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.store.FakeStore;
 import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to test the {@link Controller} class.
  */
-public class TestController extends TestCase {
+public class TestController extends XBMCAddonTestBase  {
 
 	private final static String LS = System.getProperty("line.separator");
 
@@ -37,11 +40,14 @@ public class TestController extends TestCase {
 	 * on the store.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
+	@Test
 	public void testStoreWithParams() throws Exception{
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
 		testConfig.append("    <sources>"+LS);
-		testConfig.append("  <source id=\"org.stanwood.media.source.TVCOMSource\"/>"+LS);
+		testConfig.append("  <source id=\"org.stanwood.media.renamer.FakeSource\"/>"+LS);
 		testConfig.append("  </sources>"+LS);
 		testConfig.append("  <stores>"+LS);
 		testConfig.append("	   <store id=\"org.stanwood.media.store.FakeStore\">"+LS);
@@ -60,7 +66,7 @@ public class TestController extends TestCase {
 		Controller.destoryController();
 		Controller.initFromConfigFile(configReader);
 
-		assertEquals("/testPath/blah",FakeStore.testParam1);
+		Assert.assertEquals("/testPath/blah",FakeStore.testParam1);
 
 		Controller.destoryController();
 	}

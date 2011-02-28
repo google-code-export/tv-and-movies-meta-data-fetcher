@@ -17,16 +17,12 @@
 package org.stanwood.media.setup;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +38,6 @@ import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * This is used to parse the XML configuration files. These are used to tell the
@@ -58,19 +53,18 @@ public class ConfigReader extends XMLParser {
 
 	private static XBMCAddonManager xbmcMgr;
 
-	static {
-		try {
-			setManager(new XBMCAddonManager());
-		} catch (XBMCException e) {
-			log.error(e.getMessage(),e);
-		}
-	}
-
 	/**
 	 * The constructor used to create a instance of the configuration reader
 	 * @param file The configuration file
 	 */
 	public ConfigReader(File file) {
+		if (xbmcMgr == null) {
+			try {
+				setManager(new XBMCAddonManager());
+			} catch (XBMCException e) {
+				log.error(e.getMessage(),e);
+			}
+		}
 		this.file = file;
 	}
 
@@ -82,10 +76,7 @@ public class ConfigReader extends XMLParser {
 	public void parse() throws ConfigException {
 		if (file.exists()) {
 			try {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				factory.setValidating(true);
-				factory.setSchema(XMLParser.getSchema("MediaInfoFetcher-Config-1.0.xsd"));
-				Document doc = createDocBuilder(factory).parse(file);
+				Document doc = XMLParser.parse(file, "MediaInfoFetcher-Config-1.0.xsd");
 
 				for (Node storeElement : selectNodeList(doc, "config/stores/store")) {
 					StoreConfig store = new StoreConfig();
@@ -100,7 +91,6 @@ public class ConfigReader extends XMLParser {
 					this.stores.add(store);
 				}
 
-
 				for (Node sourceElement : selectNodeList(doc, "config/sources/source")) {
 					SourceConfig source = new SourceConfig();
 					source.setID(((Element)sourceElement).getAttribute("id"));
@@ -112,13 +102,6 @@ public class ConfigReader extends XMLParser {
 
 					this.sources.add(source);
 				}
-
-			} catch (SAXException e) {
-				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
-			} catch (IOException e) {
-				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
-			} catch (ParserConfigurationException e) {
-				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 			} catch (XMLParserException e) {
 				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 			}
@@ -154,7 +137,13 @@ public class ConfigReader extends XMLParser {
 		for (SourceConfig sourceConfig : getSources()) {
 			String sourceClass = sourceConfig.getID();
 			try {
-				Class<? extends ISource> c = Class.forName(sourceClass).asSubclass(ISource.class);
+				Class<? extends ISource> c = null;
+				try {
+					c = Class.forName(sourceClass).asSubclass(ISource.class);
+				}
+				catch (ClassNotFoundException e) {
+					throw new ConfigException("Unable to add source because source '" + sourceClass + "' can't be found",e);
+				}
 				if (XBMCSource.class.isAssignableFrom(c)) {
 					List<ISource> xbmcSources = xbmcMgr.getSources();
 					if (sourceConfig.getParams() != null) {
@@ -193,8 +182,6 @@ public class ConfigReader extends XMLParser {
 					}
 					sources.add(source);
 				}
-			} catch (ClassNotFoundException e) {
-				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (InstantiationException e) {
 				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
@@ -226,15 +213,15 @@ public class ConfigReader extends XMLParser {
 				}
 				stores.add(store);
 			} catch (ClassNotFoundException e) {
-				throw new ConfigException("Unable to add source '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException("Unable to add store '" + storeClass + "' because it can't be found",e);
 			} catch (InstantiationException e) {
-				throw new ConfigException("Unable to add source '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
-				throw new ConfigException("Unable to add source '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException("Unable to add source '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (InvocationTargetException e) {
-				throw new ConfigException("Unable to add source '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			}
 		}
 		return stores;

@@ -46,6 +46,7 @@ import org.stanwood.media.search.ReverseFilePatternMatcher;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.xml.SimpleErrorHandler;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.stanwood.media.xml.XMLParserNotFoundException;
@@ -62,8 +63,9 @@ import org.xml.sax.SAXException;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private String DTD_LOCATION = "-//STANWOOD//DTD XMLStore 2.0//EN";
-	private Pattern FILE_SEARCH_PATTERN1 = Pattern.compile("(.*)[Ss]\\d+[Ee]\\d+.*");
+	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION+"/MediaInfoFetcher-XmlStore-2.0.dtd";
+	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore 2.0//EN";
+	private final static Pattern FILE_SEARCH_PATTERN1 = Pattern.compile("(.*)[Ss]\\d+[Ee]\\d+.*");
 
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
 
@@ -1036,7 +1038,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			DocumentBuilder builder = createDocBuilder(factory);
 
-			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore-2.0.dtd");
+			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, DTD_WEB_LOCATION);
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
 			NodeList nodes = doc.getDocumentElement().getParentNode().getChildNodes();
 			for (int i=0;i<nodes.getLength();i++) {

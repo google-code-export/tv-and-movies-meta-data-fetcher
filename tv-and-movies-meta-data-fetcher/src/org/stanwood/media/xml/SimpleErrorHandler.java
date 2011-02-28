@@ -1,10 +1,12 @@
-package org.stanwood.media.store.xmlstore;
+package org.stanwood.media.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.util.FileHelper;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -53,11 +55,7 @@ public class SimpleErrorHandler extends XMLErrorHandler {
     public void error(SAXParseException e) throws SAXException {
 		super.error(e);
 		if (log.isDebugEnabled()) {
-			try {
-				FileHelper.displayFile(xmlFile,e.getLineNumber()-5,e.getLineNumber()+5, System.out);
-			} catch (IOException e1) {
-				log.error(e1.getMessage(),e1);
-			}
+			displayFile(e);
 		}
     }
 
@@ -69,14 +67,29 @@ public class SimpleErrorHandler extends XMLErrorHandler {
     public void fatalError(SAXParseException e) throws SAXException {
 		super.fatalError(e);
 		if (log.isDebugEnabled()) {
-			try {
-				FileHelper.displayFile(xmlFile,e.getLineNumber()-5,e.getLineNumber()+5, System.out);
-			} catch (IOException e1) {
-				log.error(e1.getMessage(),e1);
-			}
+			displayFile(e);
 		}
 
     }
+
+	private void displayFile(SAXParseException e) {
+		OutputStream os = null;
+		try {
+			os = new LoggerOutputStream();
+			FileHelper.displayFile(xmlFile,e.getLineNumber()-5,e.getLineNumber()+5, os);
+		} catch (IOException e1) {
+			log.error(e1.getMessage(),e1);
+		}
+		finally {
+			if (os!=null) {
+				try {
+					os.close();
+				} catch (IOException e1) {
+					log.error("Unable to close stream");
+				}
+			}
+		}
+	}
 
 
 

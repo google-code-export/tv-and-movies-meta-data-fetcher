@@ -154,10 +154,18 @@ public class XBMCScraper extends XBMCExtension {
 				log.debug("Got result: " + result);
 			}
 			Document doc = XMLParser.strToDom(result);
+			checkForError(doc,funcName);
 			resolveElements(doc);
 			return doc;
 		} catch (Exception e) {
 			throw new XBMCException("Unable to execute scraper function '"+funcName+"' in addon '"+getAddon().getId()+"'",e);
+		}
+	}
+
+	private void checkForError(Document doc,String functionName) throws XBMCException, XMLParserException{
+		Node node = selectSingleNode(doc, "error/text()");
+		if (node!=null) {
+			throw new XBMCException("Unable to execute function '"+functionName+"', " + node.getTextContent());
 		}
 	}
 

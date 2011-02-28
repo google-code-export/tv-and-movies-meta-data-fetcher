@@ -2,12 +2,40 @@
 	<xs:element name="config">  
   		<xs:complexType>
   			<xs:sequence>
-  				<xs:element name="stores">
-  					<xs:element name="store"/>
+  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>
+	  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+	  						<xs:element name="source" type="source"/>
+	  					</xs:sequence>
+  					</xs:complexType>
   				</xs:element>
-  				<xs:element name="sources">
-  				</xs:element>
+  				<xs:element name="stores" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>
+	  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+	  						<xs:element name="store" type="store"/>
+	  					</xs:sequence>  
+  					</xs:complexType>					
+  				</xs:element>  				
   			</xs:sequence>
   		</xs:complexType>    	
   	</xs:element>
+
+	<xs:complexType name="store">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="source">  		
+  		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>  		
+  	</xs:complexType>
+
+	<xs:complexType name="param">
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="value" type="xs:string"></xs:attribute>
+	</xs:complexType>	
 </xs:schema>

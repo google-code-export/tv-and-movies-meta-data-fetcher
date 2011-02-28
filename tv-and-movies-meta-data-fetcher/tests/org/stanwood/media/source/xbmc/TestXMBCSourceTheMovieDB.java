@@ -31,8 +31,8 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("The MovieDB", addon.getName());
 
 		Assert.assertEquals("Team XBMC", addon.getProviderName());
-		Assert.assertEquals("1.2.0", addon.getVersion());
-		Assert.assertEquals("TMDb Movie Scraper",addon.getSummary());
+		Assert.assertEquals("1.2.4", addon.getVersion().toString());
+		Assert.assertEquals("TMDB Movie Scraper",addon.getSummary());
 		Assert.assertEquals("themoviedb.org is a free and open movie database. It's completely user driven by people like you. TMDb is currently used by millions of people every month and with their powerful API, it is also used by many popular media centers like XBMC to retrieve Movie Metadata, Posters and Fanart to enrich the user's experience.",addon.getDescription());
 		Assert.assertFalse(addon.supportsMode(Mode.TV_SHOW));
 		Assert.assertTrue(addon.supportsMode(Mode.FILM));
@@ -90,7 +90,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("http://cf1.imgobject.com/posters/eae/4bc912a2017a3c57fe006eae/iron-man-original.jpg",film.getImageURL().toExternalForm());
 		Assert.assertEquals("Action",film.getPreferredGenre());
 		Assert.assertEquals(8.4F,film.getRating().getRating());
-		Assert.assertEquals(60,film.getRating().getNumberOfVotes());
+		Assert.assertEquals(61,film.getRating().getNumberOfVotes());
 		Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
 		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getSummary());
 		Assert.assertEquals("Iron Man",film.getTitle());

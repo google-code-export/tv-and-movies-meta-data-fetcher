@@ -19,6 +19,7 @@ package org.stanwood.media.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -49,6 +50,9 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  * This is a helper class that should be extend by classes that need to parse XML
  */
 public class XMLParser {
+
+	public static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd";
+	public static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema";
 
 	/**
 	 * Used to read a integer from the XML
@@ -273,15 +277,52 @@ public class XMLParser {
 		    @Override
 		    public InputSource resolveEntity(String publicId, String systemId)
 		            throws SAXException, IOException {
-		    	if (publicId!=null) {
+		    	if (systemId.endsWith(".xsd")) {
+		    		String schemaName= systemId.substring(systemId.lastIndexOf("/")+1);
+		    		InputStream stream = XMLParser.class.getResourceAsStream("schema/"+schemaName);
+		    		if (stream==null) {
+		    			throw new IOException ("Unable to find schema: " + schemaName);
+		    		}
+		    		return new InputSource(stream);
+		    	}
+		    	else if (publicId!=null) {
 			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) {
-			    		return new InputSource(XMLParser.class.getResourceAsStream("dtd/MediaInfoFetcher.XmlStore-2.0.dtd"));
+			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaInfoFetcher-XmlStore-2.0.dtd");
+			    		if (stream==null) {
+			    			throw new IOException ("Unable to find dtd");
+			    		}
+			    		return new InputSource(stream);
 			        }
 		    	}
 		        return null;
 		    }
 		});
 		return builder;
+	}
+
+	public static Document parse(File file,String schemaName) throws XMLParserException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(true);
+		factory.setXIncludeAware(true);
+		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+
+		try {
+			DocumentBuilder builder = createDocBuilder(factory);
+			SimpleErrorHandler errorHandler = new SimpleErrorHandler(file);
+			builder.setErrorHandler(errorHandler);
+			Document doc = builder.parse(file);
+			if (errorHandler.hasErrors()) {
+				throw new XMLParserException("Unable to parse XML document as it containted errors: " + file.getAbsolutePath());
+			}
+			return doc;
+		} catch (SAXException e) {
+			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+		} catch (IOException e) {
+			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+		} catch (ParserConfigurationException e) {
+			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+		}
 	}
 
 	/**

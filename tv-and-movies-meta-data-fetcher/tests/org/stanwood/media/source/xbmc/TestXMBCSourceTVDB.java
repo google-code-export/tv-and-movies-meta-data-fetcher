@@ -34,7 +34,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("metadata.tvdb.com", addon.getId());
 		Assert.assertEquals("The TVDB", addon.getName());
 		Assert.assertEquals("Team XBMC", addon.getProviderName());
-		Assert.assertEquals("1.0.8", addon.getVersion());
+		Assert.assertEquals("1.1.0", addon.getVersion().toString());
 		Assert.assertEquals("Fetch TV show metadata from TheTVDB.com",addon.getSummary());
 		Assert.assertEquals("TheTVDB.com is a TV Scraper. The site is a massive open database that can be modified by anybody and contains full meta data for many shows in different languages. All content and images on the site have been contributed by their users for users and have a high standard or quality. The database schema and website are open source under the GPL.",addon.getDescription());
 		Assert.assertTrue(addon.supportsMode(Mode.TV_SHOW));
