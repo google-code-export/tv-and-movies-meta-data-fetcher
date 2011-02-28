@@ -18,8 +18,15 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * A test class used to test the class {@link FilmSearcher}
+ */
 public class TestFilmSearcher {
 
+	/**
+	 * Used to check that the film search class finds the correct film names to perfrom a search on
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testSearch() throws Exception {
 		File filmsDir = createFilmFiles();
@@ -145,30 +152,5 @@ public class TestFilmSearcher {
 		return tmpDir;
 	}
 
-	private static class TSearchDetails {
 
-		private File originalFile;
-		private String term;
-		private String year;
-
-		public TSearchDetails(File originalFile,String term,String year) {
-			this.originalFile = originalFile;
-			this.term = term;
-			this.year = year;
-		}
-
-		public File getOriginalFile() {
-			return originalFile;
-		}
-
-		public String getTerm() {
-			return term;
-		}
-
-		public String getYear() {
-			return year;
-		}
-
-
-	}
 }
