@@ -6,6 +6,8 @@ A.TV.Show.S10E11.HDTV.XVID-BLAH.avi
 [ www.somesite.com ] - A.TV.Show.S01E13.Show.Title.PROPER.HDTV.XviD/Sample/sample-a.tv.show.s01e13.hdtv.xvid-blah.avi
 [ www.somesite.com ] - A.TV.Show.S01E13.Show.Title.PROPER.HDTV.XviD/a.tv.show.s01e13.hdtv.xvid-blah.avi
 [ www.somesite.com ] - A.TV.Show.S01E13.Show.Title.PROPER.HDTV.XviD/a.tv.show.s01e13.hdtv.xvid-blah.nfo
-Show/Season/1 01 - episode title.avi
-Show/Season/1x01 - episode title.srt
+Show/Season 1/1 01 - episode title.avi
+Show/Season 01/1x01 - episode title.srt
 Show/Season/S01e01 - episode title.avi
+A Show season 3/Show.sO3e09.HDTV.XviD-LOL.[BLAH].m4v
+A Show season 3/Show.sO3e10.HDTV.XviD-LOL.[BLAH].m4v
