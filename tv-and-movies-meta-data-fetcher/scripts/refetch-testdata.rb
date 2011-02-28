@@ -16,9 +16,14 @@ def error(msg)
 end
 
 def doDownload(url,dest)
-    url2 = URI.parse(url)
+    url2 = URI.parse(url)    
+    path = url2.path
+    if url2.query != nil && url2.query != "" 
+        path = path + "?"+url2.query
+    end    
+    
     res = Net::HTTP.start(url2.host,url2.port) { |http|
-        resp = http.get(url2.path)
+        resp = http.get(path)
         case resp
         when Net::HTTPSuccess
             open(dest, "wb") { |file|
