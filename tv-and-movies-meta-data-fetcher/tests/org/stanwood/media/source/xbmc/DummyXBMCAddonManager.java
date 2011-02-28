@@ -91,7 +91,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 			FileHelper.copy(f,newAddon);
 			return FileHelper.getMD5Checksum(newAddon);
 		}
-		return super.downloadFile(url, newAddon);
+		throw new IOException("Unable to find test data for url: " + url);
 	}
 
 	private String getSearchName(String value) {

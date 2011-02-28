@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.0//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/etc/MediaInfoFetcher-XmlStore-2.0.dtd">
+<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.0//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaInfoFetcher-XmlStore-2.0.dtd">
 <store>
   <show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
     name="Eureka" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/show/58448/summary.html">

@@ -319,7 +319,8 @@ public class FileHelper {
 	 * @param os The output stream used to print the file to
 	 * @throws IOException Thrown if their is a problem reading the file
 	 */
-	public static void displayFile(File file,int startLine, int endLine, PrintStream os)throws IOException {
+	public static void displayFile(File file,int startLine, int endLine, OutputStream os)throws IOException {
+		PrintStream ps = new PrintStream(os);
 		if (startLine<0) {
 			startLine = 0;
 		}
@@ -328,7 +329,7 @@ public class FileHelper {
 		String str;
 		while ((str = in.readLine()) != null) {
 			if (line>=startLine && line <=endLine) {
-				os.println(line + ": " + str);
+				ps.println(line + ": " + str);
 			}
 			line++;
 		}
