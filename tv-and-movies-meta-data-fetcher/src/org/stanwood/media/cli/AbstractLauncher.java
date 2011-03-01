@@ -33,10 +33,14 @@ public abstract class AbstractLauncher {
 	private Options options;
 	private String name;
 
+	/**
+	 * Used for tests to stop the configuration been read
+	 */
 	public static boolean doInit = true;
 
 	/**
 	 * Create a instance of the class
+	 * @param name The name of the executable
 	 * @param options The options that are to be added to the CLI
 	 * @param exitHandler The exit handler used when exiting
 	 */
