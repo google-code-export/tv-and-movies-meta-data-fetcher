@@ -108,11 +108,11 @@ public class Renamer {
 	 * @throws SourceException Thrown if their is a problem reading from the source
 	 * @throws StoreException Thrown is their is a problem with a store
 	 */
-	public void tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
-		tidyDirectory(rootMediaDir);
+	public boolean tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
+		return tidyDirectory(rootMediaDir);
 	}
 
-	private void tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
+	private boolean tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -145,14 +145,19 @@ public class Renamer {
 
 		if (mode == Mode.TV_SHOW) {
 			for (File file : sortedFiles) {
-				renameTVShow(file);
+				if (!renameTVShow(file)) {
+					return false;
+				}
 			}
 		} else if (mode == Mode.FILM) {
 			for (File file : sortedFiles) {
-				renameFilm(file);
+				if (!renameFilm(file)) {
+					return false;
+				}
 			}
 		} else {
-			fatal("Unknown rename mode");
+			log.fatal("Unknown rename mode");
+			return false;
 		}
 
 		if (recursive) {
@@ -169,9 +174,10 @@ public class Renamer {
 				tidyDirectory(dir);
 			}
 		}
+		return true;
 	}
 
-	private void renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+	private boolean renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
 		SearchResult result = searchForId(file);
 		if (result!=null) {
 			id = result.getId();
@@ -179,7 +185,7 @@ public class Renamer {
 		}
 		else {
 			log.error("Unable to find film id for file '"+file.getName()+"'");
-			return;
+			return false;
 		}
 
 		String oldFileName = file.getName();
@@ -187,13 +193,14 @@ public class Renamer {
 		Film film = Controller.getInstance().getFilm(rootMediaDir, file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
-			return;
+			return false;
 		}
 
 		String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
 		File newName = getNewFilmName(film, ext);
 
 		doRename(file, newName);
+		return true;
 	}
 
 	private SearchResult searchForId(File file) throws MalformedURLException, SourceException, StoreException, IOException
@@ -204,8 +211,7 @@ public class Renamer {
 
 	}
 
-
-	private void renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+	private boolean renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
 		SearchResult result = searchForId(file);
 		if (result!=null) {
 			id = result.getId();
@@ -213,13 +219,13 @@ public class Renamer {
 		}
 		else {
 			log.error("Unable to find show id");
-			Main.doExit(1);
-			return;
+			return false;
 		}
 
 		Show show =  Controller.getInstance().getShow(rootMediaDir,file,result,refresh);
 		if (show == null) {
-			fatal("Unable to find show details");
+			log.fatal("Unable to find show details");
+			return false;
 		}
 		String oldFileName = file.getName();
 		ParsedFileName data =  FileNameParser.parse(rootMediaDir,pattern,file);
@@ -242,7 +248,7 @@ public class Renamer {
 				}
 			}
 		}
-
+		return true;
 	}
 
 	private void doRename(File file, File newFile) throws StoreException {
@@ -271,12 +277,6 @@ public class Renamer {
 				}
 			}
 		}
-	}
-
-	private void fatal(String msg) {
-		log.fatal(msg);
-		Main.doExit(1);
-		throw new RuntimeException(msg);
 	}
 
 	private String normalizeTest(String text) {
