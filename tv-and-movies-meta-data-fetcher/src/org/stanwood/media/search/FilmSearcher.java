@@ -36,8 +36,8 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder start= new StringBuilder(m.group(1));
 						String year= m.group(2);
 						StringBuilder end= new StringBuilder(m.group(3));
-						replaceDots(start);
-						replaceDots(end);
+						SearchHelper.replaceDots(start);
+						SearchHelper.replaceDots(end);
 						if (hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
@@ -66,7 +66,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				extractPart(term);
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
-				replaceDots(term);
+				SearchHelper.replaceDots(term);
 				trimRubishFromEnds(term);
 
 				String sTerm = term.toString();
@@ -79,23 +79,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 		});
 	}
 
-	private static void replaceDots(StringBuilder term) {
-		int pos = -1;
-		int currentPos = 0;
-		while ((pos = term.indexOf(".",currentPos))!=-1) {
-			boolean doit=true;
-			if (pos>=0 && term.charAt(pos-1)==' ') {
-				doit = false;
-			}
-			if (pos+1<term.length() && term.charAt(pos+1)==' ') {
-				doit = false;
-			}
-			if (doit) {
-				term.replace(pos, pos+1, " ");
-			}
-			currentPos = pos+1;
-		}
-	}
+
 
 	private static Integer extractPart(StringBuilder term) {
 		Matcher m = PATTERN_PART.matcher(term);

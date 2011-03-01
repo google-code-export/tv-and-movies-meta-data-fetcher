@@ -9,7 +9,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -18,11 +20,17 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Used to test that the class {@link ShowSearcher} works as expected
+ */
 public class TestShowSearcher {
+
+	private Map<File,String> patterns = new HashMap<File,String>();
+
 
 	@Test
 	public void testSearch() throws Exception {
-		File filmsDir = createTVFilms();
+		File filmsDir = createTVShows();
 		try {
 			final List<TSearchDetails>names = new ArrayList<TSearchDetails>();
 			ShowSearcher searcher = new ShowSearcher() {
@@ -34,7 +42,9 @@ public class TestShowSearcher {
 				}
 			};
 			for (File mediaFile : FileHelper.listFiles(filmsDir)) {
-				searcher.search(mediaFile, filmsDir, "%t.%x");
+				String pattern = patterns.get(mediaFile);
+				Assert.assertNotNull(pattern);
+				searcher.search(mediaFile, filmsDir, pattern);
 			}
 
 			Collections.sort(names,new Comparator<TSearchDetails>() {
@@ -43,15 +53,40 @@ public class TestShowSearcher {
 					return o1.getOriginalFile().getName().compareTo(o2.getOriginalFile().getName());
 				}
 			});
-			Assert.assertEquals(45,names.size());
+			Assert.assertEquals(13,names.size());
+			int index = 0;
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("A TV Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("A TV Show",null,names.get(index++));
+			assertSearchDetails("A TV Show",null,names.get(index++));
 		}
 		finally {
 			FileHelper.delete(filmsDir);
 		}
 	}
 
-	private File createTVFilms() throws Exception {
-		File tmpDir = FileHelper.createTmpDir("tv");
+	private void assertSearchDetails(String expectedTerm,String expectedYear,TSearchDetails actual) {
+		Assert.assertEquals("Did not extract the correct term from: " + actual.getOriginalFile().getAbsolutePath(),expectedTerm,actual.getTerm());
+		if (expectedYear == null) {
+			Assert.assertNull("Got year when did not expect one: " + actual.getOriginalFile().getAbsolutePath(),actual.getYear());
+		}
+		else {
+			Assert.assertEquals("Did not extract the correct year from: " + actual.getOriginalFile().getAbsolutePath(),expectedYear,actual.getYear());
+		}
+	}
+
+
+	private File createTVShows() throws Exception {
+		File tmpDir = FileHelper.createTmpDir("tv-shows");
 		InputStream is = null;
 		BufferedReader br = null;
 		try {
@@ -60,15 +95,22 @@ public class TestShowSearcher {
 
 			String strLine = null;
 		    while ((strLine = br.readLine()) != null)   {
-		    	File f = new File(tmpDir,strLine);
-		    	if (!f.getParentFile().exists()) {
-		    		if (!f.getParentFile().mkdirs() && !f.getParentFile().exists()) {
-		    			throw new IOException("Unable to create dir: " + f.getParentFile().getAbsolutePath());
-		    		}
-		    	}
+		    	int pos = strLine.indexOf(",");
+		    	if (!strLine.startsWith("#")) {
+			    	String fileName = strLine.substring(pos+1);
+			    	String pattern =  strLine.substring(0,pos);
 
-		    	if (!f.createNewFile() && !f.exists()) {
-		    		throw new IOException("Unable to create file: " + f.getAbsolutePath());
+			    	File f = new File(tmpDir,fileName);
+			    	patterns.put(f,pattern);
+			    	if (!f.getParentFile().exists()) {
+			    		if (!f.getParentFile().mkdirs() && !f.getParentFile().exists()) {
+			    			throw new IOException("Unable to create dir: " + f.getParentFile().getAbsolutePath());
+			    		}
+			    	}
+
+			    	if (!f.createNewFile() && !f.exists()) {
+			    		throw new IOException("Unable to create file: " + f.getAbsolutePath());
+			    	}
 		    	}
 		    }
 		}
