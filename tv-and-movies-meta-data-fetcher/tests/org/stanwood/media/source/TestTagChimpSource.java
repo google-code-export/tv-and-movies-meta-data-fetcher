@@ -71,7 +71,7 @@ public class TestTagChimpSource {
 	@Test
 	public void testIronManFilm() throws Exception {
 		TagChimpSource source = getSource(FILM_ID_IRON_MAN);
-		Film film = source.getFilm( FILM_ID_IRON_MAN,null);
+		Film film = source.getFilm( FILM_ID_IRON_MAN,null,null);
 		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
 		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark (Robert Downey Jr.) is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());

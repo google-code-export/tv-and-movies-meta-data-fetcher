@@ -86,12 +86,31 @@ public class XBMCScraper extends XBMCExtension {
 	/**
 	 * Used to get the show/film details as a XML document. It takes as input the
 	 * 1 or more webpages downloaded from the URL obtained with the @{link getCreateSearchUrl(String,String)} call.
+	 * @param file the file that the details are been retrieved for, or NULL if this is not known
 	 * @param contents A list of webpage contents
 	 * @return The results as a XML document
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public Document getGetDetails(String... contents) throws  XBMCException {
-		return executeFunctionByName("GetDetails",contents);
+	public Document getGetDetails(File file,String... contents) throws  XBMCException {
+		Document result = executeFunctionByName("GetDetails",contents);
+
+		if (file!=null) {
+			if (getAddon().getCreateNFOFiles()) {
+				String name = file.getName().substring(0,file.getName().indexOf("."));
+				File nfoFile = new File(file.getParentFile(),name+".nfo");
+				try {
+					if (log.isDebugEnabled()) {
+						log.debug("Creating NFO file : " +nfoFile );
+					}
+					XMLParser.writeXML(nfoFile,result);
+				}
+				catch (IOException e) {
+					throw new XBMCException("Unable to write file : " + nfoFile.getAbsolutePath(),e);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -156,6 +175,8 @@ public class XBMCScraper extends XBMCExtension {
 			Document doc = XMLParser.strToDom(result);
 			checkForError(doc,funcName);
 			resolveElements(doc);
+			String blah = domToStr(doc);
+			System.out.println(blah);
 			return doc;
 		} catch (Exception e) {
 			throw new XBMCException("Unable to execute scraper function '"+funcName+"' in addon '"+getAddon().getId()+"'",e);

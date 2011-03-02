@@ -72,13 +72,14 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * Called to retrieve the information on a episode
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode
+	 * @param file The film file if looking up a files details, or NULL
 	 * @return The episode
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Throw if their is a IO related problem
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
+	public Episode getEpisode(Season season, int episodeNum,File file)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
 		return parseEpisode(season,episodeNum);
@@ -185,19 +186,20 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * will return null.
 	 * @param showId The id of the show to get.
 	 * @param url String url of the show
+	 * @param file The media file if looking up a files details, or NULL
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Show getShow(final String showId, URL url) throws SourceException,
+	public Show getShow(final String showId, URL url,File file) throws SourceException,
 			MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
-		return parseShow(showId, url);
+		return parseShow(showId, url,file);
 	}
 
-	private Show parseShow(final String showId, URL url) throws IOException,
+	private Show parseShow(final String showId, URL url,final File file) throws IOException,
 			SourceException {
 		final Show show = new Show(showId);
 		show.setShowURL(url);
@@ -206,7 +208,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(contents,showId);
+	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);
@@ -268,20 +270,21 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * This will get a film from the source. If the film can't be found, then it will return null.
 	 * @param filmId The id of the film
 	 * @param url The URL used to lookup the film
+	 * @param file The film file if looking up a files details, or NULL
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(String filmId,URL url) throws SourceException,
+	public Film getFilm(String filmId,URL url,File file) throws SourceException,
 			MalformedURLException, IOException {
 		checkMode(Mode.FILM);
 
-		return parseFilm(filmId,url);
+		return parseFilm(filmId,url,file);
 	}
 
-	private Film parseFilm(final String filmId,final URL url) throws IOException, SourceException {
+	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
 		final Film film = new Film(filmId);
 		film.setFilmUrl(url);
 		film.setSourceId(getSourceId());
@@ -290,7 +293,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(contents,filmId);
+	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
 	    			film.setDate(FILM_YEAR_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()")));
 	    			film.setDescription(getStringFromXML(doc, "details/plot/text()"));
 	    			film.setId(filmId);
@@ -381,13 +384,14 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * return null;
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
+	 * @param file The film file if looking up a files details, or NULL
 	 * @return The special episode, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
+	public Episode getSpecial(Season season, int specialNumber,File file)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
 		return parseSpecial(season,specialNumber);
@@ -570,6 +574,10 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
+		if (key.equalsIgnoreCase("CreateNFOFiles")) {
+			addon.setCreateNFOFiles(Boolean.parseBoolean(value));
+			return;
+		}
 		addon.setSetting(key,value);
 	}
 
@@ -581,6 +589,9 @@ public class XBMCSource extends XMLParser implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
+		if (key.equalsIgnoreCase("CreateNFOFiles")) {
+			return String.valueOf(addon.getCreateNFOFiles());
+		}
 		return addon.getSetting(key).toString();
 	}
 
