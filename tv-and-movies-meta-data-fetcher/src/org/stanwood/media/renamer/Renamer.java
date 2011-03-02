@@ -79,6 +79,7 @@ public class Renamer {
 	private String sourceId;
 	private Mode mode;
 	private boolean recursive;
+	private Controller controller;
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -90,7 +91,7 @@ public class Renamer {
 	 * @param refresh If true, then don't read from the stores
 	 * @param recursive If true, then also include subdirectories
 	 */
-	public Renamer(String id,Mode mode,File rootMediaDirectory,String pattern,String exts[], boolean refresh,boolean recursive) {
+	public Renamer(Controller controller,String id,Mode mode,File rootMediaDirectory,String pattern,String exts[], boolean refresh,boolean recursive) {
 		this.id = id;
 		this.rootMediaDir = rootMediaDirectory;
 		this.pattern = pattern;
@@ -98,6 +99,7 @@ public class Renamer {
 		this.refresh = refresh;
 		this.mode = mode;
 		this.recursive = recursive;
+		this.controller = controller;
 	}
 
 	/**
@@ -190,7 +192,7 @@ public class Renamer {
 
 		String oldFileName = file.getName();
 
-		Film film = Controller.getInstance().getFilm(rootMediaDir, file,result,refresh);
+		Film film = controller.getFilm(rootMediaDir, file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + id +"' and source '"+sourceId+"'");
 			return false;
@@ -206,7 +208,7 @@ public class Renamer {
 	private SearchResult searchForId(File file) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
-		result = Controller.getInstance().searchForVideoId(rootMediaDir,mode,file,pattern);
+		result = controller.searchForVideoId(rootMediaDir,mode,file,pattern);
 		return result;
 
 	}
@@ -222,7 +224,7 @@ public class Renamer {
 			return false;
 		}
 
-		Show show =  Controller.getInstance().getShow(rootMediaDir,file,result,refresh);
+		Show show =  controller.getShow(rootMediaDir,file,result,refresh);
 		if (show == null) {
 			log.fatal("Unable to find show details");
 			return false;
@@ -233,11 +235,11 @@ public class Renamer {
 			log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
 		}
 		else {
-			Season season = Controller.getInstance().getSeason(rootMediaDir,file, show, data.getSeason(), refresh);
+			Season season = controller.getSeason(rootMediaDir,file, show, data.getSeason(), refresh);
 			if (season == null) {
 				log.error("Unable to find season for file : " + file.getAbsolutePath());
 			} else {
-				Episode episode = Controller.getInstance().getEpisode(rootMediaDir,file, season, data.getEpisode(), refresh);
+				Episode episode = controller.getEpisode(rootMediaDir,file, season, data.getEpisode(), refresh);
 				if (episode == null) {
 					log.error("Unable to find episode for file : " + file.getAbsolutePath());
 				} else {
@@ -270,7 +272,7 @@ public class Renamer {
 
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
-					Controller.getInstance().renamedFile(rootMediaDir,oldFile,newFile);
+					controller.renamedFile(rootMediaDir,oldFile,newFile);
 				}
 				else {
 					log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");

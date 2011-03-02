@@ -1,6 +1,9 @@
 package org.stanwood.media.cli;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -14,7 +17,6 @@ import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.source.SourceException;
 
 /**
  * This class should be extended by classes that have a main method used to lauch them
@@ -32,6 +34,7 @@ public abstract class AbstractLauncher {
 	private File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
 	private Options options;
 	private String name;
+	private Controller controller;
 
 	/**
 	 * Used for tests to stop the configuration been read
@@ -120,26 +123,47 @@ public abstract class AbstractLauncher {
 			warn("Unable to find config file '" +configFile+"' so using defaults.");
 			if (doInit) {
 				try {
-					Controller.initWithDefaults();
-				} catch (SourceException e) {
+					controller = new Controller(new ConfigReader(ConfigReader.class.getResourceAsStream("defaultConfig.xml")));
+				} catch (ConfigException e) {
 					fatal(e.getMessage());
 					return false;
 				}
 			}
 		}
 		else {
+			InputStream is = null;
 			try {
-				ConfigReader reader = new ConfigReader(configFile);
+				is = new FileInputStream(configFile);
+				ConfigReader reader = new ConfigReader(is);
 				reader.parse();
 				if (doInit) {
-					Controller.initFromConfigFile(reader);
+					controller = new Controller(reader);
 				}
-			} catch (ConfigException e) {
-				warn(e.getMessage());
+			}
+			catch (IOException e) {
+				fatal(e.getMessage());
+				return false;
+			}
+			catch (ConfigException e) {
+				fatal(e.getMessage());
+				return false;
+			}
+			finally {
+				if (is!=null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						warn("Unable to close stream");
+					}
+				}
 			}
 		}
 
 		return processOptions(cmd);
+	}
+
+	public Controller getController() {
+		return controller;
 	}
 
 	private boolean initLogging(String logConfig) {

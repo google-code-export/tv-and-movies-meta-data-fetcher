@@ -302,6 +302,32 @@ public class XMLParser {
 		return builder;
 	}
 
+	public static Document parse(InputStream is,String schemaName) throws XMLParserException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(true);
+		factory.setXIncludeAware(true);
+		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+
+		try {
+			DocumentBuilder builder = createDocBuilder(factory);
+			XMLErrorHandler errorHandler = new XMLErrorHandler();
+			builder.setErrorHandler(errorHandler);
+			Document doc = builder.parse(is);
+			if (errorHandler.hasErrors()) {
+				throw new XMLParserException("Unable to parse XML document as it containted errors");
+			}
+			return doc;
+		} catch (SAXException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		} catch (IOException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		} catch (ParserConfigurationException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		}
+	}
+
+
 	public static Document parse(File file,String schemaName) throws XMLParserException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(true);
