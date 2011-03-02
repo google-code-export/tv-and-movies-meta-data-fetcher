@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -37,8 +36,6 @@ import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.memory.MemoryStore;
-import org.stanwood.media.store.xmlstore.XMLStore2;
 
 /**
  * The controller is used to control access to the stores and and sources. This is a singleton class, and just first be
@@ -49,38 +46,38 @@ public class Controller {
 
 	private final static Log log = LogFactory.getLog(Controller.class);
 
-	private static Controller instance = null;
+	private List<ISource> sources = null;
+	private List<IStore> stores = null;
+	private ConfigReader configReader = null;
 
-	private static List<ISource> sources = null;
-	private static List<IStore> stores = null;
-//	private static XBMCAddonManager xbmcMgr;
-	private static ConfigReader configReader = null;
+	public Controller(ConfigReader config) throws ConfigException {
+		this.configReader = configReader;
 
-	private Controller() {
-
+		stores = config.loadStoresFromConfigFile();
+		sources = config.loadSourcesFromConfigFile();
 	}
 
-	/**
-	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
-	 * Once the store has been initialised, it can't be Initialised again.
-	 * @throws SourceException Thrown if their is a problem
-	 */
-	public static void initWithDefaults() throws SourceException {
-		synchronized (Controller.class) {
-			if (stores != null || sources != null) {
-				throw new IllegalStateException("Controller allready initialized");
-			}
-		}
-
-		stores = new ArrayList<IStore>();
-		stores.add(new MemoryStore());
-		stores.add(new XMLStore2());
-
-		sources = new ArrayList<ISource>();
-		for (Mode mode : Mode.values()) {
-			sources.add(configReader.getDefaultSource(mode));
-		}
-	}
+//	/**
+//	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
+//	 * Once the store has been initialised, it can't be Initialised again.
+//	 * @throws SourceException Thrown if their is a problem
+//	 */
+//	public void initWithDefaults() throws SourceException {
+//		synchronized (Controller.class) {
+//			if (stores != null || sources != null) {
+//				throw new IllegalStateException("Controller allready initialized");
+//			}
+//		}
+//
+//		stores = new ArrayList<IStore>();
+//		stores.add(new MemoryStore());
+//		stores.add(new XMLStore2());
+//
+//		sources = new ArrayList<ISource>();
+//		for (Mode mode : Mode.values()) {
+//			sources.add(configReader.getDefaultSource(mode));
+//		}
+//	}
 
 	/**
 	 * Used to get the default source ID
@@ -88,44 +85,26 @@ public class Controller {
 	 * @return The default source ID for a given mode
 	 * @throws SourceException Thrown if their is a problem getting the default source ID
 	 */
-	public static String getDefaultSourceID(Mode mode) throws SourceException {
+	public String getDefaultSourceID(Mode mode) throws SourceException {
 		return configReader.getDefaultSourceID(mode);
 	}
 
-	/**
-	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
-	 * again.
-	 *
-	 * @param config The parsed configuration file.
-	 * @throws ConfigException Thrown if their is a problem reading the configuration file
-	 */
-	public static void initFromConfigFile(ConfigReader config) throws ConfigException {
-		if (stores != null || sources != null) {
-			throw new IllegalStateException("Controller allready initialized");
-		}
-		configReader = config;
-
-		stores = config.loadStoresFromConfigFile();
-		sources = config.loadSourcesFromConfigFile();
-	}
-
-
-
-	/**
-	 * Get a instance of the controller.
-	 *
-	 * @return A instance of the controller.
-	 */
-	public static Controller getInstance() {
-		if (stores == null || sources == null) {
-			throw new IllegalStateException(
-					"The controller must be initialized before use by calling initWithDefaults() or initFromConfigFile() ");
-		}
-		if (instance == null) {
-			instance = new Controller();
-		}
-		return instance;
-	}
+//	/**
+//	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
+//	 * again.
+//	 *
+//	 * @param config The parsed configuration file.
+//	 * @throws ConfigException Thrown if their is a problem reading the configuration file
+//	 */
+//	public void initFromConfigFile(ConfigReader config) throws ConfigException {
+//		if (stores != null || sources != null) {
+//			throw new IllegalStateException("Controller allready initialized");
+//		}
+//		configReader = config;
+//
+//		stores = config.loadStoresFromConfigFile();
+//		sources = config.loadSourcesFromConfigFile();
+//	}
 
 	/**
 	 * Get a show with a given show id and source id. This will first try to retrieve the show from the stores. If it is
@@ -441,7 +420,7 @@ public class Controller {
 		}
 	}
 
-	public static ISource getSource(String sourceId) {
+	public ISource getSource(String sourceId) {
 		if (sourceId == null) {
 			return null;
 		}
@@ -453,12 +432,4 @@ public class Controller {
 		}
 		return null;
 	}
-
-	/* package for test */final static void destoryController() {
-		instance = null;
-		stores = null;
-		sources = null;
-	}
-
-
 }

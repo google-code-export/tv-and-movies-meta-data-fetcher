@@ -16,7 +16,7 @@
  */
 package org.stanwood.media.setup;
 
-import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,20 +36,19 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * This is used to parse the XML configuration files. These are used to tell the
  * application which stores and sources should be used.
  */
-public class ConfigReader extends XMLParser {
+public class ConfigReader extends BaseConfigReader {
 
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 
-	private File file;
-	private List<StoreConfig>stores = new ArrayList<StoreConfig>();
-	private List<SourceConfig>sources = new ArrayList<SourceConfig>();
+	private InputStream is;
+	private List<StoreConfig>stores;
+	private List<SourceConfig>sources;
 
 	private static XBMCAddonManager xbmcMgr;
 
@@ -57,7 +56,7 @@ public class ConfigReader extends XMLParser {
 	 * The constructor used to create a instance of the configuration reader
 	 * @param file The configuration file
 	 */
-	public ConfigReader(File file) {
+	public ConfigReader(InputStream is) {
 		if (xbmcMgr == null) {
 			try {
 				setManager(new XBMCAddonManager());
@@ -65,7 +64,7 @@ public class ConfigReader extends XMLParser {
 				log.error(e.getMessage(),e);
 			}
 		}
-		this.file = file;
+		this.is = is;
 	}
 
 	/**
@@ -74,39 +73,18 @@ public class ConfigReader extends XMLParser {
 	 * @throws ConfigException Thrown if their is a problem parsing the file
 	 */
 	public void parse() throws ConfigException {
-		if (file.exists()) {
-			try {
-				Document doc = XMLParser.parse(file, "MediaInfoFetcher-Config-1.0.xsd");
+		try {
+			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-1.0.xsd");
 
-				for (Node storeElement : selectNodeList(doc, "config/stores/store")) {
-					StoreConfig store = new StoreConfig();
-					store.setID(((Element)storeElement).getAttribute("id"));
+			Node configNode = selectSingleNode(doc,"/config");
 
-					for (Node paramNode : selectNodeList(storeElement, "param")) {
-						String name = ((Element)paramNode).getAttribute("name");
-						String value = ((Element)paramNode).getAttribute("value");
-						store.addParam(name, value);
-					}
-
-					this.stores.add(store);
-				}
-
-				for (Node sourceElement : selectNodeList(doc, "config/sources/source")) {
-					SourceConfig source = new SourceConfig();
-					source.setID(((Element)sourceElement).getAttribute("id"));
-					for (Node paramNode : selectNodeList(sourceElement, "param")) {
-						String name = ((Element)paramNode).getAttribute("name");
-						String value = ((Element)paramNode).getAttribute("value");
-						source.addParam(name, value);
-					}
-
-					this.sources.add(source);
-				}
-			} catch (XMLParserException e) {
-				throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
-			}
+			sources = readSources(configNode);
+			stores = readStores(configNode);
+		} catch (XMLParserException e) {
+			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 		}
 	}
+
 
 	/**
 	 * Once the data has been parsed, this will returned a list of the stores in the
@@ -132,6 +110,7 @@ public class ConfigReader extends XMLParser {
 	 * @return Thrown if their are any problems
 	 * @throws ConfigException Thrown if their are any problems
 	 */
+	@Override
 	public List<ISource> loadSourcesFromConfigFile() throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
 		for (SourceConfig sourceConfig : getSources()) {
@@ -198,6 +177,7 @@ public class ConfigReader extends XMLParser {
 	 * @return The stores
 	 * @throws ConfigException Thrown if their is any problems
 	 */
+	@Override
 	public List<IStore> loadStoresFromConfigFile() throws ConfigException {
 		List<IStore>stores = new ArrayList<IStore>();
 		for (StoreConfig storeConfig : getStores()) {

@@ -138,7 +138,7 @@ public class Main extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		Renamer renamer = new Renamer(showId,mode, rootMediaDirectory, pattern,VALID_EXTS,refresh,recursive);
+		Renamer renamer = new Renamer(getController(),showId,mode, rootMediaDirectory, pattern,VALID_EXTS,refresh,recursive);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -242,7 +242,7 @@ public class Main extends AbstractLauncher {
 			}
 
 			if (sourceId==null) {
-				sourceId = Controller.getDefaultSourceID(mode);
+				sourceId = getController().getDefaultSourceID(mode);
 			}
 
 			if (pattern==null) {
