@@ -1,5 +1,8 @@
 package org.stanwood.media.source.xbmc;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -8,6 +11,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Mode;
@@ -15,6 +19,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 
 /**
@@ -57,7 +62,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("79501",result.getId());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip", result.getUrl());
 
-		Show show = source.getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
+		Show show = source.getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"),null);
 		Assert.assertNotNull(show);
 
 		Assert.assertEquals("Heroes is a cult serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Not only are they discovering what having superpowers means to them but also the larger picture of where those powers come from and what they might mean to the rest of the world.",show.getLongSummary());
@@ -138,7 +143,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
 
-		Episode episode = source.getEpisode(season, 1);
+		Episode episode = source.getEpisode(season, 1,null);
 		Assert.assertNotNull(episode);
 
 		Assert.assertEquals(10,episode.getActors().size());
@@ -182,7 +187,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Season season = new Season(show,3);
 		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
-		Episode special = source.getSpecial(season,1);
+		Episode special = source.getSpecial(season,1,null);
 		Assert.assertNotNull(special);
 
 		Assert.assertEquals(0,special.getActors().size());
@@ -212,6 +217,30 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Assert.assertFalse(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://blah")));
 		Assert.assertTrue(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://www.thetvdb.com/index.php?tab=series&id=79501")));
+	}
+
+	@Test
+	public void testNFOFileCreation() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File tmpDir = FileHelper.createTmpDir("tvshow");
+		try {
+			File mediaFile = new File(tmpDir,"Heros 1x01 - Blah.avi");
+			if (!mediaFile.createNewFile() && !mediaFile.exists()) {
+				throw new IOException("Unable to create file: " + mediaFile);
+			}
+
+			XBMCSource source = getXBMCSource("metadata.tvdb.com");
+			source.setParameter("posters", "true");
+			source.setParameter("CreateNFOFiles","true");
+
+			source.getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), mediaFile);
+			File nfoFile = new File(tmpDir,"Heros 1x01 - Blah.nfo");
+			Assert.assertTrue(nfoFile.exists());
+			Helper.assertXMLEquals(TestXMBCSourceTVDB.class.getResourceAsStream("tvshow.nfo"),new FileInputStream(nfoFile),new HashMap<String,String>());
+		}
+		finally {
+			FileHelper.delete(tmpDir);
+		}
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

@@ -1,16 +1,13 @@
 TODO
 ----
 
-Make the XBMCManager check for updated plugins and download them
 Add --test_run command line option
 Add back the RegExpToReplace command line option
   - Instead, allow ignore tokens to be configured
 Store original filenames before rename within Store XML files
-Add concept of actions, and make rename a action  
-Add store for storing stuff in a .NFO that XBMC can read.
-	- file has to be the same names as the media file and contain the results of a GetDetails call.
+Add concept of actions, and make rename a action
+	* Action for covert to m4v	 
 Look into a tagchimp store that uses their API.
-Add to the ShowSearcher so that it will search for show names within the filename of the media
 Add scripts that allow the user to manage the XBMC plugins that are installed or to be installed.
 	* Possible put a GUI on this.
   

@@ -37,12 +37,13 @@ public interface ISource {
 	 * Called to retrieve the information on a episode
 	 * @param season The season the episode belongs too
 	 * @param episodeNum The number of the episode
+	 * @param file The special file if looking up a files details, or NULL
 	 * @return The episode
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Throw if their is a IO related problem
 	 */
-	public Episode getEpisode(Season season, int episodeNum) throws SourceException, MalformedURLException, IOException;
+	public Episode getEpisode(Season season, int episodeNum,File file) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a season from the source. If the season can't be found,
@@ -60,35 +61,38 @@ public interface ISource {
 	 * will return null.
 	 * @param showId The id of the show to get.
 	 * @param url String url of the show
+	 * @param file The media file if looking up a files details, or NULL
 	 * @return The show if it can be found, otherwise null.
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(String showId,URL url) throws SourceException, MalformedURLException, IOException;
+	public Show getShow(String showId,URL url,File file) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
 	 * @param filmId The id of the film
 	 * @param url The URL used to lookup the film
+	 * @param filmFile The film file if looking up a files details, or NULL
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(String filmId,URL url) throws SourceException, MalformedURLException, IOException;
+	public Film getFilm(String filmId,URL url,File filmFile) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will
 	 * return null;
 	 * @param season The season the special episode belongs too
 	 * @param specialNumber The number of the special episode too get
+	 * @param file The special file if looking up a files details, or NULL
 	 * @return The special episode, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getSpecial(Season season, int specialNumber) throws SourceException,MalformedURLException, IOException;
+	public Episode getSpecial(Season season, int specialNumber,File file) throws SourceException,MalformedURLException, IOException;
 
 	/**
 	 * Get the id of the source

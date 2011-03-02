@@ -18,7 +18,6 @@ package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,8 +39,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
@@ -60,12 +57,7 @@ public abstract class BaseXMLStore extends XMLParser {
 	 */
 	protected void writeCache(File file, Document doc) throws StoreException {
 		try {
-			OutputFormat format = new OutputFormat(doc);
-			format.setLineWidth(65);
-			format.setIndenting(true);
-			format.setIndent(2);
-			XMLSerializer serializer = new XMLSerializer(new FileOutputStream(file), format);
-			serializer.serialize(doc);
+			XMLParser.writeXML(file,doc);
 
 			if (log.isDebugEnabled()) {
 				log.debug("Written cache to file : " + file.getAbsolutePath());

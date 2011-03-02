@@ -57,9 +57,10 @@ public class HybridFilmSource implements ISource {
 	 *
 	 * @param season The season the episode belongs to.
 	 * @param episodeNum The number of the episode to read
+	 * @param file The film file if looking up a files details, or NULL
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum) {
+	public Episode getEpisode(Season season, int episodeNum,File file) {
 		return null;
 	}
 
@@ -77,11 +78,12 @@ public class HybridFilmSource implements ISource {
 	/**
 	 * This always returns null as this source does not support reading episodes.
 	 *
+	 * @param file The media file if looking up a files details, or NULL
 	 * @param url String url of the show
 	 * @param showId The id of the show to read
 	 */
 	@Override
-	public Show getShow(String showId,URL url) {
+	public Show getShow(String showId,URL url,File file) {
 		return null;
 	}
 
@@ -90,9 +92,10 @@ public class HybridFilmSource implements ISource {
 	 *
 	 * @param season The season the episode belongs to.
 	 * @param specialNumber The number of the special episode to read
+	 * @param file The film file if looking up a files details, or NULL
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber) {
+	public Episode getSpecial(Season season, int specialNumber,File file) {
 		return null;
 	}
 
@@ -111,13 +114,14 @@ public class HybridFilmSource implements ISource {
 	 *
 	 * @param filmId The id of the film
 	 * @param url The URL to use when looking up film details
+	 * @param file The film file if looking up a files details, or NULL
 	 * @return The film, or null if it can't be found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(String filmId,URL url) throws SourceException, MalformedURLException, IOException {
+	public Film getFilm(String filmId,URL url,File file) throws SourceException, MalformedURLException, IOException {
 		Film tagChimpFilm = null;
 		Film imdbFilm = null;
 		StringTokenizer tok = new StringTokenizer(filmId,"|");
@@ -125,10 +129,10 @@ public class HybridFilmSource implements ISource {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
 			if (key.equals(imdbSource.getSourceId())) {
-				imdbFilm = imdbSource.getFilm(value,url);
+				imdbFilm = imdbSource.getFilm(value,url,file);
 			}
 			else if (key.equals(tagChimpSource.getSourceId())) {
-				tagChimpFilm = tagChimpSource.getFilm(value,url);
+				tagChimpFilm = tagChimpSource.getFilm(value,url,file);
 			}
 		}
 

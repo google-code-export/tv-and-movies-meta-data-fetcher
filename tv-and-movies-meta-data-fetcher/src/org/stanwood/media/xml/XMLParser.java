@@ -18,8 +18,10 @@ package org.stanwood.media.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -353,6 +355,23 @@ public class XMLParser {
 		result = result.replaceAll("\\>", Matcher.quoteReplacement("&gt;"));
 		result = result.replaceAll("\"", Matcher.quoteReplacement("&quot;"));
 		return result;
+	}
+
+	public static void writeXML(File file, Document doc) throws IOException {
+		OutputFormat format = new OutputFormat(doc);
+		format.setLineWidth(65);
+		format.setIndenting(true);
+		format.setIndent(2);
+		OutputStream os = null;
+		try {
+			os = new FileOutputStream(file);
+			XMLSerializer serializer = new XMLSerializer(os, format);
+			serializer.serialize(doc);
+		}
+		finally {
+			os.close();
+		}
+
 	}
 
 }

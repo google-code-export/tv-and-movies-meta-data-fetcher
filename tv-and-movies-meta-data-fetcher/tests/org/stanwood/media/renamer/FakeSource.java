@@ -1,5 +1,6 @@
 package org.stanwood.media.renamer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,7 +22,7 @@ public class FakeSource extends XBMCSource {
 	}
 
 	@Override
-	public Episode getEpisode(Season season, int episodeNum)
+	public Episode getEpisode(Season season, int episodeNum,File file)
 			throws SourceException, MalformedURLException, IOException {
 		return null;
 	}
@@ -33,19 +34,19 @@ public class FakeSource extends XBMCSource {
 	}
 
 	@Override
-	public Show getShow(String showId, URL url) throws SourceException,
+	public Show getShow(String showId, URL url,File file) throws SourceException,
 			MalformedURLException, IOException {
 		return null;
 	}
 
 	@Override
-	public Film getFilm(String filmId, URL url) throws SourceException,
+	public Film getFilm(String filmId, URL url,File file) throws SourceException,
 			MalformedURLException, IOException {
 		return null;
 	}
 
 	@Override
-	public Episode getSpecial(Season season, int specialNumber)
+	public Episode getSpecial(Season season, int specialNumber,File file)
 			throws SourceException, MalformedURLException, IOException {
 		return null;
 	}

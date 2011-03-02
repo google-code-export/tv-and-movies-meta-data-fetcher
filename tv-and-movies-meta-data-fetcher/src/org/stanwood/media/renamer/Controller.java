@@ -165,7 +165,7 @@ public class Controller {
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
-					show = source.getShow(searchResult.getId(),showUrl);
+					show = source.getShow(searchResult.getId(),showUrl,episodeFile);
 					if (show != null) {
 						for (IStore store : stores) {
 							store.cacheShow(rootMediaDir,episodeFile, show);
@@ -216,7 +216,7 @@ public class Controller {
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
-					film = source.getFilm(searchResult.getId(),url);
+					film = source.getFilm(searchResult.getId(),url,filmFile);
 					if (film != null) {
 						for (IStore store : stores) {
 							store.cacheFilm(rootMediaDir,filmFile, film);
@@ -327,7 +327,7 @@ public class Controller {
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
-					episode = source.getEpisode(season, episodeNum);
+					episode = source.getEpisode(season, episodeNum,episodeFile);
 					if (episode != null) {
 						for (IStore store : stores) {
 							store.cacheEpisode(rootMediaDir,episodeFile, episode);
@@ -379,7 +379,7 @@ public class Controller {
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
-					episode = source.getSpecial(season, specialNum);
+					episode = source.getSpecial(season, specialNum,specialFile);
 					if (episode != null) {
 						for (IStore store : stores) {
 							store.cacheEpisode(rootMediaDir,specialFile, episode);
