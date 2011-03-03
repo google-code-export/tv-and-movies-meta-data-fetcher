@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
@@ -111,7 +112,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	@Override
-	public List<ISource> loadSourcesFromConfigFile() throws ConfigException {
+	public List<ISource> loadSourcesFromConfigFile(Controller controller) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
 		for (SourceConfig sourceConfig : getSources()) {
 			String sourceClass = sourceConfig.getID();
@@ -153,11 +154,14 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				else {
 					ISource source = c.newInstance();
+					source.setController(controller);
 					if (sourceConfig.getParams() != null) {
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
 							setParamOnSource( source, key, value);
+
 						}
+						source.setController(controller);
 					}
 					sources.add(source);
 				}
@@ -178,7 +182,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is any problems
 	 */
 	@Override
-	public List<IStore> loadStoresFromConfigFile() throws ConfigException {
+	public List<IStore> loadStoresFromConfigFile(Controller controller) throws ConfigException {
 		List<IStore>stores = new ArrayList<IStore>();
 		for (StoreConfig storeConfig : getStores()) {
 			String storeClass = storeConfig.getID();

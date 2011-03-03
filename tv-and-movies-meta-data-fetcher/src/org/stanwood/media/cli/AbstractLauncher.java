@@ -2,6 +2,7 @@ package org.stanwood.media.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -36,10 +37,11 @@ public abstract class AbstractLauncher {
 	private String name;
 	private Controller controller;
 
-	/**
-	 * Used for tests to stop the configuration been read
-	 */
-	public static boolean doInit = true;
+//	/**
+//	 * Used for tests to stop the configuration been read
+//	 */
+//	public static boolean doInit = true;
+	public static ConfigReader config = null;
 
 	/**
 	 * Create a instance of the class
@@ -119,47 +121,45 @@ public abstract class AbstractLauncher {
 		if (cmd.hasOption(CONFIG_FILE_OPTION)) {
 			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));
 		}
-		if (configFile!=null && configFile.exists()) {
-			warn("Unable to find config file '" +configFile+"' so using defaults.");
-			if (doInit) {
-				try {
-					controller = new Controller(new ConfigReader(ConfigReader.class.getResourceAsStream("defaultConfig.xml")));
-				} catch (ConfigException e) {
-					fatal(e.getMessage());
-					return false;
-				}
-			}
-		}
-		else {
-			InputStream is = null;
-			try {
-				is = new FileInputStream(configFile);
-				ConfigReader reader = new ConfigReader(is);
-				reader.parse();
-				if (doInit) {
-					controller = new Controller(reader);
-				}
-			}
-			catch (IOException e) {
-				fatal(e.getMessage());
-				return false;
-			}
-			catch (ConfigException e) {
-				fatal(e.getMessage());
-				return false;
-			}
-			finally {
-				if (is!=null) {
-					try {
-						is.close();
-					} catch (IOException e) {
-						warn("Unable to close stream");
-					}
-				}
-			}
+		try {
+			processConfig();
+			controller = new Controller(config);
+			config=null;
+		} catch (FileNotFoundException e) {
+			fatal(e.getMessage());
+			return false;
+		} catch (ConfigException e) {
+			fatal(e.getMessage());
+			return false;
 		}
 
 		return processOptions(cmd);
+	}
+
+	private void processConfig() throws FileNotFoundException, ConfigException {
+		if (config==null) {
+			if (configFile!=null && !configFile.exists()) {
+				warn("Unable to find config file '" +configFile+"' so using defaults.");
+				config = new ConfigReader(ConfigReader.class.getResourceAsStream("defaultConfig.xml"));
+			}
+			else  {
+				InputStream is = null;
+				try {
+					is = new FileInputStream(configFile);
+					config = new ConfigReader(is);
+				}
+				finally {
+					if (is!=null) {
+						try {
+							is.close();
+						} catch (IOException e) {
+							warn("Unable to close stream");
+						}
+					}
+				}
+			}
+			config.parse();
+		}
 	}
 
 	public Controller getController() {

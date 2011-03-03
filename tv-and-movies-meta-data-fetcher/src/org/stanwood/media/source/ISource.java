@@ -27,11 +27,14 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Controller;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
  */
 public interface ISource {
+
+	public void setController(Controller controller) throws SourceException;
 
 	/**
 	 * Called to retrieve the information on a episode
