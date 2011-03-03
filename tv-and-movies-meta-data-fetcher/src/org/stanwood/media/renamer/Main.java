@@ -40,14 +40,12 @@ import org.stanwood.media.store.StoreException;
  */
 public class Main extends AbstractLauncher {
 
-	@SuppressWarnings("unused")
 	private final static Log log = LogFactory.getLog(Main.class);
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
-	private final static String HELP_OPTION = "h";
 	private final static String SHOWID_OPTION = "s";
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String RENAME_PATTERN = "p";
@@ -62,11 +60,12 @@ public class Main extends AbstractLauncher {
 	private File rootMediaDirectory = new File(System.getProperty("user.dir"));
 	private String pattern = null;
 	private boolean refresh = false;
+	private boolean recursive = false;
 
 	private Mode mode = null;
-	/* package for test */ static IExitHandler exitHandler = null;
+	private static IExitHandler exitHandler = null;
 
-	private static boolean recursive = false;
+
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -119,7 +118,7 @@ public class Main extends AbstractLauncher {
 	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
-			exitHandler = new DefaultExitHandler();
+			setExitHandler(new DefaultExitHandler());
 		}
 
 		Main ca = new Main(exitHandler);
@@ -271,5 +270,9 @@ public class Main extends AbstractLauncher {
 			}
 		}
 		return Mode.TV_SHOW;
+	}
+
+	static synchronized void setExitHandler(IExitHandler handler) {
+		exitHandler = handler;
 	}
 }

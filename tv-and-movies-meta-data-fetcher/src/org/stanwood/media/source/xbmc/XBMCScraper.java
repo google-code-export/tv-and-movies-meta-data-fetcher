@@ -125,7 +125,7 @@ public class XBMCScraper extends XBMCExtension {
 
 	/**
 	 * Used to get the details of the a episode. The <code>contents</code> argument contains the downloaded
-	 * weppage of the episode details. The episode details URL is obtained by calling {@link getEpisodeList(String , URL)}
+	 * weppage of the episode details. The episode details URL is obtained by calling {@link #getEpisodeList(String , URL)}
 	 * @param contents The downloaded HTML of the episode guide
 	 * @param episodeId The ID of the episode to get the details for
 	 * @return episode details XML
@@ -175,8 +175,6 @@ public class XBMCScraper extends XBMCExtension {
 			Document doc = XMLParser.strToDom(result);
 			checkForError(doc,funcName);
 			resolveElements(doc);
-			String blah = domToStr(doc);
-			System.out.println(blah);
 			return doc;
 		} catch (Exception e) {
 			throw new XBMCException("Unable to execute scraper function '"+funcName+"' in addon '"+getAddon().getId()+"'",e);
