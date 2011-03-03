@@ -502,4 +502,10 @@ public class FileHelper {
 		}
 	}
 
+	public static File createTmpFileWithContents(StringBuilder testConfig)  throws IOException {
+		File configFile = File.createTempFile("config", ".xml");
+		configFile.deleteOnExit();
+		FileHelper.appendContentsToFile(configFile, testConfig);
+		return configFile;
+	}
 }

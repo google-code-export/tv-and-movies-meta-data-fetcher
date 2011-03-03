@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.setup;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,13 +31,12 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.xbmc.XBMCAddonManager;
-import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -48,23 +48,13 @@ public class ConfigReader extends BaseConfigReader {
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 
 	private InputStream is;
-	private List<StoreConfig>stores;
-	private List<SourceConfig>sources;
-
-	private static XBMCAddonManager xbmcMgr;
+	private List<MediaDirConfig>mediaDir;
 
 	/**
 	 * The constructor used to create a instance of the configuration reader
 	 * @param file The configuration file
 	 */
 	public ConfigReader(InputStream is) {
-		if (xbmcMgr == null) {
-			try {
-				setManager(new XBMCAddonManager());
-			} catch (XBMCException e) {
-				log.error(e.getMessage(),e);
-			}
-		}
 		this.is = is;
 	}
 
@@ -75,36 +65,44 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public void parse() throws ConfigException {
 		try {
-			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-1.0.xsd");
+			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-2.0.xsd");
 
-			Node configNode = selectSingleNode(doc,"/config");
+			List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
 
-			sources = readSources(configNode);
-			stores = readStores(configNode);
+			for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) {
+				Element dirNode = (Element) node;
+				MediaDirConfig dirConfig = new MediaDirConfig();
+				File dir = new File(dirNode.getAttribute("directory"));
+				if (!dir.exists()) {
+					throw new ConfigException("Unable to find root media directory: '"+dir.getAbsolutePath()+"'" );
+				}
+				dirConfig.setMediaDir(dir);
+				String pattern = dirNode.getAttribute("pattern").trim();
+				if (pattern.length()==0 /* TODO validate pattern */) {
+					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
+				}
+				dirConfig.setPattern(pattern);
+				dirConfig.setMode(Mode.valueOf(dirNode.getAttribute("mode")));
+
+				dirConfig.setSources(readSources(node));
+				dirConfig.setStores(readStores(node));
+				dirConfigs.add(dirConfig);
+			}
+			this.mediaDir = dirConfigs;
+
 		} catch (XMLParserException e) {
 			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 		}
 	}
 
-
-	/**
-	 * Once the data has been parsed, this will returned a list of the stores in the
-	 * configuration file.
-	 * @return A list of stores from the file
-	 */
-	public List<StoreConfig> getStores() {
-		return stores;
+	public MediaDirConfig getMediaDirectory(File directory) throws ConfigException {
+		for (MediaDirConfig c : mediaDir) {
+			if (c.getMediaDir().equals(directory)) {
+				return c;
+			}
+		}
+		throw new ConfigException("Unable to find media directory '"+directory+"' in the configuration");
 	}
-
-	/**
-	 * Once the data has been parsed, this will returned a list of the sources in the
-	 * configuration file.
-	 * @return A list of sources from the file
-	 */
-	public List<SourceConfig> getSources() {
-		return sources;
-	}
-
 
 	/**
 	 * Used to read the sources from the configuration file
@@ -112,9 +110,9 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	@Override
-	public List<ISource> loadSourcesFromConfigFile(Controller controller) throws ConfigException {
+	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
-		for (SourceConfig sourceConfig : getSources()) {
+		for (SourceConfig sourceConfig : dirConfig.getSources()) {
 			String sourceClass = sourceConfig.getID();
 			try {
 				Class<? extends ISource> c = null;
@@ -125,7 +123,7 @@ public class ConfigReader extends BaseConfigReader {
 					throw new ConfigException("Unable to add source because source '" + sourceClass + "' can't be found",e);
 				}
 				if (XBMCSource.class.isAssignableFrom(c)) {
-					List<ISource> xbmcSources = xbmcMgr.getSources();
+					List<ISource> xbmcSources = controller.getXBMCAddonManager().getSources();
 					if (sourceConfig.getParams() != null) {
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
@@ -182,9 +180,9 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is any problems
 	 */
 	@Override
-	public List<IStore> loadStoresFromConfigFile(Controller controller) throws ConfigException {
+	public List<IStore> loadStoresFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<IStore>stores = new ArrayList<IStore>();
-		for (StoreConfig storeConfig : getStores()) {
+		for (StoreConfig storeConfig : dirConfig.getStores()) {
 			String storeClass = storeConfig.getID();
 			try {
 				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
@@ -225,25 +223,5 @@ public class ConfigReader extends BaseConfigReader {
 			}
 		}
 	}
-
-	public static void setManager(XBMCAddonManager mgr) {
-		xbmcMgr = mgr;
-	}
-
-	public String getDefaultSourceID(Mode mode) throws XBMCException {
-		return xbmcMgr.getDefaultSourceID(mode);
-	}
-
-	public ISource getDefaultSource(Mode mode) throws XBMCException {
-		String id = xbmcMgr.getDefaultSourceID(mode);
-		for (ISource source : xbmcMgr.getSources()) {
-			if (source.getSourceId().equals(id)) {
-				return source;
-			}
-		}
-		return null;
-	}
-
-
 
 }

@@ -32,8 +32,11 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
@@ -50,13 +53,31 @@ public class Controller {
 	private List<IStore> stores = null;
 	private ConfigReader configReader = null;
 
+	private static XBMCAddonManager xbmcMgr;
+
 	public Controller(ConfigReader config) throws ConfigException {
 		this.configReader = config;
 	}
 
-	public void init() throws ConfigException {
-		stores = configReader.loadStoresFromConfigFile(this);
-		sources = configReader.loadSourcesFromConfigFile(this);
+	public void init(File rootMediaDir) throws ConfigException {
+		if (xbmcMgr == null) {
+			try {
+				setXBMCAddonManager(new XBMCAddonManager());
+			} catch (XBMCException e) {
+				log.error(e.getMessage(),e);
+			}
+		}
+		MediaDirConfig dirConfig = configReader.getMediaDirectory(rootMediaDir);
+		stores = configReader.loadStoresFromConfigFile(this,dirConfig);
+		sources = configReader.loadSourcesFromConfigFile(this,dirConfig);
+	}
+
+	public static void setXBMCAddonManager(XBMCAddonManager xbmcAddonManager) {
+		xbmcMgr = xbmcAddonManager;
+	}
+
+	public XBMCAddonManager getXBMCAddonManager() {
+		return xbmcMgr;
 	}
 
 //	/**
@@ -87,9 +108,20 @@ public class Controller {
 	 * @return The default source ID for a given mode
 	 * @throws SourceException Thrown if their is a problem getting the default source ID
 	 */
-	public String getDefaultSourceID(Mode mode) throws SourceException {
-		return configReader.getDefaultSourceID(mode);
+	public String getDefaultSourceID(Mode mode) throws XBMCException {
+		return xbmcMgr.getDefaultSourceID(mode);
 	}
+
+	public ISource getDefaultSource(Mode mode) throws XBMCException {
+		String id = xbmcMgr.getDefaultSourceID(mode);
+		for (ISource source : xbmcMgr.getSources()) {
+			if (source.getSourceId().equals(id)) {
+				return source;
+			}
+		}
+		return null;
+	}
+
 
 //	/**
 //	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
@@ -434,4 +466,5 @@ public class Controller {
 		}
 		return null;
 	}
+
 }
