@@ -18,6 +18,9 @@ package org.stanwood.media.logging;
 
 import java.io.File;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.RootLogger;
 
@@ -31,8 +34,14 @@ public class LogSetupHelper {
 	 * @param logConfigFile The logging configuration file
 	 */
 	public static void initLogingFromConfigFile(File logConfigFile) {
-		RootLogger.getRootLogger().removeAllAppenders();
+		resetLogging();
 		PropertyConfigurator.configure(logConfigFile.getAbsolutePath());
+	}
+
+	private static void resetLogging() {
+		RootLogger.getRootLogger().removeAllAppenders();
+		LogManager.resetConfiguration();
+		Logger.getRootLogger().setLevel(Level.INFO);
 	}
 
 	/**
@@ -40,7 +49,7 @@ public class LogSetupHelper {
 	 * @param configName The name of the configuration file stored in the same package as this class.
 	 */
 	public static void initLogingInternalConfigFile(String configName) {
-		RootLogger.getRootLogger().removeAllAppenders();
+		resetLogging();
 		PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
 	}
 

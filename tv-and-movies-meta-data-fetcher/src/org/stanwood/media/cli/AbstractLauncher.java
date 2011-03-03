@@ -37,10 +37,7 @@ public abstract class AbstractLauncher {
 	private String name;
 	private Controller controller;
 
-//	/**
-//	 * Used for tests to stop the configuration been read
-//	 */
-//	public static boolean doInit = true;
+
 	public static ConfigReader config = null;
 
 	/**
@@ -124,13 +121,16 @@ public abstract class AbstractLauncher {
 		try {
 			processConfig();
 			controller = new Controller(config);
-			config=null;
+			controller.init();
 		} catch (FileNotFoundException e) {
-			fatal(e.getMessage());
+			fatal(e);
 			return false;
 		} catch (ConfigException e) {
-			fatal(e.getMessage());
+			fatal(e);
 			return false;
+		}
+		finally {
+			config=null;
 		}
 
 		return processOptions(cmd);
@@ -162,7 +162,7 @@ public abstract class AbstractLauncher {
 		}
 	}
 
-	public Controller getController() {
+	protected Controller getController() {
 		return controller;
 	}
 
@@ -217,6 +217,10 @@ public abstract class AbstractLauncher {
 		System.err.println(msg);
 		displayHelp();
 		doExit(1);
+	}
+
+	protected void fatal(Exception e) {
+		fatal(e.getMessage());
 	}
 
 	/**

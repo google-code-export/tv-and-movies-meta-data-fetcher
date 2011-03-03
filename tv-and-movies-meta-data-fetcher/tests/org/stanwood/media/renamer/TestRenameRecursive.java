@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Helper;
+import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
@@ -40,14 +41,18 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Main.exitHandler = new IExitHandler() {
+		Main.setExitHandler(new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
-				TestRenameRecursive.exitCode = exitCode;
+				setExitCode(exitCode);
 			}
-		};
+		});
 
-		exitCode = 0;
+		setExitCode(0);
+	}
+
+	private static void setExitCode(int code) {
+		exitCode = code;
 	}
 
 	/**
@@ -94,7 +99,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
-			System.out.println(files);
 			Assert.assertEquals(4,files.size());
 			// .show.xml
 			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
@@ -165,7 +169,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
-			System.out.println(files);
 			Assert.assertEquals(4,files.size());
 			// .show.xml
 			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
@@ -261,8 +264,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveSourceRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
-		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		try {
@@ -287,6 +289,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			// Do the renaming
 			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 			Main.main(args);
 
 			// Check that things were renamed correctly
@@ -299,6 +302,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
+			setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 			Main.main(args);
 
 			// Check things are still correct
@@ -325,24 +329,25 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<config>"+LS);
 		if (source!=null) {
-			testConfig.append("    <sources>"+LS);
-			testConfig.append("  <source id=\""+source.getName()+"\">"+LS);
+			testConfig.append("  <sources>"+LS);
+			testConfig.append("    <source id=\""+source.getName()+"\">"+LS);
 			if (sourceParams!=null) {
 				for (Entry<String,String> e : sourceParams.entrySet()) {
 					testConfig.append("    <param key=\""+e.getKey()+"\" value=\""+e.getValue()+"\">"+LS);
 				}
 			}
 
-			testConfig.append("  </source>"+LS);
+			testConfig.append("    </source>"+LS);
 			testConfig.append("  </sources>"+LS);
 		}
 		if (store!=null) {
-			testConfig.append("    <stores>"+LS);
-			testConfig.append("  <store id=\""+store.getName()+"\"/>"+LS);
+			testConfig.append("  <stores>"+LS);
+			testConfig.append("    <store id=\""+store.getName()+"\"/>"+LS);
 			testConfig.append("  </stores>"+LS);
 		}
 
 		testConfig.append("</config>"+LS);
+		System.out.println(testConfig.toString());
 
 		File configFile = createConfigFileWithContents(testConfig);
 
@@ -351,7 +356,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			is = new FileInputStream(configFile);
 			ConfigReader configReader = new ConfigReader(is);
 			configReader.parse();
-
+			AbstractLauncher.config = configReader;
 		}
 		finally {
 			if (is!=null) {

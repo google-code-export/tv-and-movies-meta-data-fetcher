@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 
@@ -30,7 +29,7 @@ public class XBMCAddonTestBase {
 	 */
 	@BeforeClass
 	public static void setupTestFile() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+//		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		tmpDir = FileHelper.createTmpDir("xbmc");
 		FileHelper.unzip(TestXMBCSourceTVDB.class.getResourceAsStream("xbmc-addons.zip"),tmpDir);
