@@ -25,6 +25,7 @@ import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
@@ -593,6 +594,12 @@ public class XBMCSource extends XMLParser implements ISource {
 			return String.valueOf(addon.getCreateNFOFiles());
 		}
 		return addon.getSetting(key).toString();
+	}
+
+	@Override
+	public void setController(Controller controller) throws SourceException {
+		// TODO Auto-generated method stub
+
 	}
 
 }

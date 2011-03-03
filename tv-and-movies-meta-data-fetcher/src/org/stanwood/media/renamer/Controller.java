@@ -51,10 +51,12 @@ public class Controller {
 	private ConfigReader configReader = null;
 
 	public Controller(ConfigReader config) throws ConfigException {
-		this.configReader = configReader;
+		this.configReader = config;
+	}
 
-		stores = config.loadStoresFromConfigFile();
-		sources = config.loadSourcesFromConfigFile();
+	public void init() throws ConfigException {
+		stores = configReader.loadStoresFromConfigFile(this);
+		sources = configReader.loadSourcesFromConfigFile(this);
 	}
 
 //	/**

@@ -17,7 +17,9 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.Assert;
 
@@ -58,17 +60,22 @@ public class TestController extends XBMCAddonTestBase  {
 
 		FakeStore.testParam1 = null;
 
-
 		File configFile = createConfigFileWithContents(testConfig);
-
-		ConfigReader configReader = new ConfigReader(configFile);
-		configReader.parse();
-		Controller.destoryController();
-		Controller.initFromConfigFile(configReader);
-
-		Assert.assertEquals("/testPath/blah",FakeStore.testParam1);
-
-		Controller.destoryController();
+		InputStream is = null;
+		try {
+			is = new FileInputStream(configFile);
+			ConfigReader configReader = new ConfigReader(is);
+			configReader.parse();
+			Controller controller = new Controller(configReader);
+			controller.init();
+			Assert.assertNotNull(controller);
+			Assert.assertEquals("/testPath/blah",FakeStore.testParam1);
+		}
+		finally {
+			if (is!=null) {
+				is.close();
+			}
+		}
 	}
 
 	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {

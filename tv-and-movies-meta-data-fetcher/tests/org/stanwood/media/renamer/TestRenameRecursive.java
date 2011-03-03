@@ -3,6 +3,7 @@ package org.stanwood.media.renamer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Main.doInit = false;
 		Main.exitHandler = new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
@@ -56,8 +56,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		Main.doInit = false;
-		Controller.destoryController();
 	}
 
 	/**
@@ -109,7 +107,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			Controller.destoryController();
 			setupTestController(null,null,XMLStore2.class);
 
 			// Do the renaming
@@ -181,7 +178,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			Controller.destoryController();
 			setupTestController(null,null,XMLStore2.class);
 
 			// Do the renaming
@@ -350,10 +346,18 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 		File configFile = createConfigFileWithContents(testConfig);
 
-		ConfigReader configReader = new ConfigReader(configFile);
-		configReader.parse();
-		Controller.destoryController();
-		Controller.initFromConfigFile(configReader);
+		InputStream is = null;
+		try {
+			is = new FileInputStream(configFile);
+			ConfigReader configReader = new ConfigReader(is);
+			configReader.parse();
+
+		}
+		finally {
+			if (is!=null) {
+				is.close();
+			}
+		}
 	}
 
 	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {

@@ -48,9 +48,13 @@ public class HybridFilmSource implements ISource {
 	 * @throws SourceException Thrown if their are any problems
 	 */
 	public HybridFilmSource() throws SourceException {
-		imdbSource =Controller.getSource(Controller.getDefaultSourceID(Mode.TV_SHOW));
+
 	}
 
+	@Override
+	public void setController(Controller controller) throws SourceException {
+		imdbSource =controller.getSource(controller.getDefaultSourceID(Mode.TV_SHOW));
+	}
 
 	/**
 	 * This always returns null as this source does not support reading episodes.
