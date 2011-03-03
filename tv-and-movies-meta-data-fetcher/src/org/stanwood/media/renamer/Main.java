@@ -31,6 +31,7 @@ import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
@@ -65,8 +66,6 @@ public class Main extends AbstractLauncher {
 	private Mode mode = null;
 	private static IExitHandler exitHandler = null;
 
-
-
 	static {
 		OPTIONS = new ArrayList<Option>();
 		Option o = new Option(SHOWID_OPTION,"showid",true,"The ID of the show. If not present, then it will search for the show id.");
@@ -74,10 +73,16 @@ public class Main extends AbstractLauncher {
 		OPTIONS.add(o);
 
 		o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
+		o.setRequired(true);
+		o.setArgName("directory");
 		OPTIONS.add(o);
+
 		o = new Option(RENAME_PATTERN, "pattern",true,"The pattern used to rename files. Defaults to \"%s %e - %t.%x\" if not present.");
+		o.setArgName("pattern");
+
 		OPTIONS.add(o);
 		o = new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present.");
+
 		OPTIONS.add(o);
 		o = new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source.");
 		OPTIONS.add(o);
@@ -168,6 +173,22 @@ public class Main extends AbstractLauncher {
 		mode = null;
 
 		try {
+			if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
+				File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
+				if (dir.isDirectory() && dir.canWrite()) {
+					rootMediaDirectory = dir;
+				} else {
+					fatal("Show directory must be a writable directory");
+					return false;
+				}
+				try {
+					getController().init(rootMediaDirectory);
+				} catch (ConfigException e) {
+					fatal(e);
+					return false;
+				}
+			}
+
 			if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
 				String cliMode = cmd.getOptionValue(MODE_OPTION);
 				if (cliMode.toLowerCase().equals("film")) {
@@ -187,15 +208,6 @@ public class Main extends AbstractLauncher {
 				sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
 			}
 
-			if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
-				File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
-				if (dir.isDirectory() && dir.canWrite()) {
-					rootMediaDirectory = dir;
-				} else {
-					fatal("Show directory must be a writable directory");
-					return false;
-				}
-			}
 			if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
 				fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
 				return false;

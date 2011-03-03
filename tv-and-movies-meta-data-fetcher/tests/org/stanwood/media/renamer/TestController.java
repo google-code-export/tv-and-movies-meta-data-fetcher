@@ -18,7 +18,6 @@ package org.stanwood.media.renamer;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import junit.framework.Assert;
@@ -44,44 +43,48 @@ public class TestController extends XBMCAddonTestBase  {
 	 */
 	@Test
 	public void testStoreWithParams() throws Exception{
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
-
-		StringBuilder testConfig = new StringBuilder();
-		testConfig.append("<config>"+LS);
-		testConfig.append("    <sources>"+LS);
-		testConfig.append("  <source id=\"org.stanwood.media.renamer.FakeSource\"/>"+LS);
-		testConfig.append("  </sources>"+LS);
-		testConfig.append("  <stores>"+LS);
-		testConfig.append("	   <store id=\"org.stanwood.media.store.FakeStore\">"+LS);
-		testConfig.append("	     <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
-		testConfig.append("	   </store>"+LS);
-		testConfig.append("  </stores>"+LS);
-		testConfig.append("</config>"+LS);
-
-		FakeStore.testParam1 = null;
-
-		File configFile = createConfigFileWithContents(testConfig);
-		InputStream is = null;
+		File tmpDir = FileHelper.createTmpDir("tmddir");
 		try {
-			is = new FileInputStream(configFile);
-			ConfigReader configReader = new ConfigReader(is);
-			configReader.parse();
-			Controller controller = new Controller(configReader);
-			controller.init();
-			Assert.assertNotNull(controller);
-			Assert.assertEquals("/testPath/blah",FakeStore.testParam1);
-		}
-		finally {
-			if (is!=null) {
-				is.close();
+			LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+tmpDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
+			testConfig.append("    <sources>"+LS);
+			testConfig.append("      <source id=\"org.stanwood.media.renamer.FakeSource\"/>"+LS);
+			testConfig.append("    </sources>"+LS);
+			testConfig.append("    <stores>"+LS);
+			testConfig.append("	     <store id=\"org.stanwood.media.store.FakeStore\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("	     </store>"+LS);
+			testConfig.append("    </stores>"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			FakeStore.setFakeParam(null);
+			File configFile = FileHelper.createTmpFileWithContents(testConfig);
+			InputStream is = null;
+			try {
+				is = new FileInputStream(configFile);
+				ConfigReader configReader = new ConfigReader(is);
+				configReader.parse();
+				Controller controller = new Controller(configReader);
+
+				controller.init(tmpDir);
+				Assert.assertNotNull(controller);
+				Assert.assertEquals("/testPath/blah",FakeStore.getFakeParam());
+			}
+			finally {
+				if (is!=null) {
+					is.close();
+				}
+
 			}
 		}
+		finally {
+			FileHelper.delete(tmpDir);
+		}
 	}
 
-	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {
-		File configFile = File.createTempFile("config", ".xml");
-		configFile.deleteOnExit();
-		FileHelper.appendContentsToFile(configFile, testConfig);
-		return configFile;
-	}
+
 }

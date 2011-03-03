@@ -121,7 +121,6 @@ public abstract class AbstractLauncher {
 		try {
 			processConfig();
 			controller = new Controller(config);
-			controller.init();
 		} catch (FileNotFoundException e) {
 			fatal(e);
 			return false;

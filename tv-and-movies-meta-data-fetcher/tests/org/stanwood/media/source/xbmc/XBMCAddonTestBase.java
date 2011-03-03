@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -47,7 +47,7 @@ public class XBMCAddonTestBase {
 	@Before
 	public void setup() throws XBMCException {
 		addonManager = createAddonManager(new File(tmpDir,"addons"),Locale.ENGLISH);
-		ConfigReader.setManager(addonManager);
+		Controller.setXBMCAddonManager(addonManager);
 	}
 
 	protected void removeAddons() throws IOException {

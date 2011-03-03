@@ -18,6 +18,7 @@ import org.stanwood.media.Helper;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.logging.LogSetupHelper;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
@@ -70,9 +71,10 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		setupTestController(XBMCSource.class,new HashMap<String,String>(),XMLStore2.class);
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
+		setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),XMLStore2.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -93,7 +95,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			Main.main(args);
 
@@ -111,7 +112,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(null,null,XMLStore2.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class);
 
 			// Do the renaming
 			Main.main(args);
@@ -139,10 +140,11 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	@Test
 	public void testRecursiveStoreRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
-		setupTestController(FakeSource.class,new HashMap<String,String>(),XMLStore2.class);
 
 		// Create test files
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
+		setupTestController(dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -163,7 +165,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			Main.main(args);
 
@@ -181,7 +182,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestRenameRecursive.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(null,null,XMLStore2.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class);
 
 			// Do the renaming
 			Main.main(args);
@@ -207,9 +208,9 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
 		// Create test files
 		File dir = FileHelper.createTmpDir("movies");
+		setupTestController(dir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		try {
 			File filmsDir = new File(dir, "Films");
 			if (!filmsDir.mkdir() && !filmsDir.exists()) {
@@ -266,6 +267,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	public void testRecursiveSourceRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		// Create test files
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File eurekaDir = new File(dir, "Heroes");
@@ -287,9 +289,8 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
-			setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
+			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
 			Main.main(args);
 
 			// Check that things were renamed correctly
@@ -302,7 +303,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
-			setupTestController(XBMCSource.class,new HashMap<String,String>(),null);
+			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
 			Main.main(args);
 
 			// Check things are still correct
@@ -318,16 +319,10 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		}
 	}
 
-	/**
-	 * Create test controller
-	 * @param source The source to use with the controller , or null if none
-	 * @param store The store to use with the controller, or null if none
-	 * @param sourceParams Parameters that should be added to the source
-	 * @throws Exception Thrown if their are any problems
-	 */
-	private static void setupTestController(Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
+	private static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
-		testConfig.append("<config>"+LS);
+		testConfig.append("<mediaManager>"+LS);
+		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
 		if (source!=null) {
 			testConfig.append("  <sources>"+LS);
 			testConfig.append("    <source id=\""+source.getName()+"\">"+LS);
@@ -346,7 +341,8 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			testConfig.append("  </stores>"+LS);
 		}
 
-		testConfig.append("</config>"+LS);
+		testConfig.append("  </mediaDirectory>"+LS);
+		testConfig.append("</mediaManager>"+LS);
 		System.out.println(testConfig.toString());
 
 		File configFile = createConfigFileWithContents(testConfig);

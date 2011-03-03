@@ -33,7 +33,7 @@ import org.stanwood.media.model.Show;
 public class FakeStore implements IStore {
 
 	/** This is used to test that a param was test */
-	public static String testParam1;
+	private static String testParam1;
 
 	/**
 	 * This does nothing as the store does not support it.
@@ -122,9 +122,15 @@ public class FakeStore implements IStore {
 	 * @return The value of the test parameter
 	 */
 	public String getTestParam1() {
-		synchronized (testParam1) {
-			return FakeStore.testParam1;
-		}
+		return getFakeParam();
+	}
+
+	/**
+	 * Used to get the value of the test parameter
+	 * @return The value of the test parameter
+	 */
+	public static String getFakeParam() {
+		return testParam1;
 	}
 
 	/**
@@ -132,9 +138,15 @@ public class FakeStore implements IStore {
 	 * @param testParam1 The value of the test parameter
 	 */
 	public void setTestParam1(String testParam1) {
-		synchronized (testParam1) {
-			FakeStore.testParam1 = testParam1;
-		}
+		setFakeParam(testParam1);
+	}
+
+	/**
+	 * Used to set the value of the test parameter
+	 * @param value The value of the test parameter@param value
+	 */
+	public static void setFakeParam(String value) {
+		FakeStore.testParam1 = value;
 	}
 
 	/**

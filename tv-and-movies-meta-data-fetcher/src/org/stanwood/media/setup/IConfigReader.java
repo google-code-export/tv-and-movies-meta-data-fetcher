@@ -8,7 +8,7 @@ import org.stanwood.media.store.IStore;
 
 public interface IConfigReader {
 
-	public List<ISource> loadSourcesFromConfigFile(Controller controller) throws ConfigException;
+	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException;
 
-	public List<IStore> loadStoresFromConfigFile(Controller controller) throws ConfigException;
+	public List<IStore> loadStoresFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException;
 }

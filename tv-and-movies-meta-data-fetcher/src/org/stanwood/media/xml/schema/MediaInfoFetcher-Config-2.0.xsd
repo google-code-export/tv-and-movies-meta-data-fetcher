@@ -1,28 +1,31 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="mediaManager">  
   		<xs:complexType>
-  			<xs:element name="mediaDirectory">  
-  				<xs:complexType>
-		  			<xs:sequence>
-		  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
-		  					<xs:complexType>
-			  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			  						<xs:element name="source" type="source"/>
-			  					</xs:sequence>
-		  					</xs:complexType>
-		  				</xs:element>
-		  				<xs:element name="stores" minOccurs="0" maxOccurs="1">
-		  					<xs:complexType>
-			  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			  						<xs:element name="store" type="store"/>
-			  					</xs:sequence>  
-		  					</xs:complexType>					
-		  				</xs:element>  				
-		  			</xs:sequence>
-		  			<xs:attribute name="directory" type="xs:string" />		  			
-		  			<xs:attribute name="pattern" type="xs:string" />
-		  		</xs:complexType>
-		  	</xs:element>
+  			<xs:sequence>
+	  			<xs:element name="mediaDirectory">  
+	  				<xs:complexType>
+			  			<xs:sequence>
+			  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="source" type="source"/>
+				  					</xs:sequence>
+			  					</xs:complexType>
+			  				</xs:element>
+			  				<xs:element name="stores" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="store" type="store"/>
+				  					</xs:sequence>  
+			  					</xs:complexType>					
+			  				</xs:element>  				
+			  			</xs:sequence>
+			  			<xs:attribute name="directory" type="xs:string" />		  			
+			  			<xs:attribute name="pattern" type="xs:string" />
+			  			<xs:attribute name="mode" type="xs:string" /> <!-- TODO restrict the modes -->
+			  		</xs:complexType>
+		  		</xs:element>
+		  	</xs:sequence>
   		</xs:complexType>    	
   	</xs:element>
 
