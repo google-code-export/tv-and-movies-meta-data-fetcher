@@ -20,9 +20,9 @@
 			  					</xs:complexType>					
 			  				</xs:element>  				
 			  			</xs:sequence>
-			  			<xs:attribute name="directory" type="xs:string" />		  			
-			  			<xs:attribute name="pattern" type="xs:string" />
-			  			<xs:attribute name="mode" type="xs:string" /> <!-- TODO restrict the modes -->
+			  			<xs:attribute name="directory" type="xs:string" use="required"/>		  			
+			  			<xs:attribute name="pattern" type="xs:string"/>
+			  			<xs:attribute name="mode" type="xs:string" use="required"/> <!-- TODO restrict the modes -->
 			  		</xs:complexType>
 		  		</xs:element>
 		  	</xs:sequence>
@@ -33,18 +33,18 @@
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="param" type="param"/>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:string" />
+		<xs:attribute name="id" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="source">  		
   		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="param" type="param"/>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:string"/>  		
+		<xs:attribute name="id" type="xs:string" use="required"/>  		
   	</xs:complexType>
 
 	<xs:complexType name="param">
-		<xs:attribute name="name" type="xs:string"></xs:attribute>
-		<xs:attribute name="value" type="xs:string"></xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>	
 </xs:schema>

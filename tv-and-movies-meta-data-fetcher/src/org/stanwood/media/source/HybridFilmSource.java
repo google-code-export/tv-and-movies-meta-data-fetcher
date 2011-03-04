@@ -30,6 +30,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * This class is a source used to retrieve the best film information it can. It
@@ -187,17 +188,17 @@ public class HybridFilmSource implements ISource {
 	 * last segment of the file name, converts it to lower case, tidies up the name and performs
 	 * the search.
 	 *
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
 	 * @param filmFile The file the film is located in
-	 * @param mode The mode that the search operation should be performed in
 	 * @return Always returns null
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File filmFile,String renamePattern) throws SourceException, MalformedURLException,
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File filmFile) throws SourceException, MalformedURLException,
 			IOException {
-		if (mode != Mode.FILM) {
+		if (rootMediaDir.getMode() != Mode.FILM) {
 			return null;
 		}
 		StringBuilder id = new StringBuilder();
@@ -205,7 +206,7 @@ public class HybridFilmSource implements ISource {
 
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
-			SearchResult result = source.searchForVideoId(rootMediaDir,mode, filmFile,renamePattern);
+			SearchResult result = source.searchForVideoId(rootMediaDir,filmFile);
 			if (result!=null) {
 				if (id.length()>0) {
 					id.append("|");

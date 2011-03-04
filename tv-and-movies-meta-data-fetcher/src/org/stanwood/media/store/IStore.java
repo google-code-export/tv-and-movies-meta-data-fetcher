@@ -22,10 +22,10 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * Stores are similar too sources, except that they are also writable. Once
@@ -136,15 +136,13 @@ public interface IStore  {
 	/**
 	 * This is called to search the store for a show id. If it can't be found, then
 	 * it will return null.
-	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
-	 *         it was not specified on the command line.
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
 	 * @param episodeFile The file the episode is stored in
 	 * @param mode The mode that the search operation should be performed in
-	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return The results of the search if it was found, otherwise null
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile, String renamePattern) throws StoreException;
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile) throws StoreException;
 
 	/**
 	 * This is used when a file that holds a episode or film has been renamed

@@ -8,6 +8,9 @@ import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * A base class for configuration readers
+ */
 public abstract class BaseConfigReader extends XMLParser implements IConfigReader {
 
 	protected List<SourceConfig> readSources(Node configNode) throws XMLParserException {

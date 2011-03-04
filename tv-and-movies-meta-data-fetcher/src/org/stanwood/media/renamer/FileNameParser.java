@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.setup.MediaDirConfig;
+
 /**
  * Used to parse a filename and work out the correct season and episode number
  * of the file.
@@ -59,12 +61,11 @@ public class FileNameParser {
 
 	/**
 	 * Parse the filename and work out the episode and season number
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The pattern been used to rename media
+	 * @param dirConfig The root media directory
 	 * @param file The file been renamed
 	 * @return The parsed information
 	 */
-	public static ParsedFileName parse(File rootMediaDir,String renamePattern,File file) {
+	public static ParsedFileName parse(MediaDirConfig dirConfig,File file) {
 		for (Pattern pattern : PATTERNS) {
 			Matcher m = pattern.matcher(file.getName());
 			if (m.matches()) {
@@ -77,7 +78,7 @@ public class FileNameParser {
 			}
  		}
 
-		Map<String,String> tokens = getTokens(rootMediaDir,renamePattern,file.getAbsolutePath());
+		Map<String,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
 			String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);
 			String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);

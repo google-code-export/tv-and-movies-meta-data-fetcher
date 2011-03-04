@@ -37,7 +37,8 @@ public abstract class AbstractLauncher {
 	private String name;
 	private Controller controller;
 
-
+	/** This is used by tests to set a configuration that should be used, if null then a configuration is read
+	 * in the usual way. Once the configuration has been used, this is set back to null */
 	public static ConfigReader config = null;
 
 	/**

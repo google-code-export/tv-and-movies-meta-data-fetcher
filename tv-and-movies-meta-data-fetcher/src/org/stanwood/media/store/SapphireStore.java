@@ -32,10 +32,10 @@ import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * <p>
@@ -298,14 +298,13 @@ public class SapphireStore implements IStore {
 
 	/**
 	 * This does nothing because this source does not support searching for show ID's.
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
 	 * @param episodeFile The file the episode is stored in
-	 * @param mode The mode that the search operation should be performed in
-	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
 	 * @return Will always return null.
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern)
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile)
 			throws StoreException {
 		return null;
 	}

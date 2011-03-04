@@ -59,7 +59,7 @@ public class Controller {
 		this.configReader = config;
 	}
 
-	public void init(File rootMediaDir) throws ConfigException {
+	public MediaDirConfig init(File rootMediaDir) throws ConfigException {
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager());
@@ -70,6 +70,7 @@ public class Controller {
 		MediaDirConfig dirConfig = configReader.getMediaDirectory(rootMediaDir);
 		stores = configReader.loadStoresFromConfigFile(this,dirConfig);
 		sources = configReader.loadSourcesFromConfigFile(this,dirConfig);
+		return dirConfig;
 	}
 
 	public static void setXBMCAddonManager(XBMCAddonManager xbmcAddonManager) {
@@ -79,28 +80,6 @@ public class Controller {
 	public XBMCAddonManager getXBMCAddonManager() {
 		return xbmcMgr;
 	}
-
-//	/**
-//	 * Initialise the controller using the default settings. This will add a MemoryStore, XMLStore and a TVCOMSource.
-//	 * Once the store has been initialised, it can't be Initialised again.
-//	 * @throws SourceException Thrown if their is a problem
-//	 */
-//	public void initWithDefaults() throws SourceException {
-//		synchronized (Controller.class) {
-//			if (stores != null || sources != null) {
-//				throw new IllegalStateException("Controller allready initialized");
-//			}
-//		}
-//
-//		stores = new ArrayList<IStore>();
-//		stores.add(new MemoryStore());
-//		stores.add(new XMLStore2());
-//
-//		sources = new ArrayList<ISource>();
-//		for (Mode mode : Mode.values()) {
-//			sources.add(configReader.getDefaultSource(mode));
-//		}
-//	}
 
 	/**
 	 * Used to get the default source ID
@@ -121,24 +100,6 @@ public class Controller {
 		}
 		return null;
 	}
-
-
-//	/**
-//	 * Initialise the stores used a configuration file. Once the store has been initialised, it can't be Initialised
-//	 * again.
-//	 *
-//	 * @param config The parsed configuration file.
-//	 * @throws ConfigException Thrown if their is a problem reading the configuration file
-//	 */
-//	public void initFromConfigFile(ConfigReader config) throws ConfigException {
-//		if (stores != null || sources != null) {
-//			throw new IllegalStateException("Controller allready initialized");
-//		}
-//		configReader = config;
-//
-//		stores = config.loadStoresFromConfigFile();
-//		sources = config.loadSourcesFromConfigFile();
-//	}
 
 	/**
 	 * Get a show with a given show id and source id. This will first try to retrieve the show from the stores. If it is
@@ -409,29 +370,26 @@ public class Controller {
 	/**
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
-	 *
-	 * @param rootMediaDir The root media directory
-	 * @param mode The mode that the search operation should be performed in
+	 * @param dirConfig The root media directory configuration
 	 * @param mediaFile The file the media is stored in
-	 * @param renamePattern The rename pattern been used, or null if one is not been used
 	 * @return The results of searching for the show, or null if it can't be found.
 	 * @throws SourceException Thrown if their is a problem reading from a source
 	 * @throws StoreException Thrown if their is a problem reading for a store
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode, File mediaFile,String renamePattern) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(MediaDirConfig dirConfig, File mediaFile) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		SearchResult result = null;
 		for (IStore store : stores) {
-			result = store.searchForVideoId(rootMediaDir,mode, mediaFile,renamePattern);
+			result = store.searchForVideoId(dirConfig,mediaFile);
 			if (result != null) {
 				return result;
 			}
 		}
 
 		for (ISource source : sources) {
-			result = source.searchForVideoId(rootMediaDir,mode, mediaFile,renamePattern);
+			result = source.searchForVideoId(dirConfig,mediaFile);
 			if (result != null) {
 				return result;
 			}

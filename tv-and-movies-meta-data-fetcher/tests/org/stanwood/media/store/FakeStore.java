@@ -22,10 +22,10 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * This is a fake store that is used for testing of a stores params.
@@ -107,13 +107,12 @@ public class FakeStore implements IStore {
 
 	/**
 	 * This will always return null as this store does not support searching
-	 * @param episodeFile The file the episode is located in
-	 * @param mode The mode that the search operation should be performed in
-	 * @param renamePattern The pattern been used in rename operations, or null if not renaming
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
+	 * @param episodeFile The file the episode is stored in
 	 * @return Always returns null
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) {
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile) {
 		return null;
 	}
 

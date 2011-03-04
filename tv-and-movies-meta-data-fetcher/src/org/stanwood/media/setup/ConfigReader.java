@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.renamer.Renamer;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -46,6 +47,9 @@ import org.w3c.dom.Node;
 public class ConfigReader extends BaseConfigReader {
 
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
+
+	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
+	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
@@ -77,12 +81,32 @@ public class ConfigReader extends BaseConfigReader {
 					throw new ConfigException("Unable to find root media directory: '"+dir.getAbsolutePath()+"'" );
 				}
 				dirConfig.setMediaDir(dir);
-				String pattern = dirNode.getAttribute("pattern").trim();
-				if (pattern.length()==0 /* TODO validate pattern */) {
-					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
+
+				String strMode = dirNode.getAttribute("mode").toUpperCase();
+				Mode mode ;
+				try {
+					mode = Mode.valueOf(strMode);
 				}
+				catch (IllegalArgumentException e) {
+					throw new ConfigException("Unkown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'");
+				}
+
+				String pattern = dirNode.getAttribute("pattern").trim();
+				if (pattern.length()==0) {
+					pattern = DEFAULT_TV_FILE_PATTERN;
+					if (mode == Mode.FILM) {
+						pattern = DEFAULT_FILM_FILE_PATTERN;
+					}
+					log.warn("No pattern given, using default: " + pattern);
+				}
+				else {
+					if (!Renamer.validPattern(pattern)) {
+						throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
+					}
+				}
+
 				dirConfig.setPattern(pattern);
-				dirConfig.setMode(Mode.valueOf(dirNode.getAttribute("mode")));
+				dirConfig.setMode(mode);
 
 				dirConfig.setSources(readSources(node));
 				dirConfig.setStores(readStores(node));
@@ -95,6 +119,12 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
+	/**
+	 * Used to get the configuration for a root media directory
+	 * @param directory the root media directory
+	 * @return The configuration
+	 * @throws ConfigException Thrown if the configuration can't be found
+	 */
 	public MediaDirConfig getMediaDirectory(File directory) throws ConfigException {
 		for (MediaDirConfig c : mediaDir) {
 			if (c.getMediaDir().equals(directory)) {

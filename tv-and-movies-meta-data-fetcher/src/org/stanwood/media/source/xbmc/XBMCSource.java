@@ -27,6 +27,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.search.ShowSearcher;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.xml.IterableNodeList;
@@ -479,20 +480,17 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	/**
 	 * Used to search for a media details within the source
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
 	 * @param episodeFile The file the episode is located in
-	 * @param mode The mode that the search operation should be performed in
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The rename pattern been used, or null if one is not been used
 	 * @return The results of the search, or null if nothing was found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir, final Mode mode,
-			File episodeFile, String renamePattern) throws SourceException,
+	public SearchResult searchForVideoId(final MediaDirConfig rootMediaDir,File episodeFile) throws SourceException,
 			MalformedURLException, IOException {
-		if (!addon.supportsMode(mode)) {
+		if (!addon.supportsMode(rootMediaDir.getMode())) {
 			return null;
 		}
 
@@ -502,11 +500,11 @@ public class XBMCSource extends XMLParser implements ISource {
 				if (name==null) {
 					return null;
 				}
-				return searchMedia(name,mode);
+				return searchMedia(name,rootMediaDir.getMode());
 			}
 		};
 
-		return s.search(episodeFile,rootMediaDir,renamePattern);
+		return s.search(episodeFile,rootMediaDir.getMediaDir(),rootMediaDir.getPattern());
 	}
 
 	protected SearchResult searchMedia(final String name,final Mode mode) throws SourceException {

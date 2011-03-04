@@ -43,6 +43,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.search.ReverseFilePatternMatcher;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -911,18 +912,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir, Mode mode, File episodeFile,String renamePattern) throws StoreException {
-		Document doc = getCache(rootMediaDir);
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir, File episodeFile) throws StoreException {
+		Document doc = getCache(rootMediaDir.getMediaDir());
 		if (doc!=null) {
 			Node store;
 			try {
 				store = getStoreNode(doc);
 				if (store!=null) {
-					if (mode==Mode.TV_SHOW) {
-						return searchForTVShow(store,episodeFile,renamePattern);
+					if (rootMediaDir.getMode()==Mode.TV_SHOW) {
+						return searchForTVShow(store,episodeFile,rootMediaDir.getPattern());
 					}
 					else {
-						return searchForFilm(store,episodeFile,renamePattern);
+						return searchForFilm(store,episodeFile,rootMediaDir.getPattern());
 					}
 				}
 			} catch (XMLParserException e) {
