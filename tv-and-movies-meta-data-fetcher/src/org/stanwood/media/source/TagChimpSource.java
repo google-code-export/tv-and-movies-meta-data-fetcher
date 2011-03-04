@@ -24,6 +24,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.search.SearchHelper;
+import org.stanwood.media.setup.MediaDirConfig;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;
@@ -245,9 +246,8 @@ public class TagChimpSource implements ISource {
 	/**
 	 * This will search the IMDB site for the film. It uses the last segment of the file name, converts it to lower
 	 * case, tidies up the name and performs the search.
-	 *
+	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
 	 * @param filmFile The file the film is located in
-	 * @param mode The mode that the search operation should be performed in
 	 * @return Always returns null
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
@@ -255,9 +255,9 @@ public class TagChimpSource implements ISource {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File filmFile,String renamePattern) throws SourceException, MalformedURLException,
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File filmFile) throws SourceException, MalformedURLException,
 			IOException {
-		if (mode != Mode.FILM) {
+		if (rootMediaDir.getMode() != Mode.FILM) {
 			return null;
 		}
 		String query = SearchHelper.getQuery(filmFile, regexpToReplace).toLowerCase();

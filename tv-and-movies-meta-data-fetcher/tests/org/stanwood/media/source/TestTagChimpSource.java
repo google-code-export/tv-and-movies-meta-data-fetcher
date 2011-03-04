@@ -30,6 +30,7 @@ import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
@@ -54,7 +55,10 @@ public class TestTagChimpSource {
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"Iron man.avi");
-			SearchResult result = source.searchForVideoId(tmpFile.getAbsoluteFile(),Mode.FILM,tmpFile,null);
+			MediaDirConfig config = new MediaDirConfig();
+			config.setMediaDir(tmpFile.getAbsoluteFile());
+			config.setMode(Mode.FILM);
+			SearchResult result = source.searchForVideoId(config,tmpFile);
 			Assert.assertEquals("39752",result.getId());
 			Assert.assertEquals("tagChimp",result.getSourceId());
 			Assert.assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -30,8 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
@@ -43,51 +42,31 @@ public class Main extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(Main.class);
 
-	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
-	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
-	private final static String SHOWID_OPTION = "s";
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
-	private final static String RENAME_PATTERN = "p";
-	private final static String SOURCE_ID_OPTION = "o";
 	private final static String REFRESH_STORE_OPTION = "r";
-	private final static String MODE_OPTION = "m";
 	private final static String RECURSIVE_OPTION = "R";
 	private static final List<Option> OPTIONS;
 
-	private String showId = null;
-	private String sourceId = null;
-	private File rootMediaDirectory = new File(System.getProperty("user.dir"));
-	private String pattern = null;
 	private boolean refresh = false;
 	private boolean recursive = false;
+	private MediaDirConfig rootMediaDirConfig = null;
 
-	private Mode mode = null;
+
 	private static IExitHandler exitHandler = null;
 
 	static {
 		OPTIONS = new ArrayList<Option>();
-		Option o = new Option(SHOWID_OPTION,"showid",true,"The ID of the show. If not present, then it will search for the show id.");
-		o.setArgName("showid");
-		OPTIONS.add(o);
 
-		o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
+		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
 		o.setRequired(true);
 		o.setArgName("directory");
 		OPTIONS.add(o);
 
-		o = new Option(RENAME_PATTERN, "pattern",true,"The pattern used to rename files. Defaults to \"%s %e - %t.%x\" if not present.");
-		o.setArgName("pattern");
-
-		OPTIONS.add(o);
-		o = new Option(SOURCE_ID_OPTION, "source",true,"The id if the source too look up meta data in. Defaults too tvcom if not present.");
-
-		OPTIONS.add(o);
 		o = new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source.");
 		OPTIONS.add(o);
-		o = new Option(MODE_OPTION,"mode",true,"The mode that the tool will work in. Either FILM or TV.");
-		OPTIONS.add(o);
+
 		o = new Option(RECURSIVE_OPTION,"recursive",false,"Also process subdirectories");
 		OPTIONS.add(o);
 	}
@@ -142,7 +121,7 @@ public class Main extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		Renamer renamer = new Renamer(getController(),showId,mode, rootMediaDirectory, pattern,VALID_EXTS,refresh,recursive);
+		Renamer renamer = new Renamer(getController(),rootMediaDirConfig,VALID_EXTS,refresh,recursive);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -165,123 +144,32 @@ public class Main extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean processOptions(CommandLine cmd) {
-		showId = null;
-		sourceId = null;
-		rootMediaDirectory = new File(System.getProperty("user.dir"));
-		pattern = null;
 		refresh = false;
-		mode = null;
+		rootMediaDirConfig = null;
 
-		try {
-			if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
-				File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
-				if (dir.isDirectory() && dir.canWrite()) {
-					rootMediaDirectory = dir;
-				} else {
-					fatal("Show directory must be a writable directory");
-					return false;
-				}
+		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
+			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
+			if (dir.isDirectory() && dir.canWrite()) {
 				try {
-					getController().init(rootMediaDirectory);
+					rootMediaDirConfig = getController().init(dir);
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
 				}
-			}
-
-			if (cmd.hasOption(MODE_OPTION) && cmd.getOptionValue(MODE_OPTION)!=null) {
-				String cliMode = cmd.getOptionValue(MODE_OPTION);
-				if (cliMode.toLowerCase().equals("film")) {
-					mode = Mode.FILM;
-				}
-				else if (cliMode.toLowerCase().equals("tv")) {
-					mode = Mode.TV_SHOW;
-				}
-				else {
-					fatal("Unkown rename mode: " + cliMode);
-					return false;
-				}
-			}
-
-
-			if (cmd.hasOption(SOURCE_ID_OPTION) && cmd.getOptionValue(SOURCE_ID_OPTION)!=null) {
-				sourceId = cmd.getOptionValue(SOURCE_ID_OPTION);
-			}
-
-			if (rootMediaDirectory==null || !rootMediaDirectory.exists()) {
-				fatal("Show directory '" + rootMediaDirectory +"' does not exist.");
+			} else {
+				fatal("Media directory must be a writable directory");
 				return false;
 			}
-
-			if (cmd.hasOption(SHOWID_OPTION)
-					&& cmd.getOptionValue(SHOWID_OPTION) != null) {
-				if (mode==Mode.FILM) {
-					fatal("Show id is not a valid option when used with Film mode");
-					return false;
-				}
-				try {
-					showId = cmd.getOptionValue(SHOWID_OPTION);
-				} catch (NumberFormatException e) {
-					fatal("Invalid command line parameters");
-					return false;
-				}
-			}
-
-			if (cmd.hasOption(RENAME_PATTERN) && cmd.getOptionValue(RENAME_PATTERN) != null) {
-				pattern = cmd.getOptionValue(RENAME_PATTERN);
-			}
-
-			refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
-			recursive = (cmd.hasOption(RECURSIVE_OPTION));
-
-			if (mode == null) {
-				if (cmd.hasOption(SHOWID_OPTION)) {
-					mode = Mode.TV_SHOW;
-				}
-				else {
-					mode = getDefaultMode();
-				}
-			}
-
-			if (showId==null) {
-				if (mode==Mode.TV_SHOW) {
-					info("No id given, will search for id");
-				}
-			}
-			else {
-				info("Using show id " + sourceId+":" + showId);
-			}
-
-			if (sourceId==null) {
-				sourceId = getController().getDefaultSourceID(mode);
-			}
-
-			if (pattern==null) {
-				if (mode==Mode.TV_SHOW) {
-					pattern = DEFAULT_TV_FILE_PATTERN;
-				}
-				else {
-					pattern = DEFAULT_FILM_FILE_PATTERN;
-				}
-			}
-
-			return true;
-		}
-		catch (SourceException e) {
-			log.error(e.getMessage(),e);
-			return false;
-		}
-	}
-
-	private Mode getDefaultMode() {
-		StringTokenizer tok = new StringTokenizer(rootMediaDirectory.getAbsolutePath(),File.separator);
-		while (tok.hasMoreTokens()) {
-			String token = tok.nextToken().toLowerCase();
-			if (token.equals("films") || token.equals("movies")) {
-				return Mode.FILM;
+			if (rootMediaDirConfig==null || !rootMediaDirConfig.getMediaDir().exists()) {
+				fatal("Media directory '" + dir +"' does not exist.");
+				return false;
 			}
 		}
-		return Mode.TV_SHOW;
+
+		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
+		recursive = (cmd.hasOption(RECURSIVE_OPTION));
+
+		return true;
 	}
 
 	static synchronized void setExitHandler(IExitHandler handler) {

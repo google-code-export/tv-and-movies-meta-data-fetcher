@@ -23,11 +23,11 @@ import java.net.URL;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
@@ -106,15 +106,13 @@ public interface ISource {
 	/**
 	 * Used to search for a media details within the source
 	 * @param episodeFile The file the episode is located in
-	 * @param mode The mode that the search operation should be performed in
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The rename pattern been used, or null if one is not been used
+	 * @param rootMediaDir The root media directory configuration
 	 * @return The results of the search, or null if nothing was found
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public SearchResult searchForVideoId(File rootMediaDir,Mode mode,File episodeFile,String renamePattern) throws SourceException, MalformedURLException, IOException;
+	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
