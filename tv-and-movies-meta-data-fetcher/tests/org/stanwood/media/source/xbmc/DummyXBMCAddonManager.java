@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
@@ -36,11 +36,11 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	 * @param locale The language been used
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public DummyXBMCAddonManager(File updateSite,File addonDir, Locale locale) throws XBMCException {
-		super(addonDir,locale);
-		XBMCWebUpdater updater = new XBMCWebUpdater();
+	public DummyXBMCAddonManager(ConfigReader config,File updateSite) throws XBMCException {
+		super(config,null,false);
+		XBMCWebUpdater updater = new XBMCWebUpdater(config);
 		this.updateSite = updateSite;
-		init(updater,addonDir, locale);
+		init(updater);
 	}
 
 	@Override

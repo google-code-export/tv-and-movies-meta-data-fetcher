@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,6 +16,8 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
@@ -26,77 +27,76 @@ public class XBMCAddonManager implements IContentFetcher {
 
 	private final static Log log = LogFactory.getLog(XBMCAddonManager.class);
 
-	private File addonDir;
 	private Map<String,XBMCAddon> addons = null;
 	private List<ISource>sources = new ArrayList<ISource>();
-	private Locale locale;
-
 	private IXBMCUpdater updater;
+	private ConfigReader config;
 
-	XBMCAddonManager(IXBMCUpdater updater,File addonDir,Locale locale) throws XBMCException {
-		init(updater, addonDir, locale);
+	protected XBMCAddonManager(ConfigReader config,IXBMCUpdater updater,boolean doInit) throws XBMCException {
+		this.config = config;
+		if (doInit) {
+			init(updater);
+		}
 	}
 
-	protected void init(IXBMCUpdater updater, File addonDir, Locale locale) throws XBMCException {
-		this.addonDir = addonDir;
-		this.locale = locale;
+	/**
+	 * Used to create a instance of the addon manager
+	 * @param config The configuration
+	 * @throws XBMCException Thrown if their is a problem creating the addon manager
+	 */
+	public XBMCAddonManager(ConfigReader config) throws XBMCException {
+		this(config,new XBMCWebUpdater(config),true);
+	}
+
+	protected void init(IXBMCUpdater updater) throws XBMCException {
 		updater.setAddonManager(this);
 		this.updater = updater;
 		updatePlugins();
 	}
 
-
+	/**
+	 * Used to update the installed plugins
+	 * @return the count of plugins that were updated
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public int updatePlugins() throws XBMCException {
 		addons = new HashMap<String,XBMCAddon>();
-		int count = updater.update(addonDir);
-		registerAddons();
-		return count;
+		try {
+			int count = updater.update(config.getXBMCAddonDir());
+			registerAddons();
+			return count;
+		} catch (ConfigException e) {
+			throw new XBMCException("Unable to get the addon directory",e);
+		}
 	}
 
 	/**
-	 * Used to create a instance of the addon manager
-	 * @throws XBMCException Thrown if thier is a problem creating the addon manager
+	 * Used to get a addon
+	 * @param id The ID of the addon to get
+	 * @return The addon
+	 * @throws XBMCException Thrown if the addon could not be found
 	 */
-	public XBMCAddonManager() throws XBMCException {
-		this(new XBMCWebUpdater(),getDefaultAddonDir(),getDefaultLocale());
-
-	}
-
-	XBMCAddonManager(File addonDir, Locale locale) {
-		this.addonDir = addonDir;
-		this.locale = locale;
-	}
-
-	private static File getDefaultAddonDir() throws XBMCException {
-		File homeDir = new File(System.getProperty("user.home"));
-		File mediaConfigDir = new File(homeDir,".mediaInfo");
-		File addonDir = new File(mediaConfigDir,"xbmc"+File.separator+"addons");
-		if (!addonDir.exists()) {
-			if (!addonDir.mkdirs() && !addonDir.exists()) {
-				throw new XBMCException("Unable to create xbmc addon directory: " + addonDir);
-			}
+	public XBMCAddon getAddon(String id) throws XBMCException {
+		XBMCAddon addon = addons.get(id);
+		if (addon==null) {
+			throw new XBMCException("Unable to find XBMC addon: " + id);
 		}
-		return addonDir;
-	}
-
-	private static Locale getDefaultLocale() {
-		//TODO read from config file
-		return Locale.ENGLISH;
-	}
-
-	public XBMCAddon getAddon(String id) {
-		return addons.get(id);
+		return addon;
 	}
 
 	private void registerAddons() throws XBMCException {
-		for (File f : addonDir.listFiles()) {
-			if (f.isDirectory()) {
-				XBMCAddon addon = new XBMCAddon(this,f,locale);
-				addons.put(addon.getId(),addon);
-				if (addon.hasScrapers()) {
-					sources.add(new XBMCSource(this, addon.getId()));
+		try {
+			for (File f : config.getXBMCAddonDir().listFiles()) {
+				if (f.isDirectory()) {
+					XBMCAddon addon = new XBMCAddon(this,f,config.getXBMCLocale());
+					addons.put(addon.getId(),addon);
+					if (addon.hasScrapers()) {
+						sources.add(new XBMCSource(this, addon.getId()));
+					}
 				}
 			}
+		} catch (ConfigException e) {
+			throw new XBMCException("Unable to get the addon directory",e);
 		}
 	}
 

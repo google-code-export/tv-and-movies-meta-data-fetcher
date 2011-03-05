@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
 import org.stanwood.media.xml.XMLParser;
@@ -33,7 +34,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private XBMCAddonManager mgr;
 
-	public XBMCWebUpdater() {
+	public XBMCWebUpdater(ConfigReader config) {
 	}
 
 	@Override

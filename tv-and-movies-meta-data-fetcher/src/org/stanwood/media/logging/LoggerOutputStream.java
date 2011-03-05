@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Used to write stream data to the log
+ */
 public class LoggerOutputStream extends OutputStream {
 
 	private final static Log log = LogFactory.getLog(LoggerOutputStream.class);
@@ -13,6 +16,9 @@ public class LoggerOutputStream extends OutputStream {
 
 	private StringBuilder buffer = new StringBuilder();
 
+	/**
+	 * Append char to the buffer. if a
+	 */
 	@Override
 	public void write(int c) throws IOException {
 		buffer.append((char)c);
@@ -27,5 +33,20 @@ public class LoggerOutputStream extends OutputStream {
 			buffer.delete(0,pos+LINE_END.length());
 		}
 	}
+
+
+	/**
+	 * This will close the stream and esure that the buffer has been written to the log
+	 */
+	@Override
+	public void close() throws IOException {
+		super.close();
+		if (buffer.length()>0) {
+			buffer.append("\n");
+			checkBuffer();
+		}
+	}
+
+
 
 }

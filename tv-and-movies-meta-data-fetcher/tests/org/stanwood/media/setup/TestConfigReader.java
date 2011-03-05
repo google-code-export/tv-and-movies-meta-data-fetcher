@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -159,6 +160,61 @@ public class TestConfigReader {
 	}
 
 	/**
+	 * Used to test that the correct XBMCSettings are read from the configuration file
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testXBMCSettings() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("media");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\"/>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			Assert.assertEquals("/home/blah",configReader.getXBMCAddonDir().getAbsolutePath());
+			Assert.assertEquals(Locale.FRENCH,configReader.getXBMCLocale());
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+	}
+
+	/**
+	 * Used to test that the correct XBMC settings are returned when none are set in the config file
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testDefaultXBMCSettings() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("media");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			File homeDir = new File(System.getProperty("user.home"));
+			ConfigReader configReader = createConfigReader(testConfig);
+			Assert.assertEquals(new File(homeDir,".mediaInfo"+File.separator+"xbmc"+File.separator+"addons").getAbsolutePath(),
+					            configReader.getXBMCAddonDir().getAbsolutePath());
+			Assert.assertEquals(Locale.ENGLISH,configReader.getXBMCLocale());
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+	}
+
+	/**
 	 * Used to test that the configuration reader gets the correct pattern when non is given and the mode is set to FILM
 	 * @throws Exception Thrown if their are any problems
 	 */
@@ -202,5 +258,4 @@ public class TestConfigReader {
 		}
 		return configReader;
 	}
-
 }

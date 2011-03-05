@@ -2,6 +2,12 @@
 	<xs:element name="mediaManager">  
   		<xs:complexType>
   			<xs:sequence>
+  				<xs:element name="XBMCAddons" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>
+	  					<xs:attribute name="directory" type="xs:string"/>
+	  					<xs:attribute name="locale" type="xs:string"/>
+  					</xs:complexType>
+  				</xs:element>
 	  			<xs:element name="mediaDirectory">  
 	  				<xs:complexType>
 			  			<xs:sequence>

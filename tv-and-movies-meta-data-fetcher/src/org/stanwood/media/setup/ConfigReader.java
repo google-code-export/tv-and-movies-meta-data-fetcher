@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -54,9 +55,13 @@ public class ConfigReader extends BaseConfigReader {
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
 
+	private File xbmcAddonDir;
+
+	private Locale xbmcLocale = Locale.ENGLISH;
+
 	/**
 	 * The constructor used to create a instance of the configuration reader
-	 * @param file The configuration file
+	 * @param is The configuration file input stream
 	 */
 	public ConfigReader(InputStream is) {
 		this.is = is;
@@ -70,53 +75,55 @@ public class ConfigReader extends BaseConfigReader {
 	public void parse() throws ConfigException {
 		try {
 			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-2.0.xsd");
-
-			List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
-
-			for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) {
-				Element dirNode = (Element) node;
-				MediaDirConfig dirConfig = new MediaDirConfig();
-				File dir = new File(dirNode.getAttribute("directory"));
-				if (!dir.exists()) {
-					throw new ConfigException("Unable to find root media directory: '"+dir.getAbsolutePath()+"'" );
-				}
-				dirConfig.setMediaDir(dir);
-
-				String strMode = dirNode.getAttribute("mode").toUpperCase();
-				Mode mode ;
-				try {
-					mode = Mode.valueOf(strMode);
-				}
-				catch (IllegalArgumentException e) {
-					throw new ConfigException("Unkown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'");
-				}
-
-				String pattern = dirNode.getAttribute("pattern").trim();
-				if (pattern.length()==0) {
-					pattern = DEFAULT_TV_FILE_PATTERN;
-					if (mode == Mode.FILM) {
-						pattern = DEFAULT_FILM_FILE_PATTERN;
-					}
-					log.warn("No pattern given, using default: " + pattern);
-				}
-				else {
-					if (!Renamer.validPattern(pattern)) {
-						throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
-					}
-				}
-
-				dirConfig.setPattern(pattern);
-				dirConfig.setMode(mode);
-
-				dirConfig.setSources(readSources(node));
-				dirConfig.setStores(readStores(node));
-				dirConfigs.add(dirConfig);
-			}
-			this.mediaDir = dirConfigs;
-
+			parseXBMCSettings(doc);
+			parseMediaDirs(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 		}
+	}
+
+	private void parseMediaDirs(Document doc) throws XMLParserException, ConfigException {
+		List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
+		for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) {
+			Element dirNode = (Element) node;
+			MediaDirConfig dirConfig = new MediaDirConfig();
+			File dir = new File(dirNode.getAttribute("directory"));
+			if (!dir.exists()) {
+				throw new ConfigException("Unable to find root media directory: '"+dir.getAbsolutePath()+"'" );
+			}
+			dirConfig.setMediaDir(dir);
+
+			String strMode = dirNode.getAttribute("mode").toUpperCase();
+			Mode mode ;
+			try {
+				mode = Mode.valueOf(strMode);
+			}
+			catch (IllegalArgumentException e) {
+				throw new ConfigException("Unkown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'");
+			}
+
+			String pattern = dirNode.getAttribute("pattern").trim();
+			if (pattern.length()==0) {
+				pattern = DEFAULT_TV_FILE_PATTERN;
+				if (mode == Mode.FILM) {
+					pattern = DEFAULT_FILM_FILE_PATTERN;
+				}
+				log.warn("No pattern given, using default: " + pattern);
+			}
+			else {
+				if (!Renamer.validPattern(pattern)) {
+					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
+				}
+			}
+
+			dirConfig.setPattern(pattern);
+			dirConfig.setMode(mode);
+
+			dirConfig.setSources(readSources(node));
+			dirConfig.setStores(readStores(node));
+			dirConfigs.add(dirConfig);
+		}
+		this.mediaDir = dirConfigs;
 	}
 
 	/**
@@ -254,4 +261,83 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
+	/**
+	 * Used to get the directory where XBMC addons are installed. If one has not been specified in the configuration, then
+	 * a default on is used instead of $HOME/.mediaInfo/xbmc/addons.
+	 * @return The XBMC addon directory
+	 * @throws ConfigException Thrown if their is a problem
+	 */
+	public File getXBMCAddonDir() throws ConfigException {
+		if (xbmcAddonDir==null) {
+			xbmcAddonDir = getDefaultAddonDir();
+		}
+		return xbmcAddonDir;
+	}
+
+	private static File getDefaultAddonDir() throws ConfigException {
+		File homeDir = new File(System.getProperty("user.home"));
+		File mediaConfigDir = new File(homeDir,".mediaInfo");
+		File addonDir = new File(mediaConfigDir,"xbmc"+File.separator+"addons");
+		if (!addonDir.exists()) {
+			if (!addonDir.mkdirs() && !addonDir.exists()) {
+				throw new ConfigException("Unable to create xbmc addon directory: " + addonDir);
+			}
+		}
+		return addonDir;
+	}
+
+	/**
+	 * Used to get the locale that should be used when fetching media information from XBMC Addons.
+	 * @return The locale
+	 */
+	public Locale getXBMCLocale() {
+		return xbmcLocale;
+	}
+
+	private void parseXBMCSettings(Node configNode) throws XMLParserException {
+		Element node = (Element) selectSingleNode(configNode, "/mediaManager/XBMCAddons");
+		if (node!=null) {
+			String dir = node.getAttribute("directory");
+			if (dir.trim().length()>0) {
+				xbmcAddonDir =new File(dir);
+			}
+			String locale = node.getAttribute("locale");
+			if (locale.trim().length()>0) {
+				xbmcLocale = new Locale(locale);
+			}
+		}
+	}
+
+	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
+		List<SourceConfig> sources = new ArrayList<SourceConfig>();
+		for (Node sourceElement : selectNodeList(configNode, "sources/source")) {
+			SourceConfig source = new SourceConfig();
+			source.setID(((Element)sourceElement).getAttribute("id"));
+			for (Node paramNode : selectNodeList(sourceElement, "param")) {
+				String name = ((Element)paramNode).getAttribute("name");
+				String value = ((Element)paramNode).getAttribute("value");
+				source.addParam(name, value);
+			}
+
+			sources.add(source);
+		}
+		return sources;
+	}
+
+	private List<StoreConfig>readStores(Node configNode) throws XMLParserException {
+		List<StoreConfig>stores = new ArrayList<StoreConfig>();
+		for (Node storeElement : selectNodeList(configNode, "stores/store")) {
+			StoreConfig store = new StoreConfig();
+			store.setID(((Element)storeElement).getAttribute("id"));
+
+			for (Node paramNode : selectNodeList(storeElement, "param")) {
+				String name = ((Element)paramNode).getAttribute("name");
+				String value = ((Element)paramNode).getAttribute("value");
+				store.addParam(name, value);
+			}
+
+			stores.add(store);
+		}
+		return stores;
+	}
 }

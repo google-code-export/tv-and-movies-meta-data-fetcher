@@ -65,9 +65,6 @@ public class XBMCSource extends XMLParser implements ISource {
 		this.id = addonId;
 		this.mgr = mgr;
 		addon = mgr.getAddon(addonId);
-		if (addon==null) {
-			throw new XBMCException("Unable to find add: " + addonId);
-		}
 	}
 
 	/**
