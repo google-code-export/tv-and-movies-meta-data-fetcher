@@ -175,9 +175,6 @@ public class XBMCAddon extends XMLParser {
 					String id = ((Element)node).getAttribute("addon");
 
 					XBMCAddon addon = addonMgr.getAddon(id);
-					if (addon==null) {
-						throw new XBMCException("Unable to find required addon '" + id);
-					}
 					//TODO check the version
 //					String version = ((Element)node).getAttribute("version");
 //					if (!addon.getVersion().equals(version)) {

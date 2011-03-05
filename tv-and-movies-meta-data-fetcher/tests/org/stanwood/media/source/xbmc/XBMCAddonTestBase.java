@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -67,8 +68,20 @@ public class XBMCAddonTestBase {
 		FileHelper.delete(updateSiteDir);
 	}
 
-	protected XBMCAddonManager createAddonManager(File addonDir,Locale locale) throws XBMCException {
-		return new DummyXBMCAddonManager(new File(updateSiteDir,"addons"),addonDir,locale);
+	protected XBMCAddonManager createAddonManager(final File addonDir,final Locale locale) throws XBMCException {
+		ConfigReader config = new ConfigReader(null) {
+			@Override
+			public File getXBMCAddonDir() {
+				return addonDir;
+			}
+
+			@Override
+			public Locale getXBMCLocale() {
+				return locale;
+			}
+
+		};
+		return new DummyXBMCAddonManager(config,new File(updateSiteDir,"addons"));
 	}
 
 	protected XBMCAddonManager getAddonManager() {

@@ -62,7 +62,7 @@ public class Controller {
 	public MediaDirConfig init(File rootMediaDir) throws ConfigException {
 		if (xbmcMgr == null) {
 			try {
-				setXBMCAddonManager(new XBMCAddonManager());
+				setXBMCAddonManager(new XBMCAddonManager(configReader));
 			} catch (XBMCException e) {
 				log.error(e.getMessage(),e);
 			}
