@@ -11,4 +11,5 @@ Look into a tagchimp store that uses their API.
 Add scripts that allow the user to manage the XBMC plugins that are installed or to be installed.
 	* Possible put a GUI on this.
 Create XBMC nfo files from a store instead of the source
-  
+Update default config file in etc
+Remove WebFile class and ise WebFileInputStream instead

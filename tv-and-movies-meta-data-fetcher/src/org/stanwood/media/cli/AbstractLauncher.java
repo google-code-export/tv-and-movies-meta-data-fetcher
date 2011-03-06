@@ -5,15 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.setup.ConfigException;
@@ -24,17 +23,14 @@ import org.stanwood.media.setup.ConfigReader;
  * from the command line. It helps with adding command line parameters and add some default
  * CLI options.
  */
-public abstract class AbstractLauncher {
+public abstract class AbstractLauncher extends BaseLauncher implements ICLICommand {
 
+	private final static Log log = LogFactory.getLog(AbstractLauncher.class);
 
-	private IExitHandler exitHandler = null;
-	private final static String HELP_OPTION = "h";
 	private final static String LOG_CONFIG_OPTION = "l";
 	private final static String CONFIG_FILE_OPTION = "c";
 
-	private File configFile = new File(File.separator+"etc"+File.separator+"mediafetcher-conf.xml");
-	private Options options;
-	private String name;
+	private File configFile = null;
 	private Controller controller;
 
 	/** This is used by tests to set a configuration that should be used, if null then a configuration is read
@@ -47,57 +43,21 @@ public abstract class AbstractLauncher {
 	 * @param options The options that are to be added to the CLI
 	 * @param exitHandler The exit handler used when exiting
 	 */
-	public AbstractLauncher(String name,List<Option> options,IExitHandler exitHandler) {
-		this.options = new Options();
-		this.exitHandler = exitHandler;
-		this.name = name;
-		this.options.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
+	public AbstractLauncher(String name,List<Option> options,IExitHandler exitHandler,PrintStream stdout,PrintStream stderr) {
+		super(name,stdout,stderr,exitHandler);
 
 		for (Option o : options) {
-			this.options.addOption(o);
+			addOption(o);
 		}
-		this.options.addOption(new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]"));
-		this.options.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
+
+		Option o = new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]");
+		o.setArgName("file");
+		addOption(o);
+
+		o = new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml");
+		o.setArgName("info|debug|file");
+		addOption(o);
 	}
-
-	/**
-	 * This should be called from the main method to launch the tool.
-	 * @param args The args passed from the CLI
-	 */
-	public void launch(String args[]) {
-		CommandLineParser parser = new PosixParser();
-		CommandLine cmd;
-		try {
-			cmd = parser.parse(options, args);
-
-			if (cmd.hasOption(HELP_OPTION)) {
-				displayHelp();
-				doExit(0);
-				return;
-			} else if (processOptionsInternal(cmd)) {
-				if (run()) {
-					doExit(0);
-					return;
-				}
-				else {
-					doExit(0);
-					return;
-				}
-			} else {
-				fatal("Invalid command line parameters");
-				return;
-			}
-		} catch (ParseException e1) {
-			fatal(e1.getMessage());
-			return;
-		}
-	}
-
-	/**
-	 * This is executed to make the tool perform its function and should be extended.
-	 * @return True if executed without problems, otherwise false
-	 */
-	protected abstract boolean run();
 
 	/**
 	 * This is called to validate the tools CLI options. When this is called,
@@ -108,7 +68,8 @@ public abstract class AbstractLauncher {
 	 */
 	protected abstract boolean processOptions(CommandLine cmd);
 
-	private boolean processOptionsInternal(CommandLine cmd) {
+	@Override
+	protected boolean processOptionsInternal(CommandLine cmd) {
 		String logConfig = null;
 		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
 			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
@@ -136,11 +97,18 @@ public abstract class AbstractLauncher {
 		return processOptions(cmd);
 	}
 
-	private void processConfig() throws FileNotFoundException, ConfigException {
+	private boolean processConfig() throws FileNotFoundException, ConfigException {
 		if (config==null) {
-			if (configFile!=null && !configFile.exists()) {
-				warn("Unable to find config file '" +configFile+"' so using defaults.");
-				config = new ConfigReader(ConfigReader.class.getResourceAsStream("defaultConfig.xml"));
+			if (configFile==null) {
+				if (log.isDebugEnabled()) {
+					log.debug("No config file give, so using default location");
+				}
+				configFile = new File(ConfigReader.MEDIA_CONFIG_DIR,"mediafetcher-conf.xml");
+			}
+
+			if (!configFile.exists()) {
+				fatal("Unable to find config file '" +configFile+"' so using defaults.");
+				return false;
 			}
 			else  {
 				InputStream is = null;
@@ -160,6 +128,7 @@ public abstract class AbstractLauncher {
 			}
 			config.parse();
 		}
+		return true;
 	}
 
 	protected Controller getController() {
@@ -191,49 +160,6 @@ public abstract class AbstractLauncher {
 		}
 
 		return true;
-	}
-
-	/**
-	 * This will exit the application
-	 * @param code The exit code
-	 */
-	public void doExit(int code) {
-		exitHandler.exit(code);
-	}
-
-	/**
-	 * Called to issue a warning message
-	 * @param msg The message
-	 */
-	protected void warn(String msg) {
-		System.out.println(msg);
-	}
-
-	/**
-	 * Called to issue a fatal message and exit
-	 * @param msg The message
-	 */
-	protected void fatal(String msg) {
-		System.err.println(msg);
-		displayHelp();
-		doExit(1);
-	}
-
-	protected void fatal(Exception e) {
-		fatal(e.getMessage());
-	}
-
-	/**
-	 * Called to issue a info message
-	 * @param msg The message
-	 */
-	protected void info(String msg) {
-		System.out.println(msg);
-	}
-
-	private void displayHelp() {
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp( name, options,true);
 	}
 
 	/**

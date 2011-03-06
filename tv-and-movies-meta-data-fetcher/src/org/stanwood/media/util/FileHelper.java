@@ -52,6 +52,9 @@ public class FileHelper {
 	/** A Line separator property value */
 	public final static String LS = System.getProperty("line.separator");
 
+	/** Stores the current users home directory */
+	public final static File HOME_DIR = new File(System.getProperty("user.home"));
+
 	private final static char HEX_DIGITS[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/**
@@ -233,6 +236,12 @@ public class FileHelper {
 		}
 	}
 
+	/**
+	 * Used to generate a MD5 checksum string for a file
+	 * @param file The file
+	 * @return The checksum
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static String getMD5Checksum(File file) throws IOException {
 		try {
 			InputStream is = null;
@@ -480,6 +489,12 @@ public class FileHelper {
         }
 	}
 
+	/**
+	 * Used to move a directory or file from once location to another
+	 * @param from The old name of the file or directory
+	 * @param to The new name of the file or directory
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static void move(File from, File to) throws IOException {
 		if (!from.exists()) {
 			throw new IOException("Unable to move file " + from +" to " + to +" as the source file does not exist");
@@ -491,6 +506,11 @@ public class FileHelper {
 		delete(from);
 	}
 
+	/**
+	 * Used to delete a file or a directory tree. If a directory is given, then all it's contents are also deleted recusrsivly.
+	 * @param file The file or directory to delete
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static void delete(File file) throws IOException {
 		if (file.isDirectory()) {
 			FileHelper.deleteDir(file);
@@ -502,6 +522,12 @@ public class FileHelper {
 		}
 	}
 
+	/**
+	 * Used to create a temporary file with the give contents
+	 * @param testConfig The contents to put in the file
+	 * @return A reference to the file
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static File createTmpFileWithContents(StringBuilder testConfig)  throws IOException {
 		File configFile = File.createTempFile("config", ".xml");
 		configFile.deleteOnExit();

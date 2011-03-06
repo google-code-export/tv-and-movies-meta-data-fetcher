@@ -17,10 +17,13 @@
 package org.stanwood.media.logging;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.RootLogger;
 
@@ -51,6 +54,12 @@ public class LogSetupHelper {
 	public static void initLogingInternalConfigFile(String configName) {
 		resetLogging();
 		PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+	}
+
+	public static void initLogging(OutputStream stdout, OutputStream stderr) {
+		resetLogging();
+		PatternLayout layout = new PatternLayout("%m%n");
+		Logger.getRootLogger().addAppender(new StreamAppender(layout,new PrintStream(stdout),new PrintStream(stderr)));
 	}
 
 }

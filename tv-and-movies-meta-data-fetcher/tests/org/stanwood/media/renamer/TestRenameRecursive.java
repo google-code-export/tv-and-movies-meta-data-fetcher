@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Helper;
 import org.stanwood.media.cli.AbstractLauncher;
@@ -42,7 +41,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		Main.setExitHandler(new IExitHandler() {
+		CLIRenamer.setExitHandler(new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
 				setExitCode(exitCode);
@@ -96,7 +95,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Do the renaming
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
@@ -115,7 +114,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class);
 
 			// Do the renaming
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
@@ -166,7 +165,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Do the renaming
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
@@ -185,7 +184,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class);
 
 			// Do the renaming
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
@@ -204,7 +203,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 	}
 
-	@Ignore
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -232,7 +230,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Do the renaming
 			String args[] = new String[] {"-R","-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
@@ -243,7 +241,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
@@ -291,7 +289,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			// Do the renaming
 			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
@@ -304,7 +302,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 			// Do the renaming
 			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
-			Main.main(args);
+			CLIRenamer.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
@@ -319,7 +317,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		}
 	}
 
-	private static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
+	public static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
@@ -343,7 +341,6 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 		testConfig.append("  </mediaDirectory>"+LS);
 		testConfig.append("</mediaManager>"+LS);
-		System.out.println(testConfig.toString());
 
 		File configFile = createConfigFileWithContents(testConfig);
 

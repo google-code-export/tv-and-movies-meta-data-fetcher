@@ -18,6 +18,7 @@ package org.stanwood.media.renamer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +39,9 @@ import org.stanwood.media.store.StoreException;
  * This class is used to handle the renaming of files. It provides a main method
  * so that the Renamer class can be access from the command line.
  */
-public class Main extends AbstractLauncher {
+public class CLIRenamer extends AbstractLauncher {
 
-	private final static Log log = LogFactory.getLog(Main.class);
+	private final static Log log = LogFactory.getLog(CLIRenamer.class);
 
 	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
@@ -52,6 +53,9 @@ public class Main extends AbstractLauncher {
 	private boolean refresh = false;
 	private boolean recursive = false;
 	private MediaDirConfig rootMediaDirConfig = null;
+
+	private static PrintStream stdout = System.out;
+	private static PrintStream stderr = System.err;
 
 
 	private static IExitHandler exitHandler = null;
@@ -105,13 +109,13 @@ public class Main extends AbstractLauncher {
 			setExitHandler(new DefaultExitHandler());
 		}
 
-		Main ca = new Main(exitHandler);
+		CLIRenamer ca = new CLIRenamer(exitHandler);
 		ca.launch(args);
 	}
 
 
-	private Main(IExitHandler exitHandler) {
-		super("media-renamer",OPTIONS,exitHandler);
+	private CLIRenamer(IExitHandler exitHandler) {
+		super("media-renamer",OPTIONS,exitHandler,stdout,stderr);
 	}
 
 
