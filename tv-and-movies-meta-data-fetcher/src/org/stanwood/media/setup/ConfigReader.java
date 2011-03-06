@@ -35,6 +35,7 @@ import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -51,6 +52,9 @@ public class ConfigReader extends BaseConfigReader {
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
+
+	/** The default location to store configuration */
+	public static final File MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaInfo");
 
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
@@ -275,9 +279,8 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private static File getDefaultAddonDir() throws ConfigException {
-		File homeDir = new File(System.getProperty("user.home"));
-		File mediaConfigDir = new File(homeDir,".mediaInfo");
-		File addonDir = new File(mediaConfigDir,"xbmc"+File.separator+"addons");
+
+		File addonDir = new File(MEDIA_CONFIG_DIR,"xbmc"+File.separator+"addons");
 		if (!addonDir.exists()) {
 			if (!addonDir.mkdirs() && !addonDir.exists()) {
 				throw new ConfigException("Unable to create xbmc addon directory: " + addonDir);

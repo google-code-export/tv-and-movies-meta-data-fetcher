@@ -66,7 +66,7 @@ public class StreamAppender extends AppenderSkeleton {
 	 * @param outputStream The output stream to use
 	 * @param errorStream The error stream to use
 	 */
-	private StreamAppender(Layout layout,PrintStream outputStream, PrintStream errorStream) {
+	public StreamAppender(Layout layout,PrintStream outputStream, PrintStream errorStream) {
 		setLayout(layout);
 		setTargets(errorStream, outputStream);
 		activateOptions();
@@ -167,9 +167,11 @@ public class StreamAppender extends AppenderSkeleton {
 	 * <p>
 	 * Closed appenders cannot be reused.
 	 */
+	@Override
 	public synchronized void close() {
-		if (this.closed)
+		if (this.closed) {
 			return;
+		}
 		this.closed = true;
 		writeFooter();
 		reset();
@@ -230,6 +232,7 @@ public class StreamAppender extends AppenderSkeleton {
 	 * The WriterAppender requires a layout. Hence, this method returns <code>true</code>.
 	 * @return Always returns true.
 	 */
+	@Override
 	public boolean requiresLayout() {
 		return true;
 	}
@@ -264,8 +267,9 @@ public class StreamAppender extends AppenderSkeleton {
 	protected void writeHeader() {
 		if (layout != null) {
 			String h = layout.getHeader();
-			if (h != null && this.outputStream != null)
+			if (h != null && this.outputStream != null) {
 				this.outputStream.print(h);
+			}
 		}
 	}
 
