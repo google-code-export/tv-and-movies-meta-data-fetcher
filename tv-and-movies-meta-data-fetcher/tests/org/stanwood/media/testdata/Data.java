@@ -42,7 +42,9 @@ public class Data {
 
 	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+	/** Film Source id to use in test data */
 	public final static String TEST_FILM_SOURCE_ID = "xbmc-metadata.themoviedb.org";
+	/** TV Source id to use in test data */
 	public final static String TEST_TV_SOURCE_ID = "xbmc-metadata.tvdb.com";
 
 	/** A test show id */
@@ -163,7 +165,9 @@ public class Data {
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=1"));
 
 		File episodeFile = new File(eurekaDir,"1x01 - blah");
-		episodeFile.createNewFile();
+		if (!episodeFile.createNewFile() && episodeFile.exists()) {
+			throw new IOException("Unable to create file: " + episodeFile);
+		}
 
 		Episode episode1 = new Episode(1,season);
 		episode1.setDate(df.parse("2006-10-10"));
@@ -180,7 +184,9 @@ public class Data {
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"1x02 - blah");
-		episodeFile.createNewFile();
+		if (!episodeFile.createNewFile() && episodeFile.exists()) {
+			throw new IOException("Unable to create file: " + episodeFile);
+		}
 		Episode episode2 = new Episode(2,season);
 		episode2.setDate(df.parse("2006-10-11"));
 		episode2.setSpecial(false);
@@ -195,7 +201,9 @@ public class Data {
 		season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID_EUREKA+"/episode_listings.html?season=2"));
 
 		episodeFile = new File(eurekaDir,"2x13 - blah");
-		episodeFile.createNewFile();
+		if (!episodeFile.createNewFile() && episodeFile.exists()) {
+			throw new IOException("Unable to create file: " + episodeFile);
+		}
 		episode1 = new Episode(2,season);
 		episode1.setDate(df.parse("2007-7-10"));
 		episode1.setSpecial(false);
@@ -207,7 +215,9 @@ public class Data {
 		result.add(new EpisodeData(episode1,episodeFile));
 
 		episodeFile = new File(eurekaDir,"000 - blah");
-		episodeFile.createNewFile();
+		if (!episodeFile.createNewFile() && episodeFile.exists()) {
+			throw new IOException("Unable to create file: " + episodeFile);
+		}
 		Episode special1 = new Episode(0,season);
 		special1.setDate(df.parse("2007-7-09"));
 		special1.setSpecial(true);

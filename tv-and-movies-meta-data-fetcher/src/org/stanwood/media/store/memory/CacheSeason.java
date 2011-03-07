@@ -11,12 +11,21 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 
+/**
+ * A cached version of the season object for storing the details in memory
+ */
 public class CacheSeason extends Season {
 
 	private Map<Integer,Episode>episodes = new HashMap<Integer,Episode>();
 	private List<Episode> specials = new ArrayList<Episode>();
 	private Season season;
 
+
+	/**
+	 * Used to cache season information
+	 * @param show The cached version of the show
+	 * @param season The season to cache
+	 */
 	public CacheSeason(CacheShow show,Season season) {
 		super(show,season.getSeasonNumber());
 		this.season = season;
@@ -82,21 +91,25 @@ public class CacheSeason extends Season {
 		return episodes.size();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public URL getURL() {
 		return season.getURL();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setURL(URL url) {
 		season.setURL(url);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getSeasonNumber() {
 		return season.getSeasonNumber();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Show getShow() {
 		return season.getShow();
