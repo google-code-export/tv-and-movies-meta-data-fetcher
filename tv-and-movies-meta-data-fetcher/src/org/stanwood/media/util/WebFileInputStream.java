@@ -7,6 +7,9 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Used to create a input stream to a web resource
+ */
 public class WebFileInputStream extends InputStream {
 
 private final static String DEFAULT_USER_AGENT = "MediaInfoFetcher";
@@ -121,51 +124,58 @@ private final static String DEFAULT_USER_AGENT = "MediaInfoFetcher";
 		return MIMEtype;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int read() throws IOException {
 		return content.read();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int available() throws IOException {
 		return content.available();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() throws IOException {
 		content.close();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int read(byte[] b) throws IOException {
 		return content.read(b);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		return content.read(b, off, len);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public long skip(long n) throws IOException {
 		return content.skip(n);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void mark(int readlimit) {
 		content.mark(readlimit);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void reset() throws IOException {
 		content.reset();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean markSupported() {
 		return content.markSupported();
 	}
-
-
 
 }

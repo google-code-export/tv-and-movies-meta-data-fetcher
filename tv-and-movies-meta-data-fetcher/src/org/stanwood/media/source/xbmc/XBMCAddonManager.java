@@ -1,6 +1,5 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +20,7 @@ import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.WebFile;
+import org.stanwood.media.util.WebFileInputStream;
 
 public class XBMCAddonManager implements IContentFetcher {
 
@@ -101,14 +100,13 @@ public class XBMCAddonManager implements IContentFetcher {
 	}
 
 	/* package for test */InputStream getSource(URL url) throws IOException {
-		WebFile page = new WebFile(url);
-		String MIME = page.getMIMEType();
-		byte[] content = (byte[]) page.getContent();
+		WebFileInputStream is = new WebFileInputStream(url);
+		String MIME = is.getMIMEType();
 		if (MIME.equals("zip")) {
-			return new ZipInputStream(new ByteArrayInputStream(content));
+			return new ZipInputStream(is);
 		}
 		else {
-			return new ByteArrayInputStream(content);
+			return is;
 		}
 	}
 
