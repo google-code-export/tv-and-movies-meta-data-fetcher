@@ -25,6 +25,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		this.stdout = stdout;
 		this.stderr = stderr;
 		this.exitHandler = exitHandler;
+		this.name = name;
 
 		this.options = new Options();
 		this.options.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
@@ -38,13 +39,13 @@ public abstract class BaseLauncher implements ICLICommand {
 	 * This should be called from the main method to launch the tool.
 	 * @param args The args passed from the CLI
 	 */
-	final public void launch(String args[]) {
+	public void launch(String args[]) {
+
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd;
 		try {
 			cmd = parser.parse(options, args);
-
-			if (cmd.hasOption(HELP_OPTION)) {
+			if (hasOptionHelp(HELP_OPTION,cmd)) {
 				displayHelp(options,stdout,stderr);
 				doExit(0);
 				return;
@@ -65,6 +66,10 @@ public abstract class BaseLauncher implements ICLICommand {
 			fatal(e1.getMessage());
 			return;
 		}
+	}
+
+	protected boolean hasOptionHelp(String helpOption, CommandLine cmd) {
+		return cmd.hasOption(helpOption);
 	}
 
 	/**

@@ -68,6 +68,16 @@ public class CLIManageAddons extends AbstractLauncher {
 	}
 
 	@Override
+	protected boolean hasOptionHelp(String helpOption, CommandLine cmd) {
+		return super.hasOptionHelp(helpOption, cmd);
+	}
+
+	@Override
+	public void launch(String[] args) {
+		super.launch(args);
+	}
+
+	@Override
 	protected void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		stdout.println("usage: "+getName()+ " [--global-options] <command> [--command-options] [arguments]");
 		stdout.println("");
