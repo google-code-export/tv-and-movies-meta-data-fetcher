@@ -1,12 +1,23 @@
 package org.stanwood.media.source.xbmc.expression;
 
+/**
+ * Used to store the value of a boolean value used by the expresion evalutor
+ */
 public class BooleanValue extends Value {
 
+	/**
+	 * Used to create a instance of the class
+	 * @param type The type of the value
+	 * @param value The raw value
+	 */
 	public BooleanValue(ValueType type, Boolean value) {
 		super(type, value);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Get the value as a boolean
+	 * @return The value
+	 */
 	public boolean booleanValue() {
 		return ((Boolean)getValue()).booleanValue();
 	}
