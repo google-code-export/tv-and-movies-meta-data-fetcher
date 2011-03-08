@@ -28,32 +28,44 @@ public class CLIManageAddons extends AbstractLauncher {
 		 SUBCOMMANDS.add(new ListCommand(exitHandler,stdout,stderr));
 	}
 
+	private AbstractSubCLICommand subCommand;
+	protected int subExitCode;
+	private List<String> subCommandArgs;
+
 	private CLIManageAddons(IExitHandler exitHandler) {
 		super("xbmc-addons", OPTIONS, exitHandler,stdout,stderr);
 	}
 
 	@Override
 	protected boolean run() {
-		return false;
+		subCommand.init(stdout,stderr,new IExitHandler() {
+			@Override
+			public void exit(int exitCode) {
+				subExitCode = exitCode;
+			}
+		});
+		subCommand.launch(subCommandArgs.toArray(new String[subCommandArgs.size()]));
+
+		return subExitCode == 0;
 	}
 
 	@Override
-	protected boolean processOptions(CommandLine cmd) {
-		@SuppressWarnings("unchecked")
-		List<String> args = cmd.getArgList();
-		if (args.size()>1) {
-			String commandName = args.get(0);
-			AbstractSubCLICommand subCommand = findCommand(commandName);
-			if (subCommand == null) {
-				fatal("Unkown sub-command or option '" + commandName+"'");
-				return false;
-			}
+	protected boolean processOptions(String args[], CommandLine cmd) {
+//			if (subCommand == null) {
+//				fatal("Unkown sub-command or option '" + commandName+"'");
+//				return false;
+//			}
 
-			List<String>commandArgs = new ArrayList<String>();
-			for (int i=1;i<args.size();i++) {
-				commandArgs.add(args.get(i));
+		List<String>commandArgs = new ArrayList<String>();
+		boolean found = false;
+		subCommandArgs = new ArrayList<String>();
+		for (String a: args) {
+			if (found) {
+				subCommandArgs.add(a);
 			}
-			subCommand.launch(commandArgs.toArray(new String[commandArgs.size()]));
+			if (a.equals(subCommand.getName())) {
+				found = true;
+			}
 		}
 		return true;
 	}
@@ -68,13 +80,14 @@ public class CLIManageAddons extends AbstractLauncher {
 	}
 
 	@Override
-	protected boolean hasOptionHelp(String helpOption, CommandLine cmd) {
-		return super.hasOptionHelp(helpOption, cmd);
-	}
-
-	@Override
-	public void launch(String[] args) {
-		super.launch(args);
+	protected String checkSubCommand(String arg) {
+		if (subCommand == null) {
+			subCommand = findCommand(arg);
+			if (subCommand!=null) {
+				return arg;
+			}
+		}
+		return null;
 	}
 
 	@Override

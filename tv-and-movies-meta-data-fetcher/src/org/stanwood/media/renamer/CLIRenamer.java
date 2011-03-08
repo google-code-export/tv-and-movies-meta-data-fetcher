@@ -147,7 +147,7 @@ public class CLIRenamer extends AbstractLauncher {
 	 * @return true if valid, otherwise false.
 	 */
 	@Override
-	protected boolean processOptions(CommandLine cmd) {
+	protected boolean processOptions(String args[],CommandLine cmd) {
 		refresh = false;
 		rootMediaDirConfig = null;
 

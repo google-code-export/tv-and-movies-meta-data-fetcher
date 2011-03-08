@@ -13,7 +13,7 @@ import org.apache.commons.cli.PosixParser;
 
 public abstract class BaseLauncher implements ICLICommand {
 
-	private final static String HELP_OPTION = "h";
+	private final static String HELP_OPTION_NAME = "h";
 
 	private IExitHandler exitHandler;
 	private PrintStream stdout;
@@ -21,14 +21,22 @@ public abstract class BaseLauncher implements ICLICommand {
 	private Options options;
 	private String name;
 
+	private Option helpOption;
+
 	public BaseLauncher(String name,PrintStream stdout, PrintStream stderr, IExitHandler exitHandler) {
-		this.stdout = stdout;
-		this.stderr = stderr;
-		this.exitHandler = exitHandler;
+		init(stdout,stderr,exitHandler);
+
 		this.name = name;
 
 		this.options = new Options();
-		this.options.addOption(new Option(HELP_OPTION,"help",false,"Show the help"));
+		this.helpOption = new Option(HELP_OPTION_NAME,"help",false,"Show the help");
+		this.options.addOption(helpOption);
+	}
+
+	public void init(PrintStream stdout, PrintStream stderr,IExitHandler exitHandler) {
+		this.stdout = stdout;
+		this.stderr = stderr;
+		this.exitHandler = exitHandler;
 	}
 
 	protected void addOption(Option o) {
@@ -45,11 +53,18 @@ public abstract class BaseLauncher implements ICLICommand {
 		CommandLine cmd;
 		try {
 			cmd = parser.parse(options, args);
-			if (hasOptionHelp(HELP_OPTION,cmd)) {
+			String subCommand = null;
+			if (cmd.getArgs().length>0) {
+				subCommand = checkSubCommand(cmd.getArgs()[0]);
+			}
+
+			boolean displayHelp = shouldDisplayHelp(args, cmd, subCommand);
+			if (displayHelp) {
 				displayHelp(options,stdout,stderr);
 				doExit(0);
 				return;
-			} else if (processOptionsInternal(cmd)) {
+			}
+			else if (processOptionsInternal(args,cmd)) {
 				if (run()) {
 					doExit(0);
 					return;
@@ -68,8 +83,32 @@ public abstract class BaseLauncher implements ICLICommand {
 		}
 	}
 
-	protected boolean hasOptionHelp(String helpOption, CommandLine cmd) {
-		return cmd.hasOption(helpOption);
+	protected boolean shouldDisplayHelp(String[] args, CommandLine cmd,
+			String subCommand) {
+		boolean displayHelp = false;
+		if (cmd.hasOption(HELP_OPTION_NAME)) {
+			displayHelp = true;
+			if (subCommand !=null) {
+				boolean foundHelp = false;
+				for (String a : args) {
+					if (a.equals(helpOption.getLongOpt()) || a.equals(helpOption.getOpt())) {
+						foundHelp = true;
+					}
+					if (a.equals(subCommand)) {
+						if (!foundHelp) {
+							displayHelp = false;
+							break;
+						}
+					}
+				}
+			}
+
+		}
+		return displayHelp;
+	}
+
+	protected String checkSubCommand(String string) {
+		return null;
 	}
 
 	/**
@@ -128,7 +167,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		}
 	}
 
-	protected abstract boolean processOptionsInternal(CommandLine cmd);
+	protected abstract boolean processOptionsInternal(String args[],CommandLine cmd);
 
 	/**
 	 * This is executed to make the tool perform its function and should be extended.
