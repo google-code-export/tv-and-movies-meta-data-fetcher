@@ -25,6 +25,8 @@ import java.util.Map;
 }
 
 @members {
+  @SuppressWarnings("all")
+
   @Override
   public void reportError(RecognitionException e) {
     throw new ExpressionParserException(e);
