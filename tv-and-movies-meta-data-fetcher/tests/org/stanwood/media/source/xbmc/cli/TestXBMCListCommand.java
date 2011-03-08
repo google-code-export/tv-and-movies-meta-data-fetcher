@@ -16,7 +16,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
-		String args[] = new String[] {"list","--help"};
+		String args[] = new String[] {"--log_config","INFO","list","--help"};
 		CLIManageAddons.main(args);
 
 		StringBuilder expected = new StringBuilder();

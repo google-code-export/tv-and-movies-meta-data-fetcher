@@ -29,7 +29,7 @@ public class ListCommand extends AbstractSubCLICommand {
 	}
 
 	@Override
-	protected boolean processOptions(CommandLine cmd) {
+	protected boolean processOptions(String args[],CommandLine cmd) {
 		return false;
 	}
 

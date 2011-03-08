@@ -66,10 +66,10 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	 * @param cmd The command line options
 	 * @return True, if the command line options verified successfully, otherwise false
 	 */
-	protected abstract boolean processOptions(CommandLine cmd);
+	protected abstract boolean processOptions(String args[],CommandLine cmd);
 
 	@Override
-	protected boolean processOptionsInternal(CommandLine cmd) {
+	protected boolean processOptionsInternal(String args[],CommandLine cmd) {
 		String logConfig = null;
 		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
 			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
@@ -94,7 +94,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 			config=null;
 		}
 
-		return processOptions(cmd);
+		return processOptions(args,cmd);
 	}
 
 	private boolean processConfig() throws FileNotFoundException, ConfigException {

@@ -24,8 +24,8 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 
 
 	@Override
-	protected boolean processOptionsInternal(CommandLine cmd) {
-		return processOptions(cmd);
+	protected boolean processOptionsInternal(String args[],CommandLine cmd) {
+		return processOptions(args,cmd);
 	}
 
 	/**
@@ -35,6 +35,6 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 	 * @param cmd The command line options
 	 * @return True, if the command line options verified successfully, otherwise false
 	 */
-	protected abstract boolean processOptions(CommandLine cmd);
+	protected abstract boolean processOptions(String args[],CommandLine cmd);
 
 }
