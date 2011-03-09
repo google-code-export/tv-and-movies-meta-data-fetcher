@@ -143,7 +143,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	private List<String> getListOfPluginsToUpdate(File addonsDir,
-			File newAddon, File oldAddon) throws IOException {
+			File newAddon, File oldAddon) throws IOException, XBMCUpdaterException {
 		List<String>pluginList;
 		if (!oldAddon.exists()) {
 			pluginList = getDefaultPlugins();
@@ -154,7 +154,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				pluginList = new ArrayList<String>();
 				return pluginList;
 			}
-		 	pluginList = getInstalledAddons(addonsDir);
+			pluginList = new ArrayList<String>();
+			for (AddonDetails addon : getInstalledAddons(addonsDir)) {
+				pluginList.add(addon.getId());
+			}
 		}
 		return pluginList;
 	}
@@ -238,7 +241,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-	private List<String> getInstalledAddons(File addonsDir) {
+	private List<AddonDetails> getInstalledAddons(File addonsDir) throws XBMCUpdaterException {
 		File[] dirs = addonsDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
@@ -246,10 +249,22 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 		});
 
-		List<String>plugins = new ArrayList<String>();
+		List<AddonDetails>plugins = new ArrayList<AddonDetails>();
 		for (File dir : dirs) {
-			if (new File(dir,"addon.xml").exists()) {
-				plugins.add(dir.getName());
+			File pluginXml = new File(dir,"addon.xml");
+			if (pluginXml.exists()) {
+				try {
+					Document d = XMLParser.strToDom(pluginXml);
+					String strVersion = getStringFromXML(d,"/addon/@version");
+					plugins.add(new AddonDetails(dir.getName(),new Version(strVersion),AddonStatus.INSTALLED));
+				}
+				catch (XMLParserException e) {
+					throw new XBMCUpdaterException("Unable to reader plugin version",e);
+				}
+				catch (IOException e) {
+					throw new XBMCUpdaterException("Unable to reader plugin version",e);
+				}
+
 			}
 		}
 
