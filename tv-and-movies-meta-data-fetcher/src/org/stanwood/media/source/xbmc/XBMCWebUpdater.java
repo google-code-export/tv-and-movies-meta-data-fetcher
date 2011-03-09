@@ -58,17 +58,40 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			File newAddon = null;
 			try {
 				newAddon = downloadLatestAddonXML();
+				Document newAddonDoc = XMLParser.strToDom(newAddon);
+				List<AddonDetails>uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
 			}
 			finally {
 				if (newAddon!=null) {
 					FileHelper.delete(newAddon);
 				}
 			}
+
+
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to list XBMC scrapers",e);
 		}
+		catch (XMLParserException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+		}
+	}
 
+	private List<AddonDetails> getAddonDetails(Document newAddonDoc, AddonStatus status) throws XMLParserException {
+		List<AddonDetails>addonDetails = new ArrayList<AddonDetails>();
+
+		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon")) {
+			String id = ((Element)addon).getAttribute("id");
+			String version = ((Element)addon).getAttribute("version");
+			if (version.length()==0) {
+				throw new XMLParserNotFoundException("Unable to find version attribute of plugin '"+id+"'");
+			}
+
+			Version newVersion = new Version(version);
+			addonDetails.add(new AddonDetails(id, newVersion, status));
+		}
+
+		return addonDetails;
 	}
 
 	@Override
@@ -177,22 +200,17 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return expectedMD5;
 	}
 
-	private void updatePlugins(Document newAddonDoc, Document oldAddonDoc,
+	private void updatePlugins(Document newAddonDoc,Document oldAddonDoc,
 			List<String> pluginList, File addonsDir, File newPluginsDir) throws XMLParserException, XBMCUpdaterException {
 		for (String plugin : pluginList) {
-			for (Node addon : selectNodeList(newAddonDoc, "/addons/addon[@id='"+plugin+"']")) {
-				 String version = ((Element)addon).getAttribute("version");
-				 if (version.length()==0) {
-					 throw new XMLParserNotFoundException("Unable to find version attribute of plugin '"+plugin+"'");
-				 }
+			for (AddonDetails addonDetails : getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED)) {
 
-				 Version newVersion = new Version(version);
 				 Version oldVersion = null;
 				 if (oldAddonDoc!=null) {
 					 oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
 				 }
-				 if (oldVersion == null || newVersion.compareTo(oldVersion)>0) {
-					 downloadNewPlugin(plugin,newPluginsDir,newVersion);
+				 if (oldVersion == null || addonDetails.getVersion().compareTo(oldVersion)>0) {
+					 downloadNewPlugin(plugin,newPluginsDir,addonDetails.getVersion());
 				 }
 			}
 
