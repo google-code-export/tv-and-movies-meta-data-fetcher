@@ -10,6 +10,9 @@ import org.stanwood.media.renamer.TestRenameRecursive;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Used to test the XBMC manager cli command
+ */
 public class TestCLIManagerAddons extends  BaseCLITest {
 
 	/**
@@ -22,10 +25,24 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
-		String args[] = new String[] {"list","--help"};
-		CLIManageAddons.main(args);
+		String args[] = new String[] {"--help"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			Assert.assertEquals(0,e.getExitCode());
+		}
 
 		StringBuilder expected = new StringBuilder();
+		appendHelp(expected);
+
+		Assert.assertEquals(expected.toString(),stdout.toString());
+
+
+	}
+
+	protected void appendHelp(StringBuilder expected) {
 		expected.append("usage: xbmc-addons [--global-options] <command> [--command-options] [arguments]"+FileHelper.LS);
 		expected.append(""+FileHelper.LS);
 		expected.append("Global options:"+FileHelper.LS);
@@ -36,7 +53,60 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		expected.append(""+FileHelper.LS);
 		expected.append("Commands:"+FileHelper.LS);
 		expected.append("  list                          lists the installed XBMC addons"+FileHelper.LS);
+		expected.append("  update                        Update the installed XBMC addons to the latest versions"+FileHelper.LS);
+	}
 
+	/**
+	 * Used to check what happens when their is a invalid option
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testUnkownOption() throws Exception {
+		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		LogSetupHelper.initLogging(stdout,stderr);
+
+		String args[] = new String[] {"--blah"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			Assert.assertEquals(1,e.getExitCode());
+		}
+
+		StringBuilder expected = new StringBuilder();
+		expected.append("Unrecognized option: --blah\n");
+		Assert.assertEquals(expected.toString(), stderr.toString());
+
+		expected = new StringBuilder();
+		appendHelp(expected);
+		Assert.assertEquals(expected.toString(),stdout.toString());
+	}
+
+	/**
+	 * Used to check what happens when their is a invalid argument
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testUnkownSubCommand() throws Exception {
+		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		LogSetupHelper.initLogging(stdout,stderr);
+
+		String args[] = new String[] {"blah"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			Assert.assertEquals(1,e.getExitCode());
+		}
+
+		StringBuilder expected = new StringBuilder();
+		expected.append("Unkown sub-command or argument 'blah'\n");
+		Assert.assertEquals(expected.toString(), stderr.toString());
+
+		expected = new StringBuilder();
+		appendHelp(expected);
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 

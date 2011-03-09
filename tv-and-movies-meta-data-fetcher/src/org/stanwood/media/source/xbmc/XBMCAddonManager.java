@@ -60,13 +60,9 @@ public class XBMCAddonManager implements IContentFetcher {
 	 */
 	public int updatePlugins() throws XBMCException {
 		addons = new HashMap<String,XBMCAddon>();
-		try {
-			int count = updater.update(config.getXBMCAddonDir());
-			registerAddons();
-			return count;
-		} catch (ConfigException e) {
-			throw new XBMCException("Unable to get the addon directory",e);
-		}
+		int count = updater.update();
+		registerAddons();
+		return count;
 	}
 
 	/**

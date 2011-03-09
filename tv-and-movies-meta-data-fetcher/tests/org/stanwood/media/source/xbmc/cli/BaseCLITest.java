@@ -27,6 +27,7 @@ public class BaseCLITest extends XBMCAddonTestBase {
 			@Override
 			public void exit(int exitCode) {
 				setExitCode(exitCode);
+				throw new ExitException(exitCode);
 			}
 		});
 
