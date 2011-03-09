@@ -60,6 +60,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				newAddon = downloadLatestAddonXML();
 				Document newAddonDoc = XMLParser.strToDom(newAddon);
 				List<AddonDetails>uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
+				List<AddonDetails>installedAddons = getInstalledAddons(addonsDir);
 			}
 			finally {
 				if (newAddon!=null) {
