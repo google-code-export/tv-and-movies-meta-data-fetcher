@@ -2,6 +2,7 @@ package org.stanwood.media.cli;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -74,7 +75,9 @@ public abstract class BaseLauncher implements ICLICommand {
 					return;
 				}
 			} else {
-				fatal("Invalid command line parameters");
+//				fatal("Invalid command line parameters");
+				displayHelp(options,stdout,stderr);
+				doExit(1);
 				return;
 			}
 		} catch (ParseException e1) {
@@ -133,7 +136,7 @@ public abstract class BaseLauncher implements ICLICommand {
 	 */
 	protected void fatal(String msg) {
 		stderr.println(msg);
-		displayHelp(options,stderr,stdout);
+		displayHelp(options,stdout,stderr);
 		doExit(1);
 	}
 
@@ -149,23 +152,66 @@ public abstract class BaseLauncher implements ICLICommand {
 		stdout.println(msg);
 	}
 
+	/**
+	 * Used to get the command name
+	 * @return the command name
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
 	protected void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
-		HelpFormatter formatter = new HelpFormatter();
+		printUsage(options,stdout,stderr);
+		printOptions(options,stdout,stderr);
+	}
+
+	protected void printUsage(Options options,PrintStream stdout,PrintStream stderr) {
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(stdout);
-			formatter.printHelp(pw,80, getName(),"",options ,0,0,"",true);
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printUsage(pw, 80, getName(),options);
 			pw.flush();
 		}
 		finally {
 			pw.close();
 		}
+		stdout.println("");
 	}
+
+	@SuppressWarnings("unchecked")
+	protected void printOptions(Options options,PrintStream stdout,PrintStream stderr) {
+		for (Option o : (Collection<Option>)options.getOptions()) {
+			stdout.print("  ");
+			StringBuilder buffer = new StringBuilder();
+			boolean doneLong = false;
+			if (o.getLongOpt()!=null && o.getLongOpt().length()>0) {
+				buffer.append("--"+o.getLongOpt());
+				doneLong = true;
+			}
+			if (o.getOpt()!=null && o.getOpt().length()>0) {
+				if (doneLong) {
+					buffer.append(", ");
+				}
+				buffer.append("-"+o.getOpt());
+				if (o.hasArg() && o.getArgName()!=null && o.getArgName().length()>0) {
+					buffer.append(" <" + o.getArgName()+">");
+				}
+			}
+
+			while (buffer.length()<30) {
+				buffer.append(" ");
+			}
+			stdout.print(buffer);
+			if (buffer.length()>30) {
+				stdout.print("\n                                ");
+			}
+			stdout.print(o.getDescription());
+			stdout.println();
+		}
+	}
+
 
 	protected abstract boolean processOptionsInternal(String args[],CommandLine cmd);
 

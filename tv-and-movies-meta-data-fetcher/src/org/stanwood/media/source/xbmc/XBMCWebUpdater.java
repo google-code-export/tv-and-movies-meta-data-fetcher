@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
@@ -34,7 +36,15 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private XBMCAddonManager mgr;
 
-	public XBMCWebUpdater(ConfigReader config) {
+	private File addonsDir;
+
+	public XBMCWebUpdater(ConfigReader config) throws XBMCException {
+		try {
+			addonsDir = config.getXBMCAddonDir();
+		}
+		catch (ConfigException e) {
+			throw new XBMCException("Unable to get XBMC addon directory",e);
+		}
 	}
 
 	@Override
@@ -42,28 +52,30 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		this.mgr =mgr;
 	}
 
-	@Override
-	public int update(File addonsDir) throws XBMCUpdaterException {
+	@Test
+	public void listPlugins() throws XBMCUpdaterException {
 		try {
-			File newAddon = new File(addonsDir,"addon.xml.new");
-			File oldAddon = new File(addonsDir,"addon.xml");
-
-			String actualMD5;
+			File newAddon = null;
 			try {
-				actualMD5 = mgr.downloadFile(new URL(UPDATE_SITE_URL),newAddon);
-
+				newAddon = downloadLatestAddonXML();
 			}
-			catch (MalformedURLException e) {
-				throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
-			}
-
-			String expectedMD5 = readMD5(addonsDir);
-			if (!expectedMD5.equals(actualMD5)) {
-				if (log.isDebugEnabled()) {
-					log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]");
+			finally {
+				if (newAddon!=null) {
+					FileHelper.delete(newAddon);
 				}
-				throw new XBMCUpdaterException("Unable to check for XBMC Scraper updates, MD5 checksum failed.");
 			}
+		}
+		catch (IOException e) {
+			throw new XBMCUpdaterException("Unable to list XBMC scrapers",e);
+		}
+
+	}
+
+	@Override
+	public int update() throws XBMCUpdaterException {
+		try {
+			File oldAddon = new File(addonsDir,"addon.xml");
+			File newAddon = downloadLatestAddonXML();
 
 			List<String> pluginList = getListOfPluginsToUpdate(addonsDir,newAddon, oldAddon);
 
@@ -107,6 +119,29 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	protected File downloadLatestAddonXML() throws IOException,
+			XBMCUpdaterException {
+		File newAddon = new File(addonsDir,"addon.xml.new");
+
+		String actualMD5;
+		try {
+			actualMD5 = mgr.downloadFile(new URL(UPDATE_SITE_URL),newAddon);
+
+		}
+		catch (MalformedURLException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
+		}
+
+		String expectedMD5 = readMD5(addonsDir);
+		if (!expectedMD5.equals(actualMD5)) {
+			if (log.isDebugEnabled()) {
+				log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]");
+			}
+			throw new XBMCUpdaterException("Unable to check for XBMC Scraper updates, MD5 checksum failed.");
+		}
+		return newAddon;
+	}
+
 	private List<String> getListOfPluginsToUpdate(File addonsDir,
 			File newAddon, File oldAddon) throws IOException {
 		List<String>pluginList;
@@ -119,7 +154,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				pluginList = new ArrayList<String>();
 				return pluginList;
 			}
-		 	pluginList = getDownloadedPlugins(addonsDir);
+		 	pluginList = getInstalledAddons(addonsDir);
 		}
 		return pluginList;
 	}
@@ -203,7 +238,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-	private List<String> getDownloadedPlugins(File addonsDir) {
+	private List<String> getInstalledAddons(File addonsDir) {
 		File[] dirs = addonsDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
