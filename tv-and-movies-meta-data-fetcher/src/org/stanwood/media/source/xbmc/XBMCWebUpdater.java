@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
@@ -52,15 +51,32 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		this.mgr =mgr;
 	}
 
-	@Test
-	public void listPlugins() throws XBMCUpdaterException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<AddonDetails> listAddons() throws XBMCUpdaterException {
 		try {
 			File newAddon = null;
 			try {
 				newAddon = downloadLatestAddonXML();
 				Document newAddonDoc = XMLParser.strToDom(newAddon);
 				List<AddonDetails>uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
-				List<AddonDetails>installedAddons = getInstalledAddons(addonsDir);
+				List<AddonDetails>addons = getInstalledAddons(addonsDir);
+				for (AddonDetails uninstalledAddon : uninstalledAddons) {
+					AddonDetails installedAddon = findAddon(addons, uninstalledAddon.getId());
+					if (installedAddon==null){
+						addons.add(uninstalledAddon);
+					}
+					else {
+						if (uninstalledAddon.getVersion().compareTo(installedAddon.getVersion()) > 0) {
+							installedAddon.setStatus(AddonStatus.OUT_OF_DATE);
+						}
+
+					}
+				}
+
+				return addons;
 			}
 			finally {
 				if (newAddon!=null) {
@@ -78,6 +94,15 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	protected AddonDetails findAddon(List<AddonDetails> addons,String id) {
+		for (AddonDetails a : addons) {
+			if (a.getId().equals(id)) {
+				return a;
+			}
+		}
+		return null;
+	}
+
 	private List<AddonDetails> getAddonDetails(Document newAddonDoc, AddonStatus status) throws XMLParserException {
 		List<AddonDetails>addonDetails = new ArrayList<AddonDetails>();
 
@@ -89,14 +114,19 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 
 			Version newVersion = new Version(version);
-			addonDetails.add(new AddonDetails(id, newVersion, status));
+
+			List<String> requiredPlugins = getRequiredPlugins(newAddonDoc, id);
+			AddonDetails ad = new AddonDetails(id, newVersion, status);
+			ad.setRequiredPlugins(requiredPlugins);
+			addonDetails.add(ad);
 		}
 
 		return addonDetails;
 	}
 
 	@Override
-	public int update() throws XBMCUpdaterException {
+	public int update() throws XBMCException {
+		mgr.unregisterAddons();
 		try {
 			File oldAddon = new File(addonsDir,"addon.xml");
 			File newAddon = downloadLatestAddonXML();
@@ -114,7 +144,8 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				throw new XBMCUpdaterException("Unable to create working directory: " +newPluginsDir);
 			}
 
-			updatePlugins(newAddonDoc,oldAddonDoc,pluginList,addonsDir,newPluginsDir);
+			List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
+			updatePlugins(uninstalledAddons,newAddonDoc,oldAddonDoc,pluginList,addonsDir,newPluginsDir);
 
 			int count = 0;
 			for (File f : newPluginsDir.listFiles()) {
@@ -134,6 +165,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				FileHelper.delete(oldAddon);
 			}
 			FileHelper.move(newAddon, oldAddon);
+			mgr.registerAddons();
 			return count;
 		}
 		catch (IOException e) {
@@ -201,22 +233,26 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return expectedMD5;
 	}
 
-	private void updatePlugins(Document newAddonDoc,Document oldAddonDoc,
+	private void updatePlugins(List<AddonDetails> uninstalledAddons,Document newAddonDoc,Document oldAddonDoc,
 			List<String> pluginList, File addonsDir, File newPluginsDir) throws XMLParserException, XBMCUpdaterException {
 		for (String plugin : pluginList) {
-			for (AddonDetails addonDetails : getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED)) {
-
-				 Version oldVersion = null;
-				 if (oldAddonDoc!=null) {
-					 oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
-				 }
-				 if (oldVersion == null || addonDetails.getVersion().compareTo(oldVersion)>0) {
-					 downloadNewPlugin(plugin,newPluginsDir,addonDetails.getVersion());
-				 }
+			List<String> requiredPlugins = null;
+			for (AddonDetails addonDetails : uninstalledAddons) {
+				if (addonDetails.getId().equals(plugin)) {
+					requiredPlugins = addonDetails.getRequiredPlugins();
+					Version oldVersion = null;
+					if (oldAddonDoc!=null) {
+						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
+					}
+					if (oldVersion == null || addonDetails.getVersion().compareTo(oldVersion)>0) {
+						downloadNewPlugin(plugin,newPluginsDir,addonDetails.getVersion());
+					}
+				}
 			}
 
-			List<String> requiredPlugins = getRequiredPlugins(newAddonDoc, plugin);
-			updatePlugins(newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
+			if (requiredPlugins!=null) {
+				updatePlugins(uninstalledAddons,newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
+			}
 		}
 	}
 

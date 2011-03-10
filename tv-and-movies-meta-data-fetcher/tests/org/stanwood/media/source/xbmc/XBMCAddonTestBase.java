@@ -34,11 +34,11 @@ public class XBMCAddonTestBase {
 
 		tmpDir = FileHelper.createTmpDir("xbmc");
 		FileHelper.unzip(TestXMBCSourceTVDB.class.getResourceAsStream("xbmc-addons.zip"),tmpDir);
-		log.info("Test data dir: " + tmpDir);
+		System.out.println("Test data dir: " + tmpDir);
 
 		updateSiteDir = FileHelper.createTmpDir("updateSite");
 		FileHelper.unzip(TestXMBCSourceTVDB.class.getResourceAsStream("updates.zip"),updateSiteDir);
-		log.info("Update site dir: " + updateSiteDir);
+		System.out.println("Update site dir: " + updateSiteDir);
 	}
 
 	/**
@@ -82,6 +82,10 @@ public class XBMCAddonTestBase {
 
 		};
 		return new DummyXBMCAddonManager(config,new File(updateSiteDir,"addons"));
+	}
+
+	protected XBMCAddonManager createAddonManager(final Locale locale) throws XBMCException {
+		return createAddonManager(new File(tmpDir,"addons"), locale);
 	}
 
 	protected XBMCAddonManager getAddonManager() {
