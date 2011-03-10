@@ -63,6 +63,7 @@ public class Controller {
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager(configReader));
+				xbmcMgr.getUpdater().update();
 			} catch (XBMCException e) {
 				log.error(e.getMessage(),e);
 			}

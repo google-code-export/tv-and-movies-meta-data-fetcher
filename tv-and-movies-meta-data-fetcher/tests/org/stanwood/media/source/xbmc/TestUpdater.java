@@ -17,8 +17,6 @@ import org.stanwood.media.util.FileHelper;
  */
 public class TestUpdater extends XBMCAddonTestBase {
 
-	private static File tmpDir;
-
 	/**
 	 * This test will check that updating the addons works
 	 * @throws Exception Thrown if their is a problem
@@ -26,12 +24,16 @@ public class TestUpdater extends XBMCAddonTestBase {
 	@Test
 	public void testUpdate() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		removeAddons();
 		File addonsDir = FileHelper.createTmpDir("addons");
 		try {
 			XBMCAddonManager mgr = createAddonManager(addonsDir,Locale.ENGLISH);
-			int count = mgr.updatePlugins();
+			int count = mgr.getUpdater().update();
+			Assert.assertEquals("Check number of updated plugins",5,count);
+
+			count = mgr.getUpdater().update();
 			Assert.assertEquals("Check number of updated plugins",0,count);
+
+
 
 			assertFiles(addonsDir);
 
@@ -51,10 +53,47 @@ public class TestUpdater extends XBMCAddonTestBase {
 			Assert.assertEquals("1.1.0",addon.getVersion().toString());
 
 			Assert.assertNotNull(addon.getScraper(Mode.TV_SHOW));
+
 		}
 		finally {
 			FileHelper.delete(addonsDir);
 		}
+	}
+
+	/**
+	 * Used to test that the plugins are listed correctly
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testListPlugins() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		XBMCAddonManager mgr = createAddonManager(Locale.ENGLISH);
+		List<AddonDetails> addonDetails = mgr.getUpdater().listAddons();
+
+		Assert.assertEquals(244,addonDetails.size());
+
+		int installed = 0;
+		int uninstalled = 0;
+		int updateable = 0;
+
+		for (AddonDetails ad : addonDetails) {
+			switch (ad.getStatus()) {
+				case INSTALLED:
+					installed++;
+					break;
+				case NOT_INSTALLED:
+					uninstalled++;
+					break;
+				case OUT_OF_DATE:
+					updateable++;
+					break;
+			}
+		}
+
+		Assert.assertEquals(30,installed);
+		Assert.assertEquals(208,uninstalled);
+		Assert.assertEquals(6,updateable);
 	}
 
 	private void assertFiles(File addonsDir) {

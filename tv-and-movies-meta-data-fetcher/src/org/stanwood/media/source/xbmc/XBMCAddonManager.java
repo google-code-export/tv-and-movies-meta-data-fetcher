@@ -50,19 +50,14 @@ public class XBMCAddonManager implements IContentFetcher {
 	protected void init(IXBMCUpdater updater) throws XBMCException {
 		updater.setAddonManager(this);
 		this.updater = updater;
-		updatePlugins();
 	}
 
-	/**
-	 * Used to update the installed plugins
-	 * @return the count of plugins that were updated
-	 * @throws XBMCException Thrown if their are any problems
-	 */
-	public int updatePlugins() throws XBMCException {
+	public IXBMCUpdater getUpdater() {
+		return updater;
+	}
+
+	void unregisterAddons() {
 		addons = new HashMap<String,XBMCAddon>();
-		int count = updater.update();
-		registerAddons();
-		return count;
 	}
 
 	/**
@@ -79,7 +74,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		return addon;
 	}
 
-	private void registerAddons() throws XBMCException {
+	void registerAddons() throws XBMCException {
 		try {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
 				if (f.isDirectory()) {
