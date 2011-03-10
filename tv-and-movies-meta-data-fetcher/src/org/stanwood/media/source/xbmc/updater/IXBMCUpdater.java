@@ -1,6 +1,10 @@
-package org.stanwood.media.source.xbmc;
+package org.stanwood.media.source.xbmc.updater;
 
 import java.util.List;
+
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 
 
 /**

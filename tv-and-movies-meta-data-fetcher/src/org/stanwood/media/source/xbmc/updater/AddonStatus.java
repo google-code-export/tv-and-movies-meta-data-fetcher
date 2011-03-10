@@ -1,4 +1,4 @@
-package org.stanwood.media.source.xbmc;
+package org.stanwood.media.source.xbmc.updater;
 
 public enum AddonStatus {
 

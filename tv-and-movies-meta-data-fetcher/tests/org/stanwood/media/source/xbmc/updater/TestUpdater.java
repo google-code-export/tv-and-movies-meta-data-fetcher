@@ -1,4 +1,4 @@
-package org.stanwood.media.source.xbmc;
+package org.stanwood.media.source.xbmc.updater;
 
 import java.io.File;
 import java.util.Collections;
@@ -10,6 +10,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.source.xbmc.XBMCAddon;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
+import org.stanwood.media.source.xbmc.updater.AddonDetails;
+import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
 
 /**

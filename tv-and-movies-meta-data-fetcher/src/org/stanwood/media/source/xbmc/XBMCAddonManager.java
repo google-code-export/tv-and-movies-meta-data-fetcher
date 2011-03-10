@@ -19,6 +19,8 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
+import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.WebFileInputStream;
 
@@ -56,7 +58,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		return updater;
 	}
 
-	void unregisterAddons() {
+	public void unregisterAddons() {
 		addons = new HashMap<String,XBMCAddon>();
 	}
 
@@ -74,7 +76,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		return addon;
 	}
 
-	void registerAddons() throws XBMCException {
+	public void registerAddons() throws XBMCException {
 		try {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
 				if (f.isDirectory()) {
@@ -123,7 +125,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		return null;
 	}
 
-	String downloadFile(URL url, File newAddon) throws IOException {
+	public String downloadFile(URL url, File newAddon) throws IOException {
 		return FileHelper.copy(url,newAddon);
 	}
 
