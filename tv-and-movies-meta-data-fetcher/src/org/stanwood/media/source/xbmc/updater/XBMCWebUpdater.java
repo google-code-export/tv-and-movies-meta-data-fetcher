@@ -1,4 +1,4 @@
-package org.stanwood.media.source.xbmc;
+package org.stanwood.media.source.xbmc.updater;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -15,6 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
 import org.stanwood.media.xml.XMLParser;
@@ -69,10 +72,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 						addons.add(uninstalledAddon);
 					}
 					else {
-						if (uninstalledAddon.getVersion().compareTo(installedAddon.getVersion()) > 0) {
+						if (uninstalledAddon.getAvaliableVersion().compareTo(installedAddon.getInstalledVersion()) > 0) {
 							installedAddon.setStatus(AddonStatus.OUT_OF_DATE);
+							installedAddon.setAvaliableVersion(uninstalledAddon.getAvaliableVersion());
 						}
-
 					}
 				}
 
@@ -116,7 +119,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			Version newVersion = new Version(version);
 
 			List<String> requiredPlugins = getRequiredPlugins(newAddonDoc, id);
-			AddonDetails ad = new AddonDetails(id, newVersion, status);
+			AddonDetails ad = new AddonDetails(id, newVersion,newVersion, status);
 			ad.setRequiredPlugins(requiredPlugins);
 			addonDetails.add(ad);
 		}
@@ -244,8 +247,8 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					if (oldAddonDoc!=null) {
 						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
 					}
-					if (oldVersion == null || addonDetails.getVersion().compareTo(oldVersion)>0) {
-						downloadNewPlugin(plugin,newPluginsDir,addonDetails.getVersion());
+					if (oldVersion == null || addonDetails.getAvaliableVersion().compareTo(oldVersion)>0) {
+						downloadNewPlugin(plugin,newPluginsDir,addonDetails.getAvaliableVersion());
 					}
 				}
 			}
@@ -311,7 +314,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				try {
 					Document d = XMLParser.strToDom(pluginXml);
 					String strVersion = getStringFromXML(d,"/addon/@version");
-					plugins.add(new AddonDetails(dir.getName(),new Version(strVersion),AddonStatus.INSTALLED));
+					plugins.add(new AddonDetails(dir.getName(),new Version(strVersion),new Version(strVersion),AddonStatus.INSTALLED));
 				}
 				catch (XMLParserException e) {
 					throw new XBMCUpdaterException("Unable to reader plugin version",e);

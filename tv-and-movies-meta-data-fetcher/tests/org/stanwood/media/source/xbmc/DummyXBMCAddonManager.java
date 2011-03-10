@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
@@ -80,7 +81,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	}
 
 	@Override
-	String downloadFile(URL url, File newAddon) throws IOException {
+	public String downloadFile(URL url, File newAddon) throws IOException {
 		Matcher m = UPDATE_SIZE.matcher(url.toExternalForm());
 		if (m.matches()) {
 			File f = new File(updateSite,m.group(1));
