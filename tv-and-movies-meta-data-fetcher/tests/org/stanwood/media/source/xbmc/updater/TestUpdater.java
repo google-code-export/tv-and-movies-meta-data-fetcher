@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.updater;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -13,8 +14,6 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.XBMCAddon;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
-import org.stanwood.media.source.xbmc.updater.AddonDetails;
-import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -75,9 +74,24 @@ public class TestUpdater extends XBMCAddonTestBase {
 
 		XBMCAddonManager mgr = createAddonManager(Locale.ENGLISH);
 		List<AddonDetails> addonDetails = mgr.getUpdater().listAddons();
+		assertPluginStatus(addonDetails,30,208,6);
 
-		Assert.assertEquals(244,addonDetails.size());
+		List<String>ids = new ArrayList<String>();
+		ids.add("metadata.themoviedb.org");
+		Assert.assertEquals(1,mgr.getUpdater().uninstallAddons(ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(),30,209,5);
 
+		Assert.assertEquals(4,mgr.getUpdater().installAddons(ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(),32,208,4);
+
+		ids = new ArrayList<String>();
+		ids.add("metadata.common.hdtrailers.net");
+		Assert.assertEquals(2,mgr.getUpdater().uninstallAddons(ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(),30,210,4);
+	}
+
+	protected void assertPluginStatus(List<AddonDetails> addonDetails,int expectedInstalled,int expectedUninstalled,int expectedUpdateable) {
+		Assert.assertEquals(expectedInstalled+expectedUninstalled+expectedUpdateable,addonDetails.size());
 		int installed = 0;
 		int uninstalled = 0;
 		int updateable = 0;
@@ -96,9 +110,9 @@ public class TestUpdater extends XBMCAddonTestBase {
 			}
 		}
 
-		Assert.assertEquals(30,installed);
-		Assert.assertEquals(208,uninstalled);
-		Assert.assertEquals(6,updateable);
+		Assert.assertEquals(expectedInstalled,installed);
+		Assert.assertEquals(expectedUninstalled,uninstalled);
+		Assert.assertEquals(expectedUpdateable,updateable);
 	}
 
 	private void assertFiles(File addonsDir) {

@@ -1,6 +1,6 @@
 package org.stanwood.media.source.xbmc.updater;
 
-import java.util.List;
+import java.util.Set;
 
 import org.stanwood.media.util.Version;
 
@@ -10,7 +10,7 @@ public class AddonDetails {
 	private Version avaliableVersion;
 	private Version installedVersion;
 	private AddonStatus status;
-	private List<String> requiredPlugins;
+	private Set<String> requiredPlugins;
 
 	public AddonDetails(String id, Version installedVersion,Version avaliableVersion,AddonStatus status) {
 		this.id = id;
@@ -31,11 +31,11 @@ public class AddonDetails {
 		this.status = status;
 	}
 
-	public List<String> getRequiredPlugins() {
+	public Set<String> getRequiredPlugins() {
 		return requiredPlugins;
 	}
 
-	public void setRequiredPlugins(List<String> requiredPlugins) {
+	public void setRequiredPlugins(Set<String> requiredPlugins) {
 		this.requiredPlugins = requiredPlugins;
 	}
 

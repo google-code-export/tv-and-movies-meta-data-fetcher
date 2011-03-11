@@ -22,4 +22,8 @@ public interface IXBMCUpdater {
 	public int update() throws XBMCUpdaterException, XBMCException;
 
 	public void setAddonManager(XBMCAddonManager xbmcAddonManager);
+
+	public int installAddons(List<String>addonIds) throws XBMCException;
+
+	public int uninstallAddons(List<String>addonIds) throws XBMCUpdaterException;
 }
