@@ -516,7 +516,7 @@ public class FileHelper {
 			FileHelper.deleteDir(file);
 		}
 		else {
-			if (!file.delete() || file.exists()) {
+			if (!file.delete() && file.exists()) {
 				throw new IOException("Unable to delete file: " +file);
 			}
 		}
