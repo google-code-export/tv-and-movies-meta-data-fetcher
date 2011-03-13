@@ -59,7 +59,7 @@ public class Controller {
 		this.configReader = config;
 	}
 
-	public MediaDirConfig init(File rootMediaDir) throws ConfigException {
+	public MediaDirConfig init(File mrootMediaDir) throws ConfigException {
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager(configReader));
