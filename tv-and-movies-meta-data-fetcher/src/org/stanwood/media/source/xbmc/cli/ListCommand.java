@@ -26,11 +26,14 @@ public class ListCommand extends AbstractSubCLICommand {
 
 	@Override
 	protected boolean run() {
+
 		return false;
 	}
 
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
+		getController()
+		xbmcMgr = new XBMCAddonManager();
 		return false;
 	}
 

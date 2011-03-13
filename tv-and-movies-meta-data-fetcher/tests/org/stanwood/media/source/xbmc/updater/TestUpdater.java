@@ -37,8 +37,6 @@ public class TestUpdater extends XBMCAddonTestBase {
 			count = mgr.getUpdater().update();
 			Assert.assertEquals("Check number of updated plugins",0,count);
 
-
-
 			assertFiles(addonsDir);
 
 			Set<String> addons = mgr.listAddons();
