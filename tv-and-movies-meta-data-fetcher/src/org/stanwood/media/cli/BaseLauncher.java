@@ -11,6 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.stanwood.media.renamer.Controller;
 
 public abstract class BaseLauncher implements ICLICommand {
 
@@ -25,7 +26,9 @@ public abstract class BaseLauncher implements ICLICommand {
 	private Option helpOption;
 
 	public BaseLauncher(String name,PrintStream stdout, PrintStream stderr, IExitHandler exitHandler) {
-		init(stdout,stderr,exitHandler);
+		this.stdout = stdout;
+		this.stderr = stderr;
+		this.exitHandler = exitHandler;
 
 		this.name = name;
 
@@ -34,10 +37,8 @@ public abstract class BaseLauncher implements ICLICommand {
 		this.options.addOption(helpOption);
 	}
 
-	public void init(PrintStream stdout, PrintStream stderr,IExitHandler exitHandler) {
-		this.stdout = stdout;
-		this.stderr = stderr;
-		this.exitHandler = exitHandler;
+	public void init(Controller controller) {
+
 	}
 
 	protected void addOption(Option o) {

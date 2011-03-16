@@ -52,6 +52,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	protected void init(IXBMCUpdater updater) throws XBMCException {
 		updater.setAddonManager(this);
 		this.updater = updater;
+		registerAddons();
 	}
 
 	public IXBMCUpdater getUpdater() {
@@ -77,6 +78,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	}
 
 	public void registerAddons() throws XBMCException {
+		addons = new HashMap<String,XBMCAddon>();
 		try {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
 				if (f.isDirectory()) {

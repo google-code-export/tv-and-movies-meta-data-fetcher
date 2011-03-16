@@ -70,7 +70,8 @@ public class TestController extends XBMCAddonTestBase  {
 				configReader.parse();
 				Controller controller = new Controller(configReader);
 
-				controller.init(tmpDir);
+				controller.init();
+				controller.getMediaDirectory(tmpDir);
 				Assert.assertNotNull(controller);
 				Assert.assertEquals("/testPath/blah",FakeStore.getFakeParam());
 			}

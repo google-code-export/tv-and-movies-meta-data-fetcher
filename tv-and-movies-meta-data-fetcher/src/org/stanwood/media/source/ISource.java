@@ -26,15 +26,13 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
  */
 public interface ISource {
-
-	public void setController(Controller controller) throws SourceException;
 
 	/**
 	 * Called to retrieve the information on a episode
@@ -129,5 +127,7 @@ public interface ISource {
 	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
 	public String getParameter(String key) throws SourceException;
+
+	public void setMediaDirConfig(MediaDirectory dir) throws SourceException;
 
 }

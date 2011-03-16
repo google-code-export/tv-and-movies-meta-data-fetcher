@@ -34,7 +34,6 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
@@ -77,8 +76,9 @@ public class Renamer {
 	private String[] exts;
 	private boolean refresh;
 	private boolean recursive;
+
+	private MediaDirectory dir;
 	private Controller controller;
-	private MediaDirConfig dirConfig;
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -88,8 +88,8 @@ public class Renamer {
 	 * @param refresh If true, then don't read from the stores
 	 * @param recursive If true, then also include sub-directories
 	 */
-	public Renamer(Controller controller,MediaDirConfig dirConfig,String exts[], boolean refresh,boolean recursive) {
-		this.dirConfig = dirConfig;
+	public Renamer(Controller controller,MediaDirectory dir,String exts[], boolean refresh,boolean recursive) {
+		this.dir = dir;
 		this.exts = exts.clone();
 		this.refresh = refresh;
 		this.recursive = recursive;
@@ -106,7 +106,7 @@ public class Renamer {
 	 * @throws StoreException Thrown is their is a problem with a store
 	 */
 	public boolean tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
-		return tidyDirectory(dirConfig.getMediaDir());
+		return tidyDirectory(dir.getMediaDirConfig().getMediaDir());
 	}
 
 	private boolean tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
@@ -140,13 +140,13 @@ public class Renamer {
 			}
 		});
 
-		if (dirConfig.getMode() == Mode.TV_SHOW) {
+		if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
 			for (File file : sortedFiles) {
 				if (!renameTVShow(file)) {
 					return false;
 				}
 			}
-		} else if (dirConfig.getMode() == Mode.FILM) {
+		} else if (dir.getMediaDirConfig().getMode() == Mode.FILM) {
 			for (File file : sortedFiles) {
 				if (!renameFilm(file)) {
 					return false;
@@ -183,7 +183,7 @@ public class Renamer {
 
 		String oldFileName = file.getName();
 
-		Film film = controller.getFilm(dirConfig.getMediaDir(), file,result,refresh);
+		Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
 			return false;
@@ -199,7 +199,7 @@ public class Renamer {
 	private SearchResult searchForId(File file) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
-		result = controller.searchForVideoId(dirConfig,file);
+		result = dir.searchForVideoId(dir.getMediaDirConfig(),file);
 		return result;
 
 	}
@@ -211,22 +211,22 @@ public class Renamer {
 			return false;
 		}
 
-		Show show =  controller.getShow(dirConfig.getMediaDir(),file,result,refresh);
+		Show show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
 		if (show == null) {
 			log.fatal("Unable to find show details");
 			return false;
 		}
 		String oldFileName = file.getName();
-		ParsedFileName data =  FileNameParser.parse(dirConfig,file);
+		ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
 		if (data==null) {
 			log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
 		}
 		else {
-			Season season = controller.getSeason(dirConfig.getMediaDir(),file, show, data.getSeason(), refresh);
+			Season season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
 			if (season == null) {
 				log.error("Unable to find season for file : " + file.getAbsolutePath());
 			} else {
-				Episode episode = controller.getEpisode(dirConfig.getMediaDir(),file, season, data.getEpisode(), refresh);
+				Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
 				if (episode == null) {
 					log.error("Unable to find episode for file : " + file.getAbsolutePath());
 				} else {
@@ -259,7 +259,7 @@ public class Renamer {
 
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
-					controller.renamedFile(dirConfig.getMediaDir(),oldFile,newFile);
+					dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
 				}
 				else {
 					log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
@@ -275,7 +275,7 @@ public class Renamer {
 	}
 
 	private File getNewFilmName(Film film,String ext) {
-		String newName = dirConfig.getPattern();
+		String newName = dir.getMediaDirConfig().getPattern();
 		newName = newName.replaceAll(TOKEN_ID, normalizeText(film.getId()));
 		newName = newName.replaceAll(TOKEN_PERCENT, "%");
 		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(film.getTitle()));
@@ -285,7 +285,7 @@ public class Renamer {
 	}
 
 	private File getNewTVShowName(Show show,Season season, Episode episode,String ext) {
-		String newName = dirConfig.getPattern();
+		String newName = dir.getMediaDirConfig().getPattern();
 		newName = newName.replaceAll(TOKEN_ID, normalizeText(show.getShowId()));
 		newName = newName.replaceAll(TOKEN_SEASON, String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
@@ -317,7 +317,7 @@ public class Renamer {
 	}
 
 	private File getPath(String newName) {
-		File dir = dirConfig.getMediaDir();
+		File dir = this.dir.getMediaDirConfig().getMediaDir();
 		StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
 		while (tok.hasMoreTokens()) {
 			dir = new File(dir,tok.nextToken());

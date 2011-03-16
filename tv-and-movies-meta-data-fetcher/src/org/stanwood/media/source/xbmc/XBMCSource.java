@@ -25,7 +25,7 @@ import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.ISource;
@@ -592,9 +592,8 @@ public class XBMCSource extends XMLParser implements ISource {
 	}
 
 	@Override
-	public void setController(Controller controller) throws SourceException {
+	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 		// TODO Auto-generated method stub
 
 	}
-
 }

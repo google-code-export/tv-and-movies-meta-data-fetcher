@@ -37,6 +37,27 @@ public class TestXBMCListCommand extends BaseCLITest {
 	}
 
 	@Test
+	public void testList() throws Exception {
+		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		LogSetupHelper.initLogging(stdout,stderr);
+
+		String args[] = new String[] {"--log_config","INFO","list"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			Assert.assertEquals(0,e.getExitCode());
+		}
+
+		StringBuilder expected = new StringBuilder();
+		Assert.assertEquals(expected.toString(), stderr.toString());
+
+		expected = new StringBuilder();
+		Assert.assertEquals(expected.toString(),stdout.toString());
+	}
+
+	@Test
 	public void testUnkownOption() throws Exception {
 		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
