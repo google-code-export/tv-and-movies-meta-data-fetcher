@@ -29,8 +29,9 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.source.xbmc.XBMCException;
 
 /**
  * This class is a source used to retrieve the best film information it can. It
@@ -53,8 +54,12 @@ public class HybridFilmSource implements ISource {
 	}
 
 	@Override
-	public void setController(Controller controller) throws SourceException {
-		imdbSource =controller.getSource(controller.getDefaultSourceID(Mode.TV_SHOW));
+	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
+		try {
+			imdbSource =dir.getSource(dir.getDefaultSourceID(Mode.FILM));
+		} catch (XBMCException e) {
+			throw new SourceException("Unable to create file source",e);
+		}
 	}
 
 	/**

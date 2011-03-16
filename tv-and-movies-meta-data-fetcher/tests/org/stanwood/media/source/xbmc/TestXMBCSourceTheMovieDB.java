@@ -36,8 +36,8 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("The MovieDB", addon.getName());
 
 		Assert.assertEquals("Team XBMC", addon.getProviderName());
-		Assert.assertEquals("1.2.4", addon.getVersion().toString());
-		Assert.assertEquals("TMDB Movie Scraper",addon.getSummary());
+		Assert.assertEquals("1.2.0", addon.getVersion().toString());
+		Assert.assertEquals("TMDb Movie Scraper",addon.getSummary());
 		Assert.assertEquals("themoviedb.org is a free and open movie database. It's completely user driven by people like you. TMDb is currently used by millions of people every month and with their powerful API, it is also used by many popular media centers like XBMC to retrieve Movie Metadata, Posters and Fanart to enrich the user's experience.",addon.getDescription());
 		Assert.assertFalse(addon.supportsMode(Mode.TV_SHOW));
 		Assert.assertTrue(addon.supportsMode(Mode.FILM));

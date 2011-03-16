@@ -31,7 +31,6 @@ import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
@@ -52,7 +51,7 @@ public class CLIRenamer extends AbstractLauncher {
 
 	private boolean refresh = false;
 	private boolean recursive = false;
-	private MediaDirConfig rootMediaDirConfig = null;
+	private MediaDirectory rootMediaDir = null;
 
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
@@ -125,7 +124,7 @@ public class CLIRenamer extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		Renamer renamer = new Renamer(getController(),rootMediaDirConfig,VALID_EXTS,refresh,recursive);
+		Renamer renamer = new Renamer(getController(),rootMediaDir,VALID_EXTS,refresh,recursive);
 		try {
 			renamer.tidyShowNames();
 			return true;
@@ -149,13 +148,14 @@ public class CLIRenamer extends AbstractLauncher {
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
 		refresh = false;
-		rootMediaDirConfig = null;
+		rootMediaDir = null;
 
 		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory() && dir.canWrite()) {
 				try {
-					rootMediaDirConfig = getController().init(dir);
+					getController().init();
+					rootMediaDir = getController().getMediaDirectory(dir);
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
@@ -164,7 +164,7 @@ public class CLIRenamer extends AbstractLauncher {
 				fatal("Media directory must be a writable directory");
 				return false;
 			}
-			if (rootMediaDirConfig==null || !rootMediaDirConfig.getMediaDir().exists()) {
+			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
 				fatal("Media directory '" + dir +"' does not exist.");
 				return false;
 			}

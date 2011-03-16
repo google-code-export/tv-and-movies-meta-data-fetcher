@@ -193,14 +193,12 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				else {
 					ISource source = c.newInstance();
-					source.setController(controller);
 					if (sourceConfig.getParams() != null) {
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
 							setParamOnSource( source, key, value);
 
 						}
-						source.setController(controller);
 					}
 					sources.add(source);
 				}

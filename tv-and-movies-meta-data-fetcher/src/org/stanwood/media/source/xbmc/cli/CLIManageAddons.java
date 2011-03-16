@@ -34,19 +34,20 @@ public class CLIManageAddons extends AbstractLauncher {
 		super("xbmc-addons", OPTIONS, exitHandler,stdout,stderr);
 
 		subCommands = new ArrayList<AbstractSubCLICommand>();
-		subCommands.add(new ListCommand(this,exitHandler,stdout,stderr));
-		subCommands.add(new UpdateCommand(this,exitHandler,stdout,stderr));
-	}
-
-	@Override
-	protected boolean run() {
-		subCommand.init(stdout,stderr,new IExitHandler() {
+		IExitHandler subExitHandler = new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
 				subExitCode = exitCode;
 				doExit(subExitCode);
 			}
-		});
+		};
+		subCommands.add(new ListCommand(this,subExitHandler,stdout,stderr));
+		subCommands.add(new UpdateCommand(this,subExitHandler,stdout,stderr));
+	}
+
+	@Override
+	protected boolean run() {
+		subCommand.init(getController());
 		subCommand.launch(subCommandArgs.toArray(new String[subCommandArgs.size()]));
 
 		return true;
