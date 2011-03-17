@@ -13,6 +13,10 @@ import org.stanwood.media.cli.ICLICommand;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
+import org.stanwood.media.source.xbmc.XBMCUpdaterException;
+import org.stanwood.media.source.xbmc.updater.AddonDetails;
+import org.stanwood.media.util.TextTable;
+import org.stanwood.media.util.Version;
 
 public class ListCommand extends AbstractSubCLICommand {
 
@@ -34,25 +38,45 @@ public class ListCommand extends AbstractSubCLICommand {
 
 	@Override
 	public void init(Controller controller) {
-//		try {
-//		controller.init();
-//	}
-//	catch (ConfigException e) {
-//		log.error("Unable to setup the XBMC addon manager",e);
-//		return false;
-//	}
-
 		xbmcMgr = controller.getXBMCAddonManager();
 	}
 
 	@Override
 	protected boolean run() {
-		xbmcMgr.listAddons();
-		return false;
+		try {
+			PrintStream stdout = getStdout();
+			stdout.println("XBMC Addon list:");
+			TextTable table = new TextTable(new String[] {"ID","Status","Installed Version","Avaliable Version"});
+			for (AddonDetails ad : xbmcMgr.getUpdater().listAddons()) {
+				String installedVer = displayVersion(ad.getInstalledVersion());
+				String avaliableVer = displayVersion(ad.getAvaliableVersion());
+				table.addRow(new String[]{ad.getId(),ad.getStatus().getDisplayName(),installedVer,avaliableVer});
+			}
+			StringBuilder buffer = new StringBuilder();
+			table.printTable(buffer);
+			stdout.print(buffer.toString());
+		} catch (XBMCUpdaterException e) {
+			fatal(e);
+			return false;
+		}
+		return true;
+	}
+
+	private String displayVersion(Version version) {
+		if (version==null) {
+			return "";
+		}
+
+		return version.toString();
 	}
 
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
+		String[] args2 = cmd.getArgs();
+		if (args2.length>0) {
+			fatal("Unkown sub-command argument '" + args2[0]+"'");
+			return false;
+		}
 
 		return true;
 	}

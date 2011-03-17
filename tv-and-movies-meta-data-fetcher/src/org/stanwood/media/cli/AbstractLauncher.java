@@ -72,7 +72,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	protected boolean processOptionsInternal(String args[],CommandLine cmd) {
 		String logConfig = null;
 		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
-			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
+			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION,"INFO");
 		}
 		if (!initLogging(logConfig)) {
 			return false;

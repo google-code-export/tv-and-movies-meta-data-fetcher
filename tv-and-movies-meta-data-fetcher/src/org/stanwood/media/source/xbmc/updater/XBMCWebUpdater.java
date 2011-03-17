@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +73,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				for (AddonDetails uninstalledAddon : uninstalledAddons) {
 					AddonDetails installedAddon = findAddon(addons, uninstalledAddon.getId());
 					if (installedAddon==null){
+						uninstalledAddon.setInstalledVersion(null);
 						addons.add(uninstalledAddon);
 					}
 					else {
@@ -81,6 +84,12 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					}
 				}
 
+				Collections.sort(addons,new Comparator<AddonDetails>() {
+					@Override
+					public int compare(AddonDetails o1, AddonDetails o2) {
+						return o1.getId().compareTo(o2.getId());
+					}
+				});
 				return addons;
 			}
 			finally {

@@ -104,7 +104,14 @@ public class CLIManageAddons extends AbstractLauncher {
 	}
 
 	@Override
-	protected void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
+	protected void handleBadSubCommandOption(Options options,String arg) {
+		stderr.println("Unrecognized subcommand option: " + arg);
+		subCommand.displayHelp(subCommand.getOptions(),stdout,stderr);
+		doExit(1);
+	}
+
+	@Override
+	public void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		printUsage(options,stdout,stderr);
 		stdout.println("Global options:");
 		printOptions(options,stdout,stderr);

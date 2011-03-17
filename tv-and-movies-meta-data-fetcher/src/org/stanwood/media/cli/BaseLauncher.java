@@ -11,6 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.UnrecognizedOptionException;
 import org.stanwood.media.renamer.Controller;
 
 public abstract class BaseLauncher implements ICLICommand {
@@ -41,8 +42,27 @@ public abstract class BaseLauncher implements ICLICommand {
 
 	}
 
+	public Options getOptions() {
+		return options;
+	}
+
 	protected void addOption(Option o) {
 		this.options.addOption(o);
+	}
+
+	private Option getOption(String name) {
+		if (name.startsWith("--")) {
+			name = name.substring(2);
+		}
+		else if (name.startsWith("-")) {
+			name = name.substring(1);
+		}
+		for (Option o : (Collection<Option>)options.getOptions()) {
+			if (o.getLongOpt().equals(name) || o.getOpt().equals(name)) {
+				return o;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -50,15 +70,35 @@ public abstract class BaseLauncher implements ICLICommand {
 	 * @param args The args passed from the CLI
 	 */
 	public void launch(String args[]) {
+		int argNum = 0;
+		String subCommand = null;
+		for (int i=0;i<args.length;i++) {
+			String arg = args[i];
+			if (arg.startsWith("-")) {
+				Option o = getOption(arg);
+				if (o!=null) {
+					if (o.hasArg()) {
+						i++;
+					}
+				}
+				else {
+					handleBadOption(subCommand,arg);
+				}
+				// It's a option
+			}
+			else {
+				if (argNum == 0) {
+					subCommand = checkSubCommand(arg);
+				}
+				argNum++;
+			}
+		}
+
 
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd;
 		try {
-			cmd = parser.parse(options, args);
-			String subCommand = null;
-			if (cmd.getArgs().length>0) {
-				subCommand = checkSubCommand(cmd.getArgs()[0]);
-			}
+			cmd = parser.parse(options, args,false);
 
 			boolean displayHelp = shouldDisplayHelp(args, cmd, subCommand);
 			if (displayHelp) {
@@ -81,10 +121,27 @@ public abstract class BaseLauncher implements ICLICommand {
 				doExit(1);
 				return;
 			}
+		} catch (UnrecognizedOptionException e1) {
+			fatal(e1.getMessage());
+			return;
 		} catch (ParseException e1) {
 			fatal(e1.getMessage());
 			return;
 		}
+	}
+
+	private void handleBadOption(String subCommand, String arg) {
+		if (subCommand==null) {
+			fatal("Unrecognized option: " + arg);
+		}
+		else {
+			handleBadSubCommandOption(options,arg);
+		}
+		return;
+	}
+
+	protected void handleBadSubCommandOption(Options options,String arg) {
+		fatal("Unrecognized subcommand option: " + arg);
 	}
 
 	protected boolean shouldDisplayHelp(String[] args, CommandLine cmd,
@@ -162,7 +219,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		return name;
 	}
 
-	protected void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
+	public void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		printUsage(options,stdout,stderr);
 		printOptions(options,stdout,stderr);
 	}
@@ -221,4 +278,12 @@ public abstract class BaseLauncher implements ICLICommand {
 	 * @return True if executed without problems, otherwise false
 	 */
 	protected abstract boolean run();
+
+	protected PrintStream getStdout() {
+		return stdout;
+	}
+
+	protected PrintStream getStderr() {
+		return stderr;
+	}
 }
