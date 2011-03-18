@@ -1,5 +1,6 @@
 package org.stanwood.media.source.xbmc.cli;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.junit.Assert;
@@ -37,11 +38,48 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 
+	@Override
+	public void reset() throws Exception {
+		super.reset();
+		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+	}
+
 	@Test
 	public void testList() throws Exception {
 		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
+		// Check inital list of plugins
+		assertPluginList("expectedAddonList.txt");
+
+		// Update a plugin that will cause others to be updated
+		reset();
+		String[] args = new String[] {"--log_config","INFO","update","metadata.common.hdtrailers.net"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			if (e.getExitCode()!=0) {
+				System.out.println(stdout);
+				System.err.println(stderr);
+			}
+			Assert.assertEquals(0,e.getExitCode());
+		}
+
+		StringBuilder expected = new StringBuilder();
+		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.6\n");
+		expected.append("Installed plugin 'metadata.common.hdtrailers.net' version=1.0.6\n");
+		Assert.assertEquals(expected.toString(), stdout.toString());
+		Assert.assertEquals("",stderr.toString());
+
+		// Assert that the plugins were updated
+		reset();
+		assertPluginList("expectedAddonList.txt");
+	}
+
+	protected void assertPluginList(String filename) throws IOException {
+		// Get a initial list of plugins
 		String args[] = new String[] {"--log_config","INFO","list"};
 		try {
 			CLIManageAddons.main(args);
@@ -51,7 +89,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 			Assert.assertEquals(0,e.getExitCode());
 		}
 
-		String expected = FileHelper.readFileContents(TestXBMCListCommand.class.getResourceAsStream("expectedAddonList.txt"));
+		String expected = FileHelper.readFileContents(TestXBMCListCommand.class.getResourceAsStream(filename));
 		Assert.assertEquals(expected, stdout.toString());
 
 		Assert.assertEquals("",stderr.toString());

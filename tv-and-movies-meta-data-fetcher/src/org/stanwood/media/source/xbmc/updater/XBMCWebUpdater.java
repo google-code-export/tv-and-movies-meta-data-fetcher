@@ -9,11 +9,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,14 +63,14 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<AddonDetails> listAddons() throws XBMCUpdaterException {
+	public Set<AddonDetails> listAddons(IConsole console) throws XBMCUpdaterException {
 		try {
 			File newAddon = null;
 			try {
 				newAddon = downloadLatestAddonXML();
 				Document newAddonDoc = XMLParser.strToDom(newAddon);
 				List<AddonDetails>uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
-				List<AddonDetails>addons = getInstalledAddons(addonsDir);
+				SortedSet<AddonDetails>addons = getInstalledAddons(addonsDir);
 				for (AddonDetails uninstalledAddon : uninstalledAddons) {
 					AddonDetails installedAddon = findAddon(addons, uninstalledAddon.getId());
 					if (installedAddon==null){
@@ -84,12 +85,6 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					}
 				}
 
-				Collections.sort(addons,new Comparator<AddonDetails>() {
-					@Override
-					public int compare(AddonDetails o1, AddonDetails o2) {
-						return o1.getId().compareTo(o2.getId());
-					}
-				});
 				return addons;
 			}
 			finally {
@@ -109,12 +104,12 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	@Override
-	public int installAddons(List<String>addonIds) throws XBMCException {
+	public int installAddons(IConsole console,List<String>addonIds) throws XBMCException {
 		try {
 			File newAddon = null;
 			try {
 				newAddon = downloadLatestAddonXML();
-				List<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
+				Set<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
 				Document newAddonDoc = XMLParser.strToDom(newAddon);
 
 				Set<String>requiredPlugins = new HashSet<String>();
@@ -124,7 +119,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					findUninstalledRequiredPlugins(pluginId,version, newAddonDoc, requiredPlugins,installedPlugins);
 				}
 
-				return installPlugins(requiredPlugins,newAddon);
+				return installPlugins(console,requiredPlugins,newAddon);
 			}
 			finally {
 				if (newAddon!=null) {
@@ -142,7 +137,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	}
 
-	public void findUninstalledRequiredPlugins(String pluginId,Version version,Document newAddonDoc,Set<String>requiredPlugins,List<AddonDetails>installedAddons) throws XMLParserException {
+	public void findUninstalledRequiredPlugins(String pluginId,Version version,Document newAddonDoc,Set<String>requiredPlugins,Set<AddonDetails>installedAddons) throws XMLParserException {
 		AddonDetails installedAddon = findAddon(installedAddons, pluginId);
 		if (installedAddon==null || installedAddon.getInstalledVersion().compareTo(version) < 0) {
 			requiredPlugins.add(pluginId);
@@ -155,8 +150,8 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	@Override
-	public int uninstallAddons(List<String>addonIds) throws XBMCUpdaterException {
-		List<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
+	public int uninstallAddons(IConsole console,List<String>addonIds) throws XBMCUpdaterException {
+		Set<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
 
 		Set<String>toUnistall = new HashSet<String>();
 		for (String pluginId : addonIds) {
@@ -164,13 +159,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 
 		for (String id : toUnistall) {
-			removeAddon(id);
+			removeAddon(console,id);
 		}
 		return toUnistall.size();
 	}
 
-	private void removeAddon(String id) throws XBMCUpdaterException {
-		log.info("Uninstalling addon " + id);
+	private void removeAddon(IConsole console,String id) throws XBMCUpdaterException {
+		console.info("Uninstalling addon " + id);
 		File addonDir = new File(addonsDir,id);
 		if (addonDir.isDirectory()) {
 			try {
@@ -185,7 +180,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	}
 
-	private void findDependantAddons(String pluginId,List<AddonDetails> installedPlugins, Set<String> toUnistall) {
+	private void findDependantAddons(String pluginId,Set<AddonDetails> installedPlugins, Set<String> toUnistall) {
 		toUnistall.add(pluginId);
 
 		for (AddonDetails ad : installedPlugins) {
@@ -197,7 +192,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-	private AddonDetails findAddon(List<AddonDetails> addons,String id) {
+	private AddonDetails findAddon(Set<AddonDetails> addons,String id) {
 		for (AddonDetails a : addons) {
 			if (a.getId().equals(id)) {
 				return a;
@@ -235,11 +230,11 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return ids;
 	}
 
-	private int installPlugins(Set<String> plugins,File newAddon) throws XBMCException {
+	private int installPlugins(IConsole console,Set<String> plugins,File newAddon) throws XBMCException {
 		mgr.unregisterAddons();
 		try {
 			File oldAddon = new File(addonsDir,"addon.xml");
-			return updatePlugins(oldAddon, newAddon, plugins);
+			return updatePlugins(console,oldAddon, newAddon, plugins);
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
@@ -248,17 +243,14 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-
 	@Override
-	public int update() throws XBMCException {
+	public int update(IConsole console,Set<String> pluginList) throws XBMCException {
 		mgr.unregisterAddons();
 		try {
 			File oldAddon = new File(addonsDir,"addon.xml");
 			File newAddon = downloadLatestAddonXML();
 
-			Set<String> pluginList = getListOfPluginsToUpdate(addonsDir,newAddon, oldAddon);
-
-			return updatePlugins(oldAddon, newAddon, pluginList);
+			return updatePlugins(console,oldAddon, newAddon, pluginList);
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
@@ -267,7 +259,25 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-	protected int updatePlugins(File oldAddon, File newAddon,
+	@Override
+	public int update(IConsole console) throws XBMCException {
+		mgr.unregisterAddons();
+		try {
+			File oldAddon = new File(addonsDir,"addon.xml");
+			File newAddon = downloadLatestAddonXML();
+
+			Set<String> pluginList = getListOfPluginsToUpdate(console,addonsDir,newAddon, oldAddon);
+
+			return updatePlugins(console,oldAddon, newAddon, pluginList);
+		}
+		catch (IOException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+		} catch (XMLParserException e) {
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+		}
+	}
+
+	protected int updatePlugins(IConsole console,File oldAddon, File newAddon,
 			Set<String> plugins) throws XMLParserException, IOException,
 			XBMCUpdaterException, XBMCException {
 		Document newAddonDoc = XMLParser.strToDom(newAddon);
@@ -282,7 +292,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 
 		List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
-		updatePlugins(uninstalledAddons,newAddonDoc,oldAddonDoc,plugins,addonsDir,newPluginsDir);
+		updatePlugins(console,uninstalledAddons,newAddonDoc,oldAddonDoc,plugins,addonsDir,newPluginsDir);
 
 		int count = 0;
 		for (File f : newPluginsDir.listFiles()) {
@@ -329,14 +339,14 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return newAddon;
 	}
 
-	private Set<String> getListOfPluginsToUpdate(File addonsDir,File newAddon, File oldAddon) throws IOException, XBMCUpdaterException {
+	private Set<String> getListOfPluginsToUpdate(IConsole console,File addonsDir,File newAddon, File oldAddon) throws IOException, XBMCUpdaterException {
 		Set<String>pluginList;
 		if (!oldAddon.exists()) {
 			pluginList = getDefaultPlugins();
 		}
 		else {
 			if (checkFilesSame(oldAddon,newAddon)) {
-				log.info("No XBMC Scraper updates found.");
+				console.info("No XBMC Scraper updates found.");
 				pluginList = new HashSet<String>();
 				return pluginList;
 			}
@@ -363,7 +373,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return expectedMD5;
 	}
 
-	private void updatePlugins(List<AddonDetails> uninstalledAddons,Document newAddonDoc,Document oldAddonDoc,
+	private void updatePlugins(IConsole console,List<AddonDetails> uninstalledAddons,Document newAddonDoc,Document oldAddonDoc,
 			Set<String> pluginList, File addonsDir, File newPluginsDir) throws XMLParserException, XBMCUpdaterException {
 		for (String plugin : pluginList) {
 			Set<String> requiredPlugins = null;
@@ -375,13 +385,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
 					}
 					if (oldVersion == null || addonDetails.getAvaliableVersion().compareTo(oldVersion)>0) {
-						downloadNewPlugin(plugin,newPluginsDir,addonDetails.getAvaliableVersion());
+						downloadNewPlugin(console,plugin,newPluginsDir,addonDetails.getAvaliableVersion());
 					}
 				}
 			}
 
 			if (requiredPlugins!=null) {
-				updatePlugins(uninstalledAddons,newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
+				updatePlugins(console,uninstalledAddons,newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
 			}
 		}
 	}
@@ -398,7 +408,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return requiredPlugins;
 	}
 
-	private void downloadNewPlugin(String plugin,File newPluginsDir,Version version) throws XBMCUpdaterException {
+	private void downloadNewPlugin(IConsole console,String plugin,File newPluginsDir,Version version) throws XBMCUpdaterException {
 		try {
 			if (new File(newPluginsDir,plugin).exists()) {
 				return ;
@@ -422,14 +432,14 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					fis.close();
 				}
 			}
-			log.info("Downloaded new plugin '"+plugin+"' version="+version.toString());
+			console.info("Downloaded new plugin '"+plugin+"' version="+version.toString());
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to download new pluign : " + plugin,e);
 		}
 	}
 
-	private List<AddonDetails> getInstalledAddons(File addonsDir) throws XBMCUpdaterException {
+	private SortedSet<AddonDetails> getInstalledAddons(File addonsDir) throws XBMCUpdaterException {
 		File[] dirs = addonsDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
@@ -437,7 +447,12 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 		});
 
-		List<AddonDetails>plugins = new ArrayList<AddonDetails>();
+		SortedSet<AddonDetails>plugins = new TreeSet<AddonDetails>(new Comparator<AddonDetails>() {
+			@Override
+			public int compare(AddonDetails o1, AddonDetails o2) {
+				return o1.getId().compareTo(o2.getId());
+			}
+		});
 		for (File dir : dirs) {
 			File pluginXml = new File(dir,"addon.xml");
 			if (pluginXml.exists()) {
