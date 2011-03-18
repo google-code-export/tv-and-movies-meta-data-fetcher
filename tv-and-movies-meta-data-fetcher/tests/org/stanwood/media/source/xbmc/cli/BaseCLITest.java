@@ -40,6 +40,12 @@ public class BaseCLITest extends XBMCAddonTestBase {
 		CLIManageAddons.stderr = new PrintStream(stderr);
 	}
 
+	public void reset() throws Exception{
+		tearDown();
+		setUp();
+	}
+
+
 	/**
 	 * Used to tidy up the controller before closing the test
 	 * @throws Exception Thrown if their are any problems

@@ -2,12 +2,14 @@ package org.stanwood.media.source.xbmc.updater;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
@@ -21,6 +23,24 @@ import org.stanwood.media.util.FileHelper;
  */
 public class TestUpdater extends XBMCAddonTestBase {
 
+	private static IConsole console;
+
+	@BeforeClass
+	public static void createConsole() {
+		console = new IConsole() {
+			@Override
+			public void error(String error) {
+				System.err.println(error);
+			}
+
+			@Override
+			public void info(String info) {
+				System.err.println(info);
+			}
+
+		};
+	}
+
 	/**
 	 * This test will check that updating the addons works
 	 * @throws Exception Thrown if their is a problem
@@ -31,10 +51,10 @@ public class TestUpdater extends XBMCAddonTestBase {
 		File addonsDir = FileHelper.createTmpDir("addons");
 		try {
 			XBMCAddonManager mgr = createAddonManager(addonsDir,Locale.ENGLISH);
-			int count = mgr.getUpdater().update();
+			int count = mgr.getUpdater().update(console);
 			Assert.assertEquals("Check number of updated plugins",5,count);
 
-			count = mgr.getUpdater().update();
+			count = mgr.getUpdater().update(console);
 			Assert.assertEquals("Check number of updated plugins",0,count);
 
 			assertFiles(addonsDir);
@@ -71,24 +91,24 @@ public class TestUpdater extends XBMCAddonTestBase {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		XBMCAddonManager mgr = createAddonManager(Locale.ENGLISH);
-		List<AddonDetails> addonDetails = mgr.getUpdater().listAddons();
+		Set<AddonDetails> addonDetails = mgr.getUpdater().listAddons(console);
 		assertPluginStatus(addonDetails,30,208,6);
 
 		List<String>ids = new ArrayList<String>();
 		ids.add("metadata.themoviedb.org");
-		Assert.assertEquals(1,mgr.getUpdater().uninstallAddons(ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(),30,209,5);
+		Assert.assertEquals(1,mgr.getUpdater().uninstallAddons(console,ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(console),30,209,5);
 
-		Assert.assertEquals(4,mgr.getUpdater().installAddons(ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(),32,208,4);
+		Assert.assertEquals(4,mgr.getUpdater().installAddons(console,ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(console),32,208,4);
 
 		ids = new ArrayList<String>();
 		ids.add("metadata.common.hdtrailers.net");
-		Assert.assertEquals(2,mgr.getUpdater().uninstallAddons(ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(),30,210,4);
+		Assert.assertEquals(2,mgr.getUpdater().uninstallAddons(console,ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(console),30,210,4);
 	}
 
-	protected void assertPluginStatus(List<AddonDetails> addonDetails,int expectedInstalled,int expectedUninstalled,int expectedUpdateable) {
+	protected void assertPluginStatus(Collection<AddonDetails> addonDetails,int expectedInstalled,int expectedUninstalled,int expectedUpdateable) {
 		Assert.assertEquals(expectedInstalled+expectedUninstalled+expectedUpdateable,addonDetails.size());
 		int installed = 0;
 		int uninstalled = 0;
