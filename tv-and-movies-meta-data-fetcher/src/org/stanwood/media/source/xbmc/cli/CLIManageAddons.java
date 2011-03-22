@@ -12,18 +12,19 @@ import org.stanwood.media.cli.AbstractSubCLICommand;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 
+/**
+ * The main XBMC addon manager command line command
+ */
 public class CLIManageAddons extends AbstractLauncher {
 
 	private static IExitHandler exitHandler = null;
 	private static final List<Option> OPTIONS;
-	public static PrintStream stdout = System.out;
-	public static PrintStream stderr = System.err;
+	private static PrintStream stdout = System.out;
+	private static PrintStream stderr = System.err;
 	private List<AbstractSubCLICommand> subCommands;
 
 	static {
 		 OPTIONS = new ArrayList<Option>();
-
-
 	}
 
 	private AbstractSubCLICommand subCommand;
@@ -43,6 +44,8 @@ public class CLIManageAddons extends AbstractLauncher {
 		};
 		subCommands.add(new ListCommand(this,subExitHandler,stdout,stderr));
 		subCommands.add(new UpdateCommand(this,subExitHandler,stdout,stderr));
+		subCommands.add(new InstallCommand(this,subExitHandler,stdout,stderr));
+		subCommands.add(new RemoveCommand(this,subExitHandler,stdout,stderr));
 	}
 
 	@Override
@@ -110,6 +113,7 @@ public class CLIManageAddons extends AbstractLauncher {
 		doExit(1);
 	}
 
+	/**@{inheritDoc} */
 	@Override
 	public void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		printUsage(options,stdout,stderr);
@@ -140,6 +144,10 @@ public class CLIManageAddons extends AbstractLauncher {
 		stdout.println("");
 	}
 
+	/**
+	 * The main entry point into this command
+	 * @param args The arguments from the command line
+	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
 			setExitHandler(new DefaultExitHandler());
@@ -152,5 +160,22 @@ public class CLIManageAddons extends AbstractLauncher {
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}
+
+	/**
+	 * Set the stdout that this command should use. Mainly used by tests
+	 * @param stream The stdout stream
+	 */
+	public static void setStdout(PrintStream stream) {
+		stdout = stream;
+	}
+
+	/**
+	 * Set the stderr that this command should use. Mainly used by tests
+	 * @param stream The stderr stream
+	 */
+	public static void setStderr(PrintStream stream) {
+		stderr = stream;
+	}
+
 
 }

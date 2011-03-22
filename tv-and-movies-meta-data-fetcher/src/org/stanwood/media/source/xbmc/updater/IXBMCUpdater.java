@@ -1,6 +1,5 @@
 package org.stanwood.media.source.xbmc.updater;
 
-import java.util.List;
 import java.util.Set;
 
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
@@ -26,9 +25,9 @@ public interface IXBMCUpdater {
 
 	public void setAddonManager(XBMCAddonManager xbmcAddonManager);
 
-	public int installAddons(IConsole console,List<String>addonIds) throws XBMCException;
+	public int installAddons(IConsole console,Set<String>addonIds) throws XBMCException;
 
-	public int uninstallAddons(IConsole console,List<String>addonIds) throws XBMCUpdaterException;
+	public int uninstallAddons(IConsole console,Set<String>addonIds) throws XBMCUpdaterException;
 
 
 }

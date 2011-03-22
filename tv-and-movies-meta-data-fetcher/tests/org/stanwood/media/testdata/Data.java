@@ -237,7 +237,11 @@ public class Data {
 		return result;
 	}
 
-
+	/**
+	 * Used to create a actor list from an array
+	 * @param values The actors array
+	 * @return The actors list
+	 */
 	public static List<Actor> createActorsList(Actor values[]) {
 		List<Actor> list = new ArrayList<Actor>() ;
 		for (Actor s : values) {
@@ -246,6 +250,11 @@ public class Data {
 		return list;
 	}
 
+	/**
+	 * Used to create a list of strings from an array
+	 * @param values The array
+	 * @return The list
+	 */
 	public static List<String> createStringList(String values[]) {
 		List<String> list = new ArrayList<String>() ;
 		for (String s : values) {

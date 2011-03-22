@@ -14,6 +14,9 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.stanwood.media.renamer.Controller;
 
+/**
+ * This is the base class of all CLI command launchers
+ */
 public abstract class BaseLauncher implements ICLICommand {
 
 	private final static String HELP_OPTION_NAME = "h";
@@ -26,6 +29,13 @@ public abstract class BaseLauncher implements ICLICommand {
 
 	private Option helpOption;
 
+	/**
+	 * The constructor
+	 * @param name The name of the command
+	 * @param stdout The standard output stream
+	 * @param stderr The standard error stream
+	 * @param exitHandler The exit handler
+	 */
 	public BaseLauncher(String name,PrintStream stdout, PrintStream stderr, IExitHandler exitHandler) {
 		this.stdout = stdout;
 		this.stderr = stderr;
@@ -38,10 +48,18 @@ public abstract class BaseLauncher implements ICLICommand {
 		this.options.addOption(helpOption);
 	}
 
+	/**
+	 * Called to setup stuff that depends on the controller
+	 * @param controller The controller
+	 */
 	public void init(Controller controller) {
 
 	}
 
+	/**
+	 * Used to get the options of the command
+	 * @return The options
+	 */
 	public Options getOptions() {
 		return options;
 	}
@@ -50,6 +68,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		this.options.addOption(o);
 	}
 
+	@SuppressWarnings("unchecked")
 	private Option getOption(String name) {
 		if (name.startsWith("--")) {
 			name = name.substring(2);
@@ -219,6 +238,12 @@ public abstract class BaseLauncher implements ICLICommand {
 		return name;
 	}
 
+	/**
+	 * Called to display the commands help
+	 * @param options The commands options
+	 * @param stdout The standard output stream
+	 * @param stderr The standard error stream
+	 */
 	public void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		printUsage(options,stdout,stderr);
 		printOptions(options,stdout,stderr);

@@ -54,6 +54,9 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		expected.append("Commands:"+FileHelper.LS);
 		expected.append("  list                          lists the installed XBMC addons"+FileHelper.LS);
 		expected.append("  update                        Update the installed XBMC addons to the latest versions"+FileHelper.LS);
+		expected.append("  install                       Install a new XBMC addon"+FileHelper.LS);
+	    expected.append("  remove                        Remove a installed XBMC addons"+FileHelper.LS);
+
 	}
 
 	/**

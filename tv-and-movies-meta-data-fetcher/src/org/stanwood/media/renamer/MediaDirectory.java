@@ -390,7 +390,7 @@ public class MediaDirectory {
 	 * Used to get the default source ID
 	 * @param mode The mode that were looking for a source id in
 	 * @return The default source ID for a given mode
-	 * @throws SourceException Thrown if their is a problem getting the default source ID
+	 * @throws XBMCException Thrown if their is a problem getting the default source ID
 	 */
 	public String getDefaultSourceID(Mode mode) throws XBMCException {
 		return controller.getXBMCAddonManager().getDefaultSourceID(mode);
