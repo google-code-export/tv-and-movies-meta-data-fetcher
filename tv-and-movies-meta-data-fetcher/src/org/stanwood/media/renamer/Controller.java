@@ -42,7 +42,11 @@ public class Controller {
 
 	private static XBMCAddonManager xbmcMgr;
 
-	public Controller(ConfigReader config) throws ConfigException {
+	/**
+	 * The constructor
+	 * @param config The parsed configuration
+	 */
+	public Controller(ConfigReader config) {
 		this.configReader = config;
 	}
 
@@ -57,10 +61,18 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Used to set the addon manager. Mostly used by tests
+	 * @param xbmcAddonManager The addon manager
+	 */
 	public static void setXBMCAddonManager(XBMCAddonManager xbmcAddonManager) {
 		xbmcMgr = xbmcAddonManager;
 	}
 
+	/**
+	 * Used to get the addon manager
+	 * @return The addon manager
+	 */
 	public XBMCAddonManager getXBMCAddonManager() {
 		return xbmcMgr;
 	}

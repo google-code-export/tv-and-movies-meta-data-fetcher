@@ -41,7 +41,9 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	 * Create a instance of the class
 	 * @param name The name of the executable
 	 * @param options The options that are to be added to the CLI
-	 * @param exitHandler The exit handler used when exiting
+	 * @param stdout The standard output stream
+	 * @param stderr The standard error stream
+	 * @param exitHandler The exit handler
 	 */
 	public AbstractLauncher(String name,List<Option> options,IExitHandler exitHandler,PrintStream stdout,PrintStream stderr) {
 		super(name,stdout,stderr,exitHandler);

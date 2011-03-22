@@ -12,17 +12,31 @@ import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 
+/** A base class for all XBMC releated commands */
 public abstract class AbstractXBMCSubCommand extends AbstractSubCLICommand {
 
 	private IXBMCUpdater updater;
 	private IConsole console;
 
+	/**
+	 * The constructor
+	 * @param rootCommand The parent command
+	 * @param name The name of the sub command
+	 * @param description The description of the sub command
+	 * @param options The sub command options
+	 * @param stdout The standard output stream
+	 * @param stderr The standard error stream
+	 * @param exitHandler The exit handler
+	 */
 	public AbstractXBMCSubCommand(ICLICommand rootCommand, String name,
 			String description, List<Option> options, IExitHandler exitHandler,
 			PrintStream stdout, PrintStream stderr) {
 		super(rootCommand, name, description, options, exitHandler, stdout,stderr);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void init(Controller controller) {
 		updater = controller.getXBMCAddonManager().getUpdater();

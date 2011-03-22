@@ -1,9 +1,9 @@
 package org.stanwood.media.source.xbmc.updater;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -94,7 +94,7 @@ public class TestUpdater extends XBMCAddonTestBase {
 		Set<AddonDetails> addonDetails = mgr.getUpdater().listAddons(console);
 		assertPluginStatus(addonDetails,30,208,6);
 
-		List<String>ids = new ArrayList<String>();
+		Set<String>ids = new HashSet<String>();
 		ids.add("metadata.themoviedb.org");
 		Assert.assertEquals(1,mgr.getUpdater().uninstallAddons(console,ids));
 		assertPluginStatus( mgr.getUpdater().listAddons(console),30,209,5);
@@ -102,7 +102,7 @@ public class TestUpdater extends XBMCAddonTestBase {
 		Assert.assertEquals(4,mgr.getUpdater().installAddons(console,ids));
 		assertPluginStatus( mgr.getUpdater().listAddons(console),32,208,4);
 
-		ids = new ArrayList<String>();
+		ids = new HashSet<String>();
 		ids.add("metadata.common.hdtrailers.net");
 		Assert.assertEquals(2,mgr.getUpdater().uninstallAddons(console,ids));
 		assertPluginStatus( mgr.getUpdater().listAddons(console),30,210,4);

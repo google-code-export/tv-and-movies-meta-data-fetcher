@@ -104,7 +104,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	@Override
-	public int installAddons(IConsole console,List<String>addonIds) throws XBMCException {
+	public int installAddons(IConsole console,Set<String>addonIds) throws XBMCException {
 		try {
 			File newAddon = null;
 			try {
@@ -150,7 +150,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	@Override
-	public int uninstallAddons(IConsole console,List<String>addonIds) throws XBMCUpdaterException {
+	public int uninstallAddons(IConsole console,Set<String>addonIds) throws XBMCUpdaterException {
 		Set<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
 
 		Set<String>toUnistall = new HashSet<String>();
@@ -184,8 +184,8 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		toUnistall.add(pluginId);
 
 		for (AddonDetails ad : installedPlugins) {
-			if (ad.getRequiredPlugins()!=null) {
-				if (ad.getRequiredPlugins().contains(pluginId)) {
+			if (ad.getRequiredAddons()!=null) {
+				if (ad.getRequiredAddons().contains(pluginId)) {
 					findDependantAddons(ad.getId(),installedPlugins,toUnistall);
 				}
 			}
@@ -215,7 +215,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 			List<AddonDetails> requiredPlugins = getRequiredPlugins(newAddonDoc, id);
 			AddonDetails ad = new AddonDetails(id, newVersion,newVersion, status);
-			ad.setRequiredPlugins(getAddonDetailsIds(requiredPlugins));
+			ad.setRequiredAddons(getAddonDetailsIds(requiredPlugins));
 			addonDetails.add(ad);
 		}
 
@@ -302,6 +302,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					FileHelper.delete(oldPluginDir);
 				}
 				FileHelper.move(f, oldPluginDir);
+				console.info("Installed plugin '"+f.getName()+"'");
 				count++;
 			}
 		}
@@ -379,7 +380,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			Set<String> requiredPlugins = null;
 			for (AddonDetails addonDetails : uninstalledAddons) {
 				if (addonDetails.getId().equals(plugin)) {
-					requiredPlugins = addonDetails.getRequiredPlugins();
+					requiredPlugins = addonDetails.getRequiredAddons();
 					Version oldVersion = null;
 					if (oldAddonDoc!=null) {
 						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
@@ -432,7 +433,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					fis.close();
 				}
 			}
-			console.info("Downloaded new plugin '"+plugin+"' version="+version.toString());
+			console.info("Downloaded plugin '"+plugin+"' version="+version.toString());
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to download new pluign : " + plugin,e);
@@ -465,7 +466,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 						required.add(((Element)node).getAttribute("addon"));
 //						((Element)node).getAttribute("version");
 					}
-					ad.setRequiredPlugins(required);
+					ad.setRequiredAddons(required);
 					plugins.add(ad);
 				}
 				catch (XMLParserException e) {

@@ -10,6 +10,7 @@ import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.util.FileHelper;
 
+/** A base class for all launcher command line tests */
 public class BaseCLITest extends XBMCAddonTestBase {
 
 	protected static int exitCode;
@@ -36,11 +37,15 @@ public class BaseCLITest extends XBMCAddonTestBase {
 
 		stdout = new ByteArrayOutputStream();
 		stderr = new ByteArrayOutputStream();
-		CLIManageAddons.stdout = new PrintStream(stdout);
-		CLIManageAddons.stderr = new PrintStream(stderr);
+		CLIManageAddons.setStdout(new PrintStream(stdout));
+		CLIManageAddons.setStderr(new PrintStream(stderr));
 	}
 
-	public void reset() throws Exception{
+	/**
+	 * Used to reset the test so that it can be rerun within the same test
+	 * @throws Exception Thrown if their are any problems
+	 */
+	protected void reset() throws Exception{
 		tearDown();
 		setUp();
 	}

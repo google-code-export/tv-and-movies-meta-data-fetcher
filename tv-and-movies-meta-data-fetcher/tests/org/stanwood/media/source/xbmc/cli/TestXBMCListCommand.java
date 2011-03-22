@@ -52,7 +52,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		// Check inital list of plugins
 		assertPluginList("expectedAddonList.txt");
 
-		// Update a plugin that will cause others to be updated
+		// Update a plugin
 		reset();
 		String[] args = new String[] {"--log_config","INFO","update","metadata.common.hdtrailers.net"};
 		try {
@@ -69,13 +69,52 @@ public class TestXBMCListCommand extends BaseCLITest {
 
 		StringBuilder expected = new StringBuilder();
 		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.6\n");
-		expected.append("Installed plugin 'metadata.common.hdtrailers.net' version=1.0.6\n");
+		expected.append("Installed plugin 'metadata.common.hdtrailers.net'\n");
 		Assert.assertEquals(expected.toString(), stdout.toString());
 		Assert.assertEquals("",stderr.toString());
 
 		// Assert that the plugins were updated
 		reset();
-		assertPluginList("expectedAddonList.txt");
+		assertPluginList("expectedAddonList1.txt");
+
+		// Remove a plugin
+		reset();
+		args = new String[] {"--log_config","INFO","remove","metadata.common.hdtrailers.net"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			if (e.getExitCode()!=0) {
+				System.out.println(stdout);
+				System.err.println(stderr);
+			}
+			Assert.assertEquals(0,e.getExitCode());
+		}
+
+		// Assert that the plugins were removed
+		reset();
+		assertPluginList("expectedAddonList2.txt");
+
+		// Add a plugin
+		reset();
+		args = new String[] {"--log_config","INFO","install","metadata.themoviedb.org"};
+		try {
+			CLIManageAddons.main(args);
+			Assert.fail("No exit code");
+		}
+		catch (ExitException e) {
+			if (e.getExitCode()!=0) {
+				System.out.println(stdout);
+				System.err.println(stderr);
+			}
+			Assert.assertEquals(0,e.getExitCode());
+		}
+
+		// Assert that the plugins were removed
+		reset();
+		assertPluginList("expectedAddonList1.txt");
+
 	}
 
 	protected void assertPluginList(String filename) throws IOException {
