@@ -32,6 +32,10 @@ BuildRequires:  ant-trax
 BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:	jaudiotagger >= 1.0.9
+%if 0%{?suse_version} >= 1140
+BuildRequires:  excalibur-avalon-framework >= 4.3.1
+BuildRequires:  xmlgraphics-batik >= 1.7
+%endif
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        %%release%%
@@ -62,10 +66,16 @@ Javadoc for MediaInfoFetcher application and API.
  
 %build
 export CLASSPATH=$CLASSPATH:/usr/share/java/xalan-j2-serializer.jar
+%if 0%{?suse_version} >= 1140
+%ant -buildfile opensuse-11.4-build.xml \
+     -Dlib.dir=%{_javadir} \
+     -Dproject.version=%{version} all
+%else
 %ant -buildfile opensuse-build.xml \
      -Dlib.dir=%{_javadir} \
      -Dproject.version=%{version} \
      -Dfop.dir=/usr/share/fop/lib all
+%endif
  
 %install
 export NO_BRP_CHECK_BYTECODE_VERSION=true
@@ -78,7 +88,8 @@ pushd %{buildroot}%{_javadir}
         ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`
     done
 popd
-%__install -m 755 scripts/opensuse-11.0-media-renamer %{buildroot}%{_bindir}/media-renamer
+%__install -m 755 scripts/opensuse-11.0-mm-renamer %{buildroot}%{_bindir}/mm-renamer
+%__install -m 755 scripts/opensuse-11.0-mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs
@@ -101,7 +112,8 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %files
 %defattr(-,root,root)
 %{_javadir}/*.jar
-%{_bindir}/media-renamer
+%{_bindir}/mm-renamer
+%{_bindir}/mm-xbmc
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*
 %config /etc/mediafetcher-conf.xml

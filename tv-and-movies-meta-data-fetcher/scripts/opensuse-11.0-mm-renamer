@@ -20,6 +20,9 @@ else
         JAVA="$JAVA_HOME/bin/java"
 fi
 
+# Main class
+MAIN=org.stanwood.media.renamer.CLIRenamer
+
 # Launch application.
 CLASSPATH=/usr/share/java/MediaInfoFetcher.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-cli.jar
@@ -27,4 +30,4 @@ CLASSPATH=$CLASSPATH:/usr/share/java/jaudiotagger.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jericho-html.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-logging.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/log4j.jar
-exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH org.stanwood.media.renamer.Main "$@"
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
