@@ -8,7 +8,10 @@ Store original filenames before rename within Store XML files
 Add concept of actions, and make rename a action
 	* Action for covert to m4v	 
 Look into a tagchimp store that uses their API.
-Add scripts that allow the user to manage the XBMC plugins that are installed or to be installed.
-	* Possible put a GUI on this.
+Add scripts that allow the user to manage the XBMC plugins that are installed or to be installed.	
 Create XBMC nfo files from a store instead of the source
+	* Also test this with XBMC to make sure it works as expected
 Update default config file in etc
+Add ability to register new stores,sources and actions in the config file
+	* This can be used to test new stores and sources before they are released
+Add a GUI to manage the XBMC addons	

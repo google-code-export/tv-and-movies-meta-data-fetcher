@@ -1,0 +1,177 @@
+<project name="MediaInfoFetcher" default="all" basedir=".">
+
+<!-- Path properties -->
+    <property name="src.dir" location="${basedir}/src" />
+    <property name="build.dir" location="${basedir}/bin" />
+    <property name="test.src.dir" location="${basedir}/tests" />
+    <property name="test.build.dir" location="${basedir}/tests-bin" />
+    <property name="dist.dir" location="${basedir}/dist" />
+    <property name="libs.dir" location="${basedir}/libs" />
+    <property name="etc.dir" location="${basedir}/etc" />
+    <property name="rpm.dir" location="${basedir}/rpm" />
+    <property name="docs.dir" location="${basedir}/docs"/>
+    <property name="api.docs.dir" location="${docs.dir}/api" />
+    <property name="userguide.dir" location="${docs.dir}/userguide" />
+    <property name="reports.dir" location="${basedir}/reports"/>
+    <property name="docbook.home"    value="${basedir}/docbook/xsl"/>
+    <property name="fo.dir"          value="${basedir}/fo"/>
+    <property name="lib.dir" value="changeme"/>
+    <property name="fop.dir" value="changeme"/>
+
+    <!-- Compiler properties -->
+    <property name="javac.source" value="1.6" />
+    <property name="javac.target" value="1.6" />
+
+    <!-- Dist properties -->
+    <property name="project.version" value="changeme" />
+    <property name="project.author" value="John-Paul Stanford" />
+
+    <!-- Lib classpaths -->
+    <path id="run-time.libs.classpath">
+        <pathelement location="${lib.dir}/jericho-html.jar"/>
+        <pathelement location="${lib.dir}/commons-logging.jar"/>
+        <pathelement location="${lib.dir}/commons-cli.jar"/>
+        <pathelement location="${lib.dir}/log4j.jar"/>
+    	<pathelement location="${lib.dir}/antlr.jar"/>
+    	<pathelement location="${lib.dir}/jaudiotagger.jar"/>
+    </path>
+
+    <path id="compile-time.libs.classpath">
+    	<pathelement location="${lib.dir}/excalibur/avalon-framework.jar"/>
+    	<pathelement location="${lib.dir}/xmlgraphics-fop.jar"/>        
+    	<pathelement location="${lib.dir}/bnatik-all.jar"/>
+    </path>
+
+    <!-- Fop setup -->
+    <taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
+        <classpath refid="compile-time.libs.classpath"/>
+    </taskdef>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp />
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${test.build.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${api.docs.dir}" />
+        <mkdir dir="${reports.dir}"/>
+    </target>
+	
+	<target name="antlr">				
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
+			<classpath>				
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
+			</classpath>
+			<arg value="-fo"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionLexer.g"/>			
+		</java>
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
+			<classpath>				
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
+			</classpath>
+			<arg value="-fo"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionParser.g"/>			
+		</java>
+	</target>
+
+    <target name="compile" depends="init,antlr" description="compile the source ">
+        <property name="cp" refid="run-time.libs.classpath" />
+        <echo message="Classpath is ${cp}" />
+
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}" encoding="UTF8">
+            <classpath>
+                <path refid="run-time.libs.classpath" />
+            </classpath>
+        </javac>
+
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java" />
+        </copy>
+    </target>
+
+    <target name="javadoc">
+        <delete dir="${api.docs.dir}"/>
+        <javadoc packagenames="org.stanwood.*"
+            sourcepath="src"
+            defaultexcludes="yes"
+            destdir="${api.docs.dir}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Media Renamer/Metadata Fetcher">
+          <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
+        </javadoc>
+    </target>
+
+    <target name="clean" description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${build.dir}" includes="**/*"/>
+            <fileset dir="${test.build.dir}" includes="**/*"/>
+        </delete>
+        <delete dir="${dist.dir}" failonerror="false"/>
+        <delete dir="${api.docs.dir}" failonerror="false"/>
+        <delete dir="${rpm.dir}" failonerror="false"/>
+        <delete dir="${cobertura.dir}" failonerror="false"/>
+        <delete dir="${reports.dir}" failonerror="false"/>
+        <delete file="cobertura.ser" failonerror="false"/>
+        <delete dir="${fo.dir}" failonerror="false"/>
+        <delete dir="${basedir}/docbook" failonerror="false"/>
+    </target>
+
+    <target name="jars" description="generate the distribution">
+        <echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+
+        <jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+        <copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
+    </target>
+
+    <target name="docs" description="Converts docbook xml into pdf" >
+        <delete dir="${docbook.dir}/docbook"/>
+        <mkdir dir="${basedir}/docbook"/>
+        <mkdir dir="${userguide.dir}/html"/>
+
+        <unzip src="docbook.zip" dest="${basedir}/docbook"/>
+
+        <echo message="DTD: ${docbook.home}/../dtd/docbookx.dtd"/>
+
+        <xmlcatalog id="dtds">                           
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+                 
+        </xmlcatalog>
+
+        <xslt  style="${docbook.home}/fo/docbook.xsl"
+                basedir="${userguide.dir}/xml"
+                extension=".fo"
+                destdir="${fo.dir}">
+                <xmlcatalog refid="dtds"/>
+        </xslt>
+
+        <xslt  style="${docbook.home}/html/docbook.xsl"
+                        basedir="${userguide.dir}/xml"
+                        extension=".html"
+                        destdir="${userguide.dir}/html">
+                <xmlcatalog refid="dtds"/>
+        </xslt>
+
+        <fop format="application/pdf"
+             fofile="${fo.dir}/docbook.fo"
+             outfile="${userguide.dir}/userguide.pdf" />
+
+        <delete dir="${fo.dir}"/>
+        <delete dir="${basedir}/docbook"/>
+    </target>
+
+    <target name="all" depends="clean,compile,javadoc,docs,jars"/>
+</project>
