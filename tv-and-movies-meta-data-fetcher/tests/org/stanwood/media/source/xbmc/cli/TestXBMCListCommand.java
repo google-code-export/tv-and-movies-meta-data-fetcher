@@ -111,9 +111,9 @@ public class TestXBMCListCommand extends BaseCLITest {
 			Assert.assertEquals(0,e.getExitCode());
 		}
 
-		// Assert that the plugins were removed
+		// Assert that the plugins was installed
 		reset();
-		assertPluginList("expectedAddonList1.txt");
+		assertPluginList("expectedAddonList3.txt");
 
 	}
 

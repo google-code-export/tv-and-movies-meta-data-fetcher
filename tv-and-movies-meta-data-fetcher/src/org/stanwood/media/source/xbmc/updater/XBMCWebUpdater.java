@@ -385,7 +385,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					if (oldAddonDoc!=null) {
 						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
 					}
-					if (oldVersion == null || addonDetails.getAvaliableVersion().compareTo(oldVersion)>0) {
+					if (oldVersion == null || addonDetails.getStatus()==AddonStatus.NOT_INSTALLED || addonDetails.getAvaliableVersion().compareTo(oldVersion)>0) {
 						downloadNewPlugin(console,plugin,newPluginsDir,addonDetails.getAvaliableVersion());
 					}
 				}
