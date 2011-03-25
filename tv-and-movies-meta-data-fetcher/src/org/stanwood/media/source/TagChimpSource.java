@@ -24,7 +24,6 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.search.SearchHelper;
-import org.stanwood.media.setup.MediaDirConfig;
 
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;
@@ -243,25 +242,20 @@ public class TagChimpSource implements ISource {
 		return SOURCE_ID;
 	}
 
-	/**
-	 * This will search the IMDB site for the film. It uses the last segment of the file name, converts it to lower
-	 * case, tidies up the name and performs the search.
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param filmFile The file the film is located in
-	 * @return Always returns null
-	 * @throws SourceException Thrown if their is a problem retrieving the data
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File filmFile) throws SourceException, MalformedURLException,
-			IOException {
-		if (rootMediaDir.getMode() != Mode.FILM) {
+	public SearchResult searchMedia(String name, Mode mode, Integer part) throws SourceException {
+		if (mode != Mode.FILM) {
 			return null;
 		}
-		String query = SearchHelper.getQuery(filmFile, regexpToReplace).toLowerCase();
-		Source source = getSource(new URL(getSearchUrl(query.replaceAll(" ", "+"))));
+
+		Source source;
+		try {
+			source = getSource(new URL(getSearchUrl(name.replaceAll(" ", "+"))));
+		} catch (MalformedURLException e) {
+			throw new SourceException("Unable to search source " + getSourceId(),e);
+		} catch (IOException e) {
+			throw new SourceException("Unable to search source " + getSourceId(),e);
+		}
 		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
 		for (Element div : divs) {
 			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("main_mid")) {
@@ -274,8 +268,8 @@ public class TagChimpSource implements ISource {
 							Matcher m = SEARCH_PATTERN.matcher(url);
 							if (m.matches()) {
 								String id = m.group(1);
-								if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(query))) {
-									SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url);
+								if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(name))) {
+									SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url,null);
 									return result;
 								}
 							}
@@ -287,6 +281,7 @@ public class TagChimpSource implements ISource {
 
 		return null;
 	}
+
 
 	private String getSearchUrl(String query) {
 		return BASE_URL + "/search/index.php?s=" + query + "&search.x=0&search.y=0&kind=mo1";
@@ -348,4 +343,6 @@ public class TagChimpSource implements ISource {
 		// TODO Auto-generated method stub
 
 	}
+
+
 }

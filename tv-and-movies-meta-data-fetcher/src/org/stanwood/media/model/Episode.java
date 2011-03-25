@@ -19,6 +19,7 @@ package org.stanwood.media.model;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * This is used to store episode information
@@ -47,6 +48,8 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	private Rating rating;
 
 	private URL imageURL;
+
+	private SortedSet<VideoFile>videoFiles = new VideoFileSet();
 
 	/**
 	 * The constructor used to create a episode instance
@@ -278,6 +281,16 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	@Override
 	public String toString() {
 		return "Episode - ID:" + getEpisodeId() +" Num: " + getEpisodeNumber()+" Title: " + getTitle();
+	}
+
+	@Override
+	public SortedSet<VideoFile> getFiles() {
+		return videoFiles;
+	}
+
+	@Override
+	public void setFiles(SortedSet<VideoFile> videoFiles) {
+		this.videoFiles = videoFiles;
 	}
 
 

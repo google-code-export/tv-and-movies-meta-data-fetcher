@@ -27,6 +27,7 @@ public class SearchResult {
 	private String sourceId;
 	private String url;
 	private String title;
+	private Integer part;
 
 	/**
 	 * Constructor of the class
@@ -34,7 +35,7 @@ public class SearchResult {
 	 * @param sourceId The id of the source that it was found in
 	 * @param url The url of the show
 	 */
-	public SearchResult(String id, String sourceId,String url) {
+	public SearchResult(String id, String sourceId,String url,Integer part) {
 		super();
 		if (id == null || id.length()==0) {
 			throw new InvalidParameterException("Invalid id ["+id+"]");
@@ -49,6 +50,7 @@ public class SearchResult {
 		this.id = id;
 		this.sourceId = sourceId;
 		this.url = url;
+		this.part = part;
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class SearchResult {
 		return url;
 	}
 
-	
+
 	/**
 	 * Returns a string representation of the result
 	 * @return string representation of the result
@@ -94,7 +96,7 @@ public class SearchResult {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	/**
 	 * Used to get the title of the URL if one was found
 	 * @return The title
@@ -102,5 +104,11 @@ public class SearchResult {
 	public String getTitle() {
 		return title;
 	}
+
+	public Integer getPart() {
+		return part;
+	}
+
+
 
 }

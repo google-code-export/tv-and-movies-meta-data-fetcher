@@ -27,9 +27,11 @@ import java.util.Map;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -183,16 +185,28 @@ public class MemoryStore implements IStore {
 		return null;
 	}
 
-	/**
-	 * This does nothing because this source does not support searching for show ID's.
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param episodeFile The file the episode is stored in
-	 * @return Will always return null.
-	 * @throws StoreException Thrown if their is a problem with the source
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile)
-			throws StoreException {
+	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException {
+		if (mode==Mode.TV_SHOW) {
+			for (CacheShow show : shows) {
+				if (show.getName().equals(name)) {
+					//TODO look for the media file and work out the part
+					return new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null);
+				}
+			}
+		}
+		else if (mode==Mode.FILM) {
+			Film f = films.get(mediaFile);
+			if (f!=null) {
+				for (VideoFile vf : f.getFiles()) {
+					if (vf.getLocation().equals(mediaFile)) {
+						return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), vf.getPart());
+					}
+				}
+				return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), null);
+			}
+		}
 		return null;
 	}
 

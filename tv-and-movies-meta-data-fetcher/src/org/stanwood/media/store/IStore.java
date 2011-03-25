@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -133,16 +134,8 @@ public interface IStore  {
 	 */
 	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
 
-	/**
-	 * This is called to search the store for a show id. If it can't be found, then
-	 * it will return null.
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param episodeFile The file the episode is stored in
-	 * @param mode The mode that the search operation should be performed in
-	 * @return The results of the search if it was found, otherwise null
-	 * @throws StoreException Thrown if their is a problem with the store
-	 */
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile) throws StoreException;
+
+	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException;
 
 	/**
 	 * This is used when a file that holds a episode or film has been renamed

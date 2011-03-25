@@ -31,7 +31,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 					if (rfpm.getValues()!=null) {
 						String term =rfpm.getValues().get("n");
 						if (term!=null) {
-							return new SearchDetails(term,null);
+							return new SearchDetails(term,null,1);
 						}
 					}
 				}
@@ -80,7 +80,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 						term.replace(0, pos+1, "");
 					}
 					SearchHelper.replaceDots(term);
-					return new SearchDetails(term.toString(),null);
+					return new SearchDetails(term.toString(),null,1);
 				}
 
 				return null;
@@ -91,7 +91,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 		strategies.add(new ISearchStrategy() {
 			@Override
 			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern) {
-				return new SearchDetails(episodeFile.getParentFile().getName(),null);
+				return new SearchDetails(episodeFile.getParentFile().getName(),null,1);
 			}
 		});
 	}

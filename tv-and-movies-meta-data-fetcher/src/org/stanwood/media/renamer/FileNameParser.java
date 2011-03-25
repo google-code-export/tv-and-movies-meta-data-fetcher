@@ -80,8 +80,8 @@ public class FileNameParser {
 
 		Map<String,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
-			String episodeNumber = tokens.get(Renamer.TOKEN_EPISODE);
-			String seasonNumber = tokens.get(Renamer.TOKEN_SEASON);
+			String episodeNumber = tokens.get(PatternMatcher.TOKEN_EPISODE);
+			String seasonNumber = tokens.get(PatternMatcher.TOKEN_SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
 				ParsedFileName result = new ParsedFileName();
 				try {
@@ -97,8 +97,6 @@ public class FileNameParser {
 		return null;
 	}
 
-
-
 	private static Map<String, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
 		List<String>groups = new ArrayList<String>();
 		Pattern p = Pattern.compile("(%.)");
@@ -109,7 +107,7 @@ public class FileNameParser {
 		while (m.find()) {
 			String group = m.group();
 			groups.add(group);
-			if (group.equals(Renamer.TOKEN_EPISODE) || group.equals(Renamer.TOKEN_SEASON)){
+			if (group.equals(PatternMatcher.TOKEN_EPISODE) || group.equals(PatternMatcher.TOKEN_SEASON)){
 				m.appendReplacement(buffer,"([\\\\d]+)");
 			}
 			else {

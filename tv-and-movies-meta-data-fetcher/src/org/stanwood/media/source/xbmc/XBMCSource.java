@@ -26,8 +26,6 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.MediaDirectory;
-import org.stanwood.media.search.ShowSearcher;
-import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.xml.IterableNodeList;
@@ -475,36 +473,12 @@ public class XBMCSource extends XMLParser implements ISource {
 		return "xbmc-"+id;
 	}
 
-	/**
-	 * Used to search for a media details within the source
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param episodeFile The file the episode is located in
-	 * @return The results of the search, or null if nothing was found
-	 * @throws SourceException Thrown if their is a problem retrieving the data
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
 	@Override
-	public SearchResult searchForVideoId(final MediaDirConfig rootMediaDir,File episodeFile) throws SourceException,
-			MalformedURLException, IOException {
-		if (!addon.supportsMode(rootMediaDir.getMode())) {
+	public SearchResult searchMedia(final String name,final Mode mode,final Integer part) throws SourceException {
+		if (!addon.supportsMode(mode)) {
 			return null;
 		}
 
-		ShowSearcher s = new ShowSearcher() {
-			@Override
-			public SearchResult doSearch(File mediaFile,String name,String year) throws MalformedURLException, IOException, SourceException {
-				if (name==null) {
-					return null;
-				}
-				return searchMedia(name,rootMediaDir.getMode());
-			}
-		};
-
-		return s.search(episodeFile,rootMediaDir.getMediaDir(),rootMediaDir.getPattern());
-	}
-
-	protected SearchResult searchMedia(final String name,final Mode mode) throws SourceException {
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
 			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, ""));
@@ -517,7 +491,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 						for (int i=0;i<entities.getLength();i++) {
 							Node node = entities.item(i);
-							SearchResult result = new SearchResult(getStringFromXML(node, "id/text()"), getSourceId(), getStringFromXML(node, "url/text()"));
+							SearchResult result = new SearchResult(getStringFromXML(node, "id/text()"), getSourceId(), getStringFromXML(node, "url/text()"),part);
 							results.add(result);
 						}
 					}

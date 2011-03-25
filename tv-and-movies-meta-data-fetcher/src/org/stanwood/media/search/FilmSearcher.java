@@ -41,12 +41,12 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						if (hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
-							return new SearchDetails(term.toString().trim(), year);
+							return new SearchDetails(term.toString().trim(), year,null);
 						}
 						else if (hasIgnoredTokens(end)) {
 							term.delete(0, term.length());
 							term.append(start);
-							return new SearchDetails(term.toString().trim(), year);
+							return new SearchDetails(term.toString().trim(), year,null);
 						}
 					}
 				}
@@ -63,7 +63,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 
 				extractExtension(term);
 				String year = extractYear(term);
-				extractPart(term);
+				Integer part = extractPart(term);
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
 				SearchHelper.replaceDots(term);
@@ -73,13 +73,11 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				if (sTerm.length()==0) {
 					return null;
 				}
-				return new SearchDetails(sTerm,year);
+				return new SearchDetails(sTerm,year,part);
 			}
 
 		});
 	}
-
-
 
 	private static Integer extractPart(StringBuilder term) {
 		Matcher m = PATTERN_PART.matcher(term);

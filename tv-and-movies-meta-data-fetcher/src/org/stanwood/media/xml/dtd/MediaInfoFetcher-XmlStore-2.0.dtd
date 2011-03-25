@@ -113,6 +113,8 @@
 
 <!ATTLIST file
     location CDATA #REQUIRED
+    orginalLocation CDATA #IMPLIED
+    part NMTOKENS #IMPLIED
 >
 
 <!ELEMENT chapters (chapter*)>

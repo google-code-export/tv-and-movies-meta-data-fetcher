@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.store.StoreException;
 
 /**
  * This class is used to search for the a media files name
@@ -35,7 +36,7 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their is a problem searching via a source
 	 */
-	protected abstract SearchResult doSearch(File mediaFile,String term,String year) throws MalformedURLException, IOException, SourceException;
+	protected abstract SearchResult doSearch(File mediaFile,String term,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException;
 
 	/**
 	 * Usd to search for a show id
@@ -46,13 +47,14 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 	 * @throws MalformedURLException Thrown if their is a problem construction URL's
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their are any source problems
+
 	 */
 	@Override
-	public final SearchResult search(File mediaFile, File rootMediaDir, String renamePattern) throws MalformedURLException, IOException, SourceException {
+	public final SearchResult search(File mediaFile, File rootMediaDir, String renamePattern) throws MalformedURLException, IOException, SourceException, StoreException {
 		for (ISearchStrategy strategy :strategies) {
 			SearchDetails searchDetails = strategy.getSearch(mediaFile,rootMediaDir,renamePattern);
 			if (searchDetails!=null) {
-				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear());
+				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear(),searchDetails.getPart());
 				if (result!=null) {
 					return result;
 				}

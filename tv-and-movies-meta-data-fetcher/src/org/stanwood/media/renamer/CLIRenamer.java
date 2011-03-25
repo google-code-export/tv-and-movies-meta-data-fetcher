@@ -136,6 +136,8 @@ public class CLIRenamer extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		} catch (StoreException e) {
 			log.error(e.getMessage(),e);
+		} catch (PatternException e) {
+			log.error(e.getMessage(),e);
 		}
 		return false;
 	}

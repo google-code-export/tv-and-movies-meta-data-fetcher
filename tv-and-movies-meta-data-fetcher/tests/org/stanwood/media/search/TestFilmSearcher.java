@@ -34,9 +34,9 @@ public class TestFilmSearcher {
 			final List<TSearchDetails>names = new ArrayList<TSearchDetails>();
 			FilmSearcher f = new FilmSearcher() {
 				@Override
-				protected SearchResult doSearch(File mediaFile,String name,String year) throws MalformedURLException,
+				protected SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException,
 						IOException, SourceException {
-					names.add(new TSearchDetails(mediaFile,name,year));
+					names.add(new TSearchDetails(mediaFile,name,year,part));
 					return null;
 				}
 			};
@@ -52,68 +52,74 @@ public class TestFilmSearcher {
 			});
 			Assert.assertEquals(45,names.size());
 			int index = 0;
-			assertSearchDetails("A Movie",null,names.get(index++));
-			assertSearchDetails("\"Movie\"",null,names.get(index++));
-			assertSearchDetails("A movie",null,names.get(index++));
-			assertSearchDetails("blah - Movie","1995",names.get(index++));
-			assertSearchDetails("blah - Movie","1995",names.get(index++));
-			assertSearchDetails("A Movie's",null,names.get(index++));
-			assertSearchDetails("A Movie",null,names.get(index++));
-			assertSearchDetails("A Movie",null,names.get(index++));
+			assertSearchDetails("A Movie",null,null,names.get(index++));
+			assertSearchDetails("\"Movie\"",null,null,names.get(index++));
+			assertSearchDetails("A movie",null,null,names.get(index++));
+			assertSearchDetails("blah - Movie","1995",1,names.get(index++));
+			assertSearchDetails("blah - Movie","1995",2,names.get(index++));
+			assertSearchDetails("A Movie's",null,null,names.get(index++));
+			assertSearchDetails("A Movie",null,null,names.get(index++));
+			assertSearchDetails("A Movie",null,null,names.get(index++));
 			index++;
 //			assertSearchDetails("A Movie",null,names.get(index++));
-			assertSearchDetails("A movie 2000",null,names.get(index++));
-			assertSearchDetails("A movie",null,names.get(index++));
-			assertSearchDetails("A movie",null,names.get(index++));
-			assertSearchDetails("A movie",null,names.get(index++));
-			assertSearchDetails("A, Movie?",null,names.get(index++));
-			assertSearchDetails("A Movie","2007",names.get(index++));
-			assertSearchDetails("A Movie","2008",names.get(index++));
-			assertSearchDetails("A Movie","2010",names.get(index++));
-			assertSearchDetails("A Movie",null,names.get(index++));
-			assertSearchDetails("AMOVIE",null,names.get(index++));
-			assertSearchDetails("Blah",null,names.get(index++));
-			assertSearchDetails("Blah: Movie",null,names.get(index++));
-			assertSearchDetails("Blahía, b ôb bbbb",null,names.get(index++));
-			assertSearchDetails("Dr. Movie",null,names.get(index++));
+			assertSearchDetails("A movie 2000",null,null,names.get(index++));
+			assertSearchDetails("A movie",null,1,names.get(index++));
+			assertSearchDetails("A movie",null,2,names.get(index++));
+			assertSearchDetails("A movie",null,null,names.get(index++));
+			assertSearchDetails("A, Movie?",null,null,names.get(index++));
+			assertSearchDetails("A Movie","2007",null,names.get(index++));
+			assertSearchDetails("A Movie","2008",null,names.get(index++));
+			assertSearchDetails("A Movie","2010",null,names.get(index++));
+			assertSearchDetails("A Movie",null,null,names.get(index++));
+			assertSearchDetails("AMOVIE",null,null,names.get(index++));
+			assertSearchDetails("Blah",null,null,names.get(index++));
+			assertSearchDetails("Blah: Movie",null,null,names.get(index++));
+			assertSearchDetails("Blahía, b ôb bbbb",null,null,names.get(index++));
+			assertSearchDetails("Dr. Movie",null,null,names.get(index++));
 			index++;
 //			assertSearchDetails("Movie",null,names.get(index++));
-			assertSearchDetails("Movie 12",null,names.get(index++));
-			assertSearchDetails("Movie 2: Some movie title",null,names.get(index++));
-			assertSearchDetails("Movie I",null,names.get(index++));
-			assertSearchDetails("Movie III",null,names.get(index++));
-			assertSearchDetails("Movie's blah",null,names.get(index++));
-			assertSearchDetails("Movie","2007",names.get(index++));
-			assertSearchDetails("Movie",null,names.get(index++));
-			assertSearchDetails("Movie Vol 2",null,names.get(index++));
-			assertSearchDetails("Movie",null,names.get(index++));
-			assertSearchDetails("Movie: Three",null,names.get(index++));
+			assertSearchDetails("Movie 12",null,null,names.get(index++));
+			assertSearchDetails("Movie 2: Some movie title",null,null,names.get(index++));
+			assertSearchDetails("Movie I",null,null,names.get(index++));
+			assertSearchDetails("Movie III",null,null,names.get(index++));
+			assertSearchDetails("Movie's blah",null,null,names.get(index++));
+			assertSearchDetails("Movie","2007",null,names.get(index++));
+			assertSearchDetails("Movie",null,null,names.get(index++));
+			assertSearchDetails("Movie Vol 2",null,null,names.get(index++));
+			assertSearchDetails("Movie",null,null,names.get(index++));
+			assertSearchDetails("Movie: Three",null,null,names.get(index++));
 			index++;
 //			assertSearchDetails("A Movie (Original Render)",null,names.get(index++));
-			assertSearchDetails("The Movie: Part II",null,names.get(index++));
+			assertSearchDetails("The Movie: Part II",null,null,names.get(index++));
 			index++;
 //			assertSearchDetails("a-movie",null,names.get(index++));
-			assertSearchDetails("a movie joined",null,names.get(index++));
-			assertSearchDetails("amovie",null,names.get(index++));
-			assertSearchDetails("amovie",null,names.get(index++));
-			assertSearchDetails("9",null,names.get(index++));
-			assertSearchDetails("movie",null,names.get(index++));
-			assertSearchDetails("movie","2009",names.get(index++));
-			assertSearchDetails("movie","2009",names.get(index++));
-			assertSearchDetails("á movié",null,names.get(index++));
+			assertSearchDetails("a movie joined",null,null,names.get(index++));
+			assertSearchDetails("amovie",null,2,names.get(index++));
+			assertSearchDetails("amovie",null,1,names.get(index++));
+			assertSearchDetails("9",null,null,names.get(index++));
+			assertSearchDetails("movie",null,null,names.get(index++));
+			assertSearchDetails("movie","2009",null,names.get(index++));
+			assertSearchDetails("movie","2009",null,names.get(index++));
+			assertSearchDetails("á movié",null,null,names.get(index++));
 		}
 		finally {
 			FileHelper.delete(filmsDir);
 		}
 	}
 
-	public void assertSearchDetails(String expectedTerm,String expectedYear,TSearchDetails actual) {
+	public void assertSearchDetails(String expectedTerm,String expectedYear,Integer expectedPart,TSearchDetails actual) {
 		Assert.assertEquals("Did not extract the correct term from: " + actual.getOriginalFile().getName(),expectedTerm,actual.getTerm());
 		if (expectedYear == null) {
 			Assert.assertNull("Got year when did not expect one: " + actual.getOriginalFile().getName(),actual.getYear());
 		}
 		else {
 			Assert.assertEquals("Did not extract the correct year from: " + actual.getOriginalFile().getName(),expectedYear,actual.getYear());
+		}
+		if (expectedPart == null) {
+			Assert.assertNull("Got year when did not expect one: " + actual.getOriginalFile().getName(),actual.getPart());
+		}
+		else {
+			Assert.assertEquals("Did not extract the correct year from: " + actual.getOriginalFile().getName(),expectedPart,actual.getPart());
 		}
 	}
 
