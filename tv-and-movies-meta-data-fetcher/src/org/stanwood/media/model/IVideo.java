@@ -17,6 +17,7 @@
 package org.stanwood.media.model;
 
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * This interface is used to define the methods that are common for any type of video
@@ -70,4 +71,9 @@ public interface IVideo {
 	 * @param summary The films summary
 	 */
 	public void setSummary(String summary);
+
+	public SortedSet<VideoFile> getFiles();
+
+	public void setFiles(SortedSet<VideoFile> videoFiles);
+
 }

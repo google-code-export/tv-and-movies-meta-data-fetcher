@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.renamer.Controller;
-import org.stanwood.media.renamer.Renamer;
+import org.stanwood.media.renamer.PatternMatcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -115,7 +115,7 @@ public class ConfigReader extends BaseConfigReader {
 				log.warn("No pattern given, using default: " + pattern);
 			}
 			else {
-				if (!Renamer.validPattern(pattern)) {
+				if (!PatternMatcher.validPattern(pattern)) {
 					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
 				}
 			}

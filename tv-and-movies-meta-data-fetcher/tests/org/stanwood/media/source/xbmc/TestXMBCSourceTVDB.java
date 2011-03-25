@@ -58,7 +58,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 		source.setParameter("posters", "true");
-		SearchResult result = source.searchMedia("Heroes",Mode.TV_SHOW);
+		SearchResult result = source.searchMedia("Heroes",Mode.TV_SHOW,null);
 		Assert.assertEquals("79501",result.getId());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip", result.getUrl());
 

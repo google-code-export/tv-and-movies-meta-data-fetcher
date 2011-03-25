@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.Map.Entry;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Helper;
 import org.stanwood.media.cli.AbstractLauncher;
@@ -70,7 +70,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
@@ -95,7 +95,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
@@ -165,7 +165,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
@@ -204,15 +204,18 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 
 	}
 
-	@Ignore // TODO get this working
+	/**
+	 * This will test that films are renamed correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+//		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		// Create test files
 		File dir = FileHelper.createTmpDir("movies");
-		setupTestController(dir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		File filmsDir = new File(dir, "Films");
 		try {
-			File filmsDir = new File(dir, "Films");
+
 			if (!filmsDir.mkdir() && !filmsDir.exists()) {
 				throw new IOException("Unable to create dir: " + filmsDir);
 			}
@@ -230,27 +233,38 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 				throw new IOException("Unable to create file : " + f.getAbsolutePath());
 			}
 
+			f = new File(filmsDir,"iron.man.2009.dvdrip.xvid-amiable.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+
 			// Do the renaming
 			String args[] = new String[] {"-R","-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
-			Assert.assertEquals(2,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(0));
+			Collections.sort(files);
+			Assert.assertEquals(3,files.size());
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 1.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 2.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(2));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
+			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 			// Do the renaming
 			CLIRenamer.main(args);
 
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
-			Assert.assertEquals(2,files.size());
-			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(0));
-			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(2));
+			Collections.sort(files);
+			Assert.assertEquals(3,files.size());
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 1.avi").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 2.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man.avi").getAbsolutePath(),files.get(2));
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
@@ -289,7 +303,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-p",pattern,"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
 			CLIRenamer.main(args);
 
@@ -324,21 +338,21 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
 		if (source!=null) {
-			testConfig.append("  <sources>"+LS);
-			testConfig.append("    <source id=\""+source.getName()+"\">"+LS);
+			testConfig.append("    <sources>"+LS);
+			testConfig.append("      <source id=\""+source.getName()+"\">"+LS);
 			if (sourceParams!=null) {
 				for (Entry<String,String> e : sourceParams.entrySet()) {
-					testConfig.append("    <param key=\""+e.getKey()+"\" value=\""+e.getValue()+"\">"+LS);
+					testConfig.append("      <param key=\""+e.getKey()+"\" value=\""+e.getValue()+"\">"+LS);
 				}
 			}
 
-			testConfig.append("    </source>"+LS);
-			testConfig.append("  </sources>"+LS);
+			testConfig.append("      </source>"+LS);
+			testConfig.append("    </sources>"+LS);
 		}
 		if (store!=null) {
-			testConfig.append("  <stores>"+LS);
-			testConfig.append("    <store id=\""+store.getName()+"\"/>"+LS);
-			testConfig.append("  </stores>"+LS);
+			testConfig.append("    <stores>"+LS);
+			testConfig.append("      <store id=\""+store.getName()+"\"/>"+LS);
+			testConfig.append("    </stores>"+LS);
 		}
 
 		testConfig.append("  </mediaDirectory>"+LS);

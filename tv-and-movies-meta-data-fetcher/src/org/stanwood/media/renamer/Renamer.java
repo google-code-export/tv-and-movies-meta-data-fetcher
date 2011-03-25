@@ -24,16 +24,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
@@ -54,22 +55,6 @@ import org.stanwood.media.store.StoreException;
  */
 public class Renamer {
 
-	/** the token for "show name" */
-	public static final String TOKEN_SHOW_NAME = "%n";
-	/** the token for "episode number" */
-	public static final String TOKEN_EPISODE = "%e";
-	/** the token for "season number" */
-	public static final String TOKEN_SEASON = "%s";
-	/** the token for "extension" */
-	public static final String TOKEN_EXT = "%x";
-	/** the token for "episode or film title" */
-	public static final String TOKEN_TITLE = "%t";
-	/** add a % char */
-	public static final String TOKEN_PERCENT = "%%";
-	/** the token for "show Id" */
-	public static final String TOKEN_ID = "%h";
-
-	private final static String TOKENS[] = {TOKEN_SHOW_NAME,TOKEN_EPISODE,TOKEN_SEASON,TOKEN_EXT,TOKEN_TITLE,TOKEN_PERCENT,TOKEN_ID};
 
 	private final static Log log = LogFactory.getLog(Renamer.class);
 
@@ -104,12 +89,13 @@ public class Renamer {
 	 *                     about to read from the disc.
 	 * @throws SourceException Thrown if their is a problem reading from the source
 	 * @throws StoreException Thrown is their is a problem with a store
+	 * @throws PatternException Thrown if their are problems with the pattern been used
 	 */
-	public boolean tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException {
+	public boolean tidyShowNames() throws MalformedURLException, IOException, SourceException, StoreException, PatternException {
 		return tidyDirectory(dir.getMediaDirConfig().getMediaDir());
 	}
 
-	private boolean tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException {
+	private boolean tidyDirectory(File parentDir) throws MalformedURLException, IOException, SourceException, StoreException, PatternException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -174,7 +160,7 @@ public class Renamer {
 		return true;
 	}
 
-	private boolean renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+	private boolean renameFilm(File file) throws MalformedURLException, SourceException, IOException, StoreException, PatternException {
 		SearchResult result = searchForId(file);
 		if (result==null) {
 			log.error("Unable to find film id for file '"+file.getName()+"'");
@@ -190,9 +176,10 @@ public class Renamer {
 		}
 
 		String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
-		File newName = getNewFilmName(film, ext);
+		PatternMatcher pm = new PatternMatcher();
+		File newName = pm.getNewFilmName(dir.getMediaDirConfig(),film, ext,result.getPart());
 
-		doRename(file, newName);
+		doRename(file, newName,film);
 		return true;
 	}
 
@@ -204,7 +191,7 @@ public class Renamer {
 
 	}
 
-	private boolean renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException {
+	private boolean renameTVShow(File file) throws MalformedURLException, SourceException, IOException, StoreException, PatternException {
 		SearchResult result = searchForId(file);
 		if (result==null) {
 			log.error("Unable to find show id");
@@ -231,16 +218,17 @@ public class Renamer {
 					log.error("Unable to find episode for file : " + file.getAbsolutePath());
 				} else {
 					String ext = oldFileName.substring(oldFileName.length() - 3);
-					File newName = getNewTVShowName(show, season, episode, ext);
+					PatternMatcher pm = new PatternMatcher();
+					File newName = pm.getNewTVShowName(dir.getMediaDirConfig(),show, season, episode, ext);
 
-					doRename(file, newName);
+					doRename(file, newName,episode);
 				}
 			}
 		}
 		return true;
 	}
 
-	private void doRename(File file, File newFile) throws StoreException {
+	private void doRename(File file, File newFile,IVideo video) throws StoreException {
 		// Remove characters from filenames that windows and linux don't like
 		if (file.equals(newFile)) {
 			log.info("File '" + file.getAbsolutePath()+"' already has the correct name.");
@@ -259,6 +247,14 @@ public class Renamer {
 
 				File oldFile = new File(file.getAbsolutePath());
 				if (file.renameTo(newFile)) {
+					for (VideoFile vf : video.getFiles()) {
+						if (vf.getLocation().equals(file)) {
+							vf.setLocation(newFile);
+							if (vf.getOrginalLocation()==null) {
+								vf.setOrginalLocation(file);
+							}
+						}
+					}
 					dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
 				}
 				else {
@@ -268,60 +264,5 @@ public class Renamer {
 		}
 	}
 
-	private String normalizeText(String text) {
-		text = text.replaceAll(":|/","-");
-		text = text.replaceAll("!",".");
-		return text;
-	}
 
-	private File getNewFilmName(Film film,String ext) {
-		String newName = dir.getMediaDirConfig().getPattern();
-		newName = newName.replaceAll(TOKEN_ID, normalizeText(film.getId()));
-		newName = newName.replaceAll(TOKEN_PERCENT, "%");
-		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(film.getTitle()));
-		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
-		File path = getPath(newName);
-		return path;
-	}
-
-	private File getNewTVShowName(Show show,Season season, Episode episode,String ext) {
-		String newName = dir.getMediaDirConfig().getPattern();
-		newName = newName.replaceAll(TOKEN_ID, normalizeText(show.getShowId()));
-		newName = newName.replaceAll(TOKEN_SEASON, String.valueOf(season.getSeasonNumber()));
-		String episodeNum = String.valueOf(episode.getEpisodeNumber());
-		if (episodeNum.length()==1) {
-			episodeNum = "0" +episodeNum;
-		}
-
-		newName = newName.replaceAll(TOKEN_EPISODE, episodeNum);
-		newName = newName.replaceAll(TOKEN_PERCENT, "%");
-		newName = newName.replaceAll(TOKEN_SHOW_NAME, normalizeText(show.getName()));
-		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(episode.getTitle()));
-		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
-
-		File path = getPath(newName);
-		return path;
-	}
-
-	/**
-	 * Used to check a pattern is valid
-	 * @param pattern The pattern
-	 * @return true if valid, otherwise false
-	 */
-	public static boolean validPattern(String pattern) {
-
-		for (String token : TOKENS) {
-			pattern = pattern.replaceAll(token, "");
-		}
-		return !pattern.contains("%");
-	}
-
-	private File getPath(String newName) {
-		File dir = this.dir.getMediaDirConfig().getMediaDir();
-		StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
-		while (tok.hasMoreTokens()) {
-			dir = new File(dir,tok.nextToken());
-		}
-		return dir;
-	}
 }

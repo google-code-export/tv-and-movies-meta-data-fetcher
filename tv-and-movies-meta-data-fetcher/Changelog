@@ -1,3 +1,6 @@
+* Fri Mar 25 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Improved film and TV searching.
+- XBMC addon manager application should now be working.
 * Wed Mar 2 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Added parameter "CreateNFOFiles" to XBMC source, which when true will create .NFO files next to the media file for use by XBMC
 * Mon Feb 14 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98

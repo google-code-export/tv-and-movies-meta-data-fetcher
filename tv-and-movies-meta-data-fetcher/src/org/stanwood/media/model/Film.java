@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * This class is used to hold film related information
@@ -46,6 +47,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	private String preferredGenre;
 	private String country;
 	private List<Actor> actors;
+	private SortedSet<VideoFile> videoFiles = new VideoFileSet();
 
 	/**
 	 * This is useful if the film belongs to more than one genres. It will returned the
@@ -394,5 +396,14 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 		this.country = country;
 	}
 
+	@Override
+	public SortedSet<VideoFile> getFiles() {
+		return videoFiles;
+	}
+
+	@Override
+	public void setFiles(SortedSet<VideoFile> videoFiles) {
+		this.videoFiles = videoFiles;
+	}
 
 }

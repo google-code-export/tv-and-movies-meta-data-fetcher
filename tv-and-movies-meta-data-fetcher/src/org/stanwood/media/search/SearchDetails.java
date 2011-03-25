@@ -4,11 +4,13 @@ public class SearchDetails {
 
 	private String term;
 	private String year;
+	private Integer part;
 
-	public SearchDetails(String term, String year) {
+	public SearchDetails(String term, String year,Integer part) {
 		super();
 		this.term = term;
 		this.year = year;
+		this.part = part;
 	}
 
 	public String getTerm() {
@@ -19,4 +21,7 @@ public class SearchDetails {
 		return year;
 	}
 
+	public Integer getPart() {
+		return part;
+	}
 }

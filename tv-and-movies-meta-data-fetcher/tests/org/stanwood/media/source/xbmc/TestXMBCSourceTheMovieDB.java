@@ -54,7 +54,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 	public void testSource() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
-		SearchResult result = source.searchMedia("Iron Man",Mode.FILM);
+		SearchResult result = source.searchMedia("Iron Man",Mode.FILM,1);
 		Assert.assertEquals("1726",result.getId());
 		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726", result.getUrl());
 

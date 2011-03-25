@@ -23,11 +23,11 @@ import java.net.URL;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.MediaDirectory;
-import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
@@ -102,17 +102,6 @@ public interface ISource {
 	public String getSourceId();
 
 	/**
-	 * Used to search for a media details within the source
-	 * @param episodeFile The file the episode is located in
-	 * @param rootMediaDir The root media directory configuration
-	 * @return The results of the search, or null if nothing was found
-	 * @throws SourceException Thrown if their is a problem retrieving the data
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile) throws SourceException, MalformedURLException, IOException;
-
-	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
 	 * @param key The key of the parameter
 	 * @param value The value of the parameter
@@ -129,5 +118,7 @@ public interface ISource {
 	public String getParameter(String key) throws SourceException;
 
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException;
+
+	public SearchResult searchMedia(String name, Mode mode, Integer part) throws SourceException;
 
 }

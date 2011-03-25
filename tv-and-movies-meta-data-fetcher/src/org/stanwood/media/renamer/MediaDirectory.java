@@ -14,6 +14,9 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.search.AbstractMediaSearcher;
+import org.stanwood.media.search.FilmSearcher;
+import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.MediaDirConfig;
@@ -325,18 +328,50 @@ public class MediaDirectory {
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(MediaDirConfig dirConfig, File mediaFile) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(final MediaDirConfig dirConfig, File mediaFile) throws SourceException, StoreException,
 			MalformedURLException, IOException {
+		AbstractMediaSearcher s = null;
+		if (dirConfig.getMode() == Mode.TV_SHOW) {
+			s = new ShowSearcher() {
+				@Override
+				public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+					if (name==null) {
+						return null;
+					}
+					return searchMedia(name,dirConfig.getMode(),part,dirConfig,mediaFile);
+				}
+			};
+			return s.search(mediaFile,dirConfig.getMediaDir(),dirConfig.getPattern());
+		}
+		else if (dirConfig.getMode() == Mode.FILM) {
+			s = new FilmSearcher() {
+				@Override
+				public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+					if (name==null) {
+						return null;
+					}
+					return searchMedia(name,dirConfig.getMode(),part,dirConfig,mediaFile);
+				}
+			};
+		}
+		else {
+			return null;
+		}
+
+		return s.search(mediaFile,dirConfig.getMediaDir(),dirConfig.getPattern());
+	}
+
+	private SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException, SourceException {
 		SearchResult result = null;
 		for (IStore store : stores) {
-			result = store.searchForVideoId(dirConfig,mediaFile);
+			result = store.searchMedia(name,mode,part,dirConfig,mediaFile);
 			if (result != null) {
 				return result;
 			}
 		}
 
 		for (ISource source : sources) {
-			result = source.searchForVideoId(dirConfig,mediaFile);
+			result = source.searchMedia(name,mode,part);
 			if (result != null) {
 				return result;
 			}

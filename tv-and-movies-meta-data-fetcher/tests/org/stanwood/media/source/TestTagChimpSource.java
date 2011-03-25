@@ -58,7 +58,7 @@ public class TestTagChimpSource {
 			MediaDirConfig config = new MediaDirConfig();
 			config.setMediaDir(tmpFile.getAbsoluteFile());
 			config.setMode(Mode.FILM);
-			SearchResult result = source.searchForVideoId(config,tmpFile);
+			SearchResult result = source.searchMedia("Iron Man", Mode.FILM, null);
 			Assert.assertEquals("39752",result.getId());
 			Assert.assertEquals("tagChimp",result.getSourceId());
 			Assert.assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());

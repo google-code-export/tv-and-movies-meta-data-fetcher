@@ -20,26 +20,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.xml.XMLParser;
-import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
  * This is the base class for the XML Store classes. It has the methods which are common between
@@ -96,57 +82,6 @@ public abstract class BaseXMLStore extends XMLParser {
 		return url.toExternalForm();
 	}
 
-	/**
-	 * Used to get a list of filenames under the parent node
-	 * @param parent The node to look under for filenames
-	 * @return The filenames
-	 * @throws XMLParserException Thrown if their is a problem parsing the XML
-	 */
-	protected Set<String> getOldFilenames(Node parent) throws XMLParserException {
-		try {
-			Set<String> filenames = new HashSet<String>();
-			NodeList node = XPathAPI.selectNodeList(parent,"file/@location");
-			if (node!=null) {
-				for (int i=0;i<node.getLength();i++) {
-					filenames.add(node.item(i).getNodeValue());
-				}
-			}
-			node = XPathAPI.selectNodeList(parent,"file/@name");
-			if (node!=null) {
-				for (int i=0;i<node.getLength();i++) {
-					filenames.add(node.item(i).getNodeValue());
-				}
-			}
-
-			return filenames;
-		}
-		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parse old filenames from XML",e);
-		}
-	}
-
-	/**
-	 * Used to append a set of filenames to the document under the given parent node
-	 * @param doc The document to append the filenames to
-	 * @param parent The parent node
-	 * @param filenames The filenames to append
-	 * @throws StoreException Thrown if their is a tore releated problem
-	 */
-	protected void writeFilenames(Document doc, Node filmNode, Set<String> filenames) throws StoreException {
-		List<String> sorted = new ArrayList<String>(filenames);
-		Collections.sort(sorted,new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				return o1.compareTo(o2);
-			}
-		});
-		for (String filename : sorted) {
-			Element fileNode = doc.createElement("file");
-			fileNode.setAttribute("name", filename);
-			filmNode.appendChild(fileNode);
-		}
-
-	}
 
 
 

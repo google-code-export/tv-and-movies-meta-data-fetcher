@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.store.StoreException;
 
 /**
  * This should be implemented by classes that can search for media
@@ -22,6 +23,6 @@ public interface IMediaSearcher {
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their are any source problems
 	 */
-	public SearchResult search(File mediaFile, File rootMediaDir,String renamePattern) throws MalformedURLException, IOException,SourceException;
+	public SearchResult search(File mediaFile, File rootMediaDir,String renamePattern) throws MalformedURLException, IOException,SourceException, StoreException;
 
 }

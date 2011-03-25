@@ -30,7 +30,6 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.MediaDirectory;
-import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.xbmc.XBMCException;
 
 /**
@@ -188,30 +187,21 @@ public class HybridFilmSource implements ISource {
 		return null;
 	}
 
-	/**
-	 * This will search the www.imdb.com and www.tagchimp.com site for the film. It uses the
-	 * last segment of the file name, converts it to lower case, tidies up the name and performs
-	 * the search.
-	 *
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param filmFile The file the film is located in
-	 * @return Always returns null
-	 * @throws SourceException Thrown if their is a problem retrieving the data
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
 	@Override
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File filmFile) throws SourceException, MalformedURLException,
-			IOException {
-		if (rootMediaDir.getMode() != Mode.FILM) {
+	public SearchResult searchMedia(String name, Mode mode, Integer part)
+			throws SourceException {
+
+		if (mode != Mode.FILM) {
 			return null;
 		}
+
 		StringBuilder id = new StringBuilder();
-		String url = null;
+		String newUrl = null;
+		Integer newPart = null;
 
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
-			SearchResult result = source.searchForVideoId(rootMediaDir,filmFile);
+			SearchResult result = source.searchMedia(name, mode, part);
 			if (result!=null) {
 				if (id.length()>0) {
 					id.append("|");
@@ -219,12 +209,13 @@ public class HybridFilmSource implements ISource {
 				id.append(result.getSourceId());
 				id.append("|");
 				id.append(result.getId());
-				url = result.getUrl();
+				newUrl = result.getUrl();
+				part = result.getPart();
 			}
-		}
 
+		}
 		if (id!=null && id.length()>0) {
-			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,url);
+			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,newPart);
 			return result;
 		}
 
@@ -256,7 +247,5 @@ public class HybridFilmSource implements ISource {
 	public String getParameter(String key) throws SourceException {
 		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
-
-
 
 }

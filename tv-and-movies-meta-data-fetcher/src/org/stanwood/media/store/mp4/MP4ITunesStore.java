@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
@@ -132,19 +133,6 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	/**
-	 * This does nothing because this source does not support searching for show ID's.
-	 * @param rootMediaDir This is the configuration for the root media directory which is the root of media
-	 * @param episodeFile The file the episode is stored in
-	 * @return Will always return null.
-	 * @throws StoreException Thrown if their is a problem with the source
-	 */
-	@Override
-	public SearchResult searchForVideoId(MediaDirConfig rootMediaDir,File episodeFile)
-			throws StoreException {
-		return null;
-	}
-
 	private void validate() throws StoreException {
 	}
 
@@ -205,4 +193,11 @@ public class MP4ITunesStore implements IStore {
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException {
+		return null;
+	}
+
 }
