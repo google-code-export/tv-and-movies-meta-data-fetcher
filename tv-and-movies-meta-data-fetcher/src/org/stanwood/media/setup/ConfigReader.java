@@ -63,6 +63,8 @@ public class ConfigReader extends BaseConfigReader {
 
 	private Locale xbmcLocale = Locale.ENGLISH;
 
+	private List<Plugin> plugins = new ArrayList<Plugin>();
+
 	/**
 	 * The constructor used to create a instance of the configuration reader
 	 * @param is The configuration file input stream
@@ -81,6 +83,7 @@ public class ConfigReader extends BaseConfigReader {
 			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-2.0.xsd");
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
+			parsePlguins(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 		}
@@ -295,6 +298,15 @@ public class ConfigReader extends BaseConfigReader {
 		return xbmcLocale;
 	}
 
+	private void parsePlguins(Node doc) throws XMLParserException {
+		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) {
+			Element pluginEl = (Element)n;
+			String jar = pluginEl.getAttribute("jar");
+			String clazz = pluginEl.getAttribute("class");
+			plugins.add(new Plugin(jar,clazz));
+		}
+	}
+
 	private void parseXBMCSettings(Node configNode) throws XMLParserException {
 		Element node = (Element) selectSingleNode(configNode, "/mediaManager/XBMCAddons");
 		if (node!=null) {
@@ -340,5 +352,9 @@ public class ConfigReader extends BaseConfigReader {
 			stores.add(store);
 		}
 		return stores;
+	}
+
+	public List<Plugin>getPlugins() {
+		return plugins;
 	}
 }

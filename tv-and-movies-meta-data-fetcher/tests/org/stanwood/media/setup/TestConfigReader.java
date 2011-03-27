@@ -240,6 +240,24 @@ public class TestConfigReader {
 		}
 	}
 
+	@Test
+	public void testPlguins() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<mediaManager>"+LS);
+		testConfig.append("  <plugins>"+LS);
+		testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+LS);
+		testConfig.append("  </plugins>"+LS);
+		testConfig.append("</mediaManager>"+LS);
+
+		ConfigReader configReader = createConfigReader(testConfig);
+		Assert.assertNotNull(configReader.getPlugins());
+		Assert.assertEquals(1,configReader.getPlugins().size());
+		Assert.assertEquals("/home/test/plugin.jar",configReader.getPlugins().get(0).getJar());
+		Assert.assertEquals("this.is.a.Test",configReader.getPlugins().get(0).getPluginClass());
+	}
+
 
 	private ConfigReader createConfigReader(StringBuilder testConfig)
 	throws IOException, FileNotFoundException, ConfigException {
