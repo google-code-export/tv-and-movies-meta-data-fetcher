@@ -2,13 +2,20 @@
 	<xs:element name="mediaManager">  
   		<xs:complexType>
   			<xs:sequence>
+  				<xs:element name="plugins" minOccurs="0" maxOccurs="1">
+		  			<xs:complexType>
+		  				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		  					<xs:element name="plugin" type="plugin"/>
+		  				</xs:sequence>
+		  			</xs:complexType>
+		  		</xs:element>
   				<xs:element name="XBMCAddons" minOccurs="0" maxOccurs="1">
   					<xs:complexType>
 	  					<xs:attribute name="directory" type="xs:string"/>
 	  					<xs:attribute name="locale" type="xs:string"/>
   					</xs:complexType>
   				</xs:element>
-	  			<xs:element name="mediaDirectory">  
+	  			<xs:element name="mediaDirectory" minOccurs="0" maxOccurs="unbounded">  
 	  				<xs:complexType>
 			  			<xs:sequence>
 			  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
@@ -30,10 +37,15 @@
 			  			<xs:attribute name="pattern" type="xs:string"/>
 			  			<xs:attribute name="mode" type="xs:string" use="required"/> <!-- TODO restrict the modes -->
 			  		</xs:complexType>
-		  		</xs:element>
+		  		</xs:element>		  		
 		  	</xs:sequence>
   		</xs:complexType>    	
   	</xs:element>
+  	
+  	<xs:complexType name="plugin">  		
+  		<xs:attribute name="jar" type="xs:string" use="required"/>
+  		<xs:attribute name="class" type="xs:string" use="required"/>
+  	</xs:complexType>
 
 	<xs:complexType name="store">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
