@@ -240,6 +240,10 @@ public class TestConfigReader {
 		}
 	}
 
+	/**
+	 * Used to test that the configuration parse can read plugins correctly
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testPlguins() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
