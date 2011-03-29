@@ -19,6 +19,10 @@ package org.stanwood.media.renamer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -87,5 +91,71 @@ public class TestController extends XBMCAddonTestBase  {
 		}
 	}
 
+	@Test
+	public void testLoadingPluginStoresAndSources() throws Exception {
+		File tmpDir = FileHelper.createTmpDir("tmddir");
+		File tmpJar = File.createTempFile("tmpPlugin", ".jar");
+		try {
+			LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+
+			FileHelper.copy(TestController.class.getResourceAsStream("TestPlugin.jar"), tmpJar);
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <plugins>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.sources.TestSource\"/>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.stores.TestStore\"/>"+LS);
+			testConfig.append("  </plugins>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+tmpDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
+			testConfig.append("    <sources>"+LS);
+			testConfig.append("      <source id=\"org.stanwood.media.test.sources.TestSource\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("      </source>"+LS);
+			testConfig.append("    </sources>"+LS);
+			testConfig.append("    <stores>"+LS);
+			testConfig.append("	     <store id=\"org.stanwood.media.test.stores.TestStore\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("	     </store>"+LS);
+			testConfig.append("    </stores>"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			FakeStore.setFakeParam(null);
+			File configFile = FileHelper.createTmpFileWithContents(testConfig);
+			InputStream is = null;
+			try {
+				is = new FileInputStream(configFile);
+				ConfigReader configReader = new ConfigReader(is);
+				configReader.parse();
+				Controller controller = new Controller(configReader);
+
+				controller.init();
+
+//				mediaDir.getFilm(null, null, new SearchResult("","","",0), true);
+
+				URL url = new URL("jar:file:"+tmpJar.getAbsolutePath()+"!/");
+				URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
+				Class<?> sourceClazz = clazzLoader.loadClass("org.stanwood.media.test.sources.TestSource");
+				Method m = sourceClazz.getMethod("getEvents");
+				List<String>events = (List<String>) m.invoke(null);
+				System.out.println(events);
+
+				Class<?> storeClazz = clazzLoader.loadClass("org.stanwood.media.test.stores.TestStore");
+				m = sourceClazz.getMethod("getEvents");
+				events = (List<String>) m.invoke(null);
+				System.out.println(events);
+			}
+			finally {
+				if (is!=null) {
+					is.close();
+				}
+
+			}
+		}
+		finally {
+			FileHelper.delete(tmpDir);
+			FileHelper.delete(tmpJar);
+		}
+	}
 
 }

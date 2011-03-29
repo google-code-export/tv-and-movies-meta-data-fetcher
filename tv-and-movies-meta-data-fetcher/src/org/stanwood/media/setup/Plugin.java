@@ -18,5 +18,10 @@ public class Plugin {
 		return pluginClass;
 	}
 
+	@Override
+	public String toString() {
+		return jar+":"+pluginClass;
+	}
+
 
 }

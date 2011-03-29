@@ -356,23 +356,19 @@ public class SapphireStore implements IStore {
 		return null;
 	}
 
-	/**
-	 * Used to set the store parameter used to work out which rating should be used.
-	 * If the parameter is not set, then this will return null.
-	 * @return The preferred country certification, or null if not set.
-	 */
-	public String getPreferredCertificationCounrty() {
-		return preferedRating;
+	@Override
+	public void setParameter(String key, String value) {
+		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
+			preferedRating = value;
+		}
 	}
 
-	/**
-	 * Used to set the store parameter used to find which country's certification should be
-	 * used. If this is not set, then it will used the first if finds.
-	 * @param country The country that should be used when getting the certification
-	 */
-	public void setPreferredCertificationCounrty(String country) {
-		preferedRating = country;
+	@Override
+	public String getParameter(String key) {
+		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
+			return preferedRating;
+		}
+		return null;
 	}
-
 
 }
