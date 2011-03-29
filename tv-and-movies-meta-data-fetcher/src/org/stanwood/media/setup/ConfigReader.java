@@ -19,7 +19,6 @@ package org.stanwood.media.setup;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -159,13 +158,7 @@ public class ConfigReader extends BaseConfigReader {
 		for (SourceConfig sourceConfig : dirConfig.getSources()) {
 			String sourceClass = sourceConfig.getID();
 			try {
-				Class<? extends ISource> c = null;
-				try {
-					c = Class.forName(sourceClass).asSubclass(ISource.class);
-				}
-				catch (ClassNotFoundException e) {
-					throw new ConfigException("Unable to add source because source '" + sourceClass + "' can't be found",e);
-				}
+				Class<? extends ISource> c = controller.getSourceClass(sourceClass);
 				if (XBMCSource.class.isAssignableFrom(c)) {
 					List<ISource> xbmcSources = controller.getXBMCAddonManager().getSources();
 					if (sourceConfig.getParams() != null) {
@@ -216,6 +209,8 @@ public class ConfigReader extends BaseConfigReader {
 		return sources;
 	}
 
+
+
 	/**
 	 * Used to read the stores from the configuration file
 	 * @return The stores
@@ -227,7 +222,8 @@ public class ConfigReader extends BaseConfigReader {
 		for (StoreConfig storeConfig : dirConfig.getStores()) {
 			String storeClass = storeConfig.getID();
 			try {
-				Class<? extends IStore> c = Class.forName(storeClass).asSubclass(IStore.class);
+
+				Class<? extends IStore> c = controller.getStoreClass(storeClass);
 				IStore store = c.newInstance();
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
@@ -236,8 +232,6 @@ public class ConfigReader extends BaseConfigReader {
 					}
 				}
 				stores.add(store);
-			} catch (ClassNotFoundException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because it can't be found",e);
 			} catch (InstantiationException e) {
 				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
@@ -251,6 +245,8 @@ public class ConfigReader extends BaseConfigReader {
 		return stores;
 	}
 
+
+
 	private static void setParamOnSource(ISource source, String key, String value)
 	throws  SourceException {
 		source.setParameter(key, value);
@@ -258,12 +254,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private static void setParamOnStore(Class<? extends IStore> c, IStore store, String key, String value)
 		throws IllegalAccessException, InvocationTargetException {
-		for (Method method : c.getMethods()) {
-			if (method.getName().toLowerCase().equals("set" + key.toLowerCase())) {
-				method.invoke(store, value);
-				break;
-			}
-		}
+		store.setParameter(key, value);
 	}
 
 	/**

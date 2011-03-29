@@ -56,8 +56,8 @@ public class TestSapphireStore  {
 	public void testCacheFilm() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		SapphireStore xmlSource = new SapphireStore();
-		xmlSource.setPreferredCertificationCounrty("UK");
-		Assert.assertEquals("UK",xmlSource.getPreferredCertificationCounrty());
+		xmlSource.setParameter("PreferredCertificationCounrty", "UK");
+		Assert.assertEquals("UK",xmlSource.getParameter("PreferredCertificationCounrty"));
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File filmFile = new File(dir,"The Usual Suspects.avi");

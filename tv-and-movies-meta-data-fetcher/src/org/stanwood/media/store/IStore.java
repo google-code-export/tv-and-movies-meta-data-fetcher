@@ -160,4 +160,8 @@ public interface IStore  {
 	 */
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
 
+	public void setParameter(String key, String value);
+
+	public String getParameter(String key);
+
 }

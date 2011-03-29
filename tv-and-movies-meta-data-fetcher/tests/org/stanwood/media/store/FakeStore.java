@@ -106,12 +106,19 @@ public class FakeStore implements IStore {
 		return null;
 	}
 
-	/**
-	 * Used to get the value of the test parameter
-	 * @return The value of the test parameter
-	 */
-	public String getTestParam1() {
-		return getFakeParam();
+	@Override
+	public void setParameter(String key, String value) {
+		if (key.equalsIgnoreCase("FakeParam")) {
+			setFakeParam(value);
+		}
+	}
+
+	@Override
+	public String getParameter(String key) {
+		if (key.equalsIgnoreCase("FakeParam")) {
+			return getFakeParam();
+		}
+		return null;
 	}
 
 	/**
@@ -122,13 +129,7 @@ public class FakeStore implements IStore {
 		return testParam1;
 	}
 
-	/**
-	 * Used to set the value of the test parameter
-	 * @param testParam1 The value of the test parameter
-	 */
-	public void setTestParam1(String testParam1) {
-		setFakeParam(testParam1);
-	}
+
 
 	/**
 	 * Used to set the value of the test parameter

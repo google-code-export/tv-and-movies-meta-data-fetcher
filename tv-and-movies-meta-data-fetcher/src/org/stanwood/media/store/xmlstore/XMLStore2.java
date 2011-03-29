@@ -1024,6 +1024,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return doc;
 	}
 
+	@Override
+	public void setParameter(String key, String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getParameter(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

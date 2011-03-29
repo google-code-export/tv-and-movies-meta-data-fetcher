@@ -244,4 +244,16 @@ public class MemoryStore implements IStore {
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return films.get(filmFile);
 	}
+
+	@Override
+	public void setParameter(String key, String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getParameter(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

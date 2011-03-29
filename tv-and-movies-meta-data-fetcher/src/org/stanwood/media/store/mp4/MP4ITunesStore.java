@@ -200,4 +200,16 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
+	@Override
+	public void setParameter(String key, String value) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getParameter(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
