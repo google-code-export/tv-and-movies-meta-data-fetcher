@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -29,8 +27,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.store.FakeStore;
+import org.stanwood.media.store.IStore;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -91,6 +91,11 @@ public class TestController extends XBMCAddonTestBase  {
 		}
 	}
 
+	/**
+	 * Used to test that plugins can be registered and used
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testLoadingPluginStoresAndSources() throws Exception {
 		File tmpDir = FileHelper.createTmpDir("tmddir");
@@ -131,19 +136,26 @@ public class TestController extends XBMCAddonTestBase  {
 
 				controller.init();
 
-//				mediaDir.getFilm(null, null, new SearchResult("","","",0), true);
+				MediaDirectory mediaDir = controller.getMediaDirectory(tmpDir);
+				List<ISource> sources = mediaDir.getSources();
+				Assert.assertEquals(1,sources.size());
 
-				URL url = new URL("jar:file:"+tmpJar.getAbsolutePath()+"!/");
-				URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
-				Class<?> sourceClazz = clazzLoader.loadClass("org.stanwood.media.test.sources.TestSource");
+				Class<?> sourceClazz = sources.get(0).getClass();
 				Method m = sourceClazz.getMethod("getEvents");
 				List<String>events = (List<String>) m.invoke(null);
-				System.out.println(events);
 
-				Class<?> storeClazz = clazzLoader.loadClass("org.stanwood.media.test.stores.TestStore");
-				m = sourceClazz.getMethod("getEvents");
+				Assert.assertEquals(2,events.size());
+				Assert.assertEquals("setParameter()",events.get(0));
+				Assert.assertEquals("setMediaDirConfig()",events.get(1));
+
+				List<IStore> stores = mediaDir.getStores();
+				Assert.assertEquals(1,stores.size());
+				Class<?> storeClazz = stores.get(0).getClass();
+				m = storeClazz.getMethod("getEvents");
 				events = (List<String>) m.invoke(null);
-				System.out.println(events);
+
+				Assert.assertEquals(1,events.size());
+				Assert.assertEquals("setParameter()",events.get(0));
 			}
 			finally {
 				if (is!=null) {

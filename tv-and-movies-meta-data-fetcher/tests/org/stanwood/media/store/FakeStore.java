@@ -108,14 +108,14 @@ public class FakeStore implements IStore {
 
 	@Override
 	public void setParameter(String key, String value) {
-		if (key.equalsIgnoreCase("FakeParam")) {
+		if (key.equalsIgnoreCase("testParam1")) {
 			setFakeParam(value);
 		}
 	}
 
 	@Override
 	public String getParameter(String key) {
-		if (key.equalsIgnoreCase("FakeParam")) {
+		if (key.equalsIgnoreCase("testParam1")) {
 			return getFakeParam();
 		}
 		return null;

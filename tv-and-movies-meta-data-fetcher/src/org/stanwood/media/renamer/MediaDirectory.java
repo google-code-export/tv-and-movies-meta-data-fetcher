@@ -421,4 +421,11 @@ public class MediaDirectory {
 		return controller.getXBMCAddonManager().getDefaultSourceID(mode);
 	}
 
+	public List<IStore>getStores() {
+		return stores;
+	}
+
+	public List<ISource>getSources() {
+		return sources;
+	}
 }
