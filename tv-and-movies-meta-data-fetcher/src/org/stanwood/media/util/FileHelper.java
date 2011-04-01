@@ -534,4 +534,15 @@ public class FileHelper {
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
 	}
+
+	public static InputStream getInputStream(URL url) throws IOException {
+		WebFileInputStream is = new WebFileInputStream(url);
+		String MIME = is.getMIMEType();
+		if (MIME.equals("zip")) {
+			return new ZipInputStream(is);
+		}
+		else {
+			return is;
+		}
+	}
 }

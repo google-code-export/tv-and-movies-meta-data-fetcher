@@ -7,12 +7,9 @@ Version 2.0
 Add concept of actions, and make rename a action
 	* Action for covert to m4v
 Add --test_run command line option	 
-Look into a tagchimp store that uses their API.
 Create XBMC nfo files from a store instead of the source
 	* Also test this with XBMC to make sure it works as expected
 Update default config file in etc with some examples
-Add ability to register new stores,sources and actions in the config file
-	* This can be used to test new stores and sources before they are released
 Add windows batch files for scripts
 Create a windows installer
 
@@ -20,5 +17,5 @@ Version 2.1
 -----------
 
 Add a GUI to manage the XBMC addons
-Add back the RegExpToReplace command line option
-  - Instead, allow ignore tokens to be configured
+Allow ignore tokens to be configured
+Add support for TV to the TagChimp Source

@@ -80,6 +80,8 @@ projectDir=File.expand_path(File.dirname(__FILE__))+"/.."
 testsDir=projectDir+"/tests"
 testDataDir=testsDir+"/org/stanwood/media/testdata"
     
+downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=search&title=Iron%20Man&totalChapters=X",testDataDir+"/tagchimp-search-iron-man.html");
+downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752",testDataDir+"/tagchimp-film-39752.html");
 downloadFile("http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en",testDataDir+"/tvdb-search-heroes.html")
 downloadFile("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",testDataDir+"/tvdb-series-79501.zip" )
 downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man",testDataDir+"/themoviedb-search-iron-man.html")

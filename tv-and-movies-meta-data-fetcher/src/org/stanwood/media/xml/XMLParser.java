@@ -302,12 +302,29 @@ public class XMLParser {
 		return builder;
 	}
 
+	public static Document parse(String contents,String schemaName) throws XMLParserException {
+		DocumentBuilderFactory factory = createFactory(schemaName);
+		try {
+			DocumentBuilder builder = createDocBuilder(factory);
+			XMLErrorHandler errorHandler = new XMLErrorHandler();
+			builder.setErrorHandler(errorHandler);
+			 InputSource is = new InputSource( new StringReader( contents ) );
+			Document doc = builder.parse(is);
+			if (errorHandler.hasErrors()) {
+				throw new XMLParserException("Unable to parse XML document as it containted errors");
+			}
+			return doc;
+		} catch (SAXException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		} catch (IOException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		} catch (ParserConfigurationException e) {
+			throw new XMLParserException("Unable to parse XML document as it containted errors");
+		}
+	}
+
 	public static Document parse(InputStream is,String schemaName) throws XMLParserException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(true);
-		factory.setXIncludeAware(true);
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+		DocumentBuilderFactory factory = createFactory(schemaName);
 
 		try {
 			DocumentBuilder builder = createDocBuilder(factory);
@@ -327,13 +344,20 @@ public class XMLParser {
 		}
 	}
 
+	private static DocumentBuilderFactory createFactory(String schemaName) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		if (schemaName!=null) {
+			factory.setValidating(true);
+			factory.setXIncludeAware(true);
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+		}
+		return factory;
+	}
+
 
 	public static Document parse(File file,String schemaName) throws XMLParserException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(true);
-		factory.setXIncludeAware(true);
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+		DocumentBuilderFactory factory = createFactory(schemaName);
 
 		try {
 			DocumentBuilder builder = createDocBuilder(factory);

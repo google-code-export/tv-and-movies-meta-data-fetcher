@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +21,6 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.WebFileInputStream;
 
 public class XBMCAddonManager implements IContentFetcher {
 
@@ -95,14 +93,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	}
 
 	/* package for test */InputStream getSource(URL url) throws IOException {
-		WebFileInputStream is = new WebFileInputStream(url);
-		String MIME = is.getMIMEType();
-		if (MIME.equals("zip")) {
-			return new ZipInputStream(is);
-		}
-		else {
-			return is;
-		}
+		return FileHelper.getInputStream(url);
 	}
 
 	@Override
