@@ -1,4 +1,4 @@
-package org.stanwood.media.renamer;
+package org.stanwood.media.actions.rename;
 
 public class PatternException extends Exception {
 

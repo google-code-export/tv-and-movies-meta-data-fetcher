@@ -79,8 +79,6 @@ public class MediaDirectory {
 					break;
 				}
 			}
-		} else {
-			show = stores.get(0).getShow(rootMediaDir,episodeFile, searchResult.getId());
 		}
 
 		if (show == null) {
@@ -130,8 +128,6 @@ public class MediaDirectory {
 					break;
 				}
 			}
-		} else {
-			film = stores.get(0).getFilm(rootMediaDir,filmFile, searchResult.getId());
 		}
 
 		if (film == null) {
@@ -182,8 +178,6 @@ public class MediaDirectory {
 					break;
 				}
 			}
-		} else {
-			season = stores.get(0).getSeason(rootMediaDir,episodeFile, show, seasonNum);
 		}
 
 		if (season == null) {
@@ -232,8 +226,6 @@ public class MediaDirectory {
 					break;
 				}
 			}
-		} else {
-			episode = stores.get(0).getEpisode(rootMediaDir,episodeFile, season, episodeNum);
 		}
 
 		if (episode == null) {
@@ -284,8 +276,6 @@ public class MediaDirectory {
 					break;
 				}
 			}
-		} else {
-			episode = stores.get(0).getEpisode(rootMediaDir,specialFile, season, specialNum);
 		}
 
 		if (episode == null) {

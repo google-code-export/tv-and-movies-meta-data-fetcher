@@ -17,9 +17,7 @@
 package org.stanwood.media.renamer;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +25,14 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.ActionPerformer;
+import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.source.SourceException;
-import org.stanwood.media.store.StoreException;
 
 /**
  * This class is used to handle the renaming of files. It provides a main method
@@ -50,7 +50,6 @@ public class CLIRenamer extends AbstractLauncher {
 	private static final List<Option> OPTIONS;
 
 	private boolean refresh = false;
-	private boolean recursive = false;
 	private MediaDirectory rootMediaDir = null;
 
 	private static PrintStream stdout = System.out;
@@ -68,9 +67,6 @@ public class CLIRenamer extends AbstractLauncher {
 		OPTIONS.add(o);
 
 		o = new Option(REFRESH_STORE_OPTION, "refresh",false,"If this option is present, it will make the stores get regenerated from source.");
-		OPTIONS.add(o);
-
-		o = new Option(RECURSIVE_OPTION,"recursive",false,"Also process subdirectories");
 		OPTIONS.add(o);
 	}
 
@@ -95,7 +91,7 @@ public class CLIRenamer extends AbstractLauncher {
 	 * </pre>
 	 *
 	 * The pattern is used to work out what the format of the renamed file should be. See
-	 * @see org.stanwood.media.renamer.Renamer for more information on the pattern.
+	 * @see org.stanwood.media.actions.ActionPerformer for more information on the pattern.
 	 *
 	 * When looking up files to rename, it needs to work out the episode and season number
 	 * of each file. See @see org.stanwood.media.renamer.FileNameParser for more information
@@ -124,19 +120,15 @@ public class CLIRenamer extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		Renamer renamer = new Renamer(getController(),rootMediaDir,VALID_EXTS,refresh,recursive);
 		try {
-			renamer.tidyShowNames();
-			return true;
-		} catch (MalformedURLException e) {
-			log.error(e.getMessage(),e);
-		} catch (IOException e) {
-			log.error(e.getMessage(),e);
-		} catch (SourceException e) {
-			log.error(e.getMessage(),e);
-		} catch (StoreException e) {
-			log.error(e.getMessage(),e);
-		} catch (PatternException e) {
+			List<IAction>actions = new ArrayList<IAction>();
+			RenameAction renameAction = new RenameAction();
+			renameAction.setParameter(RenameAction.PARAM_KEY_REFRESH, String.valueOf(true));
+			actions.add(renameAction);
+			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,VALID_EXTS);
+
+			return renamer.performActions();
+		} catch (ActionException e) {
 			log.error(e.getMessage(),e);
 		}
 		return false;
@@ -173,7 +165,6 @@ public class CLIRenamer extends AbstractLauncher {
 		}
 
 		refresh = (cmd.hasOption(REFRESH_STORE_OPTION));
-		recursive = (cmd.hasOption(RECURSIVE_OPTION));
 
 		return true;
 	}
