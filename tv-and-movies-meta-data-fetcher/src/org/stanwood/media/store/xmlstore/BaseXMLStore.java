@@ -82,7 +82,4 @@ public abstract class BaseXMLStore extends XMLParser {
 		return url.toExternalForm();
 	}
 
-
-
-
 }

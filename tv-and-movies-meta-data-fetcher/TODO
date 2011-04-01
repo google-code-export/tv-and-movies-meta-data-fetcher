@@ -12,6 +12,7 @@ Create XBMC nfo files from a store instead of the source
 Update default config file in etc with some examples
 Add windows batch files for scripts
 Create a windows installer
+Allow renamer extensions to be configured
 
 Version 2.1
 -----------

@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.regex.Matcher;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -399,12 +398,30 @@ public class XMLParser {
 	 * @return The encoded value
 	 */
 	public static String encodeAttributeValue(String value) {
-		String result = value.replaceAll("'", Matcher.quoteReplacement("&apos;"));
-		result = result.replaceAll("\\&", Matcher.quoteReplacement("&amp;"));
-		result = result.replaceAll("\\<", Matcher.quoteReplacement("&lt;"));
-		result = result.replaceAll("\\>", Matcher.quoteReplacement("&gt;"));
-		result = result.replaceAll("\"", Matcher.quoteReplacement("&quot;"));
-		return result;
+		StringBuilder result =new StringBuilder();
+		for (int i=0;i<value.length();i++) {
+			char c = value.charAt(i);
+			switch (c)  {
+			case '&' :
+				result.append("&amp;");
+				break;
+			case '\'' :
+				result.append("&apos;");
+				break;
+			case '<' :
+				result.append("&lt;");
+				break;
+			case '>' :
+				result.append("&gt;");
+				break;
+			case '"' :
+				result.append("&quot;");
+				break;
+			default:
+				result.append(c);
+			}
+		}
+		return result.toString();
 	}
 
 	public static void writeXML(File file, Document doc) throws IOException {
@@ -424,4 +441,12 @@ public class XMLParser {
 
 	}
 
+	public String quoteXPathQuery(String s) {
+		if (s.contains("'")) {
+			return "\""+s+"\"";
+		}
+		else {
+			return "'"+s+"'";
+		}
+	}
 }

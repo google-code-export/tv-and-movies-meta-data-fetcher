@@ -95,7 +95,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
@@ -165,7 +165,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
@@ -241,7 +241,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
 			CLIRenamer.main(args);
 
 			// Check that things were renamed correctly
@@ -303,7 +303,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-R","-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
 			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null);
 			CLIRenamer.main(args);
 

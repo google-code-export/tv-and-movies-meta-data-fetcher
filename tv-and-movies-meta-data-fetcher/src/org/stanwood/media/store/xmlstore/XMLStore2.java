@@ -195,11 +195,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void appendFile(Document doc, Node parent, VideoFile file) throws StoreException {
 		if (file!=null) {
 			try {
-				Element fileNode = (Element)selectSingleNode(parent, "file[@location='"+file.getLocation().getAbsolutePath()+"']");
+
+				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(file.getLocation().getAbsolutePath())+"]");
 				if (fileNode==null) {
 					fileNode = doc.createElement("file");
 					parent.appendChild(fileNode);
 				}
+
 				fileNode.setAttribute("location", file.getLocation().getAbsolutePath());
 			} catch (XMLParserException e) {
 				throw new StoreException("Unable to read xml",e);
@@ -895,7 +897,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		if (doc!=null) {
 			try {
-				for (Node node : selectNodeList(doc, "//file[@location='"+oldFile.getPath()+"']")) {
+				for (Node node : selectNodeList(doc, "//file[@location="+quoteXPathQuery(oldFile.getPath())+"]")) {
 					Element fileNode = (Element)node;
 					fileNode.setAttribute("location", newFile.getAbsolutePath());
 					if (fileNode.getAttribute("orginalLocation").equals("")) {
@@ -940,7 +942,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		SearchResult result = null;
 
 		// search for film by file name
-		for (Node node : selectNodeList(store,"film/file/[@location='"+episodeFile.getAbsolutePath()+"']")) {
+		for (Node node : selectNodeList(store,"film/file/[@location="+quoteXPathQuery(episodeFile.getAbsolutePath())+"]")) {
 			Element filmEl = (Element)node.getParentNode();
 			Integer part = null;
 			if (!((Element)node).getAttribute("part").equals("")) {
@@ -956,7 +958,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		SearchResult result = null;
 
 		// search for show by file name
-		NodeList showNodes = selectNodeList(store,"show/file[@location='"+XMLParser.encodeAttributeValue(episodeFile.getAbsolutePath())+"']");
+		NodeList showNodes = selectNodeList(store,"show/file[@location="+quoteXPathQuery(episodeFile.getAbsolutePath())+"]");
 		if (showNodes!=null && showNodes.getLength()>0) {
 			Element showEl = (Element)showNodes.item(0).getParentNode();
 			Integer part = null;

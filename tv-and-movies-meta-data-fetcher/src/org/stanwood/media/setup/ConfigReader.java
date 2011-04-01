@@ -27,9 +27,9 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.renamer.Controller;
-import org.stanwood.media.renamer.PatternMatcher;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
