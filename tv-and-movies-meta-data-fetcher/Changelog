@@ -1,3 +1,5 @@
+* Fri Apr 1 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Reworked tagchimp source to use tagchimp API
 * Fri Mar 25 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Improved film and TV searching.
 - XBMC addon manager application should now be working.

@@ -86,7 +86,7 @@ public class SearchResult {
 	 */
 	@Override
 	public String toString() {
-		return id+":"+sourceId+" - [" + url+"] - ["+title+"]" ;
+		return id+":"+sourceId+" - (" + url+") - ("+title+")" ;
 	}
 
 	/**

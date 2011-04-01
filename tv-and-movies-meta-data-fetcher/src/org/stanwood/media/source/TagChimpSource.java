@@ -2,14 +2,13 @@ package org.stanwood.media.source;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,23 +17,29 @@ import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
+import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.renamer.MediaDirectory;
-import org.stanwood.media.search.SearchHelper;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
+import org.stanwood.media.source.xbmc.StreamProcessor;
+import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.xml.IterableNodeList;
+import org.stanwood.media.xml.XMLParser;
+import org.stanwood.media.xml.XMLParserException;
+import org.stanwood.media.xml.XMLParserNotFoundException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * This class is a source used to retrieve information about films from {@link "www.tagchimp.com"}. This source has the
  * option parameter "regexpToReplace". This is used when searching for a film via the film's filename. The parameter is
  * a regular expression, that when found in the filename, is removed.
  */
-public class TagChimpSource implements ISource {
+public class TagChimpSource extends XMLParser implements ISource {
 
 	private final static Log log = LogFactory.getLog(TagChimpSource.class);
 
@@ -43,12 +48,7 @@ public class TagChimpSource implements ISource {
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "tagChimp";
 
-	private static final String BASE_URL = "http://www.tagchimp.com";
-	private static final String MOVIES_URL = "/tc/$filmId$/";
-	private Pattern CHAPTER_PATTERN = Pattern.compile("chapter (\\d+):");
-	private Pattern SEARCH_PATTERN = Pattern.compile("/tc/(\\d+)/");
-
-	private String regexpToReplace = null;
+	private static final String TAG_CHIMP_TOKEN = "11151451274D8F94339E891";
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -63,126 +63,53 @@ public class TagChimpSource implements ISource {
 	 */
 	@Override
 	public Film getFilm(String filmId,URL url,File file) throws SourceException, MalformedURLException, IOException {
-		//TODO is this needed? We now have a url in the params
-		url = new URL(getFilmURL(filmId));
-		Film film = new Film(filmId);
+		return parseFilm(filmId,url,file);
+	}
+
+	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
+		final Film film = new Film(filmId);
 		film.setFilmUrl(url);
-		film.setSourceId(SOURCE_ID);
-		Source source = getSource(film.getFilmUrl());
-		if (source == null) {
-			throw new SourceException("Unable to find film with id: " + filmId);
-		}
-		parseFilm(source, film);
-		// if (fetchPosters) {
-		// FindFilmPosters posterFinder = new FindFilmPosters();
-		// film.setImageURL(posterFinder.findViaMoviePoster(film));
-		// }
+		film.setSourceId(getSourceId());
+
+		StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+			@Override
+			public void processContents(String contents) throws SourceException {
+				try {
+	    			Document doc = parse(contents, null);
+	    			film.setDate(RELEASE_DATE_FORMAT.parse(getStringFromXML(doc, "/items/movie/movieTags/info/releaseDate/text()")));
+	    			film.setDescription(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/longDescription/text()")," "));
+	    			film.setId(filmId);
+	    			film.setTitle(getStringFromXML(doc, "/items/movie/movieTags/info/movieTitle/text()"));
+	    			film.setSummary(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/shortDescription/text()")," "));
+//	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
+//	    			film.setCountry(getStringFromXML(doc, "details/country/text()"));
+	    			film.setImageURL(new URL(getStringFromXML(doc, "/items/movie/movieTags/coverArtLarge/text()")));
+
+	    			parseDirectors(film, doc);
+	    			parseActors(film, doc);
+	    			parseWriters(film, doc);
+
+	    			parseGenres(film,doc);
+	    			parseCertification(film,doc);
+	    			parseChapters(film,doc);
+
+
+				}
+				catch (XMLParserException e) {
+					throw new SourceException("Unable to parse show details",e);
+				}
+				catch (MalformedURLException e) {
+					throw new SourceException("Unable to parse show details",e);
+				} catch (ParseException e) {
+					throw new SourceException("Unable to parse show details",e);
+				}
+			}
+
+		};
+		processor.handleStream();
+
 
 		return film;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void parseFilm(Source source, Film film) throws MalformedURLException {
-		List<Element> trs = source.findAllElements(HTMLElementName.TR);
-		for (Element tr : trs) {
-			List<Element> tds = tr.getChildElements();
-			if (tds.size() == 2 || tds.size() == 3) {
-				int index = 0;
-				if (tds.size()==3) {
-					index++;
-				}
-				String fieldName = tds.get(index).getTextExtractor().toString();
-				@SuppressWarnings("rawtypes")
-				List elements = tds.get(index+1).getChildElements();
-				if (elements.size()>0) {
-					Element sub = (Element) elements.get(0);
-					String fieldValue = null;
-					if (sub.getName().equals(HTMLElementName.INPUT)) {
-						fieldValue = sub.getAttributeValue("value");
-					} else if (sub.getName().equals(HTMLElementName.SELECT)) {
-						List<Element> opts = sub.getChildElements();
-						for (Element opt : opts) {
-							if (opt.getAttributeValue("selected") != null
-									&& opt.getAttributeValue("selected").equals("selected")) {
-								fieldValue = opt.getAttributeValue("value");
-							}
-						}
-					} else if (sub.getName().equals(HTMLElementName.TEXTAREA)) {
-						fieldName = sub.getAttributeValue("name");
-						fieldValue = sub.getTextExtractor().toString();
-					}
-
-					if (fieldValue != null) {
-
-						handleField(film, fieldName, SearchHelper.decodeHtmlEntities(fieldValue).trim());
-					}
-				}
-			}
-		}
-		List<Element> imgs = source.findAllElements(HTMLElementName.IMG);
-		for (Element img : imgs) {
-			String src = img.getAttributeValue("src");
-			if (src != null && src.startsWith("/covers/large/")) {
-				film.setImageURL(new URL(BASE_URL + src));
-			}
-		}
-	}
-
-	private void handleField(Film film, String name, String value) {
-		name = name.toLowerCase();
-		if (name.equals("movie title")) {
-			film.setTitle(value);
-		} else if (name.equals("release date")) {
-			try {
-				film.setDate(RELEASE_DATE_FORMAT.parse(value));
-			} catch (ParseException e) {
-				log.error("Unable to parse date '" + value + "' of film with id '" + film.getId() + "'");
-			}
-		} else if (name.equals("director")) {
-			List<String> directors = new ArrayList<String>();
-			for (String director : value.split(",")) {
-				directors.add(director.trim());
-			}
-			film.setDirectors(directors);
-		} else if (name.equals("producer")) {
-
-		} else if (name.equals("screenwriter")) {
-			List<String> writers = new ArrayList<String>();
-			for (String writer : value.split(",")) {
-				writers.add(writer.trim());
-			}
-			film.setWriters(writers);
-		} else if (name.equals("copyright")) {
-
-		} else if (name.equals("rating")) {
-			List<Certification> certs = new ArrayList<Certification>();
-			certs.add(new Certification(value, "USA"));
-			film.setCertifications(certs);
-		} else if (name.equals("genre")) {
-			List<String> genres = new ArrayList<String>();
-			genres.add(value);
-			film.setGenres(genres);
-			film.setPreferredGenre(value);
-		} else if (name.equals("artist")) {
-			List<Actor> guestStars = new ArrayList<Actor>();
-			for (String artist : value.split(",")) {
-				guestStars.add(new Actor(artist.trim(),""));
-			}
-			film.setActors(guestStars);
-		} else if (name.equals("short_description")) {
-			film.setSummary(value);
-		} else if (name.equals("long_description")) {
-			film.setDescription(value);
-		} else {
-			Matcher m = CHAPTER_PATTERN.matcher(name);
-			if (m.matches()) {
-				addChapter(film, Integer.parseInt(m.group(1)), value);
-			}
-		}
-	}
-
-	private void addChapter(Film film, int number, String name) {
-		film.addChapter(new Chapter(name, number));
 	}
 
 	/**
@@ -243,48 +170,139 @@ public class TagChimpSource implements ISource {
 	}
 
 	@Override
-	public SearchResult searchMedia(String name, Mode mode, Integer part) throws SourceException {
+	public SearchResult searchMedia(final String name, final Mode mode, final Integer part) throws SourceException {
 		if (mode != Mode.FILM) {
 			return null;
 		}
 
-		Source source;
+		final List<SearchResult>lockedResults = new ArrayList<SearchResult>();
+		final List<SearchResult>unlockedResults = new ArrayList<SearchResult>();
 		try {
-			source = getSource(new URL(getSearchUrl(name.replaceAll(" ", "+"))));
-		} catch (MalformedURLException e) {
-			throw new SourceException("Unable to search source " + getSourceId(),e);
-		} catch (IOException e) {
-			throw new SourceException("Unable to search source " + getSourceId(),e);
-		}
-		List<Element> divs = source.findAllElements(HTMLElementName.DIV);
-		for (Element div : divs) {
-			if (div.getAttributeValue("id") != null && div.getAttributeValue("id").equals("main_mid")) {
-					List<Element> links= new ArrayList<Element>();
-					ParseHelper.findAllElements(links,div, HTMLElementName.A,true,null);
-					for (Element link : links) {
-						String url = link.getAttributeValue("href");
-						String title = link.getTextExtractor().toString();
-						if (url != null) {
-							Matcher m = SEARCH_PATTERN.matcher(url);
-							if (m.matches()) {
-								String id = m.group(1);
-								if (SearchHelper.normalizeQuery(title).contains(SearchHelper.normalizeQuery(name))) {
-									SearchResult result = new SearchResult(id, SOURCE_ID,BASE_URL+url,null);
-									return result;
-								}
+			URL url = getSearchUrl(name);
+			StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+				@Override
+				public void processContents(String contents) throws SourceException {
+					try {
+						Document doc = parse(contents, null);
+						IterableNodeList entities = selectNodeList(doc, "/items/movie");
+						for (Node n : entities) {
+							String id = getStringFromXML(n, "tagChimpID/text()");
+							String locked = getStringFromXML(n, "locked/text()");
+							SearchResult result = new SearchResult(id, getSourceId(), getFilmUrl(id).toExternalForm(), null);
+							result.setTitle(getStringFromXML(n,"movieTags/info/movieTitle/text()"));
+							if (locked.equals("yes")) {
+								lockedResults.add(result);
+							}
+							else {
+								unlockedResults.add(result);
 							}
 						}
-//					}
+					}
+					catch (XMLParserException e) {
+						throw new SourceException("Unale to get show results",e);
+					} catch (MalformedURLException e) {
+						throw new SourceException("Unale to get show results",e);
+					}
 				}
-			}
+			};
+			processor.handleStream();
+		} catch (MalformedURLException e) {
+			throw new SourceException("Unable to search for show",e);
+		} catch (IOException e) {
+			throw new SourceException("Unable to search for show",e);
 		}
 
-		return null;
+		final List<SearchResult>results = new ArrayList<SearchResult>();
+		results.addAll(lockedResults);
+		results.addAll(unlockedResults);
+		if (results.size()>0) {
+			for (SearchResult result : results) {
+				if (result.getTitle().equalsIgnoreCase(name)) {
+					return result;
+				}
+			}
+			return results.get(0);
+		}
+		else {
+			return null;
+
+		}
 	}
 
+	private void parseGenres(final IVideoGenre video, Document doc) throws XMLParserException {
+		List<String> genres = new ArrayList<String>();
+		for (Node genre : selectNodeList(doc, "//genre/text()")) {
+			genres.add(genre.getTextContent());
+		}
+		video.setGenres(genres);
+	}
 
-	private String getSearchUrl(String query) {
-		return BASE_URL + "/search/index.php?s=" + query + "&search.x=0&search.y=0&kind=mo1";
+	private void parseWriters(final IVideo viode, Document doc)
+	throws XMLParserException {
+		List<String> writers = new ArrayList<String>();
+		for (Node writer : selectNodeList(doc, "/items/movie/movieTags/info/screenwriters/screenwriter/text()")) {
+			writers.add(writer.getTextContent());
+		}
+		viode.setWriters(writers);
+	}
+
+	private void parseDirectors(final IVideo video, Document doc)
+		throws XMLParserException {
+		List<String> directors = new ArrayList<String>();
+		for (Node director : selectNodeList(doc, "/items/movie/movieTags/info/directors/director/text()")) {
+			directors.add(director.getTextContent());
+		}
+		video.setDirectors(directors);
+	}
+
+	private void parseActors(final IVideoActors video, Document doc)
+		throws XMLParserException {
+		List<Actor> actors = new ArrayList<Actor>();
+		try {
+			for (Node actor : selectNodeList(doc, "/items/movie/movieTags/info/cast/actor/text()")) {
+				actors.add(new Actor(actor.getNodeValue(),""));
+			}
+		}
+		catch (XMLParserNotFoundException e) {
+			// Ignore, no actors
+		}
+		video.setActors(actors);
+	}
+
+	protected void parseChapters(Film film, Document doc) throws XMLParserException {
+		List<Chapter>chapters = new ArrayList<Chapter>();
+		for (Node chapterNode : selectNodeList(doc, "/items/movie/movieChapters/chapter")) {
+			chapters.add(new Chapter(getStringFromXML(chapterNode, "chapterTitle/text()"),getIntegerFromXML(chapterNode, "chapterNumber/text()")));
+		}
+		film.setChapters(chapters);
+	}
+
+	protected void parseCertification(Film film, Document doc) throws XMLParserException {
+		String type = "mpaa";
+		String cert = getStringFromXML(doc, "/items/movie/movieTags/info/rating/text()");
+		List<Certification>certs = new ArrayList<Certification>();
+		certs.add(new Certification(cert, type));
+		film.setCertifications(certs);
+	}
+
+	private URL getSearchUrl(String query) throws MalformedURLException {
+		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=search&totalChapters=X&title="+query);
+	}
+
+	private URL getFilmUrl(String id) throws MalformedURLException {
+		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=lookup&id="+id);
+	}
+
+	/* package for test */InputStream getSource(URL url) throws IOException {
+		return FileHelper.getInputStream(url);
+	}
+
+	public InputStream getStreamToURL(URL url) throws IOException, SourceException {
+		InputStream stream = getSource(url);
+		if (stream==null) {
+			throw new SourceException("Unable to get resource: " + url);
+		}
+		return stream;
 	}
 
 	/**
@@ -300,9 +318,6 @@ public class TagChimpSource implements ISource {
 	 */
 	@Override
 	public void setParameter(String key,String value) throws SourceException {
-		if (key.equalsIgnoreCase("RegexpToReplace")) {
-			regexpToReplace = value;
-		}
 		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
 
@@ -319,30 +334,40 @@ public class TagChimpSource implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		if (key.equalsIgnoreCase("RegexpToReplace")) {
-			return regexpToReplace;
-		}
 		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
 	}
 
-	/* package for test */Source getSource(URL url) throws IOException {
-		return new Source(url);
-	}
-
-	private final static String getFilmURL(String filmId) {
-		String strFilmId = filmId;
-		while (strFilmId.length() < 7) {
-			strFilmId = "0" + strFilmId;
-		}
-
-		return BASE_URL + MOVIES_URL.replaceAll("\\$filmId\\$", strFilmId);
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
-		// TODO Auto-generated method stub
 
 	}
+
+	public static String stripLineBreaks(String string, String replaceWith) {
+
+
+	      int len = string.length();
+	      StringBuffer buffer = new StringBuffer(len);
+	      for (int i = 0; i < len; i++) {
+	          char c = string.charAt(i);
+
+	          // skip \n, \r, \r\n
+	          switch (c) {
+	              case '\n':
+	              case '\r': // do lookahead
+	                  if (i + 1 < len && string.charAt(i + 1) == '\n') {
+	                      i++;
+	                  }
+
+	                  buffer.append(replaceWith);
+	                  break;
+	              default:
+	                  buffer.append(c);
+	          }
+	      }
+
+	      return buffer.toString().replaceAll(replaceWith+replaceWith, replaceWith);
+	  }
 
 
 }

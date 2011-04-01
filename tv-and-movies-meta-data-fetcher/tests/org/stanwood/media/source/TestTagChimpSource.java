@@ -18,10 +18,13 @@ package org.stanwood.media.source;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,14 +37,14 @@ import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
-import au.id.jericho.lib.html.Source;
-
 /**
  * Used to test the {@link TagChimpSource} class.
  */
 public class TestTagChimpSource {
 
-	private final static String FILM_ID_IRON_MAN = "iron-man-17";
+	private static final Pattern TAGCHIMP_FILM_PATTERN = Pattern.compile(".*tagchimp\\.com.*id\\=(.+?)");
+	private static final Pattern TAGCHIMP_SEARCH_PATTERN = Pattern.compile(".*tagchimp\\.com.*title\\=(.+?)");
+	private static final String FILM_ID_IRON_MAN = "39752";
 
 	private final DateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
 
@@ -51,7 +54,8 @@ public class TestTagChimpSource {
 	 */
 	@Test
 	public void testSearch() throws Exception {
-		TagChimpSource source = getSource(FILM_ID_IRON_MAN);
+		TagChimpSource source = getSource();
+
 		File dir = FileHelper.createTmpDir("films");
 		try {
 			File tmpFile = new File(dir,"Iron man.avi");
@@ -61,7 +65,7 @@ public class TestTagChimpSource {
 			SearchResult result = source.searchMedia("Iron Man", Mode.FILM, null);
 			Assert.assertEquals("39752",result.getId());
 			Assert.assertEquals("tagChimp",result.getSourceId());
-			Assert.assertEquals("http://www.tagchimp.com/tc/39752/",result.getUrl());
+			Assert.assertEquals("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752",result.getUrl());
 		}
 		finally {
 			FileHelper.delete(dir);
@@ -74,8 +78,8 @@ public class TestTagChimpSource {
 	 */
 	@Test
 	public void testIronManFilm() throws Exception {
-		TagChimpSource source = getSource(FILM_ID_IRON_MAN);
-		Film film = source.getFilm( FILM_ID_IRON_MAN,null,null);
+		TagChimpSource source = getSource();
+		Film film = source.getFilm( FILM_ID_IRON_MAN,new URL("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752"),null);
 		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
 		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
 		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark (Robert Downey Jr.) is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
@@ -107,7 +111,7 @@ public class TestTagChimpSource {
 
 		List<Certification>certs = film.getCertifications();
 		Assert.assertEquals(1,certs.size());
-		Assert.assertEquals("USA",certs.get(0).getType());
+		Assert.assertEquals("mpaa",certs.get(0).getType());
 		Assert.assertEquals("PG-13",certs.get(0).getCertification());
 
 		List<Chapter>chapters = film.getChapters();
@@ -147,21 +151,29 @@ public class TestTagChimpSource {
 		Assert.assertEquals("Check chapter name", "End Credits",chapters.get(16).getName());
 	}
 
-	private TagChimpSource getSource(final String filmId) {
+	private TagChimpSource getSource() {
 		TagChimpSource source = new TagChimpSource() {
 			@Override
-			Source getSource(URL url) throws IOException {
+			InputStream getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();
-				if (strUrl.equals("http://www.tagchimp.com/tc/"+filmId+"/")) {
-					String file = "tagchimp-"+filmId+".html";
-					return new Source(Data.class.getResource(file));
+				System.out.println("Fetching URL: " + strUrl);
+				Matcher m = TAGCHIMP_SEARCH_PATTERN.matcher(strUrl);
+				if (m.matches()) {
+					return Data.class.getResourceAsStream("tagchimp-search-"+getSearchName(m.group(1))+".html");
 				}
-				else if (strUrl.contains("/search/index.php?s=")) {
-					return new Source(Data.class.getResource("tagchimp-search-ironman.html"));
+				m = TAGCHIMP_FILM_PATTERN.matcher(strUrl);
+				if (m.matches()) {
+					return Data.class.getResourceAsStream("tagchimp-film-"+m.group(1)+".html");
 				}
-				return null;
+				throw new IOException("Unable to find test data for url: " + url);
 			}
 		};
 		return source;
+	}
+
+	private String getSearchName(String value) {
+		value = value.toLowerCase();
+		value = value.replaceAll("[ |+]", "-");
+		return value;
 	}
 }
