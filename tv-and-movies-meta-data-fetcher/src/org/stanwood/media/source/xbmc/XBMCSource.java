@@ -206,6 +206,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
+	    			String blah = XMLParser.domToStr(doc);
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);

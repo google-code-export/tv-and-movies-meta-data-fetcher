@@ -44,7 +44,7 @@ public abstract class BaseXMLStore extends XMLParser {
 	protected void writeCache(File file, Document doc) throws StoreException {
 		try {
 			XMLParser.writeXML(file,doc);
-
+			System.out.println("Write cache");
 			if (log.isDebugEnabled()) {
 				log.debug("Written cache to file : " + file.getAbsolutePath());
 			}

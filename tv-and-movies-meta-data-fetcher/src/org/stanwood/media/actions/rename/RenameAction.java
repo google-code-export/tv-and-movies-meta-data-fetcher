@@ -22,8 +22,10 @@ import org.stanwood.media.store.StoreException;
 
 public class RenameAction implements IAction {
 
-	public static final String PARAM_KEY_REFRESH = "refresh";
 	private final static Log log = LogFactory.getLog(RenameAction.class);
+
+	public static final String PARAM_KEY_REFRESH = "refresh";
+
 	private boolean refresh = false;
 
 	@Override

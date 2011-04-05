@@ -123,7 +123,7 @@ public class CLIRenamer extends AbstractLauncher {
 		try {
 			List<IAction>actions = new ArrayList<IAction>();
 			RenameAction renameAction = new RenameAction();
-			renameAction.setParameter(RenameAction.PARAM_KEY_REFRESH, String.valueOf(true));
+			renameAction.setParameter(RenameAction.PARAM_KEY_REFRESH, String.valueOf(refresh));
 			actions.add(renameAction);
 			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,VALID_EXTS);
 
