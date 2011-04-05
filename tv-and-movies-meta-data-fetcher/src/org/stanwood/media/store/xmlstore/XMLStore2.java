@@ -808,7 +808,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	throws StoreException, NotInStoreException, MalformedURLException {
 		try {
 			Node storeNode = getStoreNode(doc);
-			Element showNode = (Element) selectSingleNode(storeNode, "show[@id='"+showId+"']");
+			Element showNode = (Element) selectSingleNode(storeNode, "show[@id="+quoteXPathQuery(showId)+"]");
 			if (showNode==null) {
 				throw new NotInStoreException();
 			}
@@ -827,7 +827,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				show.setImageURL(new URL(imageURL));
 			}
 			catch (MalformedURLException e) {
-				log.warn("Unable to get show image url " + imageURL);
+				log.warn("Unable to get show image url [" + imageURL+"]");
 			}
 
 			show.setLongSummary(longSummary);
@@ -1014,10 +1014,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, DTD_WEB_LOCATION);
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
-			NodeList nodes = doc.getDocumentElement().getParentNode().getChildNodes();
-			for (int i=0;i<nodes.getLength();i++) {
-				System.out.println(nodes.item(i).getNodeName() + " : " + nodes.item(i).getNodeValue() + " : " + nodes.item(i).getClass());
-			}
 			writeCache(cacheFile, doc);
 		} catch (ParserConfigurationException e) {
 			throw new StoreException("Unable to create cache: "

@@ -139,7 +139,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveStoreRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+//		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 
 		// Create test files
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
