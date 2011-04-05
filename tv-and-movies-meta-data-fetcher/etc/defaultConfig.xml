@@ -1,3 +1,32 @@
-<mediaManager xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:xsi:schemaLocation="https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd">
+<mediaManager>	
+	<!-- Example Film media directory -->
+	<!-- 	
+	<mediaDirectory directory="/media/films" mode="FILMS" pattern="%t{ Part %p}.%x">
+		<sources>
+			<source id="org.stanwood.media.source.xbmc.XBMCSource"/>
+		</sources>
+		<stores>
+			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
+		</stores>
+	</mediaDirectory>
+	 -->
+	
+	<!-- Example TV show media directory -->
+	<!-- 
+	<mediaDirectory directory="/media/TV" mode="TV_SHOW" pattern="%n/Season %s/%e - %t.%x">
+		<sources>
+			<source id="org.stanwood.media.source.xbmc.XBMCSource">
+				<param key="posters" value="true"/>
+			</source>
+		</sources>
+		<stores>
+			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
+		</stores>
+	</mediaDirectory>
+	 -->
+	 
+	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
+	 <!--
+	 <XBMCAddons directory="/home/user/.mediaManager/xbmc" locale="en"/> 
+	  -->
 </mediaManager>

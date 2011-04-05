@@ -333,6 +333,16 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 		}
 	}
 
+	/**
+	 * Used to setup the controller ready for testing
+	 * @param mediaDir The media directory been tested
+	 * @param pattern The pattern to use with rename operations
+	 * @param mode The mode of the test
+	 * @param source The source to use, or null if none are used
+	 * @param sourceParams The params of the source
+	 * @param store The store to use, or null if none are used
+	 * @throws Exception Thrown if their is a problem
+	 */
 	public static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
