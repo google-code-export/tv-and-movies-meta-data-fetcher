@@ -14,6 +14,9 @@ import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Test the config reader
+ */
 public class TestConfigReader {
 
 	private final static String LS = System.getProperty("line.separator");
@@ -26,7 +29,12 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
+			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
+			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaInfoFetcher-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
+//			testConfig.append("              version=\"2.0\""+LS);
+//			testConfig.append("<mediaManager"+LS);
+			testConfig.append(">"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
 			testConfig.append("    <sources>"+LS);
 			testConfig.append("      <source id=\"org.stanwood.media.renamer.FakeSource\">"+LS);
@@ -38,6 +46,11 @@ public class TestConfigReader {
 			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
 			testConfig.append("	     </store>"+LS);
 			testConfig.append("    </stores>"+LS);
+			testConfig.append("    <actions>"+LS);
+			testConfig.append("        <action id=\"a.test.action\">"+LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("        </action>"+LS);
+			testConfig.append("    </actions>"+LS);
 			testConfig.append("  </mediaDirectory>"+LS);
 			testConfig.append("</mediaManager>"+LS);
 
@@ -64,6 +77,10 @@ public class TestConfigReader {
 			List<StoreConfig> stores = dirConfig.getStores();
 			Assert.assertEquals(1,stores.size());
 			Assert.assertEquals("org.stanwood.media.store.FakeStore",stores.get(0).getID());
+
+			List<ActionConfig> actions = dirConfig.getActions();
+			Assert.assertEquals(1,actions.size());
+			Assert.assertEquals("a.test.action",actions.get(0).getID());
 		}
 		finally {
 			FileHelper.delete(mediaDir);

@@ -8,6 +8,11 @@
 		<stores>
 			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
 		</stores>
+		<actions>
+			<action id="org.stanwood.media.actions.rename.RenameAction">
+				<param key="refresh" value="false"/>				
+			</action>
+		</actions>
 	</mediaDirectory>
 	 -->
 	
@@ -22,11 +27,14 @@
 		<stores>
 			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
 		</stores>
+		<actions>
+			<action id="org.stanwood.media.actions.rename.RenameAction"/>
+		</actions>
 	</mediaDirectory>
 	 -->
 	 
 	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
 	 <!--
 	 <XBMCAddons directory="/home/user/.mediaManager/xbmc" locale="en"/> 
-	  -->
+	  -->	 
 </mediaManager>
