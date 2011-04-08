@@ -127,6 +127,7 @@ public class ConfigReader extends BaseConfigReader {
 
 			dirConfig.setSources(readSources(node));
 			dirConfig.setStores(readStores(node));
+			dirConfig.setActions(readActions(node));
 			dirConfigs.add(dirConfig);
 		}
 		this.mediaDir = dirConfigs;
@@ -344,6 +345,25 @@ public class ConfigReader extends BaseConfigReader {
 		}
 		return stores;
 	}
+
+	private List<ActionConfig>readActions(Node configNode) throws XMLParserException {
+		List<ActionConfig>actions = new ArrayList<ActionConfig>();
+		for (Node storeElement : selectNodeList(configNode, "actions/action")) {
+			ActionConfig action = new ActionConfig();
+			action.setID(((Element)storeElement).getAttribute("id"));
+
+			for (Node paramNode : selectNodeList(storeElement, "param")) {
+				String name = ((Element)paramNode).getAttribute("name");
+				String value = ((Element)paramNode).getAttribute("value");
+				action.addParam(name, value);
+			}
+
+			actions.add(action);
+		}
+		return actions;
+	}
+
+
 
 	public List<Plugin>getPlugins() {
 		return plugins;

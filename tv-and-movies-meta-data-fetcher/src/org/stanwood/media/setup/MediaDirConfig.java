@@ -12,6 +12,7 @@ public class MediaDirConfig {
 	private Mode mode;
 	private List<StoreConfig>stores;
 	private List<SourceConfig>sources;
+	private List<ActionConfig>actions;
 
 	public File getMediaDir() {
 		return mediaDir;
@@ -43,6 +44,11 @@ public class MediaDirConfig {
 	public void setSources(List<SourceConfig> sources) {
 		this.sources = sources;
 	}
-
+	public List<ActionConfig> getActions() {
+		return actions;
+	}
+	public void setActions(List<ActionConfig> actions) {
+		this.actions = actions;
+	}
 
 }

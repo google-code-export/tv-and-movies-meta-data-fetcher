@@ -1,4 +1,5 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="2.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="mediaManager">  
   		<xs:complexType>
   			<xs:sequence>
@@ -32,6 +33,13 @@
 				  					</xs:sequence>  
 			  					</xs:complexType>					
 			  				</xs:element>  				
+			  				<xs:element name="actions" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="action" type="action"/>
+				  					</xs:sequence>  
+			  					</xs:complexType>					
+			  				</xs:element>
 			  			</xs:sequence>
 			  			<xs:attribute name="directory" type="xs:string" use="required"/>		  			
 			  			<xs:attribute name="pattern" type="xs:string"/>
@@ -55,6 +63,13 @@
 	</xs:complexType>
 
 	<xs:complexType name="source">  		
+  		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>  		
+  	</xs:complexType>
+  	
+  	<xs:complexType name="action">  		
   		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="param" type="param"/>
 		</xs:sequence>
