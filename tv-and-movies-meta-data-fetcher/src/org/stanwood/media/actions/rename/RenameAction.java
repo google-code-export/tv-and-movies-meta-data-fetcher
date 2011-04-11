@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.model.Episode;
@@ -16,7 +17,6 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
-import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 

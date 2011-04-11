@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.renamer;
+package org.stanwood.media;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.actions.IAction;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
@@ -55,10 +56,10 @@ public class TestController extends XBMCAddonTestBase  {
 			testConfig.append("<mediaManager>"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+tmpDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
 			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\"org.stanwood.media.renamer.FakeSource\"/>"+LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\"/>"+LS);
 			testConfig.append("    </sources>"+LS);
 			testConfig.append("    <stores>"+LS);
-			testConfig.append("	     <store id=\"org.stanwood.media.store.FakeStore\">"+LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
 			testConfig.append("	     </store>"+LS);
 			testConfig.append("    </stores>"+LS);
@@ -101,7 +102,7 @@ public class TestController extends XBMCAddonTestBase  {
 		File tmpDir = FileHelper.createTmpDir("tmddir");
 		File tmpJar = File.createTempFile("tmpPlugin", ".jar");
 		try {
-			LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 			FileHelper.copy(TestController.class.getResourceAsStream("TestPlugin.jar"), tmpJar);
 
@@ -110,6 +111,7 @@ public class TestController extends XBMCAddonTestBase  {
 			testConfig.append("  <plugins>"+LS);
 			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.sources.TestSource\"/>"+LS);
 			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.stores.TestStore\"/>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.actions.TestAction\"/>"+LS);
 			testConfig.append("  </plugins>"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+tmpDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
 			testConfig.append("    <sources>"+LS);
@@ -122,6 +124,11 @@ public class TestController extends XBMCAddonTestBase  {
 			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
 			testConfig.append("	     </store>"+LS);
 			testConfig.append("    </stores>"+LS);
+			testConfig.append("    <actions>"+LS);
+			testConfig.append("	     <action id=\"org.stanwood.media.test.actions.TestAction\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("	     </action>"+LS);
+			testConfig.append("    </actions>"+LS);
 			testConfig.append("  </mediaDirectory>"+LS);
 			testConfig.append("</mediaManager>"+LS);
 
@@ -152,6 +159,15 @@ public class TestController extends XBMCAddonTestBase  {
 				Assert.assertEquals(1,stores.size());
 				Class<?> storeClazz = stores.get(0).getClass();
 				m = storeClazz.getMethod("getEvents");
+				events = (List<String>) m.invoke(null);
+
+				Assert.assertEquals(1,events.size());
+				Assert.assertEquals("setParameter()",events.get(0));
+
+				List<IAction> actions = mediaDir.getActions();
+				Assert.assertEquals(1,stores.size());
+				Class<?> actionClazz = stores.get(0).getClass();
+				m = actionClazz.getMethod("getEvents");
 				events = (List<String>) m.invoke(null);
 
 				Assert.assertEquals(1,events.size());

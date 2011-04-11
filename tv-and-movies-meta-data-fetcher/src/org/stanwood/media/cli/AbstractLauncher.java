@@ -13,8 +13,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.logging.LogSetupHelper;
-import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 

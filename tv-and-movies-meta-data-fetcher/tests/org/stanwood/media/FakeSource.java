@@ -1,4 +1,4 @@
-package org.stanwood.media.renamer;
+package org.stanwood.media;
 
 import java.io.File;
 import java.io.IOException;

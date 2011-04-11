@@ -13,6 +13,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -25,7 +26,6 @@ import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.xml.IterableNodeList;
@@ -206,7 +206,6 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
-	    			String blah = XMLParser.domToStr(doc);
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()");
 						show.setLongSummary(longSummary);

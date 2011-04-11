@@ -1,4 +1,4 @@
-package org.stanwood.media.renamer;
+package org.stanwood.media.cli.renamer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,9 +14,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.stanwood.media.FakeSource;
 import org.stanwood.media.Helper;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.cli.renamer.CLIRenamer;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigReader;

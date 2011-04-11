@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.Controller;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 

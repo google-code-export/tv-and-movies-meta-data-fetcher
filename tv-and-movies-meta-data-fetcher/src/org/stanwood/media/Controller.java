@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.renamer;
+package org.stanwood.media;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.actions.IAction;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
@@ -50,6 +51,7 @@ public class Controller {
 
 	private Map<String, Class<? extends ISource>> pluginSources = new HashMap<String,Class<? extends ISource>>();
 	private Map<String, Class<? extends IStore>> pluginStores = new HashMap<String,Class<? extends IStore>>();
+	private Map<String, Class<? extends IAction>> pluginActions = new HashMap<String,Class<? extends IAction>>();
 
 	private static XBMCAddonManager xbmcMgr;
 
@@ -74,6 +76,7 @@ public class Controller {
 		registerPlugins();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void registerPlugins() throws ConfigException {
 		for (Plugin plugin : configReader.getPlugins()) {
 			try {
@@ -85,6 +88,9 @@ public class Controller {
 				}
 				if (IStore.class.isAssignableFrom(clazz) ) {
 					pluginStores.put(plugin.getPluginClass(),(Class<? extends IStore>)clazz);
+				}
+				if (IAction.class.isAssignableFrom(clazz) ) {
+					pluginActions.put(plugin.getPluginClass(),(Class<? extends IAction>)clazz);
 				}
 
 			}
@@ -114,8 +120,7 @@ public class Controller {
 		return xbmcMgr;
 	}
 
-	public MediaDirectory getMediaDirectory(File mediaDir)
-			throws ConfigException {
+	public MediaDirectory getMediaDirectory(File mediaDir) throws ConfigException {
 		MediaDirectory dir = mediaDirs.get(mediaDir);
 		if (dir == null) {
 			dir = new MediaDirectory(this, configReader, mediaDir);
@@ -126,8 +131,7 @@ public class Controller {
 
 
 
-	public Class<? extends ISource> getSourceClass(String className)
-			throws ConfigException {
+	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
 		if (pluginSources.get(className)!=null) {
 			return pluginSources.get(className);
 		}
@@ -147,7 +151,18 @@ public class Controller {
 		try {
 			return Class.forName(className).asSubclass(IStore.class);
 		} catch (ClassNotFoundException e) {
-			throw new ConfigException("Unable to add store because source '"+ className + "' can't be found", e);
+			throw new ConfigException("Unable to add store because store '"+ className + "' can't be found", e);
+		}
+	}
+
+	public Class<? extends IAction> getActionClass(String className) throws  ConfigException {
+		if (pluginActions.get(className)!=null) {
+			return pluginActions.get(className);
+		}
+		try {
+			return Class.forName(className).asSubclass(IAction.class);
+		} catch (ClassNotFoundException e) {
+			throw new ConfigException("Unable to add action because action '"+ className + "' can't be found", e);
 		}
 	}
 

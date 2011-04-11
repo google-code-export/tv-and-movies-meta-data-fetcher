@@ -18,7 +18,6 @@ package org.stanwood.media.setup;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,9 +26,11 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
+import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.model.Mode;
-import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -229,7 +230,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
 						String value = storeConfig.getParams().get(key);
-						setParamOnStore(c, store, key, value);
+						setParamOnStore(store, key, value);
 					}
 				}
 				stores.add(store);
@@ -239,11 +240,37 @@ public class ConfigReader extends BaseConfigReader {
 				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalArgumentException e) {
 				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
-			} catch (InvocationTargetException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			}
 		}
 		return stores;
+	}
+
+	public List<IAction> loadActionsFromConfigFile(Controller controller, MediaDirConfig dirConfig) throws ConfigException {
+		List<IAction>actions = new ArrayList<IAction>();
+		for (ActionConfig actionConfig : dirConfig.getActions()) {
+			String actionClass = actionConfig.getID();
+			try {
+
+				Class<? extends IAction> c = controller.getActionClass(actionClass);
+				IAction action = c.newInstance();
+				if (actionConfig.getParams() != null) {
+					for (String key : actionConfig.getParams().keySet()) {
+						String value = actionConfig.getParams().get(key);
+						setParamOnAction(action, key, value);
+					}
+				}
+				actions.add(action);
+			} catch (InstantiationException e) {
+				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+			} catch (IllegalAccessException e) {
+				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+			} catch (IllegalArgumentException e) {
+				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+			} catch (ActionException e) {
+				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+			}
+		}
+		return actions;
 	}
 
 
@@ -253,9 +280,13 @@ public class ConfigReader extends BaseConfigReader {
 		source.setParameter(key, value);
 	}
 
-	private static void setParamOnStore(Class<? extends IStore> c, IStore store, String key, String value)
-		throws IllegalAccessException, InvocationTargetException {
+	private static void setParamOnStore(IStore store, String key, String value) {
 		store.setParameter(key, value);
+	}
+
+	private static void setParamOnAction(IAction action, String key, String value)
+	throws ActionException {
+		action.setParameter(key, value);
 	}
 
 	/**
@@ -368,4 +399,5 @@ public class ConfigReader extends BaseConfigReader {
 	public List<Plugin>getPlugins() {
 		return plugins;
 	}
+
 }

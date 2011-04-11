@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.renamer;
+package org.stanwood.media.cli.renamer;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -25,6 +25,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
@@ -110,7 +111,7 @@ public class CLIRenamer extends AbstractLauncher {
 
 
 	private CLIRenamer(IExitHandler exitHandler) {
-		super("media-renamer",OPTIONS,exitHandler,stdout,stderr);
+		super("mm-renamer",OPTIONS,exitHandler,stdout,stderr);
 	}
 
 

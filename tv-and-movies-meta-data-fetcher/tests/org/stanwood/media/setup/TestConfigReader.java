@@ -10,8 +10,10 @@ import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.FakeSource;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.store.FakeStore;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -31,18 +33,18 @@ public class TestConfigReader {
 			StringBuilder testConfig = new StringBuilder();
 			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
 			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
-			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaInfoFetcher-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
+//			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaInfoFetcher-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
 //			testConfig.append("              version=\"2.0\""+LS);
 //			testConfig.append("<mediaManager"+LS);
 			testConfig.append(">"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
 			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\"org.stanwood.media.renamer.FakeSource\">"+LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
 			testConfig.append("      </source>"+LS);
 			testConfig.append("    </sources>"+LS);
 			testConfig.append("    <stores>"+LS);
-			testConfig.append("	     <store id=\"org.stanwood.media.store.FakeStore\">"+LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
 			testConfig.append("	     </store>"+LS);
 			testConfig.append("    </stores>"+LS);
@@ -72,7 +74,7 @@ public class TestConfigReader {
 
 			List<SourceConfig> sources = dirConfig.getSources();
 			Assert.assertEquals(1,sources.size());
-			Assert.assertEquals("org.stanwood.media.renamer.FakeSource",sources.get(0).getID());
+			Assert.assertEquals("org.stanwood.media.FakeSource",sources.get(0).getID());
 
 			List<StoreConfig> stores = dirConfig.getStores();
 			Assert.assertEquals(1,stores.size());
