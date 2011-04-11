@@ -21,7 +21,7 @@ else
 fi
 
 # Main class
-MAIN=org.stanwood.media.cli.renamer.CLIRenamer
+MAIN=org.stanwood.media.cli.manager.CLIManager
 
 # Launch application.
 CLASSPATH=/usr/share/java/MediaInfoFetcher.jar

@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.renamer.MediaDirectory;
+import org.stanwood.media.MediaDirectory;
 
 
 public class ActionPerformer {

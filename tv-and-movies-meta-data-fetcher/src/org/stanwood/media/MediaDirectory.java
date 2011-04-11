@@ -1,4 +1,4 @@
-package org.stanwood.media.renamer;
+package org.stanwood.media;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.actions.IAction;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -32,6 +33,7 @@ public class MediaDirectory {
 
 	private List<ISource> sources = null;
 	private List<IStore> stores = null;
+	private List<IAction> actions = null;
 	private Controller controller;
 
 	private MediaDirConfig dirConfig;
@@ -42,6 +44,7 @@ public class MediaDirectory {
 		dirConfig = config.getMediaDirectory(mediaDir);
 		stores = config.loadStoresFromConfigFile(controller,dirConfig);
 		sources = config.loadSourcesFromConfigFile(controller,dirConfig);
+		actions = config.loadActionsFromConfigFile(controller,dirConfig);
 		try {
 			for (ISource source : sources) {
 				source.setMediaDirConfig(this);
@@ -417,5 +420,9 @@ public class MediaDirectory {
 
 	public List<ISource>getSources() {
 		return sources;
+	}
+
+	public List<IAction>getActions() {
+		return actions;
 	}
 }

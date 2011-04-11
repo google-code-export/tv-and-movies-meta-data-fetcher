@@ -23,13 +23,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.renamer.MediaDirectory;
 import org.stanwood.media.source.xbmc.XBMCException;
 
 /**

@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.stanwood.media.Controller;
 import org.stanwood.media.cli.AbstractSubCLICommand;
 import org.stanwood.media.cli.ICLICommand;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.renamer.Controller;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 

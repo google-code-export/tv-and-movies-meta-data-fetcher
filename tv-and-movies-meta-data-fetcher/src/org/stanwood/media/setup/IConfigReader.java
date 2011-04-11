@@ -2,7 +2,7 @@ package org.stanwood.media.setup;
 
 import java.util.List;
 
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.Controller;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.store.IStore;
 

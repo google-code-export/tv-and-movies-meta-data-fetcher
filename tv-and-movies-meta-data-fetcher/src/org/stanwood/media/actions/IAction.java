@@ -2,7 +2,7 @@ package org.stanwood.media.actions;
 
 import java.io.File;
 
-import org.stanwood.media.renamer.MediaDirectory;
+import org.stanwood.media.MediaDirectory;
 
 public interface IAction {
 

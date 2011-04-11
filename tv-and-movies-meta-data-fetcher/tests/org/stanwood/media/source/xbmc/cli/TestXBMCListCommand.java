@@ -5,9 +5,9 @@ import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.cli.renamer.TestRenameRecursive;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
-import org.stanwood.media.renamer.TestRenameRecursive;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.util.FileHelper;
 

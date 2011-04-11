@@ -12,7 +12,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
-import org.stanwood.media.renamer.Controller;
+import org.stanwood.media.Controller;
 
 /**
  * This is the base class of all CLI command launchers
