@@ -281,6 +281,70 @@ public class TestConfigReader {
 		Assert.assertEquals("this.is.a.Test",configReader.getPlugins().get(0).getPluginClass());
 	}
 
+	@Test
+	public void testDefaultExtensions() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("media");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			List<String> exts = configReader.getMediaDirectory(mediaDir).getExtensions();
+			Assert.assertEquals(11,exts.size());
+
+			Assert.assertEquals("avi",exts.get(0));
+			Assert.assertEquals("mkv",exts.get(1));
+			Assert.assertEquals("mov",exts.get(2));
+			Assert.assertEquals("jpg",exts.get(3));
+			Assert.assertEquals("mpg",exts.get(4));
+			Assert.assertEquals("mp4",exts.get(5));
+			Assert.assertEquals("m4a",exts.get(6));
+			Assert.assertEquals("m4v",exts.get(7));
+			Assert.assertEquals("srt",exts.get(8));
+			Assert.assertEquals("sub",exts.get(9));
+			Assert.assertEquals("divx",exts.get(10));
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+	}
+
+	@Test
+	public void testConfiguredExtensions() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("media");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
+			testConfig.append("    <extensions>"+LS);
+			testConfig.append("      <extension>avi</extension>"+LS);
+			testConfig.append("      <extension>m4v</extension>"+LS);
+			testConfig.append("      <extension>qt</extension>"+LS);
+			testConfig.append("    </extensions>"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			List<String> exts = configReader.getMediaDirectory(mediaDir).getExtensions();
+			Assert.assertEquals(3,exts.size());
+
+			Assert.assertEquals("avi",exts.get(0));
+			Assert.assertEquals("m4v",exts.get(1));
+			Assert.assertEquals("qt",exts.get(2));
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+	}
 
 	private ConfigReader createConfigReader(StringBuilder testConfig)
 	throws IOException, FileNotFoundException, ConfigException {

@@ -43,8 +43,6 @@ public class CLIRenamer extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIRenamer.class);
 
-	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
-
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String REFRESH_STORE_OPTION = "r";
 	private final static String RECURSIVE_OPTION = "R";
@@ -126,7 +124,7 @@ public class CLIRenamer extends AbstractLauncher {
 			RenameAction renameAction = new RenameAction();
 			renameAction.setParameter(RenameAction.PARAM_KEY_REFRESH, String.valueOf(refresh));
 			actions.add(renameAction);
-			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,VALID_EXTS);
+			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 
 			return renamer.performActions();
 		} catch (ActionException e) {
