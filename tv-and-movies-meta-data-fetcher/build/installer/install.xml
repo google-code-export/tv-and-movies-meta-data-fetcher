@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<installation version="1.0">
+	<info>
+		<appname>@{ant.project.name}</appname>
+		<appversion>@{project.version}</appversion>
+		<uninstaller name="remove.task" path="${INSTALL_PATH}/Uninstall" write="yes"/>
+	</info>
+
+	<guiprefs width="600" height="480" resizable="no">
+		<laf name="kunststoff">
+			<os family="unix" />
+		</laf>
+		<laf name="looks">
+			<os family="windows" />
+			<param name="variant" value="extwin" />
+		</laf>
+		<modifier key="useHeadingPanel" value="yes"/>
+		<modifier key="useHeadingForSummary" value="yes"/>
+		<modifier key="headingImageOnLeft" value="yes"/>
+		<modifier key="headingLineCount" value="2"/>
+		<modifier key="headingFontSize" value="1.5"/>
+		<modifier key="headingBackgroundColor" value="0x00ffffff"/>
+		<modifier key="headingPanelCounter" value="text"/>
+		<modifier key="headingPanelCounterPos" value="inHeading"/>
+	</guiprefs>
+
+	<locale>
+		<langpack iso3="eng"/>
+	</locale>
+		
+	<variables>		
+	</variables>
+	
+	<panels>       
+		<panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+		<panel classname="SummaryPanel"/>
+        <panel classname="InstallPanel"/> 
+	</panels>
+	
+	<packs>
+		<pack name="3rd Party Libraries" required="yes" installGroups="Libraries" >
+			<description>3rd Pary libraries needed by the application</description>
+			
+			<!-- Install all the libs -->
+			<fileset targetdir="$INSTALL_PATH/lib" dir="@{libs.dir}/test-time" includes="*.jar"/>
+        </pack>
+		
+		<pack name="Application Libaray" required="yes" installGroups="Libraries">
+			<description>The libraries need by the the command line and GUI tools</description>
+			
+			<file src="@{dist.dir}/@{ant.project.name}-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
+		</pack>
+		
+		<pack name="Unix CLI" required="yes" installGroups="Application" os="unix">
+			<description>Command line application</description>
+			
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-manager" target="$INSTALL_PATH/bin/mm-manager"/>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-renamer" target="$INSTALL_PATH/bin/mm-renamer"/>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-xbmc" target="$INSTALL_PATH/bin/mm-xbmc"/>
+		</pack>
+		
+		<pack name="Windows CLI" required="yes" installGroups="Application" os="windows">
+			<description>Command line application</description>
+			
+			<file src="@{scripts.dir}/mm-manager.bat" targetdir="$INSTALL_PATH/bin"/>
+			<file src="@{scripts.dir}/mm-renamer.bat" targetdir="$INSTALL_PATH/bin"/>
+			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin"/>
+		</pack>
+	</packs>
+</installation>
