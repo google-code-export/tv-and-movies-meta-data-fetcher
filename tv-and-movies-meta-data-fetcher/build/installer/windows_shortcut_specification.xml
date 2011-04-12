@@ -2,14 +2,14 @@
 
 <shortcuts>
   <skipIfNotSupported/>
-  <programGroup defaultName="Media Manager" location="applications||startMenu"/>
+  <programGroup defaultName="Media Manager" location="applications"/>
   <shortcut
-    name="HTML CLI Documentation"    
-    target="$INSTALL_PATH\docs\html\index.html"       
+    name="Media Manager CLI Documentation (HTML)"    
+    target="$INSTALL_PATH|docs|html|index.html"       
     description="The command line documentation in HTML format"        
     programGroup="yes"
     desktop="no"
-    applications="no"
+    applications="yes"
     startMenu="no"
     startup="no">    
   </shortcut>
