@@ -18,6 +18,7 @@
 	<property name="reports.dir" location="${basedir}/reports"/>
 	<property name="docbook.home"    value="${basedir}/docbook/xsl"/>	
 	<property name="fo.dir"          value="${basedir}/fo"/>
+	<property name="scripts.dir" location="${basedir}/scripts"/>
     
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
@@ -48,6 +49,10 @@
 	<property name="cobertura.dir" value="${basedir}/cobertura" />
 	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
 	<taskdef classpathref="compile-time.libs.classpath" resource="tasks.properties" />
+
+	<taskdef name="izpack" classname="com.izforge.izpack.ant.IzPackTask">
+		<classpath refid="compile-time.libs.classpath"/>
+	</taskdef>
 
 	<!-- Fop setup -->
   	<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">        
@@ -223,7 +228,7 @@
 			</zipfileset>
 			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
-			<zipfileset dir="scripts" prefix="${ant.project.name}-${project.version}/scripts"/>
+			<zipfileset dir="${scripts.dir}" prefix="${ant.project.name}-${project.version}/scripts"/>
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
 			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/VERSION" prefix="${ant.project.name}-${project.version}"/>
@@ -241,11 +246,16 @@
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." compress="true" />
 
 		<mkdir dir="${dist.dir}/bin/${ant.project.name}-${project.version}" />		
-		<jar jarfile="${dist.dir}/bin/${ant.project.name}-${project.version}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" compress="true"/>
+		
+		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" compress="true"/>
+		<copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
+			<fileset file="${dist.dir}/${ant.project.name}-${project.version}.jar" />
+		</copy>		
+		
 		<copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
 			<fileset file="${basedir}/VERSION" />
 			<fileset file="${basedir}/COPYING" />
-			<fileset file="${basedir}/scripts/**" />						
+			<fileset file="${scripts.dir}/**" />						
 		</copy>		
 		<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
 
@@ -264,58 +274,6 @@
 		    </lib>
 		</one-jar>
 	</target>
-
-	<!--
-http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
--->
-	<target name="createRPM">
-		
-		<delete dir="${rpm.dir}" />
-		<mkdir dir="${rpm.dir}/BUILD" />
-		<mkdir dir="${rpm.dir}/RPMS" />
-		<mkdir dir="${rpm.dir}/RPMS/noarch" />
-		<mkdir dir="${rpm.dir}/SOURCES" />
-		<mkdir dir="${rpm.dir}/SPECS" />
-		<mkdir dir="${rpm.dir}/SRPMS" />
-		<mkdir dir="${rpm.dir}/tmp" />		
-		
-		<property name="project.name" value="${ant.project.name}" />
-		<property name="project.rpm.topdir" value="${rpm.dir}" />
-		<loadfile property="project.description" srcFile="Description" />
-		<loadfile property="project.changelog" srcFile="Changelog" />
-		<echoproperties prefix="project." destfile="${dist.dir}/project.properties" />
-
-		<filter filtersfile="${dist.dir}/project.properties" />
-		<copy file="${etc.dir}/${spec.file}" tofile="${rpm.dir}/SPECS/${spec.file}" filtering="true" />		
-		<delete file="${dist.dir}/project.properties" />
-				
-		<copy file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" todir="${rpm.dir}/SOURCES" />
-		<copy file="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" todir="${rpm.dir}/SOURCES" />
-		<copy file="${libs.dir}/run-time/jericho-html-2.6.jar" todir="${rpm.dir}/SOURCES"/>
-		
-		<exec executable="rpmbuild" failifexecutionfails="true" failonerror="true">
-			<arg value="-ba" />
-			<arg value="${rpm.dir}/SPECS/${spec.file}" />
-		</exec>
-		
-		<copy todir="${dist.dir}">
-			<fileset dir="${rpm.dir}/RPMS/noarch" includes="**/*.rpm" />
-		</copy>
-		<delete dir="${rpm.dir}" />
-	</target>
-	
-	<target name="rpms" depends="jars">		
-		<echo message="Building Project RPM's for OpenSUSE 11.0"/>					
-		<antcall target="createRPM" inheritall="true">
-			<param name="spec.file" value="opensuse-11.0.spec"/>	
-		</antcall>
-		
-		<echo message="Building jericho-html for OpenSUSE 11.0" />						
-		<antcall target="createRPM" inheritall="true">
-			<param name="spec.file" value="jericho.spec"/>
-		</antcall>
-
-	</target>	
 
 	<!-- 
 			http://wiki.wsmoak.net/cgi-bin/wiki.pl?DocBookToPDF
@@ -346,6 +304,18 @@ http://linuxhacks.org/tutorials/jakes_rpm_build_tutorial.php
 		<delete dir="${basedir}/docbook"/>
 	</target>
 		
+	<target name="installer" depends="jars">
+		<mkdir dir="${basedir}/build/installer/tmp.build"/>
+		<izpack input="${basedir}/build/windows/install.xml"
+			    output="${dist.dir}/${ant.project.name}-${project.version}-install.jar"
+				installerType="standard"
+				inheritAll="true"
+				basedir="${basedir}/build/windows/tmp.build"
+				compression="deflate"
+				compressionlevel="9"/>
+				
+		<delete dir="${basedir}/build/windows/tmp.build"/>
+	</target>
 
-	<target name="dist" depends="clean,run-tests,javadoc,docs,jars"/>
+	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,installer"/>	
 </project>
