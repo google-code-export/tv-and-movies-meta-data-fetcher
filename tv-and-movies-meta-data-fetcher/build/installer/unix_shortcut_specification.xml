@@ -2,11 +2,10 @@
 
 <shortcuts>
 
-  <programGroup defaultName="IzForge/IzPack"
-  location="applications"/>
+  <programGroup defaultName="Media Manager" location="applications"/>
 
    <shortcut
-     name="HTML CLI Documentation"
+     name="Media Manager CLI Documentation (HTML)"
      programGroup="yes"
      desktop="no"
      applications="no"
@@ -23,7 +22,7 @@
    </shortcut>
 
    <shortcut
-     name="PDF CLI Documentation"
+     name="Media Manager CLI Documentation (PDF)"
      programGroup="yes"
      desktop="no"
      applications="no"
@@ -40,11 +39,10 @@
      description="The command line documentation in PDF format">
    </shortcut>
 
-<!-- 
    <shortcut
      name="Uninstaller"
      programGroup="yes"
-     desktop="yes"
+     desktop="no"
      applications="no"
      startMenu="no"
      startup="no"
@@ -57,8 +55,7 @@
      workingDirectory=""
      type="Application"
      encoding="UTF-8"
-     description="IzPack uninstaller">
+     description="Uninstaller">
      <createForPack name="Core" />
-   </shortcut>
- -->
+   </shortcut> 
 </shortcuts>
