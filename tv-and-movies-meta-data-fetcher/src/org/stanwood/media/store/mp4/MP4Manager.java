@@ -30,6 +30,7 @@ import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
 import org.jaudiotagger.tag.mp4.field.Mp4TagTextField;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"} It is used
@@ -189,7 +190,7 @@ public class MP4Manager implements IMP4Manager {
 	}
 
 	private File downloadToTempFile(URL url) throws IOException {
-		File file = File.createTempFile("artwork", ".jpg");
+		File file = FileHelper.createTempFile("artwork", ".jpg");
 		if (!file.delete()) {
 			throw new IOException("Unable to delete temp file "+file.getAbsolutePath());
 		}

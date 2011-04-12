@@ -18,7 +18,6 @@ import org.stanwood.media.FakeSource;
 import org.stanwood.media.Helper;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.cli.renamer.CLIRenamer;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigReader;
@@ -387,8 +386,7 @@ public class TestRenameRecursive extends XBMCAddonTestBase {
 	}
 
 	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {
-		File configFile = File.createTempFile("config", ".xml");
-		configFile.deleteOnExit();
+		File configFile = FileHelper.createTempFile("config", ".xml");
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
 	}
