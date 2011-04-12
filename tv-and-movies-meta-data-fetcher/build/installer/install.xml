@@ -77,23 +77,37 @@
 			<file src="@{dist.dir}/@{ant.project.name}-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
 		</pack>
 		
-		<pack name="Unix CLI" required="yes" installGroups="Application" os="unix">
+		<pack name="CLI Application" required="yes" installGroups="Application" os="unix">
 			<description>Command line application</description>
 			
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-manager" target="$INSTALL_PATH/bin/mm-manager"/>
-			<executable targetfile="$INSTALL_PATH/bin/mm-manager"/>
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-renamer" target="$INSTALL_PATH/bin/mm-renamer"/>
-			<executable targetfile="$INSTALL_PATH/bin/mm-renamer"/>
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-xbmc" target="$INSTALL_PATH/bin/mm-xbmc"/>
-			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc"/>
-		</pack>
-		
-		<pack name="Windows CLI" required="yes" installGroups="Application" os="windows">
-			<description>Command line application</description>
-						
-			<file src="@{scripts.dir}/mm-manager.bat" targetdir="$INSTALL_PATH/bin"/>
-			<file src="@{scripts.dir}/mm-renamer.bat" targetdir="$INSTALL_PATH/bin"/>
-			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin"/>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-manager" target="$INSTALL_PATH/bin/mm-manager">
+				<os family="unix"/>
+			</singlefile>
+			<executable targetfile="$INSTALL_PATH/bin/mm-manager">
+				<os family="unix"/>
+			</executable>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-renamer" target="$INSTALL_PATH/bin/mm-renamer">
+				<os family="unix"/>
+			</singlefile>
+			<executable targetfile="$INSTALL_PATH/bin/mm-renamer">
+				<os family="unix"/>
+			</executable>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-xbmc" target="$INSTALL_PATH/bin/mm-xbmc">
+				<os family="unix"/>
+			</singlefile>
+			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
+				<os family="unix"/>
+			</executable>
+			
+			<file src="@{scripts.dir}/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>
+			<file src="@{scripts.dir}/mm-renamer.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>
+			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>
 			
 			<native type="izpack" name="ShellLink.dll">
 				<os family="windows"/>
@@ -101,6 +115,7 @@
 			<native type="3rdparty" name="COIOSHelper.dll" stage="both">
     			<os family="windows"/>
 			</native>
+			
 		</pack>
 		
 		<pack name="CLI Documentation" required="no" installGroups="Documentation">
