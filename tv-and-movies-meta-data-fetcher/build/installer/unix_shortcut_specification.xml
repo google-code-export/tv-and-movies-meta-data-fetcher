@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+  <programGroup defaultName="IzForge/IzPack"
+  location="applications"/>
+
+   <shortcut
+     name="HTML CLI Documentation"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="konqueror"     
+     initialState="noShow"
+     iconFile="help"
+     iconIndex="0"
+     url="$INSTALL_PATH/docs/html/index.html"
+     type="Link"
+     encoding="UTF-8"
+     description="The command line documentation in HTML format">     
+   </shortcut>
+
+   <shortcut
+     name="PDF CLI Documentation"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="acroread"     
+     commandLine="$INSTALL_PATH/doc/izpack/pdf/izpack-doc.pdf"
+     initialState="noShow"
+     iconFile="acroread"
+     iconIndex="0"
+     url="$INSTALL_PATH/docs/pdf/userguide.pdf"
+     type="Application"
+     encoding="UTF-8"
+     description="The command line documentation in PDF format">
+   </shortcut>
+
+<!-- 
+   <shortcut
+     name="Uninstaller"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="/usr/lib/java/bin/java"
+     commandLine="-jar
+     &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+     initialState="noShow"
+     iconFile="trashcan_full"
+     iconIndex="0"
+     workingDirectory=""
+     type="Application"
+     encoding="UTF-8"
+     description="IzPack uninstaller">
+     <createForPack name="Core" />
+   </shortcut>
+ -->
+</shortcuts>
