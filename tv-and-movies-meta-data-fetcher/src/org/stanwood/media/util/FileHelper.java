@@ -545,4 +545,20 @@ public class FileHelper {
 			return is;
 		}
 	}
+
+	public static File createTempFile(String name,String ext) throws IOException {
+		final File file = File.createTempFile(name, ext);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				if (file.exists()) {
+					if (!file.delete() || file.exists()) {
+						log.error("Unable to delete temp file: " + file);
+					}
+				}
+			}
+		});
+		return file;
+	}
 }

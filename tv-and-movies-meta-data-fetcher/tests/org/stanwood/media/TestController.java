@@ -100,7 +100,7 @@ public class TestController extends XBMCAddonTestBase  {
 	@Test
 	public void testLoadingPluginStoresAndSources() throws Exception {
 		File tmpDir = FileHelper.createTmpDir("tmddir");
-		File tmpJar = File.createTempFile("tmpPlugin", ".jar");
+		File tmpJar = FileHelper.createTempFile("tmpPlugin", ".jar");
 		try {
 			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 

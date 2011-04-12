@@ -393,8 +393,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	}
 
 	private static File createConfigFileWithContents(StringBuilder testConfig) throws IOException {
-		File configFile = File.createTempFile("config", ".xml");
-		configFile.deleteOnExit();
+		File configFile = FileHelper.createTempFile("config", ".xml");
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
 	}

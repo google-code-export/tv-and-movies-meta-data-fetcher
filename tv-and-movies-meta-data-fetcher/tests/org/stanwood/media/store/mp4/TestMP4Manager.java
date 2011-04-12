@@ -96,12 +96,11 @@ public class TestMP4Manager {
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
 
-		File mp4File = File.createTempFile("test", ".mp4");
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
 		if (!mp4File.delete()) {
 			throw new IOException("Unable to delete file");
 		}
 		FileHelper.copy(srcFile, mp4File);
-		mp4File.deleteOnExit();
 		Episode episode = createTestEpisode();
 		IMP4Manager ap = new MP4Manager();
 		ap.updateEpsiode(mp4File, episode);
@@ -140,12 +139,11 @@ public class TestMP4Manager {
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
 
-		File mp4File = File.createTempFile("test", ".mp4");
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
 		if (!mp4File.delete() && mp4File.exists()) {
 			throw new IOException("Unable to delete file");
 		}
 		FileHelper.copy(srcFile, mp4File);
-		mp4File.deleteOnExit();
 		Film film = createTestFilm();
 
 		IMP4Manager ap = new MP4Manager();
