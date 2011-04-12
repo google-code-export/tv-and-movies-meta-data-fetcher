@@ -304,17 +304,15 @@
 		<delete dir="${basedir}/docbook"/>
 	</target>
 		
-	<target name="installer" depends="jars">
-		<mkdir dir="${basedir}/build/installer/tmp.build"/>
-		<izpack input="${basedir}/build/windows/install.xml"
+	<target name="installer" depends="jars">		
+		<izpack input="${basedir}/build/installer/install.xml"
 			    output="${dist.dir}/${ant.project.name}-${project.version}-install.jar"
 				installerType="standard"
 				inheritAll="true"
-				basedir="${basedir}/build/windows/tmp.build"
+				basedir="${basedir}/build/installer"
 				compression="deflate"
 				compressionlevel="9"/>
-				
-		<delete dir="${basedir}/build/windows/tmp.build"/>
+						
 	</target>
 
 	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,installer"/>	

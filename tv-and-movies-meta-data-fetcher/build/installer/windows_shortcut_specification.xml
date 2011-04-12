@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+  <skipIfNotSupported/>
+  <programGroup defaultName="Media Manager" location="applications||startMenu"/>
+  <shortcut
+    name="HTML CLI Documentation"    
+    target="$INSTALL_PATH\docs\html\index.html"       
+    description="The command line documentation in HTML format"        
+    programGroup="yes"
+    desktop="no"
+    applications="no"
+    startMenu="no"
+    startup="no">    
+  </shortcut>
+</shortcuts>

@@ -4,6 +4,12 @@
 	<info>
 		<appname>@{ant.project.name}</appname>
 		<appversion>@{project.version}</appversion>
+		<url>http://code.google.com/p/tv-and-movies-meta-data-fetcher/</url>
+		<authors>
+			<author name="John-Paul Stanford" email="dev@stanwood.org.uk"/>
+		</authors>
+		<javaversion>1.6</javaversion>
+		<requiresjdk/>
 		<uninstaller name="remove.task" path="${INSTALL_PATH}/Uninstall" write="yes"/>
 	</info>
 
@@ -32,11 +38,26 @@
 	<variables>		
 	</variables>
 	
+	<listeners>
+	    <listener installer="RegistryInstallerListener" uninstaller="RegistryUninstallerListener" >
+	        <os family="windows"/>
+	    </listener>
+	</listeners>
+	
+	<resources>    
+    	<res src="RegistrySpec.xml" id="RegistrySpec.xml"/>
+    	<res src="windows_shortcut_specification.xml" id="shortcutSpec.xml"/>
+		<res src="unix_shortcut_specification.xml" id="Unix_shortcutSpec.xml"/>
+	</resources>
+	
 	<panels>       
+		<panel classname="CheckedHelloPanel"/>
 		<panel classname="TargetPanel"/>
         <panel classname="PacksPanel"/>
 		<panel classname="SummaryPanel"/>
         <panel classname="InstallPanel"/> 
+        <!--  <panel classname="FinishPanel"/> -->
+        <!--  <panel classname="JDKPathPanel"/>  -->
 	</panels>
 	
 	<packs>
@@ -57,16 +78,34 @@
 			<description>Command line application</description>
 			
 			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-manager" target="$INSTALL_PATH/bin/mm-manager"/>
+			<executable targetfile="$INSTALL_PATH/bin/mm-manager"/>
 			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-renamer" target="$INSTALL_PATH/bin/mm-renamer"/>
+			<executable targetfile="$INSTALL_PATH/bin/mm-renamer"/>
 			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-xbmc" target="$INSTALL_PATH/bin/mm-xbmc"/>
+			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc"/>
 		</pack>
 		
 		<pack name="Windows CLI" required="yes" installGroups="Application" os="windows">
 			<description>Command line application</description>
-			
+						
 			<file src="@{scripts.dir}/mm-manager.bat" targetdir="$INSTALL_PATH/bin"/>
 			<file src="@{scripts.dir}/mm-renamer.bat" targetdir="$INSTALL_PATH/bin"/>
 			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin"/>
+			
+			<native type="izpack" name="ShellLink.dll">
+				<os family="windows"/>
+			</native>
+			<native type="3rdparty" name="COIOSHelper.dll" stage="both">
+    			<os family="windows"/>
+			</native>
 		</pack>
+		
+		<pack name="CLI Documentation" required="no" installGroups="Documentation">
+			<description>Command line documentation</description>
+			
+			<!-- Create start menu entries for docs -->
+			<singlefile src="@{docs.dir}/userguide/html/docbook.html" target="$INSTALL_PATH/docs/html/index.html"/>
+			<singlefile src="@{docs.dir}/userguide/userguide.pdf" target="$INSTALL_PATH/docs/pdf/userguide.html"/>
+		</pack>			
 	</packs>
 </installation>
