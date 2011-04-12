@@ -1,3 +1,6 @@
+* Mon Apr 11 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Added the concept of actions and made the renamer a action that can be applied to media folders
+- Renamer extensions can now be configured via the config file
 * Fri Apr 1 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Reworked tagchimp source to use tagchimp API
 * Fri Mar 25 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98

@@ -1,7 +1,13 @@
 <mediaManager>	
 	<!-- Example Film media directory -->
+	<!-- The default extensions have been overriden for this directory so that the media manager
+	     will only consider .avi and .m4v files as media files. -->
 	<!-- 	
 	<mediaDirectory directory="/media/films" mode="FILMS" pattern="%t{ Part %p}.%x">
+		<extensions>
+			<extension>avi</extension>
+			<extension>m4v</extension>
+		<extensions>
 		<sources>
 			<source id="org.stanwood.media.source.xbmc.XBMCSource"/>
 		</sources>

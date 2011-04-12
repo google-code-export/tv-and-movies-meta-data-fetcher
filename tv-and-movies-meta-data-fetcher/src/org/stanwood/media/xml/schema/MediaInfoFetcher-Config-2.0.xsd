@@ -19,6 +19,20 @@
 	  			<xs:element name="mediaDirectory" minOccurs="0" maxOccurs="unbounded">  
 	  				<xs:complexType>
 			  			<xs:sequence>
+				  			<xs:element name="extensions" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="extension">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+													</xs:extension>
+												</xs:simpleContent>													
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>			  				
 			  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
 			  					<xs:complexType>
 				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">

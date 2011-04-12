@@ -4,15 +4,12 @@ TODO
 Version 2.0
 -----------
 
-Add concept of actions, and make rename a action
-	* Action for covert to m4v
 Add --test_run command line option	 
 Create XBMC nfo files from a store instead of the source
 	* Also test this with XBMC to make sure it works as expected
-Update default config file in etc with some examples
 Add windows batch files for scripts
 Create a windows installer
-Allow renamer extensions to be configured
+Add action for covert to files m4v
 
 Version 2.1
 -----------
@@ -20,3 +17,4 @@ Version 2.1
 Add a GUI to manage the XBMC addons
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
+Add a podcast action for new media files

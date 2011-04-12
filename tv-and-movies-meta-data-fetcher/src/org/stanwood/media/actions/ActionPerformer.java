@@ -33,7 +33,7 @@ public class ActionPerformer {
 
 	private final static Log log = LogFactory.getLog(ActionPerformer.class);
 
-	private String[] exts;
+	private List<String> exts;
 	private MediaDirectory dir;
 	private List<IAction> actions;
 
@@ -44,9 +44,9 @@ public class ActionPerformer {
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
 	 */
-	public ActionPerformer(List<IAction> actions,MediaDirectory dir,String exts[]) {
+	public ActionPerformer(List<IAction> actions,MediaDirectory dir,List<String> exts) {
 		this.dir = dir;
-		this.exts = exts.clone();
+		this.exts = exts;
 		this.actions = actions;
 	}
 

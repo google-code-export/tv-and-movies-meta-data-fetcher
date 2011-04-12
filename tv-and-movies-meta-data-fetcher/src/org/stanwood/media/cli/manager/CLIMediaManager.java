@@ -22,8 +22,6 @@ public class CLIMediaManager extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIRenamer.class);
 
-	private final static String VALID_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
-
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private static final List<Option> OPTIONS;
 
@@ -66,7 +64,7 @@ public class CLIMediaManager extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try {
-			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,VALID_EXTS);
+			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 
 			return renamer.performActions();
 		} catch (ActionException e) {

@@ -49,6 +49,7 @@ import org.w3c.dom.Node;
 public class ConfigReader extends BaseConfigReader {
 
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
+	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
@@ -129,7 +130,19 @@ public class ConfigReader extends BaseConfigReader {
 			dirConfig.setSources(readSources(node));
 			dirConfig.setStores(readStores(node));
 			dirConfig.setActions(readActions(node));
+
+			List<String>exts = new ArrayList<String>();
+			for (Node extNode : selectNodeList(node,"extensions/extension/text()")) {
+				exts.add(extNode.getNodeValue());
+			}
+			if (exts.size()==0) {
+				for (String ext : DEFAULT_EXTS) {
+					exts.add(ext);
+				}
+			}
+			dirConfig.setExtensions(exts);
 			dirConfigs.add(dirConfig);
+
 		}
 		this.mediaDir = dirConfigs;
 	}
