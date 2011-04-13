@@ -5,15 +5,18 @@ Version 2.0
 -----------
 
 Add --test_run command line option	 
-Create XBMC nfo files from a store instead of the source
-	* Also test this with XBMC to make sure it works as expected
 Add windows batch files for scripts
 Create a windows installer
-Add action for covert to files m4v
+Create macos installer
+Create Linux installer
+Add action to create pod casts of new media that is found
 
 Version 2.1
 -----------
 
+Add action for covert to files m4v
+Create XBMC nfo files from a store instead of the source
+	* Also test this with XBMC to make sure it works as expected
 Add a GUI to manage the XBMC addons
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source

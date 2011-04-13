@@ -35,6 +35,9 @@
 	<import file="one-jar-ant-task.xml"/>	
 
 	<!-- Lib classpaths -->
+	<path id="installer.libs.classpath">
+		<fileset dir="${libs.dir}/installer" includes="*.jar" />
+	</path>
 	<path id="run-time.libs.classpath">
 		<fileset dir="${libs.dir}/run-time" includes="*.jar" />
 	</path>
@@ -49,9 +52,9 @@
 	<property name="cobertura.dir" value="${basedir}/cobertura" />
 	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
 	<taskdef classpathref="compile-time.libs.classpath" resource="tasks.properties" />
-
-	<taskdef name="izpack" classname="com.izforge.izpack.ant.IzPackTask">
-		<classpath refid="compile-time.libs.classpath"/>
+	
+    <taskdef name="izpack" classname="com.izforge.izpack.ant.IzPackTask">
+		<classpath refid="installer.libs.classpath"/>
 	</taskdef>
 
 	<!-- Fop setup -->
