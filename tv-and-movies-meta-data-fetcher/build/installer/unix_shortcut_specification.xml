@@ -2,22 +2,20 @@
 
 <shortcuts>
 
-  <programGroup defaultName="Media Manager" location="applications"/>
+  <programGroup defaultName="Media Manager/Media Manager" location="startMenu"/>
 
    <shortcut
      name="Media Manager CLI Documentation (HTML)"
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="no"
+     startMenu="yes"
      startup="no"
-     target="konqueror"     
-     initialState="noShow"
-     iconFile="help"
-     iconIndex="0"
-     url="$INSTALL_PATH/docs/html/index.html"
-     type="Link"
+     target="xdg-open"
+     commandLine="$INSTALL_PATH/docs/html/index.html"
+     type="Application"
      encoding="UTF-8"
+	 initialState="noShow"
      description="The command line documentation in HTML format">     
    </shortcut>
 
@@ -26,13 +24,10 @@
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="no"
+     startMenu="yes"
      startup="no"
-     target="acroread"     
-     commandLine="$INSTALL_PATH/doc/izpack/pdf/izpack-doc.pdf"
-     initialState="noShow"
-     iconFile="acroread"
-     iconIndex="0"
+     target="xdg-open"     
+     commandLine="$INSTALL_PATH/docs/pdf/userguide.pdf"
      url="$INSTALL_PATH/docs/pdf/userguide.pdf"
      type="Application"
      encoding="UTF-8"
@@ -40,22 +35,19 @@
    </shortcut>
 
    <shortcut
-     name="Uninstaller"
+     name="Media Manager Uninstall"
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="no"
+     startMenu="yes"
      startup="no"
-     target="/usr/lib/java/bin/java"
-     commandLine="-jar
-     &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+     target="java"
+     commandLine="-jar &quot;$INSTALL_PATH/Uninstall/remove.task&quot;"
      initialState="noShow"
      iconFile="trashcan_full"
      iconIndex="0"
-     workingDirectory=""
      type="Application"
      encoding="UTF-8"
      description="Uninstaller">
-     <createForPack name="Core" />
    </shortcut> 
 </shortcuts>
