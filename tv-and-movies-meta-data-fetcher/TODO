@@ -9,7 +9,11 @@ Add windows batch files for scripts
 Create a windows installer
 Create macos installer
 Create Linux installer
+	* Make sure shortcuts are installed in correct location
+	* Add script to lauch the correct browser
+	* Make native laucher for installer
 Add action to create pod casts of new media that is found
+Add desktop shortcuts to RPM's
 
 Version 2.1
 -----------
