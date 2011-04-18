@@ -2,20 +2,21 @@
 
 <shortcuts>
 
-  <programGroup defaultName="Media Manager/Media Manager" location="startMenu"/>
+   <programGroup defaultName="MediaManager" location="applications"/>
 
    <shortcut
-     name="Media Manager CLI Documentation (HTML)"
+     name="Media Manager/Media Manager CLI Documentation (HTML)"
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="yes"
+     startMenu="no"
      startup="no"
      target="xdg-open"
      commandLine="$INSTALL_PATH/docs/html/index.html"
      type="Application"
      encoding="UTF-8"
 	 initialState="noShow"
+	 terminal="false"
      description="The command line documentation in HTML format">     
    </shortcut>
 
@@ -24,13 +25,15 @@
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="yes"
+     startMenu="no"
      startup="no"
-     target="xdg-open"     
+     target="xdg-open"
+     initialState="noShow"     
      commandLine="$INSTALL_PATH/docs/pdf/userguide.pdf"
      url="$INSTALL_PATH/docs/pdf/userguide.pdf"
      type="Application"
      encoding="UTF-8"
+     terminal="false"
      description="The command line documentation in PDF format">
    </shortcut>
 
@@ -39,15 +42,16 @@
      programGroup="yes"
      desktop="no"
      applications="no"
-     startMenu="yes"
+     startMenu="no"
      startup="no"
-     target="java"
+     target="$INSTALL_PATH/bin/mm-java"
      commandLine="-jar &quot;$INSTALL_PATH/Uninstall/remove.task&quot;"
      initialState="noShow"
      iconFile="trashcan_full"
      iconIndex="0"
      type="Application"
      encoding="UTF-8"
+     terminal="false"
      description="Uninstaller">
    </shortcut> 
 </shortcuts>

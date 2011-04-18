@@ -88,7 +88,7 @@
 			</executable>
 			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-renamer" target="$INSTALL_PATH/bin/mm-renamer">
 				<os family="unix"/>
-			</singlefile>
+			</singlefile>			
 			<executable targetfile="$INSTALL_PATH/bin/mm-renamer">
 				<os family="unix"/>
 			</executable>
@@ -96,6 +96,12 @@
 				<os family="unix"/>
 			</singlefile>
 			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
+				<os family="unix"/>
+			</executable>
+			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-java" target="$INSTALL_PATH/bin/mm-java">
+				<os family="unix"/>
+			</singlefile>
+			<executable targetfile="$INSTALL_PATH/bin/mm-java">
 				<os family="unix"/>
 			</executable>
 			
@@ -107,7 +113,7 @@
 			</file>
 			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
-			</file>
+			</file>			
 			
 			<native type="izpack" name="ShellLink.dll">
 				<os family="windows"/>
