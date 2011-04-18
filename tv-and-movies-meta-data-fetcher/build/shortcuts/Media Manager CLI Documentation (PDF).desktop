@@ -1,5 +1,5 @@
 [Desktop Entry]
-Categories=AudioVideo;Video;TV
+Categories=AudioVideo;Video;TV;
 Comment=The command line documentation in PDF format
 Comment[en]=The command line documentation in PDF format
 Encoding=UTF-8
@@ -17,6 +17,5 @@ SwallowTitle=
 Terminal=false
 TerminalOptions=
 Type=Application
-URL=
 X-KDE-SubstituteUID=false
 X-KDE-Username=root
