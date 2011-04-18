@@ -229,6 +229,7 @@
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
 			<zipfileset dir="${scripts.dir}" prefix="${ant.project.name}-${project.version}/scripts"/>
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
+			<zipfileset dir="${basedir}/build" prefix="${ant.project.name}-${project.version}/build"/>
 			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/VERSION" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/COPYING" prefix="${ant.project.name}-${project.version}"/>

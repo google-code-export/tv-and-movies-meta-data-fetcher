@@ -1,0 +1,22 @@
+[Desktop Entry]
+Categories=
+Comment=The command line documentation in PDF format
+Comment[en]=The command line documentation in PDF format
+Encoding=UTF-8
+Exec=xdg-open /usr/share/doc/MediaInfoFetcher/userguide.pdf
+GenericName=
+GenericName[en]=
+Icon=
+MimeType=
+Name=Media Manager CLI Documentation (PDF)
+Name[en]=Media Manager CLI Documentation (PDF)
+Path=
+ServiceTypes=
+SwallowExec=
+SwallowTitle=
+Terminal=false
+TerminalOptions=
+Type=Application
+URL=
+X-KDE-SubstituteUID=false
+X-KDE-Username=root
