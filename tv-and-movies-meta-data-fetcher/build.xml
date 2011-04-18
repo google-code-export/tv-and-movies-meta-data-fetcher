@@ -308,6 +308,7 @@
 	</target>
 		
 	<target name="installer" depends="jars">		
+		<!-- Create java installer -->		
 		<izpack input="${basedir}/build/installer/install.xml"
 			    output="${dist.dir}/${ant.project.name}-${project.version}-install.jar"
 				installerType="standard"
@@ -315,7 +316,31 @@
 				basedir="${basedir}/build/installer"
 				compression="deflate"
 				compressionlevel="9"/>
-						
+		
+		<!-- Create Linux Shell Installer -->
+		<tar destfile="${dist.dir}/${ant.project.name}-${project.version}-install.tar">
+			<tarfileset dir="${dist.dir}" preserveLeadingSlashes="true"> 
+			    <include name="${ant.project.name}-${project.version}-install.jar"/>
+			</tarfileset>
+		</tar>		      
+		<gzip destfile="${dist.dir}/${ant.project.name}-${project.version}-install.tar.gz" src="${dist.dir}/${ant.project.name}-${project.version}-install.tar"/>
+		<delete file="${dist.dir}/${ant.project.name}-${project.version}-install.tar"/>
+		
+		<copy file="${basedir}/build/installer/install.sh.template" tofile="${dist.dir}/install.sh.template"/>		
+		<echo file="${dist.dir}/install.sh.template" append="true" message="PAYLOAD:${line.separator}"/>
+		<replace file="${dist.dir}/install.sh.template">
+			<replacefilter token="@@version@@" value="${project.version}"/>
+			<replacefilter token="@@name@@" value="${ant.project.name}"/>
+			<replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+			<replacefilter token="@@mode@@" value="0"/>
+		</replace>
+		
+		<concat destfile="${dist.dir}/${ant.project.name}-${project.version}-install.sh" binary="yes">
+			<fileset file="${dist.dir}/install.sh.template"/>
+			<fileset file="${dist.dir}/${ant.project.name}-${project.version}-install.tar.gz"/>
+		</concat>
+		<delete file="${dist.dir}/install.sh.template"/>
+		<chmod file="${dist.dir}/${ant.project.name}-${project.version}-install.sh" perm="ugo+rx"/>
 	</target>
 
 	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,installer"/>	

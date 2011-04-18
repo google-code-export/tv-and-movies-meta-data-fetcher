@@ -1,24 +1,58 @@
 #!/bin/bash
 
-uuencode=1
-binary=0
+NAME=@@name@@
+VERSION=@@version@@
+FILE=@@file@@
+MODE=@@mode@@
+
+case "$0" in
+  /*) INSTALLER_PATH=$0;;
+  *) INSTALLER_PATH=`pwd`"/$0";;
+esac
 
 function untar_payload()
 {
-	match=$(grep --text --line-number '^PAYLOAD:$' $0 | cut -d ':' -f 1)
+	match=$(grep --text --line-number '^PAYLOAD:$' $INSTALLER_PATH | cut -d ':' -f 1)
 	payload_start=$((match + 1))
-	if [[ $binary -ne 0 ]]; then
-		tail -n +$payload_start $0 | tar -tzvf -
+	if [[ $MODE -eq 0 ]]; then
+		tail -n +$payload_start $INSTALLER_PATH | tar -xzvf -
+		if [[ $? -ne 0 ]]; then
+			echo "Unable to extract installer"
+			exit 1
+		fi
 	fi
-	if [[ $uuencode -ne 0 ]]; then
-		tail -n +$payload_start $0 | uudecode | tar -tzvf -
+	if [[ $MODE -eq 1 ]]; then
+		tail -n +$payload_start $INSTALLER_PATH | uudecode | tar -xzvf -
+		if [[ $? -ne 0 ]]; then
+			echo "Unable to extract installer"
+			exit 1
+		fi
 	fi
 }
 
-read -p "Install files? " ans
-if [[ "${ans:0:1}"  ||  "${ans:0:1}" ]]; then
-	untar_payload
-	# Do remainder of install steps.
-fi
+# Create tmp work dir
+tmp=""
+mymktemp=`which mktemp`	
+test -n $mymktemp && {
+	tmp=`mktemp -d`
+}
+test -z $mymktemp && {
+	tmp=${TMPDIR-/tmp}
+	tmp=$tmp/$NAME.$RANDOM.$RANDOM.$RANDOM.$$
+	(umask 077 && mkdir $tmp) || {
+		echo "Could not create temporary directory! Exiting." 1>&2 
+		exit 1
+	}
+}
+
+# Extract installer
+cd $tmp
+untar_payload
+
+# Start installer
+java -jar $FILE
+
+# Clean up
+rm -rf $tmp
 
 exit 0
