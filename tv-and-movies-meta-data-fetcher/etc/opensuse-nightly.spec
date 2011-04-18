@@ -96,6 +96,7 @@ popd
 %__install -dm 755 %{buildroot}/usr/share/doc/%{name}
 %__install -m 644 docs/userguide/userguide.pdf %{buildroot}/usr/share/doc/%{name}
 %__install -m 644 docs/userguide/html/docbook.html %{buildroot}/usr/share/doc/%{name}/userguide.html
+%__install -dm 755 %{buildroot}%{_datadir}/applications
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(HTML\).desktop %{buildroot}%{_datadir}/applications/
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(PDF\).desktop %{buildroot}%{_datadir}/applications/
  
