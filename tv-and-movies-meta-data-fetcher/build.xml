@@ -30,10 +30,6 @@
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
 
-	<!-- One Jar Setup -->
-	<property name="one-jar.dist.dir" value="${libs.dir}/compile-time"/>
-	<import file="one-jar-ant-task.xml"/>	
-
 	<!-- Lib classpaths -->
 	<path id="installer.libs.classpath">
 		<fileset dir="${libs.dir}/installer" includes="*.jar" />
@@ -264,18 +260,7 @@
 
 		<zip file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" basedir="${dist.dir}/bin" compress="true"/>
 
-		<delete dir="${dist.dir}/bin" />				
-		
-		<!-- Construct the One-JAR file -->
-		<one-jar destfile="${dist.dir}/${ant.project.name}-${project.version}-static-bin.jar" 
-			     manifest="${etc.dir}/manifest.mf">
-			<main>		    	
-		        <fileset dir="${build.dir}"/>
-		    </main>
-		    <lib>
-		    	<fileset dir="${libs.dir}/run-time" includes="*.jar" />		    	
-		    </lib>
-		</one-jar>
+		<delete dir="${dist.dir}/bin" />						
 	</target>
 
 	<!-- 
