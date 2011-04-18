@@ -1,12 +1,12 @@
 [Desktop Entry]
-Categories=Applications
+Categories=AudioVideo;Video;TV
 Comment=The command line documentation in PDF format
 Comment[en]=The command line documentation in PDF format
 Encoding=UTF-8
 Exec=xdg-open /usr/share/doc/MediaInfoFetcher/userguide.pdf
 GenericName=Media Manager CLI Documentation (PDF)
 GenericName[en]=Media Manager CLI Documentation (PDF)
-Icon=help
+Icon=
 MimeType=
 Name=Media Manager CLI Documentation (PDF)
 Name[en]=Media Manager CLI Documentation (PDF)
