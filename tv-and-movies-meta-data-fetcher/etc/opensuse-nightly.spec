@@ -96,6 +96,8 @@ popd
 %__install -dm 755 %{buildroot}/usr/share/doc/%{name}
 %__install -m 644 docs/userguide/userguide.pdf %{buildroot}/usr/share/doc/%{name}
 %__install -m 644 docs/userguide/html/docbook.html %{buildroot}/usr/share/doc/%{name}/userguide.html
+%__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(HTML\).desktop %{buildroot}%{_datadir}/applications/
+%__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(PDF\).desktop %{buildroot}%{_datadir}/applications/
  
 # javadoc
 %__install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
@@ -114,10 +116,11 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_javadir}/*.jar
 %{_bindir}/mm-renamer
 %{_bindir}/mm-xbmc
+%{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*
 %config /etc/mediafetcher-conf.xml
- 
+
 %files javadoc
 %defattr(-,root,root)
 %doc %{_javadocdir}/%{name}-%{version}
