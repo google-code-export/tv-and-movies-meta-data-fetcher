@@ -6,6 +6,7 @@
 
    <shortcut
      name="Media Manager/Media Manager CLI Documentation (HTML)"
+     Categories="Application"
      programGroup="yes"
      desktop="no"
      applications="no"
@@ -15,6 +16,7 @@
      commandLine="$INSTALL_PATH/docs/html/index.html"
      type="Application"
      encoding="UTF-8"
+     iconFile="help"
 	 initialState="noShow"
 	 terminal="false"
      description="The command line documentation in HTML format">     
@@ -22,13 +24,15 @@
 
    <shortcut
      name="Media Manager CLI Documentation (PDF)"
+     Categories="Application"
      programGroup="yes"
      desktop="no"
      applications="no"
      startMenu="no"
      startup="no"
      target="xdg-open"
-     initialState="noShow"     
+     initialState="noShow"   
+     iconFile="help"  
      commandLine="$INSTALL_PATH/docs/pdf/userguide.pdf"
      url="$INSTALL_PATH/docs/pdf/userguide.pdf"
      type="Application"
@@ -39,6 +43,7 @@
 
    <shortcut
      name="Media Manager Uninstall"
+     Categories="Application"
      programGroup="yes"
      desktop="no"
      applications="no"
