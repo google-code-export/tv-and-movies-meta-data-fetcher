@@ -45,6 +45,7 @@ import org.w3c.dom.Node;
 /**
  * This is used to parse the XML configuration files. These are used to tell the
  * application which stores and sources should be used.
+ * Strings in config file can contain variables which get evaulated with the configuration is read.
  */
 public class ConfigReader extends BaseConfigReader {
 
@@ -55,7 +56,7 @@ public class ConfigReader extends BaseConfigReader {
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
 
 	/** The default location to store configuration */
-	public static final File MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaInfo");
+	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager");
 
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
@@ -65,6 +66,7 @@ public class ConfigReader extends BaseConfigReader {
 	private Locale xbmcLocale = Locale.ENGLISH;
 
 	private List<Plugin> plugins = new ArrayList<Plugin>();
+	private File configDir;
 
 	/**
 	 * The constructor used to create a instance of the configuration reader
@@ -82,6 +84,7 @@ public class ConfigReader extends BaseConfigReader {
 	public void parse() throws ConfigException {
 		try {
 			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-2.0.xsd");
+			parseGlobal(doc);
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
 			parsePlguins(doc);
@@ -89,6 +92,8 @@ public class ConfigReader extends BaseConfigReader {
 			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
 		}
 	}
+
+
 
 	private void parseMediaDirs(Document doc) throws XMLParserException, ConfigException {
 		List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
@@ -310,20 +315,30 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public File getXBMCAddonDir() throws ConfigException {
 		if (xbmcAddonDir==null) {
-			xbmcAddonDir = getDefaultAddonDir();
+			return getDefaultAddonDir();
 		}
 		return xbmcAddonDir;
 	}
 
-	private static File getDefaultAddonDir() throws ConfigException {
-
-		File addonDir = new File(MEDIA_CONFIG_DIR,"xbmc"+File.separator+"addons");
+	private File getDefaultAddonDir() throws ConfigException {
+		File addonDir = new File(getConfigDir(),"xbmc"+File.separator+"addons");
 		if (!addonDir.exists()) {
 			if (!addonDir.mkdirs() && !addonDir.exists()) {
 				throw new ConfigException("Unable to create xbmc addon directory: " + addonDir);
 			}
 		}
 		return addonDir;
+	}
+
+	public File getConfigDir() {
+		if (configDir == null) {
+			configDir = getDefaultConfigDir();
+		}
+		return configDir;
+	}
+
+	public static File getDefaultConfigDir() {
+		return DEFAULT_MEDIA_CONFIG_DIR;
 	}
 
 	/**
@@ -337,8 +352,8 @@ public class ConfigReader extends BaseConfigReader {
 	private void parsePlguins(Node doc) throws XMLParserException {
 		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) {
 			Element pluginEl = (Element)n;
-			String jar = pluginEl.getAttribute("jar");
-			String clazz = pluginEl.getAttribute("class");
+			String jar = parseString(pluginEl.getAttribute("jar"));
+			String clazz = parseString(pluginEl.getAttribute("class"));
 			plugins.add(new Plugin(jar,clazz));
 		}
 	}
@@ -346,13 +361,23 @@ public class ConfigReader extends BaseConfigReader {
 	private void parseXBMCSettings(Node configNode) throws XMLParserException {
 		Element node = (Element) selectSingleNode(configNode, "/mediaManager/XBMCAddons");
 		if (node!=null) {
-			String dir = node.getAttribute("directory");
+			String dir = parseString(node.getAttribute("directory"));
 			if (dir.trim().length()>0) {
 				xbmcAddonDir =new File(dir);
 			}
-			String locale = node.getAttribute("locale");
+			String locale = parseString(node.getAttribute("locale"));
 			if (locale.trim().length()>0) {
 				xbmcLocale = new Locale(locale);
+			}
+		}
+	}
+
+	private void parseGlobal(Document configNode) throws XMLParserException {
+		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global");
+		if (node!=null) {
+			String dir = parseString(getStringFromXML(node, "configDirectory/text()"));
+			if (dir.trim().length()>0) {
+				configDir =new File(dir);
 			}
 		}
 	}
@@ -364,7 +389,7 @@ public class ConfigReader extends BaseConfigReader {
 			source.setID(((Element)sourceElement).getAttribute("id"));
 			for (Node paramNode : selectNodeList(sourceElement, "param")) {
 				String name = ((Element)paramNode).getAttribute("name");
-				String value = ((Element)paramNode).getAttribute("value");
+				String value = parseString(((Element)paramNode).getAttribute("value"));
 				source.addParam(name, value);
 			}
 
@@ -381,7 +406,7 @@ public class ConfigReader extends BaseConfigReader {
 
 			for (Node paramNode : selectNodeList(storeElement, "param")) {
 				String name = ((Element)paramNode).getAttribute("name");
-				String value = ((Element)paramNode).getAttribute("value");
+				String value = parseString(((Element)paramNode).getAttribute("value"));
 				store.addParam(name, value);
 			}
 
@@ -398,7 +423,7 @@ public class ConfigReader extends BaseConfigReader {
 
 			for (Node paramNode : selectNodeList(storeElement, "param")) {
 				String name = ((Element)paramNode).getAttribute("name");
-				String value = ((Element)paramNode).getAttribute("value");
+				String value = parseString(((Element)paramNode).getAttribute("value"));
 				action.addParam(name, value);
 			}
 
@@ -413,4 +438,8 @@ public class ConfigReader extends BaseConfigReader {
 		return plugins;
 	}
 
+	private String parseString(String input) {
+		input = input.replaceAll("\\$HOME", FileHelper.HOME_DIR.getAbsolutePath());
+		return input;
+	}
 }

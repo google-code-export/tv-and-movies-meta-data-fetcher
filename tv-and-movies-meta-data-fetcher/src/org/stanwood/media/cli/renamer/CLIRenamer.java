@@ -45,7 +45,6 @@ public class CLIRenamer extends AbstractLauncher {
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String REFRESH_STORE_OPTION = "r";
-	private final static String RECURSIVE_OPTION = "R";
 	private static final List<Option> OPTIONS;
 
 	private boolean refresh = false;
@@ -126,7 +125,8 @@ public class CLIRenamer extends AbstractLauncher {
 			actions.add(renameAction);
 			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 
-			return renamer.performActions();
+			renamer.performActions();
+			return true;
 		} catch (ActionException e) {
 			log.error(e.getMessage(),e);
 		}

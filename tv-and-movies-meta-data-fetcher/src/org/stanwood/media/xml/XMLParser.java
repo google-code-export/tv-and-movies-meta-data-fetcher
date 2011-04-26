@@ -170,8 +170,8 @@ public class XMLParser {
 	}
 
 	/**
-	 * Used to convert a XML string to a DOM document
-	 * @param str The string to convert
+	 * Used to convert a XML file to a DOM document
+	 * @param file the XML file
 	 * @return The DOM Document
 	 * @throws XMLParserException Thrown if their is a parsing problem
 	 * @throws IOException Thrown if their is a problem reading the file
@@ -301,6 +301,15 @@ public class XMLParser {
 		return builder;
 	}
 
+	/**
+	 * Used to convert a XML String to a XML document. If the schemaName is not null,
+	 * then the XML string is validated against it. It will also attempt to find the
+	 * schema locally if possible
+	 * @param contents The XML String
+	 * @param schemaName The schema name, or null if validation is not required
+	 * @return The XML Document
+	 * @throws XMLParserException Thrown if their was a problem converting the string to a document
+	 */
 	public static Document parse(String contents,String schemaName) throws XMLParserException {
 		DocumentBuilderFactory factory = createFactory(schemaName);
 		try {
@@ -322,6 +331,15 @@ public class XMLParser {
 		}
 	}
 
+	/**
+	 * Used to convert a XML InputStream to a XML document. If the schemaName is not null,
+	 * then the XML string is validated against it. It will also attempt to find the
+	 * schema locally if possible
+	 * @param is The XML InputStream
+	 * @param schemaName The schema name, or null if validation is not required
+	 * @return The XML Document
+	 * @throws XMLParserException Thrown if their was a problem converting the string to a document
+	 */
 	public static Document parse(InputStream is,String schemaName) throws XMLParserException {
 		DocumentBuilderFactory factory = createFactory(schemaName);
 
@@ -354,7 +372,15 @@ public class XMLParser {
 		return factory;
 	}
 
-
+	/**
+	 * Used to convert a XML file to a XML document. If the schemaName is not null,
+	 * then the XML string is validated against it. It will also attempt to find the
+	 * schema locally if possible
+	 * @param file The XML file
+	 * @param schemaName The schema name, or null if validation is not required
+	 * @return The XML Document
+	 * @throws XMLParserException Thrown if their was a problem converting the file to a document
+	 */
 	public static Document parse(File file,String schemaName) throws XMLParserException {
 		DocumentBuilderFactory factory = createFactory(schemaName);
 
@@ -424,6 +450,12 @@ public class XMLParser {
 		return result.toString();
 	}
 
+	/**
+	 * Used to write a XML document to a file
+	 * @param file The file to write
+	 * @param doc The XML contents
+	 * @throws IOException Thrown if thier is aproblem writing the file
+	 */
 	public static void writeXML(File file, Document doc) throws IOException {
 		OutputFormat format = new OutputFormat(doc);
 		format.setLineWidth(65);

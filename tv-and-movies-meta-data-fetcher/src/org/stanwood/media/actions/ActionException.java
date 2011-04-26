@@ -1,9 +1,10 @@
 package org.stanwood.media.actions;
 
 /**
- * Thrown if their is a problem releated to actions
+ * Thrown if their is a problem related to actions
  */
 public class ActionException extends Exception {
+
 
 	public ActionException() {
 		super();

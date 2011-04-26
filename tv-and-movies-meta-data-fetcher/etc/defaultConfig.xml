@@ -1,4 +1,9 @@
 <mediaManager>	
+	<global>
+		<!-- Used to define the location where configuration settings are stored -->
+		<configDirectory>$HOME/.mediaManager</configDirectory>
+	</global>
+
 	<!-- Example Film media directory -->
 	<!-- The default extensions have been overriden for this directory so that the media manager
 	     will only consider .avi and .m4v files as media files. -->
@@ -41,6 +46,6 @@
 	 
 	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
 	 <!--
-	 <XBMCAddons directory="/home/user/.mediaManager/xbmc" locale="en"/> 
+	 <XBMCAddons directory="$HOME/.mediaManager/xbmc" locale="en"/> 
 	  -->	 
 </mediaManager>
