@@ -3,6 +3,9 @@ package org.stanwood.media.actions.rename;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,36 +23,63 @@ import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 
+/**
+ * This action is used to rename media files based on a pattern, media data that can be found in source/stores and
+ * the mode.
+ */
 public class RenameAction implements IAction {
 
 	private final static Log log = LogFactory.getLog(RenameAction.class);
 
+	/**
+	 * The key of the refresh parameter for this action.
+	 */
 	public static final String PARAM_KEY_REFRESH = "refresh";
 
 	private boolean refresh = false;
 
+	/**
+	 * Perform the rename action of the file files
+	 * @param files the media files
+	 * @throws ActionException Thrown if their is a problem renaming the files
+	 */
 	@Override
-	public File perform(MediaDirectory dir,File file) throws ActionException {
-		try {
-			if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
-				return renameTVShow(dir,file);
-			} else if (dir.getMediaDirConfig().getMode() == Mode.FILM) {
-				return renameFilm(dir,file);
-			} else {
-				log.fatal("Unknown rename mode");
-				return null;
+	public void perform(MediaDirectory dir,List<File> files) throws ActionException {
+		Iterator<File> it =files.iterator();
+		List<File>newFiles = new ArrayList<File>();
+		while (it.hasNext()) {
+			File file = it.next();
+			try {
+				if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
+					File newFile = renameTVShow(dir,file);
+					if (!file.equals(newFile)) {
+						it.remove();
+						newFiles.add(newFile);
+					}
+				} else if (dir.getMediaDirConfig().getMode() == Mode.FILM) {
+					File newFile = renameFilm(dir,file);
+					if (!file.equals(newFile)) {
+						it.remove();
+						newFiles.add(newFile);
+					}
+				} else {
+					throw new ActionException("Unknown rename mode: " + dir.getMediaDirConfig().getMode() );
+				}
+			}
+			catch (PatternException e) {
+				throw new ActionException("Unable to rename file " +file,e);
+			} catch (MalformedURLException e) {
+				throw new ActionException("Unable to rename file " +file,e);
+			} catch (SourceException e) {
+				throw new ActionException("Unable to rename file " +file,e);
+			} catch (IOException e) {
+				throw new ActionException("Unable to rename file " +file,e);
+			} catch (StoreException e) {
+				throw new ActionException("Unable to rename file " +file,e);
 			}
 		}
-		catch (PatternException e) {
-			throw new ActionException("Unable to rename file " +file,e);
-		} catch (MalformedURLException e) {
-			throw new ActionException("Unable to rename file " +file,e);
-		} catch (SourceException e) {
-			throw new ActionException("Unable to rename file " +file,e);
-		} catch (IOException e) {
-			throw new ActionException("Unable to rename file " +file,e);
-		} catch (StoreException e) {
-			throw new ActionException("Unable to rename file " +file,e);
+		for (File newFile : newFiles) {
+			files.add(newFile);
 		}
 	}
 
@@ -158,6 +188,14 @@ public class RenameAction implements IAction {
 		}
 	}
 
+	/**
+	 * <p>Used to set the value of a parameter for this action.</p>
+	 * <p>This action supports the following parameters
+	 * <ul>
+	 * <li>refresh - if true, will only read from sources. Stores will then be refreshed</li>
+	 * </ul>
+	 * </p>
+	 */
 	@Override
 	public void setParameter(String key,String value) throws ActionException {
 		if (key.equalsIgnoreCase(PARAM_KEY_REFRESH)) {

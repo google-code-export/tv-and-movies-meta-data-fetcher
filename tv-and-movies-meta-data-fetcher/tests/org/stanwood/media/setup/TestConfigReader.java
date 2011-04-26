@@ -23,6 +23,10 @@ public class TestConfigReader {
 
 	private final static String LS = System.getProperty("line.separator");
 
+	/**
+	 * Used to test the configuration reader works correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testConfig() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -281,6 +285,10 @@ public class TestConfigReader {
 		Assert.assertEquals("this.is.a.Test",configReader.getPlugins().get(0).getPluginClass());
 	}
 
+	/**
+	 * Used to test that a media directories can have the correct extensions
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testDefaultExtensions() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -315,6 +323,10 @@ public class TestConfigReader {
 		}
 	}
 
+	/**
+	 * Used to test that a media directories can have the valid extensions configured
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testConfiguredExtensions() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -344,6 +356,25 @@ public class TestConfigReader {
 		finally {
 			FileHelper.delete(mediaDir);
 		}
+	}
+
+	/**
+	 * Used to test that the configuration directory is read correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testGlobalSettings() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<mediaManager>"+LS);
+		testConfig.append("  <global>"+LS);
+		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+LS);
+		testConfig.append("  </global>"+LS);
+		testConfig.append("</mediaManager>"+LS);
+
+		ConfigReader configReader = createConfigReader(testConfig);
+		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 	}
 
 	private ConfigReader createConfigReader(StringBuilder testConfig)

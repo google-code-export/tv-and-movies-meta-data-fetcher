@@ -28,8 +28,10 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 
 
+/**
+ * This class is used to perform a list of actions upon files in a media directory
+ */
 public class ActionPerformer {
-
 
 	private final static Log log = LogFactory.getLog(ActionPerformer.class);
 
@@ -50,11 +52,15 @@ public class ActionPerformer {
 		this.actions = actions;
 	}
 
-	public boolean performActions() throws ActionException {
-		return processDirectory(dir.getMediaDirConfig().getMediaDir());
+	/**
+	 * Used to perform the actions
+	 * @throws ActionException Thrown if their are any errors with the actions
+	 */
+	public void performActions() throws ActionException {
+		processDirectory(dir.getMediaDirConfig().getMediaDir());
 	}
 
-	private boolean processDirectory(File parentDir) throws ActionException {
+	private void processDirectory(File parentDir) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -84,11 +90,7 @@ public class ActionPerformer {
 			}
 		});
 
-		for (File file : sortedFiles) {
-			if (!performActions(file)) {
-				return false;
-			}
-		}
+		performActions(sortedFiles);
 
 		File dirs[] = parentDir.listFiles(new FileFilter() {
 			@Override
@@ -102,18 +104,13 @@ public class ActionPerformer {
 		for (File dir : dirs) {
 			processDirectory(dir);
 		}
-
-		return true;
 	}
 
-	private boolean performActions(File file) throws ActionException {
+	private void performActions(List<File> files) throws ActionException {
 		for (IAction action : actions) {
-			file = action.perform(dir, file);
-			if (file==null) {
-				return false;
-			}
+			action.perform(dir, files);
 		}
-		return true;
+
 	}
 
 

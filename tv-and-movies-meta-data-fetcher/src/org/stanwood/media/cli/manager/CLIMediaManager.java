@@ -66,7 +66,8 @@ public class CLIMediaManager extends AbstractLauncher {
 		try {
 			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 
-			return renamer.performActions();
+			renamer.performActions();
+			return true;
 		} catch (ActionException e) {
 			log.error(e.getMessage(),e);
 		}
