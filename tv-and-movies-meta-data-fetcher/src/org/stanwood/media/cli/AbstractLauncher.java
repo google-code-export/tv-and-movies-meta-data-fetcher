@@ -102,7 +102,8 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	private boolean processConfig() throws FileNotFoundException, ConfigException {
 		if (config==null) {
 			if (configFile==null) {
-				configFile = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
+				configFile = ConfigReader.getDefaultConfigFile();
+
 				if (log.isDebugEnabled()) {
 					log.debug("No config file give, so using default location: " + configFile.getAbsolutePath());
 				}
@@ -117,6 +118,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 				try {
 					is = new FileInputStream(configFile);
 					config = new ConfigReader(is);
+					config.parse();
 				}
 				finally {
 					if (is!=null) {
@@ -128,7 +130,6 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 					}
 				}
 			}
-			config.parse();
 		}
 		return true;
 	}

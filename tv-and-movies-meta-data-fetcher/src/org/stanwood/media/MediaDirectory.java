@@ -142,7 +142,9 @@ public class MediaDirectory {
 					film = source.getFilm(searchResult.getId(),url,filmFile);
 					if (film != null) {
 						for (IStore store : stores) {
-							store.cacheFilm(rootMediaDir,filmFile, film);
+							if (!controller.isTestRun()) {
+								store.cacheFilm(rootMediaDir,filmFile, film);
+							}
 						}
 						break;
 					}

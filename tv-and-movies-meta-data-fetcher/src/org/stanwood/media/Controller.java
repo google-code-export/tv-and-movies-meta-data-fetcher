@@ -32,6 +32,7 @@ import org.stanwood.media.setup.Plugin;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
 
 /**
@@ -68,6 +69,19 @@ public class Controller {
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager(configReader));
+				if (getXBMCAddonManager().isFirstTime()) {
+					getXBMCAddonManager().getUpdater().update( new IConsole() {
+						@Override
+						public void error(String error) {
+							log.error(error);
+						}
+
+						@Override
+						public void info(String info) {
+							log.info(info);
+						}
+					});
+				}
 				// xbmcMgr.getUpdater().update();
 			} catch (XBMCException e) {
 				log.error(e.getMessage(), e);
@@ -164,6 +178,10 @@ public class Controller {
 		} catch (ClassNotFoundException e) {
 			throw new ConfigException("Unable to add action because action '"+ className + "' can't be found", e);
 		}
+	}
+
+	public boolean isTestRun() {
+		return true;
 	}
 
 }
