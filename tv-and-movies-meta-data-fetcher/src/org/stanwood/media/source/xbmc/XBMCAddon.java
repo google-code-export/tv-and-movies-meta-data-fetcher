@@ -174,14 +174,17 @@ public class XBMCAddon extends XMLParser {
 				for (Node node : selectNodeList(getDocument(addonFile), "addon/requires/import")) {
 					String id = ((Element)node).getAttribute("addon");
 
-					XBMCAddon addon = addonMgr.getAddon(id);
-					//TODO check the version
-//					String version = ((Element)node).getAttribute("version");
-//					if (!addon.getVersion().equals(version)) {
-//						throw new XBMCException("Unable to find required addon '" + id+"' of version '"+version+"'");
-//					}
+					// The XBMC addons are not need by this app
+					if (!id.startsWith("xbmc.")) {
+						XBMCAddon addon = addonMgr.getAddon(id);
+						//TODO check the version
+	//					String version = ((Element)node).getAttribute("version");
+	//					if (!addon.getVersion().equals(version)) {
+	//						throw new XBMCException("Unable to find required addon '" + id+"' of version '"+version+"'");
+	//					}
 
-					requiredAddons.add(addon);
+						requiredAddons.add(addon);
+					}
 				}
 			}
 			catch (XMLParserException e1) {
@@ -341,6 +344,7 @@ public class XBMCAddon extends XMLParser {
 		String result = null;
 		for (XBMCExtension addon : getExtensions()) {
 			try {
+				result = addon.executeXBMCScraperFunction(functionName, params);
 				result = addon.executeXBMCScraperFunction(functionName, params);
 				break;
 			}

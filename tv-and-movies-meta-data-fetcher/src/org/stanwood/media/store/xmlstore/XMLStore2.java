@@ -104,7 +104,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				seasonNode.appendChild(node);
 			}
 
-			writeEpisodeCommonData(doc, episode, node,episodeFile);
+			writeEpisodeCommonData(doc, episode, node,episodeFile,rootMediaDir);
 
 			File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 			writeCache(cacheFile, doc);
@@ -129,7 +129,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				seasonNode.appendChild(node);
 			}
 
-			writeEpisodeCommonData(doc, episode, node,episodeFile);
+			writeEpisodeCommonData(doc, episode, node,episodeFile,rootMediaDir);
 
 			File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 			writeCache(cacheFile, doc);
@@ -139,7 +139,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile)
+	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile,File rootMediaDir)
 	throws StoreException {
 		try {
 			((Element) node).setAttribute("title", episode.getTitle());
@@ -162,7 +162,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			writeActors(node,episode);
 
 			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null));
-			writeFilenames(doc, node, episode);
+			writeFilenames(doc, node, episode,rootMediaDir);
 		}
 		catch (XMLParserException e) {
 			throw new StoreException("Unable to write episode data",e);
@@ -192,17 +192,17 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		episode.setActors(actors);
 	}
 
-	private void appendFile(Document doc, Node parent, VideoFile file) throws StoreException {
+	private void appendFile(Document doc, Node parent, VideoFile file,File rootMediaDir) throws StoreException {
 		if (file!=null) {
 			try {
 
-				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(file.getLocation().getAbsolutePath())+"]");
+				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir))+"]");
 				if (fileNode==null) {
 					fileNode = doc.createElement("file");
 					parent.appendChild(fileNode);
 				}
 
-				fileNode.setAttribute("location", file.getLocation().getAbsolutePath());
+				fileNode.setAttribute("location", makePathRelativeToMediaDir(file.getLocation(),rootMediaDir));
 			} catch (XMLParserException e) {
 				throw new StoreException("Unable to read xml",e);
 			}
@@ -226,7 +226,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			Node storeNode = getStoreNode(doc);
 			film.getFiles().add(new VideoFile(filmFile,filmFile,null));
-			appendFilm(doc, storeNode, film);
+			appendFilm(doc, storeNode, film,rootMediaDir);
 
 			File cacheFile = getCacheFile(rootMediaDir, FILENAME);
 			writeCache(cacheFile, doc);
@@ -235,7 +235,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void appendFilm(Document doc, Node filmsNode, Film film)
+	private void appendFilm(Document doc, Node filmsNode, Film film,File rootMediaDir)
 	throws XMLParserException, StoreException {
 		Element filmNode = (Element) selectSingleNode(filmsNode, "film[@id='"+film.getId()+"']");
 		if (filmNode!=null) {
@@ -271,7 +271,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		writeWriters(filmNode, film);
 		writeActors(filmNode,film);
 		writeChapters(film, filmNode);
-		writeFilenames(doc, filmNode, film);
+		writeFilenames(doc, filmNode, film,rootMediaDir);
 
 
 	}
@@ -436,9 +436,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @param filenames The filenames to append
 	 * @throws StoreException Thrown if their is a tore releated problem
 	 */
-	protected void writeFilenames(Document doc, Node parent, IVideo video) throws StoreException {
+	protected void writeFilenames(Document doc, Node parent, IVideo video,File rootMediaDir) throws StoreException {
 		for (VideoFile filename : video.getFiles()) {
-			appendFile(doc, parent, filename);
+			appendFile(doc, parent, filename,rootMediaDir);
 		}
 	}
 
@@ -588,7 +588,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		Episode episode = null;
 		try {
-			episode = getEpisodeFromCache(episodeNum, season, doc);
+			episode = getEpisodeFromCache(episodeNum, season, doc,rootMediaDir);
 			return episode;
 		} catch (NotInStoreException e) {
 			return null;
@@ -619,7 +619,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			Element filmNode = (Element) selectSingleNode(doc, "store/film[@id='"+filmId+"']");
 			if (filmNode==null) {
-				throw new StoreException("Unable to find film with id '"+ filmId+"'");
+				if (log.isDebugEnabled()) {
+					log.debug("Film with id '"+filmId+"' is not in store " + XMLStore2.class.getName());
+				}
+				return null;
 			}
 			readGenres(film, filmNode);
 			film.setCountry(getStringFromXML(filmNode, "country/text()"));
@@ -636,7 +639,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			film.setSourceId(getStringFromXML(filmNode, "@sourceId"));
 			readChapters(film, filmNode);
 			readCertifications(film, filmNode);
-			readFiles(film,filmNode);
+			readFiles(film,filmNode,rootMediaDir);
 		}
 		catch (XMLParserException e) {
 			throw new StoreException("Unable to read film from store",e);
@@ -650,7 +653,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return film;
 	}
 
-	private void readFiles(IVideo video, Element videoNode) throws XMLParserException {
+	private void readFiles(IVideo video, Element videoNode,File rootMediaDir) throws XMLParserException {
 		SortedSet<VideoFile> files = new VideoFileSet();
 
 		for (Node node : selectNodeList(videoNode, "file")) {
@@ -658,14 +661,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			String originalLocation = ((Element)node).getAttribute("orginalLocation");
 			File orgLocFile = null;
 			if (!originalLocation.equals("")) {
-				orgLocFile = new File(originalLocation);
+				orgLocFile = new File(rootMediaDir,originalLocation);
 			}
 			String strPart = ((Element)node).getAttribute("part");
 			Integer part = null;
 			if (!strPart.equals("")) {
 				part = Integer.parseInt(strPart);
 			}
-			files.add(new VideoFile(new File(location),orgLocFile,part));
+			files.add(new VideoFile(new File(rootMediaDir,location),orgLocFile,part));
 		}
 		video.setFiles(files);
 	}
@@ -703,8 +706,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private Episode getEpisodeFromCache(int episodeNum, Season season,
-			Document doc) throws NotInStoreException, StoreException,
+	private Episode getEpisodeFromCache(int episodeNum, Season season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
 			Show show = season.getShow();
@@ -715,7 +717,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 
 			Episode episode = new Episode(episodeNum, season);
-			readCommonEpisodeInfo(episodeNode, episode);
+			readCommonEpisodeInfo(episodeNode, episode,rootMediaDir);
 			episode.setSpecial(false);
 
 			return episode;
@@ -729,8 +731,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private Episode getSpecialFromCache(int specialNum, Season season,
-			Document doc) throws NotInStoreException, StoreException,
+	private Episode getSpecialFromCache(int specialNum, Season season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
 			Show show = season.getShow();
@@ -742,7 +743,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			Episode episode = new Episode(specialNum, season);
 
-			readCommonEpisodeInfo(episodeNode, episode);
+			readCommonEpisodeInfo(episodeNode, episode,rootMediaDir);
 
 			episode.setSpecial(true);
 			return episode;
@@ -756,7 +757,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void readCommonEpisodeInfo(Node episodeNode, Episode episode)
+	private void readCommonEpisodeInfo(Node episodeNode, Episode episode,File rootMediaDir)
 	throws XMLParserException, NotInStoreException,MalformedURLException, ParseException {
 		try {
 			String summary = getStringFromXML(episodeNode, "summary/text()");
@@ -780,7 +781,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			readWriters(episode, (Element)episodeNode);
 			parseRating(episode,(Element)episodeNode);
 			readDirectors(episode, (Element)episodeNode);
-			readFiles(episode,(Element)episodeNode);
+			readFiles(episode,(Element)episodeNode,rootMediaDir);
 		}
 		catch (XMLParserNotFoundException e) {
 			throw new NotInStoreException();
@@ -882,7 +883,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		Episode episode = null;
 		try {
-			episode = getSpecialFromCache(specialNumber, season, doc);
+			episode = getSpecialFromCache(specialNumber, season, doc,rootMediaDir);
 			return episode;
 		} catch (NotInStoreException e) {
 			return null;
@@ -897,11 +898,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		if (doc!=null) {
 			try {
-				for (Node node : selectNodeList(doc, "//file[@location="+quoteXPathQuery(oldFile.getPath())+"]")) {
+				for (Node node : selectNodeList(doc, "//file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(oldFile, rootMediaDir))+"]")) {
 					Element fileNode = (Element)node;
-					fileNode.setAttribute("location", newFile.getAbsolutePath());
+					fileNode.setAttribute("location", makePathRelativeToMediaDir(newFile,rootMediaDir));
 					if (fileNode.getAttribute("orginalLocation").equals("")) {
-						fileNode.setAttribute("orginalLocation", oldFile.getAbsolutePath());
+						fileNode.setAttribute("orginalLocation",makePathRelativeToMediaDir(oldFile, rootMediaDir));
 					}
 				}
 
@@ -923,10 +924,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				store = getStoreNode(doc);
 				if (store!=null) {
 					if (dirConfig.getMode()==Mode.TV_SHOW) {
-						return searchForTVShow(store,mediaFile,dirConfig.getPattern());
+						return searchForTVShow(store,mediaFile,dirConfig.getPattern(),dirConfig.getMediaDir());
 					}
 					else {
-						return searchForFilm(store,mediaFile,dirConfig.getPattern());
+						return searchForFilm(store,mediaFile,dirConfig);
 					}
 				}
 			} catch (XMLParserException e) {
@@ -938,11 +939,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 
 
-	private SearchResult searchForFilm(Node store, File episodeFile,String renamePattern) throws XMLParserException {
+	private SearchResult searchForFilm(Node store, File episodeFile,MediaDirConfig dirConfig) throws XMLParserException {
 		SearchResult result = null;
 
 		// search for film by file name
-		for (Node node : selectNodeList(store,"film/file/[@location="+quoteXPathQuery(episodeFile.getAbsolutePath())+"]")) {
+		for (Node node : selectNodeList(store,"film/file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(episodeFile,dirConfig.getMediaDir()))+"]")) {
 			Element filmEl = (Element)node.getParentNode();
 			Integer part = null;
 			if (!((Element)node).getAttribute("part").equals("")) {
@@ -954,11 +955,22 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return result;
 	}
 
-	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern) throws XMLParserException {
+	private String makePathRelativeToMediaDir(File episodeFile, File rootMediaDir) {
+		String path = rootMediaDir.getAbsolutePath();
+		int len = path.length();
+		if (episodeFile.getAbsolutePath().startsWith(path)) {
+			return episodeFile.getAbsolutePath().substring(len+1);
+		}
+		else {
+			return episodeFile.getAbsolutePath();
+		}
+	}
+
+	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern,File rootMediaDir) throws XMLParserException {
 		SearchResult result = null;
 
 		// search for show by file name
-		NodeList showNodes = selectNodeList(store,"show/file[@location="+quoteXPathQuery(episodeFile.getAbsolutePath())+"]");
+		NodeList showNodes = selectNodeList(store,"show/file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(episodeFile,rootMediaDir))+"]");
 		if (showNodes!=null && showNodes.getLength()>0) {
 			Element showEl = (Element)showNodes.item(0).getParentNode();
 			Integer part = null;

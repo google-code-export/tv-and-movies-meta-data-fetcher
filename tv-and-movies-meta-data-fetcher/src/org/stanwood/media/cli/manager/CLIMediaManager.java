@@ -85,7 +85,7 @@ public class CLIMediaManager extends AbstractLauncher {
 
 		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
-			if (dir.isDirectory() && dir.canWrite()) {
+			if (dir.isDirectory()) {
 				try {
 					getController().init();
 					rootMediaDir = getController().getMediaDirectory(dir);
@@ -94,7 +94,7 @@ public class CLIMediaManager extends AbstractLauncher {
 					return false;
 				}
 			} else {
-				fatal("Media directory must be a writable directory");
+				fatal("Media directory '"+dir+"' must be a writable directory");
 				return false;
 			}
 			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {

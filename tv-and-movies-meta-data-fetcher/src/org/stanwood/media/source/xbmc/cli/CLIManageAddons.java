@@ -11,6 +11,7 @@ import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.AbstractSubCLICommand;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.setup.ConfigException;
 
 /**
  * The main XBMC addon manager command line command
@@ -61,7 +62,12 @@ public class CLIManageAddons extends AbstractLauncher {
 		if (!checkArgs(cmd)) {
 			return false;
 		}
-
+		try {
+			getController().init();
+		} catch (ConfigException e) {
+			fatal(e);
+			return false;
+		}
 		boolean found = false;
 		subCommandArgs = new ArrayList<String>();
 		for (String a: args) {

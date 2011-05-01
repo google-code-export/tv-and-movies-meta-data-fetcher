@@ -38,4 +38,16 @@ public enum Mode {
 	public String getDisplayName() {
 		return displayName;
 	}
+
+	public static String modeList() {
+		StringBuilder validModes = new StringBuilder();
+		for (Mode m : Mode.values()) {
+			if (validModes.length()>0) {
+				validModes.append(", ");
+			}
+			validModes.append("'"+m+"'");
+
+		}
+		return validModes.toString();
+	}
 }

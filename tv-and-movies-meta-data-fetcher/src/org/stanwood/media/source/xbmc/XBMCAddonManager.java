@@ -125,4 +125,13 @@ public class XBMCAddonManager implements IContentFetcher {
 	public Set<String> listAddons() {
 		return addons.keySet();
 	}
+
+	public boolean isFirstTime() throws XBMCException {
+		try {
+			return config.getXBMCAddonDir().list().length==0;
+		}
+		catch (ConfigException e) {
+			throw new XBMCException("Unable to find addon directory",e);
+		}
+	}
 }

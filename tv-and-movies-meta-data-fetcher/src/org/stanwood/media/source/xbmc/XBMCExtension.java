@@ -150,7 +150,9 @@ public abstract class XBMCExtension extends XMLParser {
 			newOutput.append(input);
 		}
 
-		String output = processInfoVars(newOutput.toString());
+		String s = newOutput.toString().replaceAll("\\&",Matcher.quoteReplacement("&amp;"));
+		String output = processInfoVars(s);
+
 		if (dest!=-1) {
 			if (log.isDebugEnabled()) {
 				log.debug("Put param " + dest + " - " + output);

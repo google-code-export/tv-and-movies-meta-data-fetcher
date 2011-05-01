@@ -17,6 +17,7 @@
 package org.stanwood.media.setup;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -112,7 +113,8 @@ public class ConfigReader extends BaseConfigReader {
 				mode = Mode.valueOf(strMode);
 			}
 			catch (IllegalArgumentException e) {
-				throw new ConfigException("Unkown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'");
+
+				throw new ConfigException("Unknown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'. Valid modes are "+Mode.modeList());
 			}
 
 			String pattern = dirNode.getAttribute("pattern").trim();
@@ -330,15 +332,21 @@ public class ConfigReader extends BaseConfigReader {
 		return addonDir;
 	}
 
-	public File getConfigDir() {
+	public File getConfigDir() throws ConfigException {
 		if (configDir == null) {
 			configDir = getDefaultConfigDir();
 		}
 		return configDir;
 	}
 
-	public static File getDefaultConfigDir() {
-		return DEFAULT_MEDIA_CONFIG_DIR;
+	public static File getDefaultConfigDir() throws ConfigException {
+		File dir = DEFAULT_MEDIA_CONFIG_DIR;
+		if (!dir.exists()) {
+			if (!dir.mkdirs() && !dir.exists()) {
+				throw new ConfigException ("Unable to create missing configuration directory: " + dir);
+			}
+		}
+		return dir;
 	}
 
 	/**
@@ -441,5 +449,17 @@ public class ConfigReader extends BaseConfigReader {
 	private String parseString(String input) {
 		input = input.replaceAll("\\$HOME", FileHelper.HOME_DIR.getAbsolutePath());
 		return input;
+	}
+
+	public static File getDefaultConfigFile() throws ConfigException {
+		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
+		if (!file.exists()) {
+			try {
+				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file);
+			} catch (IOException e) {
+				throw new ConfigException("Unable to create default configuration file : " + file,e);
+			}
+		}
+		return file;
 	}
 }

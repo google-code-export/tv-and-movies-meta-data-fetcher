@@ -38,6 +38,8 @@ public class RenameAction implements IAction {
 
 	private boolean refresh = false;
 
+	private boolean testRun = true;
+
 	/**
 	 * Perform the rename action of the file files
 	 * @param files the media files
@@ -162,27 +164,32 @@ public class RenameAction implements IAction {
 				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");
 			}
 			else {
-				if (!newFile.getParentFile().exists()) {
-					if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
-						log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());
-					}
-				}
-				log.info("Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"'");
-
-				File oldFile = new File(file.getAbsolutePath());
-				if (file.renameTo(newFile)) {
-					for (VideoFile vf : video.getFiles()) {
-						if (vf.getLocation().equals(file)) {
-							vf.setLocation(newFile);
-							if (vf.getOrginalLocation()==null) {
-								vf.setOrginalLocation(file);
-							}
+				if (testRun) {
+					if (!newFile.getParentFile().exists()) {
+						if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
+							log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());
 						}
 					}
-					dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+					log.info("Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"'");
+
+					File oldFile = new File(file.getAbsolutePath());
+					if (file.renameTo(newFile)) {
+						for (VideoFile vf : video.getFiles()) {
+							if (vf.getLocation().equals(file)) {
+								vf.setLocation(newFile);
+								if (vf.getOrginalLocation()==null) {
+									vf.setOrginalLocation(file);
+								}
+							}
+						}
+						dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+					}
+					else {
+						log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
+					}
 				}
 				else {
-					log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
+					log.info("Not Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"' as it's a test run");
 				}
 			}
 		}

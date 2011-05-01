@@ -200,8 +200,8 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem reading or wring the file
 	 */
 	public static String copy(URL url,File dest) throws IOException {
-		if (log.isInfoEnabled()) {
-			log.info("Fetching: " + url);
+		if (log.isDebugEnabled()) {
+			log.debug("Fetching: " + url);
 		}
 		try {
 			OutputStream out = null;
