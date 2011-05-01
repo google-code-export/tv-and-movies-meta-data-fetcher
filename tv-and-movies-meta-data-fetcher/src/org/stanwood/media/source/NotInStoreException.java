@@ -16,11 +16,13 @@
  */
 package org.stanwood.media.source;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * This is thrown when an attempt is made to retrieve data from a store, but
  * it can't be found in the store.
  */
-public class NotInStoreException extends Exception {
+public class NotInStoreException extends StanwoodException {
 
 	private static final long serialVersionUID = 3104144918984938688L;
 

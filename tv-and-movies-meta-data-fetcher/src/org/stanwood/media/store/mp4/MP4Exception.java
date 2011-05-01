@@ -1,9 +1,11 @@
 package org.stanwood.media.store.mp4;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * This exception is throw if their is problems relating to MP4 files
  */
-public class MP4Exception extends Exception {
+public class MP4Exception extends StanwoodException {
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
@@ -18,7 +20,7 @@ public class MP4Exception extends Exception {
      * cause is not initialized, and may subsequently be initialized by
      * a call to {@link #initCause}.
      *
-     * @param   message   the detail message. The detail message is saved for 
+     * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
     public MP4Exception(String message) {
@@ -58,5 +60,5 @@ public class MP4Exception extends Exception {
     public MP4Exception(Throwable cause) {
         super(cause);
     }
-	
+
 }

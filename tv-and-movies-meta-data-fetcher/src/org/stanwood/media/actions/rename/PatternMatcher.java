@@ -1,6 +1,8 @@
 package org.stanwood.media.actions.rename;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
 import org.stanwood.media.model.Episode;
@@ -27,9 +29,12 @@ public class PatternMatcher {
 	public static final String TOKEN_ID = "%h";
 	/** the token for "part number" */
 	public static final String TOKEN_PART = "%p";
+	/** the token for the "year" */
+	public static final String TOKEN_YEAR = "%y";
 
-	private final static String TOKENS[] = {TOKEN_SHOW_NAME,TOKEN_EPISODE,TOKEN_SEASON,TOKEN_EXT,TOKEN_TITLE,TOKEN_PERCENT,TOKEN_ID,TOKEN_PART};
+	private final static String TOKENS[] = {TOKEN_SHOW_NAME,TOKEN_EPISODE,TOKEN_SEASON,TOKEN_EXT,TOKEN_TITLE,TOKEN_PERCENT,TOKEN_ID,TOKEN_PART,TOKEN_YEAR};
 
+	private final static DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 
 	private String normalizeText(String text) {
 		text = text.replaceAll(":|/","-");
@@ -58,6 +63,7 @@ public class PatternMatcher {
 			newName = newName.replaceAll(TOKEN_PART, String.valueOf(part));
 		}
 		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
+		newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(film.getDate()));
 		return newName;
 	}
 
@@ -74,6 +80,7 @@ public class PatternMatcher {
 		newName = newName.replaceAll(TOKEN_SHOW_NAME, normalizeText(show.getName()));
 		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(episode.getTitle()));
 		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
+		newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(episode.getDate()));
 		return newName;
 	}
 

@@ -75,7 +75,7 @@ public class TestController extends XBMCAddonTestBase  {
 				configReader.parse();
 				Controller controller = new Controller(configReader);
 
-				controller.init();
+				controller.init(false);
 				controller.getMediaDirectory(tmpDir);
 				Assert.assertNotNull(controller);
 				Assert.assertEquals("/testPath/blah",FakeStore.getFakeParam());
@@ -141,7 +141,7 @@ public class TestController extends XBMCAddonTestBase  {
 				configReader.parse();
 				Controller controller = new Controller(configReader);
 
-				controller.init();
+				controller.init(false);
 
 				MediaDirectory mediaDir = controller.getMediaDirectory(tmpDir);
 				List<ISource> sources = mediaDir.getSources();

@@ -1,9 +1,11 @@
 package org.stanwood.media.actions;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * Thrown if their is a problem related to actions
  */
-public class ActionException extends Exception {
+public class ActionException extends StanwoodException {
 
 
 	public ActionException() {

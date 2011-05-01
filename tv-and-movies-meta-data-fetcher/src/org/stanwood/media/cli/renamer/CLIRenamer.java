@@ -147,7 +147,7 @@ public class CLIRenamer extends AbstractLauncher {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory() && dir.canWrite()) {
 				try {
-					getController().init();
+					getController().init(false);
 					rootMediaDir = getController().getMediaDirectory(dir);
 				} catch (ConfigException e) {
 					fatal(e);

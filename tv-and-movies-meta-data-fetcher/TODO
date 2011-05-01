@@ -10,6 +10,8 @@ Create a windows installer
 Create macosx installer
 Add action to create pod casts of new media that is found
 Media Manager should perform a XBMC update before running
+Make sure that /etc is also checked for a config file
+ReversePatternMatcher needs the Optional pattern adding and any other missing ones
 
 Version 2.1
 -----------

@@ -345,7 +345,6 @@ public class XBMCAddon extends XMLParser {
 		for (XBMCExtension addon : getExtensions()) {
 			try {
 				result = addon.executeXBMCScraperFunction(functionName, params);
-				result = addon.executeXBMCScraperFunction(functionName, params);
 				break;
 			}
 			catch (XBMCException e) {

@@ -10,8 +10,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
-import org.stanwood.media.actions.IAction;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
@@ -27,7 +27,7 @@ import org.stanwood.media.store.StoreException;
  * This action is used to rename media files based on a pattern, media data that can be found in source/stores and
  * the mode.
  */
-public class RenameAction implements IAction {
+public class RenameAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(RenameAction.class);
 
@@ -37,8 +37,6 @@ public class RenameAction implements IAction {
 	public static final String PARAM_KEY_REFRESH = "refresh";
 
 	private boolean refresh = false;
-
-	private boolean testRun = true;
 
 	/**
 	 * Perform the rename action of the file files
@@ -73,7 +71,7 @@ public class RenameAction implements IAction {
 			} catch (MalformedURLException e) {
 				throw new ActionException("Unable to rename file " +file,e);
 			} catch (SourceException e) {
-				throw new ActionException("Unable to rename file " +file,e);
+				log.error("Unable to rename file '" + file,e);
 			} catch (IOException e) {
 				throw new ActionException("Unable to rename file " +file,e);
 			} catch (StoreException e) {
@@ -164,7 +162,7 @@ public class RenameAction implements IAction {
 				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");
 			}
 			else {
-				if (testRun) {
+				if (isTestMode()) {
 					if (!newFile.getParentFile().exists()) {
 						if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
 							log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());

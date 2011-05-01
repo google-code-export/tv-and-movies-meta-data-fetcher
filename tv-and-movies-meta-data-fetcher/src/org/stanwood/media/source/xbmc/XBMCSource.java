@@ -298,7 +298,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			film.setTitle(getStringFromXML(doc, "details/title/text()"));
 	    			film.setSummary(getStringFromXML(doc, "details/overview/text()"));
 	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
-	    			film.setCountry(getStringFromXML(doc, "details/country/text()"));
+	    			try {
+	    				film.setCountry(getStringFromXML(doc, "details/country/text()"));
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+	    				// Ignore, their was no country
+	    			}
 
 	    			parseDirectors(film, doc);
 	    			parseActors(film, doc);
@@ -366,14 +371,19 @@ public class XBMCSource extends XMLParser implements ISource {
 	}
 
 	protected void parseCertification(Film film, Document doc) throws XMLParserException {
-		String type = "mpaa";
-		String cert = getStringFromXML(doc, "details/mpaa/text()");
-		if (cert.startsWith("Rated ")) {
-			cert = cert.substring(6);
+		try {
+			String type = "mpaa";
+			String cert = getStringFromXML(doc, "details/mpaa/text()");
+			if (cert.startsWith("Rated ")) {
+				cert = cert.substring(6);
+			}
+			List<Certification>certs = new ArrayList<Certification>();
+			certs.add(new Certification(cert, type));
+			film.setCertifications(certs);
 		}
-		List<Certification>certs = new ArrayList<Certification>();
-		certs.add(new Certification(cert, type));
-		film.setCertifications(certs);
+		catch (XMLParserNotFoundException e) {
+			// Ignore, was no rating
+		}
 	}
 
 	/**
