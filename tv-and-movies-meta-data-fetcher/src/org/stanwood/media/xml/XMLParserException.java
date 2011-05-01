@@ -1,9 +1,11 @@
 package org.stanwood.media.xml;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * Thrown if their are problems parsing XML
  */
-public class XMLParserException extends Exception {
+public class XMLParserException extends StanwoodException {
 
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.

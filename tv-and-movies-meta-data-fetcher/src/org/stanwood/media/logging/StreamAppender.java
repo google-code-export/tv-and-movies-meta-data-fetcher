@@ -202,12 +202,30 @@ public class StreamAppender extends AppenderSkeleton {
 		stream.print(this.layout.format(event));
 
 		if (layout.ignoresThrowable()) {
-			String[] s = event.getThrowableStrRep();
-			if (s != null) {
-				int len = s.length;
-				for (int i = 0; i < len; i++) {
-					stream.print(s[i]);
-					stream.print(Layout.LINE_SEP);
+			if (event.getThrowableInformation()!=null && event.getThrowableInformation().getThrowable() instanceof StanwoodException) {
+				if (!event.getLevel().isGreaterOrEqual(Level.DEBUG)) {
+					String[] s = event.getThrowableStrRep();
+					if (s != null) {
+						int len = s.length;
+						for (int i = 0; i < len; i++) {
+							stream.print(s[i]);
+							stream.print(Layout.LINE_SEP);
+						}
+					}
+				}
+				else {
+					stream.print(((StanwoodException)event.getThrowableInformation().getThrowable()).printException());
+				}
+				stream.print(Layout.LINE_SEP);
+			}
+			else {
+				String[] s = event.getThrowableStrRep();
+				if (s != null) {
+					int len = s.length;
+					for (int i = 0; i < len; i++) {
+						stream.print(s[i]);
+						stream.print(Layout.LINE_SEP);
+					}
 				}
 			}
 		}

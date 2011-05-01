@@ -63,7 +63,7 @@ public class CLIManageAddons extends AbstractLauncher {
 			return false;
 		}
 		try {
-			getController().init();
+			getController().init(false);
 		} catch (ConfigException e) {
 			fatal(e);
 			return false;

@@ -134,7 +134,7 @@ public class MediaDirectory {
 		}
 
 		if (film == null) {
-			log.info("Reading film from sources");
+			log.info("Reading film details from sources with id '" + searchResult.getSourceId()+":"+searchResult.getId()+"'");
 			URL url = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {

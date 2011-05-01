@@ -54,6 +54,8 @@ public class Controller {
 	private Map<String, Class<? extends IStore>> pluginStores = new HashMap<String,Class<? extends IStore>>();
 	private Map<String, Class<? extends IAction>> pluginActions = new HashMap<String,Class<? extends IAction>>();
 
+	private boolean testMode;
+
 	private static XBMCAddonManager xbmcMgr;
 
 	/**
@@ -65,7 +67,7 @@ public class Controller {
 		this.configReader = config;
 	}
 
-	public void init() throws ConfigException {
+	public void init(boolean testMode) throws ConfigException {
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager(configReader));
@@ -87,6 +89,7 @@ public class Controller {
 				log.error(e.getMessage(), e);
 			}
 		}
+		this.testMode = testMode;
 		registerPlugins();
 	}
 
@@ -181,7 +184,7 @@ public class Controller {
 	}
 
 	public boolean isTestRun() {
-		return true;
+		return testMode;
 	}
 
 }

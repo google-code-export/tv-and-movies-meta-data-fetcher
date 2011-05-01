@@ -16,10 +16,12 @@
  */
 package org.stanwood.media.setup;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * This exception is thrown when their is a problem related to the configuration file.
  */
-public class ConfigException extends Exception {
+public class ConfigException extends StanwoodException {
 
 	private static final long serialVersionUID = 9020239129448543761L;
 
@@ -29,7 +31,7 @@ public class ConfigException extends Exception {
      * call to {@link #initCause}.
      */
 	public ConfigException() {
-		
+
 	}
 
 	/**
@@ -42,7 +44,7 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(String message) {
 		super(message);
-		
+
 	}
 
    /**
@@ -60,7 +62,7 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(Throwable cause) {
 		super(cause);
-	
+
 	}
 
 	/**
@@ -78,6 +80,6 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(String message, Throwable cause) {
 		super(message, cause);
-	
+
 	}
 }

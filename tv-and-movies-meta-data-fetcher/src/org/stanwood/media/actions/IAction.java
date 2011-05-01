@@ -27,4 +27,6 @@ public interface IAction {
 	 * @throws ActionException Thrown if their is a problem setting the parameter
 	 */
 	public void setParameter(String key, String value) throws ActionException;
+
+	public void setTestMode(boolean testMode);
 }

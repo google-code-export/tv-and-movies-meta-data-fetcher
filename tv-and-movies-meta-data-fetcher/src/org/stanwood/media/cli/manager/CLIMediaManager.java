@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.ActionPerformer;
+import org.stanwood.media.actions.IAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
@@ -23,6 +24,8 @@ public class CLIMediaManager extends AbstractLauncher {
 	private final static Log log = LogFactory.getLog(CLIRenamer.class);
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
+	private final static String TEST_OPTION = "t";
+
 	private static final List<Option> OPTIONS;
 
 	private MediaDirectory rootMediaDir = null;
@@ -39,6 +42,10 @@ public class CLIMediaManager extends AbstractLauncher {
 		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
 		o.setRequired(true);
 		o.setArgName("directory");
+		OPTIONS.add(o);
+
+		o = new Option(TEST_OPTION,"test",false,"If this option is present, then no changes are performed.");
+		o.setRequired(false);
 		OPTIONS.add(o);
 	}
 
@@ -63,7 +70,11 @@ public class CLIMediaManager extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		try {
+		try  {
+			for (IAction action : rootMediaDir.getActions()) {
+				action.setTestMode(getController().isTestRun());
+			}
+
 			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 
 			renamer.performActions();
@@ -87,7 +98,7 @@ public class CLIMediaManager extends AbstractLauncher {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory()) {
 				try {
-					getController().init();
+					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
 				} catch (ConfigException e) {
 					fatal(e);

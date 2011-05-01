@@ -16,10 +16,12 @@
  */
 package org.stanwood.media.store;
 
+import org.stanwood.media.logging.StanwoodException;
+
 /**
  * Thrown is their is a problem with a store
  */
-public class StoreException extends Exception {
+public class StoreException extends StanwoodException {
 
 	private static final long serialVersionUID = 2339844228367668776L;
 
@@ -29,7 +31,7 @@ public class StoreException extends Exception {
      * call to {@link #initCause}.
      */
 	public StoreException() {
-		
+
 	}
 
 	/**
@@ -42,7 +44,7 @@ public class StoreException extends Exception {
      */
 	public StoreException(String message) {
 		super(message);
-		
+
 	}
 
    /**
@@ -60,7 +62,7 @@ public class StoreException extends Exception {
      */
 	public StoreException(Throwable cause) {
 		super(cause);
-	
+
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class StoreException extends Exception {
      */
 	public StoreException(String message, Throwable cause) {
 		super(message, cause);
-	
+
 	}
-	
+
 }
