@@ -63,7 +63,9 @@ public class PatternMatcher {
 			newName = newName.replaceAll(TOKEN_PART, String.valueOf(part));
 		}
 		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
-		newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(film.getDate()));
+		if (film.getDate()!=null) {
+			newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(film.getDate()));
+		}
 		return newName;
 	}
 
@@ -80,7 +82,9 @@ public class PatternMatcher {
 		newName = newName.replaceAll(TOKEN_SHOW_NAME, normalizeText(show.getName()));
 		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(episode.getTitle()));
 		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
-		newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(episode.getDate()));
+		if (episode.getDate()!=null) {
+			newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(episode.getDate()));
+		}
 		return newName;
 	}
 

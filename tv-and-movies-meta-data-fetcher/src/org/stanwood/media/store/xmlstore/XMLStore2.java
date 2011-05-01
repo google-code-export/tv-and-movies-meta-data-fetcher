@@ -626,7 +626,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 			readGenres(film, filmNode);
 			film.setCountry(getStringFromXML(filmNode, "country/text()"));
-			film.setDate(df.parse(getStringFromXML(filmNode, "@releaseDate")));
+			try {
+				film.setDate(df.parse(getStringFromXML(filmNode, "@releaseDate")));
+			}
+			catch (XMLParserNotFoundException e) {
+				// Ignore does not have a date
+			}
 			film.setFilmUrl(new URL(getStringFromXML(filmNode,"@url")));
 			film.setDescription(getStringFromXML(filmNode,"description/long/text()"));
 			film.setSummary(getStringFromXML(filmNode,"description/short/text()"));
