@@ -17,8 +17,8 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
 /**
- * Used to parse and update MP4 Video files. This makes use of the jaudiotagger library and extends it 
- * to support video files. 
+ * Used to parse and update MP4 Video files. This makes use of the jaudiotagger library and extends it
+ * to support video files.
  */
 public class MP4VideoFileReader {
 
@@ -44,7 +44,7 @@ public class MP4VideoFileReader {
 	 * and the encoding information present in the file. If the file has no tag, an
 	 * empty one is returned. If the encoding information is not valid , an exception is
 	 * thrown.
-	 * 
+	 *
 	 * @param f The file to read
 	 * @return The audio file or video file
 	 * @exception IOException Thrown if their is a IO Problem
@@ -80,10 +80,10 @@ public class MP4VideoFileReader {
 		} catch (CannotReadException cre) {
 			throw cre;
 		} catch (Exception e) {
+			e.printStackTrace();
 			// TODO is this masking exceptions, i.e NullBoxIDException get
 			// converted to CannotReadException
-			throw new CannotReadException(f.getAbsolutePath() + ":"
-					+ e.getMessage(), e);
+			throw new CannotReadException("Unable to read mp4 file: "+f.getAbsolutePath(), e);
 		} finally {
 			try {
 				if (raf != null) {

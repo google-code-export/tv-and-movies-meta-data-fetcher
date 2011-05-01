@@ -107,10 +107,11 @@ public class ActionPerformer {
 	}
 
 	private void performActions(List<File> files) throws ActionException {
+		log.info(("Processing "+files.size()+" files"));
 		for (IAction action : actions) {
 			action.perform(dir, files);
 		}
-
+		log.info("Finished");
 	}
 
 

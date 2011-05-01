@@ -64,15 +64,15 @@ public class MP4Manager implements IMP4Manager {
 			}
 			return atoms;
 		} catch (CannotReadException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		} catch (TagException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		} catch (ReadOnlyFileException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		} catch (InvalidAudioFrameException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		} catch (IOException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File,e);
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		}
 	}
 
@@ -137,17 +137,18 @@ public class MP4Manager implements IMP4Manager {
 			mp4.commit();
 		}
 		catch (CannotReadException e) {
-			throw new MP4Exception("Unable to read mp4 file: " + mp4File,e);
+			e.printStackTrace();
+			throw new MP4Exception("Unable to read mp4 file: " + mp4File.getAbsolutePath(),e);
 		} catch (IOException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File,e);
+			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
 		} catch (TagException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File,e);
+			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
 		} catch (ReadOnlyFileException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File,e);
+			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
 		} catch (InvalidAudioFrameException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File,e);
+			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
 		} catch (CannotWriteException e) {
-			throw new MP4Exception("Unable to write mp4 file: " + mp4File,e);
+			throw new MP4Exception("Unable to write mp4 file: " + mp4File.getAbsolutePath(),e);
 		}
 	}
 

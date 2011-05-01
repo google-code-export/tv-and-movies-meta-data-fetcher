@@ -15,7 +15,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private static List<ISearchStrategy> strategies = new ArrayList<ISearchStrategy>();
 	private final static Pattern PATTERN_YEAR = Pattern.compile("(^.+)[\\(|\\[](\\d\\d\\d\\d)[\\)|\\]](.*$)");
 	private final static Pattern PATTERN_YEAR2 = Pattern.compile("(^.+)\\.(\\d\\d\\d\\d)\\.(.*$)");
-	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)cd(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
+	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part)(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
 	private final static Pattern PATTERN_EXT = Pattern.compile("(^.*)\\.(.+)$");
 	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$");
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");

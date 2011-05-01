@@ -162,7 +162,7 @@ public class RenameAction extends AbstractAction {
 				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");
 			}
 			else {
-				if (isTestMode()) {
+				if (!isTestMode()) {
 					if (!newFile.getParentFile().exists()) {
 						if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
 							log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());

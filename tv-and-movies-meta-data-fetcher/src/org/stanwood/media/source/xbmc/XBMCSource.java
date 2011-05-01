@@ -291,7 +291,12 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
-	    			film.setDate(FILM_YEAR_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()")));
+	    			try {
+	    				film.setDate(FILM_YEAR_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()")));
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+	    				// Ignore if not found
+	    			}
 	    			film.setDescription(getStringFromXML(doc, "details/plot/text()"));
 	    			film.setId(filmId);
 	    			film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
