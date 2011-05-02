@@ -625,7 +625,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				return null;
 			}
 			readGenres(film, filmNode);
-			film.setCountry(getStringFromXML(filmNode, "country/text()"));
+			film.setCountry(getStringFromXMLOrNull(filmNode, "country/text()"));
 			try {
 				film.setDate(df.parse(getStringFromXML(filmNode, "@releaseDate")));
 			}
@@ -635,7 +635,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			film.setFilmUrl(new URL(getStringFromXML(filmNode,"@url")));
 			film.setDescription(getStringFromXML(filmNode,"description/long/text()"));
 			film.setSummary(getStringFromXML(filmNode,"description/short/text()"));
-			film.setImageURL(new URL(getStringFromXML(filmNode, "@imageUrl")));
+			film.setImageURL(getURLFromXMLOrNull(filmNode, "@imageUrl"));
 			film.setTitle(getStringFromXML(filmNode, "@title"));
 			parseRating(film,filmNode);
 			readActors(filmNode,film);
@@ -651,7 +651,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		catch (NotInStoreException e) {
 			throw new StoreException("Unable to read film from store",e);
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			throw new StoreException("Unable to read film from store",e);
 		}
 
@@ -1031,7 +1032,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 			DocumentType docType = builder.getDOMImplementation().createDocumentType("store", DTD_LOCATION, DTD_WEB_LOCATION);
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType);
-			writeCache(cacheFile, doc);
 		} catch (ParserConfigurationException e) {
 			throw new StoreException("Unable to create cache: "
 					+ e.getMessage());

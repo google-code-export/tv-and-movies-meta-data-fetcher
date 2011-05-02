@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -109,6 +111,22 @@ public class XMLParser {
 	 */
 	protected String getStringFromXML(Node parent, String path)
 			throws XMLParserException {
+		String value = getStringFromXMLOrNull(parent,path);
+		if (value==null) {
+			throw new XMLParserNotFoundException("Unable to find path "+path+" in XML");
+		}
+		return value;
+	}
+
+	/**
+	 * Used to read a string from the XML, if it can't be found then return null
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the string
+	 * @return The string value
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 */
+	protected String getStringFromXMLOrNull(Node parent, String path)
+			throws XMLParserException {
 		try {
 			Node node = XPathAPI.selectSingleNode(parent, path);
 			if (node != null) {
@@ -118,7 +136,38 @@ public class XMLParser {
 		catch (TransformerException e) {
 			throw new XMLParserException("Unable to parser XML",e);
 		}
-		throw new XMLParserNotFoundException();
+		return null;
+	}
+
+	/**
+	 * Used to read a URL from the XML
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the URL
+	 * @return The string value
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 * @throws XMLParserNotFoundException Thrown if the value can't be read
+	 */
+	protected URL getURLFromXML(Node parent, String path) throws MalformedURLException, XMLParserException {
+		URL value = getURLFromXMLOrNull(parent,path);
+		if (value==null) {
+			throw new XMLParserNotFoundException("Unable to find path "+path+" in XML");
+		}
+		return value;
+	}
+
+	/**
+	 * Used to read a URL; from the XML, if it can't be found then return null
+	 * @param parent The parent node it's the path is to be used from
+	 * @param path The xpath location of the URL
+	 * @return The string value
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 */
+	protected URL getURLFromXMLOrNull(Node parent, String path) throws MalformedURLException, XMLParserException {
+		String url = getStringFromXMLOrNull(parent, path);
+		if (url!=null && url.length()>0) {
+			return new URL(url);
+		}
+		return null;
 	}
 
 	/**

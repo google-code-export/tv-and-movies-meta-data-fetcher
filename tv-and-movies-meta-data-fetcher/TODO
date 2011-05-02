@@ -3,8 +3,7 @@ TODO
 
 Version 2.0
 -----------
-
-Add --test_run command line option	 
+	 
 Add windows batch files for scripts
 Create a windows installer
 Create macosx installer

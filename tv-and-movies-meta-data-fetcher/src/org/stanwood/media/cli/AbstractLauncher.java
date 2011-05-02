@@ -14,6 +14,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.Controller;
+import org.stanwood.media.logging.LogConfig;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
@@ -140,22 +141,20 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	private boolean initLogging(String logConfig) {
 		if (logConfig!=null) {
-			if (logConfig.toLowerCase().equals("info")) {
-				LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+			for (LogConfig lc : LogConfig.values()) {
+				if (lc.name().equalsIgnoreCase(logConfig)) {
+					LogSetupHelper.initLogingInternalConfigFile(lc.getFilename());
+					return true;
+				}
 			}
-			else if (logConfig.toLowerCase().equals("debug")) {
-				LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+
+			File logConfigFile = new File(logConfig);
+			if (logConfigFile.exists()) {
+				LogSetupHelper.initLogingFromConfigFile(logConfigFile);
 			}
 			else {
-				File logConfigFile = new File(logConfig);
-				if (logConfigFile.exists()) {
-					LogSetupHelper.initLogingFromConfigFile(logConfigFile);
-				}
-				else {
-					fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath());
-					return false;
-				}
-
+				fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath());
+				return false;
 			}
 		}
 		else {

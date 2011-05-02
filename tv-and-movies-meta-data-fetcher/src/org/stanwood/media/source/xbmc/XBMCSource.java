@@ -299,7 +299,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			}
 	    			film.setDescription(getStringFromXML(doc, "details/plot/text()"));
 	    			film.setId(filmId);
-	    			film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
+	    			try {
+	    				film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+	    				// Ignore no image URL
+	    			}
 	    			film.setTitle(getStringFromXML(doc, "details/title/text()"));
 	    			film.setSummary(getStringFromXML(doc, "details/overview/text()"));
 	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
