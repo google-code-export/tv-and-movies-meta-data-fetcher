@@ -326,7 +326,7 @@ public class MediaDirectory {
 					return searchMedia(name,dirConfig.getMode(),part,dirConfig,mediaFile);
 				}
 			};
-			return s.search(mediaFile,dirConfig.getMediaDir(),dirConfig.getPattern());
+			return s.search(mediaFile,this);
 		}
 		else if (dirConfig.getMode() == Mode.FILM) {
 			s = new FilmSearcher() {
@@ -343,7 +343,7 @@ public class MediaDirectory {
 			return null;
 		}
 
-		return s.search(mediaFile,dirConfig.getMediaDir(),dirConfig.getPattern());
+		return s.search(mediaFile,this);
 	}
 
 	private SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException, SourceException {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
@@ -13,16 +14,17 @@ import org.stanwood.media.store.StoreException;
  */
 public interface IMediaSearcher {
 
+
 	/**
-	 * Used to search for a show id
+	 * Used to search for a media id
 	 * @param mediaFile The episode file been processed
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The rename pattern been used
+	 * @param mediaDir The root media directory
 	 * @return The results of the search, or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a problem construction URL's
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their are any source problems
+	 * @throws StoreException Thrown if their is a problem related to stores
 	 */
-	public SearchResult search(File mediaFile, File rootMediaDir,String renamePattern) throws MalformedURLException, IOException,SourceException, StoreException;
+	public SearchResult search(File mediaFile, MediaDirectory mediaDir) throws MalformedURLException, IOException, SourceException, StoreException;
 
 }

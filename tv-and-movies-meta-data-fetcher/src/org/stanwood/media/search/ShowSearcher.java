@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.MediaDirectory;
+
 /**
  * This class is used to find a shows name using a series of different searching strategies
  */
@@ -21,7 +23,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 
 		strategies.add(new ISearchStrategy() {
 			@Override
-			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern) {
+			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				String fileName = episodeFile.getAbsolutePath();
 				if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath())) {
 					fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
@@ -41,14 +43,14 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 
 		strategies.add(new ISearchStrategy() {
 			@Override
-			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern) {
+			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				if (!episodeFile.getParentFile().equals(rootMediaDir)) {
 					String fullName = episodeFile.getName();
 					int pos = fullName.lastIndexOf(".");
 					String name = fullName.substring(0,pos);
 					File nfo = new File(episodeFile.getParentFile(),name+".nfo");
 					if (nfo.exists()) {
-						SearchDetails result = episodeFileStrategy.getSearch(episodeFile.getParentFile(), rootMediaDir, renamePattern);
+						SearchDetails result = episodeFileStrategy.getSearch(episodeFile.getParentFile(), rootMediaDir, renamePattern,mediaDir);
 						if (result!=null) {
 							return result;
 						}
@@ -61,7 +63,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 
 		episodeFileStrategy = new ISearchStrategy() {
 			@Override
-			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern) {
+			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder fileName = new StringBuilder(episodeFile.getName());
 				Matcher m = PATTERN_EP1.matcher(fileName);
 				StringBuilder term = null;
@@ -90,7 +92,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 
 		strategies.add(new ISearchStrategy() {
 			@Override
-			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern) {
+			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				return new SearchDetails(episodeFile.getParentFile().getName(),null,1);
 			}
 		});

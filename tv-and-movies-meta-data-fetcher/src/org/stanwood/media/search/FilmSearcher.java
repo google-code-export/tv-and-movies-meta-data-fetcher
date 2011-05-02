@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.MediaDirectory;
+
 /**
  * This class is used to find a films name using a series of different searching strategies
  */
@@ -15,7 +17,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private static List<ISearchStrategy> strategies = new ArrayList<ISearchStrategy>();
 	private final static Pattern PATTERN_YEAR = Pattern.compile("(^.+)[\\(|\\[](\\d\\d\\d\\d)[\\)|\\]](.*$)");
 	private final static Pattern PATTERN_YEAR2 = Pattern.compile("(^.+)\\.(\\d\\d\\d\\d)\\.(.*$)");
-	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
 	private final static Pattern PATTERN_EXT = Pattern.compile("(^.*)\\.(.+)$");
 	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$");
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
@@ -24,10 +25,13 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private static final String STRIPED_CHARS[] = {"?"};
 
 	static {
+		// Search using a NFO file next to the film if it exists
+		strategies.add(new FilmNFOSearchStrategy());
+
 		strategies.add(new ISearchStrategy() {
 			@Override
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir,
-					String renamePattern) {
+					String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder term = new StringBuilder(mediaFile.getName());
 				if (term.indexOf(" ")==-1) {
 					extractExtension(term);
@@ -60,12 +64,12 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 		// Excact search on film name
 		strategies.add(new ISearchStrategy() {
 			@Override
-			public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern) {
+			public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder term = new StringBuilder(mediaFile.getName());
 
 				extractExtension(term);
 				String year = extractYear(term);
-				Integer part = extractPart(term);
+				Integer part = SearchHelper.extractPart(term);
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
 				SearchHelper.replaceWithSpaces(term);
@@ -78,30 +82,8 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				}
 				return new SearchDetails(sTerm,year,part);
 			}
-
 		});
 	}
-
-	private static Integer extractPart(StringBuilder term) {
-		Matcher m = PATTERN_PART.matcher(term);
-		Integer part = null;
-		if (m.matches()) {
-			try {
-				part = Integer.valueOf(m.group(2));
-			}
-			catch (NumberFormatException e) {
-				return null;
-			}
-			String first = m.group(1);
-			String last = m.group(3);
-			term.delete(0, term.length());
-			term.append(first);
-			term.append(last);
-		}
-		return part;
-	}
-
-
 
 	private static String extractYear(StringBuilder term) {
 		Matcher m = PATTERN_YEAR.matcher(term);

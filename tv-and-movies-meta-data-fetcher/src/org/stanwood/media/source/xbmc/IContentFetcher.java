@@ -18,5 +18,5 @@ public interface IContentFetcher {
 	 * @throws IOException Thrown if their is a problem with I/O
 	 * @throws SourceException Thrown if their are any other problems
 	 */
-	public InputStream getStreamToURL(URL url) throws IOException, SourceException;
+	public InputStream getStreamToURL(URL url) throws SourceException;
 }

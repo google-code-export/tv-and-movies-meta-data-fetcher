@@ -2,6 +2,8 @@ package org.stanwood.media.search;
 
 import java.io.File;
 
+import org.stanwood.media.MediaDirectory;
+
 /**
  * This interface should be implemented by classes that provide
  * a search strategy that can be used to search for tv shows.
@@ -14,8 +16,9 @@ public interface ISearchStrategy {
 	 * @param mediaFile The media file that is been processed
 	 * @param rootMediaDir The root media directory
 	 * @param renamePattern The pattern that is been used to rename media files
+	 * @param mediaDir The media directory
 	 * @return The search details
 	 */
-	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern);
+	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern, MediaDirectory mediaDir);
 
 }

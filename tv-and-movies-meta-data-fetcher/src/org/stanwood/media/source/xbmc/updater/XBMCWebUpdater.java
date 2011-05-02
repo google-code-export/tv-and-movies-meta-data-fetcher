@@ -486,6 +486,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		Set<String>defaultPlugins = new HashSet<String>();
 		defaultPlugins.add("metadata.themoviedb.org");
 		defaultPlugins.add("metadata.tvdb.com");
+		defaultPlugins.add("metadata.imdb.com");
 		return defaultPlugins;
 	}
 

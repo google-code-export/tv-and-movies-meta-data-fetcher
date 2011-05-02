@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
@@ -39,20 +40,21 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 	protected abstract SearchResult doSearch(File mediaFile,String term,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException;
 
 	/**
-	 * Usd to search for a show id
+	 * Used to search for a media id
 	 * @param mediaFile The episode file been processed
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The rename pattern been used
+	 * @param mediaDir The root media directory
 	 * @return The results of the search, or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a problem construction URL's
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their are any source problems
-
+	 * @throws StoreException Thrown if their is a problem related to stores
 	 */
 	@Override
-	public final SearchResult search(File mediaFile, File rootMediaDir, String renamePattern) throws MalformedURLException, IOException, SourceException, StoreException {
+	public final SearchResult search(File mediaFile, MediaDirectory mediaDir) throws MalformedURLException, IOException, SourceException, StoreException {
+		File rootMediaDir = mediaDir.getMediaDirConfig().getMediaDir();
+		String renamePattern = mediaDir.getMediaDirConfig().getPattern();
 		for (ISearchStrategy strategy :strategies) {
-			SearchDetails searchDetails = strategy.getSearch(mediaFile,rootMediaDir,renamePattern);
+			SearchDetails searchDetails = strategy.getSearch(mediaFile,rootMediaDir,renamePattern,mediaDir);
 			if (searchDetails!=null) {
 				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear(),searchDetails.getPart());
 				if (result!=null) {

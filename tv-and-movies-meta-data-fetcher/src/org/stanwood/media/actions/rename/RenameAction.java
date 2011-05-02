@@ -159,7 +159,7 @@ public class RenameAction extends AbstractAction {
 		}
 		else {
 			if (newFile.exists()) {
-				log.error("Unable rename '"+file.getAbsolutePath()+"' file too '"+newFile.getAbsolutePath()+"' as it already exists.");
+				log.error("Unable to rename '"+file.getAbsolutePath()+"' file to '"+newFile.getAbsolutePath()+"' as it already exists.");
 			}
 			else {
 				if (!isTestMode()) {

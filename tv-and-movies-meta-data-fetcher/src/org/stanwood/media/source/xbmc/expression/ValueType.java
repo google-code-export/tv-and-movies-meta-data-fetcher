@@ -7,5 +7,7 @@ public enum ValueType {
 	/** Boolean type of value */
 	BOOLEAN,
 	/** Integer type of value */
-	INTEGER;
+	INTEGER,
+	/** String type of value */
+	STRING;
 }
