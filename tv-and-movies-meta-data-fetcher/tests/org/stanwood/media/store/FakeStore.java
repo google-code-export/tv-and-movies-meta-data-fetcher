@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -172,6 +173,12 @@ public class FakeStore implements IStore {
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException {
 		return null;
+	}
+
+	@Override
+	public void performedActions(MediaDirectory dir) {
+		// TODO Auto-generated method stub
+
 	}
 
 

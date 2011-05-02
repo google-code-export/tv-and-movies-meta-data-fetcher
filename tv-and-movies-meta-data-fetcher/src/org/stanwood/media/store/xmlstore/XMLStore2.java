@@ -22,6 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -1049,6 +1050,32 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	public String getParameter(String key) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void performedActions(MediaDirectory dir) throws StoreException {
+		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
+		Document cache = getCache(rootMediaDir);
+		try {
+			boolean changed = false;
+			for (Node fileNode : selectNodeList(cache, "//file")) {
+				Element el = (Element)fileNode;
+				File location = new File(el.getAttribute("location"));
+				if (!location.exists()) {
+					if (log.isDebugEnabled()) {
+						log.debug("Unable to find file '"+location.getAbsolutePath()+"' so removing from store");
+					}
+					el.getParentNode().removeChild(el);
+					changed = true;
+				}
+			}
+			if (changed) {
+				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
+				writeCache(cacheFile, cache);
+			}
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse store XML",e);
+		}
 	}
 
 

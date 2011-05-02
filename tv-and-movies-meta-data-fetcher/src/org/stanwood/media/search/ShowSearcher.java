@@ -79,7 +79,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 					if (pos!=-1) {
 						term.replace(0, pos+1, "");
 					}
-					SearchHelper.replaceDots(term);
+					SearchHelper.replaceWithSpaces(term);
 					return new SearchDetails(term.toString(),null,1);
 				}
 

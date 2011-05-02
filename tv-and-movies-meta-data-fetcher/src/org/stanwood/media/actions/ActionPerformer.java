@@ -26,6 +26,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.StoreException;
 
 
 /**
@@ -58,6 +60,13 @@ public class ActionPerformer {
 	 */
 	public void performActions() throws ActionException {
 		processDirectory(dir.getMediaDirConfig().getMediaDir());
+		for (IStore store : dir.getStores()) {
+			try {
+				store.performedActions(dir);
+			} catch (StoreException e) {
+				log.error("Unable to clean up store: " + store.getClass().getName(),e);
+			}
+		}
 	}
 
 	private void processDirectory(File parentDir) throws ActionException {

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -163,5 +164,7 @@ public interface IStore  {
 	public void setParameter(String key, String value);
 
 	public String getParameter(String key);
+
+	public void performedActions(MediaDirectory dir) throws StoreException;
 
 }

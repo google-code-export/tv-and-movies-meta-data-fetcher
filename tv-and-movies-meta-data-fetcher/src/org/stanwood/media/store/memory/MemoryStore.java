@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -255,5 +256,11 @@ public class MemoryStore implements IStore {
 	public String getParameter(String key) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void performedActions(MediaDirectory dir) {
+		// TODO Auto-generated method stub
+
 	}
 }
