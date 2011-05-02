@@ -34,6 +34,7 @@ public class StreamAppender extends AppenderSkeleton {
 
 	private PrintStream errorStream = System.err;
 	private PrintStream outputStream = System.out;
+	private boolean printStackTrace = false;
 
 	/**
 	 * Immediate flush means that the underlying writer or output stream will be flushed at the end of each append
@@ -201,24 +202,16 @@ public class StreamAppender extends AppenderSkeleton {
 		PrintStream stream = getStream(event.getLevel());
 		stream.print(this.layout.format(event));
 
+
 		if (layout.ignoresThrowable()) {
+			boolean renderStack = true;
 			if (event.getThrowableInformation()!=null && event.getThrowableInformation().getThrowable() instanceof StanwoodException) {
-				if (!event.getLevel().isGreaterOrEqual(Level.DEBUG)) {
-					String[] s = event.getThrowableStrRep();
-					if (s != null) {
-						int len = s.length;
-						for (int i = 0; i < len; i++) {
-							stream.print(s[i]);
-							stream.print(Layout.LINE_SEP);
-						}
-					}
+				if (event.getLevel().isGreaterOrEqual(Level.DEBUG)) {
+					renderStack = false;
 				}
-				else {
-					stream.print(((StanwoodException)event.getThrowableInformation().getThrowable()).printException());
-				}
-				stream.print(Layout.LINE_SEP);
 			}
-			else {
+
+			if (renderStack || this.printStackTrace) {
 				String[] s = event.getThrowableStrRep();
 				if (s != null) {
 					int len = s.length;
@@ -227,6 +220,10 @@ public class StreamAppender extends AppenderSkeleton {
 						stream.print(Layout.LINE_SEP);
 					}
 				}
+			}
+			else {
+				stream.print(((StanwoodException)event.getThrowableInformation().getThrowable()).printException());
+				stream.print(Layout.LINE_SEP);
 			}
 		}
 
@@ -289,6 +286,22 @@ public class StreamAppender extends AppenderSkeleton {
 				this.outputStream.print(h);
 			}
 		}
+	}
+
+	/**
+	 * Returns true if stack traces should be printed to the log
+	 * @return true if stack traces should be printed to the log
+	 */
+	public boolean isPrintStackTrace() {
+		return printStackTrace;
+	}
+
+	/**
+	 * If this is set to true, the stack traces will be printed
+	 * @param printStackTrace set to true, the stack traces will be printed
+	 */
+	public void setPrintStackTrace(boolean printStackTrace) {
+		this.printStackTrace = printStackTrace;
 	}
 
 
