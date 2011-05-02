@@ -98,7 +98,6 @@ public class XBMCAddon extends XMLParser {
 			if (log.isDebugEnabled()) {
 				log.debug("Adding setting: " + id + " : " + type + " = " + value);
 			}
-			log.info("Adding setting: " + id + " : " + type + " = " + value);
 			eval.getVariables().put(id,value);
 		}
 		else if(type.equals("labelenum")) {
@@ -106,7 +105,6 @@ public class XBMCAddon extends XMLParser {
 			if (log.isDebugEnabled()) {
 				log.debug("Adding setting: " + id + " : " + type + " = " + value);
 			}
-			log.info("Adding setting: " + id + " : " + type + " = " + value);
 			eval.getVariables().put(id,value);
 		}
 	}

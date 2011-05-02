@@ -297,7 +297,8 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			catch (XMLParserNotFoundException e) {
 	    				// Ignore if not found
 	    			}
-	    			film.setDescription(getStringFromXML(doc, "details/plot/text()"));
+	    			String plot = getStringFromXML(doc, "details/plot/text()");
+	    			film.setDescription(plot);
 	    			film.setId(filmId);
 	    			try {
 	    				film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()")));
@@ -305,9 +306,22 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			catch (XMLParserNotFoundException e) {
 	    				// Ignore no image URL
 	    			}
-	    			film.setTitle(getStringFromXML(doc, "details/title/text()"));
-	    			film.setSummary(getStringFromXML(doc, "details/overview/text()"));
-	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
+	    			String title= getStringFromXMLOrNull(doc, "details/title/text()");
+	    			if (title==null) {
+	    				title= getStringFromXMLOrNull(doc, "details/originaltitle/text()");
+	    			}
+	    			if (title ==null) {
+	    				throw new XBMCException("Unable to find title");
+	    			}
+	    			film.setTitle(title);
+	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()");
+	    			if (overview==null) {
+	    				overview = "";
+	    			}
+	    			film.setSummary(overview);
+	    			String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",","");
+	    			Integer vote = Integer.parseInt(rawVote);
+	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote));
 	    			try {
 	    				film.setCountry(getStringFromXML(doc, "details/country/text()"));
 	    			}

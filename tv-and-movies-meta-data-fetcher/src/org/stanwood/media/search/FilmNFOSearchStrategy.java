@@ -60,6 +60,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 							SearchDetails details = new SearchDetails(film.getTitle(),year,part);
 							return details;
 						} catch (SourceException e) {
+							e.printException();
 							log.error("Unable to look up NFO file details on IMDB.com",e);
 						} catch (MalformedURLException e) {
 							log.error("Unable to look up NFO file details on IMDB.com",e);
