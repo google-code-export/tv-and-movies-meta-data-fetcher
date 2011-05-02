@@ -253,7 +253,9 @@ public class XBMCScraper extends XBMCExtension {
 						Map<Integer, String> params = new HashMap<Integer,String>();
 						params.put(1, contents);
 						try {
-							String s = getAddon().executeFunction(functionName, params) ;
+							try {
+								String s = getAddon().executeFunction(functionName, params) ;
+
 							Document results = strToDom(s);
 							Node parent = node.getParentNode();
 							parent.removeChild(node);
@@ -261,6 +263,10 @@ public class XBMCScraper extends XBMCExtension {
 							for (Node n : selectNodeList(results, "details/*")) {
 								Node newNode = doc.importNode(n,true);
 								parent.appendChild(newNode);
+							}
+							}
+							catch (XBMCException e) {
+								e.printException();
 							}
 						} catch (XMLParserException e) {
 							throw new SourceException("Unable to execute function '"+functionName+"'");
@@ -284,7 +290,7 @@ public class XBMCScraper extends XBMCExtension {
 	public String executeXBMCScraperFunction(String functionName,Map<Integer,String> params) throws  XBMCException, XMLParserException {
 		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName);
 		if (functionNode==null) {
-			throw new XBMCException("Unable to find scraper function '" + functionName+"'");
+			throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
 		}
 		return executeXBMCFunction(functionNode,params);
 	}

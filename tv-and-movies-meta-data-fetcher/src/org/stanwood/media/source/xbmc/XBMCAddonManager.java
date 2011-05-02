@@ -81,6 +81,9 @@ public class XBMCAddonManager implements IContentFetcher {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
 				if (f.isDirectory()) {
 					XBMCAddon addon = new XBMCAddon(this,f,config.getXBMCLocale());
+					if (log.isDebugEnabled()) {
+						log.debug("Registered addon " + addon.getId());
+					}
 					addons.put(addon.getId(),addon);
 					if (addon.hasScrapers()) {
 						sources.add(new XBMCSource(this, addon.getId()));
@@ -96,13 +99,23 @@ public class XBMCAddonManager implements IContentFetcher {
 		return FileHelper.getInputStream(url);
 	}
 
+	/**
+	 * This will get a input stream to the contents pointed at by the URL
+	 * @param url The URL
+	 * @return The input stream
+	 * @exception SourceException thrown if their is a problem getting the stream
+	 */
 	@Override
-	public InputStream getStreamToURL(URL url) throws IOException, SourceException {
-		InputStream stream = getSource(url);
-		if (stream==null) {
-			throw new SourceException("Unable to get resource: " + url);
+	public InputStream getStreamToURL(URL url) throws SourceException {
+		try {
+			InputStream stream = getSource(url);
+			if (stream==null) {
+				throw new SourceException("Unable to get resource: " + url);
+			}
+			return stream;
+		} catch (IOException e) {
+			throw new SourceException("Uanble to get resource: " + url,e);
 		}
-		return stream;
 	}
 
 	public List<ISource> getSources() {

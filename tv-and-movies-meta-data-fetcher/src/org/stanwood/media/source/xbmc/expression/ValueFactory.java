@@ -18,6 +18,9 @@ public class ValueFactory {
 		else if (type==ValueType.BOOLEAN) {
 			return new BooleanValue(type,Boolean.parseBoolean(value));
 		}
+		else if (type==ValueType.STRING) {
+			return new StringValue(type,value);
+		}
 		throw new RuntimeException("Unsuppported type");
 	}
 

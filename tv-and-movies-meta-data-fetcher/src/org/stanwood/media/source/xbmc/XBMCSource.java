@@ -507,12 +507,17 @@ public class XBMCSource extends XMLParser implements ISource {
 				public void processContents(String contents) throws SourceException {
 					try {
 		    			Document doc = addon.getScraper(mode).getGetSearchResults(contents, name);
+
 						NodeList entities = XPathAPI.selectNodeList(doc, "*/entity");
 
 						for (int i=0;i<entities.getLength();i++) {
 							Node node = entities.item(i);
-							SearchResult result = new SearchResult(getStringFromXML(node, "id/text()"), getSourceId(), getStringFromXML(node, "url/text()"),part);
-							results.add(result);
+							String id = getStringFromXMLOrNull(node, "id/text()");
+							String url =  getStringFromXMLOrNull(node, "url/text()");
+							if (id!=null && url!=null) {
+								SearchResult result = new SearchResult(id, getSourceId(),url,part);
+								results.add(result);
+							}
 						}
 					}
 					catch (TransformerException e) {

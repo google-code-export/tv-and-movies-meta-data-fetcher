@@ -16,7 +16,7 @@ public class ExpressionEval {
 
 	private final static Log log = LogFactory.getLog(ExpressionEval.class);
 
-	private Map<String,Value> variables = new HashMap<String,Value>();
+	private static Map<String,Value> variables = new HashMap<String,Value>();
 
 	/**
 	 * Used to get the variables which can be used by expressions. This method can be used to add new variables

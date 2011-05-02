@@ -16,12 +16,17 @@
  */
 package org.stanwood.media.search;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * This class provides some helper functions that can be used to do things like
  * construct a normalised search query from a file name.
  */
 public class SearchHelper {
+
+	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * This is a helper method that will replace the dot's sometimes found in place of spaces of filenames.
@@ -138,5 +143,24 @@ public class SearchHelper {
 
 		s =s.replaceAll(":|-|,|'", "");
 		return s;
+	}
+
+	public static Integer extractPart(StringBuilder term) {
+		Matcher m = PATTERN_PART.matcher(term);
+		Integer part = null;
+		if (m.matches()) {
+			try {
+				part = Integer.valueOf(m.group(2));
+			}
+			catch (NumberFormatException e) {
+				return null;
+			}
+			String first = m.group(1);
+			String last = m.group(3);
+			term.delete(0, term.length());
+			term.append(first);
+			term.append(last);
+		}
+		return part;
 	}
 }

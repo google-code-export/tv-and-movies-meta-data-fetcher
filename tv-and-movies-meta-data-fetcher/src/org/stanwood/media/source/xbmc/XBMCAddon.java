@@ -18,6 +18,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.expression.BooleanValue;
 import org.stanwood.media.source.xbmc.expression.ExpressionEval;
 import org.stanwood.media.source.xbmc.expression.ExpressionParserException;
+import org.stanwood.media.source.xbmc.expression.StringValue;
 import org.stanwood.media.source.xbmc.expression.Value;
 import org.stanwood.media.source.xbmc.expression.ValueType;
 import org.stanwood.media.util.Version;
@@ -97,10 +98,17 @@ public class XBMCAddon extends XMLParser {
 			if (log.isDebugEnabled()) {
 				log.debug("Adding setting: " + id + " : " + type + " = " + value);
 			}
+			log.info("Adding setting: " + id + " : " + type + " = " + value);
 			eval.getVariables().put(id,value);
-			return;
 		}
-		return;
+		else if(type.equals("labelenum")) {
+			Value value = new StringValue(ValueType.STRING,defaultValue);
+			if (log.isDebugEnabled()) {
+				log.debug("Adding setting: " + id + " : " + type + " = " + value);
+			}
+			log.info("Adding setting: " + id + " : " + type + " = " + value);
+			eval.getVariables().put(id,value);
+		}
 	}
 
 	/**
@@ -321,7 +329,17 @@ public class XBMCAddon extends XMLParser {
 		if (key.equals("language")) {
 			return locale.getLanguage();
 		}
-		throw new XBMCException("Unknown info key '"+key+"'");
+
+		try {
+			Value value = eval.getVariables().get(key);
+			if (value==null) {
+				throw new XBMCException("Unknown xbmc setting with key '"+key+"'");
+			}
+			return value.toString();
+		}
+		catch (ExpressionParserException e) {
+			throw new XBMCException("Unknown xbmc setting with key '"+key+"'",e);
+		}
 	}
 
 	/**
@@ -342,12 +360,14 @@ public class XBMCAddon extends XMLParser {
 	 */
 	public String executeFunction(String functionName,Map<Integer, String> params) throws XBMCException {
 		String result = null;
+
+		// Check within this Addon for the function
 		for (XBMCExtension addon : getExtensions()) {
 			try {
 				result = addon.executeXBMCScraperFunction(functionName, params);
 				break;
 			}
-			catch (XBMCException e) {
+			catch (XBMCFunctionNotFoundException e) {
 				// Ignore
 			}
 			catch (XMLParserException e) {
@@ -356,12 +376,13 @@ public class XBMCAddon extends XMLParser {
 		}
 
 		if (result==null) {
+			// Check within the addons that this addon depends on
 			for (XBMCAddon addon : getRquiredAddons()) {
 				try {
 					result = addon.executeFunction(functionName, params);
 					break;
 				}
-				catch (XBMCException e) {
+				catch (XBMCFunctionNotFoundException e) {
 					// Ignore
 				}
 			}
@@ -369,7 +390,7 @@ public class XBMCAddon extends XMLParser {
 
 		if (result == null)
 		{
-			throw new XBMCException("Unable to find scraper function '" + functionName+"'");
+			throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
 		}
 
 		return result;
@@ -445,4 +466,12 @@ public class XBMCAddon extends XMLParser {
 	public void setCreateNFOFiles(boolean value) {
 		createNFOFiles = value;
 	}
+
+
+	@Override
+	public String toString() {
+		return "XBMCAddon: " + addonDir.getAbsolutePath();
+	}
+
+
 }
