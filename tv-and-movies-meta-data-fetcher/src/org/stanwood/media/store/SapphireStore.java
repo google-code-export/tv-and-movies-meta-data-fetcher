@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -369,6 +370,12 @@ public class SapphireStore implements IStore {
 			return preferedRating;
 		}
 		return null;
+	}
+
+	@Override
+	public void performedActions(MediaDirectory dir) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -21,6 +21,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
 
 	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"};
+	private static final String STRIPED_CHARS[] = {"?"};
 
 	static {
 		strategies.add(new ISearchStrategy() {
@@ -36,8 +37,9 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder start= new StringBuilder(m.group(1));
 						String year= m.group(2);
 						StringBuilder end= new StringBuilder(m.group(3));
-						SearchHelper.replaceDots(start);
-						SearchHelper.replaceDots(end);
+						SearchHelper.replaceWithSpaces(start);
+						SearchHelper.replaceWithSpaces(end);
+						removeUnwantedCharacters(term);
 						if (hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
@@ -66,7 +68,8 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				Integer part = extractPart(term);
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
-				SearchHelper.replaceDots(term);
+				SearchHelper.replaceWithSpaces(term);
+				removeUnwantedCharacters(term);
 				trimRubishFromEnds(term);
 
 				String sTerm = term.toString();
@@ -97,6 +100,8 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 		}
 		return part;
 	}
+
+
 
 	private static String extractYear(StringBuilder term) {
 		Matcher m = PATTERN_YEAR.matcher(term);
@@ -148,6 +153,15 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			String first = m.group(1);
 			term.delete(0, term.length());
 			term.append(first);
+		}
+	}
+
+	protected static void removeUnwantedCharacters(StringBuilder term) {
+		for (String c : STRIPED_CHARS) {
+			int pos = -1;
+			while ((pos = term.indexOf(c))!=-1) {
+				term.replace(pos, pos+c.length(), "");
+			}
 		}
 	}
 

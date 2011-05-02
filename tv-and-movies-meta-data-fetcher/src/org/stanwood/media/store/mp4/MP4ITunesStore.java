@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -210,6 +211,12 @@ public class MP4ITunesStore implements IStore {
 	public String getParameter(String key) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void performedActions(MediaDirectory dir) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

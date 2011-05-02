@@ -11,15 +11,17 @@ Add action to create pod casts of new media that is found
 Media Manager should perform a XBMC update before running
 Make sure that /etc is also checked for a config file
 ReversePatternMatcher needs the Optional pattern adding and any other missing ones
-Add remove from store command line tool
 Remove the rename command line tool
 Find a replacement for the JAudioTagger lib or fix it to work
 Add way of removing stuff from stores if the files assoicated with it can no longer be found
 Add action to change the permissions and ownership of media files
+Change FILM search to to lookup film details from a NFO file.
 
 Version 2.1
 -----------
 
+Add remove from store command line tool
+Remove stuff from the XML Store that has no files assoicated with it
 Extend patterns
 	* Allow formatting of elements like dates
 	* Allow formatting of strings to take only part of the string

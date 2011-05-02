@@ -46,6 +46,29 @@ public class SearchHelper {
 		}
 	}
 
+	public static void replaceUnderscore(StringBuilder term) {
+		int pos = -1;
+		int currentPos = 0;
+		while ((pos = term.indexOf("_",currentPos))!=-1) {
+			boolean doit=true;
+			if (pos>=0 && term.charAt(pos-1)==' ') {
+				doit = false;
+			}
+			if (pos+1<term.length() && term.charAt(pos+1)==' ') {
+				doit = false;
+			}
+			if (doit) {
+				term.replace(pos, pos+1, " ");
+			}
+			currentPos = pos+1;
+		}
+	}
+
+	public static void replaceWithSpaces(StringBuilder term) {
+		replaceUnderscore(term);
+		replaceDots(term);
+	}
+
 	/**
 	 * Used to decode HTML entities in strings
 	 * @param s The string to decode

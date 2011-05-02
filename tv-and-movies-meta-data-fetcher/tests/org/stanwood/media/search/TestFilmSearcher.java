@@ -50,13 +50,14 @@ public class TestFilmSearcher {
 					return o1.getOriginalFile().getName().compareTo(o2.getOriginalFile().getName());
 				}
 			});
-			Assert.assertEquals(45,names.size());
+			Assert.assertEquals(49,names.size());
 			int index = 0;
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("\"Movie\"",null,null,names.get(index++));
 			assertSearchDetails("A movie",null,null,names.get(index++));
 			assertSearchDetails("blah - Movie","1995",1,names.get(index++));
 			assertSearchDetails("blah - Movie","1995",2,names.get(index++));
+			assertSearchDetails("A & Movie","2000",null,names.get(index++));
 			assertSearchDetails("A Movie's",null,null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
@@ -65,13 +66,16 @@ public class TestFilmSearcher {
 			assertSearchDetails("A movie 2000",null,null,names.get(index++));
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
+			assertSearchDetails("A movie",null,1,names.get(index++));
+			assertSearchDetails("A movie",null,2,names.get(index++));
 			assertSearchDetails("A movie",null,null,names.get(index++));
-			assertSearchDetails("A, Movie?",null,null,names.get(index++));
+			assertSearchDetails("A, Movie",null,null,names.get(index++));
 			assertSearchDetails("A Movie","2007",null,names.get(index++));
 			assertSearchDetails("A Movie","2008",null,names.get(index++));
 			assertSearchDetails("A Movie","2010",null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("AMOVIE",null,null,names.get(index++));
+			assertSearchDetails("A MOVIE",null,null,names.get(index++));
 			assertSearchDetails("Blah",null,null,names.get(index++));
 			assertSearchDetails("Blah: Movie",null,null,names.get(index++));
 			assertSearchDetails("Blahía, b ôb bbbb",null,null,names.get(index++));
