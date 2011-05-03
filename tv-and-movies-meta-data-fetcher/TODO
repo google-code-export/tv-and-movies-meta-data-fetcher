@@ -10,7 +10,6 @@ Create macosx installer
 Add action to create pod casts of new media that is found
 Media Manager should perform a XBMC update before running
 Make sure that /etc is also checked for a config file
-ReversePatternMatcher needs the Optional pattern adding and any other missing ones
 Remove the rename command line tool
 Find a replacement for the JAudioTagger lib or fix it to work
 Add way of removing stuff from stores if the files assoicated with it can no longer be found
