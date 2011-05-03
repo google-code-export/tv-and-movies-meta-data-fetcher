@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.actions.rename.Token;
+
 /**
  * This class provides methods that will take a file path and a search pattern, then
  * parse the file path using the pattern. This is used to find the value of the tokens
@@ -28,22 +30,13 @@ public class ReverseFilePatternMatcher {
 		for (int i=0;i<pattern.length();i++) {
 			if (pattern.charAt(i)=='%') {
 				i++;
-				char token = pattern.charAt(i);
-				switch (token) {
-				case 'h':
-				case 'n':
-				case 't':
-				case 'x':
-					tokens.add(""+token);
-				    regexp.append("(.*)");
-				    break;
-				case 's':
-				case 'e':
-					tokens.add(""+token);
-					regexp.append("(\\d+)");
-					break;
-				case '%' :
+				Token token = Token.fromToken(pattern.charAt(i));
+				if (token == Token.PERCENT) {
 					regexp.append("%");
+				}
+				else {
+					tokens.add(""+token.getToken());
+					regexp.append(token.getPattern());
 				}
 			}
 			else {

@@ -28,6 +28,8 @@ public class SearchHelper {
 
 	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
 
+	private static final String STRIPED_CHARS[] = {"?","'",","};
+
 	/**
 	 * This is a helper method that will replace the dot's sometimes found in place of spaces of filenames.
 	 * @param term The term that might contains dot's instead of spaces. This buffer will have the dot's
@@ -48,6 +50,15 @@ public class SearchHelper {
 				term.replace(pos, pos+1, " ");
 			}
 			currentPos = pos+1;
+		}
+	}
+
+	public static void removeUnwantedCharacters(StringBuilder term) {
+		for (String c : STRIPED_CHARS) {
+			int pos = -1;
+			while ((pos = term.indexOf(c))!=-1) {
+				term.replace(pos, pos+c.length(), "");
+			}
 		}
 	}
 
