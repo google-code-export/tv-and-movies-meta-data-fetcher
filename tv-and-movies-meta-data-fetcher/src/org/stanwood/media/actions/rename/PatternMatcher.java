@@ -13,26 +13,8 @@ import org.stanwood.media.setup.MediaDirConfig;
 
 public class PatternMatcher {
 
-	/** the token for "show name" */
-	public static final String TOKEN_SHOW_NAME = "%n";
-	/** the token for "episode number" */
-	public static final String TOKEN_EPISODE = "%e";
-	/** the token for "season number" */
-	public static final String TOKEN_SEASON = "%s";
-	/** the token for "extension" */
-	public static final String TOKEN_EXT = "%x";
-	/** the token for "episode or film title" */
-	public static final String TOKEN_TITLE = "%t";
-	/** add a % char */
-	public static final String TOKEN_PERCENT = "%%";
-	/** the token for "show Id" */
-	public static final String TOKEN_ID = "%h";
-	/** the token for "part number" */
-	public static final String TOKEN_PART = "%p";
-	/** the token for the "year" */
-	public static final String TOKEN_YEAR = "%y";
-
-	private final static String TOKENS[] = {TOKEN_SHOW_NAME,TOKEN_EPISODE,TOKEN_SEASON,TOKEN_EXT,TOKEN_TITLE,TOKEN_PERCENT,TOKEN_ID,TOKEN_PART,TOKEN_YEAR};
+	//	private final static String TOKENS[] = {"%"+TOKEN_SHOW_NAME,"%"+TOKEN_EPISODE,"%"+TOKEN_SEASON,
+//		                                    "%"+TOKEN_EXT,"%"+TOKEN_TITLE,"%"+TOKEN_PERCENT,"%"+TOKEN_ID,"%"+TOKEN_PART,"%"+TOKEN_YEAR};
 
 	private final static DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 
@@ -56,34 +38,34 @@ public class PatternMatcher {
 
 
 	private String processFilmName(String newName, Film film, String ext,Integer part) {
-		newName = newName.replaceAll(TOKEN_ID, normalizeText(film.getId()));
-		newName = newName.replaceAll(TOKEN_PERCENT, "%");
-		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(film.getTitle()));
+		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(film.getId()));
+		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
+		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(film.getTitle()));
 		if (part!=null) {
-			newName = newName.replaceAll(TOKEN_PART, String.valueOf(part));
+			newName = newName.replaceAll(Token.PART.getFull(), String.valueOf(part));
 		}
-		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
+		newName = newName.replaceAll(Token.EXT.getFull(), normalizeText(ext));
 		if (film.getDate()!=null) {
-			newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(film.getDate()));
+			newName = newName.replaceAll(Token.YEAR.getFull(),YEAR_FORMAT.format(film.getDate()));
 		}
 		return newName;
 	}
 
 	private String processTVShowName(String newName,Show show,Season season,Episode episode,String ext) {
-		newName = newName.replaceAll(TOKEN_ID, normalizeText(show.getShowId()));
-		newName = newName.replaceAll(TOKEN_SEASON, String.valueOf(season.getSeasonNumber()));
+		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(show.getShowId()));
+		newName = newName.replaceAll(Token.SEASON.getFull(), String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
 		if (episodeNum.length()==1) {
 			episodeNum = "0" +episodeNum;
 		}
 
-		newName = newName.replaceAll(TOKEN_EPISODE, episodeNum);
-		newName = newName.replaceAll(TOKEN_PERCENT, "%");
-		newName = newName.replaceAll(TOKEN_SHOW_NAME, normalizeText(show.getName()));
-		newName = newName.replaceAll(TOKEN_TITLE, normalizeText(episode.getTitle()));
-		newName = newName.replaceAll(TOKEN_EXT, normalizeText(ext));
+		newName = newName.replaceAll(Token.EPISODE.getFull(), episodeNum);
+		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
+		newName = newName.replaceAll(Token.SHOW_NAME.getFull(), normalizeText(show.getName()));
+		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(episode.getTitle()));
+		newName = newName.replaceAll(Token.EXT.getFull(), normalizeText(ext));
 		if (episode.getDate()!=null) {
-			newName = newName.replaceAll(TOKEN_YEAR,YEAR_FORMAT.format(episode.getDate()));
+			newName = newName.replaceAll(Token.YEAR.getFull(),YEAR_FORMAT.format(episode.getDate()));
 		}
 		return newName;
 	}
@@ -107,8 +89,8 @@ public class PatternMatcher {
 	 */
 	public static boolean validPattern(String pattern) {
 
-		for (String token : TOKENS) {
-			pattern = pattern.replaceAll(token, "");
+		for (Token token : Token.values()) {
+			pattern = pattern.replaceAll(token.getFull(), "");
 		}
 		return !pattern.contains("%");
 	}
@@ -157,8 +139,8 @@ public class PatternMatcher {
 		protected abstract String processName(String string);
 
 		private boolean containsPattern(String newName) {
-			for (String token : TOKENS ) {
-				if (newName.indexOf(token)!=-1) {
+			for (Token token : Token.values() ) {
+				if (newName.indexOf(token.getFull())!=-1) {
 					return true;
 				}
 			}

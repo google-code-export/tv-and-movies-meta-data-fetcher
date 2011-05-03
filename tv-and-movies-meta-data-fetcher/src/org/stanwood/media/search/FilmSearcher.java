@@ -22,7 +22,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
 
 	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"};
-	private static final String STRIPED_CHARS[] = {"?"};
+
 
 	static {
 		// Search using a NFO file next to the film if it exists
@@ -43,7 +43,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder end= new StringBuilder(m.group(3));
 						SearchHelper.replaceWithSpaces(start);
 						SearchHelper.replaceWithSpaces(end);
-						removeUnwantedCharacters(term);
+						SearchHelper.removeUnwantedCharacters(term);
 						if (hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
@@ -73,7 +73,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
 				SearchHelper.replaceWithSpaces(term);
-				removeUnwantedCharacters(term);
+				SearchHelper.removeUnwantedCharacters(term);
 				trimRubishFromEnds(term);
 
 				String sTerm = term.toString();
@@ -135,15 +135,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			String first = m.group(1);
 			term.delete(0, term.length());
 			term.append(first);
-		}
-	}
-
-	protected static void removeUnwantedCharacters(StringBuilder term) {
-		for (String c : STRIPED_CHARS) {
-			int pos = -1;
-			while ((pos = term.indexOf(c))!=-1) {
-				term.replace(pos, pos+c.length(), "");
-			}
 		}
 	}
 

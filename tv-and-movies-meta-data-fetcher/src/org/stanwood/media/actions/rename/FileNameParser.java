@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.source.xbmc.expression.ValueType;
 
 /**
  * Used to parse a filename and work out the correct season and episode number
@@ -78,10 +79,10 @@ public class FileNameParser {
 			}
  		}
 
-		Map<String,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
+		Map<Token,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
-			String episodeNumber = tokens.get(PatternMatcher.TOKEN_EPISODE);
-			String seasonNumber = tokens.get(PatternMatcher.TOKEN_SEASON);
+			String episodeNumber = tokens.get(Token.EPISODE);
+			String seasonNumber = tokens.get(Token.SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
 				ParsedFileName result = new ParsedFileName();
 				try {
@@ -97,7 +98,7 @@ public class FileNameParser {
 		return null;
 	}
 
-	private static Map<String, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
+	private static Map<Token, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
 		List<String>groups = new ArrayList<String>();
 		Pattern p = Pattern.compile("(%.)");
 		renamePattern = renamePattern.replaceAll("\\"+File.separator,"\\\\"+File.separator );
@@ -106,8 +107,7 @@ public class FileNameParser {
 		Matcher m = p.matcher(renamePattern);
 		while (m.find()) {
 			String group = m.group();
-			groups.add(group);
-			if (group.equals(PatternMatcher.TOKEN_EPISODE) || group.equals(PatternMatcher.TOKEN_SEASON)){
+			if (Token.fromFull(group).getType()==ValueType.INTEGER){
 				m.appendReplacement(buffer,"([\\\\d]+)");
 			}
 			else {
@@ -123,9 +123,9 @@ public class FileNameParser {
 		}
 		m = p.matcher(filename);
 		if (m.matches()) {
-			Map<String,String>result = new HashMap<String,String>();
+			Map<Token,String>result = new HashMap<Token,String>();
 			for (int i=0;i<m.groupCount();i++) {
-				result.put(groups.get(i),m.group(i+1));
+				result.put(Token.fromFull(groups.get(i)),m.group(i+1));
 			}
 			return result;
 		}
