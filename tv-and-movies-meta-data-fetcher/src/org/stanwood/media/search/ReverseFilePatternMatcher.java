@@ -31,12 +31,10 @@ public class ReverseFilePatternMatcher {
 		while (i<pattern.length()) {
 			char c = pattern.charAt(i);
 			if (c=='{') {
-//				matchPattern(path, tokens, regexp);
-//				tokens = new ArrayList<Character>();
-//				regexp = new StringBuilder();
+				regexp.append("(?:");
 			}
 			else if (c=='}') {
-//				matchPattern(path, tokens, regexp);
+				regexp.append(")?");
 			}
 			else if (c=='%') {
 				i++;
@@ -50,7 +48,7 @@ public class ReverseFilePatternMatcher {
 				}
 			}
 			else {
-				if (c=='.' || c=='$' || c=='^' || c=='|' || c=='(' || c==')') {
+				if (c=='.' || c=='$' || c=='?' || c=='^' || c=='|' || c=='(' || c==')') {
 					regexp.append("\\"+c);
 				}
 				else {

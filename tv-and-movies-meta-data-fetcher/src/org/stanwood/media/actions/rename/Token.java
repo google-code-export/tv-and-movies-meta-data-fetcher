@@ -4,19 +4,19 @@ import org.stanwood.media.source.xbmc.expression.ValueType;
 
 public enum Token {
 	/** the token for "show name" */
-	SHOW_NAME('n',"(.*)",ValueType.STRING),
+	SHOW_NAME('n',"(.*?)",ValueType.STRING),
 	/** the token for "episode number" */
 	EPISODE('e',"(\\d+)",ValueType.INTEGER),
 	/** the token for "season number" */
 	SEASON('s',"(\\d+)",ValueType.INTEGER),
 	/** the token for "extension" */
-	EXT('x',"(.*)",ValueType.STRING),
+	EXT('x',"(.*?)",ValueType.STRING),
 	/** the token for "episode or film title" */
-	TITLE('t',"(.*)",ValueType.STRING),
+	TITLE('t',"(.*?)",ValueType.STRING),
 	/** add a % char */
 	PERCENT('%',"%",ValueType.STRING),
 	/** the token for "show Id" */
-	ID('h',"(.*)",ValueType.STRING),
+	ID('h',"(.*?)",ValueType.STRING),
 	/** the token for "part number" */
 	PART('p',"(\\d+)",ValueType.INTEGER),
 	/** the token for the "year" */
