@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.Token;
 
 /**
  * This class is used to find a films name using a series of different searching strategies
@@ -25,6 +26,8 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 
 
 	static {
+		strategies.add(new ReversePatternSearchStrategy(Token.TITLE));
+
 		// Search using a NFO file next to the film if it exists
 		strategies.add(new FilmNFOSearchStrategy());
 

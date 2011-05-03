@@ -16,7 +16,7 @@ import org.stanwood.media.actions.rename.Token;
  */
 public class ReverseFilePatternMatcher {
 
-	private Map<String,String> values = new HashMap<String,String>();
+	private Map<Token,String> values = new HashMap<Token,String>();
 
 	/**
 	 * Parse the file path using the rename pattern and find the tokens in the
@@ -25,40 +25,62 @@ public class ReverseFilePatternMatcher {
 	 * @param pattern The rename pattern
 	 */
 	public void parse(String path,String pattern) {
-		List<String> tokens = new ArrayList<String>();
+		List<Character> tokens = new ArrayList<Character>();
 		StringBuilder regexp = new StringBuilder();
-		for (int i=0;i<pattern.length();i++) {
-			if (pattern.charAt(i)=='%') {
+		int i=0;
+		while (i<pattern.length()) {
+			char c = pattern.charAt(i);
+			if (c=='{') {
+//				matchPattern(path, tokens, regexp);
+//				tokens = new ArrayList<Character>();
+//				regexp = new StringBuilder();
+			}
+			else if (c=='}') {
+//				matchPattern(path, tokens, regexp);
+			}
+			else if (c=='%') {
 				i++;
 				Token token = Token.fromToken(pattern.charAt(i));
 				if (token == Token.PERCENT) {
 					regexp.append("%");
 				}
 				else {
-					tokens.add(""+token.getToken());
+					tokens.add(token.getToken());
 					regexp.append(token.getPattern());
 				}
 			}
 			else {
-				regexp.append(pattern.charAt(i));
+				if (c=='.' || c=='$' || c=='^' || c=='|' || c=='(' || c==')') {
+					regexp.append("\\"+c);
+				}
+				else {
+					regexp.append(c);
+				}
 			}
+			i++;
 		}
 
+		matchPattern(path, tokens, regexp);
+	}
+
+	private boolean matchPattern(String path, List<Character> tokens, StringBuilder regexp) {
 		Pattern p = Pattern.compile(regexp.toString());
 		Matcher m = p.matcher(path);
 		if (m.matches()) {
-			this.values= new HashMap<String,String>();
-			for (int i=1;i<m.groupCount();i++) {
-				values.put(tokens.get(i-1),m.group(i));
+			this.values= new HashMap<Token,String>();
+			for (int i=1;i<=m.groupCount();i++) {
+				values.put(Token.fromToken(tokens.get(i-1)),m.group(i));
 			}
+			return true;
 		}
+		return false;
 	}
 
 	/**
 	 * A map of tokens found when a file path was parsed using a rename pattern
 	 * @return The tokens
 	 */
-	public Map<String,String> getValues() {
+	public Map<Token,String> getValues() {
 		return values;
 	}
 

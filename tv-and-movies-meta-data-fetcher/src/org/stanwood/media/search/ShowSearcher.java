@@ -7,11 +7,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.Token;
 
 /**
  * This class is used to find a shows name using a series of different searching strategies
  */
 public abstract class ShowSearcher extends AbstractMediaSearcher {
+
+
 
 	private final static List<ISearchStrategy> strategies = new ArrayList<ISearchStrategy>();
 	private final static ISearchStrategy episodeFileStrategy;
@@ -20,26 +23,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?)\\.\\d+x\\d+\\..*",Pattern.CASE_INSENSITIVE);
 
 	static {
-
-		strategies.add(new ISearchStrategy() {
-			@Override
-			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
-				String fileName = episodeFile.getAbsolutePath();
-				if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath())) {
-					fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
-
-					ReverseFilePatternMatcher rfpm = new ReverseFilePatternMatcher();
-					rfpm.parse(fileName, renamePattern);
-					if (rfpm.getValues()!=null) {
-						String term =rfpm.getValues().get("n");
-						if (term!=null) {
-							return new SearchDetails(term,null,1);
-						}
-					}
-				}
-				return null;
-			}
-		});
+		strategies.add(new ReversePatternSearchStrategy(Token.SHOW_NAME));
 
 		strategies.add(new ISearchStrategy() {
 			@Override

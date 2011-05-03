@@ -112,7 +112,7 @@ public class TestFilmSearcher {
 		}
 	}
 
-	public void assertSearchDetails(String expectedTerm,String expectedYear,Integer expectedPart,TSearchDetails actual) {
+	public static void assertSearchDetails(String expectedTerm,String expectedYear,Integer expectedPart,TSearchDetails actual) {
 		Assert.assertEquals("Did not extract the correct term from: " + actual.getOriginalFile().getName(),expectedTerm,actual.getTerm());
 		if (expectedYear == null) {
 			Assert.assertNull("Got year when did not expect one: " + actual.getOriginalFile().getName(),actual.getYear());
