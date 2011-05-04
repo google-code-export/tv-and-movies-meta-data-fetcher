@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.source.SourceException;
 
 /**
@@ -78,6 +79,7 @@ public abstract class StreamProcessor {
 					}
 					String str = sw.toString();
 					if (str.length()>0) {
+						str = StringEscapeUtils.unescapeHtml(str);
 						processContents(str);
 					}
 				}

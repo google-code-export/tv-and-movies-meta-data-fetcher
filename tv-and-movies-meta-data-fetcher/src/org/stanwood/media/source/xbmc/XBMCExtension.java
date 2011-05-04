@@ -106,6 +106,7 @@ public abstract class XBMCExtension extends XMLParser {
 	private void performRegexp(Map<Integer, String> params, Element node) throws XBMCException {
 		String input = getInputAttr(params,node);
 		String orgOutput = getOutputAttr(params,node);
+		orgOutput = fixXML(orgOutput);
 		String conditional = node.getAttribute("conditional");
 		if ( (!conditional.equals("")) && !addon.checkCondition(conditional)) {
 			return;
@@ -152,7 +153,8 @@ public abstract class XBMCExtension extends XMLParser {
 			newOutput.append(input);
 		}
 
-		String s = newOutput.toString().replaceAll("\\&",Matcher.quoteReplacement("&amp;"));
+//		String s = XMLParser.encodeAttributeValue(newOutput.toString());
+		String s = newOutput.toString();
 		String output = processInfoVars(s);
 
 		if (dest!=-1) {
@@ -168,6 +170,10 @@ public abstract class XBMCExtension extends XMLParser {
 			params.put(Integer.valueOf(dest), output);
 		}
 
+	}
+
+	private String fixXML(String orgOutput) {
+		return orgOutput.replaceAll("&","&amp;");
 	}
 
 	private String processValue(XBMCExpression expression,String value,int group) {

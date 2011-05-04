@@ -478,7 +478,15 @@ public class XMLParser {
 			char c = value.charAt(i);
 			switch (c)  {
 			case '&' :
-				result.append("&amp;");
+				boolean doIt = true;
+				if (value.length()>i+5) {
+					if (value.substring(i,i+4).equals("&amp;")) {
+						doIt = false;
+					}
+				}
+				if (doIt) {
+					result.append("&amp;");
+				}
 				break;
 			case '\'' :
 				result.append("&apos;");
