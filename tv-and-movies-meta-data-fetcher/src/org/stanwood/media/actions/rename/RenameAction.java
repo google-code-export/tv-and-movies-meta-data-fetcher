@@ -21,6 +21,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
 /**
@@ -104,6 +105,11 @@ public class RenameAction extends AbstractAction {
 				if (vf.getPart()!=null && vf.getPart().equals(result.getPart())) {
 					newPart = false;
 					break;
+				}
+			}
+			if (newPart) {
+				for (IStore store : dir.getStores()) {
+					store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
 				}
 			}
 		}
