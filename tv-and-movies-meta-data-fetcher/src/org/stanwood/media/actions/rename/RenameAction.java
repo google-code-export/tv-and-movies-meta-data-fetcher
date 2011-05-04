@@ -94,20 +94,21 @@ public class RenameAction extends AbstractAction {
 		}
 
 		String oldFileName = file.getName();
-		boolean newPart = true;
+
 		Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
 			return null;
 		}
 		if (result.getPart()!=null) {
+			boolean found = false;
 			for (VideoFile vf : film.getFiles()) {
-				if (vf.getPart()!=null && vf.getPart().equals(result.getPart())) {
-					newPart = false;
+				if (vf.getPart()!=null && vf.getPart().equals(result.getPart()) && vf.getLocation().equals(file)) {
+					found = true;
 					break;
 				}
 			}
-			if (newPart) {
+			if (!found) {
 				for (IStore store : dir.getStores()) {
 					store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
 				}
