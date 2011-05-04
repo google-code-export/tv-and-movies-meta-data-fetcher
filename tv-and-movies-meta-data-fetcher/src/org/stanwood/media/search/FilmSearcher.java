@@ -46,7 +46,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder end= new StringBuilder(m.group(3));
 						SearchHelper.replaceWithSpaces(start);
 						SearchHelper.replaceWithSpaces(end);
-						SearchHelper.removeUnwantedCharacters(term);
 						if (hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
@@ -76,7 +75,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				removeUpToHyphon(term);
 				removeIgnoredTokens(term);
 				SearchHelper.replaceWithSpaces(term);
-				SearchHelper.removeUnwantedCharacters(term);
 				trimRubishFromEnds(term);
 
 				String sTerm = term.toString();

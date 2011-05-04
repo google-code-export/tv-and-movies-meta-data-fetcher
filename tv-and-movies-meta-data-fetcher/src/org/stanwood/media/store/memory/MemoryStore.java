@@ -218,7 +218,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
 		films.put(filmFile,film);
 	}
 

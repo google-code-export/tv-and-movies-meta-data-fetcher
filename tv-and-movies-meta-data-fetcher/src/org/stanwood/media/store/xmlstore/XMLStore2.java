@@ -204,6 +204,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				}
 
 				fileNode.setAttribute("location", makePathRelativeToMediaDir(file.getLocation(),rootMediaDir));
+				if (file.getPart()!=null) {
+					fileNode.setAttribute("part", String.valueOf(file.getPart()));
+				}
 			} catch (XMLParserException e) {
 				throw new StoreException("Unable to read xml",e);
 			}
@@ -219,14 +222,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir, File filmFile, Film film,Integer part) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache film " + filmFile.getAbsolutePath());
 		}
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
-			film.getFiles().add(new VideoFile(filmFile,filmFile,null));
+			film.getFiles().add(new VideoFile(filmFile,filmFile,part));
 			appendFilm(doc, storeNode, film,rootMediaDir);
 
 			File cacheFile = getCacheFile(rootMediaDir, FILENAME);
@@ -921,7 +924,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException {
 		Document doc = getCache(dirConfig.getMediaDir());
@@ -1060,7 +1062,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			boolean changed = false;
 			for (Node fileNode : selectNodeList(cache, "//file")) {
 				Element el = (Element)fileNode;
-				File location = new File(el.getAttribute("location"));
+				File location = new File(dir.getMediaDirConfig().getMediaDir(),el.getAttribute("location"));
 				if (!location.exists()) {
 					if (log.isDebugEnabled()) {
 						log.debug("Unable to find file '"+location.getAbsolutePath()+"' so removing from store");

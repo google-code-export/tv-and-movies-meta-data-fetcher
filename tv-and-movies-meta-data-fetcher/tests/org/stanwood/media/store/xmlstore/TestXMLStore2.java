@@ -74,8 +74,8 @@ public class TestXMLStore2 {
 			}
 			Film film = Data.createFilm();
 
-			xmlSource.cacheFilm(dir, filmFile1, film);
-			xmlSource.cacheFilm(dir, filmFile2, film);
+			xmlSource.cacheFilm(dir, filmFile1, film,1);
+			xmlSource.cacheFilm(dir, filmFile2, film,2);
 
 			File actualFile = new File(dir,".mediaInfoFetcher-xmlStore.xml");
 			Map<String,String>params = new HashMap<String,String>();
