@@ -84,18 +84,28 @@ public class RenameAction extends AbstractAction {
 	}
 
 	private File renameFilm(MediaDirectory dir,File file) throws MalformedURLException, SourceException, IOException, StoreException, PatternException {
+
 		SearchResult result = searchForId(dir,file);
+
 		if (result==null) {
 			log.error("Unable to find film id for file '"+file.getName()+"'");
 			return null;
 		}
 
 		String oldFileName = file.getName();
-
+		boolean newPart = true;
 		Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 		if (film==null) {
 			log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
 			return null;
+		}
+		if (result.getPart()!=null) {
+			for (VideoFile vf : film.getFiles()) {
+				if (vf.getPart()!=null && vf.getPart().equals(result.getPart())) {
+					newPart = false;
+					break;
+				}
+			}
 		}
 
 		String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);

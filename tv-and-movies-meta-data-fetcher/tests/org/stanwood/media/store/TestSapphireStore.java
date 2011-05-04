@@ -128,7 +128,7 @@ public class TestSapphireStore  {
 			writers.add("Christopher McQuarrie");
 			film.setWriters(writers);
 
-			xmlSource.cacheFilm(dir,filmFile, film);
+			xmlSource.cacheFilm(dir,filmFile, film,1);
 
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			Assert.assertTrue(actualFile.exists());

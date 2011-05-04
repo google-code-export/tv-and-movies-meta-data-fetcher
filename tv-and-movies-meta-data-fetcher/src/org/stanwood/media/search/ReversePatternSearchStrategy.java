@@ -15,6 +15,9 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 
 	@Override
 	public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
+		if (patternComplextity(renamePattern)<4) {
+			return null;
+		}
 		String fileName = episodeFile.getAbsolutePath();
 		if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath())) {
 			fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
@@ -37,5 +40,16 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			}
 		}
 		return null;
+	}
+
+	private int patternComplextity(String renamePattern) {
+		int count = 0;
+		for (int i=0;i<renamePattern.length();i++) {
+			if (renamePattern.charAt(i)=='%') {
+				count++;
+			}
+		}
+
+		return count;
 	}
 }

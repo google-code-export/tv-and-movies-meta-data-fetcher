@@ -17,6 +17,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.search.AbstractMediaSearcher;
 import org.stanwood.media.search.FilmSearcher;
+import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.search.ShowSearcher;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
@@ -143,7 +144,7 @@ public class MediaDirectory {
 					if (film != null) {
 						for (IStore store : stores) {
 							if (!controller.isTestRun()) {
-								store.cacheFilm(rootMediaDir,filmFile, film);
+								store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
 							}
 						}
 						break;
@@ -323,7 +324,9 @@ public class MediaDirectory {
 					if (name==null) {
 						return null;
 					}
-					return searchMedia(name,dirConfig.getMode(),part,dirConfig,mediaFile);
+					StringBuilder term = new StringBuilder(name);
+					SearchHelper.removeUnwantedCharacters(term);
+					return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
 				}
 			};
 			return s.search(mediaFile,this);
@@ -332,10 +335,12 @@ public class MediaDirectory {
 			s = new FilmSearcher() {
 				@Override
 				public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+					StringBuilder term = new StringBuilder(name);
+					SearchHelper.removeUnwantedCharacters(term);
 					if (name==null) {
 						return null;
 					}
-					return searchMedia(name,dirConfig.getMode(),part,dirConfig,mediaFile);
+					return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
 				}
 			};
 		}

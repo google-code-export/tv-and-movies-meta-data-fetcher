@@ -71,11 +71,12 @@ public interface IStore  {
 	 * This is used to write a film to the store.
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
+	 * @param part The part number of the film
 	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheFilm(File rootMediaDir,File filmFile,Film film) throws StoreException;
+	public void cacheFilm(File rootMediaDir,File filmFile,Film film,Integer part) throws StoreException;
 
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will

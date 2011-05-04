@@ -144,7 +144,8 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
+		// TODO make use of the part number
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
 			validate();

@@ -146,7 +146,7 @@ public class FakeStore implements IStore {
 	 * @param film The film details
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film) {
+	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) {
 
 	}
 
