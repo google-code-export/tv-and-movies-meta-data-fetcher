@@ -253,9 +253,7 @@ public class XBMCScraper extends XBMCExtension {
 						Map<Integer, String> params = new HashMap<Integer,String>();
 						params.put(1, contents);
 						try {
-							try {
-								String s = getAddon().executeFunction(functionName, params) ;
-
+							String s = getAddon().executeFunction(functionName, params) ;
 							Document results = strToDom(s);
 							Node parent = node.getParentNode();
 							parent.removeChild(node);
@@ -263,10 +261,6 @@ public class XBMCScraper extends XBMCExtension {
 							for (Node n : selectNodeList(results, "details/*")) {
 								Node newNode = doc.importNode(n,true);
 								parent.appendChild(newNode);
-							}
-							}
-							catch (XBMCException e) {
-								e.printException();
 							}
 						} catch (XMLParserException e) {
 							throw new SourceException("Unable to execute function '"+functionName+"'");
