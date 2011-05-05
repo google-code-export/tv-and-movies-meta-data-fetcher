@@ -16,6 +16,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
@@ -44,8 +45,7 @@ public class TestShowSearcher {
 			for (File mediaFile : FileHelper.listFiles(filmsDir)) {
 				String pattern = patterns.get(mediaFile);
 				Assert.assertNotNull(pattern);
-				//TODO FIX this so the test works again
-//				searcher.search(mediaFile, filmsDir, pattern);
+				searcher.search(mediaFile, TestFilmSearcher.getMediaDir(filmsDir,pattern,Mode.TV_SHOW));
 			}
 
 			Collections.sort(names,new Comparator<TSearchDetails>() {

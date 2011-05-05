@@ -14,7 +14,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.Controller;
+import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.cli.manager.TestCLIMediaManager;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
 
@@ -40,9 +45,9 @@ public class TestFilmSearcher {
 					return null;
 				}
 			};
+
 			for (File mediaFile : FileHelper.listFiles(filmsDir)) {
-				//TODO FIX this so the test works again
-				// f.search(mediaFile, filmsDir, "%t.%x");
+				 f.search(mediaFile, getMediaDir(filmsDir,"%t.%x",Mode.FILM));
 			}
 
 			Collections.sort(names,new Comparator<TSearchDetails>() {
@@ -70,7 +75,7 @@ public class TestFilmSearcher {
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
 			assertSearchDetails("A movie",null,null,names.get(index++));
-			assertSearchDetails("A, Movie",null,null,names.get(index++));
+			assertSearchDetails("A, Movie?",null,null,names.get(index++));
 			assertSearchDetails("A Movie","2007",null,names.get(index++));
 			assertSearchDetails("A Movie","2008",null,names.get(index++));
 			assertSearchDetails("A Movie","2010",null,names.get(index++));
@@ -110,6 +115,12 @@ public class TestFilmSearcher {
 		finally {
 			FileHelper.delete(filmsDir);
 		}
+	}
+
+	static MediaDirectory getMediaDir(File mediaDir,String pattern,Mode mode) throws Exception {
+		ConfigReader config = TestCLIMediaManager.setupTestController(mediaDir, pattern, mode, null,null,null,null);
+		Controller controller = new Controller(config);
+		return new MediaDirectory(controller, config, mediaDir);
 	}
 
 	public static void assertSearchDetails(String expectedTerm,String expectedYear,Integer expectedPart,TSearchDetails actual) {
