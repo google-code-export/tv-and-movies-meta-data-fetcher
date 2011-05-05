@@ -95,7 +95,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("http://cf1.imgobject.com/posters/eae/4bc912a2017a3c57fe006eae/iron-man-original.jpg",film.getImageURL().toExternalForm());
 		Assert.assertEquals("Action",film.getPreferredGenre());
 		Assert.assertEquals(8.4F,film.getRating().getRating());
-		Assert.assertEquals(64,film.getRating().getNumberOfVotes());
+		Assert.assertEquals(69,film.getRating().getNumberOfVotes());
 		Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
 		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getSummary());
 		Assert.assertEquals("Iron Man",film.getTitle());
