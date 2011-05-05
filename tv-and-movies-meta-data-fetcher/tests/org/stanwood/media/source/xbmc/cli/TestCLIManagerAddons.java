@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.cli.renamer.TestRenameRecursive;
+import org.stanwood.media.cli.manager.TestCLIMediaManager;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -22,7 +22,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	@Test
 	public void testGlobalHelp() throws Exception {
 
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--help"};
@@ -65,7 +65,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	 */
 	@Test
 	public void testUnkownOption() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--blah"};
@@ -92,7 +92,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	 */
 	@Test
 	public void testUnkownSubCommand() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"blah"};

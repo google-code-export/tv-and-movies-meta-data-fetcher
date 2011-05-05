@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.stanwood.media.cli.renamer.TestRenameRecursive;
+import org.stanwood.media.cli.manager.TestCLIMediaManager;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -15,7 +15,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 
 	@Test
 	public void testListCommandHelp() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--log_config","INFO","list","--help"};
@@ -41,12 +41,12 @@ public class TestXBMCListCommand extends BaseCLITest {
 	@Override
 	public void reset() throws Exception {
 		super.reset();
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 	}
 
 	@Test
 	public void testList() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		// Check inital list of plugins
@@ -136,7 +136,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 
 	@Test
 	public void testUnkownOption() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","--blah"};
@@ -162,7 +162,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 
 	@Test
 	public void testUnexpectedArgument() throws Exception {
-		TestRenameRecursive.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","blah"};

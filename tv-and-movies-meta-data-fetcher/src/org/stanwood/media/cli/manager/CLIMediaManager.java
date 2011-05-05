@@ -16,12 +16,11 @@ import org.stanwood.media.actions.IAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.cli.renamer.CLIRenamer;
 import org.stanwood.media.setup.ConfigException;
 
 public class CLIMediaManager extends AbstractLauncher {
 
-	private final static Log log = LogFactory.getLog(CLIRenamer.class);
+	private final static Log log = LogFactory.getLog(CLIMediaManager.class);
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String TEST_OPTION = "t";
