@@ -173,7 +173,8 @@ public abstract class XBMCExtension extends XMLParser {
 	}
 
 	private String fixXML(String orgOutput) {
-		return orgOutput.replaceAll("&","&amp;");
+//		return orgOutput.replaceAll("&","&amp;");
+		return orgOutput;
 	}
 
 	private String processValue(XBMCExpression expression,String value,int group) {

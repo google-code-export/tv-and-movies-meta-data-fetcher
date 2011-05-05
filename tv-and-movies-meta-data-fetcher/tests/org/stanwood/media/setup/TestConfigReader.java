@@ -37,7 +37,7 @@ public class TestConfigReader {
 			StringBuilder testConfig = new StringBuilder();
 			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
 			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
-//			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaInfoFetcher-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
+//			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaManager-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
 //			testConfig.append("              version=\"2.0\""+LS);
 //			testConfig.append("<mediaManager"+LS);
 			testConfig.append(">"+LS);
