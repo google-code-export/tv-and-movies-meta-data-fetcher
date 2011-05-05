@@ -342,9 +342,10 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @param source The source to use, or null if none are used
 	 * @param sourceParams The params of the source
 	 * @param store The store to use, or null if none are used
+	 * @return The config reader
 	 * @throws Exception Thrown if their is a problem
 	 */
-	public static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,Class<? extends IAction> ... actions) throws Exception{
+	public static ConfigReader setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,Class<? extends IAction> ... actions) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
@@ -384,6 +385,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			ConfigReader configReader = new ConfigReader(is);
 			configReader.parse();
 			AbstractLauncher.config = configReader;
+			return configReader;
 		}
 		finally {
 			if (is!=null) {
