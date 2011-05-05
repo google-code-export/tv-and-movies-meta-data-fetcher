@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WebFileInputStream extends InputStream {
 
-private final static String DEFAULT_USER_AGENT = "MediaInfoFetcher";
+private final static String DEFAULT_USER_AGENT = "MediaManager";
 
 	private final static Log log = LogFactory.getLog(WebFileInputStream.class);
 

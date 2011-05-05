@@ -337,7 +337,7 @@ public class XMLParser {
 		    	}
 		    	else if (publicId!=null) {
 			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) {
-			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaInfoFetcher-XmlStore-2.0.dtd");
+			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.0.dtd");
 			    		if (stream==null) {
 			    			throw new IOException ("Unable to find dtd");
 			    		}
