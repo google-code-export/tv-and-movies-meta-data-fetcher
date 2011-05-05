@@ -94,10 +94,15 @@ downloadFile("http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb43
 files=[
     "addons.xml",
     "addons.xml.md5",
-    "metadata.themoviedb.org/metadata.themoviedb.org-1.2.4.zip",
+    "metadata.themoviedb.org/metadata.themoviedb.org-1.4.0.zip",
     "metadata.common.hdtrailers.net/metadata.common.hdtrailers.net-1.0.6.zip",
-    "metadata.common.imdb.com/metadata.common.imdb.com-2.0.7.zip",
-    "metadata.tvdb.com/metadata.tvdb.com-1.1.0.zip",
-    "metadata.common.themoviedb.org/metadata.common.themoviedb.org-1.0.7.zip"
+    "metadata.common.imdb.com/metadata.common.imdb.com-2.1.0.zip",
+    "metadata.tvdb.com/metadata.tvdb.com-1.2.1.zip",
+    "metadata.common.themoviedb.org/metadata.common.themoviedb.org-1.1.0.zip",
+    "metadata.imdb.com/metadata.imdb.com-2.1.9.zip",
+    "plugin.video.youtube/plugin.video.youtube-2.0.3.zip",
+    "script.module.beautifulsoup/script.module.beautifulsoup-3.0.8.zip",
+    "metadata.common.movieposterdb.com/metadata.common.movieposterdb.com-1.0.4.zip",
+    "metadata.common.impa.com/metadata.common.impa.com-1.0.4.zip"
 ]
 zipWebsite(testsDir+"/org/stanwood/media/source/xbmc/updates.zip","http://mirrors.xbmc.org/addons/dharma","addons",files)
