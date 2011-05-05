@@ -8,14 +8,16 @@ import org.stanwood.media.actions.rename.Token;
 public class ReversePatternSearchStrategy implements ISearchStrategy {
 
 	private Token termToken;
+	private boolean doComplexityCheck;
 
-	public ReversePatternSearchStrategy(Token termToken) {
+	public ReversePatternSearchStrategy(Token termToken,boolean doComplexityCheck) {
 		this.termToken = termToken;
+		this.doComplexityCheck = doComplexityCheck;
 	}
 
 	@Override
 	public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
-		if (patternComplextity(renamePattern)<4) {
+		if (doComplexityCheck && patternComplextity(renamePattern)<4) {
 			return null;
 		}
 		String fileName = episodeFile.getAbsolutePath();

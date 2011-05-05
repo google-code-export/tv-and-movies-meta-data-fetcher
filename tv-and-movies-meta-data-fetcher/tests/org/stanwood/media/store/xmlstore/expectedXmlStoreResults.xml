@@ -33,7 +33,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
           <actor name="sally" role="betty"/>
           <actor name="Cedric" role="steve"/>	        
         </actors>
-        <file location="$rootMedia$/Eureka/1x01 - blah"/>
+        <file location="Eureka/1x01 - blah"/>
       </episode>
       <episode episodeId="800578" firstAired="2006-10-11" number="2" imageUrl=""
         title="Many Happy Returns" url="http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html">
@@ -42,7 +42,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         <directors/>
         <writers/>
         <actors/>
-        <file location="$rootMedia$/Eureka/1x02 - blah"/>
+        <file location="Eureka/1x02 - blah"/>
       </episode>
     </season>
     <season      
@@ -54,7 +54,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         <directors/>
         <writers/>
         <actors/>
-        <file location="$rootMedia$/Eureka/2x13 - blah"/>
+        <file location="Eureka/2x13 - blah"/>
       </episode>
       <special episodeId="800578" firstAired="2007-07-09" number="0" imageUrl=""                
         title="Countdown to the Premiere" url="http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html">        
@@ -71,7 +71,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         	<actor name="bob" role="fred"/>
           	<actor name="Write a little" role="blah"/> 
         </actors>        
-        <file location="$rootMedia$/Eureka/000 - blah"/>
+        <file location="Eureka/000 - blah"/>
       </special>
     </season>
   </show>
@@ -105,7 +105,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
         	<actor name="sally" role="betty"/>
           	<actor name="Cedric" role="steve"/>
         </actors>        
-        <file location="$rootMedia$/Heroes/1x01 - hero"/>
+        <file location="Heroes/1x01 - hero"/>
       </episode>
     </season>
   </show>
@@ -180,7 +180,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
 	    <chapter name="Second Chapter" number="2"/>
 	    <chapter name="The end" number="3"/>
     </chapters>
-    <file location="$rootMedia$/The Usual Suspects part1.avi"/>
-    <file location="$rootMedia$/The Usual Suspects part2.avi"/>
+    <file location="The Usual Suspects part1.avi" part="1"/>
+    <file location="The Usual Suspects part2.avi" part="2"/>
   </film>
 </store>

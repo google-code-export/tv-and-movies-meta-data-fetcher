@@ -23,7 +23,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?)\\.\\d+x\\d+\\..*",Pattern.CASE_INSENSITIVE);
 
 	static {
-		strategies.add(new ReversePatternSearchStrategy(Token.SHOW_NAME));
+		strategies.add(new ReversePatternSearchStrategy(Token.SHOW_NAME,true));
 
 		strategies.add(new ISearchStrategy() {
 			@Override

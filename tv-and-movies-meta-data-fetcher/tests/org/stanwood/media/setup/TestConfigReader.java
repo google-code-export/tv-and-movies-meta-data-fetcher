@@ -147,7 +147,7 @@ public class TestConfigReader {
 				Assert.fail("Did not detect the exception");
 			}
 			catch (ConfigException e) {
-				Assert.assertEquals(e.getMessage(),"Unkown mode 'BLAH' for media directory '"+mediaDir.getAbsolutePath()+"'");
+				Assert.assertEquals(e.getMessage(),"Unknown mode 'BLAH' for media directory '"+mediaDir.getAbsolutePath()+"'");
 			}
 
 		}
@@ -228,7 +228,7 @@ public class TestConfigReader {
 
 			File homeDir = new File(System.getProperty("user.home"));
 			ConfigReader configReader = createConfigReader(testConfig);
-			Assert.assertEquals(new File(homeDir,".mediaInfo"+File.separator+"xbmc"+File.separator+"addons").getAbsolutePath(),
+			Assert.assertEquals(new File(homeDir,".mediaManager"+File.separator+"xbmc"+File.separator+"addons").getAbsolutePath(),
 					            configReader.getXBMCAddonDir().getAbsolutePath());
 			Assert.assertEquals(Locale.ENGLISH,configReader.getXBMCLocale());
 		}
