@@ -205,6 +205,7 @@ public class XBMCScraper extends XBMCExtension {
 			resolveChainNodes(doc,(Element) node);
 		}
 
+
 		for (Node node : selectNodeList(doc, "details/url")) {
 			resolveUrlNodes(doc,(Element) node);
 		}

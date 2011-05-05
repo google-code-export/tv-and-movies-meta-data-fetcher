@@ -26,7 +26,6 @@ import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.xml.IterableNodeList;
@@ -279,7 +278,8 @@ public class XBMCSource extends XMLParser implements ISource {
 			MalformedURLException, IOException {
 		checkMode(Mode.FILM);
 
-		return parseFilm(filmId,url,file);
+		Film film =  parseFilm(filmId,url,file);
+		return film;
 	}
 
 	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
@@ -314,7 +314,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			if (title ==null) {
 	    				throw new XBMCException("Unable to find title");
 	    			}
-	    			title = SearchHelper.decodeHtmlEntities(title);
+//	    			title = SearchHelper.decodeHtmlEntities(title);
 	    			film.setTitle(title);
 	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()");
 	    			if (overview==null) {

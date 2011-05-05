@@ -109,6 +109,17 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals(2008,cal.get(Calendar.YEAR));
 	}
 
+	@Test
+	public void testEncodings() throws Exception {
+		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
+		SearchResult result = source.searchMedia("Dude Where’s My Car",Mode.FILM,1);
+		Assert.assertEquals("8859",result.getId());
+		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/8859", result.getUrl());
+
+		Film film = source.getFilm("8859",new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/8859"),null);
+		Assert.assertEquals("Dude, Where’s My Car?",film.getTitle());
+	}
+
 	/**
 	 * Used to test that the scrapers applyParams method works correctly
 	 * @throws Exception Thrown if their are any problems

@@ -89,7 +89,6 @@ public class XBMCAddon extends XMLParser {
 		String type = node.getAttribute("type");
 		String defaultValue = node.getAttribute("default");
 		String id = node.getAttribute("id");
-
 		if (type.equals("bool")) {
 			Value value = eval.eval(defaultValue);
 			if (value.getType()!=ValueType.BOOLEAN) {
