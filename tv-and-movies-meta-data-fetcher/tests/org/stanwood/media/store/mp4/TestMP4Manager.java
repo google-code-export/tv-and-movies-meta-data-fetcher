@@ -64,26 +64,26 @@ public class TestMP4Manager {
 		});
 
 		Assert.assertEquals(10,atoms.size());
-		Assert.assertEquals(atoms.get(0).getName(), "catg");
-		Assert.assertEquals(atoms.get(0).getValue(), "SciFi");
-		Assert.assertEquals(atoms.get(1).getName(), "desc");
-		Assert.assertEquals(atoms.get(1).getValue(), "This is a test show summary");
-		Assert.assertEquals(atoms.get(2).getName(), "stik");
-		Assert.assertEquals(atoms.get(2).getValue(), "10");
-		Assert.assertEquals(atoms.get(3).getName(), "tven");
-		Assert.assertEquals(atoms.get(3).getValue(), "103");
-		Assert.assertEquals(atoms.get(4).getName(), "tves");
-		Assert.assertEquals(atoms.get(4).getValue(), "3");
-		Assert.assertEquals(atoms.get(5).getName(), "tvsh");
-		Assert.assertEquals(atoms.get(5).getValue(), "Test Show Name");
-		Assert.assertEquals(atoms.get(6).getName(), "tvsn");
-		Assert.assertEquals(atoms.get(6).getValue(), "1");
-		Assert.assertEquals(atoms.get(7).getName(), "©day");
-		Assert.assertEquals(atoms.get(7).getValue().replaceAll("0 ... ", "0 "), "Thu Nov 10 00:00:00 2005");
-		Assert.assertEquals(atoms.get(8).getName(), "©gen");
-		Assert.assertEquals(atoms.get(8).getValue(), "SciFi");
-		Assert.assertEquals(atoms.get(9).getName(), "©nam");
-		Assert.assertEquals(atoms.get(9).getValue(), "Test Episode");
+		Assert.assertEquals("catg",atoms.get(0).getName());
+		Assert.assertEquals("SciFi",atoms.get(0).getValue());
+		Assert.assertEquals("desc",atoms.get(1).getName());
+		Assert.assertEquals("This is a test show summary",atoms.get(1).getValue());
+		Assert.assertEquals("stik",atoms.get(2).getName());
+		Assert.assertEquals("10",atoms.get(2).getValue());
+		Assert.assertEquals("tven",atoms.get(3).getName());
+		Assert.assertEquals("103",atoms.get(3).getValue());
+		Assert.assertEquals("tves",atoms.get(4).getName());
+		Assert.assertEquals("3",atoms.get(4).getValue());
+		Assert.assertEquals("tvsh",atoms.get(5).getName());
+		Assert.assertEquals("Test Show Name",atoms.get(5).getValue());
+		Assert.assertEquals("tvsn",atoms.get(6).getName());
+		Assert.assertEquals("1",atoms.get(6).getValue());
+		Assert.assertEquals("©day",atoms.get(7).getName());
+		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(7).getValue().replaceAll("0 ... ", "0 "));
+		Assert.assertEquals("©gen",atoms.get(8).getName());
+		Assert.assertEquals("SciFi",atoms.get(8).getValue());
+		Assert.assertEquals("©nam",atoms.get(9).getName());
+		Assert.assertEquals("Test Episode",atoms.get(9).getValue());
 	}
 
 	/**
@@ -107,7 +107,8 @@ public class TestMP4Manager {
 
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		Assert.assertEquals(10,atoms.size());
-		Assert.assertEquals("TV Show",atoms.get(0).getValue());
+		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
+		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
 		Assert.assertEquals("stik",atoms.get(0).getName());
 		Assert.assertEquals("34567",atoms.get(1).getValue());
 		Assert.assertEquals("tven",atoms.get(1).getName());
@@ -161,11 +162,12 @@ public class TestMP4Manager {
 
 		Assert.assertEquals("SciFi",atoms.get(0).getValue());
 		Assert.assertEquals("catg",atoms.get(0).getName());
-		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
+		Assert.assertEquals("iTunes Cover",atoms.get(1).getValue());
 		Assert.assertEquals("covr",atoms.get(1).getName());
 		Assert.assertEquals("A test description",atoms.get(2).getValue());
 		Assert.assertEquals("desc",atoms.get(2).getName());
-		Assert.assertEquals("Movie",atoms.get(3).getValue());
+		Assert.assertEquals("Movie",((AtomStik)atoms.get(3)).getTypedValue().getDescription());
+		Assert.assertEquals("9",((AtomStik)atoms.get(3)).getTypedValue().getId());
 		Assert.assertEquals("stik",atoms.get(3).getName());
 		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(4).getValue().replaceAll("0 ... ", "0 "));
 		Assert.assertEquals("©day",atoms.get(4).getName());

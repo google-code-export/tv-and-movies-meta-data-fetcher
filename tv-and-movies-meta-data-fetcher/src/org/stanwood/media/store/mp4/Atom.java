@@ -16,13 +16,17 @@
  */
 package org.stanwood.media.store.mp4;
 
+import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
+
+
+
 
 /**
  * Used to store mp4 atom information.
  */
 public class Atom {
 
-	
+
 	private String name;
 	private String value;
 
@@ -32,13 +36,13 @@ public class Atom {
 	 * @param value The value of the atom
 	 */
 	public Atom(String name, String value) {
-		this.name = name;
-		this.value = value;
+		setName(name);
+		setValue(value);
 	}
 
 	/**
 	 * Used to get the name of the atom
-	 * 
+	 *
 	 * @return The name of the atom
 	 */
 	public String getName() {
@@ -47,7 +51,7 @@ public class Atom {
 
 	/**
 	 * Used to set the name of the atom
-	 * 
+	 *
 	 * @param name
 	 *            The name of the atom
 	 */
@@ -57,7 +61,7 @@ public class Atom {
 
 	/**
 	 * Used to get the value of the atom
-	 * 
+	 *
 	 * @return The value of the atom
 	 */
 	public String getValue() {
@@ -66,7 +70,7 @@ public class Atom {
 
 	/**
 	 * Used to set the value of the atom
-	 * 
+	 *
 	 * @param value
 	 *            The value of the atom
 	 */
@@ -94,23 +98,30 @@ public class Atom {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Atom other = (Atom) obj;
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (value == null) {
-			if (other.value != null)
+			if (other.value != null) {
 				return false;
-		} else if (!value.equals(other.value))
+			}
+		} else if (!value.equals(other.value)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -121,8 +132,10 @@ public class Atom {
 	@Override
 	public String toString() {
 		return name +"="+value;
-	}	
-	
-	
-	
+	}
+
+	public void updateBoxValue(AbstractAppleMetaDataBox b) {
+		b.setValue(getValue());
+	}
+
 }

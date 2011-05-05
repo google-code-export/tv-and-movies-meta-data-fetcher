@@ -12,18 +12,16 @@ Requires:       java >= 1.6
 Requires:       jpackage-utils
 Requires:       jakarta-commons-cli = 1.0
 Requires:		jakarta-commons-lang >= 2.6
-Requires:       jericho-html >= 2.6
 Requires:       log4j >= 1.2.15
 Requires:       jakarta-commons-logging >= 1.0.4
 Requires:       mysql-connector-java >= 5.1.6
-Requires:       jericho-html >= 2.6
 Requires:		antlr-java >= 3.1.3
-Requires:		jaudiotagger >= 1.0.9
+Requires:		isoparser
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
-BuildRequires:  jericho-html >= 2.6
 BuildRequires:  jakarta-commons-cli = 1.0
 BuildRequires:	jakarta-commons-lang >= 2.6
+BuildRequires:	isoparser
 BuildRequires:  java >= 1.6
 BuildRequires:  java-devel >= 1.6
 BuildRequires:  jakarta-commons-logging >= 1.0.4
@@ -33,7 +31,7 @@ BuildRequires:  fop >= 0.95
 BuildRequires:  ant-trax
 BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
-BuildRequires:	jaudiotagger >= 1.0.9
+BuildRequires:	isoparser
 %if 0%{?suse_version} >= 1140
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
