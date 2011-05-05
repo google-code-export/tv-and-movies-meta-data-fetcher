@@ -344,7 +344,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @param store The store to use, or null if none are used
 	 * @throws Exception Thrown if their is a problem
 	 */
-	public void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,Class<? extends IAction> ... actions) throws Exception{
+	public static void setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,Class<? extends IAction> ... actions) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
