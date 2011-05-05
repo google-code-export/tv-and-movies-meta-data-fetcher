@@ -28,7 +28,6 @@
 
     <!-- Lib classpaths -->
     <path id="run-time.libs.classpath">
-        <pathelement location="${lib.dir}/jericho-html.jar"/>
         <pathelement location="${lib.dir}/commons-logging.jar"/>
         <pathelement location="${lib.dir}/commons-cli.jar"/>
     	<pathelement location="${lib.dir}/commons-lang.jar"/>
