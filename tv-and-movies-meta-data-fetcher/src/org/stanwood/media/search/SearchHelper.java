@@ -90,38 +90,38 @@ public class SearchHelper {
 	 * @param s The string to decode
 	 * @return The decoded string
 	 */
-	public static String decodeHtmlEntities(String s) {
-//		int i = 0, j = 0, pos = 0;
-		StringBuilder sb = new StringBuilder();
-		int pos = 0;
-
-		while (pos< s.length()) {
-			if (s.length()>pos+2 && s.substring(pos,pos+2).equals("&#")) {
-				int n = -1;
-				int j = s.indexOf(';', pos);
-				pos+=2;
-				while (pos < j) {
-					char c = s.charAt(pos);
-					if ('0' <= c && c <= '9') {
-						n = (n == -1 ? 0 : n * 10) + c - '0';
-					} else {
-						break;
-					}
-					pos++;
-				}
-				if (n!=-1) {
-					sb.append((char) n);
-				}
-			}
-			else {
-				sb.append(s.charAt(pos));
-			}
-
-			pos++;
-		}
-
-		return sb.toString();
-	}
+//	public static String decodeHtmlEntities(String s) {
+////		int i = 0, j = 0, pos = 0;
+//		StringBuilder sb = new StringBuilder();
+//		int pos = 0;
+//
+//		while (pos< s.length()) {
+//			if (s.length()>pos+2 && s.substring(pos,pos+2).equals("&#")) {
+//				int n = -1;
+//				int j = s.indexOf(';', pos);
+//				pos+=2;
+//				while (pos < j) {
+//					char c = s.charAt(pos);
+//					if ('0' <= c && c <= '9') {
+//						n = (n == -1 ? 0 : n * 10) + c - '0';
+//					} else {
+//						break;
+//					}
+//					pos++;
+//				}
+//				if (n!=-1) {
+//					sb.append((char) n);
+//				}
+//			}
+//			else {
+//				sb.append(s.charAt(pos));
+//			}
+//
+//			pos++;
+//		}
+//
+//		return sb.toString();
+//	}
 
 	/**
 	 * This will normalise a string. It lower cases the string and then replaces any accented

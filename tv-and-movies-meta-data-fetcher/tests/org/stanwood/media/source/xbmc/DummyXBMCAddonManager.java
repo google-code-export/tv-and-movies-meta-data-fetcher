@@ -54,7 +54,10 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		}
 		m = THE_MOVIE_DB_SEARCH.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("themoviedb-search-"+getSearchName(m.group(1))+".html");
+			String term = getSearchName(m.group(1));
+			term=term.replaceAll("\\+","-");
+			term=term.replaceAll("\\%..","");
+			return Data.class.getResourceAsStream("themoviedb-search-"+term+".html");
 		}
 		m = THE_MOVIE_DB_IMDB_LOOKUP.matcher(strUrl);
 		if (m.matches()) {
