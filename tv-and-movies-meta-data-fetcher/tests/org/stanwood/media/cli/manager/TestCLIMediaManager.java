@@ -103,7 +103,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			List<String>files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
 			// .show.xml
-			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
@@ -121,7 +121,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
-			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
@@ -173,7 +173,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			List<String>files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
 			// .show.xml
-			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
@@ -191,7 +191,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Check things are still correct
 			files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
-			Assert.assertEquals(new File(dir,".mediaInfoFetcher-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
