@@ -4,7 +4,6 @@
 	<classpathentry kind="src" output="tests-bin" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/run-time/commons-cli-1.1.jar"/>
-	<classpathentry kind="lib" path="libs/run-time/jericho-html-2.6.jar"/>
 	<classpathentry kind="lib" path="libs/test-time/xmlunit-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/log4j-1.2.15.jar"/>
