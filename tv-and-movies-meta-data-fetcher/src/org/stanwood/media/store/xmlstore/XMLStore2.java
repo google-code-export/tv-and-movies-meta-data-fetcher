@@ -56,17 +56,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This store is used to store the show and film information in a XML called .mediaInfoFetcher-xmlStore.xml.
+ * This store is used to store the show and film information in a XML called .mediaManager-xmlStore.xml.
  * This is located in the root media directory.
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION+"/MediaInfoFetcher-XmlStore-2.0.dtd";
+	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION+"/MediaManager-XmlStore-2.0.dtd";
 	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore 2.0//EN";
 
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
 
-	private final static String FILENAME = ".mediaInfoFetcher-xmlStore.xml";
+	private final static String FILENAME = ".mediaManager-xmlStore.xml";
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 

@@ -84,7 +84,7 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public void parse() throws ConfigException {
 		try {
-			Document doc = XMLParser.parse(is, "MediaInfoFetcher-Config-2.0.xsd");
+			Document doc = XMLParser.parse(is, "MediaManager-Config-2.0.xsd");
 			parseGlobal(doc);
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
@@ -311,7 +311,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	/**
 	 * Used to get the directory where XBMC addons are installed. If one has not been specified in the configuration, then
-	 * a default on is used instead of $HOME/.mediaInfo/xbmc/addons.
+	 * a default on is used instead of $HOME/.mediaManager/xbmc/addons.
 	 * @return The XBMC addon directory
 	 * @throws ConfigException Thrown if their is a problem
 	 */
