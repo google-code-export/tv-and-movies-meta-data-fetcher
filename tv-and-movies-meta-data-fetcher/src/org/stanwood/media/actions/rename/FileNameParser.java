@@ -109,9 +109,11 @@ public class FileNameParser {
 			String group = m.group();
 			if (Token.fromFull(group).getType()==ValueType.INTEGER){
 				m.appendReplacement(buffer,"([\\\\d]+)");
+				groups.add(group);
 			}
 			else {
 				m.appendReplacement(buffer,"(.*)");
+				groups.add(group);
 			}
 		}
 		m.appendTail(buffer);
