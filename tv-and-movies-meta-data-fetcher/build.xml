@@ -125,7 +125,7 @@
 	<target name="javadoc">
 		<delete dir="${api.docs.dir}"/>
         <javadoc packagenames="org.stanwood.*"
-            sourcepath="src"                
+            sourcepath="${src.dir}"                
             defaultexcludes="yes"
             destdir="${api.docs.dir}"
             author="true"

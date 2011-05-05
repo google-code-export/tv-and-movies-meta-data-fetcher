@@ -2,35 +2,40 @@ package org.stanwood.media.store.mp4;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.TagField;
-import org.jaudiotagger.tag.datatype.Artwork;
-import org.jaudiotagger.tag.mp4.Mp4Tag;
-import org.jaudiotagger.tag.mp4.field.Mp4TagByteField;
-import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
-import org.jaudiotagger.tag.mp4.field.Mp4TagTextField;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.util.FileHelper;
+
+import com.coremedia.iso.IsoBufferWrapper;
+import com.coremedia.iso.IsoFile;
+import com.coremedia.iso.IsoFileConvenienceHelper;
+import com.coremedia.iso.IsoOutputStream;
+import com.coremedia.iso.PropertyBoxParserImpl;
+import com.coremedia.iso.boxes.AbstractContainerBox;
+import com.coremedia.iso.boxes.Box;
+import com.coremedia.iso.boxes.MetaBox;
+import com.coremedia.iso.boxes.MovieBox;
+import com.coremedia.iso.boxes.UserDataBox;
+import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
+import com.coremedia.iso.boxes.apple.AppleCoverBox;
+import com.coremedia.iso.boxes.apple.AppleCustomGenreBox;
+import com.coremedia.iso.boxes.apple.AppleItemListBox;
+import com.coremedia.iso.boxes.apple.AppleRecordingYearBox;
+import com.coremedia.iso.boxes.apple.AppleTrackTitleBox;
 
 /**
  * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"} It is used
@@ -42,6 +47,9 @@ public class MP4Manager implements IMP4Manager {
 
 	private final static Log log = LogFactory.getLog(MP4Manager.class);
 
+	//TODO find better whay of encoding this
+	private final static String COPYRIGHT_SYMBOL = new String(new byte[]{-87},Charset.forName("ISO-8859-1"));
+
 	/**
 	 * Used to get a list of atoms in the MP4 file.
 	 *
@@ -52,44 +60,90 @@ public class MP4Manager implements IMP4Manager {
 	@Override
 	public List<Atom> listAttoms(File mp4File) throws MP4Exception {
 		try {
+			// http://code.google.com/p/mp4parser/
 			List<Atom> atoms = new ArrayList<Atom>();
-			MP4VideoFileReader reader = new MP4VideoFileReader();
-			AudioFile mp4 = reader.read(mp4File);
-			Tag tag = mp4.getTag();
-			Iterator<TagField> it = tag.getFields();
-			while (it.hasNext()) {
-				TagField field = it.next();
-				Atom atom = new Atom(field.getId(),getAtomTextValue(field));
-				atoms.add(atom);
-			}
+
+			IsoFile isoFile = getIsoFile(mp4File,getProperties());
+	        isoFile.parse();
+
+	         Box blah = IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta");
+	        AppleItemListBox appleItemListBox = (AppleItemListBox) IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta/ilst");
+	        if (appleItemListBox!=null) {
+		        Box[] boxes = appleItemListBox.getBoxes();
+				if (boxes !=null) {
+			        for (Box box : boxes) {
+			        	atoms.add(getAtomTextValue(box));
+			        }
+				}
+	        }
 			return atoms;
-		} catch (CannotReadException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
-		} catch (TagException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
-		} catch (ReadOnlyFileException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
-		} catch (InvalidAudioFrameException e) {
-			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		} catch (IOException e) {
 			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
 		}
+
 	}
 
-	private String getAtomTextValue(TagField field) throws UnsupportedEncodingException,MP4Exception {
-		if (field instanceof Mp4TagTextField) {
-			return ((Mp4TagTextField)field).getContent();
+	private Properties getProperties() throws MP4Exception {
+		InputStream is = null;
+		try {
+			Properties properties = new Properties();
+			is = MP4Manager.class.getResourceAsStream("default.properties");
+			properties.load(is);
+			properties.setProperty("ilst-"+"catg", GenericStringBox.class.getName()+"(type)");
+			properties.setProperty("ilst-"+"ﾩday", AppleRecordingYearBox.class.getName()+"()");
+			properties.setProperty("ilst-"+"ﾩnam", AppleTrackTitleBox.class.getName()+"()");
+			properties.setProperty("ilst-"+"ﾩgen", AppleCustomGenreBox.class.getName()+"()");
+		    return properties;
 		}
-		else if (field instanceof Mp4TagByteField) {
-			return ((Mp4TagByteField)field).getContent();
+		catch (IOException e) {
+			throw new MP4Exception("Unable to create mp4 parser",e);
 		}
-		else if (field instanceof Mp4TagCoverField) {
-			Mp4TagCoverField cover = (Mp4TagCoverField)field;
-			return "Artwork of type " + cover.getFieldType() +" and size " + cover.getDataSize();
+		finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				log.error("Unable to close stream",e);
+			}
 		}
-		throw new MP4Exception("Unsupported field type "+field.getClass()+" of field '" + field.getId());
+
 	}
 
+	private IsoFile getIsoFile(File mp4File,Properties properties) throws MP4Exception {
+		try {
+		    PropertyBoxParserImpl boxParser = new PropertyBoxParserImpl(properties);
+
+			IsoBufferWrapper isoBufferWrapper = new IsoBufferWrapper(mp4File);
+			IsoFile isoFile = new IsoFile(isoBufferWrapper,boxParser);
+			return isoFile;
+		}
+		catch (IOException e) {
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
+		}
+	}
+
+	private Atom getAtomTextValue(Box box) throws MP4Exception, IOException {
+		String type = new String(box.getType(),Charset.forName("ISO-8859-1"));
+		if (box instanceof AppleCoverBox ) {
+			Atom a = AtomFactory.createAtom(type,((AppleCoverBox) box).getDisplayName());
+			return a;
+		}
+		else if (box instanceof AbstractAppleMetaDataBox ) {
+			AbstractAppleMetaDataBox b = (AbstractAppleMetaDataBox)box;
+
+			Atom a = AtomFactory.createAtom(type,b.getValue());
+			return a;
+		}
+		else if (box instanceof GenericStringBox) {
+			GenericStringBox b = (GenericStringBox)box;
+			Atom a = AtomFactory.createAtom(type,b.getValue());
+			return a;
+		}
+		throw new MP4Exception("Unknown atom table: " + box.getClass());
+	}
+
+	static long toLong(byte b) {
+        return b < 0 ? b + 256 : b;
+    }
 
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
@@ -101,57 +155,165 @@ public class MP4Manager implements IMP4Manager {
 	@Override
 	public void updateEpsiode(File mp4File, Episode episode) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(new Atom("stik", "TV Show"));
-		atoms.add(new Atom("tven", episode.getEpisodeId()));
-		atoms.add(new Atom("tvsh", episode.getSeason().getShow().getName()));
-		atoms.add(new Atom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
-		atoms.add(new Atom("tves", String.valueOf(episode.getEpisodeNumber())));
-		atoms.add(new Atom("©day", episode.getDate().toString()));
-		atoms.add(new Atom("©nam", episode.getTitle()));
-		atoms.add(new Atom("desc", episode.getSummary()));
+		atoms.add(AtomFactory.createAtom(AtomStik.Value.TV_SHOW));
+		atoms.add(AtomFactory.createAtom("tven", episode.getEpisodeId()));
+		atoms.add(AtomFactory.createAtom("tvsh", episode.getSeason().getShow().getName()));
+		atoms.add(AtomFactory.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
+		atoms.add(AtomFactory.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
+		atoms.add(AtomFactory.createAtom("©day", episode.getDate().toString()));
+		atoms.add(AtomFactory.createAtom("©nam", episode.getTitle()));
+		atoms.add(AtomFactory.createAtom("desc", episode.getSummary()));
 //		atoms.add(new Atom("rtng", ));
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
-			atoms.add(new Atom("©gen", episode.getSeason().getShow().getGenres().get(0)));
-			atoms.add(new Atom("catg", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(AtomFactory.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(AtomFactory.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
 		}
 
 		update(mp4File, atoms);
 	}
 
 	private void update(File mp4File, List<Atom> atoms) throws MP4Exception {
+		Properties properties = getProperties();
+		IsoFile isoFile = getIsoFile(mp4File,properties);
+		FileOutputStream os = null;
 		try {
-			MP4VideoFileReader reader = new MP4VideoFileReader();
-			AudioFile mp4 = reader.read(mp4File);
-			Mp4Tag tag = (Mp4Tag) mp4.getTag();
+			isoFile.parse();
 			for (Atom atom : atoms) {
 				if (atom.getName().equals("covr")) {
-					Artwork art = new Artwork();
-					art.setFromFile(new File(atom.getValue()));
-					tag.setField(art);
+					writeArtworkFiled(isoFile,atom,properties);
 				}
 				else {
-					tag.setField(new Mp4TagTextField(atom.getName(),atom.getValue()));
+					writeTextField(isoFile,atom,properties);
 				}
 			}
-			mp4.commit();
+
+			File newFile = FileHelper.createTempFile("media", ".mp4");
+			FileHelper.delete(newFile);
+			os = new FileOutputStream(newFile);
+			isoFile.getBox(new IsoOutputStream(os));
+			FileHelper.delete(mp4File);
+			FileHelper.copy(newFile, mp4File);
+			if (log.isDebugEnabled()) {
+				log.debug("Created mp4 file '"+mp4File.getAbsolutePath()+"' with size " + mp4File.length());
+			}
 		}
-		catch (CannotReadException e) {
-			e.printStackTrace();
-			throw new MP4Exception("Unable to read mp4 file: " + mp4File.getAbsolutePath(),e);
-		} catch (IOException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
-		} catch (TagException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
-		} catch (ReadOnlyFileException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
-		} catch (InvalidAudioFrameException e) {
-			throw new MP4Exception("Unable to update mp4 file: " + mp4File.getAbsolutePath(),e);
-		} catch (CannotWriteException e) {
-			throw new MP4Exception("Unable to write mp4 file: " + mp4File.getAbsolutePath(),e);
+		catch (IOException e) {
+			throw new MP4Exception("Unable to list the atoms in the file: " + mp4File.getAbsolutePath(),e);
+		}
+		finally {
+			try {
+				if (os!=null) {
+					os.close();
+				}
+			} catch (IOException e) {
+				log.error("Unable to close stream",e);
+			}
+		}
+
+	}
+
+	private void writeArtworkFiled(IsoFile isoFile, Atom atom,Properties properties) throws IOException {
+		AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
+
+		String name = atom.getName();
+		if (atom.getName().equals("covr")) {
+			AppleCoverBox box = (AppleCoverBox) IsoFileConvenienceHelper.get(appleItemListBox, name);
+			if (box!=null) {
+				appleItemListBox.removeBox(box);
+			}
+
+			box = new AppleCoverBox();
+			box.setJpg(readFile(new File(atom.getValue())));
+			appleItemListBox.addBox(box);
 		}
 	}
 
+	public byte[] readFile(File file) throws IOException {
+		FileInputStream fin = null;
+		try {
+
+			fin = new FileInputStream(file);
+
+			byte fileContent[] = new byte[(int) file.length()];
+
+			fin.read(fileContent);
+
+			return fileContent;
+		} finally {
+			if (fin != null) {
+				fin.close();
+			}
+		}
+	}
+
+	private void writeTextField(IsoFile isoFile, Atom atom,Properties properties) throws MP4Exception {
+		AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
+
+		String name = atom.getName();
+		Box box = IsoFileConvenienceHelper.get(appleItemListBox, name);
+		if (box!=null) {
+			appleItemListBox.removeBox(box);
+		}
+
+		box = createBox(atom,properties);
+		appleItemListBox.addBox(box);
+	}
+
+	protected AppleItemListBox findAppleItemListBox(IsoFile isoFile) {
+		AbstractContainerBox moovBox = (AbstractContainerBox)IsoFileConvenienceHelper.get(isoFile,"moov");
+		if (moovBox==null) {
+			moovBox = new MovieBox();
+			isoFile.addBox(moovBox);
+		}
+		AbstractContainerBox udtaBox = (AbstractContainerBox)IsoFileConvenienceHelper.get(moovBox,"udta");
+		if (udtaBox==null) {
+			udtaBox = new UserDataBox();
+			moovBox.addBox(udtaBox);
+		}
+		MetaBox metaBox = (MetaBox)IsoFileConvenienceHelper.get(udtaBox,"meta");
+		if (metaBox==null) {
+			metaBox = new MetaBox();
+			udtaBox.addBox(metaBox);
+		}
+		AppleItemListBox appleItemListBox = (AppleItemListBox)IsoFileConvenienceHelper.get(metaBox,"ilst");
+		if (appleItemListBox==null) {
+			appleItemListBox = new AppleItemListBox();
+			metaBox.addBox(appleItemListBox);
+		}
+		return appleItemListBox;
+	}
+
+	private Box createBox(Atom atom, Properties properties) throws MP4Exception {
+		String prop = properties.getProperty("ilst-"+atom.getName());
+		if (prop==null) {
+			throw new MP4Exception("Unable to create MP4 box with name '"+atom.getName()+"'");
+		}
+		if (prop.contains(GenericStringBox.class.getName())) {
+			GenericStringBox box = new GenericStringBox(atom.getName().getBytes());
+			box.setValue(atom.getValue());
+			return box;
+		}
+		else {
+			if (prop.endsWith("()")) {
+				String className = prop.substring(0,prop.length()-2);
+				try {
+					Class<?> c = Class.forName(className);
+					AbstractAppleMetaDataBox b = (AbstractAppleMetaDataBox ) c.newInstance();
+					atom.updateBoxValue(b);
+					return b;
+				} catch (ClassNotFoundException e) {
+					throw new MP4Exception("Unable to create MP4 box of type '"+className+"'",e);
+				} catch (InstantiationException e) {
+					throw new MP4Exception("Unable to create MP4 box of type '"+className+"'",e);
+				} catch (IllegalAccessException e) {
+					throw new MP4Exception("Unable to create MP4 box of type '"+className+"'",e);
+				}
+			}
+		}
+
+		throw new MP4Exception("Unable to create box of type: " +atom.getName() );
+	}
 
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
@@ -164,27 +326,27 @@ public class MP4Manager implements IMP4Manager {
 	@Override
 	public void updateFilm(File mp4File, Film film) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(new Atom("stik", "Movie"));
-		atoms.add(new Atom("©day", film.getDate().toString()));
-		atoms.add(new Atom("©nam", film.getTitle()));
-		atoms.add(new Atom("desc", film.getDescription()));
+		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
+		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
+		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
+		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
 		if (film.getImageURL() != null) {
 			File artwork;
 			try {
 				artwork = downloadToTempFile(film.getImageURL());
-				atoms.add(new Atom("covr", artwork.getAbsolutePath()));
+				atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
 			} catch (IOException e) {
 				log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
 				return;
 			}
 		}
 		if (film.getPreferredGenre() != null) {
-			atoms.add(new Atom("©gen", film.getPreferredGenre()));
-			atoms.add(new Atom("catg", film.getPreferredGenre()));
+			atoms.add(AtomFactory.createAtom("©gen", film.getPreferredGenre()));
+			atoms.add(AtomFactory.createAtom("catg", film.getPreferredGenre()));
 		} else {
 			if (film.getGenres().size() > 0) {
-				atoms.add(new Atom("©gen", film.getGenres().get(0)));
-				atoms.add(new Atom("catg", film.getGenres().get(0)));
+				atoms.add(AtomFactory.createAtom("©gen", film.getGenres().get(0)));
+				atoms.add(AtomFactory.createAtom("catg", film.getGenres().get(0)));
 			}
 		}
 		update(mp4File, atoms);

@@ -28,13 +28,12 @@
 
     <!-- Lib classpaths -->
     <path id="run-time.libs.classpath">
-        <pathelement location="${lib.dir}/jericho-html.jar"/>
         <pathelement location="${lib.dir}/commons-logging.jar"/>
         <pathelement location="${lib.dir}/commons-cli.jar"/>
     	<pathelement location="${lib.dir}/commons-lang.jar"/>
+    	<pathelement location="${lib.dir}/isoparser.jar"/>
         <pathelement location="${lib.dir}/log4j.jar"/>
     	<pathelement location="${lib.dir}/antlr.jar"/>
-    	<pathelement location="${lib.dir}/jaudiotagger.jar"/>
     </path>
 
     <path id="compile-time.libs.classpath">
