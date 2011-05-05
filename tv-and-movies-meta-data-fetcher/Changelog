@@ -1,3 +1,9 @@
+* Thy May 5 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Removed need for jaudiotagger, instead using isoparser.
+- Rewritten the MP4Itines store to use isoparser.
+- Many bug fixes
+- Added new action for change media file permissions and ownership
+- New command line tool for (mm-manager) which performs action on media files
 * Mon Apr 11 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Added the concept of actions and made the renamer a action that can be applied to media folders
 - Renamer extensions can now be configured via the config file
