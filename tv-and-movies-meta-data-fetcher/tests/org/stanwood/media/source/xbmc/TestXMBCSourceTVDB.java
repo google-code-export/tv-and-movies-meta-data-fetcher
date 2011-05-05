@@ -160,7 +160,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("2006-09-25",EPISODE_DATE_FORMAT.format(episode.getDate()));
 		Assert.assertEquals("308906",episode.getEpisodeId());
 		Assert.assertEquals(1,episode.getEpisodeNumber());
-		Assert.assertEquals(8.2F,episode.getRating().getRating(),0);
+		Assert.assertEquals(8.3F,episode.getRating().getRating(),0);
 		Assert.assertEquals(1,episode.getRating().getNumberOfVotes());
 		Assert.assertEquals(season,episode.getSeason());
 		Assert.assertEquals("In this episode, we are introduced to Peter Petrelli, a young man who dreams of flying, and his brother Nathan, a ruthless politician who thinks that Peter is dreaming his life away. Meanwhile, ordinary people from all around the world are starting to suspect that they have abilities beyond those of normal humans. Artist Isaac Mendez believes that he is painting the future, high school cheerleader Claire Bennet is suddenly able to recover from any wound almost instantly, Japanese businessman Hiro Nakamura tries to convince a friend that he can bend space and time, and single mother Niki Sanders starts seeing strange things in mirrors.Upon learning of his father's death, genetics Professor Mohinder Suresh begins to look into his research for a clue to why he was killed. When he follows his father's trail to New York City, however, Mohinder learns that someone else is on the trail of the same research.  Someone who may kill to protect the secrets of the next step in human evolution.",episode.getSummary());
