@@ -26,7 +26,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 
 
 	static {
-		strategies.add(new ReversePatternSearchStrategy(Token.TITLE));
+		strategies.add(new ReversePatternSearchStrategy(Token.TITLE,true));
 
 		// Search using a NFO file next to the film if it exists
 		strategies.add(new FilmNFOSearchStrategy());
