@@ -1,4 +1,6 @@
-* Thy May 5 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+* Fri May 6 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Updated the action interface to better cope with ideas for new actions
+* Thu May 5 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Removed need for jaudiotagger, instead using isoparser.
 - Rewritten the MP4Itines store to use isoparser.
 - Many bug fixes
