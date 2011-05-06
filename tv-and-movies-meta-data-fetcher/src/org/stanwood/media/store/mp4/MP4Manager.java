@@ -66,7 +66,6 @@ public class MP4Manager implements IMP4Manager {
 			IsoFile isoFile = getIsoFile(mp4File,getProperties());
 	        isoFile.parse();
 
-	         Box blah = IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta");
 	        AppleItemListBox appleItemListBox = (AppleItemListBox) IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta/ilst");
 	        if (appleItemListBox!=null) {
 		        Box[] boxes = appleItemListBox.getBoxes();
