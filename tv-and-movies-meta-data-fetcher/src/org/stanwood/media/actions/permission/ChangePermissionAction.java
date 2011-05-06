@@ -1,17 +1,23 @@
 package org.stanwood.media.actions.permission;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.Executor;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.util.AbstractExecutable;
+import org.stanwood.media.logging.LoggerOutputStream;
 
 public class ChangePermissionAction extends AbstractAction {
 
@@ -44,30 +50,20 @@ public class ChangePermissionAction extends AbstractAction {
 		params.put(key,value);
 	}
 
-	private void executeCommand(String ... args) throws ActionException {
-		AbstractExecutable cmd =  new AbstractExecutable();
-		String debug = getCommand(args);
+	private void executeCommand(String exec,String ... args) throws ActionException {
+		CommandLine cmdLine= getCommand(exec,args);
+		Executor cmd = new DefaultExecutor();
 		try {
-			cmd.execute(args);
-			String errorOutput = cmd.getErrorStream().trim();
-			if (errorOutput.length()>0) {
-				log.error(errorOutput);
-			}
+			cmd.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
+			cmd.execute(cmdLine);
 		} catch (IOException e) {
-			throw new ActionException("Unable to execute system command: " + debug);
-		} catch (InterruptedException e) {
-			throw new ActionException("Unable to execute system command: " + debug);
+			throw new ActionException("Unable to execute system command: " + cmdLine.toString());
 		}
 	}
 
-	private String getCommand(String ... args) {
-		StringBuilder buffer = new StringBuilder();
-		for (String a : args) {
-			if (buffer.length()>0) {
-				buffer.append(" ");
-			}
-			buffer.append(a);
-		}
-		return buffer.toString();
+	private CommandLine getCommand(String exec,String ... args) {
+		CommandLine cmdLine = new CommandLine(exec);
+		cmdLine.addArguments(args);
+		return cmdLine;
 	}
 }
