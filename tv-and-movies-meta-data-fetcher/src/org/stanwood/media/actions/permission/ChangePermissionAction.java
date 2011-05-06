@@ -3,7 +3,6 @@ package org.stanwood.media.actions.permission;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.util.AbstractExecutable;
 
 public class ChangePermissionAction extends AbstractAction {
@@ -19,7 +19,7 @@ public class ChangePermissionAction extends AbstractAction {
 	private Map<String,String>params = new HashMap<String,String>();
 
 	@Override
-	public void perform(MediaDirectory dir, List<File> files) throws ActionException {
+	public void perform(MediaDirectory dir, File file,IActionEventHandler eventHandler) throws ActionException {
 		if (params.get("group")!=null && params.get("chgrp")==null) {
 			throw new ActionException("The parameter 'chgrp' must be set if the parameter 'group' has been set.");
 		}
@@ -27,17 +27,15 @@ public class ChangePermissionAction extends AbstractAction {
 			throw new ActionException("The parameter 'chown' must be set if the parameter 'owner' has been set.");
 		}
 
-		for (File file : files) {
-			log.info("Updating permisions of file: " + file.getAbsolutePath());
-			if (params.get("group")!=null) {
-				executeCommand(params.get("chgrp"),params.get("group"),file.getAbsolutePath());
-			}
-			if (params.get("group")!=null) {
-				executeCommand(params.get("chown"),params.get("owner"),file.getAbsolutePath());
-			}
-			if (params.get("group")!=null) {
-				executeCommand(params.get("chmod"),params.get("permissions"),file.getAbsolutePath());
-			}
+		log.info("Updating permisions of file: " + file.getAbsolutePath());
+		if (params.get("group")!=null) {
+			executeCommand(params.get("chgrp"),params.get("group"),file.getAbsolutePath());
+		}
+		if (params.get("group")!=null) {
+			executeCommand(params.get("chown"),params.get("owner"),file.getAbsolutePath());
+		}
+		if (params.get("group")!=null) {
+			executeCommand(params.get("chmod"),params.get("permissions"),file.getAbsolutePath());
 		}
 	}
 

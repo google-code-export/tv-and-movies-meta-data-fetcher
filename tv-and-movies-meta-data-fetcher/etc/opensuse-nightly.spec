@@ -11,7 +11,7 @@ Name:           MediaInfoFetcher
 Requires:       java >= 1.6
 Requires:       jpackage-utils
 Requires:       jakarta-commons-cli = 1.0
-Requires:		jakarta-commons-lang >= 2.6
+Requires:		jakarta-commons-lang >= 2.4
 Requires:       log4j >= 1.2.15
 Requires:       jakarta-commons-logging >= 1.0.4
 Requires:       mysql-connector-java >= 5.1.6
@@ -20,7 +20,7 @@ Requires:		isoparser
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  jakarta-commons-cli = 1.0
-BuildRequires:	jakarta-commons-lang >= 2.6
+BuildRequires:	jakarta-commons-lang >= 2.4
 BuildRequires:	isoparser
 BuildRequires:  java >= 1.6
 BuildRequires:  java-devel >= 1.6

@@ -3,15 +3,13 @@ package org.stanwood.media.actions.rename;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
@@ -45,46 +43,30 @@ public class RenameAction extends AbstractAction {
 	 * @throws ActionException Thrown if their is a problem renaming the files
 	 */
 	@Override
-	public void perform(MediaDirectory dir,List<File> files) throws ActionException {
-		Iterator<File> it =files.iterator();
-		List<File>newFiles = new ArrayList<File>();
-		while (it.hasNext()) {
-			File file = it.next();
-			try {
-				if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
-					File newFile = renameTVShow(dir,file);
-					if (!file.equals(newFile)) {
-						it.remove();
-						newFiles.add(newFile);
-					}
-				} else if (dir.getMediaDirConfig().getMode() == Mode.FILM) {
-					File newFile = renameFilm(dir,file);
-					if (!file.equals(newFile)) {
-						it.remove();
-						newFiles.add(newFile);
-					}
-				} else {
-					throw new ActionException("Unknown rename mode: " + dir.getMediaDirConfig().getMode() );
-				}
-			}
-			catch (PatternException e) {
-				throw new ActionException("Unable to rename file " +file,e);
-			} catch (MalformedURLException e) {
-				throw new ActionException("Unable to rename file " +file,e);
-			} catch (SourceException e) {
-				log.error("Unable to rename file '" + file,e);
-			} catch (IOException e) {
-				throw new ActionException("Unable to rename file " +file,e);
-			} catch (StoreException e) {
-				throw new ActionException("Unable to rename file " +file,e);
+	public void perform(MediaDirectory dir,File file,IActionEventHandler eventHandler) throws ActionException {
+		try {
+			if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
+				renameTVShow(dir,file,eventHandler);
+			} else if (dir.getMediaDirConfig().getMode() == Mode.FILM) {
+				renameFilm(dir,file,eventHandler);
+			} else {
+				throw new ActionException("Unknown rename mode: " + dir.getMediaDirConfig().getMode() );
 			}
 		}
-		for (File newFile : newFiles) {
-			files.add(newFile);
+		catch (PatternException e) {
+			throw new ActionException("Unable to rename file " +file,e);
+		} catch (MalformedURLException e) {
+			throw new ActionException("Unable to rename file " +file,e);
+		} catch (SourceException e) {
+			log.error("Unable to rename file '" + file,e);
+		} catch (IOException e) {
+			throw new ActionException("Unable to rename file " +file,e);
+		} catch (StoreException e) {
+			throw new ActionException("Unable to rename file " +file,e);
 		}
 	}
 
-	private File renameFilm(MediaDirectory dir,File file) throws MalformedURLException, SourceException, IOException, StoreException, PatternException {
+	private File renameFilm(MediaDirectory dir,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
 
 		SearchResult result = searchForId(dir,file);
 		if (result==null) {
@@ -98,7 +80,7 @@ public class RenameAction extends AbstractAction {
 			log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
 			return null;
 		}
-		if (result.getPart()!=null) {
+		if (result.getPart()!=null && !isTestMode()) {
 			boolean found = false;
 			for (VideoFile vf : film.getFiles()) {
 				if (vf.getPart()!=null && vf.getPart().equals(result.getPart()) && vf.getLocation().equals(file)) {
@@ -118,11 +100,11 @@ public class RenameAction extends AbstractAction {
 		PatternMatcher pm = new PatternMatcher();
 		File newName = pm.getNewFilmName(dir.getMediaDirConfig(),film, ext,result.getPart());
 
-		doRename(dir,file, newName,film);
+		doRename(dir,file, newName,film,eventHandler);
 		return newName;
 	}
 
-	private File renameTVShow(MediaDirectory dir,File file) throws MalformedURLException, SourceException, IOException, StoreException, PatternException {
+	private File renameTVShow(MediaDirectory dir,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
 		SearchResult result = searchForId(dir,file);
 		if (result==null) {
 			log.error("Unable to find show id");
@@ -152,7 +134,7 @@ public class RenameAction extends AbstractAction {
 					PatternMatcher pm = new PatternMatcher();
 					File newName = pm.getNewTVShowName(dir.getMediaDirConfig(),show, season, episode, ext);
 
-					doRename(dir,file, newName,episode);
+					doRename(dir,file, newName,episode,eventHandler);
 					file = newName;
 				}
 			}
@@ -168,7 +150,7 @@ public class RenameAction extends AbstractAction {
 
 	}
 
-	private void doRename(MediaDirectory dir,File file, File newFile,IVideo video) throws StoreException {
+	private void doRename(MediaDirectory dir,File file, File newFile,IVideo video,IActionEventHandler eventHandler) throws StoreException, ActionException {
 		// Remove characters from filenames that windows and linux don't like
 		if (file.equals(newFile)) {
 			log.info("File '" + file.getAbsolutePath()+"' already has the correct name.");
@@ -196,7 +178,7 @@ public class RenameAction extends AbstractAction {
 								}
 							}
 						}
-						dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+						eventHandler.sendEventRenamedFile(oldFile, newFile);
 					}
 					else {
 						log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");

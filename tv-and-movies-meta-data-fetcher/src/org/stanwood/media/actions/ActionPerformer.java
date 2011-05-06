@@ -33,7 +33,7 @@ import org.stanwood.media.store.StoreException;
 /**
  * This class is used to perform a list of actions upon files in a media directory
  */
-public class ActionPerformer {
+public class ActionPerformer implements IActionEventHandler {
 
 	private final static Log log = LogFactory.getLog(ActionPerformer.class);
 
@@ -59,7 +59,10 @@ public class ActionPerformer {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions() throws ActionException {
-		processDirectory(dir.getMediaDirConfig().getMediaDir());
+		List<File> sortedFiles = findMediaFiles();
+
+		performActions(sortedFiles);
+
 		for (IStore store : dir.getStores()) {
 			try {
 				store.performedActions(dir);
@@ -69,7 +72,23 @@ public class ActionPerformer {
 		}
 	}
 
-	private void processDirectory(File parentDir) throws ActionException {
+	protected List<File> findMediaFiles() throws ActionException {
+		List<File>mediaFiles = new ArrayList<File>();
+		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles);
+		List<File> sortedFiles = new ArrayList<File>();
+		for (File file : mediaFiles) {
+			sortedFiles.add(file);
+		}
+		Collections.sort(sortedFiles,new Comparator<File>() {
+			@Override
+			public int compare(File arg0, File arg1) {
+				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
+			}
+		});
+		return sortedFiles;
+	}
+
+	private void findMediaFiles(File parentDir,List<File>mediaFiles) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -87,19 +106,9 @@ public class ActionPerformer {
 				return false;
 			}
 		});
-
-		List<File> sortedFiles = new ArrayList<File>();
-		for (File file : files) {
-			sortedFiles.add(file);
+		for (File f : files) {
+			mediaFiles.add(f);
 		}
-		Collections.sort(sortedFiles,new Comparator<File>() {
-			@Override
-			public int compare(File arg0, File arg1) {
-				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
-			}
-		});
-
-		performActions(sortedFiles);
 
 		File dirs[] = parentDir.listFiles(new FileFilter() {
 			@Override
@@ -111,17 +120,35 @@ public class ActionPerformer {
 			}
 		});
 		for (File dir : dirs) {
-			processDirectory(dir);
+			findMediaFiles(dir,mediaFiles);
 		}
 	}
 
 	private void performActions(List<File> files) throws ActionException {
 		log.info(("Processing "+files.size()+" files"));
-		for (IAction action : actions) {
-			action.perform(dir, files);
+		for (File file : files) {
+			for (IAction action : actions) {
+				action.perform(dir, file,this);
+			}
 		}
 		log.info("Finished");
 	}
 
+	@Override
+	public void sendEventNewFile(File file) {
+	}
+
+	@Override
+	public void sendEventDeletedFile(File file) {
+	}
+
+	@Override
+	public void sendEventRenamedFile(File oldFile, File newFile) throws ActionException {
+		try {
+			dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+		} catch (StoreException e) {
+			throw new ActionException("Unable to rename file",e);
+		}
+	}
 
 }
