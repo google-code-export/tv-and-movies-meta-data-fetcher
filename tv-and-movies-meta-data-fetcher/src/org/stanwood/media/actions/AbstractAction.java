@@ -10,6 +10,7 @@ public abstract class AbstractAction implements IAction {
 		this.testMode = testMode;
 	}
 
+	@Override
 	public boolean isTestMode() {
 		return this.testMode;
 	}
