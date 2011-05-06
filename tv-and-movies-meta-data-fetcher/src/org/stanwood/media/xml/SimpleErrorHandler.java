@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.util.FileHelper;
 import org.xml.sax.SAXException;
@@ -75,7 +76,7 @@ public class SimpleErrorHandler extends XMLErrorHandler {
 	private void displayFile(SAXParseException e) {
 		OutputStream os = null;
 		try {
-			os = new LoggerOutputStream();
+			os = new LoggerOutputStream(Level.INFO);
 			FileHelper.displayFile(xmlFile,e.getLineNumber()-5,e.getLineNumber()+5, os);
 		} catch (IOException e1) {
 			log.error(e1.getMessage(),e1);
