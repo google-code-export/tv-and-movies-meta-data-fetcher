@@ -31,6 +31,7 @@
         <pathelement location="${lib.dir}/commons-logging.jar"/>
         <pathelement location="${lib.dir}/commons-cli.jar"/>
     	<pathelement location="${lib.dir}/commons-lang.jar"/>
+    	<pathelement location="${lib.dir}/jakarta-commons-exec.jar"/>    	
     	<pathelement location="${lib.dir}/isoparser.jar"/>
         <pathelement location="${lib.dir}/log4j.jar"/>
     	<pathelement location="${lib.dir}/antlr.jar"/>

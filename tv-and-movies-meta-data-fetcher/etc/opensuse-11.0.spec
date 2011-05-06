@@ -13,8 +13,9 @@ Requires:       java >= 1.6
 Requires:		jpackage-utils
 Requires:		jakarta-commons-cli = 1.0
 Requires:		jakarta-commons-lang >= 2.6
-Requires:       log4j >= 1.2.15
+Requires:		jakarta-commons-exec >= 1.1
 Requires:       jakarta-commons-logging >= 1.0.4
+Requires:       log4j >= 1.2.15
 Requires:       mysql-connector-java >= 5.1.6
 Requires:		isoparser
 BuildRequires:	jpackage-utils >= 2.0.2 
