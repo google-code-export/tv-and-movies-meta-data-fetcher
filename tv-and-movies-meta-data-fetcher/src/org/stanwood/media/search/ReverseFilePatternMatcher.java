@@ -57,12 +57,11 @@ public class ReverseFilePatternMatcher {
 			}
 			i++;
 		}
-
 		matchPattern(path, tokens, regexp);
 	}
 
 	private boolean matchPattern(String path, List<Character> tokens, StringBuilder regexp) {
-		Pattern p = Pattern.compile(regexp.toString());
+		Pattern p = Pattern.compile("^"+regexp.toString()+"$");
 		Matcher m = p.matcher(path);
 		if (m.matches()) {
 			this.values= new HashMap<Token,String>();
