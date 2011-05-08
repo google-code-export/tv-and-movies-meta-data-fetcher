@@ -354,7 +354,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			testConfig.append("      <source id=\""+source.getName()+"\">"+LS);
 			if (sourceParams!=null) {
 				for (Entry<String,String> e : sourceParams.entrySet()) {
-					testConfig.append("      <param key=\""+e.getKey()+"\" value=\""+e.getValue()+"\">"+LS);
+					testConfig.append("      <param name=\""+e.getKey()+"\" value=\""+e.getValue()+"\"/>"+LS);
 				}
 			}
 

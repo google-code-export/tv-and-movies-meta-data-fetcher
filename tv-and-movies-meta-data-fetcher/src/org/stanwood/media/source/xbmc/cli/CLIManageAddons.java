@@ -163,7 +163,7 @@ public class CLIManageAddons extends AbstractLauncher {
 		ca.launch(args);
 	}
 
-	static synchronized void setExitHandler(IExitHandler handler) {
+	public static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}
 

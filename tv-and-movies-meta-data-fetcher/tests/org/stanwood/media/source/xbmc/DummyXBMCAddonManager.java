@@ -26,6 +26,8 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	private static final Pattern THE_MOVIE_DB_IMDB_LOOKUP = Pattern.compile(".*themoviedb.*/Movie\\.imdbLookup/.*/(tt\\d+)");
 	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(\\d+)");
 	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
+	private static final Pattern IDBM_COMBINED = Pattern.compile(".*imdb.com/title/(tt\\d+)/combined");
+	private static final Pattern IDBM_POSTERS = Pattern.compile(".*imdb.com/title/(tt\\d+)/posters");
 	private static final Pattern UPDATE_SIZE = Pattern.compile(".*mirrors.xbmc.org/addons/dharma/(.*)");
 
 	private File updateSite;
@@ -62,6 +64,14 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		m = THE_MOVIE_DB_IMDB_LOOKUP.matcher(strUrl);
 		if (m.matches()) {
 			return Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html");
+		}
+		m = IDBM_COMBINED.matcher(strUrl);
+		if (m.matches()) {
+			return Data.class.getResourceAsStream("imdb-combined-"+m.group(1)+".html");
+		}
+		m = IDBM_POSTERS.matcher(strUrl);
+		if (m.matches()) {
+			return Data.class.getResourceAsStream("imdb-posters-"+m.group(1)+".html");
 		}
 		m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
 		if (m.matches()) {
