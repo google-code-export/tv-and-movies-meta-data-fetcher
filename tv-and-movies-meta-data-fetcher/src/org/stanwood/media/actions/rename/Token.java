@@ -1,22 +1,25 @@
 package org.stanwood.media.actions.rename;
 
+import java.io.File;
+
 import org.stanwood.media.source.xbmc.expression.ValueType;
 
 public enum Token {
+
 	/** the token for "show name" */
-	SHOW_NAME('n',"(.*?)",ValueType.STRING),
+	SHOW_NAME('n',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
 	/** the token for "episode number" */
 	EPISODE('e',"(\\d+)",ValueType.INTEGER),
 	/** the token for "season number" */
 	SEASON('s',"(\\d+)",ValueType.INTEGER),
 	/** the token for "extension" */
-	EXT('x',"(.*?)",ValueType.STRING),
+	EXT('x',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
 	/** the token for "episode or film title" */
-	TITLE('t',"(.*?)",ValueType.STRING),
+	TITLE('t',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
 	/** add a % char */
 	PERCENT('%',"%",ValueType.STRING),
 	/** the token for "show Id" */
-	ID('h',"(.*?)",ValueType.STRING),
+	ID('h',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING),
 	/** the token for "part number" */
 	PART('p',"(\\d+)",ValueType.INTEGER),
 	/** the token for the "year" */

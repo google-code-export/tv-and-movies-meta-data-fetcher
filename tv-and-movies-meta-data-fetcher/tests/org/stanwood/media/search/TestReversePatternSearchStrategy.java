@@ -2,6 +2,7 @@ package org.stanwood.media.search;
 
 import java.io.File;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.actions.rename.Token;
 
@@ -15,6 +16,7 @@ public class TestReversePatternSearchStrategy {
 		TestFilmSearcher.assertSearchDetails("The Movie", null, 2, doSearch("The Movie Part 2.m4v", "%t{ (%y)}{ Part %p}.%x"));
 		TestFilmSearcher.assertSearchDetails("The Movie", "2010", null, doSearch("The Movie (2010).m4v", "%t{ (%y)}{ Part %p}.%x"));
 		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie.m4v", "%t{ (%y)}{ Part %p}.%x"));
+		Assert.assertNull(doSearch(File.separator+"Blah"+File.separator+"The Movie.m4v", "%t{ (%y)}{ Part %p}.%x"));
 	}
 
 	private TSearchDetails doSearch(String filename, String pattern) {
@@ -22,6 +24,9 @@ public class TestReversePatternSearchStrategy {
 		File rootMediaDir = new File(File.separator+"media");
 		File originalFile = new File(rootMediaDir,filename);
 		SearchDetails searchDetails = strategy.getSearch(originalFile, rootMediaDir, pattern, null);
+		if (searchDetails == null) {
+			return null;
+		}
 		TSearchDetails sd = new TSearchDetails(originalFile, searchDetails.getTerm(), searchDetails.getYear(), searchDetails.getPart());
 		return sd;
 	}

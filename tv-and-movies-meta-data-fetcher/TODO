@@ -12,6 +12,8 @@ Media Manager should perform a XBMC update before running
 Make sure that /etc is also checked for a config file
 Add action to change the permissions and ownership of media files
 Change FILM search to to lookup film details from a NFO file.
+	- Delete samples
+Add option to prune empty folders
 
 Version 2.1
 -----------
