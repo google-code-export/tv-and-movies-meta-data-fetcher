@@ -17,6 +17,9 @@ import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCUpdaterException;
+import org.stanwood.media.source.xbmc.updater.IConsole;
 
 public class CLIMediaManager extends AbstractLauncher {
 
@@ -72,6 +75,26 @@ public class CLIMediaManager extends AbstractLauncher {
 		try  {
 			for (IAction action : rootMediaDir.getActions()) {
 				action.setTestMode(getController().isTestRun());
+			}
+
+			if (!getController().isTestRun()) {
+				try {
+					getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
+						@Override
+						public void error(String error) {
+							log.info(error);
+						}
+
+						@Override
+						public void info(String info) {
+							log.info(info);
+						}
+					});
+				} catch (XBMCUpdaterException e) {
+					log.error("Unable to update XBMC addons",e);
+				} catch (XBMCException e) {
+					log.error("Unable to update XBMC addons",e);
+				}
 			}
 
 			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
