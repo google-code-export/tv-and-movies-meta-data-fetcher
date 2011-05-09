@@ -39,8 +39,14 @@ public class MediaDirectory {
 
 	private MediaDirConfig dirConfig;
 
+	private AbstractMediaSearcher filmSearcher;
+
+	private AbstractMediaSearcher showSearcher;
+
 	public MediaDirectory(Controller controller,ConfigReader config,File mediaDir) throws ConfigException {
 		this.controller = controller;
+
+		createSearchers();
 
 		dirConfig = config.getMediaDirectory(mediaDir);
 		stores = config.loadStoresFromConfigFile(controller,dirConfig);
@@ -53,6 +59,32 @@ public class MediaDirectory {
 		} catch (SourceException e) {
 			throw new ConfigException("Unable to setup the sources",e);
 		}
+	}
+
+	protected void createSearchers() {
+		this.filmSearcher = new FilmSearcher() {
+			@Override
+			public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+				StringBuilder term = new StringBuilder(name);
+				SearchHelper.removeUnwantedCharacters(term);
+				if (name==null) {
+					return null;
+				}
+				return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
+			}
+		};
+
+		this.showSearcher = new ShowSearcher() {
+			@Override
+			public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+				if (name==null) {
+					return null;
+				}
+				StringBuilder term = new StringBuilder(name);
+				SearchHelper.removeUnwantedCharacters(term);
+				return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
+			}
+		};
 	}
 
 	/**
@@ -318,31 +350,10 @@ public class MediaDirectory {
 			MalformedURLException, IOException {
 		AbstractMediaSearcher s = null;
 		if (dirConfig.getMode() == Mode.TV_SHOW) {
-			s = new ShowSearcher() {
-				@Override
-				public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
-					if (name==null) {
-						return null;
-					}
-					StringBuilder term = new StringBuilder(name);
-					SearchHelper.removeUnwantedCharacters(term);
-					return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
-				}
-			};
-			return s.search(mediaFile,this);
+			s = showSearcher;
 		}
 		else if (dirConfig.getMode() == Mode.FILM) {
-			s = new FilmSearcher() {
-				@Override
-				public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
-					StringBuilder term = new StringBuilder(name);
-					SearchHelper.removeUnwantedCharacters(term);
-					if (name==null) {
-						return null;
-					}
-					return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
-				}
-			};
+			s = filmSearcher;
 		}
 		else {
 			return null;
