@@ -52,8 +52,10 @@ public class LogSetupHelper {
 	 * @param configName The name of the configuration file stored in the same package as this class.
 	 */
 	public static void initLogingInternalConfigFile(String configName) {
-		resetLogging();
-		PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+		if (!configName.equals("")) {
+			resetLogging();
+			PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+		}
 	}
 
 	public static void initLogging(OutputStream stdout, OutputStream stderr) {

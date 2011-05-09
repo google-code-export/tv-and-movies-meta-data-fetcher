@@ -24,7 +24,7 @@ metadata.artists.naver.com            | Not Installed    |                   | 1
 metadata.artists.top100.cn            | Not Installed    |                   | 1.0.0            
 metadata.artists.yoyo.pl              | Not Installed    |                   | 1.0.9            
 metadata.asiandb.com                  | Not Installed    |                   | 1.0.3            
-metadata.atmovies.com.tw              | Not Installed    |                   | 1.0.4            
+metadata.atmovies.com.tw              | Not Installed    |                   | 1.0.5            
 metadata.bestanime.co.kr              | Not Installed    |                   | 1.0.2            
 metadata.beyazperde.mynet.com         | Not Installed    |                   | 1.0.2            
 metadata.cine.passion-xbmc.org        | Not Installed    |                   | 1.1.4            
@@ -81,7 +81,7 @@ metadata.videobuster.de               | Not Installed    |                   | 1
 metadata.worldart.ru                  | Not Installed    |                   | 1.1.0            
 metadata.yahoomusic.com               | Not Installed    |                   | 1.0.4            
 plugin.audio.abradio.cz               | Not Installed    |                   | 1.0.0            
-plugin.audio.dr.dk.netradio           | Not Installed    |                   | 1.0.3            
+plugin.audio.dr.dk.netradio           | Not Installed    |                   | 1.1.0            
 plugin.audio.engadget                 | Not Installed    |                   | 0.0.2            
 plugin.audio.hvsc                     | Not Installed    |                   | 0.7              
 plugin.audio.icecast                  | Not Installed    |                   | 0.0.8            
@@ -91,7 +91,7 @@ plugin.audio.luisterpaal              | Not Installed    |                   | 1
 plugin.audio.modland                  | Not Installed    |                   | 0.11             
 plugin.audio.mozart                   | Not Installed    |                   | 0.0.3            
 plugin.audio.npr                      | Not Installed    |                   | 1.1.0            
-plugin.audio.podcatcher               | Not Installed    |                   | 0.1.1            
+plugin.audio.podcatcher               | Not Installed    |                   | 0.1.2            
 plugin.audio.relive                   | Not Installed    |                   | 0.7              
 plugin.audio.shoutcast                | Not Installed    |                   | 1.1.1            
 plugin.audio.soundcloud               | Not Installed    |                   | 0.1.5            
@@ -121,6 +121,7 @@ plugin.video.ccctv                    | Not Installed    |                   | 1
 plugin.video.classiccinema            | Not Installed    |                   | 0.7.1            
 plugin.video.cnet.podcasts            | Not Installed    |                   | 0.0.4            
 plugin.video.day9                     | Not Installed    |                   | 0.4.0            
+plugin.video.diy                      | Not Installed    |                   | 0.0.1            
 plugin.video.dmi.dk                   | Not Installed    |                   | 1.0.0            
 plugin.video.dr.dk.bonanza            | Not Installed    |                   | 1.0.6            
 plugin.video.dr.dk.live               | Not Installed    |                   | 1.2.3            

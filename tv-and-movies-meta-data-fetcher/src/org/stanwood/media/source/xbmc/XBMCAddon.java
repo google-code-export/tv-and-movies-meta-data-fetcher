@@ -89,7 +89,10 @@ public class XBMCAddon extends XMLParser {
 		String type = node.getAttribute("type");
 		String defaultValue = node.getAttribute("default");
 		String id = node.getAttribute("id");
-		if (type.equals("bool")) {
+		if (type.equals("sep") || id.length()==0) {
+			// do nothing
+		}
+		else if (type.equals("bool")) {
 			Value value = eval.eval(defaultValue);
 			if (value.getType()!=ValueType.BOOLEAN) {
 				throw new XBMCException("Unable to get the default value for setting '"+id+"'");
@@ -447,7 +450,8 @@ public class XBMCAddon extends XMLParser {
 	public void setSetting(String key, String expression) throws XBMCException {
 		try {
 			if (!eval.getVariables().containsKey(key)) {
-				throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
+				return;
+//				throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
 			}
 			eval.getVariables().put(key, eval.eval(expression));
 		}

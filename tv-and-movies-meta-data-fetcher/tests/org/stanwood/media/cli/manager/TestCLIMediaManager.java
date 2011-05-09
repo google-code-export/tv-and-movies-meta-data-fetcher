@@ -96,7 +96,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -166,7 +166,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -242,7 +242,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,RenameAction.class);
 
 			// Do the renaming
-			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -304,7 +304,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,RenameAction.class);
 			CLIMediaManager.main(args);
 

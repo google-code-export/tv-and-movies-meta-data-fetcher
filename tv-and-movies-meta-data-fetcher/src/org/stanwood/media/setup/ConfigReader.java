@@ -184,9 +184,9 @@ public class ConfigReader extends BaseConfigReader {
 				if (XBMCSource.class.isAssignableFrom(c)) {
 					List<ISource> xbmcSources = controller.getXBMCAddonManager().getSources();
 					if (sourceConfig.getParams() != null) {
+						List<String>addons = null;
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
-							List<String>addons = null;
 							if (key.equals("scrapers")) {
 								addons = new ArrayList<String>();
 								StringTokenizer tok = new StringTokenizer(value,",");
@@ -194,15 +194,20 @@ public class ConfigReader extends BaseConfigReader {
 									addons.add("xbmc-"+tok.nextToken());
 								}
 							}
+						}
 
-							Iterator<ISource> it = xbmcSources.iterator();
-							while (it.hasNext()) {
-								ISource source = it.next();
-								if (addons!=null && !addons.contains(source.getSourceId())) {
-									it.remove();
-								}
-								else {
-									setParamOnSource( source, key, value);
+						for (String key : sourceConfig.getParams().keySet()) {
+							if (!key.equals("scrapers")) {
+								String value = sourceConfig.getParams().get(key);
+								Iterator<ISource> it = xbmcSources.iterator();
+								while (it.hasNext()) {
+									ISource source = it.next();
+									if (addons!=null && !addons.contains(source.getSourceId())) {
+										it.remove();
+									}
+									else {
+										setParamOnSource( source, key, value);
+									}
 								}
 							}
 						}

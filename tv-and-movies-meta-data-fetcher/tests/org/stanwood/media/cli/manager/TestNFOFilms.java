@@ -66,8 +66,8 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 			createFiles(mediaDir);
 
 			String pattern = "%t{ (%y)}{ Part %p}.%x";
-//			mmXBMCCmd(mediaDir, pattern,"install","metadata.imdb.com");
-			mmXBMCCmd(mediaDir, pattern,"update");
+			mmXBMCCmd(mediaDir, pattern,"--log_config","NOINIT","install","metadata.imdb.com");
+			mmXBMCCmd(mediaDir, pattern,"--log_config","NOINIT","update");
 			mmManagerCmd(mediaDir, pattern);
 
 			List<String>files = FileHelper.listFilesAsStrings(mediaDir);
@@ -94,8 +94,9 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters","false");
 		params.put("trailer","false");
+//		params.put("scrapers", "metadata.imdb.com");
 		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,RenameAction.class);
-		String args[] = new String[] {"-d",mediaDir.getAbsolutePath()};
+		String args[] = new String[] {"-d",mediaDir.getAbsolutePath(),"--log_config","NOINIT"};
 		CLIMediaManager.main(args);
 	}
 
