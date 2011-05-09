@@ -454,6 +454,10 @@ public class ConfigReader extends BaseConfigReader {
 	public static File getDefaultConfigFile() throws ConfigException {
 		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
 		if (!file.exists()) {
+			file = new File(File.separator+"etc"+File.separator+"mediamanager-conf.xml");
+		}
+		if (!file.exists()) {
+			file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
 			try {
 				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file);
 			} catch (IOException e) {
