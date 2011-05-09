@@ -1,5 +1,9 @@
 package org.stanwood.media.actions;
 
+import java.io.File;
+
+import org.stanwood.media.MediaDirectory;
+
 public abstract class AbstractAction implements IAction {
 
 
@@ -14,4 +18,9 @@ public abstract class AbstractAction implements IAction {
 	public boolean isTestMode() {
 		return this.testMode;
 	}
+
+	@Override
+	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) {
+	}
+
 }

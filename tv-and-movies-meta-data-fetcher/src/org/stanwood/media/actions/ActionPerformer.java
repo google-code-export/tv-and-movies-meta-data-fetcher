@@ -41,6 +41,10 @@ public class ActionPerformer implements IActionEventHandler {
 	private MediaDirectory dir;
 	private List<IAction> actions;
 
+	private ArrayList<File> dirs;
+
+	private ArrayList<File> sortedFiles;
+
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -59,9 +63,10 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions() throws ActionException {
-		List<File> sortedFiles = findMediaFiles();
+		findMediaFiles();
 
-		performActions(sortedFiles);
+		performActionsFiles(sortedFiles);
+		performActionsDirs(sortedFiles);
 
 		for (IStore store : dir.getStores()) {
 			try {
@@ -72,10 +77,11 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	protected List<File> findMediaFiles() throws ActionException {
+	protected void findMediaFiles() throws ActionException {
 		List<File>mediaFiles = new ArrayList<File>();
-		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles);
-		List<File> sortedFiles = new ArrayList<File>();
+		dirs = new ArrayList<File>();
+		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles,dirs);
+		sortedFiles = new ArrayList<File>();
 		for (File file : mediaFiles) {
 			sortedFiles.add(file);
 		}
@@ -85,10 +91,9 @@ public class ActionPerformer implements IActionEventHandler {
 				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
 			}
 		});
-		return sortedFiles;
 	}
 
-	private void findMediaFiles(File parentDir,List<File>mediaFiles) throws ActionException {
+	private void findMediaFiles(File parentDir,List<File>mediaFiles,List<File>mediaDirs) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -120,15 +125,26 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 		});
 		for (File dir : dirs) {
-			findMediaFiles(dir,mediaFiles);
+			mediaDirs.add(dir);
+			findMediaFiles(dir,mediaFiles,mediaDirs);
 		}
 	}
 
-	private void performActions(List<File> files) throws ActionException {
+	private void performActionsFiles(List<File> files) throws ActionException {
 		log.info(("Processing "+files.size()+" files"));
 		for (File file : files) {
 			for (IAction action : actions) {
 				action.perform(dir, file,this);
+			}
+		}
+		log.info("Finished");
+	}
+
+	private void performActionsDirs(List<File> files) throws ActionException {
+		log.info(("Processing "+files.size()+" dirs"));
+		for (File file : files) {
+			for (IAction action : actions) {
+				action.performOnDirectory(dir, file,this);
 			}
 		}
 		log.info("Finished");
