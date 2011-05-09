@@ -30,4 +30,6 @@ public interface IAction {
 	void setTestMode(boolean testMode);
 
 	boolean isTestMode();
+
+	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler);
 }
