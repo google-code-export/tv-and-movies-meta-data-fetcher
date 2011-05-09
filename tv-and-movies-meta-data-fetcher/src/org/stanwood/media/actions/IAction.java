@@ -31,5 +31,5 @@ public interface IAction {
 
 	boolean isTestMode();
 
-	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler);
+	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) throws ActionException;
 }

@@ -3,6 +3,7 @@ package org.stanwood.media.actions.rename;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +22,7 @@ import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This action is used to rename media files based on a pattern, media data that can be found in source/stores and
@@ -34,8 +36,11 @@ public class RenameAction extends AbstractAction {
 	 * The key of the refresh parameter for this action.
 	 */
 	public static final String PARAM_KEY_REFRESH = "refresh";
+	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders";
 
 	private boolean refresh = false;
+
+	private boolean pruneEmptyFolders = false;
 
 	/**
 	 * Perform the rename action of the file files
@@ -196,6 +201,7 @@ public class RenameAction extends AbstractAction {
 	 * <p>This action supports the following parameters
 	 * <ul>
 	 * <li>refresh - if true, will only read from sources. Stores will then be refreshed</li>
+	 * <li>pruneEmptyFolders - If true, then after renaming, empty folders will be deleted</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -204,10 +210,35 @@ public class RenameAction extends AbstractAction {
 		if (key.equalsIgnoreCase(PARAM_KEY_REFRESH)) {
 			refresh = Boolean.parseBoolean(value);
 		}
+		else if (key.equalsIgnoreCase(PARAM_KEY_PRUNE_EMPTY_FOLDERS)) {
+			pruneEmptyFolders = Boolean.parseBoolean(value);
+		}
 		else {
 			throw new ActionException("Unsupported parameter "+key);
 		}
 	}
+
+	@Override
+	public void performOnDirectory(MediaDirectory mediaDir, File dir,IActionEventHandler actionEventHandler) throws ActionException {
+		if (pruneEmptyFolders) {
+			List<File> files = FileHelper.listFiles(dir);
+			if (files.size()==0) {
+				try {
+					if (!isTestMode()) {
+						log.info("Empty directory '"+dir.getAbsolutePath()+"' not deleted as in test mode");
+					}
+					else {
+						FileHelper.delete(dir);
+						log.info("Deleted empty directory '"+dir.getAbsolutePath()+"'");
+					}
+
+				} catch (IOException e) {
+					throw new ActionException("Unable to delete empty directory '"+dir.getAbsolutePath()+"'",e);
+				}
+			}
+		}
+	}
+
 
 
 }

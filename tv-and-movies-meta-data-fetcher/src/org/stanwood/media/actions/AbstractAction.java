@@ -20,7 +20,7 @@ public abstract class AbstractAction implements IAction {
 	}
 
 	@Override
-	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) {
+	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) throws ActionException {
 	}
 
 }
