@@ -12,6 +12,8 @@
 	<classpathentry kind="lib" path="libs/run-time/antlr-runtime-3.1.3.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/commons-exec-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/run-time/rome-1.0.jar"/>
+	<classpathentry kind="lib" path="libs/run-time/jdom.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/run-time/isoparser-svn.r114.jar"/>
 	<classpathentry kind="output" path="bin"/>
