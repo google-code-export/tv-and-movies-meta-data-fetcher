@@ -31,17 +31,17 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	private List<String> extensions;
 
 	@Override
-	public void perform(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) throws ActionException {
+	public void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
 		if (!isTestMode()) {
 			if (extensions!=null) {
-				String ext = FileHelper.getExtension(file);
+				String ext = FileHelper.getExtension(mediaFile);
 				if (!extensions.contains(ext)) {
 					return;
 				}
 			}
 
-			executeCommand(file);
-			sendEvents(actionEventHandler);
+			executeCommand(mediaFile);
+			sendEvents(actionEventHandler,mediaFile);
 		}
 	}
 
@@ -57,20 +57,24 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		}
 	}
 
-	protected void sendEvents(IActionEventHandler actionEventHandler)
+	protected void sendEvents(IActionEventHandler actionEventHandler,File mediaFile)
 			throws ActionException {
 		if (deletedFile!=null) {
-			actionEventHandler.sendEventDeletedFile(new File(deletedFile));
+			actionEventHandler.sendEventDeletedFile(new File(replaceVars(deletedFile,mediaFile)));
 		}
 		if (newFile!=null) {
-			actionEventHandler.sendEventNewFile(new File(newFile));
+			actionEventHandler.sendEventNewFile(new File(replaceVars(newFile,mediaFile)));
 		}
 	}
 
 	private String replaceVars(String cmd,File mediaFile) {
-		String s = cmd.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath());
-		s = cmd.replaceAll("\\$NEWFILE", newFile);
-		s = cmd.replaceAll("\\$DELETEDFILE", deletedFile);
+		String s=cmd;
+		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath());
+		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile));
+		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile));
+		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent());
+		s = s.replaceAll("\\$NEWFILE", newFile);
+		s = s.replaceAll("\\$DELETEDFILE", deletedFile);
 		return s;
 	}
 
