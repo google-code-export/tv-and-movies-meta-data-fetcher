@@ -1,3 +1,6 @@
+* Mon 9 May 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Added new Action for executing a system command on media files
+- Removed the Changed permission action as the above mentioned action can be used instead
 * Fri May 6 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Updated the action interface to better cope with ideas for new actions
 * Thu May 5 2001 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98

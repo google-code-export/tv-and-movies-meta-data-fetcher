@@ -562,5 +562,10 @@ public class FileHelper {
 		return file;
 	}
 
+	public static String getExtension(File file) {
+		String fileName = file.getAbsolutePath();
+		return fileName.substring(fileName.lastIndexOf(".")+1);
+	}
+
 
 }
