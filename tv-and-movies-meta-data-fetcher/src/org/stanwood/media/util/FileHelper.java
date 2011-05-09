@@ -567,5 +567,10 @@ public class FileHelper {
 		return fileName.substring(fileName.lastIndexOf(".")+1);
 	}
 
+	public static String getName(File file) {
+		String fileName = file.getName();
+		return fileName.substring(0,fileName.lastIndexOf("."));
+	}
+
 
 }
