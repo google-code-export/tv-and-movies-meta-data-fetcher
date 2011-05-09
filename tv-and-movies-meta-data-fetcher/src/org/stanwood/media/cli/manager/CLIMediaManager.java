@@ -53,7 +53,7 @@ public class CLIMediaManager extends AbstractLauncher {
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(NOUPDATE_OPTION,"dontUpdateXBMCAddons",false,"If this option is present, then the XBMC addons won't be updated");
+		o = new Option(NOUPDATE_OPTION,"noupdate",false,"If this option is present, then the XBMC addons won't be updated");
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}

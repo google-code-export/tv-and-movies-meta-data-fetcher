@@ -80,20 +80,20 @@ projectDir=File.expand_path(File.dirname(__FILE__))+"/.."
 testsDir=projectDir+"/tests"
 testDataDir=testsDir+"/org/stanwood/media/testdata"
     
-#downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Dude+Where%E2%80%99s+My+Car",testDataDir+"/themoviedb-search-dude-wheres-my-car.html")
-#downloadFile("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/8859",testDataDir+"/themoviedb-film-8859.html")
-#downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/8859",testDataDir+"/themoviedb-images-8859.html")
-#downloadFile("http://akas.imdb.com/title/tt0371746/combined",testDataDir+"/imdb-combined-tt0371746.html");
+downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Dude+Where%E2%80%99s+My+Car",testDataDir+"/themoviedb-search-dude-wheres-my-car.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/8859",testDataDir+"/themoviedb-film-8859.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/8859",testDataDir+"/themoviedb-images-8859.html")
+downloadFile("http://akas.imdb.com/title/tt0371746/combined",testDataDir+"/imdb-combined-tt0371746.html");
 downloadFile("http://akas.imdb.com/title/tt0371746/posters",testDataDir+"/imdb-posters-tt0371746.html");
-#downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=search&title=Iron%20Man&totalChapters=X",testDataDir+"/tagchimp-search-iron-man.html");
-#downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752",testDataDir+"/tagchimp-film-39752.html");
-#downloadFile("http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en",testDataDir+"/tvdb-search-heroes.html")
-#downloadFile("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",testDataDir+"/tvdb-series-79501.zip" )
-#downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man",testDataDir+"/themoviedb-search-iron-man.html")
-#downloadFile("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-film-1726.html")
-#downloadFile("http://akas.imdb.com/title/tt0371746/",testDataDir+"/imdb-tt0371746.html")
-#downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-images-1726.html")
-#downloadFile("http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-imdbLookup-tt0371746.html")
+downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=search&title=Iron%20Man&totalChapters=X",testDataDir+"/tagchimp-search-iron-man.html");
+downloadFile("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752",testDataDir+"/tagchimp-film-39752.html");
+downloadFile("http://www.thetvdb.com/api/GetSeries.php?seriesname=Heroes&language=en",testDataDir+"/tvdb-search-heroes.html")
+downloadFile("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",testDataDir+"/tvdb-series-79501.zip" )
+downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4df77afb854740ea9/Iron+Man",testDataDir+"/themoviedb-search-iron-man.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-film-1726.html")
+downloadFile("http://akas.imdb.com/title/tt0371746/",testDataDir+"/imdb-tt0371746.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-images-1726.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-imdbLookup-tt0371746.html")
 
 
 # Create a ziped update site of XBMC plugins
@@ -111,4 +111,4 @@ files=[
     "metadata.common.movieposterdb.com/metadata.common.movieposterdb.com-1.0.4.zip",
     "metadata.common.impa.com/metadata.common.impa.com-1.0.4.zip"
 ]
-#zipWebsite(testsDir+"/org/stanwood/media/source/xbmc/updates.zip","http://mirrors.xbmc.org/addons/dharma","addons",files)
+zipWebsite(testsDir+"/org/stanwood/media/source/xbmc/updates.zip","http://mirrors.xbmc.org/addons/dharma","addons",files)

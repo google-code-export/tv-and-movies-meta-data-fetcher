@@ -6,7 +6,8 @@ public enum LogConfig {
 	INFOEX("infoex.log4j.properties"),
 	ERROR("error.log4j.properties"),
 	ERROREX("errorex.log4j.properties"),
-	DEBUG("debug.log4j.properties");
+	DEBUG("debug.log4j.properties"),
+	NOINIT("");
 
 	private String filename;
 
