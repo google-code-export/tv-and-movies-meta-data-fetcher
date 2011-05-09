@@ -32,4 +32,6 @@ CLASSPATH=$CLASSPATH:/usr/share/java/jakarta-commons-logging.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jakarta-commons-exec.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/isoparser.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/log4j.jar
+CLASSPATH=$CLASSPATH:/usr/share/java/jdom.jar
+CLASSPATH=$CLASSPATH:/usr/share/java/ROME.jar
 exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
