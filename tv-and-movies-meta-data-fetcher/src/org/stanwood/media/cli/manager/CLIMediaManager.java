@@ -30,7 +30,10 @@ public class CLIMediaManager extends AbstractLauncher {
 
 	private static final List<Option> OPTIONS;
 
+	private static final String NOUPDATE_OPTION = "u";
+
 	private MediaDirectory rootMediaDir = null;
+	private boolean xbmcUpdate = true;
 
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
@@ -47,6 +50,10 @@ public class CLIMediaManager extends AbstractLauncher {
 		OPTIONS.add(o);
 
 		o = new Option(TEST_OPTION,"test",false,"If this option is present, then no changes are performed.");
+		o.setRequired(false);
+		OPTIONS.add(o);
+
+		o = new Option(NOUPDATE_OPTION,"dontUpdateXBMCAddons",false,"If this option is present, then the XBMC addons won't be updated");
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -77,7 +84,7 @@ public class CLIMediaManager extends AbstractLauncher {
 				action.setTestMode(getController().isTestRun());
 			}
 
-			if (!getController().isTestRun()) {
+			if ((!getController().isTestRun()) && xbmcUpdate) {
 				try {
 					getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
 						@Override
@@ -134,6 +141,10 @@ public class CLIMediaManager extends AbstractLauncher {
 				fatal("Media directory '" + dir +"' does not exist.");
 				return false;
 			}
+		}
+
+		if (cmd.hasOption(NOUPDATE_OPTION)) {
+			xbmcUpdate = false;
 		}
 		return true;
 	}
