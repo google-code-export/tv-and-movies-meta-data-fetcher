@@ -10,7 +10,10 @@ Create macosx installer
 Add action to create pod casts of new media that is found
 Change FILM search to to lookup film details from a NFO file.
 	- Option to ignore samples Delete samples
-	- Option to delete anything that did not get renamed in the NFO folder	
+	- Option to delete anything that did not get renamed in the NFO folder
+Allow the checking for updates period to be configured (Default once a day)	
+Make sure that IMDB source can be searched
+Check that we can search multiple XBMC sources
 
 Version 2.1
 -----------
@@ -20,11 +23,8 @@ Remove stuff from the XML Store that has no files assoicated with it
 Extend patterns
 	* Allow formatting of elements like dates
 	* Allow formatting of strings to take only part of the string
-Add action for covert to files m4v
 Create XBMC nfo files from a store instead of the source
 	* Also test this with XBMC to make sure it works as expected
 Add a GUI to manage the XBMC addons
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
-Add a podcast action for new media files
-Find more java based way to change file permisions for the action
