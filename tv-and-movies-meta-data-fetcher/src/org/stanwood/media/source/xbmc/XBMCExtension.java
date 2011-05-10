@@ -148,6 +148,9 @@ public abstract class XBMCExtension extends XMLParser {
 					break;
 				}
 			}
+			if (found==false && !expression.getClear()) {
+				return;
+			}
 		}
 		else {
 			newOutput.append(input);
@@ -202,13 +205,9 @@ public abstract class XBMCExtension extends XMLParser {
 			expr.setNoClean(expNode.getAttribute("noclean"));
 
 
-			if (expNode.getAttribute("clear").equals("yes")){
-				expr.setClear(true);
-			}
+			expr.setClear((expNode.getAttribute("clear").equals("yes")));
 
-			if (expNode.getAttribute("repeat").equals("yes")){
-				expr.setRepeat(true);
-			}
+			expr.setRepeat((expNode.getAttribute("repeat").equals("yes")));
 
 			return expr;
 		}

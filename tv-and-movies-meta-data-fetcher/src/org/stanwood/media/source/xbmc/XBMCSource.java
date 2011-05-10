@@ -523,7 +523,6 @@ public class XBMCSource extends XMLParser implements ISource {
 				public void processContents(String contents) throws SourceException {
 					try {
 		    			Document doc = addon.getScraper(mode).getGetSearchResults(contents, name);
-
 						NodeList entities = XPathAPI.selectNodeList(doc, "*/entity");
 
 						for (int i=0;i<entities.getLength();i++) {
