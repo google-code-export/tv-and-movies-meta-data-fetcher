@@ -22,12 +22,14 @@ import org.stanwood.media.util.FileHelper;
 
 public class ExecuteSystemCommandAction extends AbstractAction {
 
-	private final static String PARAM_CMD_KEY = "command";
+	private final static String PARAM_CMD_ON_FILE_KEY = "commandOnFile";
+	private final static String PARAM_CMD_ON_DIR_KEY = "commandOnDirectory";
 	private final static String PARAM_EXTENSIONS_KEY = "extensions";
 	private final static String PARAM_NEW_FILE_KEY = "newFile";
 	private final static String PARAM_DELETED_FILE_KEY = "deletedFile";
 
-	private String cmd;
+	private String fileCmd;
+	private String dirCmd;
 	private String newFile;
 	private String deletedFile;
 	private List<String> extensions;
@@ -41,18 +43,27 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 				}
 			}
 
-			executeCommand(mediaFile);
+			executeCommand(fileCmd,mediaFile);
 			sendEvents(actionEventHandler,mediaFile);
 		}
 	}
 
-	protected void executeCommand(File file) throws ActionException {
+	@Override
+	public void performOnDirectory(MediaDirectory dir, File directory, IActionEventHandler actionEventHandler)
+			throws ActionException {
+		if (!isTestMode()) {
+			executeCommand(fileCmd,directory);
+			sendEvents(actionEventHandler,directory);
+		}
+	}
+
+	protected void executeCommand(String cmd,File file) throws ActionException {
 		String convertedCmd = replaceVars(cmd,file);
 		CommandLine cmdLine= CommandLine.parse(convertedCmd);
-		Executor cmd = new DefaultExecutor();
+		Executor exec = new DefaultExecutor();
 		try {
-			cmd.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
-			cmd.execute(cmdLine);
+			exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
+			exec.execute(cmdLine);
 		} catch (IOException e) {
 			throw new ActionException("Unable to execute system command: " + cmdLine.toString());
 		}
@@ -81,8 +92,8 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 
 	@Override
 	public void setParameter(String key, String value) throws ActionException {
-		if (key.equalsIgnoreCase(PARAM_CMD_KEY)) {
-			this.cmd = value;
+		if (key.equalsIgnoreCase(PARAM_CMD_ON_FILE_KEY)) {
+			this.fileCmd = value;
 		}
 		else if (key.equalsIgnoreCase(PARAM_NEW_FILE_KEY)) {
 			this.newFile = value;
@@ -96,6 +107,9 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
 			}
+		}
+		else if (key.equalsIgnoreCase(PARAM_CMD_ON_DIR_KEY)) {
+			this.dirCmd = value;
 		}
 		else {
 			throw new ActionException("Unsupported parameter for action '"+key+"'");
@@ -113,5 +127,9 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			IActionEventHandler actionEventHandler) throws ActionException {
 		perform(dir,mediaFile,actionEventHandler);
 	}
+
+
+
+
 
 }
