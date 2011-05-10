@@ -84,25 +84,7 @@ public class CLIMediaManager extends AbstractLauncher {
 				action.setTestMode(getController().isTestRun());
 			}
 
-			if ((!getController().isTestRun()) && xbmcUpdate) {
-				try {
-					getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
-						@Override
-						public void error(String error) {
-							log.info(error);
-						}
-
-						@Override
-						public void info(String info) {
-							log.info(info);
-						}
-					});
-				} catch (XBMCUpdaterException e) {
-					log.error("Unable to update XBMC addons",e);
-				} catch (XBMCException e) {
-					log.error("Unable to update XBMC addons",e);
-				}
-			}
+			doUpdateCheck();
 
 			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
 
@@ -112,6 +94,32 @@ public class CLIMediaManager extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		}
 		return false;
+	}
+
+	private void doUpdateCheck() {
+		if ((!getController().isTestRun()) && xbmcUpdate) {
+			try {
+				log.info("Checking for updated XBMC plugins....");
+				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
+					@Override
+					public void error(String error) {
+						log.info(error);
+					}
+
+					@Override
+					public void info(String info) {
+						log.info(info);
+					}
+				});
+				if (count>0 ) {
+					log.info("Downloaded and installed "+count+" updates");
+				}
+			} catch (XBMCUpdaterException e) {
+				log.error("Unable to update XBMC addons",e);
+			} catch (XBMCException e) {
+				log.error("Unable to update XBMC addons",e);
+			}
+		}
 	}
 
 	/**
