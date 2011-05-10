@@ -16,6 +16,8 @@ import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.logging.LoggerOutputStream;
+import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.util.FileHelper;
 
 public class ExecuteSystemCommandAction extends AbstractAction {
@@ -30,8 +32,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	private String deletedFile;
 	private List<String> extensions;
 
-	@Override
-	public void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
+	private void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
 		if (!isTestMode()) {
 			if (extensions!=null) {
 				String ext = FileHelper.getExtension(mediaFile);
@@ -99,6 +100,18 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		else {
 			throw new ActionException("Unsupported parameter for action '"+key+"'");
 		}
+	}
+
+	@Override
+	public void perform(MediaDirectory dir, Episode episode, File mediaFile,
+			IActionEventHandler actionEventHandler) throws ActionException {
+		perform(dir,mediaFile,actionEventHandler);
+	}
+
+	@Override
+	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,
+			IActionEventHandler actionEventHandler) throws ActionException {
+		perform(dir,mediaFile,actionEventHandler);
 	}
 
 }

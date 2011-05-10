@@ -38,6 +38,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
@@ -374,8 +375,19 @@ public class SapphireStore implements IStore {
 
 	@Override
 	public void performedActions(MediaDirectory dir) {
-		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
+		File xmlFile = getCacheFile(file);
+		if (xmlFile.exists()) {
+			try {
+				FileHelper.delete(xmlFile);
+			} catch (IOException e) {
+				throw new StoreException("Unable to delete store file: " + xmlFile.getAbsolutePath(),e);
+			}
+		}
 	}
 
 }

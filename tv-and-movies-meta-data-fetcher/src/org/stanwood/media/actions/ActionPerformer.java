@@ -18,6 +18,8 @@ package org.stanwood.media.actions;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +28,16 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.FileNameParser;
+import org.stanwood.media.actions.rename.ParsedFileName;
+import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
+import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.model.Season;
+import org.stanwood.media.model.Show;
+import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
@@ -45,6 +57,8 @@ public class ActionPerformer implements IActionEventHandler {
 
 	private ArrayList<File> sortedFiles;
 
+	private boolean testMode;
+
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -52,10 +66,11 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
 	 */
-	public ActionPerformer(List<IAction> actions,MediaDirectory dir,List<String> exts) {
+	public ActionPerformer(List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
 		this.dir = dir;
 		this.exts = exts;
 		this.actions = actions;
+		this.testMode =testMode;
 	}
 
 	/**
@@ -63,8 +78,14 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions() throws ActionException {
+
+		for (IAction action : actions) {
+			action.init(dir);
+		}
+
 		findMediaFiles();
 
+		log.info(("Processing "+sortedFiles.size()+" files"));
 		performActionsFiles(sortedFiles);
 		performActionsDirs(sortedFiles);
 
@@ -75,6 +96,11 @@ public class ActionPerformer implements IActionEventHandler {
 				log.error("Unable to clean up store: " + store.getClass().getName(),e);
 			}
 		}
+
+		for (IAction action : actions) {
+			action.finished(dir);
+		}
+		log.info("Finished");
 	}
 
 	protected void findMediaFiles() throws ActionException {
@@ -131,13 +157,20 @@ public class ActionPerformer implements IActionEventHandler {
 	}
 
 	private void performActionsFiles(List<File> files) throws ActionException {
-		log.info(("Processing "+files.size()+" files"));
 		for (File file : files) {
 			for (IAction action : actions) {
-				action.perform(dir, file,this);
+				if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
+					SearchResult result = findFilm(dir, file);
+					Film film = getFilm(result,dir,file);
+					action.perform(dir,film,file,result.getPart(),this);
+				}
+				else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
+					Episode episode = getTVEpisode(dir, file);
+					action.perform(dir,episode, file,this);
+				}
+
 			}
 		}
-		log.info("Finished");
 	}
 
 	private void performActionsDirs(List<File> files) throws ActionException {
@@ -151,11 +184,21 @@ public class ActionPerformer implements IActionEventHandler {
 	}
 
 	@Override
-	public void sendEventNewFile(File file) {
+	public void sendEventNewFile(File file) throws ActionException {
+		List<File> files = new ArrayList<File>();
+		files.add(file);
+		performActionsFiles(files);
 	}
 
 	@Override
 	public void sendEventDeletedFile(File file) {
+		for (IStore store : dir.getStores()) {
+			try {
+				store.fileDeleted(dir,file);
+			} catch (StoreException e) {
+				log.error("Unable to process action file deleted event",e);
+			}
+		}
 	}
 
 	@Override
@@ -167,4 +210,89 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
+	private Episode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
+		boolean refresh = false;
+		try {
+			SearchResult result = searchForId(dir,file);
+			if (result==null) {
+				log.error("Unable to find show id");
+				return null;
+			}
+
+			Show show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
+			if (show == null) {
+				log.fatal("Unable to find show details");
+				return null;
+			}
+
+			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
+			if (data==null) {
+				log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
+			}
+			else {
+				Season season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
+				if (season == null) {
+					log.error("Unable to find season for file : " + file.getAbsolutePath());
+				} else {
+					Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
+					return episode;
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new ActionException("Unable to get TV epsiode details for file '"+file.getAbsolutePath()+"'",e);
+		}
+		return null;
+	}
+
+	private Film getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
+		boolean refresh = false;
+		try {
+			Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
+			if (film==null) {
+				log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
+				return null;
+			}
+			if (result.getPart()!=null && !testMode) {
+				boolean found = false;
+				for (VideoFile vf : film.getFiles()) {
+					if (vf.getPart()!=null && vf.getPart().equals(result.getPart()) && vf.getLocation().equals(file)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					for (IStore store : dir.getStores()) {
+						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
+					}
+				}
+			}
+			return film;
+		}
+		catch (Exception e) {
+			throw new ActionException("Unable to find film for file '" + file.getAbsolutePath()+"'",e);
+		}
+	}
+
+	protected SearchResult findFilm(MediaDirectory dir, File file) throws ActionException {
+		try {
+			SearchResult result = searchForId(dir,file);
+			if (result==null) {
+				log.error("Unable to find film id for file '"+file.getName()+"'");
+				return null;
+			}
+			return result;
+		}
+		catch (Exception e) {
+			throw new ActionException("Unable to find film for file '" + file.getAbsolutePath()+"'",e);
+		}
+	}
+
+	private SearchResult searchForId(MediaDirectory dir,File file) throws MalformedURLException, SourceException, StoreException, IOException
+	{
+		SearchResult result;
+		result = dir.searchForVideoId(dir.getMediaDirConfig(),file);
+		return result;
+
+	}
 }

@@ -168,4 +168,6 @@ public interface IStore  {
 
 	public void performedActions(MediaDirectory dir) throws StoreException;
 
+	public void fileDeleted(MediaDirectory dir, File file) throws StoreException;
+
 }

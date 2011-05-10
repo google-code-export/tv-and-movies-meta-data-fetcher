@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -141,33 +140,33 @@ public class RSSFeed {
 	 * @param publishDate The date the entry was published
 	 * @param plainDescription The plain text description of the entry
 	 * @param author The author of the entry
-	 * @param audioFile The audio file
+	 * @param file The movie file
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEntry(String title, URL link, Date publishDate, String plainDescription, String author,IFeedFile audioFile) {
+	public void addEntry(IFeedFile file) {
 		SyndEntry entry = new SyndEntryImpl();
-		if (title != null) {
-			entry.setTitle(title);
+		if (file.getTitle() != null) {
+			entry.setTitle(file.getTitle());
 		}
 
-		entry.setLink(link.toExternalForm());
-		entry.setPublishedDate(publishDate);
+		entry.setLink(file.getLink().toExternalForm());
+		entry.setPublishedDate(file.getLastModified());
 
 		List<SyndEnclosure> es = new ArrayList<SyndEnclosure>();
 		SyndEnclosure e = new SyndEnclosureImpl();
-		e.setType(audioFile.getContentType());
-		e.setUrl(link.toExternalForm());
-		e.setLength(audioFile.getFile().length());
+		e.setType(file.getContentType());
+		e.setUrl(file.getLink().toExternalForm());
+		e.setLength(file.getFile().length());
 		es.add(e);
 		entry.setEnclosures(es);
 
-		if (plainDescription != null) {
+		if (file.getDescription() != null) {
 			SyndContent description = new SyndContentImpl();
 			description.setType("text/plain");
-			description.setValue(plainDescription);
+			description.setValue(file.getDescription());
 			entry.setDescription(description);
 		}
-		entry.setAuthor(author);
+//		entry.setAuthor(author);
 
 		feed.getEntries().add(0, entry);
 		log.info("Entry added to rss feed" + feedFile);

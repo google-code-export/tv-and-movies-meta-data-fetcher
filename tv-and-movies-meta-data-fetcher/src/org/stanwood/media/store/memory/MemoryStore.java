@@ -263,4 +263,32 @@ public class MemoryStore implements IStore {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void fileDeleted(MediaDirectory dir, File file) {
+		films.remove(file);
+
+		for (CacheShow show : shows) {
+			for (CacheSeason season : show.getSeasons()) {
+				for (Episode episode : season.getEpisodes()) {
+					Iterator<VideoFile> it  = episode.getFiles().iterator();
+					while (it.hasNext()) {
+						VideoFile f = it.next();
+						if (f.getLocation().equals(file)) {
+							it.remove();
+						}
+					}
+				}
+				for (Episode special : season.getSpecials()) {
+					Iterator<VideoFile> it  = special.getFiles().iterator();
+					while (it.hasNext()) {
+						VideoFile f = it.next();
+						if (f.getLocation().equals(file)) {
+							it.remove();
+						}
+					}
+				}
+			}
+		}
+	}
 }

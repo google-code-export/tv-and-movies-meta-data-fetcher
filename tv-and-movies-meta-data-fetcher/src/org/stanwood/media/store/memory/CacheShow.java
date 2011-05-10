@@ -14,7 +14,7 @@ import org.stanwood.media.model.Show;
  */
 public class CacheShow extends Show {
 
-	private List<Season> seasons = new ArrayList<Season>();
+	private List<CacheSeason> seasons = new ArrayList<CacheSeason>();
 	private Show show;
 
 	/**
@@ -46,9 +46,9 @@ public class CacheShow extends Show {
 	 * @param seasonNumber The season number of the season to remove
 	 */
 	public void removeSeason(int seasonNumber) {
-		Iterator<Season> it = seasons.iterator();
+		Iterator<CacheSeason> it = seasons.iterator();
 		while (it.hasNext()) {
-			Season foundSeason = it.next();
+			CacheSeason foundSeason = it.next();
 			if (foundSeason.getSeasonNumber() == seasonNumber) {
 				it.remove();
 			}
@@ -59,7 +59,7 @@ public class CacheShow extends Show {
 	 * Used to add a season to the show.
 	 * @param season The season to add to the show.
 	 */
-	public void addSeason(Season season) {
+	public void addSeason(CacheSeason season) {
 		seasons.add(season);
 	}
 
@@ -249,5 +249,8 @@ public class CacheShow extends Show {
 		show.setExtraInfo(params);
 	}
 
+	public List<CacheSeason>getSeasons() {
+		return seasons;
+	}
 
 }
