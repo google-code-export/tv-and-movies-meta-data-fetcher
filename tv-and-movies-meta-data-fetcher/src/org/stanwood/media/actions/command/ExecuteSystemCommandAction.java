@@ -52,7 +52,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	public void performOnDirectory(MediaDirectory dir, File directory, IActionEventHandler actionEventHandler)
 			throws ActionException {
 		if (!isTestMode()) {
-			executeCommand(fileCmd,directory);
+			executeCommand(dirCmd,directory);
 			sendEvents(actionEventHandler,directory);
 		}
 	}
