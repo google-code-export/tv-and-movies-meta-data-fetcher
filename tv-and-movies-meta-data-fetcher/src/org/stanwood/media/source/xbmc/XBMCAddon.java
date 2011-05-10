@@ -89,7 +89,7 @@ public class XBMCAddon extends XMLParser {
 		String type = node.getAttribute("type");
 		String defaultValue = node.getAttribute("default");
 		String id = node.getAttribute("id");
-		if (type.equals("sep") || id.length()==0) {
+		if (type.equals("sep")) {
 			// do nothing
 		}
 		else if (type.equals("bool")) {
@@ -97,17 +97,24 @@ public class XBMCAddon extends XMLParser {
 			if (value.getType()!=ValueType.BOOLEAN) {
 				throw new XBMCException("Unable to get the default value for setting '"+id+"'");
 			}
-			if (log.isDebugEnabled()) {
-				log.debug("Adding setting: " + id + " : " + type + " = " + value);
+
+			if (eval.getVariables().get(id)==null) {
+				if (log.isDebugEnabled()) {
+					log.debug("Adding setting: " + id + " : " + type + " = " + value);
+				}
+				eval.getVariables().put(id,value);
 			}
-			eval.getVariables().put(id,value);
 		}
 		else if(type.equals("labelenum")) {
 			Value value = new StringValue(ValueType.STRING,defaultValue);
-			if (log.isDebugEnabled()) {
-				log.debug("Adding setting: " + id + " : " + type + " = " + value);
+
+			if (eval.getVariables().get(id)==null) {
+				if (log.isDebugEnabled()) {
+					log.debug("Adding setting: " + id + " : " + type + " = " + value);
+				}
+
+				eval.getVariables().put(id,value);
 			}
-			eval.getVariables().put(id,value);
 		}
 	}
 
@@ -451,9 +458,11 @@ public class XBMCAddon extends XMLParser {
 		try {
 			if (!eval.getVariables().containsKey(key)) {
 				return;
+
 //				throw new XBMCException("Unkown setting '"+key+"' in addon '"+getId()+"'");
 			}
-			eval.getVariables().put(key, eval.eval(expression));
+			Value value = eval.eval(expression);
+			eval.getVariables().put(key,value );
 		}
 		catch (ExpressionParserException e) {
 			throw new XBMCException("Unable to evaluate expression '"+expression+"' in addon " + getId(),e);
