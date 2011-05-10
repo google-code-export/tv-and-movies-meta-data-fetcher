@@ -24,7 +24,7 @@ public class PatternMatcher {
 		return text;
 	}
 
-	public File getNewFilmName(MediaDirConfig dirConfig,final Film film,final String ext,final Integer part) throws PatternException {
+	public File getNewFilmName(MediaDirConfig dirConfig,String pattern,final Film film,final String ext,final Integer part) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
@@ -33,7 +33,7 @@ public class PatternMatcher {
 			}
 		};
 
-		return processor.doit(dirConfig);
+		return processor.doit(dirConfig,pattern);
 	}
 
 
@@ -70,16 +70,18 @@ public class PatternMatcher {
 		return newName;
 	}
 
-	public File getNewTVShowName(MediaDirConfig dirConfig,final Show show,final Season season,final Episode episode,final String ext) throws PatternException {
+	public File getNewTVShowName(MediaDirConfig dirConfig,String pattern,final Episode episode,final String ext) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
+				Season season = episode.getSeason();
+				Show show = season.getShow();
 				String value = processTVShowName(name,show,season,episode,ext);
 				return value;
 			}
 		};
 
-		return processor.doit(dirConfig);
+		return processor.doit(dirConfig,pattern);
 	}
 
 	/**
@@ -98,8 +100,7 @@ public class PatternMatcher {
 
 	private static abstract class PatternProcessor {
 
-		public File doit(MediaDirConfig dirConfig) throws PatternException {
-			String pattern = dirConfig.getPattern();
+		public File doit(MediaDirConfig dirConfig,String pattern) throws PatternException {
 			boolean inBrace = false;
 			StringBuilder result = new StringBuilder();
 			StringBuilder newName = new StringBuilder();

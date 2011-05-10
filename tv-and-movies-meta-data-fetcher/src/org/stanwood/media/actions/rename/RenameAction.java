@@ -80,7 +80,7 @@ public class RenameAction extends AbstractAction {
 			String oldFileName = file.getName();
 			String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
 			PatternMatcher pm = new PatternMatcher();
-			File newName = pm.getNewFilmName(dir.getMediaDirConfig(),film, ext,part);
+			File newName = pm.getNewFilmName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),film, ext,part);
 
 			doRename(dir,file, newName,film,eventHandler);
 			return newName;
@@ -97,7 +97,7 @@ public class RenameAction extends AbstractAction {
 			Show show = season.getShow();
 			String ext = FileHelper.getExtension(file);
 			PatternMatcher pm = new PatternMatcher();
-			File newName = pm.getNewTVShowName(dir.getMediaDirConfig(),show, season, episode, ext);
+			File newName = pm.getNewTVShowName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),episode, ext);
 
 			doRename(dir,file, newName,episode,eventHandler);
 			file = newName;
