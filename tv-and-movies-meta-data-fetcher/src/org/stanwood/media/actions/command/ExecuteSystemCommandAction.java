@@ -3,6 +3,7 @@ package org.stanwood.media.actions.command;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -59,7 +60,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 
 	protected void executeCommand(String cmd,File file) throws ActionException {
 		String convertedCmd = replaceVars(cmd,file);
-		CommandLine cmdLine= CommandLine.parse(convertedCmd);
+		CommandLine cmdLine= parseCommandLine(convertedCmd);
 		Executor exec = new DefaultExecutor();
 		try {
 			exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
@@ -67,6 +68,16 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		} catch (IOException e) {
 			throw new ActionException("Unable to execute system command: " + cmdLine.toString());
 		}
+	}
+
+	private CommandLine parseCommandLine(String cmdLine) {
+		List<String> args = ExecParseUtils.splitToWhiteSpaceSeparatedTokens(cmdLine);
+		Iterator<String> it = args.iterator();
+		CommandLine cmd = new CommandLine(it.next());
+		while (it.hasNext()) {
+			cmd.addArgument(it.next(),false);
+		}
+		return cmd;
 	}
 
 	protected void sendEvents(IActionEventHandler actionEventHandler,File mediaFile)
@@ -81,10 +92,10 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 
 	private String replaceVars(String cmd,File mediaFile) {
 		String s=cmd;
-		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath());
-		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile));
-		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile));
-		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent());
+		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
 		s = s.replaceAll("\\$NEWFILE", newFile);
 		s = s.replaceAll("\\$DELETEDFILE", deletedFile);
 		return s;
