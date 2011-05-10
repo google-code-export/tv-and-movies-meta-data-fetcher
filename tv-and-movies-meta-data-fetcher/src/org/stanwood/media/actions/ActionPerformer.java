@@ -161,12 +161,18 @@ public class ActionPerformer implements IActionEventHandler {
 			for (IAction action : actions) {
 				if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
 					SearchResult result = findFilm(dir, file);
-					Film film = getFilm(result,dir,file);
-					action.perform(dir,film,file,result.getPart(),this);
+					if (result!=null) {
+						Film film = getFilm(result,dir,file);
+						if (film!=null) {
+							action.perform(dir,film,file,result.getPart(),this);
+						}
+					}
 				}
 				else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
 					Episode episode = getTVEpisode(dir, file);
-					action.perform(dir,episode, file,this);
+					if (episode!=null) {
+						action.perform(dir,episode, file,this);
+					}
 				}
 
 			}
@@ -282,6 +288,10 @@ public class ActionPerformer implements IActionEventHandler {
 				return null;
 			}
 			return result;
+		}
+		catch (SourceException e) {
+			log.error("Unable to search for film: " + file,e);
+			return null;
 		}
 		catch (Exception e) {
 			throw new ActionException("Unable to find film for file '" + file.getAbsolutePath()+"'",e);
