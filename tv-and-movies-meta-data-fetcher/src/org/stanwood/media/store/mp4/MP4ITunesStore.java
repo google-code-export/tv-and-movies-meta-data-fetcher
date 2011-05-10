@@ -220,4 +220,10 @@ public class MP4ITunesStore implements IStore {
 
 	}
 
+	@Override
+	public void fileDeleted(MediaDirectory dir, File file) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

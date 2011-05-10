@@ -1044,13 +1044,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	@Override
 	public void setParameter(String key, String value) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public String getParameter(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1080,6 +1078,30 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-
+	@Override
+	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
+		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
+		Document cache = getCache(rootMediaDir);
+		try {
+			boolean changed = false;
+			for (Node fileNode : selectNodeList(cache, "//file")) {
+				Element el = (Element)fileNode;
+				File location = new File(dir.getMediaDirConfig().getMediaDir(),el.getAttribute("location"));
+				if (location.equals(file)) {
+					if (log.isDebugEnabled()) {
+						log.debug("Unable to find file '"+location.getAbsolutePath()+"' so removing from store");
+					}
+					el.getParentNode().removeChild(el);
+					changed = true;
+				}
+			}
+			if (changed) {
+				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
+				writeCache(cacheFile, cache);
+			}
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse store XML",e);
+		}
+	}
 
 }
