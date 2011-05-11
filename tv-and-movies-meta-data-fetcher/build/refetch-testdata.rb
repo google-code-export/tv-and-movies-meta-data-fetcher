@@ -93,6 +93,7 @@ downloadFile("http://api.themoviedb.org/2.1/Movie.search/en/xml/57983e31fb435df4
 downloadFile("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-film-1726.html")
 downloadFile("http://akas.imdb.com/title/tt0371746/",testDataDir+"/imdb-tt0371746.html")
 downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-images-1726.html")
+downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-images-tt0371746.html")
 downloadFile("http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-imdbLookup-tt0371746.html")
 
 
