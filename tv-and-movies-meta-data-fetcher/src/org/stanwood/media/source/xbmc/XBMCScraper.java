@@ -94,7 +94,7 @@ public class XBMCScraper extends XBMCExtension {
 	public Document getGetDetails(File file,String... contents) throws  XBMCException {
 		Document result = executeFunctionByName("GetDetails",contents);
 
-		if (file!=null) {
+		if (file!=null && result!=null) {
 			if (getAddon().getCreateNFOFiles()) {
 				String name = file.getName().substring(0,file.getName().indexOf("."));
 				File nfoFile = new File(file.getParentFile(),name+".nfo");
@@ -154,7 +154,7 @@ public class XBMCScraper extends XBMCExtension {
 				log.debug("Got result: " + result);
 			}
 
-			return (result.length()>0);
+			return (result != null && result.length()>0);
 		} catch (Exception e) {
 			throw new XBMCException("Unable to execute scraper function 'NfoUrl' in addon '"+getAddon().getId()+"'",e);
 		}
@@ -171,6 +171,9 @@ public class XBMCScraper extends XBMCExtension {
 
 			if (log.isDebugEnabled()) {
 				log.debug("Got result: " + result);
+			}
+			if (result == null) {
+				result = "";
 			}
 			Document doc = XMLParser.strToDom(result);
 			checkForError(doc,funcName);

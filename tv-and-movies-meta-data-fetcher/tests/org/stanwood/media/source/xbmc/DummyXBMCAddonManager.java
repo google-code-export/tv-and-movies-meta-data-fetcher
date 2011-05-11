@@ -24,7 +24,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	private static final Pattern THE_MOVIE_DB_SEARCH = Pattern.compile(".*themoviedb.*/Movie.search/.*/(.+)");
 	private static final Pattern THE_MOVIE_DB_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
 	private static final Pattern THE_MOVIE_DB_IMDB_LOOKUP = Pattern.compile(".*themoviedb.*/Movie\\.imdbLookup/.*/(tt\\d+)");
-	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(\\d+)");
+	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(.*?)");
 	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 	private static final Pattern IDBM_COMBINED = Pattern.compile(".*imdb.com/title/(tt\\d+)/combined");
 	private static final Pattern IDBM_POSTERS = Pattern.compile(".*imdb.com/title/(tt\\d+)/posters");
