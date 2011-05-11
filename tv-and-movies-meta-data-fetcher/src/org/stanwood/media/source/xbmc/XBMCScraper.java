@@ -258,6 +258,9 @@ public class XBMCScraper extends XBMCExtension {
 						params.put(1, contents);
 						try {
 							String s = getAddon().executeFunction(functionName, params) ;
+							if (s==null) {
+								s = "";
+							}
 							Document results = strToDom(s);
 							Node parent = node.getParentNode();
 							parent.removeChild(node);

@@ -2,7 +2,6 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +11,7 @@ import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Stream;
 
 /**
  * This is a dummy XBMCAddonManager that fetches data from the test source tree instead of from the web. This
@@ -47,48 +47,47 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	}
 
 	@Override
-	InputStream getSource(URL url) throws IOException {
+	Stream getSource(URL url) throws IOException {
 		String strUrl = url.toExternalForm();
 		System.out.println("Fetching URL: " + strUrl);
 		Matcher m = TVDB_SEARCH_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("tvdb-search-"+getSearchName(m.group(1))+".html");
+			return new Stream(Data.class.getResourceAsStream("tvdb-search-"+getSearchName(m.group(1))+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = THE_MOVIE_DB_SEARCH.matcher(strUrl);
 		if (m.matches()) {
 			String term = getSearchName(m.group(1));
 			term=term.replaceAll("\\+","-");
 			term=term.replaceAll("\\%..","");
-			return Data.class.getResourceAsStream("themoviedb-search-"+term+".html");
+			return new Stream(Data.class.getResourceAsStream("themoviedb-search-"+term+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = THE_MOVIE_DB_IMDB_LOOKUP.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = IDBM_COMBINED.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("imdb-combined-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("imdb-combined-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
 		}
 		m = IDBM_POSTERS.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("imdb-posters-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("imdb-posters-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
 		}
 		m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = THE_MOVIE_DB_IMAGES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = IDBM_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return Data.class.getResourceAsStream("imdb-"+m.group(1)+".html");
+			return new Stream(Data.class.getResourceAsStream("imdb-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
 		}
 		m = TVDB_SERIES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-
-			return new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip"));
+			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"zip","UTF-8",url.toExternalForm());
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}

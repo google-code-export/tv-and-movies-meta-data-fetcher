@@ -18,7 +18,6 @@ package org.stanwood.media.source;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +35,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Stream;
 
 /**
  * Used to test the {@link TagChimpSource} class.
@@ -154,16 +154,16 @@ public class TestTagChimpSource {
 	private TagChimpSource getSource() {
 		TagChimpSource source = new TagChimpSource() {
 			@Override
-			InputStream getSource(URL url) throws IOException {
+			Stream getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();
 				System.out.println("Fetching URL: " + strUrl);
 				Matcher m = TAGCHIMP_SEARCH_PATTERN.matcher(strUrl);
 				if (m.matches()) {
-					return Data.class.getResourceAsStream("tagchimp-search-"+getSearchName(m.group(1))+".html");
+					return new Stream(Data.class.getResourceAsStream("tagchimp-search-"+getSearchName(m.group(1))+".html"),"text/html","UTF-8",url.toExternalForm());
 				}
 				m = TAGCHIMP_FILM_PATTERN.matcher(strUrl);
 				if (m.matches()) {
-					return Data.class.getResourceAsStream("tagchimp-film-"+m.group(1)+".html");
+					return new Stream(Data.class.getResourceAsStream("tagchimp-film-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
 				}
 				throw new IOException("Unable to find test data for url: " + url);
 			}

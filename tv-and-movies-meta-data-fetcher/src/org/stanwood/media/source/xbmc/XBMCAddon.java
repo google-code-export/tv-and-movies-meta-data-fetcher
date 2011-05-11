@@ -366,13 +366,11 @@ public class XBMCAddon extends XMLParser {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public String executeFunction(String functionName,Map<Integer, String> params) throws XBMCException {
-		String result = null;
-
 		// Check within this Addon for the function
 		for (XBMCExtension addon : getExtensions()) {
 			try {
-				result = addon.executeXBMCScraperFunction(functionName, params);
-				break;
+				String result = addon.executeXBMCScraperFunction(functionName, params);
+				return result;
 			}
 			catch (XBMCFunctionNotFoundException e) {
 				// Ignore
@@ -382,25 +380,18 @@ public class XBMCAddon extends XMLParser {
 			}
 		}
 
-		if (result==null) {
-			// Check within the addons that this addon depends on
-			for (XBMCAddon addon : getRquiredAddons()) {
-				try {
-					result = addon.executeFunction(functionName, params);
-					break;
-				}
-				catch (XBMCFunctionNotFoundException e) {
-					// Ignore
-				}
+		// Check within the addons that this addon depends on
+		for (XBMCAddon addon : getRquiredAddons()) {
+			try {
+				String result = addon.executeFunction(functionName, params);
+				return result;
+			}
+			catch (XBMCFunctionNotFoundException e) {
+				// Ignore
 			}
 		}
 
-		if (result == null)
-		{
-			throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
-		}
-
-		return result;
+		throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
 	}
 
 	/**
