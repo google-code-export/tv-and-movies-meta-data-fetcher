@@ -17,16 +17,18 @@ REM Locations of libraries
 set LIB_DIR=..\libs
 
 REM Setup class path
-set CLASSPATH=/usr/share/java/MediaInfoFetcher.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jakarta-commons-cli.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jakarta-commons-lang.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jakarta-commons-exec.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jakarta-commons-logging.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jakarta-commons-exec.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/isoparser.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/log4j.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/jdom.jar
-set CLASSPATH=%CLASSPATH%:%LIB_DIR%/ROME.jar
+set CLASSPATH=%LIB_DIR%\MediaManager-1.98.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\antlr-runtime-3.1.3.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\commons-cli-1.1.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\commons-exec-1.1.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\commons-lang-2.6.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\commons-logging-1.0.4.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\isoparser-svn.r114.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\jdom.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\log4j-1.2.15.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\mysql-connector-java-5.1.6.jar
+set CLASSPATH=%CLASSPATH%:%LIB_DIR%\rome-1.0.jar
+
 
 REM Launch app
 call %JAVA% -Xms%JAVA_HEAP_INIT_SIZE% -Xmx%JAVA_HEAP_MAX_SIZE%M -classpath %CLASSPATH% %MAIN% "$@"
