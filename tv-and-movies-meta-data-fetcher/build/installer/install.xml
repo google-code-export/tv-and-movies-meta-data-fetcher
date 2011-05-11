@@ -68,7 +68,7 @@
 			<description>3rd Pary libraries needed by the application</description>
 			
 			<!-- Install all the libs -->
-			<fileset targetdir="$INSTALL_PATH/lib" dir="@{libs.dir}/test-time" includes="*.jar"/>
+			<fileset targetdir="$INSTALL_PATH/lib" dir="@{libs.dir}/run-time" includes="*.jar"/>
         </pack>
 		
 		<pack name="Application Libaray" required="yes" installGroups="Libraries">
@@ -80,29 +80,29 @@
 		<pack name="CLI Application" required="yes" installGroups="Application" os="unix">
 			<description>Command line application</description>
 			
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-manager" target="$INSTALL_PATH/bin/mm-manager">
+			<file src="@{installer.dir}/scripts/unix/mm-manager" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
-			</singlefile>
+			</file>
 			<executable targetfile="$INSTALL_PATH/bin/mm-manager">
 				<os family="unix"/>
 			</executable>			
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-xbmc" target="$INSTALL_PATH/bin/mm-xbmc">
+			<file src="@{installer.dir}/scripts/unix/mm-xbmc" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
-			</singlefile>
+			</file>
 			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
 				<os family="unix"/>
 			</executable>
-			<singlefile src="@{scripts.dir}/opensuse-11.0-mm-java" target="$INSTALL_PATH/bin/mm-java">
+			<file src="@{installer.dir}/scripts/unix/mm-java" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
-			</singlefile>
+			</file>
 			<executable targetfile="$INSTALL_PATH/bin/mm-java">
 				<os family="unix"/>
 			</executable>
 			
-			<file src="@{scripts.dir}/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
+			<file src="@{installer.dir}/scripts/windows/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>			
-			<file src="@{scripts.dir}/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
+			<file src="@{installer.dir}/scripts/windows/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>			
 			

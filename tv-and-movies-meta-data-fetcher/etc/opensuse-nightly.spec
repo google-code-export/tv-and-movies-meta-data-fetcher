@@ -94,8 +94,8 @@ pushd %{buildroot}%{_javadir}
         ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`
     done
 popd
-%__install -m 755 scripts/opensuse-11.0-mm-renamer %{buildroot}%{_bindir}/mm-renamer
-%__install -m 755 scripts/opensuse-11.0-mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
+%__install -m 755 build/scripts/opensuse/mm-renamer %{buildroot}%{_bindir}/mm-renamer
+%__install -m 755 build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs

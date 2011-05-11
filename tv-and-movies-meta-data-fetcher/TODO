@@ -12,8 +12,8 @@ Change FILM search to to lookup film details from a NFO file.
 	- Option to ignore samples Delete samples
 	- Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)	
-Make sure that IMDB source can be searched
 Check that we can search multiple XBMC sources
+Ensure when installed onto linux via installer, libs are also installed and used
 
 Version 2.1
 -----------

@@ -18,7 +18,8 @@
 	<property name="reports.dir" location="${basedir}/reports"/>
 	<property name="docbook.home"    value="${basedir}/docbook/xsl"/>	
 	<property name="fo.dir"          value="${basedir}/fo"/>
-	<property name="scripts.dir" location="${basedir}/scripts"/>
+	<property name="scripts.dir" location="${basedir}/build/scripts"/>
+	<property name="installer.dir" location="${basedir}/build/installer"/>
     
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
@@ -227,7 +228,7 @@
 			</zipfileset>
 			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
-			<zipfileset dir="${scripts.dir}" prefix="${ant.project.name}-${project.version}/scripts"/>
+			<zipfileset dir="${scripts.dir}" prefix="${ant.project.name}-${project.version}/build/scripts"/>
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
 			<zipfileset dir="${basedir}/build" prefix="${ant.project.name}-${project.version}/build"/>
 			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
