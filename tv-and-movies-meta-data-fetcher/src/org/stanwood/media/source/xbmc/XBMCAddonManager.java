@@ -2,7 +2,6 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Stream;
 
 public class XBMCAddonManager implements IContentFetcher {
 
@@ -95,7 +95,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		}
 	}
 
-	/* package for test */InputStream getSource(URL url) throws IOException {
+	/* package for test */Stream getSource(URL url) throws IOException {
 		return FileHelper.getInputStream(url);
 	}
 
@@ -106,9 +106,9 @@ public class XBMCAddonManager implements IContentFetcher {
 	 * @exception SourceException thrown if their is a problem getting the stream
 	 */
 	@Override
-	public InputStream getStreamToURL(URL url) throws SourceException {
+	public Stream getStreamToURL(URL url) throws SourceException {
 		try {
-			InputStream stream = getSource(url);
+			Stream stream = getSource(url);
 			if (stream==null) {
 				throw new SourceException("Unable to get resource: " + url);
 			}

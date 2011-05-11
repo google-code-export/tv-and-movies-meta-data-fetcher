@@ -116,6 +116,10 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 		return responseHeader;
 	}
 
+	public String getCharset() {
+		return charset;
+	}
+
 	/**
 	 * Get the MIME type.
 	 * @return The MIME type
@@ -177,5 +181,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 	public boolean markSupported() {
 		return content.markSupported();
 	}
+
+
 
 }

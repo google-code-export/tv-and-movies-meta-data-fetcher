@@ -170,6 +170,7 @@ public abstract class XBMCExtension extends XMLParser {
 					output = orgValue+output;
 				}
 			}
+
 			params.put(Integer.valueOf(dest), output);
 		}
 
@@ -300,4 +301,12 @@ public abstract class XBMCExtension extends XMLParser {
 	protected XBMCAddon getAddon() {
 		return addon;
 	}
+
+
+	@Override
+	public String toString() {
+		return "XBMCExtension:" + scraperFile +" : " + point;
+	}
+
+
 }

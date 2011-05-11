@@ -42,4 +42,11 @@ public class BaseMediaDirSubItem {
 	public void addParam(String key,String value) {
 		params.put(key,value);
 	}
+
+	@Override
+	public String toString() {
+		return id;
+	}
+
+
 }

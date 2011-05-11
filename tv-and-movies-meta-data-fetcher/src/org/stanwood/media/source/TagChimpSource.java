@@ -2,7 +2,6 @@ package org.stanwood.media.source;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -27,6 +26,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.xbmc.StreamProcessor;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Stream;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -293,12 +293,12 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=lookup&id="+id);
 	}
 
-	/* package for test */InputStream getSource(URL url) throws IOException {
+	/* package for test */Stream getSource(URL url) throws IOException {
 		return FileHelper.getInputStream(url);
 	}
 
-	public InputStream getStreamToURL(URL url) throws IOException, SourceException {
-		InputStream stream = getSource(url);
+	public Stream getStreamToURL(URL url) throws IOException, SourceException {
+		Stream stream = getSource(url);
 		if (stream==null) {
 			throw new SourceException("Unable to get resource: " + url);
 		}

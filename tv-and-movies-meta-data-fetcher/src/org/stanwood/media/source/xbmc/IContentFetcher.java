@@ -1,10 +1,10 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.Stream;
 
 /**
  * This interface should be implemented by classes used to fetch content from a URL
@@ -18,5 +18,5 @@ public interface IContentFetcher {
 	 * @throws IOException Thrown if their is a problem with I/O
 	 * @throws SourceException Thrown if their are any other problems
 	 */
-	public InputStream getStreamToURL(URL url) throws SourceException;
+	public Stream getStreamToURL(URL url) throws SourceException;
 }

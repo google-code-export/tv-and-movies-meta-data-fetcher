@@ -33,9 +33,11 @@ public class RenameAction extends AbstractAction {
 	 * The key of the refresh parameter for this action.
 	 */
 	public static final String PARAM_KEY_REFRESH = "refresh";
+	public static final String PARAM_KEY_IGNORE_SAMPLES = "NFO-ignore-samples";
 	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders";
 
 	private boolean refresh = false;
+	private boolean ignoreSamples;
 
 	private boolean pruneEmptyFolders = false;
 

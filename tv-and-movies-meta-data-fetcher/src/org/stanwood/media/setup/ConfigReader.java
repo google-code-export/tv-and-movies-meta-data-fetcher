@@ -177,42 +177,48 @@ public class ConfigReader extends BaseConfigReader {
 	@Override
 	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
+		List<String>addons = new ArrayList<String>();
+		List<ISource> xbmcSources = null;
+		if (controller.getXBMCAddonManager()!=null) {
+			xbmcSources = controller.getXBMCAddonManager().getSources();
+		}
 		for (SourceConfig sourceConfig : dirConfig.getSources()) {
 			String sourceClass = sourceConfig.getID();
 			try {
 				Class<? extends ISource> c = controller.getSourceClass(sourceClass);
 				if (XBMCSource.class.isAssignableFrom(c)) {
-					List<ISource> xbmcSources = controller.getXBMCAddonManager().getSources();
 					if (sourceConfig.getParams() != null) {
-						List<String>addons = null;
+						String scraper = null;
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
 							if (key.equals("scrapers")) {
-								addons = new ArrayList<String>();
 								StringTokenizer tok = new StringTokenizer(value,",");
 								while (tok.hasMoreTokens()) {
-									addons.add("xbmc-"+tok.nextToken());
+									scraper = "xbmc-"+tok.nextToken();
+									addons.add(scraper);
 								}
+							}
+						}
+
+						if (scraper == null) {
+							for (ISource source : xbmcSources) {
+								addons.add(source.getSourceId());
 							}
 						}
 
 						for (String key : sourceConfig.getParams().keySet()) {
 							if (!key.equals("scrapers")) {
 								String value = sourceConfig.getParams().get(key);
-								Iterator<ISource> it = xbmcSources.iterator();
-								while (it.hasNext()) {
-									ISource source = it.next();
-									if (addons!=null && !addons.contains(source.getSourceId())) {
-										it.remove();
-									}
-									else {
-										setParamOnSource( source, key, value);
+								if (xbmcSources!=null) {
+									for (ISource source : xbmcSources ) {
+										if (scraper == null || scraper.equals(source.getSourceId())) {
+											setParamOnSource( source, key, value);
+										}
 									}
 								}
 							}
 						}
 					}
-					sources.addAll(xbmcSources);
 				}
 				else {
 					ISource source = c.newInstance();
@@ -225,6 +231,8 @@ public class ConfigReader extends BaseConfigReader {
 					}
 					sources.add(source);
 				}
+
+
 			} catch (InstantiationException e) {
 				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			} catch (IllegalAccessException e) {
@@ -232,7 +240,21 @@ public class ConfigReader extends BaseConfigReader {
 			} catch (SourceException e) {
 				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
 			}
+
+
 		}
+
+		if (xbmcSources!=null) {
+			Iterator<ISource>it = xbmcSources.iterator();
+			while (it.hasNext()) {
+				ISource source = it.next();
+				if (!addons.contains(source.getSourceId())) {
+					it.remove();
+				}
+			}
+			sources.addAll(xbmcSources);
+		}
+
 		return sources;
 	}
 

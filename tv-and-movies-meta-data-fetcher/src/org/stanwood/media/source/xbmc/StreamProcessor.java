@@ -1,14 +1,15 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.Stream;
 
 /**
  * This class is used to process streams that could be zipped. If the stream is not zipped, then
@@ -18,13 +19,13 @@ import org.stanwood.media.source.SourceException;
  */
 public abstract class StreamProcessor {
 
-	private InputStream stream = null;
+	private Stream stream = null;
 
 	/**
 	 * Used to create a instance of the class
 	 * @param stream The stream to be processed
 	 */
-	public StreamProcessor(InputStream stream) {
+	public StreamProcessor(Stream stream) {
 		if (stream==null) {
 			throw new NullPointerException("Stream cannot be null");
 		}
@@ -37,10 +38,9 @@ public abstract class StreamProcessor {
 	 * @throws SourceException Thrown in their are any problems
 	 */
 	public void handleStream() throws SourceException {
-		String encoding = "iso-8859-1";
 		try {
-			if (stream instanceof ZipInputStream) {
-				ZipInputStream zis = (ZipInputStream) stream;
+			if (stream.getInputStream() instanceof ZipInputStream) {
+				ZipInputStream zis = (ZipInputStream) stream.getInputStream();
 				ZipEntry entry = null;
 	            while ((entry = zis.getNextEntry())!=null) {
 	            	StringBuilder contents = new StringBuilder();
@@ -57,7 +57,7 @@ public abstract class StreamProcessor {
 							else {
 								dest = data;
 							}
-
+							String encoding = "iso-8859-1";
 							contents.append(new String(dest,encoding));
 			            }
 	                }
@@ -68,8 +68,9 @@ public abstract class StreamProcessor {
 	            }
 			}
 			else {
-				Reader r = new InputStreamReader(stream);
+				Reader r = new InputStreamReader(stream.getInputStream());
 				StringWriter sw = null;
+				String data = null;
 				try {
 					sw = new StringWriter();
 					char[] buffer = new char[1024];
@@ -78,14 +79,20 @@ public abstract class StreamProcessor {
 					}
 					String str = sw.toString();
 					if (str.length()>0) {
-//						str = StringEscapeUtils.unescapeHtml(str);
-						processContents(str);
+						data = str;
+						if (stream.getMineType().equals("text/html")) {
+							data = StringEscapeUtils.unescapeHtml(data);
+						}
+
 					}
 				}
 				finally {
 					if (sw!=null) {
 						sw.close();
 					}
+				}
+				if (data!=null) {
+					processContents(data);
 				}
 			}
 		}
@@ -95,7 +102,7 @@ public abstract class StreamProcessor {
 		finally {
 			if (stream!=null) {
 				try {
-					stream.close();
+					stream.getInputStream().close();
 				} catch (IOException e) {
 					throw new SourceException("Unable to close stream",e);
 				}

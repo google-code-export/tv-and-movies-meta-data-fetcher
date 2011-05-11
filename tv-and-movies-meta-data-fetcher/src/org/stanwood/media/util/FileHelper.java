@@ -535,15 +535,16 @@ public class FileHelper {
 		return configFile;
 	}
 
-	public static InputStream getInputStream(URL url) throws IOException {
+	public static Stream getInputStream(URL url) throws IOException {
 		WebFileInputStream is = new WebFileInputStream(url);
 		String MIME = is.getMIMEType();
 		if (MIME.equals("zip")) {
-			return new ZipInputStream(is);
+			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm());
 		}
 		else {
-			return is;
+			return new Stream(is,MIME,is.getCharset(),url.toExternalForm());
 		}
+
 	}
 
 	public static File createTempFile(String name,String ext) throws IOException {
