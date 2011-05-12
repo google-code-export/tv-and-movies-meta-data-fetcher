@@ -21,7 +21,7 @@ else
 fi
 
 # Main class
-MAIN=org.stanwood.media.cli.manager.CLIManager
+MAIN=org.stanwood.media.cli.manager.CLIMediaManager
 
 # Libraries location
 LIB_DIR=/usr/share/java

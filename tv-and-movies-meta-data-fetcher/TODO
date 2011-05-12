@@ -13,7 +13,6 @@ Change FILM search to to lookup film details from a NFO file.
 	- Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)	
 Check that we can search multiple XBMC sources
-Ensure when installed onto linux via installer, libs are also installed and used
 
 Version 2.1
 -----------

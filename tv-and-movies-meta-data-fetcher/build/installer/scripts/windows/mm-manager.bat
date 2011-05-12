@@ -11,7 +11,7 @@ set JAVA=%JAVA_HOME%/bin/java
 :doit
 
 REM Main class
-set MAIN=org.stanwood.media.cli.manager.CLIManager
+set MAIN=org.stanwood.media.cli.manager.CLIMediaManager
 
 REM Locations of libraries
 set LIB_DIR=..\libs
