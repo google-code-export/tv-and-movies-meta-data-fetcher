@@ -5,7 +5,7 @@ set JAVA_HEAP_INIT_SIZE=64
 set JAVA_HEAP_MAX_SIZE=192
 
 REM Find a java installation.
-if not exist %JAVA_HOME% goto javaHomeNotSet
+if not exist JAVA_HOME goto :javaHomeNotSet
 set JAVA=%JAVA_HOME%/bin/java
 
 :doit
@@ -14,7 +14,7 @@ REM Main class
 set MAIN=org.stanwood.media.cli.manager.CLIMediaManager
 
 REM Locations of libraries
-set LIB_DIR=..\libs
+set LIB_DIR=..\lib
 
 REM Setup class path
 set CLASSPATH=%LIB_DIR%\MediaManager-1.98.jar
@@ -31,15 +31,17 @@ set CLASSPATH=%CLASSPATH%;%LIB_DIR%\rome-1.0.jar
 
 
 REM Launch app
-call %JAVA% -Xms%JAVA_HEAP_INIT_SIZE% -Xmx%JAVA_HEAP_MAX_SIZE%M -classpath %CLASSPATH% %MAIN% "$@"
+call %JAVA% -Xms%JAVA_HEAP_INIT_SIZE%M -Xmx%JAVA_HEAP_MAX_SIZE%M -classpath %CLASSPATH% %MAIN% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-exit
+goto :exit
 
 :javaHomeNotSet
 
 echo "Warning: JAVA_HOME environment variable not set! Consider setting it."
 echo "          Attempting to use java on the path..."
 
-set JAVA=java        
+set JAVA=java
 
-goto doit
+goto :doit
+
+:exit

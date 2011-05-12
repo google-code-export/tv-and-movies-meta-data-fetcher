@@ -9,7 +9,7 @@
 			<author name="John-Paul Stanford" email="dev@stanwood.org.uk"/>
 		</authors>
 		<javaversion>1.6</javaversion>
-		<requiresjdk/>
+		<!-- <requiresjdk/>  -->
 		<uninstaller name="remove.task" path="${INSTALL_PATH}/Uninstall" write="yes"/>
 	</info>
 
@@ -54,7 +54,6 @@
 	
 	<panels>       
 		<panel classname="CheckedHelloPanel"/>
-		<panel classname="JDKPathPanel"/>
 		<panel classname="TargetPanel"/>
         <panel classname="PacksPanel"/>
 		<panel classname="SummaryPanel"/>
@@ -77,7 +76,7 @@
 			<file src="@{dist.dir}/@{ant.project.name}-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
 		</pack>
 		
-		<pack name="CLI Application" required="yes" installGroups="Application" os="unix">
+		<pack name="CLI Application" required="yes" installGroups="Application">
 			<description>Command line application</description>
 			
 			<file src="@{installer.dir}/scripts/unix/mm-manager" targetdir="$INSTALL_PATH/bin">
@@ -107,10 +106,16 @@
 			</file>			
 			
 			<native type="izpack" name="ShellLink.dll">
-				<os family="windows"/>
+				<os family="windows" />
 			</native>
+			<native type="izpack" name="ShellLink_x64.dll">
+  				<os family="windows" />
+			c:</native>
 			<native type="3rdparty" name="COIOSHelper.dll" stage="both">
-    			<os family="windows"/>
+				<os family="windows" />
+			</native>
+			<native type="3rdparty" name="COIOSHelper_x64.dll" stage="both">
+				<os family="windows" />
 			</native>
 			
 		</pack>
