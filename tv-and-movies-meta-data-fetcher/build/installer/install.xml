@@ -104,6 +104,9 @@
 			<file src="@{installer.dir}/scripts/windows/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>			
+			<file src="@{installer.dir}/scripts/windows/mm-java.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>
 			
 			<native type="izpack" name="ShellLink.dll">
 				<os family="windows" />
