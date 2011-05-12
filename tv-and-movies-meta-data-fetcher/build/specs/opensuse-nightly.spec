@@ -1,5 +1,5 @@
 #
-# spec file for package MediaInfoFetcher 1.0
+# spec file for package MediaManager 1.98
 #
 # Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
@@ -7,7 +7,7 @@
 #
 # Please submit bugfixes or comments via http://code.google.com/p/tv-and-movies-meta-data-fetcher/
 #
-Name:           MediaInfoFetcher
+Name:           MediaManager
 Requires:       java >= 1.6
 Requires:       jpackage-utils
 Requires:       jakarta-commons-cli = 1.0
@@ -35,9 +35,9 @@ BuildRequires:  fop >= 0.95
 BuildRequires:  ant-trax
 BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
-BuildRequires:	isoparser
 BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
+BuildRequires:	isoparser
 %if 0%{?suse_version} >= 1140
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
@@ -60,12 +60,12 @@ Authors
   John-Paul Stanford <dev@stanwood.org.uk>
  
 %package javadoc
-Summary:    Javadoc for MediaInfoFetcher
+Summary:    Javadoc for MediaManager
 Group:      Documentation/HTML
 PreReq:     coreutils
  
 %description javadoc
-Javadoc for MediaInfoFetcher application and API.
+Javadoc for MediaManager application and API.
  
 %prep
 %setup -q
@@ -94,8 +94,9 @@ pushd %{buildroot}%{_javadir}
         ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`
     done
 popd
-%__install -m 755 build/scripts/opensuse/mm-renamer %{buildroot}%{_bindir}/mm-renamer
+%__install -m 755 build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
 %__install -m 755 build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
+%__install -m 755 build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs
@@ -121,7 +122,8 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %files
 %defattr(-,root,root)
 %{_javadir}/*.jar
-%{_bindir}/mm-renamer
+%{_bindir}/mm-java
+%{_bindir}/mm-manager
 %{_bindir}/mm-xbmc
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}

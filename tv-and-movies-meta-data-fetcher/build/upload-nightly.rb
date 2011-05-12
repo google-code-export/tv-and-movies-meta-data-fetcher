@@ -52,7 +52,7 @@ end
 def doBuild(projectDir)
     Dir.chdir(projectDir)
      
-    executeCmd("ant dist")
+    #executeCmd("ant dist")
 end
 
 ################## Main ##################
@@ -66,7 +66,7 @@ params=Hash[
   "version" => version, 
   "release" => date,
   "changelog" => readFile(projectDir,"Changelog"),
-  "sourcefile" => "MediaInfoFetcher-#{version}-#{date}-src.zip",
+  "sourcefile" => "MediaManager-#{version}-#{date}-src.zip",
   "description" => readFile(projectDir,"Description")
 ]
 
@@ -88,8 +88,8 @@ Dir.mktmpdir("osc") { |dir|
         File.delete(file)
     }
 
-    copyAndUpdateFile("#{projectDir}/etc/opensuse-nightly.spec","MediaInfoFetcher.spec",params) 
-    copyFileToProject("#{projectDir}/dist/MediaInfoFetcher-#{version}-src.zip","MediaInfoFetcher-#{version}-#{date}-src.zip") 
+    copyAndUpdateFile("#{projectDir}/build/specs/opensuse-nightly.spec","MediaManager.spec",params) 
+    copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-src.zip","MediaManager-#{version}-#{date}-src.zip") 
 
     executeCmd("osc addremove")
     executeCmd("osc commit -m \"nightly upload #{version}-#{date}\"")
