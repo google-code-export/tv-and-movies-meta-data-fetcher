@@ -51,8 +51,10 @@ public class CLIManageAddons extends AbstractLauncher {
 
 	@Override
 	protected boolean run() {
-		subCommand.init(getController());
-		subCommand.launch(subCommandArgs.toArray(new String[subCommandArgs.size()]));
+		if (subCommand!=null) {
+			subCommand.init(getController());
+			subCommand.launch(subCommandArgs.toArray(new String[subCommandArgs.size()]));
+		}
 
 		return true;
 	}
@@ -69,6 +71,10 @@ public class CLIManageAddons extends AbstractLauncher {
 			return false;
 		}
 		boolean found = false;
+		if (subCommand==null) {
+			fatal("No subcommand given");
+			return false;
+		}
 		subCommandArgs = new ArrayList<String>();
 		for (String a: args) {
 			if (found) {
