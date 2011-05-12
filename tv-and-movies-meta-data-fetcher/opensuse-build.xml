@@ -28,7 +28,7 @@
 
     <!-- Lib classpaths -->
     <path id="run-time.libs.classpath">
-    	<pathelement location="${lib.dir}/commons-logging.jar"/>
+        <pathelement location="${lib.dir}/commons-logging.jar"/>
         <pathelement location="${lib.dir}/commons-cli.jar"/>
     	<pathelement location="${lib.dir}/commons-lang.jar"/>
     	<pathelement location="${lib.dir}/jakarta-commons-exec.jar"/>    	
@@ -99,7 +99,7 @@
     <target name="javadoc">
         <delete dir="${api.docs.dir}"/>
         <javadoc packagenames="org.stanwood.*"
-            sourcepath="src"
+            sourcepath="${src.dir}"
             defaultexcludes="yes"
             destdir="${api.docs.dir}"
             author="true"

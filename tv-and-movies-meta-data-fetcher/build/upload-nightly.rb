@@ -52,7 +52,7 @@ end
 def doBuild(projectDir)
     Dir.chdir(projectDir)
      
-    #executeCmd("ant dist")
+    executeCmd("ant dist")
 end
 
 ################## Main ##################
