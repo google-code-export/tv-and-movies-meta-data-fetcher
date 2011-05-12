@@ -1,4 +1,4 @@
-<project name="MediaInfoFetcher" default="dist" basedir=".">
+<project name="MediaManager" default="dist" basedir=".">
 
 	<!-- Allow properties to be overridden by a property file -->
 	<property file="build.properties" />
@@ -227,8 +227,7 @@
 				<exclude name="**/ExpressionLexer.java"/>
 			</zipfileset>
 			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
-			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
-			<zipfileset dir="${scripts.dir}" prefix="${ant.project.name}-${project.version}/build/scripts"/>
+			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>			
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
 			<zipfileset dir="${basedir}/build" prefix="${ant.project.name}-${project.version}/build"/>
 			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>

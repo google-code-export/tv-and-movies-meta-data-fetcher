@@ -1,4 +1,4 @@
-<project name="MediaInfoFetcher" default="all" basedir=".">
+<project name="MediaManager" default="all" basedir=".">
 
 <!-- Path properties -->
     <property name="src.dir" location="${basedir}/src" />
