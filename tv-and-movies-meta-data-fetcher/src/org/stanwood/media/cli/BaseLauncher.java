@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -143,6 +144,9 @@ public abstract class BaseLauncher implements ICLICommand {
 		} catch (UnrecognizedOptionException e1) {
 			fatal(e1.getMessage());
 			return;
+		} catch (MissingOptionException e1) {
+			fatal(e1.getMessage());
+			return;
 		} catch (ParseException e1) {
 			fatal(e1.getMessage());
 			return;
@@ -250,16 +254,16 @@ public abstract class BaseLauncher implements ICLICommand {
 	}
 
 	protected void printUsage(Options options,PrintStream stdout,PrintStream stderr) {
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(stdout);
+//		PrintWriter pw = null;
+//		try {
+			PrintWriter pw = new PrintWriter(stdout);
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printUsage(pw, 80, getName(),options);
 			pw.flush();
-		}
-		finally {
-			pw.close();
-		}
+//		}
+//		finally {
+//			pw.close();
+//		}
 		stdout.println("");
 	}
 
