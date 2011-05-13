@@ -10,7 +10,7 @@
 		</authors>
 		<javaversion>1.6</javaversion>
 		<!-- <requiresjdk/>  -->
-		<uninstaller name="remove.task" path="${INSTALL_PATH}/Uninstall" write="yes"/>
+		<uninstaller name="uninstall.jar" path="${INSTALL_PATH}/uninstaller" write="yes"/>
 	</info>
 
 	<guiprefs width="600" height="480" resizable="no">

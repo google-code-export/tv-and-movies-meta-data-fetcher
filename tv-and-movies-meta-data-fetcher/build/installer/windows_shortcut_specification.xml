@@ -33,7 +33,7 @@
      startMenu="no"
      startup="no"
      target="$INSTALL_PATH\bin\mm-java.bat"
-     commandLine="-jar &quot;$INSTALL_PATH\Uninstall\remove.task&quot;"          
+     commandLine="-jar &quot;$INSTALL_PATH\uninstaller\uninstall.jar&quot;"          
      type="Application"
      description="Uninstaller">
    </shortcut> 
