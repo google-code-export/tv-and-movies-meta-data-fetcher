@@ -11,7 +11,8 @@ Add action to create pod casts of new media that is found
 Change FILM search to to lookup film details from a NFO file.
 	- Option to ignore samples Delete samples
 	- Option to delete anything that did not get renamed in the NFO folder
-Allow the checking for updates period to be configured (Default once a day)	
+Allow the checking for updates period to be configured (Default once a day)
+Store the part numbers in MP4 files	
 
 Version 2.1
 -----------
