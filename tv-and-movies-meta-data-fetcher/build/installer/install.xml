@@ -49,8 +49,17 @@
 	<resources>    
     	<res src="RegistrySpec.xml" id="RegistrySpec.xml"/>
     	<res src="windows_shortcut_specification.xml" id="shortcutSpec.xml"/>
-		<res src="unix_shortcut_specification.xml" id="Unix_shortcutSpec.xml"/>
+		<res src="unix_shortcut_specification.xml" id="Unix_shortcutSpec.xml"/>		
 	</resources>
+	
+	<native type="izpack" name="ShellLink.dll"/>				
+	<native type="izpack" name="ShellLink_x64.dll"/>  					
+	<native type="3rdparty" name="COIOSHelper.dll" stage="both">
+		<os family="windows"/>				
+	</native>
+	<native type="3rdparty" name="COIOSHelper_x64.dll" stage="both">
+		<os family="windows"/>				
+	</native>
 	
 	<panels>       
 		<panel classname="CheckedHelloPanel"/>
@@ -107,20 +116,6 @@
 			<file src="@{installer.dir}/scripts/windows/mm-java.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>
-			
-			<native type="izpack" name="ShellLink.dll">
-				<os family="windows" />
-			</native>
-			<native type="izpack" name="ShellLink_x64.dll">
-  				<os family="windows" />
-			c:</native>
-			<native type="3rdparty" name="COIOSHelper.dll" stage="both">
-				<os family="windows" />
-			</native>
-			<native type="3rdparty" name="COIOSHelper_x64.dll" stage="both">
-				<os family="windows" />
-			</native>
-			
 		</pack>
 		
 		<pack name="CLI Documentation" required="no" installGroups="Documentation">
