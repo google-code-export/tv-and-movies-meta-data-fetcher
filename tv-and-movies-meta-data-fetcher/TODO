@@ -4,8 +4,6 @@ TODO
 Version 2.0
 -----------
 	 
-Add windows batch files for scripts
-Create a windows installer
 Create macosx installer
 Add action to create pod casts of new media that is found
 Change FILM search to to lookup film details from a NFO file.
@@ -18,7 +16,7 @@ Version 2.1
 -----------
 
 Add remove from store command line tool
-Remove stuff from the XML Store that has no files assoicated with it
+Remove stuff from the XML Store that has no files associated with it
 Extend patterns
 	* Allow formatting of elements like dates
 	* Allow formatting of strings to take only part of the string
