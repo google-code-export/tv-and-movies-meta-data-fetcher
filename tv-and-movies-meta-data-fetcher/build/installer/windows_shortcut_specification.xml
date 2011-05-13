@@ -5,7 +5,7 @@
   <programGroup defaultName="Media Manager" location="applications"/>
   <shortcut
     name="Media Manager CLI Documentation (HTML)"    
-    target="$INSTALL_PATH|docs|html|index.html"       
+    target="$INSTALL_PATH\docs\html\index.html"       
     description="The command line documentation in HTML format"        
     programGroup="yes"
     desktop="no"
@@ -16,7 +16,7 @@
   
   <shortcut
     name="Media Manager CLI Documentation (PDF)"    
-    target="$INSTALL_PATH|docs|pdf|userguide.pdf"       
+    target="$INSTALL_PATH\docs\pdf\userguide.pdf"       
     description="The command line documentation in HTML format"        
     programGroup="yes"
     desktop="no"
@@ -32,8 +32,8 @@
      applications="yes"
      startMenu="no"
      startup="no"
-     target="$INSTALL_PATH|bin|mm-java.bat"
-     commandLine="-jar &quot;$INSTALL_PATH|Uninstall|remove.task&quot;"          
+     target="$INSTALL_PATH\bin\mm-java.bat"
+     commandLine="-jar &quot;$INSTALL_PATH\Uninstall\remove.task&quot;"          
      type="Application"
      description="Uninstaller">
    </shortcut> 
