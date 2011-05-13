@@ -9,7 +9,7 @@
     description="The command line documentation in HTML format"        
     programGroup="yes"
     desktop="no"
-    applications="yes"
+    applications="no"
     startMenu="no"
     startup="no">    
   </shortcut>
@@ -20,7 +20,7 @@
     description="The command line documentation in HTML format"        
     programGroup="yes"
     desktop="no"
-    applications="yes"
+    applications="no"
     startMenu="no"
     startup="no">    
   </shortcut>
@@ -29,7 +29,7 @@
      name="Media Manager Uninstall"     
      programGroup="yes"
      desktop="no"
-     applications="yes"
+     applications="no"
      startMenu="no"
      startup="no"
      target="$INSTALL_PATH\bin\mm-java.bat"
