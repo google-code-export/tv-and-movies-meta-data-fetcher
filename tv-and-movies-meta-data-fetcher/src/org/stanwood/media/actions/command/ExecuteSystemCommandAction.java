@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -28,11 +29,13 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	private final static String PARAM_EXTENSIONS_KEY = "extensions";
 	private final static String PARAM_NEW_FILE_KEY = "newFile";
 	private final static String PARAM_DELETED_FILE_KEY = "deletedFile";
+	private final static String PARAM_ABORT_IF_FILE_EXISTS = "abortIfFileExists";
 
 	private String fileCmd;
 	private String dirCmd;
 	private String newFile;
 	private String deletedFile;
+	private String abortIfFileExists;
 	private List<String> extensions;
 
 	private void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
@@ -59,14 +62,19 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	}
 
 	protected void executeCommand(String cmd,File file) throws ActionException {
-		String convertedCmd = replaceVars(cmd,file);
-		CommandLine cmdLine= parseCommandLine(convertedCmd);
-		Executor exec = new DefaultExecutor();
-		try {
-			exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
-			exec.execute(cmdLine);
-		} catch (IOException e) {
-			throw new ActionException("Unable to execute system command: " + cmdLine.toString());
+		if (cmd!=null) {
+			if (abortIfFileExists!=null && new File(replaceVars(abortIfFileExists,file)).exists()) {
+				return;
+			}
+			String convertedCmd = replaceVars(cmd,file);
+			CommandLine cmdLine= parseCommandLine(convertedCmd);
+			Executor exec = new DefaultExecutor();
+			try {
+				exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
+				exec.execute(cmdLine);
+			} catch (IOException e) {
+				throw new ActionException("Unable to execute system command: " + cmdLine.toString());
+			}
 		}
 	}
 
@@ -75,7 +83,8 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		Iterator<String> it = args.iterator();
 		CommandLine cmd = new CommandLine(it.next());
 		while (it.hasNext()) {
-			cmd.addArgument(it.next(),false);
+			String arg = it.next();
+			cmd.addArgument(arg,false);
 		}
 		return cmd;
 	}
@@ -92,12 +101,16 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 
 	private String replaceVars(String cmd,File mediaFile) {
 		String s=cmd;
-		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
+		if (newFile!=null) {
+			s = s.replaceAll("\\$NEWFILE",Matcher.quoteReplacement(newFile));
+		}
+		if (deletedFile!=null) {
+			s = s.replaceAll("\\$DELETEDFILE", Matcher.quoteReplacement(deletedFile));
+		}
 		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ "));
 		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
 		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
-		s = s.replaceAll("\\$NEWFILE", newFile);
-		s = s.replaceAll("\\$DELETEDFILE", deletedFile);
+		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
 		return s;
 	}
 
@@ -113,7 +126,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			this.deletedFile = value;
 		}
 		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY)) {
-			StringTokenizer tok = new StringTokenizer(",");
+			StringTokenizer tok = new StringTokenizer(value,",");
 			this.extensions = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
@@ -122,7 +135,10 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		else if (key.equalsIgnoreCase(PARAM_CMD_ON_DIR_KEY)) {
 			this.dirCmd = value;
 		}
-		else {
+		else if (key.equalsIgnoreCase(PARAM_ABORT_IF_FILE_EXISTS)) {
+			this.abortIfFileExists = value;
+		}
+ 		else {
 			throw new ActionException("Unsupported parameter for action '"+key+"'");
 		}
 	}
