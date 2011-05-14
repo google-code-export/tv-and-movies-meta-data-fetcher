@@ -158,24 +158,26 @@ public class ActionPerformer implements IActionEventHandler {
 
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
-			for (IAction action : actions) {
-				if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-					SearchResult result = findFilm(dir, file);
-					if (result!=null) {
-						Film film = getFilm(result,dir,file);
-						if (film!=null) {
+			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
+				SearchResult result = findFilm(dir, file);
+				if (result!=null) {
+					Film film = getFilm(result,dir,file);
+					if (film!=null) {
+						for (IAction action : actions) {
 							action.perform(dir,film,file,result.getPart(),this);
 						}
 					}
 				}
-				else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
-					Episode episode = getTVEpisode(dir, file);
-					if (episode!=null) {
+			}
+			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
+				Episode episode = getTVEpisode(dir, file);
+				if (episode!=null) {
+					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);
 					}
 				}
-
 			}
+
 		}
 	}
 
@@ -194,6 +196,12 @@ public class ActionPerformer implements IActionEventHandler {
 		List<File> files = new ArrayList<File>();
 		files.add(file);
 		performActionsFiles(files);
+
+//		for (IStore store : dir.getStores()) {
+//			if (!testMode) {
+//				store.cacheFilm(dir,file, film,searchResult.getPart());
+//			}
+//		}
 	}
 
 	@Override
@@ -259,10 +267,10 @@ public class ActionPerformer implements IActionEventHandler {
 				log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
 				return null;
 			}
-			if (result.getPart()!=null && !testMode) {
+			if (!testMode) {
 				boolean found = false;
 				for (VideoFile vf : film.getFiles()) {
-					if (vf.getPart()!=null && vf.getPart().equals(result.getPart()) && vf.getLocation().equals(file)) {
+					if (vf.getLocation().equals(file)) {
 						found = true;
 						break;
 					}
