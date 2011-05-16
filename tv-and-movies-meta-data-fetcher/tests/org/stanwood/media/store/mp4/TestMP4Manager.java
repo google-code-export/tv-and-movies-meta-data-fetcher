@@ -148,7 +148,7 @@ public class TestMP4Manager {
 		Film film = createTestFilm();
 
 		IMP4Manager ap = new MP4Manager();
-		ap.updateFilm(mp4File, film);
+		ap.updateFilm(mp4File, film,null);
 
 		List<Atom> atoms = ap.listAttoms(mp4File);
 		Collections.sort(atoms, new Comparator<Atom>() {

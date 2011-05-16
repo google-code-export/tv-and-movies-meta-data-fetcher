@@ -149,14 +149,14 @@ public class MP4ITunesStore implements IStore {
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
 			validate();
-			writeFilm(filmFile,film);
+			writeFilm(filmFile,film,part);
 		}
 	}
 
-	private void writeFilm(File filmFile, Film film) throws StoreException {
+	private void writeFilm(File filmFile, Film film, Integer part) throws StoreException {
 		IMP4Manager ap = new MP4Manager();
 		try {
-			ap.updateFilm(filmFile,film);
+			ap.updateFilm(filmFile,film,part);
 		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}

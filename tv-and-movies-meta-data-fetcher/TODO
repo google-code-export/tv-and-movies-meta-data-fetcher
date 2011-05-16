@@ -9,13 +9,15 @@ Add action to create pod casts of new media that is found
 Change FILM search to to lookup film details from a NFO file.
 	- Option to ignore samples Delete samples
 	- Option to delete anything that did not get renamed in the NFO folder
-Allow the checking for updates period to be configured (Default once a day)
-Store the part numbers in MP4 files	
 Allow pattern vars to be placed in ExecuteSystemCommandAction params
+Add a getting started guide and link to a button in the installer
+Update java doc
+Update user guide
 
 Version 2.1
 -----------
 
+Allow the checking for updates period to be configured (Default once a day)
 Add remove from store command line tool
 Remove stuff from the XML Store that has no files associated with it
 Extend patterns

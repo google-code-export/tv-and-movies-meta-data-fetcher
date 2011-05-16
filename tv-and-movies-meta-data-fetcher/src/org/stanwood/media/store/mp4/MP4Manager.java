@@ -153,6 +153,7 @@ public class MP4Manager implements IMP4Manager {
 	 */
 	@Override
 	public void updateEpsiode(File mp4File, Episode episode) throws MP4Exception {
+		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.TV_SHOW));
 		atoms.add(AtomFactory.createAtom("tven", episode.getEpisodeId()));
@@ -162,7 +163,7 @@ public class MP4Manager implements IMP4Manager {
 		atoms.add(AtomFactory.createAtom("©day", episode.getDate().toString()));
 		atoms.add(AtomFactory.createAtom("©nam", episode.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", episode.getSummary()));
-//		atoms.add(new Atom("rtng", ));
+//		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
 			atoms.add(AtomFactory.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
@@ -320,15 +321,20 @@ public class MP4Manager implements IMP4Manager {
 	 *
 	 * @param mp4File The MP4 file
 	 * @param film The film details
+	 * @param part The part number of the film, or null if it does not have parts
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
 	@Override
-	public void updateFilm(File mp4File, Film film) throws MP4Exception {
+	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
 		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
+		if (part!=null) {
+			atoms.add(AtomFactory.createAtom("disk", String.valueOf(part)));
+		}
+
 		if (film.getImageURL() != null) {
 			File artwork;
 			try {
