@@ -33,7 +33,7 @@ public class CLIManageAddons extends AbstractLauncher {
 	private List<String> subCommandArgs;
 
 	private CLIManageAddons(IExitHandler exitHandler) {
-		super("xbmc-addons", OPTIONS, exitHandler,stdout,stderr);
+		super("mm-xbmc", OPTIONS, exitHandler,stdout,stderr);
 
 		subCommands = new ArrayList<AbstractSubCLICommand>();
 		IExitHandler subExitHandler = new IExitHandler() {
@@ -157,8 +157,26 @@ public class CLIManageAddons extends AbstractLauncher {
 	}
 
 	/**
-	 * The main entry point into this command
-	 * @param args The arguments from the command line
+	 * <p>
+	 * This CLI launcher command is used to manage XBMC addons. It has sub commands and args
+	 * listed below.
+	 * </p>
+	 * <code>
+	 * usage: mm-xbmc [--global-options] <command> [--command-options] [arguments]
+	 *
+	 * Global options:
+	 *   --config_file, -c <info|debug|file>
+	 *                                 The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *   --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
+	 *   --help, -h                    Show the help
+	 *
+	 * Commands:
+	 *   list                          lists the installed XBMC addons
+	 *   update                        Update the installed XBMC addons to the latest versions
+	 *   install                       Install a new XBMC addon
+	 *   remove                        Remove a installed XBMC addons
+	 * </code>
+	 * @param args The arguments passed to the program from the command line
 	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
@@ -169,6 +187,10 @@ public class CLIManageAddons extends AbstractLauncher {
 		ca.launch(args);
 	}
 
+	/**
+	 * Used to se a exit handler
+	 * @param handler The exit handler
+	 */
 	public static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}

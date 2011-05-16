@@ -19,6 +19,10 @@ public class LoggerOutputStream extends OutputStream {
 	private StringBuilder buffer = new StringBuilder();
 	private Level level;
 
+	/**
+	 * The constructor
+	 * @param level The log level to output to
+	 */
 	public LoggerOutputStream(Level level) {
 		this.level = level;
 	}

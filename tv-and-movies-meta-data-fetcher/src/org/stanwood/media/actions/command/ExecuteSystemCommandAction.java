@@ -17,9 +17,12 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
+import org.stanwood.media.actions.rename.PatternException;
+import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
 
 public class ExecuteSystemCommandAction extends AbstractAction {
@@ -38,7 +41,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	private String abortIfFileExists;
 	private List<String> extensions;
 
-	private void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
+	private void perform(MediaDirectory dir, File mediaFile,IActionEventHandler actionEventHandler,IVideo video) throws ActionException {
 		if (!isTestMode()) {
 			if (extensions!=null) {
 				String ext = FileHelper.getExtension(mediaFile);
@@ -47,7 +50,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 				}
 			}
 
-			executeCommand(fileCmd,mediaFile);
+			executeCommand(fileCmd,mediaFile,dir,video);
 			sendEvents(actionEventHandler,mediaFile);
 		}
 	}
@@ -56,17 +59,17 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	public void performOnDirectory(MediaDirectory dir, File directory, IActionEventHandler actionEventHandler)
 			throws ActionException {
 		if (!isTestMode()) {
-			executeCommand(dirCmd,directory);
+			executeCommand(dirCmd,directory,dir,null);
 			sendEvents(actionEventHandler,directory);
 		}
 	}
 
-	protected void executeCommand(String cmd,File file) throws ActionException {
+	protected void executeCommand(String cmd,File file, MediaDirectory dir, IVideo video) throws ActionException {
 		if (cmd!=null) {
-			if (abortIfFileExists!=null && new File(replaceVars(abortIfFileExists,file)).exists()) {
+			if (abortIfFileExists!=null && new File(replaceVars(abortIfFileExists,file,dir,video)).exists()) {
 				return;
 			}
-			String convertedCmd = replaceVars(cmd,file);
+			String convertedCmd = replaceVars(cmd,file,dir,video);
 			CommandLine cmdLine= parseCommandLine(convertedCmd);
 			Executor exec = new DefaultExecutor();
 			try {
@@ -92,14 +95,14 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	protected void sendEvents(IActionEventHandler actionEventHandler,File mediaFile)
 			throws ActionException {
 		if (deletedFile!=null) {
-			actionEventHandler.sendEventDeletedFile(new File(replaceVars(deletedFile,mediaFile)));
+			actionEventHandler.sendEventDeletedFile(new File(replaceVars(deletedFile,mediaFile,null,null)));
 		}
 		if (newFile!=null) {
-			actionEventHandler.sendEventNewFile(new File(replaceVars(newFile,mediaFile)));
+			actionEventHandler.sendEventNewFile(new File(replaceVars(newFile,mediaFile,null,null)));
 		}
 	}
 
-	private String replaceVars(String cmd,File mediaFile) {
+	private String replaceVars(String cmd,File mediaFile,MediaDirectory dir,IVideo video) throws ActionException {
 		String s=cmd;
 		if (newFile!=null) {
 			s = s.replaceAll("\\$NEWFILE",Matcher.quoteReplacement(newFile));
@@ -111,6 +114,23 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
 		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
 		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
+
+		if (dir!=null && video!=null) {
+			String ext = FileHelper.getExtension(new File(s));
+			try {
+				PatternMatcher pm = new PatternMatcher();
+				if (video instanceof Film) {
+					s = pm.getNewFilmName(dir.getMediaDirConfig(), s, (Film)video, ext, null).getAbsolutePath();
+				}
+				else if (video instanceof Episode) {
+					s = pm.getNewTVShowName(dir.getMediaDirConfig(), s, (Episode)video, ext).getAbsolutePath();
+				}
+			} catch (PatternException e) {
+				throw new ActionException("Unable to translate pattern",e);
+			}
+		}
+
+
 		return s;
 	}
 
@@ -146,13 +166,13 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	@Override
 	public void perform(MediaDirectory dir, Episode episode, File mediaFile,
 			IActionEventHandler actionEventHandler) throws ActionException {
-		perform(dir,mediaFile,actionEventHandler);
+		perform(dir,mediaFile,actionEventHandler,episode);
 	}
 
 	@Override
 	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,
 			IActionEventHandler actionEventHandler) throws ActionException {
-		perform(dir,mediaFile,actionEventHandler);
+		perform(dir,mediaFile,actionEventHandler,film);
 	}
 
 

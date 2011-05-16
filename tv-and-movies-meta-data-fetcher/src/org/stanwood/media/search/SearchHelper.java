@@ -53,6 +53,10 @@ public class SearchHelper {
 		}
 	}
 
+	/**
+	 * This is used to remove any unwanted characters from search terms
+	 * @param term The search term
+	 */
 	public static void removeUnwantedCharacters(StringBuilder term) {
 		for (String c : STRIPED_CHARS) {
 			int pos = -1;
@@ -62,6 +66,10 @@ public class SearchHelper {
 		}
 	}
 
+	/**
+	 * This is used to replace underscore characters with spaces in the search term
+	 * @param term The search term
+	 */
 	public static void replaceUnderscore(StringBuilder term) {
 		int pos = -1;
 		int currentPos = 0;
@@ -80,82 +88,20 @@ public class SearchHelper {
 		}
 	}
 
+	/**
+	 * This is used to replace word seperator characters such as underscores with spaces.
+	 * @param term The search term
+	 */
 	public static void replaceWithSpaces(StringBuilder term) {
 		replaceUnderscore(term);
 		replaceDots(term);
 	}
 
 	/**
-	 * Used to decode HTML entities in strings
-	 * @param s The string to decode
-	 * @return The decoded string
+	 * Used to get a part number for the search term
+	 * @param term The search term
+	 * @return The part number, or null if it could not be found
 	 */
-//	public static String decodeHtmlEntities(String s) {
-////		int i = 0, j = 0, pos = 0;
-//		StringBuilder sb = new StringBuilder();
-//		int pos = 0;
-//
-//		while (pos< s.length()) {
-//			if (s.length()>pos+2 && s.substring(pos,pos+2).equals("&#")) {
-//				int n = -1;
-//				int j = s.indexOf(';', pos);
-//				pos+=2;
-//				while (pos < j) {
-//					char c = s.charAt(pos);
-//					if ('0' <= c && c <= '9') {
-//						n = (n == -1 ? 0 : n * 10) + c - '0';
-//					} else {
-//						break;
-//					}
-//					pos++;
-//				}
-//				if (n!=-1) {
-//					sb.append((char) n);
-//				}
-//			}
-//			else {
-//				sb.append(s.charAt(pos));
-//			}
-//
-//			pos++;
-//		}
-//
-//		return sb.toString();
-//	}
-
-	/**
-	 * This will normalise a string. It lower cases the string and then replaces any accented
-	 * characters. Other punciation is removed.
-	 * @param s The string to normalise
-	 * @return The normalised string
-	 */
-	public static String normalizeQuery(String s) {
-		s =s.toLowerCase();
-
-		s = s.replaceAll("ä|á","a");
-		s = s.replaceAll("ñ","n");
-		s = s.replaceAll("ö","o");
-		s = s.replaceAll("ü","u");
-		s = s.replaceAll("ÿ","y");
-		s = s.replaceAll("é","e");
-
-		s = s.replaceAll("ß","ss");  //  German beta “ß” -> “ss”
-		s = s.replaceAll("Æ","AE");  //  Æ
-		s = s.replaceAll("æ","ae");  //  æ
-		s = s.replaceAll("Ĳ","IJ");  //  Ĳ
-		s = s.replaceAll("ĳ","ij");  //  ĳ
-		s = s.replaceAll("Œ","Oe");  //  Œ
-		s = s.replaceAll("œ","oe");  //  œ
-//
-//		s = s.replaceAll("\\x{00d0}\\x{0110}\\x{00f0}\\x{0111}\\x{0126}\\x{0127}","DDddHh");
-//		s = s.replaceAll("\\x{0131}\\x{0138}\\x{013f}\\x{0141}\\x{0140}\\x{0142}","ikLLll");
-//		s = s.replaceAll("\\x{014a}\\x{0149}\\x{014b}\\x{00d8}\\x{00f8}\\x{017f}","NnnOos");
-//		s = s.replaceAll("\\x{00de}\\x{0166}\\x{00fe}\\x{0167}","TTtt");
-
-		s =s.replaceAll(":|-|,|'", "");
-		return s;
-	}
-
 	public static Integer extractPart(StringBuilder term) {
 		Matcher m = PATTERN_PART.matcher(term);
 		Integer part = null;

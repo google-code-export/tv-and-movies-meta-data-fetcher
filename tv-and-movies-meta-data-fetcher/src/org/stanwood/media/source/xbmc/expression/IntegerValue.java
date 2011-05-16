@@ -1,11 +1,23 @@
 package org.stanwood.media.source.xbmc.expression;
 
+/**
+ * Used to store integer values for the {@link ExpressionEval}
+ */
 public class IntegerValue extends Value {
 
+	/**
+	 * The constructor
+	 * @param type The type
+	 * @param value the value
+	 */
 	public IntegerValue(ValueType type, Integer value) {
 		super(type, value);
 	}
 
+	/**
+	 * Get the value as a int
+	 * @return The value as a int
+	 */
 	public int intValue() {
 		return ((Integer)getValue()).intValue();
 	}

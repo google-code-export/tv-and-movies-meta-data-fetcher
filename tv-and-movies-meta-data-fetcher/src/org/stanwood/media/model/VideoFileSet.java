@@ -3,8 +3,14 @@ package org.stanwood.media.model;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+/**
+ * Used to store video files in a sorted set
+ */
 public class VideoFileSet extends TreeSet<VideoFile> {
 
+	/**
+	 * The constructor
+	 */
 	public VideoFileSet() {
 		super(new Comparator<VideoFile>() {
 			@Override

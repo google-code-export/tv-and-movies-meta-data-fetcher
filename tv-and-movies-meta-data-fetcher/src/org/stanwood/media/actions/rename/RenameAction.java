@@ -14,8 +14,6 @@ import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
@@ -95,8 +93,6 @@ public class RenameAction extends AbstractAction {
 			log.error("Unable to find episode for file : " + file.getAbsolutePath());
 		}
 		else {
-			Season season = episode.getSeason();
-			Show show = season.getShow();
 			String ext = FileHelper.getExtension(file);
 			PatternMatcher pm = new PatternMatcher();
 			File newName = pm.getNewTVShowName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),episode, ext);
@@ -172,6 +168,13 @@ public class RenameAction extends AbstractAction {
 		}
 	}
 
+	/**
+	 * If the &quot;pruneEmptyFolders&quot; option has been set, then this will delete any empty
+	 * directories it finds.
+	 * @param mediaDir The media directory
+	 * @param dir The directory been checked
+	 * @param actionEventHandler Thrown if their is a problem with the action
+	 */
 	@Override
 	public void performOnDirectory(MediaDirectory mediaDir, File dir,IActionEventHandler actionEventHandler) throws ActionException {
 		if (pruneEmptyFolders) {

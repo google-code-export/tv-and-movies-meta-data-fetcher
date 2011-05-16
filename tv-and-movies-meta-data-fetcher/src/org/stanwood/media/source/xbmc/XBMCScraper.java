@@ -93,23 +93,6 @@ public class XBMCScraper extends XBMCExtension {
 	 */
 	public Document getGetDetails(File file,String... contents) throws  XBMCException {
 		Document result = executeFunctionByName("GetDetails",contents);
-
-		if (file!=null && result!=null) {
-			if (getAddon().getCreateNFOFiles()) {
-				String name = file.getName().substring(0,file.getName().indexOf("."));
-				File nfoFile = new File(file.getParentFile(),name+".nfo");
-				try {
-					if (log.isDebugEnabled()) {
-						log.debug("Creating NFO file : " +nfoFile );
-					}
-					XMLParser.writeXML(nfoFile,result);
-				}
-				catch (IOException e) {
-					throw new XBMCException("Unable to write file : " + nfoFile.getAbsolutePath(),e);
-				}
-			}
-		}
-
 		return result;
 	}
 
@@ -123,17 +106,6 @@ public class XBMCScraper extends XBMCExtension {
 		return executeFunctionByName("EpisodeGuideUrl",rawHtml);
 	}
 
-	/**
-	 * Used to get the details of the a episode. The <code>contents</code> argument contains the downloaded
-	 * weppage of the episode details. The episode details URL is obtained by calling {@link #getEpisodeList(String , URL)}
-	 * @param contents The downloaded HTML of the episode guide
-	 * @param episodeId The ID of the episode to get the details for
-	 * @return episode details XML
-	 * @throws XBMCException Thrown if their are any problems
-	 */
-	public Document getGetEpisodeDetails(String contents,String episodeId) throws  XBMCException {
-		return executeFunctionByName("GetEpisodeDetails",contents,episodeId);
-	}
 
 	/**
 	 * Used to get a Show or film URL from the contents of a NFO file.
@@ -305,4 +277,17 @@ public class XBMCScraper extends XBMCExtension {
 	public boolean supportsURL(URL url) throws SourceException {
 		return getNfoUrl(url.toExternalForm());
 	}
+
+	/**
+	 * Used to get the details of the a episode. The <code>contents</code> argument contains the downloaded
+	 * weppage of the episode details. The episode details URL is obtained by calling {@link #getGetEpisodeList(String, URL)}
+	 * @param contents The downloaded HTML of the episode guide
+	 * @param episodeId The ID of the episode to get the details for
+	 * @return episode details XML
+	 * @throws XBMCException Thrown if their are any problems
+	 */
+	public Document getGetEpisodeDetails(String contents,String episodeId) throws  XBMCException {
+		return executeFunctionByName("GetEpisodeDetails",contents,episodeId);
+	}
+
 }

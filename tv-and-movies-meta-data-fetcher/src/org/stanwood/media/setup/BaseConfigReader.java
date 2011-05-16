@@ -5,7 +5,7 @@ import org.stanwood.media.xml.XMLParser;
 /**
  * A base class for configuration readers
  */
-public abstract class BaseConfigReader extends XMLParser implements IConfigReader {
+public abstract class BaseConfigReader extends XMLParser {
 
 
 

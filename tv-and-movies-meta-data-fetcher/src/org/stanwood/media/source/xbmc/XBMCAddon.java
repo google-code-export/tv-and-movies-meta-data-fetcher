@@ -47,8 +47,6 @@ public class XBMCAddon extends XMLParser {
 	private Map<File, Document> docs = new HashMap<File,Document>();
 	private ExpressionEval eval = new ExpressionEval();
 
-	private boolean createNFOFiles = false;
-
 	/**
 	 * Used to create a instance of the addon class
 	 * @param addonMgr The XBMC addon manager
@@ -460,15 +458,7 @@ public class XBMCAddon extends XMLParser {
 		}
 	}
 
-	public boolean getCreateNFOFiles() {
-		return createNFOFiles;
-	}
-
-	public void setCreateNFOFiles(boolean value) {
-		createNFOFiles = value;
-	}
-
-
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "XBMCAddon: " + addonDir.getAbsolutePath();

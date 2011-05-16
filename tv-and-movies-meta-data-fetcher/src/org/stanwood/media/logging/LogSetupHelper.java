@@ -58,6 +58,11 @@ public class LogSetupHelper {
 		}
 	}
 
+	/**
+	 * Initialise the logging with default settings, and send the output to the streams.
+	 * @param stdout The stdout stream
+	 * @param stderr The stderr stream
+	 */
 	public static void initLogging(OutputStream stdout, OutputStream stderr) {
 		resetLogging();
 		PatternLayout layout = new PatternLayout("%m%n");

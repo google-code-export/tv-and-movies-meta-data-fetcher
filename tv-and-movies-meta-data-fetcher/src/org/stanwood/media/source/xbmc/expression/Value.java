@@ -82,42 +82,107 @@ public class Value {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","*",type));
 	}
 
+	/**
+	 * Used to subtract the parameter value from this value
+	 * @param value The value to subtract
+	 * @return The result of the operation
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value subtract(Value value) throws ExpressionParserException {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","-",type));
 	}
 
+	/**
+	 * Used to perform a not operation on this value and return the result
+	 * @return The not value of this value
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value not() {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","!",type));
 	}
 
+	/**
+	 * Used to &apos;and&apos; the parameter value from with value
+	 * @param value The value to &apos;and&apos; with
+	 * @return The result of the operation
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value and(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","&&",type));
 	}
 
+	/**
+	 * Used to &apos;or&apos; the parameter value from with value
+	 * @param value The value to &apos;or&apos; with
+	 * @return The result of the operation
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value or(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","||",type));
 	}
 
+	/**
+	 * Used to perform a <code>!=</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value notequals(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","!=",type));
 	}
 
+	/**
+	 * Used to perform a <code>==</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value equals(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","==",type));
 	}
 
+	/**
+	 * Used to perform a <code>&gt;</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value greater(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'",">",type));
 	}
 
+	/**
+	 * Used to perform a <code>&gt;=</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value greaterEquals(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'",">=",type));
 	}
 
+	/**
+	 * Used to perform a <code>&lt;</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value less(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","<",type));
 	}
 
+	/**
+	 * Used to perform a <code>&lt;=</code> operation between this value and the value in the
+	 * parameter
+	 * @param value The value to perform the operation with
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if not supported by this value
+	 */
 	public Value lessEquals(Value value) {
 		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","<=",type));
 	}

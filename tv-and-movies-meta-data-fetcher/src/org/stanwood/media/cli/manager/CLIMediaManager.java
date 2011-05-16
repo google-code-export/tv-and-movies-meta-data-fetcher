@@ -21,6 +21,13 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 
+/**
+ * <p>
+ * This is a command line launcher that is used to managed a media directory. It reads
+ * the configuration file to work out which sources, stores and actions are to be used
+ * with media directory. Then the actions are performed on the media directory.
+ * </p>
+ */
 public class CLIMediaManager extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIMediaManager.class);
@@ -58,6 +65,24 @@ public class CLIMediaManager extends AbstractLauncher {
 		OPTIONS.add(o);
 	}
 
+	/**
+	 * The entry point, see class documentation for arguments
+	 * <p>
+	 * It has the following usage:
+	 * <code>
+	 *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u]
+	 *
+	 *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
+	 *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
+	 *  --test, -t                    If this option is present, then no changes are performed.
+	 *  --config_file, -c <info|debug|file>
+	 *                                The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *  --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
+	 *  --help, -h                    Show the help
+	 * </code>
+	 * </p>
+	 * @param args The arguments
+	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
 			setExitHandler(new DefaultExitHandler());

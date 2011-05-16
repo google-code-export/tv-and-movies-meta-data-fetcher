@@ -33,7 +33,8 @@ public class SearchResult {
 	 * Constructor of the class
 	 * @param id The id of the show that was found
 	 * @param sourceId The id of the source that it was found in
-	 * @param url The url of the show
+	 * @param url The URL of the show
+	 * @param part The part number of the media, or null if not known/supported
 	 */
 	public SearchResult(String id, String sourceId,String url,Integer part) {
 		super();
@@ -105,6 +106,10 @@ public class SearchResult {
 		return title;
 	}
 
+	/**
+	 * Used to get the part number if one was found
+	 * @return The part number or null if it was not found
+	 */
 	public Integer getPart() {
 		return part;
 	}

@@ -396,11 +396,13 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 		this.country = country;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SortedSet<VideoFile> getFiles() {
 		return videoFiles;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setFiles(SortedSet<VideoFile> videoFiles) {
 		this.videoFiles = videoFiles;
