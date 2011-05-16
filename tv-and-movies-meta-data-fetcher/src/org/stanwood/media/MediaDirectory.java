@@ -28,6 +28,9 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
+/**
+ * Used to represent a directory that contains media and can be managed by MediaManager
+ */
 public class MediaDirectory {
 
 	private final static Log log = LogFactory.getLog(MediaDirectory.class);
@@ -43,6 +46,13 @@ public class MediaDirectory {
 
 	private AbstractMediaSearcher showSearcher;
 
+	/**
+	 * The constructor
+	 * @param controller The media controller
+	 * @param config The configuration of the media directory
+	 * @param mediaDir The location of the media directory
+	 * @throws ConfigException Thrown if their is a problem reading the configuration
+	 */
 	public MediaDirectory(Controller controller,ConfigReader config,File mediaDir) throws ConfigException {
 		this.controller = controller;
 
@@ -395,6 +405,12 @@ public class MediaDirectory {
 		}
 	}
 
+	/**
+	 * Used to get the default source to use for a given mode
+	 * @param mode The mode to check
+	 * @return The source, or null if one can't be found
+	 * @throws XBMCException Thrown if thier is a problem finding the source
+	 */
 	public ISource getDefaultSource(Mode mode) throws XBMCException {
 		String id = controller.getXBMCAddonManager().getDefaultSourceID(mode);
 		for (ISource source : controller.getXBMCAddonManager().getSources()) {
@@ -405,6 +421,11 @@ public class MediaDirectory {
 		return null;
 	}
 
+	/**
+	 * Used to get a source by it's ID
+	 * @param sourceId The id of the source
+	 * @return The source, or null if it can't be found
+	 */
 	public ISource getSource(String sourceId) {
 		if (sourceId == null) {
 			return null;
@@ -418,6 +439,10 @@ public class MediaDirectory {
 		return null;
 	}
 
+	/**
+	 * Get the configuration of the media directory
+	 * @return the configuration of the media directory
+	 */
 	public MediaDirConfig getMediaDirConfig() {
 		return dirConfig;
 	}
@@ -432,14 +457,26 @@ public class MediaDirectory {
 		return controller.getXBMCAddonManager().getDefaultSourceID(mode);
 	}
 
+	/**
+	 * Get the stores been used by the media directory
+	 * @return The stores
+	 */
 	public List<IStore>getStores() {
 		return stores;
 	}
 
+	/**
+	 * Get the sources been used by the media directory
+	 * @return The sources
+	 */
 	public List<ISource>getSources() {
 		return sources;
 	}
 
+	/**
+	 * Get the actions been used by the media directory
+	 * @return The actions
+	 */
 	public List<IAction>getActions() {
 		return actions;
 	}

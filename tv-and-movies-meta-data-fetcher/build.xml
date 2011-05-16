@@ -343,6 +343,18 @@
 			<zipfileset file="${dist.dir}/wrappers/izpack2exe/setup.exe" prefix=""/>
 		</zip>
 		
+		<!-- Create a native mac installer -->
+		<copy todir="${dist.dir}/wrappers/izpack2app">
+			<fileset dir="${installer.dir}/Mac-App-Template" includes="**/*"/>
+		</copy>
+		<chmod file="${dist.dir}/wrappers/izpack2app/izpack2app.py" perm="ugo+x"/>
+		<chmod file="${dist.dir}/wrappers/izpack2app/setup.py" perm="ugo+x"/>
+		
+		<exec dir="${dist.dir}/wrappers/izpack2app" executable="./izpack2app.py" failonerror="true">
+			<arg file="${dist.dir}/${ant.project.name}-${project.version}-install.jar"/>
+			<arg file="${dist.dir}/${ant.project.name}-${project.version}-macosx.app"/>
+		</exec>
+		
 		<delete dir="${dist.dir}/wrappers"/>
 	</target>
 

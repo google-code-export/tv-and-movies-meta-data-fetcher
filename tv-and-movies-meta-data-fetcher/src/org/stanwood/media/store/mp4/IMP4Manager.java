@@ -35,8 +35,9 @@ public interface IMP4Manager {
 	 *
 	 * @param mp4File The MP4 file
 	 * @param film The film details
+	 * @param part The part number of the film, or null if it does not have parts
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
-	public void updateFilm(File mp4File, Film film) throws MP4Exception;
-	
+	public void updateFilm(File mp4File, Film film, Integer part) throws MP4Exception;
+
 }

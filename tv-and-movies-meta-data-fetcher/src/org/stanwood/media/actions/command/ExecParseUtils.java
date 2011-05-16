@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * Used to parse command line parameters
+ */
 public final class ExecParseUtils {
 
+	/** The whitespace char */
 	public static final String WHITESPACE = " ";
 
+	/** The quote char */
 	public static final String QUOTE_CHAR = "\"";
 
 	private ExecParseUtils() {

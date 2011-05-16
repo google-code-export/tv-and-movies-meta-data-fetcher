@@ -67,6 +67,11 @@ public class Controller {
 		this.configReader = config;
 	}
 
+	/**
+	 * Used to setup the controller ready for use
+	 * @param testMode If true then test mode is active and no changes are to be written to disk
+	 * @throws ConfigException Thrown if their is a problem reading the configuration
+	 */
 	public void init(boolean testMode) throws ConfigException {
 		if (xbmcMgr == null) {
 			try {
@@ -137,6 +142,12 @@ public class Controller {
 		return xbmcMgr;
 	}
 
+	/**
+	 * Used to convert a media directory location into the media directory object
+	 * @param mediaDir The location of a media directory
+	 * @return The media directory
+	 * @throws ConfigException Thrown if their is a problem reading the configuration
+	 */
 	public MediaDirectory getMediaDirectory(File mediaDir) throws ConfigException {
 		MediaDirectory dir = mediaDirs.get(mediaDir);
 		if (dir == null) {
@@ -146,8 +157,13 @@ public class Controller {
 		return dir;
 	}
 
-
-
+	/**
+	 * Used to get the class of a source. This can handle getting the class if
+	 * the source is in a plugin
+	 * @param className The name of the class
+	 * @return The class object
+	 * @throws ConfigException Thrown if their are any problems
+	 */
 	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
 		if (pluginSources.get(className)!=null) {
 			return pluginSources.get(className);
@@ -161,6 +177,13 @@ public class Controller {
 
 	}
 
+	/**
+	 * Used to get the class of a store. This can handle getting the class if
+	 * the store is in a plugin
+	 * @param className The name of the class
+	 * @return The class object
+	 * @throws ConfigException Thrown if their are any problems
+	 */
 	public Class<? extends IStore> getStoreClass(String className) throws  ConfigException {
 		if (pluginStores.get(className)!=null) {
 			return pluginStores.get(className);
@@ -172,6 +195,13 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Used to get the class of a action. This can handle getting the class if
+	 * the action is in a plugin
+	 * @param className The name of the class
+	 * @return The class object
+	 * @throws ConfigException Thrown if their are any problems
+	 */
 	public Class<? extends IAction> getActionClass(String className) throws  ConfigException {
 		if (pluginActions.get(className)!=null) {
 			return pluginActions.get(className);
@@ -183,6 +213,11 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Used to find out if test mode is been used. Test mode means that changes are not
+	 * to be written to disk
+	 * @return True if test mode, otherwise false
+	 */
 	public boolean isTestRun() {
 		return testMode;
 	}

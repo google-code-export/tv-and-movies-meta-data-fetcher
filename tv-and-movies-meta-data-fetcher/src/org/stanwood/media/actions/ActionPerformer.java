@@ -65,6 +65,7 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @param actions List of actions to perform
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
+	 * @param testMode True if test mode is enabled
 	 */
 	public ActionPerformer(List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
 		this.dir = dir;
@@ -191,19 +192,21 @@ public class ActionPerformer implements IActionEventHandler {
 		log.info("Finished");
 	}
 
+	/**
+	 * Listen for the new file event and perform the actions on it
+	 * @param file the File
+	 */
 	@Override
 	public void sendEventNewFile(File file) throws ActionException {
 		List<File> files = new ArrayList<File>();
 		files.add(file);
 		performActionsFiles(files);
-
-//		for (IStore store : dir.getStores()) {
-//			if (!testMode) {
-//				store.cacheFilm(dir,file, film,searchResult.getPart());
-//			}
-//		}
 	}
 
+	/**
+	 * Listen for the delete file event and remove it from the stores
+	 * @param file the File
+	 */
 	@Override
 	public void sendEventDeletedFile(File file) {
 		for (IStore store : dir.getStores()) {
@@ -215,6 +218,11 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
+	/**
+	 * Listen for the rename file event and and update stores
+	 * @param oldFile The old filename
+	 * @param newFile The new filename
+	 */
 	@Override
 	public void sendEventRenamedFile(File oldFile, File newFile) throws ActionException {
 		try {
