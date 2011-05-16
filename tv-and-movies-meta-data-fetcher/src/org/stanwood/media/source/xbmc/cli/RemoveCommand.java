@@ -14,6 +14,16 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.AddonDetails;
 
+/**
+ * This is a sub command of the {@link CLIManageAddons} command. It is used
+ * to remove xmbc addons. It has the following usage:
+ * <code>
+ * usage: mm-xbmc [--global-options] remove [--command-options] <addon id>
+ *
+ * Command Options:
+ *   --help, -h                    Show the help
+ * </code>
+ */
 public class RemoveCommand extends AbstractXBMCSubCommand {
 
 	private final static String NAME = "remove";
@@ -26,6 +36,13 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 
 	private Set<String> plugins;
 
+	/**
+	 * The constructor
+	 * @param rootCommand The root command
+	 * @param exitHandler The exit handler
+	 * @param stdout The output stream
+	 * @param stderr The error stream
+	 */
 	public RemoveCommand(ICLICommand rootCommand,IExitHandler exitHandler,PrintStream stdout,PrintStream stderr) {
 		super(rootCommand,NAME, DESCRIPTION,OPTIONS,exitHandler,stdout,stderr);
 	}
@@ -47,6 +64,7 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
 		plugins = new HashSet<String>();

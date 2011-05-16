@@ -11,12 +11,12 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
 
+/**
+ * This class is used to translate media directory patterns into filenames with the media
+ */
 public class PatternMatcher {
 
-	//	private final static String TOKENS[] = {"%"+TOKEN_SHOW_NAME,"%"+TOKEN_EPISODE,"%"+TOKEN_SEASON,
-//		                                    "%"+TOKEN_EXT,"%"+TOKEN_TITLE,"%"+TOKEN_PERCENT,"%"+TOKEN_ID,"%"+TOKEN_PART,"%"+TOKEN_YEAR};
-
-	private final static DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
+	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 
 	private String normalizeText(String text) {
 		text = text.replaceAll(":|/","-");
@@ -24,6 +24,16 @@ public class PatternMatcher {
 		return text;
 	}
 
+	/**
+	 * Get a file name for a film pattern
+	 * @param dirConfig The media directory configuration where the film is to be located
+	 * @param pattern The pattern
+	 * @param film The film information
+	 * @param ext The film extension
+	 * @param part The part number of the film
+	 * @return The filename
+	 * @throws PatternException thrown if their is a problem
+	 */
 	public File getNewFilmName(MediaDirConfig dirConfig,String pattern,final Film film,final String ext,final Integer part) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
@@ -35,7 +45,6 @@ public class PatternMatcher {
 
 		return processor.doit(dirConfig,pattern);
 	}
-
 
 	private String processFilmName(String newName, Film film, String ext,Integer part) {
 		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(film.getId()));
@@ -70,6 +79,15 @@ public class PatternMatcher {
 		return newName;
 	}
 
+	/**
+	 * Get a file name for a TV show pattern
+	 * @param dirConfig The media directory configuration where the episode is to be located
+	 * @param pattern The pattern
+	 * @param episode The Episode information
+	 * @param ext The film extension
+	 * @return The filename
+	 * @throws PatternException thrown if their is a problem
+	 */
 	public File getNewTVShowName(MediaDirConfig dirConfig,String pattern,final Episode episode,final String ext) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override

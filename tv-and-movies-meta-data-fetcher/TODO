@@ -4,15 +4,15 @@ TODO
 Version 2.0
 -----------
 	 
-Create macosx installer
-Add action to create pod casts of new media that is found
-Change FILM search to to lookup film details from a NFO file.
-	- Option to ignore samples Delete samples
-	- Option to delete anything that did not get renamed in the NFO folder
-Allow pattern vars to be placed in ExecuteSystemCommandAction params
-Add a getting started guide and link to a button in the installer
-Update java doc
-Update user guide
+*Inprogress*    - Create macosx installer
+*Inprogress*    - Add action to create pod casts of new media that is found
+*Not started*   - Change FILM search to to lookup film details from a NFO file.
+					- Option to ignore samples Delete samples
+					- Option to delete anything that did not get renamed in the NFO folder
+*Needs testing* - Allow pattern vars to be placed in ExecuteSystemCommandAction params
+*Not started*   - Add a getting started guide and link to a button in the installer
+*Inprogress*    - Update java doc
+*Not started*   - Update user guide
 
 Version 2.1
 -----------

@@ -134,6 +134,10 @@ public class Atom {
 		return name +"="+value;
 	}
 
+	/**
+	 * This is called to set the value in the box
+	 * @param b The box that's haveing it's value set
+	 */
 	public void updateBoxValue(AbstractAppleMetaDataBox b) {
 		b.setValue(getValue());
 	}

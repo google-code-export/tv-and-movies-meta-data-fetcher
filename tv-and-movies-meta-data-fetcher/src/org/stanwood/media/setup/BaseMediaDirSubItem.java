@@ -3,6 +3,9 @@ package org.stanwood.media.setup;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is a base class for all sub items of the media directory configuration.
+ */
 public class BaseMediaDirSubItem {
 
 	private String id;
@@ -43,6 +46,7 @@ public class BaseMediaDirSubItem {
 		params.put(key,value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return id;

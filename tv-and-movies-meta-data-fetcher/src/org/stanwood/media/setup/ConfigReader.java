@@ -171,10 +171,11 @@ public class ConfigReader extends BaseConfigReader {
 
 	/**
 	 * Used to read the sources from the configuration file
+	 * @param controller The media controller
+	 * @param dirConfig The media directory configuration
 	 * @return Thrown if their are any problems
 	 * @throws ConfigException Thrown if their are any problems
 	 */
-	@Override
 	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
 		List<String>addons = new ArrayList<String>();
@@ -258,14 +259,13 @@ public class ConfigReader extends BaseConfigReader {
 		return sources;
 	}
 
-
-
 	/**
 	 * Used to read the stores from the configuration file
+	 * @param controller The media controller
+	 * @param dirConfig The media directory configuration
 	 * @return The stores
 	 * @throws ConfigException Thrown if their is any problems
 	 */
-	@Override
 	public List<IStore> loadStoresFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<IStore>stores = new ArrayList<IStore>();
 		for (StoreConfig storeConfig : dirConfig.getStores()) {
@@ -292,6 +292,13 @@ public class ConfigReader extends BaseConfigReader {
 		return stores;
 	}
 
+	/**
+	 * Used to read the actions from the configuration file
+	 * @param controller The media controller
+	 * @param dirConfig The media directory configuration
+	 * @return The actions
+	 * @throws ConfigException Thrown if their is any problems
+	 */
 	public List<IAction> loadActionsFromConfigFile(Controller controller, MediaDirConfig dirConfig) throws ConfigException {
 		List<IAction>actions = new ArrayList<IAction>();
 		for (ActionConfig actionConfig : dirConfig.getActions()) {
@@ -359,6 +366,11 @@ public class ConfigReader extends BaseConfigReader {
 		return addonDir;
 	}
 
+	/**
+	 * Get the location of the media directory
+	 * @return The location of the media directory
+	 * @throws ConfigException Thrown if their is a problem
+	 */
 	public File getConfigDir() throws ConfigException {
 		if (configDir == null) {
 			configDir = getDefaultConfigDir();
@@ -366,6 +378,11 @@ public class ConfigReader extends BaseConfigReader {
 		return configDir;
 	}
 
+	/**
+	 * Used to get the default location of the media manager configuration directory
+	 * @return the default location of the media manager configuration directory
+	 * @throws ConfigException Thrown if their is a problem
+	 */
 	public static File getDefaultConfigDir() throws ConfigException {
 		File dir = DEFAULT_MEDIA_CONFIG_DIR;
 		if (!dir.exists()) {
@@ -467,8 +484,10 @@ public class ConfigReader extends BaseConfigReader {
 		return actions;
 	}
 
-
-
+	/**
+	 * Used to get a list of plugins
+	 * @return a list of plugins
+	 */
 	public List<Plugin>getPlugins() {
 		return plugins;
 	}
@@ -478,6 +497,11 @@ public class ConfigReader extends BaseConfigReader {
 		return input;
 	}
 
+	/**
+	 * Used to the default configuration filename
+	 * @return The default configuration filename
+	 * @throws ConfigException Thrown if their are any problems
+	 */
 	public static File getDefaultConfigFile() throws ConfigException {
 		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
 		if (!file.exists()) {

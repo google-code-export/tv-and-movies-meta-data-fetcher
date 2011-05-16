@@ -509,6 +509,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		return "xbmc-"+id;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(final String name,final Mode mode,final Integer part) throws SourceException {
 		if (!addon.supportsMode(mode)) {
@@ -546,8 +547,6 @@ public class XBMCSource extends XMLParser implements ISource {
 			processor.handleStream();
 		} catch (MalformedURLException e) {
 			throw new SourceException("Unable to search for show",e);
-		} catch (IOException e) {
-			throw new SourceException("Unable to search for show",e);
 		}
 		if (results.size()>0) {
 			return results.get(0);
@@ -584,10 +583,6 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
-		if (key.equalsIgnoreCase("CreateNFOFiles")) {
-			addon.setCreateNFOFiles(Boolean.parseBoolean(value));
-			return;
-		}
 		addon.setSetting(key,value);
 	}
 
@@ -599,15 +594,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		if (key.equalsIgnoreCase("CreateNFOFiles")) {
-			return String.valueOf(addon.getCreateNFOFiles());
-		}
 		return addon.getSetting(key).toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
-		// TODO Auto-generated method stub
 
 	}
 }

@@ -21,12 +21,26 @@ import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 
+/**
+ * This search strategy looks information about films if they are in or under a directory contains a .NFO
+ * file that describes them.
+ */
 public class FilmNFOSearchStrategy implements ISearchStrategy {
 
 	private final static Pattern PATTERN_IMDB_URL = Pattern.compile(".*www\\.imdb\\..*/(tt\\d+).*");
 	private final static Log log = LogFactory.getLog(FilmNFOSearchStrategy.class);
-	private final static DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
+	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 	private final static Pattern PATTERN_PART_FOLDER = Pattern.compile("^CD(\\d+)$");
+
+
+	/**
+	 * Look up the film file details using the NFO file if it can be found
+	 * @param mediaFile The media file that is been processed
+	 * @param rootMediaDir The root media directory
+	 * @param renamePattern The pattern that is been used to rename media files
+	 * @param mediaDir The media directory
+	 * @return The search details
+	 */
 
 	@Override
 	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {

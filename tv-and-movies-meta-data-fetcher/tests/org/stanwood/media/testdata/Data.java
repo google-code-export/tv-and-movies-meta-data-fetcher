@@ -40,8 +40,6 @@ import org.stanwood.media.model.Show;
  */
 public class Data {
 
-	private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
 	/** Film Source id to use in test data */
 	public final static String TEST_FILM_SOURCE_ID = "xbmc-metadata.themoviedb.org";
 	/** TV Source id to use in test data */
@@ -58,6 +56,7 @@ public class Data {
 	 * @throws Exception Thrown if their is a problem creating the film
 	 */
 	public static Film createFilm() throws Exception {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Film film = new Film("114814");
 		film.setImageURL(new URL("http://test/image.jpg"));
 		film.setTitle("The Usual Suspects");
@@ -141,6 +140,7 @@ public class Data {
 	 * @throws ParseException Thrown if their is a problem parsing a date
 	 */
 	public static List<EpisodeData> createEurekaShow(File eurekaDir) throws IOException, ParseException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		List<EpisodeData>result = new ArrayList<EpisodeData>();
 
 		Show show = new Show(SHOW_ID_EUREKA);
@@ -271,6 +271,7 @@ public class Data {
 	 * @throws ParseException Thrown if their is a problem parsing a date
 	 */
 	public static List<EpisodeData> createHeroesShow(File heroesDir) throws IOException, ParseException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		List<EpisodeData>result = new ArrayList<EpisodeData>();
 		Show show = new Show(SHOW_ID_HEROES);
 		show.setSourceId(TEST_TV_SOURCE_ID);

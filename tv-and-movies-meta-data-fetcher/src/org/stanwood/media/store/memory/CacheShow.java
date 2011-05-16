@@ -249,6 +249,10 @@ public class CacheShow extends Show {
 		show.setExtraInfo(params);
 	}
 
+	/**
+	 * Used to get a list of seasons in the show
+	 * @return a list of seasons in the show
+	 */
 	public List<CacheSeason>getSeasons() {
 		return seasons;
 	}

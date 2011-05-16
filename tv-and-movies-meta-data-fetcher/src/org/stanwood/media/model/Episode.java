@@ -283,11 +283,13 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 		return "Episode - ID:" + getEpisodeId() +" Num: " + getEpisodeNumber()+" Title: " + getTitle();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SortedSet<VideoFile> getFiles() {
 		return videoFiles;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setFiles(SortedSet<VideoFile> videoFiles) {
 		this.videoFiles = videoFiles;

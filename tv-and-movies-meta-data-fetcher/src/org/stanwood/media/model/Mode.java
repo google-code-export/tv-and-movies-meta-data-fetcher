@@ -39,6 +39,10 @@ public enum Mode {
 		return displayName;
 	}
 
+	/**
+	 * Get a list of modes
+	 * @return The list of modes
+	 */
 	public static String modeList() {
 		StringBuilder validModes = new StringBuilder();
 		for (Mode m : Mode.values()) {

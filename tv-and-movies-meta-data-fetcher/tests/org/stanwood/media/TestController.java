@@ -165,8 +165,8 @@ public class TestController extends XBMCAddonTestBase  {
 				Assert.assertEquals("setParameter()",events.get(0));
 
 				List<IAction> actions = mediaDir.getActions();
-				Assert.assertEquals(1,stores.size());
-				Class<?> actionClazz = stores.get(0).getClass();
+				Assert.assertEquals(1,actions.size());
+				Class<?> actionClazz = actions.get(0).getClass();
 				m = actionClazz.getMethod("getEvents");
 				events = (List<String>) m.invoke(null);
 
