@@ -5,10 +5,23 @@ package org.stanwood.media.xml;
  */
 public class XMLParserNotFoundException extends XMLParserException {
 
+	/**
+     * Constructs a new exception with <code>null</code> as its detail message.
+     * The cause is not initialised, and may subsequently be initialised by a
+     * call to {@link #initCause}.
+     */
 	public XMLParserNotFoundException() {
 		super();
 	}
 
+	/**
+     * Constructs a new exception with the specified detail message.  The
+     * cause is not initialised, and may subsequently be initialised by
+     * a call to {@link #initCause}.
+     *
+     * @param   message   the detail message. The detail message is saved for
+     *          later retrieval by the {@link #getMessage()} method.
+     */
 	public XMLParserNotFoundException(String message) {
 		super(message);
 	}

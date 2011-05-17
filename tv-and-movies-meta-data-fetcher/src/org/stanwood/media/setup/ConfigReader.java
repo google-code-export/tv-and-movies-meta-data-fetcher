@@ -36,6 +36,7 @@ import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -287,6 +288,8 @@ public class ConfigReader extends BaseConfigReader {
 				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			} catch (IllegalArgumentException e) {
 				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
+			} catch (StoreException e) {
+				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
 			}
 		}
 		return stores;
@@ -334,7 +337,7 @@ public class ConfigReader extends BaseConfigReader {
 		source.setParameter(key, value);
 	}
 
-	private static void setParamOnStore(IStore store, String key, String value) {
+	private static void setParamOnStore(IStore store, String key, String value) throws StoreException {
 		store.setParameter(key, value);
 	}
 

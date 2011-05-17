@@ -3,8 +3,17 @@ package org.stanwood.media.source.xbmc;
 import org.stanwood.media.model.Mode;
 import org.w3c.dom.Element;
 
+/**
+ * A factory class used to create XBMC extensions
+ */
 public class XBMCExtenstionFactory {
 
+	/**
+	 * Create the extension
+	 * @param addon The addon the extension belongs to
+	 * @param extensionNode The extension node
+	 * @return The extension or null if unsupported
+	 */
 	public static XBMCExtension createExtension(XBMCAddon addon,Element extensionNode) {
 		String point = extensionNode.getAttribute("point");
 		if (point.equals("xbmc.metadata.scraper.tvshows")) {

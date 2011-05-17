@@ -535,6 +535,12 @@ public class FileHelper {
 		return configFile;
 	}
 
+	/**
+	 * Used to get a stream to a URL
+	 * @param url The URL of the stream
+	 * @return The stream
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static Stream getInputStream(URL url) throws IOException {
 		WebFileInputStream is = new WebFileInputStream(url);
 		String MIME = is.getMIMEType();
@@ -547,6 +553,13 @@ public class FileHelper {
 
 	}
 
+	/**
+	 * Used a temporary file that will be deleted when the JVM exits
+	 * @param name name of file
+	 * @param ext extension of the file
+	 * @return The file
+	 * @throws IOException Thrown if their is a problem creating the file
+	 */
 	public static File createTempFile(String name,String ext) throws IOException {
 		final File file = File.createTempFile(name, ext);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -563,11 +576,21 @@ public class FileHelper {
 		return file;
 	}
 
+	/**
+	 * Used to get the extension of the file
+	 * @param file The file
+	 * @return The extension
+	 */
 	public static String getExtension(File file) {
 		String fileName = file.getAbsolutePath();
 		return fileName.substring(fileName.lastIndexOf(".")+1);
 	}
 
+	/**
+	 * Used to get the name of the file
+	 * @param file The file
+	 * @return The name
+	 */
 	public static String getName(File file) {
 		String fileName = file.getName();
 		return fileName.substring(0,fileName.lastIndexOf("."));

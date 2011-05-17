@@ -246,24 +246,23 @@ public class MemoryStore implements IStore {
 		return films.get(filmFile);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) {
-		// TODO Auto-generated method stub
-
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) {
-		// TODO Auto-generated method stub
-
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) {
 		films.remove(file);

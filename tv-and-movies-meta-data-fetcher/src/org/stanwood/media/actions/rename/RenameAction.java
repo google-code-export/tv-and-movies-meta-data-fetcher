@@ -20,58 +20,61 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * This action is used to rename media files based on a pattern, media data that can be found in source/stores and
- * the mode.
+ * <p>This action is used to rename media files in a media directory based on a pattern.</p>
+ * <p>This action supports the following parameters
+ * <ul>
+ * <li>pruneEmptyFolders - If true, then after renaming, empty folders will be deleted</li>
+ * </ul>
+ * </p>
  */
 public class RenameAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(RenameAction.class);
 
-	/**
-	 * The key of the refresh parameter for this action.
-	 */
-	public static final String PARAM_KEY_REFRESH = "refresh";
-	public static final String PARAM_KEY_IGNORE_SAMPLES = "NFO-ignore-samples";
+	/** The key of the pruneEmptyFolders parameter for this action. */
 	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders";
-
-	private boolean refresh = false;
-	private boolean ignoreSamples;
 
 	private boolean pruneEmptyFolders = false;
 
 	/**
 	 * Perform the rename action of the file files
-	 * @param files the media files
-	 * @throws ActionException Thrown if their is a problem renaming the files
-	 */
-	@Override
-	public void perform(MediaDirectory dir,Film film,File file,Integer part,IActionEventHandler eventHandler) throws ActionException {
+	 * @param film The film information
+	 * @param part The part number of the film, or null if it does not have parts
+	 * @param mediaFile The media file
+	 * @param dir File media directory the files belongs to
+	 * @param actionEventHandler Used to notify the action performer about changes
+	 * @throws ActionException Thrown if their is a problem with the action
+	 */	@Override
+	public void perform(MediaDirectory dir,Film film,File mediaFile,Integer part,IActionEventHandler actionEventHandler) throws ActionException {
 		try {
-			renameFilm(dir,film,file,part,eventHandler);
+			renameFilm(dir,film,mediaFile,part,actionEventHandler);
 		}
 		catch (SourceException e) {
-			log.error("Unable to rename file '" + file,e);
+			log.error("Unable to rename file '" + mediaFile,e);
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to rename file " +file,e);
+			throw new ActionException("Unable to rename file " +mediaFile,e);
 		}
 	}
 
 	/**
 	 * Perform the rename action of the file files
-	 * @param files the media files
-	 * @throws ActionException Thrown if their is a problem renaming the files
+	 * @param episode The film information
+	 * @param mediaFile The media file
+	 * @param dir File media directory the files belongs to
+	 * @param actionEventHandler Used to notify the action performer about changes
+	 * @throws ActionException Thrown if their is a problem with the action
 	 */
 	@Override
-	public void perform(MediaDirectory dir,Episode episode,File file,IActionEventHandler eventHandler) throws ActionException {
+	public void perform(MediaDirectory dir,Episode episode,File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
 		try {
-			renameTVShow(dir,episode,file,eventHandler);
+			renameTVShow(dir,episode,mediaFile,actionEventHandler);
 		}
 		catch (SourceException e) {
-			log.error("Unable to rename file '" + file,e);
+			log.error("Unable to rename file '" + mediaFile,e);
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to rename file " +file,e);
+			throw new ActionException("Unable to rename file " +mediaFile,e);
 		}
 	}
 
@@ -150,17 +153,13 @@ public class RenameAction extends AbstractAction {
 	 * <p>Used to set the value of a parameter for this action.</p>
 	 * <p>This action supports the following parameters
 	 * <ul>
-	 * <li>refresh - if true, will only read from sources. Stores will then be refreshed</li>
 	 * <li>pruneEmptyFolders - If true, then after renaming, empty folders will be deleted</li>
 	 * </ul>
 	 * </p>
 	 */
 	@Override
 	public void setParameter(String key,String value) throws ActionException {
-		if (key.equalsIgnoreCase(PARAM_KEY_REFRESH)) {
-			refresh = Boolean.parseBoolean(value);
-		}
-		else if (key.equalsIgnoreCase(PARAM_KEY_PRUNE_EMPTY_FOLDERS)) {
+		if (key.equalsIgnoreCase(PARAM_KEY_PRUNE_EMPTY_FOLDERS)) {
 			pruneEmptyFolders = Boolean.parseBoolean(value);
 		}
 		else {

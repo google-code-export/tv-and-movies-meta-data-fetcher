@@ -3,12 +3,19 @@ package org.stanwood.media.util;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to render a table to text
+ */
 public class TextTable {
 
 	private String[] columnNames;
 	private List<String[]>rows = new ArrayList<String[]>();
 	private int widths[];
 
+	/**
+	 * The constructor
+	 * @param columnNames The names of the columns
+	 */
 	public TextTable(String columnNames[]) {
 		this.columnNames = columnNames;
 		this.widths = new int[columnNames.length];
@@ -23,6 +30,11 @@ public class TextTable {
 		}
 	}
 
+	/**
+	 * Used to add a row to the table. The number of values must be the same
+	 * as the number of columns in the table.
+	 * @param row The values in the row
+	 */
 	public void addRow(String row[]) {
 		if (row.length > columnNames.length || row.length < columnNames.length) {
 			throw new IllegalArgumentException("row must be the same size as the number of column names");
@@ -31,6 +43,10 @@ public class TextTable {
 		updateWidths(row);
 	}
 
+	/**
+	 * Used to print the table to a buffer
+	 * @param buffer The buffer
+	 */
 	public void printTable(StringBuilder buffer) {
 		printHeader(buffer);
 		printRows(buffer);

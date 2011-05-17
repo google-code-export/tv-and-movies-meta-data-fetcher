@@ -37,6 +37,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -54,7 +55,9 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class XMLParser {
 
+	/** The (@link {@link XMLStore2 } schema */
 	public static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd";
+	/** The application configuration schema */
 	public static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema";
 
 	/**
@@ -530,6 +533,11 @@ public class XMLParser {
 
 	}
 
+	/**
+	 * Used to quote xpath queries
+	 * @param s The query
+	 * @return the quoted query
+	 */
 	public String quoteXPathQuery(String s) {
 		if (s.contains("'")) {
 			return "\""+s+"\"";

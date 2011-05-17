@@ -1,8 +1,18 @@
 package org.stanwood.media.source.xbmc.expression;
 
-
+/**
+ * Used to help with expression evaluation operations
+ */
 public class OperationHelper {
 
+	/**
+	 * Used to perform a operation on two values
+	 * @param op The operation
+	 * @param value1 The fist value
+	 * @param value2 The second value
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if their is a expression problem
+	 */
 	public static Value performOperation(Operation op, Value value1,Value value2) throws ExpressionParserException {
 		if (value1.getType()==value2.getType()) {
 			switch (op) {
@@ -38,6 +48,13 @@ public class OperationHelper {
 		throw new ExpressionParserException("Can only perform operation on values of same type");
 	}
 
+	/**
+	 * Used to perform a operation on one value
+	 * @param op The operation
+	 * @param value The value
+	 * @return The result
+	 * @throws ExpressionParserException Thrown if their is a expression problem
+	 */
 	public static Value performOperation(Operation op, Value value) {
 		switch (op) {
 		case NOT:

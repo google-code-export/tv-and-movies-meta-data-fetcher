@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
-import java.util.logging.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.coremedia.iso.BoxParser;
 import com.coremedia.iso.IsoBufferWrapper;
@@ -13,36 +15,58 @@ import com.coremedia.iso.Utf8;
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.ContainerBox;
-import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 import com.coremedia.iso.boxes.apple.AppleDataBox;
 
+/**
+ * This is a generic atom box for MP4 files that stores string contents
+ */
 public class GenericStringBox extends AbstractBox implements ContainerBox {
 
+	private AppleDataBox appleDataBox = new AppleDataBox();
+	private final static Log log = LogFactory.getLog(GenericStringBox.class);
+
+	/**
+	 * The constructor
+	 * @param type The type of the box
+	 */
 	public GenericStringBox(byte[] type) {
 		super(type);
         appleDataBox = AppleDataBox.getStringAppleDataBox();
     }
 
+	/**
+	 * Get a pretty display name
+	 * @return the display name
+	 */
     @Override
 	public String getDisplayName() {
-        return "iTunes Album Artist Box";
+        return "Generic string box";
     }
 
-
-    private static Logger LOG = Logger.getLogger(AbstractAppleMetaDataBox.class.getName());
-    AppleDataBox appleDataBox = new AppleDataBox();
-
+    /**
+     * Get a list of boxes within this box
+     * @return list of boxes
+     */
     @Override
 	public Box[] getBoxes() {
         return new AbstractBox[]{appleDataBox};
     }
 
+    /**
+     * Get a list of boxes within this box
+     * @return list of boxes
+     */
     @Override
 	public <T extends Box> T[] getBoxes(Class<T> clazz) {
         return getBoxes(clazz, false);
     }
 
-    @Override
+    /**
+     * Get a list of boxes within this box
+     * @return list of boxes
+     */
+    @SuppressWarnings("unchecked")
+	@Override
 	public <T extends Box> T[] getBoxes(Class<T> clazz, boolean recursive) {
         //todo recursive?
         if (clazz.isAssignableFrom(appleDataBox.getClass())) {
@@ -53,6 +77,13 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
         return null;
     }
 
+    /**
+     * Used to parse the box
+     * @param in The raw box data
+     * @param size The size of the data
+     * @param boxParser the parser
+     * @param lastMovieFragmentBox The last movie fragment box
+     */
     @Override
 	public void parse(IsoBufferWrapper in, long size, BoxParser boxParser, Box lastMovieFragmentBox) throws IOException {
         long sp = in.position();
@@ -65,7 +96,10 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
         appleDataBox.offset = sp;
     }
 
-
+    /**
+     * Used to get the size of the content
+     * @return the size of the content
+     */
     @Override
 	protected long getContentSize() {
         return appleDataBox.getSize();
@@ -76,11 +110,19 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
         appleDataBox.getBox(os);
     }
 
+    /**
+     * Used to get the number bytes to the first child
+     * @return the number bytes to the first child
+     */
     @Override
 	public long getNumOfBytesToFirstChild() {
         return getSize() - appleDataBox.getSize();
     }
 
+    /**
+     * Return a string representation of the box for debug.
+     * @return a string representation of the box.
+     */
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
@@ -92,6 +134,10 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
         return b < 0 ? b + 256 : b;
     }
 
+    /**
+     * Used to set the value of the box
+     * @param value the value of the box
+     */
     public void setValue(String value) {
         if (appleDataBox.getFlags() == 1) {
             appleDataBox = new AppleDataBox();
@@ -131,10 +177,14 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
             appleDataBox.setContent(hexStringToByteArray(value));
 
         } else {
-            LOG.warning("Don't know how to handle appleDataBox with flag=" + appleDataBox.getFlags());
+            log.warn("Don't know how to handle appleDataBox with flag=" + appleDataBox.getFlags());
         }
     }
 
+    /**
+     * Used to get the value of the box
+     * @return the value of the box
+     */
     public String getValue() {
         if (appleDataBox.getFlags() == 1) {
             return Utf8.convert(appleDataBox.getContent());
@@ -154,7 +204,7 @@ public class GenericStringBox extends AbstractBox implements ContainerBox {
         }
     }
 
-    public static byte[] hexStringToByteArray(String s) {
+    private static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {

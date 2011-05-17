@@ -33,11 +33,10 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	private File updateSite;
 
 	/**
-	 * Used to create a instance of the class
-	 * @param updateSite The location of the dummy update site
-	 * @param addonDir The directory the addon's data is stored in
-	 * @param locale The language been used
-	 * @throws XBMCException Thrown if their are any problems
+	 * Used to create a instance of the addon manager
+	 * @param config The configuration
+	 * @param updateSite location of the test update site
+	 * @throws XBMCException Thrown if their is a problem creating the addon manager
 	 */
 	public DummyXBMCAddonManager(ConfigReader config,File updateSite) throws XBMCException {
 		super(config,null,false);
@@ -92,6 +91,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		throw new IOException("Unable to find test data for url: " + url);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String downloadFile(URL url, File newAddon) throws IOException {
 		Matcher m = UPDATE_SIZE.matcher(url.toExternalForm());

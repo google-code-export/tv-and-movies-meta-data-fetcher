@@ -52,6 +52,7 @@ public class HybridFilmSource implements ISource {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 		try {
@@ -187,6 +188,7 @@ public class HybridFilmSource implements ISource {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part)
 			throws SourceException {

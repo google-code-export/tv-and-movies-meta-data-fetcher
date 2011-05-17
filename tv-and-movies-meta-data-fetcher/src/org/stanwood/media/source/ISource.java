@@ -117,8 +117,21 @@ public interface ISource {
 	 */
 	public String getParameter(String key) throws SourceException;
 
+	/**
+	 * Called to tell the source which media directory is been processed
+	 * @param dir The media directory
+	 * @throws SourceException Thrown if their is a problem with the source
+	 */
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException;
 
+	/**
+	 * This is called to search the source for media details
+ 	 * @param name The search term
+	 * @param mode The mode of the search
+	 * @param part The part number to search for
+	 * @return The search result or NULL if it could not be found
+	 * @throws SourceException Thrown if their is a problem with the source
+	 */
 	public SearchResult searchMedia(String name, Mode mode, Integer part) throws SourceException;
 
 }

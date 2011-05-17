@@ -25,6 +25,19 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * <p>This action is used execute a system command</p>
+ * <p>This action supports the following parameters:
+ * <ul>
+ * <li>commandOnFile - A command to execute on finding acceptable media files</li>
+ * <li>commandOnDirectory - A command to execute on finding acceptable directories within the media directory</li>
+ * <li>extensions - A comma separated list of media file extensions to accept</li>
+ * <li>newFile - If this command creates a new file, then the name should be in this parameter</li>
+ * <li>deletedFile - If this command deletes a new file, then the name should be in this parameter</li>
+ * <li>abortIfFileExists - The name of a file, that if it exists, then this action will not perform</li>
+ * </ul>
+ * </p>
+ */
 public class ExecuteSystemCommandAction extends AbstractAction {
 
 	private final static String PARAM_CMD_ON_FILE_KEY = "commandOnFile";
@@ -55,12 +68,20 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		}
 	}
 
+	/**
+	 * This will execute the command in the parameter <code><commandOnDirectory</code> on
+	 * the directory if the parameter is set.
+	 * @param dir The media directory
+	 * @param mediaDir The directory the action is to perform on
+	 * @param actionEventHandler Used to notify the action performer about changes
+	 * @throws ActionException Thrown if their is a problem with the action
+	 */
 	@Override
-	public void performOnDirectory(MediaDirectory dir, File directory, IActionEventHandler actionEventHandler)
+	public void performOnDirectory(MediaDirectory dir, File mediaDir, IActionEventHandler actionEventHandler)
 			throws ActionException {
 		if (!isTestMode()) {
-			executeCommand(dirCmd,directory,dir,null);
-			sendEvents(actionEventHandler,directory);
+			executeCommand(dirCmd,mediaDir,dir,null);
+			sendEvents(actionEventHandler,mediaDir);
 		}
 	}
 
@@ -134,6 +155,20 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		return s;
 	}
 
+	/**
+	 * This method is sued to set parameters. This action supports the following parameters:
+     * <ul>
+	 * <li>commandOnFile - A command to execute on finding acceptable media files</li>
+	 * <li>commandOnDirectory - A command to execute on finding acceptable directories within the media directory</li>
+	 * <li>extensions - A comma separated list of media file extensions to accept</li>
+	 * <li>newFile - If this command creates a new file, then the name should be in this parameter</li>
+	 * <li>deletedFile - If this command deletes a new file, then the name should be in this parameter</li>
+	 * <li>abortIfFileExists - The name of a file, that if it exists, then this action will not perform</li>
+	 * </ul>
+	 * @param key The parameter key
+	 * @param value The parameter value
+	 * @throws ActionException Thrown if a known key is given
+	 */
 	@Override
 	public void setParameter(String key, String value) throws ActionException {
 		if (key.equalsIgnoreCase(PARAM_CMD_ON_FILE_KEY)) {
@@ -163,12 +198,31 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		}
 	}
 
+	/**
+	 * This will execute the command in the parameter <code><commandOnFile</code> on
+	 * the mediaFile if the parameter is set.
+	 * @param episode The episode information
+	 * @param mediaFile The media file
+	 * @param dir File media directory the files belongs to
+	 * @param actionEventHandler Used to notify the action performer about changes
+	 * @throws ActionException Thrown if their is a problem with the action
+	 */
 	@Override
 	public void perform(MediaDirectory dir, Episode episode, File mediaFile,
 			IActionEventHandler actionEventHandler) throws ActionException {
 		perform(dir,mediaFile,actionEventHandler,episode);
 	}
 
+	/**
+	 * This will execute the command in the parameter <code><commandOnFile</code> on
+	 * the mediaFile if the parameter is set.
+	 * @param film The film information
+	 * @param part The part number
+	 * @param mediaFile The media file
+	 * @param dir File media directory the files belongs to
+	 * @param actionEventHandler Used to notify the action performer about changes
+	 * @throws ActionException Thrown if their is a problem with the action
+	 */
 	@Override
 	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,
 			IActionEventHandler actionEventHandler) throws ActionException {
