@@ -20,12 +20,6 @@ import java.util.Map;
 /** Map Value name to Integer object holding value */
 private Map<String,Value> variables;
 
-private Value result = null;
-
-public Value getResult() {
-  return result;
-}
-
 public Map<String,Value> getVariables() {
   return this.variables; 
 }
