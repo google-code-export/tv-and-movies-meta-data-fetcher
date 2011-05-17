@@ -353,6 +353,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @param source The source to use, or null if none are used
 	 * @param sourceParams The params of the source
 	 * @param store The store to use, or null if none are used
+	 * @param dummy Does nothing
 	 * @param actions The actions to perform
 	 * @return The configuration reader
 	 * @throws Exception Thrown if their is a problem

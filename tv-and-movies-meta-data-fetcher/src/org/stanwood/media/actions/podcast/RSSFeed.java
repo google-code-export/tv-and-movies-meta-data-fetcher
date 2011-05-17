@@ -135,12 +135,7 @@ public class RSSFeed {
 
 	/**
 	 * Used to add a pod cast entry to the RSS feed
-	 * @param title The title of the entry
-	 * @param link The link to the entry
-	 * @param publishDate The date the entry was published
-	 * @param plainDescription The plain text description of the entry
-	 * @param author The author of the entry
-	 * @param file The movie file
+	 * @param file The feed file to add to the RSS feed
 	 */
 	@SuppressWarnings("unchecked")
 	public void addEntry(IFeedFile file) {
