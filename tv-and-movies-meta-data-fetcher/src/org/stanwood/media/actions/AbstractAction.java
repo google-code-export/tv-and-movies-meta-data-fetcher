@@ -29,9 +29,10 @@ public abstract class AbstractAction implements IAction {
 	public void performOnDirectory(MediaDirectory dir, File file,IActionEventHandler actionEventHandler) throws ActionException {
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 */
 	@Override
-	public void init(MediaDirectory dir) {
+	public void init(MediaDirectory dir) throws ActionException {
 	}
 
 	/** {@inheritDoc} */

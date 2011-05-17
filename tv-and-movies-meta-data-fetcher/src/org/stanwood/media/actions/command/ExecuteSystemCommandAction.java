@@ -141,10 +141,10 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			try {
 				PatternMatcher pm = new PatternMatcher();
 				if (video instanceof Film) {
-					s = pm.getNewFilmName(dir.getMediaDirConfig(), s, (Film)video, ext, null).getAbsolutePath();
+					s = pm.getNewFilmName(dir.getMediaDirConfig(), s, (Film)video, ext, null);
 				}
 				else if (video instanceof Episode) {
-					s = pm.getNewTVShowName(dir.getMediaDirConfig(), s, (Episode)video, ext).getAbsolutePath();
+					s = pm.getNewTVShowName(dir.getMediaDirConfig(), s, (Episode)video, ext);
 				}
 			} catch (PatternException e) {
 				throw new ActionException("Unable to translate pattern",e);

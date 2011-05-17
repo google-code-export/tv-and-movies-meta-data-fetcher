@@ -1,9 +1,7 @@
 package org.stanwood.media.actions.rename;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.StringTokenizer;
 
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -34,7 +32,7 @@ public class PatternMatcher {
 	 * @return The filename
 	 * @throws PatternException thrown if their is a problem
 	 */
-	public File getNewFilmName(MediaDirConfig dirConfig,String pattern,final Film film,final String ext,final Integer part) throws PatternException {
+	public String getNewFilmName(MediaDirConfig dirConfig,String pattern,final Film film,final String ext,final Integer part) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
@@ -88,7 +86,7 @@ public class PatternMatcher {
 	 * @return The filename
 	 * @throws PatternException thrown if their is a problem
 	 */
-	public File getNewTVShowName(MediaDirConfig dirConfig,String pattern,final Episode episode,final String ext) throws PatternException {
+	public String getNewTVShowName(MediaDirConfig dirConfig,String pattern,final Episode episode,final String ext) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
@@ -115,10 +113,9 @@ public class PatternMatcher {
 		return !pattern.contains("%");
 	}
 
-
 	private static abstract class PatternProcessor {
 
-		public File doit(MediaDirConfig dirConfig,String pattern) throws PatternException {
+		public String doit(MediaDirConfig dirConfig,String pattern) throws PatternException {
 			boolean inBrace = false;
 			StringBuilder result = new StringBuilder();
 			StringBuilder newName = new StringBuilder();
@@ -151,8 +148,8 @@ public class PatternMatcher {
 				result.append(processName(newName.toString()));
 			}
 
-			File path = getPath(dirConfig,result.toString());
-			return path;
+			return result.toString();
+
 		}
 
 		protected abstract String processName(String string);
@@ -166,14 +163,7 @@ public class PatternMatcher {
 			return false;
 		}
 
-		private File getPath(MediaDirConfig dirConfig,String newName) {
-			File dir = dirConfig.getMediaDir();
-			StringTokenizer tok = new StringTokenizer(newName,""+File.separatorChar);
-			while (tok.hasMoreTokens()) {
-				dir = new File(dir,tok.nextToken());
-			}
-			return dir;
-		}
+
 
 	}
 }

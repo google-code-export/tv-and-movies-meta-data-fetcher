@@ -9,15 +9,17 @@ Version 2.0
 *Not started*   - Change FILM search to to lookup film details from a NFO file.
 					- Option to ignore samples Delete samples
 					- Option to delete anything that did not get renamed in the NFO folder
-*Needs testing* - Allow pattern vars to be placed in ExecuteSystemCommandAction params
 *Not started*   - Add a getting started guide and link to a button in the installer
 *Inprogress*    - Update java doc
 *Not started*   - Update user guide
+*Not started*   - Add tool to move a media file into a media directory
+*Not started*   - Add variables to javadoc of system command action
 
 Version 2.0.1
 -------------
 
 Bug fixes
+
 
 Version 2.1
 -----------
@@ -33,3 +35,6 @@ Create XBMC nfo files from a store instead of the source
 Add a GUI to manage the XBMC addons
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
+Database store
+Deamon mode
+UPnP server

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -481,4 +482,18 @@ public class MediaDirectory {
 		return actions;
 	}
 
+	/**
+	 * Used to get the full location of a file within the media directory
+
+	 * @param name the path of the file relative to the media directory
+	 * @return the full location of a file within the media directory
+	 */
+	public File getPath(String name) {
+		File dir = getMediaDirConfig().getMediaDir();
+		StringTokenizer tok = new StringTokenizer(name,""+File.separatorChar);
+		while (tok.hasMoreTokens()) {
+			dir = new File(dir,tok.nextToken());
+		}
+		return dir;
+	}
 }
