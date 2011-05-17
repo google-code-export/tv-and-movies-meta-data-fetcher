@@ -41,6 +41,11 @@ public class PodCastAction extends AbstractAction {
 				return o1.getLastModified().compareTo(o2.getLastModified());
 			}
 		});
+
+		File feedFile = getFeedFile();
+		if (feedFile.exists()) {
+			RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig() );
+		}
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class PodCastAction extends AbstractAction {
 
 	@Override
 	public void finished(MediaDirectory dir) throws ActionException {
-		RSSFeed rssFeed = new RSSFeed(getFeedFile());
+		RSSFeed rssFeed = new RSSFeed(getFeedFile(),mediaDirUrl,dir.getMediaDirConfig());
 		rssFeed.createNewFeed();
 		for (IFeedFile file : feedFiles) {
 			rssFeed.addEntry(file);
