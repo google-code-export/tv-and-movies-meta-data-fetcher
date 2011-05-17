@@ -1,8 +1,5 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -11,7 +8,6 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Mode;
@@ -19,7 +15,6 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 
 /**
@@ -217,30 +212,6 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Assert.assertFalse(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://blah")));
 		Assert.assertTrue(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://www.thetvdb.com/index.php?tab=series&id=79501")));
-	}
-
-	@Test
-	public void testNFOFileCreation() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		File tmpDir = FileHelper.createTmpDir("tvshow");
-		try {
-			File mediaFile = new File(tmpDir,"Heros 1x01 - Blah.avi");
-			if (!mediaFile.createNewFile() && !mediaFile.exists()) {
-				throw new IOException("Unable to create file: " + mediaFile);
-			}
-
-			XBMCSource source = getXBMCSource("metadata.tvdb.com");
-			source.setParameter("posters", "true");
-			source.setParameter("CreateNFOFiles","true");
-
-			source.getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), mediaFile);
-			File nfoFile = new File(tmpDir,"Heros 1x01 - Blah.nfo");
-			Assert.assertTrue(nfoFile.exists());
-			Helper.assertXMLEquals(TestXMBCSourceTVDB.class.getResourceAsStream("tvshow.nfo"),new FileInputStream(nfoFile),new HashMap<String,String>());
-		}
-		finally {
-			FileHelper.delete(tmpDir);
-		}
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

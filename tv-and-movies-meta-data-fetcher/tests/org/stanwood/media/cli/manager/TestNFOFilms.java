@@ -19,9 +19,11 @@ import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.source.xbmc.cli.CLIManageAddons;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * This is a test class used to test that NFO files are handled correctly by the media
+ * manager application.
+ */
 public class TestNFOFilms extends XBMCAddonTestBase {
-
-	private final static String LS = System.getProperty("line.separator");
 
 	protected static int exitCode;
 
@@ -59,6 +61,10 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Tests that media renaming works as expected when their is a .NFO file.
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testNFOFilmsRenaming() throws Exception {
 		File mediaDir = FileHelper.createTmpDir("films");
@@ -90,18 +96,20 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void mmManagerCmd(File mediaDir, String pattern) throws Exception {
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters","false");
 		params.put("trailer","false");
 //		params.put("scrapers", "metadata.imdb.com");
-		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,RenameAction.class);
+		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 		String args[] = new String[] {"-d",mediaDir.getAbsolutePath(),"--log_config","NOINIT"};
 		CLIMediaManager.main(args);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,RenameAction.class);
+		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 		CLIManageAddons.main(cmd);
 	}
 
@@ -118,10 +126,14 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 	private void createFile(File file) throws IOException {
 		// Create dirs
 		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
+			if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
+				throw new IOException("Unable to create dir: "+file.getParentFile());
+			}
 		}
 		if (!file.exists()) {
-			file.createNewFile();
+			if (!file.createNewFile() && !file.exists()) {
+				throw new IOException("Unable to create file: " + file);
+			}
 		}
 		if (file.getName().endsWith(".nfo")) {
 			PrintStream ps = null;

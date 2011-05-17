@@ -123,6 +123,13 @@ public class TestFilmSearcher {
 		return new MediaDirectory(controller, config, mediaDir);
 	}
 
+	/**
+	 * Used to test that the search details are correct
+	 * @param expectedTerm The expected search term
+	 * @param expectedYear The expected year
+	 * @param expectedPart The expected part
+	 * @param actual The actual results
+	 */
 	public static void assertSearchDetails(String expectedTerm,String expectedYear,Integer expectedPart,TSearchDetails actual) {
 		Assert.assertEquals("Did not extract the correct term from: " + actual.getOriginalFile().getName(),expectedTerm,actual.getTerm());
 		if (expectedYear == null) {

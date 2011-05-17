@@ -11,11 +11,18 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Used to test the XBMC addon list command
+ */
 public class TestXBMCListCommand extends BaseCLITest {
 
+	/**
+	 * USed to test the help output of the mm-xbmc list command
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testListCommandHelp() throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--log_config","INFO","list","--help"};
@@ -38,15 +45,20 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void reset() throws Exception {
 		super.reset();
-		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
 	}
 
+	/**
+	 * Used to test a list of addons
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testList() throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		// Check inital list of plugins
@@ -134,9 +146,13 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals("",stderr.toString());
 	}
 
+	/**
+	 * Used to test known options
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testUnkownOption() throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","--blah"};
@@ -160,9 +176,13 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 
+	/**
+	 * Test unexpected arguments
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testUnexpectedArgument() throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null);
+		TestCLIMediaManager.setupTestController(mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","blah"};

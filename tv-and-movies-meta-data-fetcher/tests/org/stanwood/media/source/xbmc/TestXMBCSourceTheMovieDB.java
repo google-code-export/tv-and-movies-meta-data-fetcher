@@ -1,8 +1,5 @@
 package org.stanwood.media.source.xbmc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,13 +8,11 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 
 /**
@@ -109,6 +104,10 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals(2008,cal.get(Calendar.YEAR));
 	}
 
+	/**
+	 * Used to test character encodings
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testEncodings() throws Exception {
 		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
@@ -153,28 +152,6 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
 		Assert.assertFalse(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://blah")));
 		Assert.assertTrue(addon.getScraper(Mode.TV_SHOW).supportsURL(new URL("http://www.imdb.com/title/tt0371746/")));
-	}
-
-	@Test
-	public void testNFOFileCreation() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		File tmpDir = FileHelper.createTmpDir("films");
-		try {
-			File mediaFile = new File(tmpDir,"Iron Man.avi");
-			if (!mediaFile.createNewFile() && !mediaFile.exists()) {
-				throw new IOException("Unable to create file: " + mediaFile);
-			}
-			XBMCSource source = getXBMCSource("metadata.themoviedb.org");
-			source.setParameter("CreateNFOFiles","true");
-
-			source.getFilm("1726", new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"), mediaFile);
-			File nfoFile = new File(tmpDir,"Iron Man.nfo");
-			Assert.assertTrue(nfoFile.exists());
-			Helper.assertXMLEquals(TestXMBCSourceTVDB.class.getResourceAsStream("film.nfo"),new FileInputStream(nfoFile),new HashMap<String,String>());
-		}
-		finally {
-			FileHelper.delete(tmpDir);
-		}
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{

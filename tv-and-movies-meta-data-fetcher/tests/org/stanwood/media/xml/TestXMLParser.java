@@ -5,14 +5,24 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Used to test the {@link XMLParser}
+ */
 public class TestXMLParser {
 
+	/**
+	 * Used to test encodings
+	 */
 	@Test
 	public void testEncoding() {
 		Assert.assertEquals("Don&apos;t look back",XMLParser.encodeAttributeValue("Don't look back"));
 		Assert.assertEquals("me &amp; you",XMLParser.encodeAttributeValue("me & you"));
 	}
 
+	/**
+	 * Used to test writing entities
+	 * @throws Exception Thrown if their are problems
+	 */
 	@Test
 	public void testWrightingEntities() throws Exception {
 		XMLParser parser = new XMLParser();

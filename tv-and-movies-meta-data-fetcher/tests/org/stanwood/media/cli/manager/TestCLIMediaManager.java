@@ -30,7 +30,9 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.util.FileHelper;
 
-
+/**
+ * This is a test class used to test the class {@link CLIMediaManager}.
+ */
 public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 	private final static String LS = System.getProperty("line.separator");
@@ -69,6 +71,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * Used to test recursive renaming of media using a source, but no stores.
 	 * @throws Exception Thrown if their are any errors
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
@@ -77,7 +80,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters", "false");
-		setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,RenameAction.class);
+		setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -114,7 +117,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,RenameAction.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -139,6 +142,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * This test makes sure that the store is used and not the source
 	 * @throws Exception If their are problems
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveStoreRename() throws Exception {
 //		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
@@ -147,7 +151,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
 
-		setupTestController(dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class,RenameAction.class);
+		setupTestController(dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class,"",RenameAction.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -185,7 +189,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,RenameAction.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -211,6 +215,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * This will test that films are renamed correctly
 	 * @throws Exception Thrown if their are any problems
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
 //		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -243,7 +248,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("posters", "false");
-			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,RenameAction.class);
+			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 
 			// Do the renaming
 			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
@@ -259,7 +264,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
-			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,RenameAction.class);
+			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 			// Do the renaming
 			CLIMediaManager.main(args);
 
@@ -282,6 +287,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * Used to test recursive renaming of media using a source, but no stores.
 	 * @throws Exception Thrown if their are any errors
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveSourceRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -310,7 +316,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Do the renaming
 			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,RenameAction.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -323,7 +329,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
-			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,RenameAction.class);
+			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 			CLIMediaManager.main(args);
 
 			// Check things are still correct
@@ -347,10 +353,11 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @param source The source to use, or null if none are used
 	 * @param sourceParams The params of the source
 	 * @param store The store to use, or null if none are used
-	 * @return The config reader
+	 * @param actions The actions to perform
+	 * @return The configuration reader
 	 * @throws Exception Thrown if their is a problem
 	 */
-	public static ConfigReader setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,Class<? extends IAction> ... actions) throws Exception{
+	public static ConfigReader setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,String dummy,Class<? extends IAction> ... actions) throws Exception{
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);

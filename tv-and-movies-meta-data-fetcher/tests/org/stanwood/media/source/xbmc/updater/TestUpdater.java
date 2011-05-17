@@ -25,6 +25,9 @@ public class TestUpdater extends XBMCAddonTestBase {
 
 	private static IConsole console;
 
+	/**
+	 * Create the console for the updater
+	 */
 	@BeforeClass
 	public static void createConsole() {
 		console = new IConsole() {
