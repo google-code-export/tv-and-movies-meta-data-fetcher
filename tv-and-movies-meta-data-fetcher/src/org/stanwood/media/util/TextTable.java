@@ -17,7 +17,7 @@ public class TextTable {
 	 * @param columnNames The names of the columns
 	 */
 	public TextTable(String columnNames[]) {
-		this.columnNames = columnNames;
+		this.columnNames = columnNames.clone();
 		this.widths = new int[columnNames.length];
 		updateWidths(columnNames);
 	}

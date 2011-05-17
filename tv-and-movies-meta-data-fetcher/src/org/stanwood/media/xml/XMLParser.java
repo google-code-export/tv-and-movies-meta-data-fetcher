@@ -56,9 +56,9 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 public class XMLParser {
 
 	/** The (@link {@link XMLStore2 } schema */
-	public static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd";
+	public final static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd";
 	/** The application configuration schema */
-	public static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema";
+	public final static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema";
 
 	/**
 	 * Used to read a integer from the XML

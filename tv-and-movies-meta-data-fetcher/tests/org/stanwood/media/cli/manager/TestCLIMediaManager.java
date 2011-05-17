@@ -37,7 +37,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 	private final static String LS = System.getProperty("line.separator");
 
-	protected static int exitCode;
+	static int exitCode;
 
 	/**
 	 * Used to setup the exit handler
@@ -397,7 +397,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			is = new FileInputStream(configFile);
 			ConfigReader configReader = new ConfigReader(is);
 			configReader.parse();
-			AbstractLauncher.config = configReader;
+			AbstractLauncher.setConfig(configReader);
 			return configReader;
 		}
 		finally {
