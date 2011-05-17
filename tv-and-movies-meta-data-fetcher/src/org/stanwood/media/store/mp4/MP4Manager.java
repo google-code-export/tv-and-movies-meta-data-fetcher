@@ -384,6 +384,7 @@ public class MP4Manager implements IMP4Manager {
 					out.close();
 				}
 			} catch (IOException ioe) {
+				log.error("Unable to close file: " + file);
 			}
 		}
 	}

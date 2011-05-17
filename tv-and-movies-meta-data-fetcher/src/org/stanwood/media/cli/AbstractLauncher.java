@@ -36,7 +36,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	/** This is used by tests to set a configuration that should be used, if null then a configuration is read
 	 * in the usual way. Once the configuration has been used, this is set back to null */
-	public static ConfigReader config = null;
+	private static ConfigReader config = null;
 
 	/**
 	 * Create a instance of the class
@@ -177,5 +177,13 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		catch (NumberFormatException e) {
 			throw new ParseException("Unable to parse number from " + optionValue);
 		}
+	}
+
+	/**
+	 * Used by tests to set the config reader
+	 * @param configReader the config reader
+	 */
+	public static void setConfig(ConfigReader configReader) {
+		config = configReader;
 	}
 }

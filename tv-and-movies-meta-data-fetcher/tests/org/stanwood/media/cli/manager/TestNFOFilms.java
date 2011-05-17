@@ -25,7 +25,7 @@ import org.stanwood.media.util.FileHelper;
  */
 public class TestNFOFilms extends XBMCAddonTestBase {
 
-	protected static int exitCode;
+	static int exitCode;
 
 	/**
 	 * Used to setup the exit handler
