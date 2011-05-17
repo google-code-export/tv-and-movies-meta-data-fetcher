@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.setup.MediaDirConfig;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -35,13 +36,18 @@ public class RSSFeed {
 
 	private SyndFeed feed;
 	private File feedFile;
+	private String baseUrl;
+
+	private MediaDirConfig dirConfig;
 
 	/**
 	 * The constructor used to create a instance of the RSSFeed object
 	 * @param feedFile The file used to store the pod cast RSS feed
 	 */
-	public RSSFeed(File feedFile) {
+	public RSSFeed(File feedFile,String baseUrl,MediaDirConfig dirConfig) {
 		this.feedFile = feedFile;
+		this.baseUrl = baseUrl;
+		this.dirConfig = dirConfig;
 	}
 
 	/**
@@ -131,6 +137,19 @@ public class RSSFeed {
 			throw new FeedException("Unable to write feed, feed has no link");
 		}
 		output.output(feed, feedFile);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<IFeedFile> getEntries() {
+		ArrayList<IFeedFile> files = new ArrayList<IFeedFile>();
+		List<SyndEntry> rssEntries = feed.getEntries();
+		for (SyndEntry rssE : rssEntries) {
+			SyndEnclosure enc = (SyndEnclosure) rssE.getEnclosures().get(0);
+//			enc.getUrl();
+//			enc.getType()
+//			FeedFileFactory.createFile(file, dirConfig, media, baseUrl);
+		}
+		return files;
 	}
 
 	/**
