@@ -47,9 +47,6 @@ public class MP4Manager implements IMP4Manager {
 
 	private final static Log log = LogFactory.getLog(MP4Manager.class);
 
-	//TODO find better whay of encoding this
-	private final static String COPYRIGHT_SYMBOL = new String(new byte[]{-87},Charset.forName("ISO-8859-1"));
-
 	/**
 	 * Used to get a list of atoms in the MP4 file.
 	 *
@@ -229,7 +226,7 @@ public class MP4Manager implements IMP4Manager {
 		}
 	}
 
-	public byte[] readFile(File file) throws IOException {
+	private byte[] readFile(File file) throws IOException {
 		FileInputStream fin = null;
 		try {
 

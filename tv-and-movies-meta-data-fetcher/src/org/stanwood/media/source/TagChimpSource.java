@@ -9,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -40,8 +38,6 @@ import org.w3c.dom.Node;
  * a regular expression, that when found in the filename, is removed.
  */
 public class TagChimpSource extends XMLParser implements ISource {
-
-	private final static Log log = LogFactory.getLog(TagChimpSource.class);
 
 	private static final SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -169,6 +165,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return SOURCE_ID;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(final String name, final Mode mode, final Integer part) throws SourceException {
 		if (mode != Mode.FILM) {
@@ -297,6 +294,13 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return FileHelper.getInputStream(url);
 	}
 
+	/**
+	 * Used to download a URL to a stream
+	 * @param url The URL to download
+	 * @return The stream
+	 * @throws IOException Thrown if their are IO problems
+	 * @throws SourceException Thrown if their are any other problems
+	 */
 	public Stream getStreamToURL(URL url) throws IOException, SourceException {
 		Stream stream = getSource(url);
 		if (stream==null) {
@@ -343,9 +347,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	}
 
-	public static String stripLineBreaks(String string, String replaceWith) {
-
-
+	private static String stripLineBreaks(String string, String replaceWith) {
 	      int len = string.length();
 	      StringBuffer buffer = new StringBuffer(len);
 	      for (int i = 0; i < len; i++) {

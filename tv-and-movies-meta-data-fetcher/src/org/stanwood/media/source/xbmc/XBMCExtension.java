@@ -21,6 +21,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * All types of XBMC extension classes should inherit from this class as it implements
+ * methods generic to all XBMC extensions.
+ */
 public abstract class XBMCExtension extends XMLParser {
 
 	private final static Log log = LogFactory.getLog(XBMCExtension.class);
@@ -35,6 +39,12 @@ public abstract class XBMCExtension extends XMLParser {
 	private File scraperFile;
 	private XBMCAddon addon;
 
+	/**
+	 * The constructor
+	 * @param addon the addon
+	 * @param scraperFile The scraper file the extension is been read from
+	 * @param point The extension point been used for the extension
+	 */
 	public XBMCExtension(XBMCAddon addon,File scraperFile,String point) {
 		this.point = point;
 		this.scraperFile = scraperFile;
@@ -70,6 +80,14 @@ public abstract class XBMCExtension extends XMLParser {
 		return doc;
 	}
 
+	/**
+	 * Used to execute a XBMC function
+	 * @param functionNode The node of the function
+	 * @param params The parameters been passed to the function
+	 * @return The result of executing the function
+	 * @throws XBMCException Thrown if their is a XBMC problem
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 */
 	public String executeXBMCFunction(Element functionNode,Map<Integer,String> params) throws  XBMCException, XMLParserException {
 		if (log.isDebugEnabled()) {
 			log.debug("Executing function : " + functionNode.getNodeName());
@@ -296,6 +314,14 @@ public abstract class XBMCExtension extends XMLParser {
 		return scraperFile;
 	}
 
+	/**
+	 * Used to execute a XBMC function
+	 * @param functionName The name of the function
+	 * @param params The parameters been passed to the function
+	 * @return The result of executing the function
+	 * @throws XBMCException Thrown if their is a XBMC problem
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 */
 	public abstract String executeXBMCScraperFunction(String functionName,Map<Integer,String> params) throws  XBMCException, XMLParserException;
 
 	protected XBMCAddon getAddon() {
@@ -303,6 +329,7 @@ public abstract class XBMCExtension extends XMLParser {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "XBMCExtension:" + scraperFile +" : " + point;

@@ -51,14 +51,28 @@ public class XBMCExpression {
 		return trim.contains(field);
 	}
 
+	/**
+	 * Used to find out if the dest field should be cleared when a expression fails
+	 * @return true if the dest field should be cleared when a expression fails
+	 */
 	public boolean getClear() {
 		return clear;
 	}
 
+	/**
+	 * If set to true, then if the expression fails the dest field is clear
+	 * @param clear If set to true, then if the expression fails the dest field is clear
+	 */
 	public void setClear(boolean clear) {
 		this.clear = clear;
 	}
 
+	/**
+	 * By default HTML tags and special characters are stripped from the
+	 * matches. By setting noclean to a comma separated list of field numbers,
+	 *  you can stop this behaviour.
+	 * @param value A comma separated list of field numbers that should not be cleaned
+	 */
 	public void setNoClean(String value) {
 		if (!value.equals("")) {
 			StringTokenizer tok = new StringTokenizer(value,",");
@@ -69,6 +83,10 @@ public class XBMCExpression {
 		}
 	}
 
+	/**
+	 * trim white spaces from the end of matches
+	 * @param value A comma separated list of field numbers that should trimmed
+	 */
 	public void setTrim(String value) {
 		if (!value.equals("")) {
 			StringTokenizer tok = new StringTokenizer(value,",");
@@ -95,6 +113,7 @@ public class XBMCExpression {
 		this.repeat = repeat;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return pattern.toString();

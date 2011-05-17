@@ -22,6 +22,9 @@ import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Stream;
 
+/**
+ * The manager for XBMC addons
+ */
 public class XBMCAddonManager implements IContentFetcher {
 
 	private final static Log log = LogFactory.getLog(XBMCAddonManager.class);
@@ -53,10 +56,17 @@ public class XBMCAddonManager implements IContentFetcher {
 		registerAddons();
 	}
 
+	/**
+	 * Used to get the XBMC updater
+	 * @return the XBMC updater
+	 */
 	public IXBMCUpdater getUpdater() {
 		return updater;
 	}
 
+	/**
+	 * Used to unregister all XBMC addons with the manager
+	 */
 	public void unregisterAddons() {
 		addons = new HashMap<String,XBMCAddon>();
 	}
@@ -75,6 +85,10 @@ public class XBMCAddonManager implements IContentFetcher {
 		return addon;
 	}
 
+	/**
+	 * Used to register all the XBMC addons that are found in the addon directory
+	 * @throws XBMCException Thrown if their is a problem
+	 */
 	public void registerAddons() throws XBMCException {
 		addons = new HashMap<String,XBMCAddon>();
 		try {
@@ -118,10 +132,20 @@ public class XBMCAddonManager implements IContentFetcher {
 		}
 	}
 
+	/**
+	 * Gets a list of sources
+	 * @return a list of sources
+	 */
 	public List<ISource> getSources() {
 		return sources;
 	}
 
+	/**
+	 * Used to get the default source ID
+	 * @param mode The mode that were looking for a source id in
+	 * @return The default source ID for a given mode
+	 * @throws XBMCException Thrown if their is a problem getting the default source ID
+	 */
 	public String getDefaultSourceID(Mode mode) throws XBMCException {
 		for (Entry<String,XBMCAddon> e : addons.entrySet()) {
 			if (e.getValue().supportsMode(mode)) {
@@ -131,14 +155,30 @@ public class XBMCAddonManager implements IContentFetcher {
 		return null;
 	}
 
+	/**
+	 * This will copy a file from the web to a destination file on the local system
+	 * @param url The URL to read from the file from
+	 * @param newAddon The file to be created on the location system
+	 * @return A MD5 sum of the file
+	 * @throws IOException Thrown if their is a problem reading or wring the file
+	 */
 	public String downloadFile(URL url, File newAddon) throws IOException {
 		return FileHelper.copy(url,newAddon);
 	}
 
+	/**
+	 * Used to get a list of addon ID's
+	 * @return The list of addon ID's
+	 */
 	public Set<String> listAddons() {
 		return addons.keySet();
 	}
 
+	/**
+	 * Checks if this is the first time the application has been run.
+	 * @return True if first time , otherwise false
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public boolean isFirstTime() throws XBMCException {
 		try {
 			return config.getXBMCAddonDir().list().length==0;

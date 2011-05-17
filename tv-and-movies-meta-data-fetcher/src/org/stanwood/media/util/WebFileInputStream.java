@@ -116,6 +116,10 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 		return responseHeader;
 	}
 
+	/**
+	 * Used to get the charset of the stream
+	 * @return the charset of the stream
+	 */
 	public String getCharset() {
 		return charset;
 	}

@@ -32,7 +32,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-
+/**
+ * This class is used to install, remove or update XBMC addons
+ */
 public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private final static Log log = LogFactory.getLog(XBMCWebUpdater.class);
@@ -45,6 +47,11 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private File addonsDir;
 
+	/**
+	 * The constructor
+	 * @param config The Media directory configuration
+	 * @throws XBMCException Thrown if their is a problem reading from the configuration
+	 */
 	public XBMCWebUpdater(ConfigReader config) throws XBMCException {
 		try {
 			addonsDir = config.getXBMCAddonDir();
@@ -54,14 +61,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setAddonManager(XBMCAddonManager mgr) {
 		this.mgr =mgr;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Set<AddonDetails> listAddons(IConsole console) throws XBMCUpdaterException {
 		try {
@@ -103,6 +109,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int installAddons(IConsole console,Set<String>addonIds) throws XBMCException {
 		try {
@@ -137,7 +144,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	}
 
-	public void findUninstalledRequiredPlugins(String pluginId,Version version,Document newAddonDoc,Set<String>requiredPlugins,Set<AddonDetails>installedAddons) throws XMLParserException {
+	private void findUninstalledRequiredPlugins(String pluginId,Version version,Document newAddonDoc,Set<String>requiredPlugins,Set<AddonDetails>installedAddons) throws XMLParserException {
 		AddonDetails installedAddon = findAddon(installedAddons, pluginId);
 		if (installedAddon==null || installedAddon.getInstalledVersion().compareTo(version) < 0) {
 			requiredPlugins.add(pluginId);
@@ -149,6 +156,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int uninstallAddons(IConsole console,Set<String>addonIds) throws XBMCUpdaterException {
 		Set<AddonDetails> installedPlugins = getInstalledAddons(addonsDir);
@@ -243,6 +251,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int update(IConsole console,Set<String> pluginList) throws XBMCException {
 		mgr.unregisterAddons();
@@ -259,6 +268,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int update(IConsole console) throws XBMCException {
 		mgr.unregisterAddons();
@@ -566,6 +576,4 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			return false;
 		}
 	}
-
-
 }

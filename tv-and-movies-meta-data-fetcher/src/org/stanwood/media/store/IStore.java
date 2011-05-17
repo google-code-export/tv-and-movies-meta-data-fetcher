@@ -28,6 +28,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.source.SourceException;
 
 /**
  * Stores are similar too sources, except that they are also writable. Once
@@ -136,7 +137,16 @@ public interface IStore  {
 	 */
 	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
 
-
+	/**
+	 * Used to search for store for media
+	 * @param name The search term
+	 * @param mode The mode of the search
+	 * @param part The part number to search for
+	 * @param dirConfig The Media directory configuration
+	 * @param mediaFile The media file the search is associated with
+	 * @return The search result or NULL if it could not be found
+	 * @throws StoreException Thrown if their is a problem with the store
+	 */
 	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException;
 
 	/**
@@ -162,12 +172,36 @@ public interface IStore  {
 	 */
 	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
 
-	public void setParameter(String key, String value);
+	/**
+	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @param value The value of the parameter
+	 * @throws StoreException Throw if the key is not supported by this store.
+	 */
+	public void setParameter(String key,String value) throws StoreException;
 
-	public String getParameter(String key);
+	/**
+	 * <p>Used to get the value of a source parameter. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
+	 * @param key The key of the parameter
+	 * @return The value of the parameter
+	 * @throws StoreException Throw if the key is not supported by this store.
+	 */
+	public String getParameter(String key) throws StoreException;
 
+	/**
+	 * This is called after all the actions on all the media files have been performed so that
+	 * the store can clean up any stale data.
+	 * @param dir The media directory
+	 * @throws StoreException Thrown if their is a problem
+	 */
 	public void performedActions(MediaDirectory dir) throws StoreException;
 
+	/**
+	 * This is called when a file is deleted from a media directory
+	 * @param dir The media directory
+	 * @param file The file
+	 * @throws StoreException Thrown if their is a problem
+	 */
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException;
 
 }

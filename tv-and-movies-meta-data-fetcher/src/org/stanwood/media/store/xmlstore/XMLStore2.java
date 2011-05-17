@@ -446,12 +446,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void removeOldCache(Node filmNode, Film film) {
-		if (filmNode != null) {
-			filmNode.getParentNode().removeChild(filmNode);
-		}
-	}
-
 	private Element getSeasonNode(File rootMediaDir, Season season,Document doc) throws StoreException {
 
 		Element showNode = getShowNode(doc, season.getShow());
@@ -924,6 +918,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException {
 		Document doc = getCache(dirConfig.getMediaDir());
@@ -1042,16 +1037,19 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return doc;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
@@ -1078,6 +1076,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();

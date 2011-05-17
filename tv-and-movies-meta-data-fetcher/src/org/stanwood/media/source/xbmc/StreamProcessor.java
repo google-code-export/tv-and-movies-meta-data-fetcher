@@ -68,10 +68,11 @@ public abstract class StreamProcessor {
 	            }
 			}
 			else {
-				Reader r = new InputStreamReader(stream.getInputStream());
+				Reader r = null;
 				StringWriter sw = null;
 				String data = null;
 				try {
+					r = new InputStreamReader(stream.getInputStream());
 					sw = new StringWriter();
 					char[] buffer = new char[1024];
 					for (int n; (n = r.read(buffer)) != -1; ) {
@@ -89,6 +90,9 @@ public abstract class StreamProcessor {
 				finally {
 					if (sw!=null) {
 						sw.close();
+					}
+					if (r!=null) {
+						r.close();
 					}
 				}
 				if (data!=null) {

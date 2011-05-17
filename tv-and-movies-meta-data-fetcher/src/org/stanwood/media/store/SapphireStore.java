@@ -47,7 +47,7 @@ import org.stanwood.media.util.FileHelper;
  * "http://appletv.nanopi.net/manual/overriding-metadata/"}.
  * </p>
  * <p>
- * Every time the {@link SapphireStore#cacheEpisode(File, File, Episode)} or the {@link SapphireStore#cacheFilm(File, File, Film)}
+ * Every time the {@link SapphireStore#cacheEpisode(File, File, Episode)} or the {@link SapphireStore#cacheFilm(File, File, Film, Integer)}
  * method is called, a XML file is written next to the episodes/films file with a
  * .xml extension.
  * </p>
@@ -358,6 +358,7 @@ public class SapphireStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) {
 		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
@@ -365,6 +366,7 @@ public class SapphireStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) {
 		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
@@ -373,11 +375,13 @@ public class SapphireStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
 		File xmlFile = getCacheFile(file);
