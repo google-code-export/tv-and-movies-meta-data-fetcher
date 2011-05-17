@@ -8,8 +8,20 @@ import org.stanwood.media.model.IVideo;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Used to create feed files
+ */
 public class FeedFileFactory {
 
+	/**
+	 * Create a feed file
+	 * @param file The location of the file
+	 * @param dirConfig The media directory configuration where the file lives
+	 * @param media The media file information
+	 * @param baseUrl The base URL of the feed
+	 * @return The feed file
+	 * @throws ActionException Thrown if their is a problem creating the feed file
+	 */
 	public static IFeedFile createFile(File file,MediaDirConfig dirConfig, IVideo media, String baseUrl) throws ActionException {
 		try {
 			String ext = FileHelper.getExtension(file).toLowerCase();

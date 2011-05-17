@@ -377,6 +377,10 @@ public class TestConfigReader {
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 	}
 
+	/**
+	 * Used to test parsing of default config file
+	 * @throws Exception  Thrown if their are any problems
+	 */
 	@Test
 	public void testParseDefaultConfigFile() throws Exception {
 		ConfigReader configReader = null;

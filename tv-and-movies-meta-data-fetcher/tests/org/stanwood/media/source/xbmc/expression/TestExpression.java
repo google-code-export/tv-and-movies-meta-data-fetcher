@@ -4,8 +4,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * Used to test the evaluation of expressions
+ */
 public class TestExpression {
 
+	/**
+	 * Test expressions using integers
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testIntExpressions() throws Exception {
 		ExpressionEval eval = new ExpressionEval();
@@ -76,6 +83,10 @@ public class TestExpression {
 		Assert.assertEquals(3456, result.getValue());
 	}
 
+	/**
+	 * Test expressions using booleans
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testBoolExpressions() throws Exception {
 		ExpressionEval eval = new ExpressionEval();

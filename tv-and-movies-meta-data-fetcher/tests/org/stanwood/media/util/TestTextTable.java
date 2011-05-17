@@ -4,8 +4,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * Used to test the class {@link TextTable}
+ */
 public class TestTextTable {
 
+	/**
+	 * Test the table formatting
+	 */
 	@Test
 	public void testTableFormat() {
 		TextTable table = new TextTable(new String[] {"row1","Description","blah"});

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,8 +15,6 @@ import org.stanwood.media.util.FileHelper;
  * This is a base class for tests of XBMC Addons
  */
 public class XBMCAddonTestBase {
-
-	private final static Log log = LogFactory.getLog(XBMCAddonTestBase.class);
 
 	private static File tmpDir;
 	private static File updateSiteDir;

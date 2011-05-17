@@ -28,7 +28,10 @@ public class TestShowSearcher {
 
 	private Map<File,String> patterns = new HashMap<File,String>();
 
-
+	/**
+	 * Used to test the show searcher
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testSearch() throws Exception {
 		File filmsDir = createTVShows();

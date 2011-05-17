@@ -6,8 +6,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.actions.rename.Token;
 
+/**
+ * Used to test that the Film Search works as expecteded with looking for the details
+ * in the files name.
+ */
 public class TestReversePatternSearchStrategy {
 
+	/**
+	 * Used to test that the Film Search works as expecteded with looking for the details
+	 * in the files name.
+	 */
 	@Test
 	public void testSearch() {
 		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie.m4v", "%t.%x"));

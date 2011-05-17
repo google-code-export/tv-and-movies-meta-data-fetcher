@@ -107,6 +107,7 @@ public class FakeStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) {
 		if (key.equalsIgnoreCase("testParam1")) {
@@ -114,6 +115,7 @@ public class FakeStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) {
 		if (key.equalsIgnoreCase("testParam1")) {
@@ -175,15 +177,15 @@ public class FakeStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) {
-		// TODO Auto-generated method stub
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) {
-		// TODO Auto-generated method stub
 
 	}
 

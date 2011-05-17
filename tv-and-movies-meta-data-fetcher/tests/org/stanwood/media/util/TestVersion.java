@@ -4,8 +4,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * Used to test the class {@link Version}
+ */
 public class TestVersion {
 
+	/**
+	 * Used to test the version compare function
+	 */
 	@Test
 	public void testCompareVersion() {
 		Assert.assertEquals(0,compare("52", "52"));
