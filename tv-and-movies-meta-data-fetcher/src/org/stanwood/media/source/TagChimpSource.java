@@ -176,7 +176,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 		final List<SearchResult>unlockedResults = new ArrayList<SearchResult>();
 		try {
 			URL url = getSearchUrl(name);
-			StreamProcessor processor = new StreamProcessor(getStreamToURL(url)) {
+			StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") {
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {

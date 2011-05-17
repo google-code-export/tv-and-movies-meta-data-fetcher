@@ -43,7 +43,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	}
 
 	protected void appendHelp(StringBuilder expected) {
-		expected.append("usage: xbmc-addons [--global-options] <command> [--command-options] [arguments]"+FileHelper.LS);
+		expected.append("usage: mm-xbmc [--global-options] <command> [--command-options] [arguments]"+FileHelper.LS);
 		expected.append(""+FileHelper.LS);
 		expected.append("Global options:"+FileHelper.LS);
 		expected.append("  --config_file, -c <info|debug|file>"+FileHelper.LS);

@@ -38,7 +38,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(), stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: xbmc-addons [--global-options] list [--command-options]\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
 		expected.append("\n");
 		expected.append("Command Options:\n");
 		expected.append("  --help, -h                    Show the help\n");
@@ -169,7 +169,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(),stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: xbmc-addons [--global-options] list [--command-options]\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
 		expected.append("\n");
 		expected.append("Command Options:\n");
 		expected.append("  --help, -h                    Show the help\n");
@@ -199,7 +199,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(),stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: xbmc-addons [--global-options] list [--command-options]\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
 		expected.append("\n");
 		expected.append("Command Options:\n");
 		expected.append("  --help, -h                    Show the help\n");

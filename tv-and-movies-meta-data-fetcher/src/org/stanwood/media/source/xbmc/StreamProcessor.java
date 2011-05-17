@@ -20,16 +20,28 @@ import org.stanwood.media.util.Stream;
 public abstract class StreamProcessor {
 
 	private Stream stream = null;
+	private String forcedContentType = null;
 
 	/**
-	 * Used to create a instance of the class
-	 * @param stream The stream to be processed
+	 * Used to create a instance of the class.
+	 * @param stream The stream to be processed.
+	 * @param forcedContentType Used to force the stream content type and ignore what the
+	 *                          web site reports.
 	 */
-	public StreamProcessor(Stream stream) {
+	public StreamProcessor(Stream stream,String forcedContentType) {
 		if (stream==null) {
 			throw new NullPointerException("Stream cannot be null");
 		}
 		this.stream = stream;
+		this.forcedContentType = forcedContentType;
+	}
+
+	/**
+	 * Used to create a instance of the class.
+	 * @param stream The stream to be processed.
+	 */
+	public StreamProcessor(Stream stream) {
+		this(stream,null);
 	}
 
 	/**
@@ -39,6 +51,10 @@ public abstract class StreamProcessor {
 	 */
 	public void handleStream() throws SourceException {
 		try {
+			String contentType = stream.getMineType();
+			if (this.forcedContentType!=null) {
+				contentType = this.forcedContentType;
+			}
 			if (stream.getInputStream() instanceof ZipInputStream) {
 				ZipInputStream zis = (ZipInputStream) stream.getInputStream();
 				ZipEntry entry = null;
@@ -81,7 +97,8 @@ public abstract class StreamProcessor {
 					String str = sw.toString();
 					if (str.length()>0) {
 						data = str;
-						if (stream.getMineType().equals("text/html")) {
+
+						if (contentType.equals("text/html")) {
 							data = StringEscapeUtils.unescapeHtml(data);
 						}
 
