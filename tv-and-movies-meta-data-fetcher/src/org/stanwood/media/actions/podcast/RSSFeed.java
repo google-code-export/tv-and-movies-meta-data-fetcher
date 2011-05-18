@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.setup.MediaDirConfig;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -43,6 +44,8 @@ public class RSSFeed {
 	/**
 	 * The constructor used to create a instance of the RSSFeed object
 	 * @param feedFile The file used to store the pod cast RSS feed
+	 * @param baseUrl The base URL of the feed
+	 * @param dirConfig The media directory configuration
 	 */
 	public RSSFeed(File feedFile,String baseUrl,MediaDirConfig dirConfig) {
 		this.feedFile = feedFile;
@@ -139,15 +142,18 @@ public class RSSFeed {
 		output.output(feed, feedFile);
 	}
 
+	/**
+	 * Used to get the entries form the feed.
+	 * @return The entries
+	 * @throws ActionException Thrown if their are any problems
+	 */
 	@SuppressWarnings("unchecked")
-	public List<IFeedFile> getEntries() {
+	public List<IFeedFile> getEntries() throws ActionException {
 		ArrayList<IFeedFile> files = new ArrayList<IFeedFile>();
 		List<SyndEntry> rssEntries = feed.getEntries();
 		for (SyndEntry rssE : rssEntries) {
-			SyndEnclosure enc = (SyndEnclosure) rssE.getEnclosures().get(0);
-//			enc.getUrl();
-//			enc.getType()
-//			FeedFileFactory.createFile(file, dirConfig, media, baseUrl);
+			File file = new File(dirConfig.getMediaDir(),rssE.getLink().substring(baseUrl.length()+1));
+			files.add(FeedFileFactory.createFile(file, dirConfig, rssE.getTitle(),rssE.getDescription().getValue(), baseUrl));
 		}
 		return files;
 	}

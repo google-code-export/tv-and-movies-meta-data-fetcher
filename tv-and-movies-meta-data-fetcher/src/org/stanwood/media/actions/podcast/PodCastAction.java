@@ -22,6 +22,29 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * <p>
+ * This action is used create a pod cast of media that it finds. It will
+ * add order the  most recent media files by the date they were last modified.
+ * </p>
+ * <p>This action supports the following parameters:
+ * <ul>
+ * <li>mediaDirURL - This is a required parameter that specifies the URL used to find the root media directory.</li>
+ * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</li>
+ * <li>numberEntries - The maximum number of entries in the feed. The default if not set is unlimited.</li>
+ * <li>extensions - A comma separated list of media file extensions to accept.</li>
+ * <li>restrictPattern - This can be used to restrict the media files. It can contain standard rename patterns with the value.</li>
+ * <li>feedTitle - Used to give a title to the RSS feed</li>
+ * <li>feedDescription - Used to give a description to the RSS feed</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Parameters can also have variable in them. The following variables cane be used:
+ * <ul>
+ * <li>$HOME - The current users home directory.</li>
+ * </ul>
+ * </p>
+ */
 public class PodCastAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(PodCastAction.class);
@@ -35,7 +58,7 @@ public class PodCastAction extends AbstractAction {
 	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription";
 
 	private List<IFeedFile>feedFiles = null;
-	private int numEntries = 20;
+	private Integer numEntries = null;
 	private MediaDirectory dir;
 	private String fileLocation;
 	private String mediaDirUrl;
@@ -45,8 +68,14 @@ public class PodCastAction extends AbstractAction {
 	private String feedDescription = "";
 	private String feedTitle = "";
 
+	/**
+	 * Used to setup the action and parse the podcast if it already exists
+	 * @param dir The media directory
+	 * @throws ActionException Thrown if their are any problems
+	 */
 	@Override
 	public void init(MediaDirectory dir) throws ActionException {
+		validateParameters();
 		if (log.isDebugEnabled()) {
 			log.debug("Init PodCast Action");
 		}
@@ -58,6 +87,14 @@ public class PodCastAction extends AbstractAction {
 
 			if (feedFile.exists()) {
 				RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig() );
+				rssFeed.parse();
+				feedFiles.addAll(rssFeed.getEntries());
+				Collections.sort(feedFiles, new Comparator<IFeedFile>() {
+					@Override
+					public int compare(IFeedFile o1, IFeedFile o2) {
+						return o1.compareTo(o2);
+					}
+				});
 			}
 		}
 		catch (Exception e) {
@@ -65,6 +102,27 @@ public class PodCastAction extends AbstractAction {
 		}
 	}
 
+	private void validateParameters() throws ActionException {
+		List<String>missingParams = new ArrayList<String>();
+		if (fileLocation==null) {
+			missingParams.add(PARAM_FILE_LOCATION);
+		}
+		if (mediaDirUrl==null) {
+			missingParams.add(PARAM_MEDIA_DIR_URL);
+		}
+		if (missingParams.size()>0) {
+			StringBuilder buffer = new StringBuilder("Missing required parameters for PodCastAction: ");
+			for (int i=0;i<missingParams.size();i++) {
+				if (i>0) {
+					buffer.append(", ");
+				}
+				buffer.append("'"+missingParams.get(i)+"'");
+			}
+			throw new ActionException(buffer.toString());
+		}
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public void perform(MediaDirectory dir, Episode episode, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
 		String ext = FileHelper.getExtension(mediaFile);
@@ -85,6 +143,7 @@ public class PodCastAction extends AbstractAction {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,IActionEventHandler actionEventHandler) throws ActionException {
 		String ext = FileHelper.getExtension(mediaFile);
@@ -107,25 +166,35 @@ public class PodCastAction extends AbstractAction {
 
 		IFeedFile feedFile = FeedFileFactory.createFile(file,dir.getMediaDirConfig(),video,mediaDirUrl );
 
-		int index = Collections.binarySearch(feedFiles,feedFile,new Comparator<IFeedFile>() {
-			@Override
-			public int compare(IFeedFile o1, IFeedFile o2) {
-				return o1.getLastModified().compareTo(o2.getLastModified());
-			}
-		});
+		addFileToList(feedFile);
+	}
+
+	protected void addFileToList(IFeedFile feedFile) {
+		int index = Collections.binarySearch(feedFiles,feedFile);
 		if (index < 0) {
 		    feedFiles.add(-index-1,feedFile);
 		}
+		else {
+			feedFiles.add(feedFile);
+		}
 
-		if (feedFiles.size()>numEntries) {
+		if (numEntries!=null && feedFiles.size()>numEntries) {
 			Iterator<IFeedFile> it = feedFiles.iterator();
 			it.next();
 			it.remove();
 		}
 	}
 
+	/**
+	 * Used to write the podcast
+	 * @param dir The media directory
+	 * @throws ActionException Thrown if their are any problems
+	 */
 	@Override
 	public void finished(MediaDirectory dir) throws ActionException {
+		if (isTestMode()) {
+			return;
+		}
 		File feedFile = getFeedFile();
 		try {
 			RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig());
@@ -133,7 +202,12 @@ public class PodCastAction extends AbstractAction {
 			rssFeed.setTitle(feedTitle);
 			rssFeed.setDescription(feedDescription);
 			rssFeed.setLink(new URL(mediaDirUrl));
-
+			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
+				@Override
+				public int compare(IFeedFile o1, IFeedFile o2) {
+					return o1.compareTo(o2);
+				}
+			});
 			for (IFeedFile file : feedFiles) {
 				rssFeed.addEntry(file);
 			}
@@ -152,6 +226,23 @@ public class PodCastAction extends AbstractAction {
 		return dir.getPath(loc);
 	}
 
+	/**
+	 * <p>Used to set parameters on the action</p>
+	 * <p>
+	 * <ul>
+	 * <li>mediaDirURL - This is a required parameter that specifies the URL used to find the root media directory.</li>
+	 * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</li>
+	 * <li>numberEntries - The maximum number of entries in the feed. The default if not set is unlimited.</li>
+	 * <li>extensions - A comma separated list of media file extensions to accept.</li>
+	 * <li>restrictPattern - This can be used to restrict the media files. It can contain standard rename patterns with the value.</li>
+	 * <li>feedTitle - Used to give a title to the RSS feed</li>
+	 * <li>feedDescription - Used to give a description to the RSS feed</li>
+	 * </ul>
+	 * </p>
+	 * @param key The key of the parameter
+	 * @param value The value of the parameter
+	 * @throws ActionException Thrown if their is a problem setting the parameter
+	 */
 	@Override
 	public void setParameter(String key, String value) throws ActionException {
 		if (key.equalsIgnoreCase(PARAM_NUMBER_ENTRIES)) {
