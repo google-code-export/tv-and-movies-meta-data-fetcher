@@ -5,7 +5,6 @@ Version 2.0
 -----------
 	 
 *Inprogress*    - Create macosx installer
-*Inprogress*    - Add action to create pod casts of new media that is found
 *Not started*   - Change FILM search to to lookup film details from a NFO file.
 					- Option to ignore samples Delete samples
 					- Option to delete anything that did not get renamed in the NFO folder
@@ -13,7 +12,6 @@ Version 2.0
 *Inprogress*    - Update java doc
 *Not started*   - Update user guide
 *Not started*   - Add tool to move a media file into a media directory
-*Not started*   - Add variables to javadoc of system command action
 
 Version 2.0.1
 -------------

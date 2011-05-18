@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * This should be implemented by files that are to be inserted into a RSS feed
  */
-public interface IFeedFile {
+public interface IFeedFile extends Comparable<IFeedFile>{
 
 	/**
 	 * Used to get the content type

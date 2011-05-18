@@ -1,3 +1,5 @@
+* Wed May 18 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Added new PodCastAction to create video podcasts
 * Mon May 9 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Added new Action for executing a system command on media files
 - Removed the Changed permission action as the above mentioned action can be used instead

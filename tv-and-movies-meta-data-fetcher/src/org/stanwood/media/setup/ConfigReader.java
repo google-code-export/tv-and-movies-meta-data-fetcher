@@ -54,8 +54,8 @@ public class ConfigReader extends BaseConfigReader {
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","jpg","mpg","mp4","m4a","m4v","srt","sub","divx" };
 
-	private final static String DEFAULT_TV_FILE_PATTERN = "%s %e - %t.%x";
-	private final static String DEFAULT_FILM_FILE_PATTERN = "%t.%x";
+	private final static String DEFAULT_TV_FILE_PATTERN = "%sx%e - %t.%x";
+	private final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x";
 
 	/** The default location to store configuration */
 	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager");

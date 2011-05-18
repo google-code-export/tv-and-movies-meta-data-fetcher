@@ -72,4 +72,5 @@ public class VideoFile {
 	public void setPart(Integer part) {
 		this.part = part;
 	}
+
 }

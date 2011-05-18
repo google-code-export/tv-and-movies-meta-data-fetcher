@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
-import org.stanwood.media.model.IVideo;
 import org.stanwood.media.setup.MediaDirConfig;
 
 /**
@@ -14,23 +13,26 @@ import org.stanwood.media.setup.MediaDirConfig;
 public class VideoFeedFile implements IFeedFile {
 
 	private File file;
-	private IVideo media;
 	private URL url;
 	private String contentType;
+	private String description;
+	private String title;
 
 	/**
 	 * The constructor
 	 * @param file The location of the file
 	 * @param dirConfig The media directory configuration
-	 * @param media The media file information
+	 * @param title The title of the file
+	 * @param description The description of the file
 	 * @param baseUrl The base URL of the feed
 	 * @param contentType The content type of the file
 	 * @throws MalformedURLException Thrown if their is a problem create URL's
 	 */
-	public VideoFeedFile(File file,MediaDirConfig dirConfig, IVideo media, String baseUrl,String contentType) throws MalformedURLException {
+	public VideoFeedFile(File file,MediaDirConfig dirConfig, String title,String description, String baseUrl,String contentType) throws MalformedURLException {
 		this.file = file;
-		this.media = media;
 		this.contentType =contentType;
+		this.title = title;
+		this.description = description;
 
 		String relPath = makePathRelativeToMediaDir(file,dirConfig.getMediaDir());
 		if (!File.separator.equals("/")) {
@@ -60,7 +62,7 @@ public class VideoFeedFile implements IFeedFile {
 	/** {@inheritDoc} */
 	@Override
 	public String getTitle() {
-		return media.getTitle();
+		return title;
 	}
 
 	private String makePathRelativeToMediaDir(File episodeFile, File rootMediaDir) {
@@ -83,7 +85,7 @@ public class VideoFeedFile implements IFeedFile {
 	/** {@inheritDoc} */
 	@Override
 	public String getDescription() {
-		return media.getSummary();
+		return description;
 	}
 
 
@@ -91,6 +93,21 @@ public class VideoFeedFile implements IFeedFile {
 	@Override
 	public String toString() {
 		return "VideoFile: " +file.getAbsolutePath();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int compareTo(IFeedFile o) {
+		int compare = Long.valueOf(getLastModified().getTime()).compareTo(o.getLastModified().getTime());
+		if (compare==0) {
+			if (getTitle().compareTo(o.getTitle())>0) {
+				compare=1;
+			}
+			else {
+				compare = -1;
+			}
+		}
+		return compare;
 	}
 
 	/** {@inheritDoc} */
@@ -124,5 +141,6 @@ public class VideoFeedFile implements IFeedFile {
 		}
 		return true;
 	}
+
 
 }

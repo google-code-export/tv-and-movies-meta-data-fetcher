@@ -37,6 +37,19 @@ import org.stanwood.media.util.FileHelper;
  * <li>abortIfFileExists - The name of a file, that if it exists, then this action will not perform</li>
  * </ul>
  * </p>
+ * <p>
+ * Parameters can also have variable in them. These can be any of the pattern variables, as well as
+ * the following special variables:
+ * <ul>
+ * <li>$NEWFILE - The value of the &apos;newFile&apos; parameter.</li>
+ * <li>$DELETEDFILE - The value of the &apos;deletedFile&apos; parameter.</li>
+ * <li>$MEDIAFILE_NAME - The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</li>
+ * <li>$MEDIAFILE_EXT - The extension of the current media file been processed.</li>
+ * <li>$MEDIAFILE_DIR - The directory the current media file is in.</li>
+ * <li>$MEDIAFILE - The full path of the current media file.</li>
+ * <li>$HOME - The current users home directory.</li>
+ * </ul>
+ * </p>
  */
 public class ExecuteSystemCommandAction extends AbstractAction {
 
