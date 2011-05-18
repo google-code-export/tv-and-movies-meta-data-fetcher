@@ -174,7 +174,7 @@ public class TestConfigReader {
 			testConfig.append("</mediaManager>"+LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
-			Assert.assertEquals("%s %e - %t.%x", configReader.getMediaDirectory(mediaDir).getPattern());
+			Assert.assertEquals("%sx%e - %t.%x", configReader.getMediaDirectory(mediaDir).getPattern());
 
 		}
 		finally {
