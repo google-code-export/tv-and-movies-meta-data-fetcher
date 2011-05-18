@@ -23,7 +23,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +57,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 	private ArrayList<File> dirs;
 
-	private ArrayList<File> sortedFiles;
+
 
 	private boolean testMode;
 
@@ -79,16 +81,24 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions() throws ActionException {
+		List<File> sortedFiles = findMediaFiles();
 
+		performActions(sortedFiles);
+	}
+
+	/**
+	 * Used to perform the actions
+	 * @param files The files to perform the actions on
+	 * @throws ActionException Thrown if their are any errors with the actions
+	 */
+	public void performActions(List<File> files) throws ActionException {
 		for (IAction action : actions) {
 			action.init(dir);
 		}
 
-		findMediaFiles();
-
-		log.info(("Processing "+sortedFiles.size()+" files"));
-		performActionsFiles(sortedFiles);
-		performActionsDirs(sortedFiles);
+		log.info(("Processing "+files.size()+" files"));
+		performActionsFiles(files);
+		performActionsDirs(files);
 
 		for (IStore store : dir.getStores()) {
 			try {
@@ -104,11 +114,11 @@ public class ActionPerformer implements IActionEventHandler {
 		log.info("Finished");
 	}
 
-	protected void findMediaFiles() throws ActionException {
+	protected List<File> findMediaFiles() throws ActionException {
 		List<File>mediaFiles = new ArrayList<File>();
 		dirs = new ArrayList<File>();
 		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles,dirs);
-		sortedFiles = new ArrayList<File>();
+		List<File> sortedFiles = new ArrayList<File>();
 		for (File file : mediaFiles) {
 			sortedFiles.add(file);
 		}
@@ -118,6 +128,7 @@ public class ActionPerformer implements IActionEventHandler {
 				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
 			}
 		});
+		return sortedFiles;
 	}
 
 	private void findMediaFiles(File parentDir,List<File>mediaFiles,List<File>mediaDirs) throws ActionException {
@@ -184,9 +195,15 @@ public class ActionPerformer implements IActionEventHandler {
 
 	private void performActionsDirs(List<File> files) throws ActionException {
 		log.info(("Processing "+files.size()+" dirs"));
+		Set<File> dirs = new HashSet<File>();
 		for (File file : files) {
+			if (!dir.getMediaDirConfig().getMediaDir().equals(file.getParentFile())) {
+				dirs.add(file.getParentFile());
+			}
+		}
+		for (File d : dirs) {
 			for (IAction action : actions) {
-				action.performOnDirectory(dir, file,this);
+				action.performOnDirectory(dir, d,this);
 			}
 		}
 		log.info("Finished");
