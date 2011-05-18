@@ -255,7 +255,7 @@ public class TestConfigReader {
 			testConfig.append("</mediaManager>"+LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
-			Assert.assertEquals("%t.%x", configReader.getMediaDirectory(mediaDir).getPattern());
+			Assert.assertEquals("%t{ (%y)}{ Part %p}.%x", configReader.getMediaDirectory(mediaDir).getPattern());
 
 		}
 		finally {
