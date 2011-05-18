@@ -104,4 +104,9 @@ public class InstallCommand extends AbstractXBMCSubCommand {
 		return false;
 	}
 
+	@Override
+	protected String getPrintArguments() {
+		return " <plugins...>";
+	}
+
 }

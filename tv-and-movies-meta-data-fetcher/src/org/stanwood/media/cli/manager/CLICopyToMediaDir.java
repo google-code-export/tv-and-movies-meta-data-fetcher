@@ -223,6 +223,10 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 		return true;
 	}
 
+	protected String getPrintArguments() {
+		return " <media files...>";
+	}
+
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}

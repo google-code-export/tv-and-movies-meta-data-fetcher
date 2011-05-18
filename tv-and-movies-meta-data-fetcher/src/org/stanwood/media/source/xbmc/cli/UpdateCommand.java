@@ -104,4 +104,8 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 		return false;
 	}
 
+	@Override
+	protected String getPrintArguments() {
+		return " <plugins...>";
+	}
 }
