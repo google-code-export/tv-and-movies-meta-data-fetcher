@@ -103,4 +103,8 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 		return false;
 	}
 
+	@Override
+	protected String getPrintArguments() {
+		return " <plugins...>";
+	}
 }

@@ -41,9 +41,13 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 
 	@Override
 	protected void printUsage(Options options, PrintStream stdout,PrintStream stderr) {
-		stdout.println("usage: "+rootCommand.getName()+" [--global-options] " + getName() +" [--command-options]");
+		stdout.println("usage: "+rootCommand.getName()+" [--global-options] " + getName() +" [--command-options]" + getPrintArguments());
 		stdout.println("");
 		stdout.println("Command Options:");
+	}
+
+	protected String getPrintArguments() {
+		return "";
 	}
 
 	@Override
