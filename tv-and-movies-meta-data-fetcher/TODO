@@ -11,7 +11,9 @@ Version 2.0
 *Not started*   - Add a getting started guide and link to a button in the installer
 *Inprogress*    - Update java doc
 *Not started*   - Update user guide
-*Not started*   - Add tool to move a media file into a media directory
+*Inprogress*    - Add tool to move a media file into a media directory
+*Needs Testing* - Test the hybrid source works correct
+*Not started*   - No help command line text for unamed command arguments
 
 Version 2.0.1
 -------------

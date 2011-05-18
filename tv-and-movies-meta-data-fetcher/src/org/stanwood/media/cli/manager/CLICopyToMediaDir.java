@@ -1,6 +1,7 @@
 package org.stanwood.media.cli.manager;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
@@ -20,17 +22,18 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
- * This is a command line launcher that is used to managed a media directory. It reads
+ * This is a command line launcher that is used to move media files into a media directory. It reads
  * the configuration file to work out which sources, stores and actions are to be used
  * with media directory. Then the actions are performed on the media directory.
  * </p>
  * <p>
  * It has the following usage:
  * <code>
- *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u]
+ *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u] <media files...>
  *
  *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
  *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
@@ -42,9 +45,9 @@ import org.stanwood.media.source.xbmc.updater.IConsole;
  * </code>
  * </p>
  */
-public class CLIMediaManager extends AbstractLauncher {
+public class CLICopyToMediaDir extends AbstractLauncher {
 
-	private final static Log log = LogFactory.getLog(CLIMediaManager.class);
+	private final static Log log = LogFactory.getLog(CLICopyToMediaDir.class);
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d";
 	private final static String TEST_OPTION = "t";
@@ -55,6 +58,8 @@ public class CLIMediaManager extends AbstractLauncher {
 
 	private MediaDirectory rootMediaDir = null;
 	private boolean xbmcUpdate = true;
+
+	private List<File> files;
 
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
@@ -80,11 +85,11 @@ public class CLIMediaManager extends AbstractLauncher {
 	}
 
 	/**
-	 * The entry point
+	 * The entry point.
 	 * <p>
 	 * It has the following usage:
 	 * <code>
-	 *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u]
+	 *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u] <media files...>
 	 *
 	 *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
 	 *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
@@ -102,13 +107,13 @@ public class CLIMediaManager extends AbstractLauncher {
 			setExitHandler(new DefaultExitHandler());
 		}
 
-		CLIMediaManager ca = new CLIMediaManager(exitHandler);
+		CLICopyToMediaDir ca = new CLICopyToMediaDir(exitHandler);
 		ca.launch(args);
 	}
 
 
-	private CLIMediaManager(IExitHandler exitHandler) {
-		super("mm-manager",OPTIONS,exitHandler,stdout,stderr);
+	private CLICopyToMediaDir(IExitHandler exitHandler) {
+		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr);
 	}
 
 
@@ -125,9 +130,20 @@ public class CLIMediaManager extends AbstractLauncher {
 
 			doUpdateCheck();
 
-			ActionPerformer renamer = new ActionPerformer(rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
+			for (File from : files) {
+				try {
+					FileHelper.move(from, new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName()));
+				} catch (IOException e) {
+					log.error(e.getMessage(),e);
+					return false;
+				}
+			}
 
-			renamer.performActions();
+			List<IAction> actions = rootMediaDir.getActions();
+			actions.add(0,new RenameAction());
+			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
+			renamer.performActions(files);
+
 			return true;
 		} catch (ActionException e) {
 			log.error(e.getMessage(),e);
@@ -187,6 +203,17 @@ public class CLIMediaManager extends AbstractLauncher {
 			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
 				fatal("Media directory '" + dir +"' does not exist.");
 				return false;
+			}
+		}
+
+		if (cmd.getArgs().length==0) {
+			fatal("Missing argument giving media files to move");
+			return false;
+		}
+		else {
+			files = new ArrayList<File>();
+			for (String s : cmd.getArgs()) {
+				files.add(new File(s));
 			}
 		}
 
