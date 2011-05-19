@@ -151,7 +151,6 @@
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
             <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
-                 
         </xmlcatalog>
 
         <xslt  style="${docbook.home}/fo/docbook.xsl"

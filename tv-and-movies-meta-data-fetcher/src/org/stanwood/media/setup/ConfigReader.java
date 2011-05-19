@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -149,10 +150,23 @@ public class ConfigReader extends BaseConfigReader {
 				}
 			}
 			dirConfig.setExtensions(exts);
+
+			parseIgnorePatterns(node,dirConfig);
 			dirConfigs.add(dirConfig);
+
 
 		}
 		this.mediaDir = dirConfigs;
+	}
+
+	private void parseIgnorePatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException, ConfigException {
+		List<Pattern>patterns = new ArrayList<Pattern>();
+		for (Node node : selectNodeList(dirNode,"ignore/text()")) {
+			patterns.add(Pattern.compile(node.getTextContent()));
+		}
+		if (patterns.size()>0) {
+			dirConfig.setIgnorePatterns(patterns);
+		}
 	}
 
 	/**
