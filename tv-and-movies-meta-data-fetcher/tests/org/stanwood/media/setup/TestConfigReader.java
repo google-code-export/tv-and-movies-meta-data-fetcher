@@ -87,10 +87,64 @@ public class TestConfigReader {
 			List<ActionConfig> actions = dirConfig.getActions();
 			Assert.assertEquals(1,actions.size());
 			Assert.assertEquals("a.test.action",actions.get(0).getID());
+
+			Assert.assertNull(dirConfig.getIgnorePatterns());
 		}
 		finally {
 			FileHelper.delete(mediaDir);
 		}
+	}
+
+	/**
+	 * A test to check that the ignore patterns are read correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testIgnorePatterns() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("films");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
+			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
+			testConfig.append(">"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
+			testConfig.append("    <ignore>.*incomming.*</ignore>"+LS);
+			testConfig.append("    <ignore>.*blah.*</ignore>"+LS);
+			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+LS);
+			testConfig.append("    <sources>"+LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
+			testConfig.append("      </source>"+LS);
+			testConfig.append("    </sources>"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+
+			try {
+				configReader.getMediaDirectory(new File("blah"));
+				Assert.fail("Did not detect exception");
+			}
+			catch (ConfigException e) {
+				Assert.assertEquals("Unable to find media directory 'blah' in the configuration",e.getMessage());
+			}
+
+
+			MediaDirConfig dirConfig = configReader.getMediaDirectory(mediaDir);
+
+			Assert.assertNotNull(dirConfig.getIgnorePatterns());
+			Assert.assertEquals(3,dirConfig.getIgnorePatterns().size());
+			Assert.assertEquals(".*incomming.*",dirConfig.getIgnorePatterns().get(0).pattern());
+			Assert.assertEquals(".*blah.*",dirConfig.getIgnorePatterns().get(1).pattern());
+			Assert.assertEquals(".*[S|s]amples.*",dirConfig.getIgnorePatterns().get(2).pattern());
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+
 	}
 
 	/**

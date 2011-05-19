@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,6 +121,13 @@ public class ActionPerformer implements IActionEventHandler {
 		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles,dirs);
 		List<File> sortedFiles = new ArrayList<File>();
 		for (File file : mediaFiles) {
+			if (dir.getMediaDirConfig().getIgnorePatterns()!=null) {
+				for (Pattern p : dir.getMediaDirConfig().getIgnorePatterns()) {
+					if (p.matcher(file.getAbsolutePath()).matches()) {
+						continue;
+					}
+				}
+			}
 			sortedFiles.add(file);
 		}
 		Collections.sort(sortedFiles,new Comparator<File>() {

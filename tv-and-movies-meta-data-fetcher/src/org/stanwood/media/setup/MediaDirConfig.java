@@ -2,6 +2,7 @@ package org.stanwood.media.setup;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.stanwood.media.model.Mode;
 
@@ -17,6 +18,7 @@ public class MediaDirConfig {
 	private List<SourceConfig>sources;
 	private List<ActionConfig>actions;
 	private List<String> extensions;
+	private List<Pattern> ignorePatterns;
 
 	/**
 	 * Used to get the media directory location
@@ -130,4 +132,21 @@ public class MediaDirConfig {
 		return extensions;
 	}
 
+	/**
+	 * Used to set a list of patterns that will be tested against files
+	 *  in  a media directory to work out if they should be ignored.
+	 * @param patterns The list of patterns
+	 */
+	public void setIgnorePatterns(List<Pattern> patterns) {
+		this.ignorePatterns = patterns;
+	}
+
+	/**
+	 * Used to get a list of patterns that will be tested against files
+	 *  in  a media directory to work out if they should be ignored.
+	 * @return The list of patterns
+	 */
+	public List<Pattern> getIgnorePatterns() {
+		return ignorePatterns;
+	}
 }
