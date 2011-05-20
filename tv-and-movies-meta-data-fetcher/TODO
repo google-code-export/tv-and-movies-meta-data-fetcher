@@ -6,10 +6,7 @@ Version 2.0
 	 
 *Inprogress*    - Create macosx installer
 *Not started*   - Add a getting started guide and link to a button in the installer
-*Inprogress*    - Update java doc
 *Not started*   - Update user guide
-*Inprogress*    - Add tool to move a media file into a media directory
-					- Also add the ability to move NFO directory into the store
 *Needs Testing* - Test the hybrid source works correct
 *Needs Testing* - Test generated podcasts with iTunes
 

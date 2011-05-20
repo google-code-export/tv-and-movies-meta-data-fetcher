@@ -134,8 +134,15 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			for (File from : files) {
 				try {
 					File toFile =new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName());
-					newFiles.add(toFile);
 					FileHelper.move(from, toFile);
+					if (toFile.isDirectory()) {
+						for (File f : FileHelper.listFiles(toFile)) {
+							newFiles.add(f);
+						}
+					}
+					else {
+						newFiles.add(toFile);
+					}
 				} catch (IOException e) {
 					log.error(e.getMessage(),e);
 					return false;
