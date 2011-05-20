@@ -150,6 +150,9 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 * @return The first air date of the episode
 	 */
 	public Date getDate() {
+		if (airDate==null) {
+			return null;
+		}
 		return new Date(airDate.getTime());
 	}
 

@@ -145,7 +145,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			((Element) node).setAttribute("title", episode.getTitle());
 			((Element) node).setAttribute("url", urlToText(episode.getUrl()));
-			((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
+			if (episode.getDate()!=null) {
+				((Element) node).setAttribute("firstAired", df.format(episode.getDate()));
+			}
 			((Element) node).setAttribute("episodeId", episode.getEpisodeId());
 			((Element) node).setAttribute("imageUrl", urlToText(episode.getImageURL()));
 
