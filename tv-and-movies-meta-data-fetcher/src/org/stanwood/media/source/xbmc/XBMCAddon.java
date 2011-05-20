@@ -87,6 +87,12 @@ public class XBMCAddon extends XMLParser {
 		String type = node.getAttribute("type");
 		String defaultValue = node.getAttribute("default");
 		String id = node.getAttribute("id");
+
+		// Fix a broken scraper so the trailer part is ignored (not needed anyhow)
+		if (id.equals("trailer")) {
+			defaultValue="false";
+		}
+
 		if (type.equals("sep")) {
 			// do nothing
 		}

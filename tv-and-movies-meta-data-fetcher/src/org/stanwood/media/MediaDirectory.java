@@ -496,4 +496,12 @@ public class MediaDirectory {
 		}
 		return dir;
 	}
+
+	/**
+	 * Used to get the media controller
+	 * @return the media controller
+	 */
+	public Controller getController() {
+		return controller;
+	}
 }
