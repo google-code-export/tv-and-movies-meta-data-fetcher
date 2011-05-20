@@ -86,7 +86,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		}
 		m = TVDB_SERIES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"zip","UTF-8",url.toExternalForm());
+			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"application/zip","UTF-8",url.toExternalForm());
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}

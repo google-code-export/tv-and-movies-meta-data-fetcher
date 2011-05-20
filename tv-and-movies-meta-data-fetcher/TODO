@@ -11,6 +11,7 @@ Version 2.0
 *Needs Testing* - Test the hybrid source works correct
 *Needs Testing* - Test generated podcasts with iTunes
 *Needs Testing* - Test TV Show renaming
+*Needs Testing* - Test that mp4 store does not overwrite existing atoms (Like chapters)
 
 Version 2.0.1
 -------------
@@ -39,3 +40,4 @@ Database store
 Deamon mode
 UPnP server
 Replace windows .bat files with native .exe launchers
+Add scripting support for sources, actions, stores and searching strategies

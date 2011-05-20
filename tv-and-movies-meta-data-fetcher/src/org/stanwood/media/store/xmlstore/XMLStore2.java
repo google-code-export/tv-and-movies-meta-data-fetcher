@@ -684,11 +684,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		film.setRating(new Rating(rating,numberOfVotes));
 	}
 
-	private void writeRating(IVideoRating film, Element node) {
-		Element ratingNode = node.getOwnerDocument().createElement("rating");
-		ratingNode.setAttribute("value", String.valueOf(film.getRating().getRating()));
-		ratingNode.setAttribute("numberOfVotes", String.valueOf(film.getRating().getNumberOfVotes()));
-		node.appendChild(ratingNode);
+	private void writeRating(IVideoRating video, Element node) {
+		if (video.getRating()!=null) {
+			Element ratingNode = node.getOwnerDocument().createElement("rating");
+			ratingNode.setAttribute("value", String.valueOf(video.getRating().getRating()));
+			ratingNode.setAttribute("numberOfVotes", String.valueOf(video.getRating().getNumberOfVotes()));
+			node.appendChild(ratingNode);
+		}
 	}
 
 	/**

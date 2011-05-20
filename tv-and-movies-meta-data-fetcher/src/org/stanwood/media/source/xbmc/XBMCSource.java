@@ -251,7 +251,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		processor.handleStream();
 
 		if (show.getName() == null || show.getLongSummary()==null) {
-			throw new SourceException("Show details parsing was incomplete");
+			return null; // Show details not complete
 		}
 		return show;
 	}

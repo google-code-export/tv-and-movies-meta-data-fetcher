@@ -101,7 +101,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			}
 
 			// Do the renaming
-			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","NOINIT","--noupdate"};
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
