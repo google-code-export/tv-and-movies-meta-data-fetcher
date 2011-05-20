@@ -216,9 +216,7 @@ public class PodCastAction extends AbstractAction {
 		} catch (Exception e) {
 			throw new ActionException("Unable to write pod case",e);
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Written RSS feed: " + feedFile);
-		}
+		log.info("Written Podcast feed: " + feedFile);
 	}
 
 	private File getFeedFile() {

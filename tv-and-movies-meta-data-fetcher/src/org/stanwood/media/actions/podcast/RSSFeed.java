@@ -189,7 +189,6 @@ public class RSSFeed {
 //		entry.setAuthor(author);
 
 		feed.getEntries().add(0, entry);
-		log.info("Entry added to rss feed" + feedFile);
 	}
 
 	/**
