@@ -544,7 +544,7 @@ public class FileHelper {
 	public static Stream getInputStream(URL url) throws IOException {
 		WebFileInputStream is = new WebFileInputStream(url);
 		String MIME = is.getMIMEType();
-		if (MIME.equals("zip")) {
+		if (MIME.equals("application/zip")) {
 			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm());
 		}
 		else {

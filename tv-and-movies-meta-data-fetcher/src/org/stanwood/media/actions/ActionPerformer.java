@@ -262,24 +262,24 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			SearchResult result = searchForId(dir,file);
 			if (result==null) {
-				log.error("Unable to find show id");
+				log.error("Unable to find show id for file '"+file+"'");
 				return null;
 			}
 
 			Show show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
 			if (show == null) {
-				log.fatal("Unable to find show details");
+				log.fatal("Unable to find show details for file '"+file+"'");
 				return null;
 			}
 
 			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
 			if (data==null) {
-				log.error("Unable to workout the season and/or episode number of '" + file.getName()+"'");
+				log.error("Unable to workout the season and/or episode number for file '" + file.getName()+"'");
 			}
 			else {
 				Season season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
 				if (season == null) {
-					log.error("Unable to find season for file : " + file.getAbsolutePath());
+					log.error("Unable to find season for file '"+file+"'");
 				} else {
 					Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
 					return episode;
