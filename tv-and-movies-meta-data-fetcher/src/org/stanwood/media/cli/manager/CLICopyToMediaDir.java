@@ -130,9 +130,12 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 
 			doUpdateCheck();
 
+			List<File>newFiles = new ArrayList<File>();
 			for (File from : files) {
 				try {
-					FileHelper.move(from, new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName()));
+					File toFile =new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName());
+					newFiles.add(toFile);
+					FileHelper.move(from, toFile);
 				} catch (IOException e) {
 					log.error(e.getMessage(),e);
 					return false;
@@ -140,9 +143,19 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			}
 
 			List<IAction> actions = rootMediaDir.getActions();
-			actions.add(0,new RenameAction());
+			boolean found = false;
+			for (IAction action : actions) {
+				if (action instanceof RenameAction) {
+					found = true;
+				}
+			}
+
+			if (!found) {
+				actions.add(0,new RenameAction());
+			}
+
 			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
-			renamer.performActions(files);
+			renamer.performActions(newFiles);
 
 			return true;
 		} catch (ActionException e) {

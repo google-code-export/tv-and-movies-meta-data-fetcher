@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Set jvm heap initial and maximum sizes (in megabytes).
+JAVA_HEAP_INIT_SIZE=64
+JAVA_HEAP_MAX_SIZE=192
+
+# Find a java installation.
+if [ -z "$JAVA_HOME" ]; then
+        echo "Warning: \$JAVA_HOME environment variable not set! Consider setting it."
+        echo "          Attempting to locate java..."
+        j=`which java 2>/dev/null`
+        if [ -z "$j" ]; then
+                echo "Failed to locate the java virtual machine! Bailing..."
+                exit 1
+        else
+                echo "Found a virtual machine at: $j..."
+                JAVA="$j"
+        fi
+else
+        JAVA="$JAVA_HOME/bin/java"
+fi
+
+SCRIPT_PATH="${BASH_SOURCE[0]}";
+if ([ -h "${SCRIPT_PATH}" ]) then
+  while([ -h "${SCRIPT_PATH}" ]) do SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+fi
+pushd . > /dev/null
+cd `dirname ${SCRIPT_PATH}` > /dev/null
+SCRIPT_PATH=`pwd`;
+popd  > /dev/null
+
+# Main class
+MAIN=org.stanwood.media.source.xbmc.cli.CLIManageAddons
+
+# Libraries location
+LIB_DIR=$SCRIPT_PATH/../../../libs/run-time
+
+# Launch application.
+CLASSPATH="$SCRIPT_PATH/../../../bin"
+for FILE in `find $LIB_DIR -name "*.jar"` 
+do
+	CLASSPATH=$CLASSPATH:$FILE	
+done 
+
+# Launch Application
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
