@@ -54,11 +54,11 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		}
 
 		Option o = new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]");
-		o.setArgName("file");
+		o.setArgName("info|debug|file");
 		addOption(o);
 
 		o = new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml");
-		o.setArgName("info|debug|file");
+		o.setArgName("file");
 		addOption(o);
 	}
 

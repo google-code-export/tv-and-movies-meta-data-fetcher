@@ -33,15 +33,9 @@ import org.stanwood.media.store.StoreException;
 
 /**
  * <p>
- * This store is used to store and retrieve film/TV show information from .mp4 files used
+ * This store is used to store and retrieve film/TV show information from .mp4/.m4v files used
  * by iTunes. This allows iTuness to use the meta data retrieved by this tool and this tool
  * too use the meta data of iTunes.
- * </p>
- * <p>
- * Reading and writing too the .mp4 files is done via the application AtomicParsley
- * {@link "http://atomicparsley.sourceforge.net/"}. In order for this store to work, the AtomicParsley
- * command line tool must be installed. Use the method <code>setAtomicParsleyPath</code> too set the
- * of the application.
  * </p>
  */
 public class MP4ITunesStore implements IStore {

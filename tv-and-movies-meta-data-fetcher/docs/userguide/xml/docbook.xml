@@ -1,8 +1,12 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
-	<!ENTITY apptitle "MediaInfoFetcher">	
-	<!ENTITY version "1.0">
-	<!ENTITY mediarenamer "media-renamer">
+	<!ENTITY apptitle "@@name@@">	
+	<!ENTITY version "@@version@@">
+	<!ENTITY mmmanager "mm-manager">
+	<!ENTITY mmxbmc "mm-xbmc">
+	<!ENTITY mmmovemedia "mm-move-into-media-directory">
+	<!ENTITY copyrightdate "2007-2011">
+	<!ENTITY copyholder "John-Paul Stanford">
 ]>
 <book>
 	<bookinfo>
@@ -17,8 +21,8 @@
 			</author>			
 		</authorgroup>
 		<copyright>
-			<year>2007</year>
-			<holder>John-Paul Stanford</holder>
+			<year>&copyrightdate;</year>
+			<holder>&copyholder;</holder>
 		</copyright>
 		<abstract>	
 			<para>
@@ -31,20 +35,25 @@
 		<para>
 			&apptitle; is a application and a API which can be used to retrieve TV show 
 			and movie meta data from Internet sources. This information is then stored 
-			locally and can be used to rename media files with the correct title.
+			locally and can be used to perform actions upon the file files, such as renaming 
+			the media files based on meta data.
 		</para>		
 		<sect1>
 			<title>Features</title>
 			<para>
 				<itemizedlist>
 					<listitem><para>Provides a CLI tool that renames media files with the correct names.</para></listitem>
-					<listitem><para>Fetches TV Show and Film meta data from the Internet.</para></listitem>
-					<listitem><para>Allows multiple sources and stores.</para></listitem>
-					<listitem><para>Caches information in XML.</para></listitem>
-					<listitem><para>Find film posters on the Internet for each film.</para></listitem>					
-					<listitem><para>Provides a API for accessing the information.</para></listitem>
+					<listitem><para>Fetches TV Show and Film metadata from the Internet.</para></listitem>					
+					<listitem><para>Multiple sources of media information including XBMC metadata parsers.</para></listitem>
+					<listitem><para>Cache media information locally in stores, including a XML store.</para></listitem>
+					<listitem><para>Run actions on the media, such as renaming it based on media information</para></listitem>
+					<listitem><para>Provides a action for executing system commands on media files</para></listitem>					
+					<listitem><para>Provides a action creating video podcasts of media files</para></listitem>
+					<listitem><para>Provides a API for accessing the media information.</para></listitem>
 					<listitem><para>Provides a store that writes Sapphire XML files.</para></listitem>                                        
 					<listitem><para>Provides a store that saves metadata into MP4/M4V files that iTunes can read.</para></listitem>
+					<listitem><para>Allows plugins to be registers so that custom Sources, Stores and Actions can be added.</para></listitem>
+					<listitem><para>Provides a command line tool to manage XBMC addon scrapers.</para></listitem>
 					<listitem><para>Runs on any platform that supports Java 1.6.</para></listitem>
 				</itemizedlist>				
 			</para>
@@ -52,106 +61,87 @@
 		<sect1>
 			<title>Sources</title>
 			<para>
-				Sources are the places that &apptitle; retrieves information from. Sources
-				are read only so it's not possible to information back too them. Their are two 
-				sources that come with &apptitle;, however others can be added.
+				Sources are the places that &apptitle; retrieves media information from. Sources
+				are read only, so it's not possible to write information back too them. The following 
+				sources come with &apptitle;, however others can be added.
 			</para>
 			<sect2>
-				<title>org.stanwood.media.source.TVCOMSource</title>
+				<title>org.stanwood.media.source.xbmc.XBMCSource</title>
 				<para>
-				The www.tv.com source will fetch TV Show information from the www.tv.com site.
-				This source also allows TV shows searching.
+				This is the main source that &apptitle; was desgined to use. It makes use of XBMC scrappers
+				to fetch media information. It is capable of reading both TV Show and Film information if 
+				the XBMC Scraper supports it. 
+				</para>
+				<para>
+				In order for for this source to work, their must be XBMC addon scrapers installed. These can
+				be installed and managed using the command line tool &mmxbmc;
+				</para>
+				<para>
+				Any parameters set on this source are passed through to the XBMC addon scrapers as parameters.
+				In addition this source also supports the following parameters
+					 <itemizedlist>
+                      	<listitem>
+                      		<para>
+                      			<literal>scrapers</literal> a comma seperated list of XBMC scraper ID's. These 
+                      			are the ID's of scrappers that are useable. If not given, then all scrappers are 
+                      			considered useable.
+                      		</para>
+                      	</listitem>
+                     </itemizedlist> 
 				</para>
 			</sect2>
 			<sect2>
-				<title>org.stanwood.media.source.IMDBSource</title>
+				<title>org.stanwood.media.source.TagChimpSource</title>
 				<para>
-				The www.imdb.com source will fetch Film information from the www.imdb.com. This
-				source also allows Film searching.
-				</para>
-				<para>
-				This source has the option parameter "RegexpToReplace", which is used when searching for a film
-                via the film's filename. The parameter is a regular expression, that when found in the filename,
-                is removed.   
-				</para>
-				<para>
-                      It has the following parameters:
-                      <itemizedlist>
-                      	<listitem><para><literal>RegexpToReplace</literal> a regular expression, that when found in the filename, is removed</para></listitem>
-                     </itemizedlist>
-				</para>
+				The TagChimpSource Source is film source that fetchs film information from the website 
+				<ulink url="http://www.tagchimp.com/">www.tagchimp.com</ulink>. This also includes chapter 
+				information.
+				</para>											
 			</sect2>
 			<sect2>
 				<title>org.stanwood.media.source.HybridFilmSource</title>
 				<para>
 				The HybridFilm Source is a bit different to the other sources. It uses the other sources to 
-				find the best information it can about a film. This is the preferred source to use when
-				fetching film information.
-				</para>				
-				<para>
-				This source has the option parameter "RegexpToReplace", which is used when searching for a film
-                via the film's filename. The parameter is a regular expression, that when found in the filename,
-                is removed.   
-				</para>
-				<para>
-                      It has the following parameters:
-                      <itemizedlist>
-                      	<listitem><para><literal>RegexpToReplace</literal> a regular expression, that when found in the filename, is removed</para></listitem>
-                     </itemizedlist>
-				</para>
+				find the best information it can about a film. It's main use to to combine the extra information
+				film chapter information from the <literal>TagChimpSource</literal> source with the information in 
+				the <literal>XBMCSource</literal>. 				
+				</para>											
 			</sect2>
 		</sect1>
 		<sect1>
 			<title>Stores</title>
 			<para>
 				Stores are similar too sources, except that they are also writable. Once
-				information has been retrieved from a source, it is written too a store.
+				information has been retrieved from a source, it is written info a store.
 				Next time the information is needed, it can be retrieved from the store.
-				This makes retrieving information a lot faster.  
+				This makes repeatedly retrieving information a lot faster.  
 			</para>
              <para>
-                     Stores can have parameters. These parameters are entered via the configuration file.
-                     The stores will validated their parameters when the store is access and report
-                     back any problems that are found.
+                 Stores can have parameters. These parameters are entered via the configuration file.
+                 The stores will validated their parameters when the store is access and report
+                 back any problems that are found.
              </para>
 			<para>
-				Their are 4 stores that come with &apptitle;. Each of these has different
-				properties. Some of these stores can also be used by applications such as 
+				Thee following stores that come with &apptitle;. Each of these has different
+				properties. Some of these stores can also be used by other applications such as 
 				media centre's to display media metadata. 				
 			</para>
 			<sect2>
 				<title>org.stanwood.media.store.memory.MemoryStore</title>
 				<para>
-				This store is used to store the show information in memory. This allows the tool
- 				reuse the show information without having to fetch it from other stores or sources 
+				This store is used to store the media information in memory. This allows the tool
+ 				to reuse the media information without having to fetch it from other stores or sources 
  				(which would be slower). This information will be lost once the application exits. 
 				</para>
 			</sect2>
 			<sect2>
 				<title>org.stanwood.media.store.xmlstore.XMLStore2</title>
 				<para>
-				This store is used to store the tv show and film information in a XML file called &apos;.mediaInfoFetcher-xmlStore.xml&apos;.
- 				This file will be locationed in the root media directory and can store multiple films/tv shows. This
- 				store can also be used when search for tv show and film ID's. 				
-				</para>
-				<para>
-				This store is intended to replace the older store &apos;org.stanwood.media.store.XMLStore&apos;. The main difference is a single XML to store 
- 				all media details in and a better XML format with a DTD.
-				</para>
-			</sect2>
-			<sect2>
-				<title>org.stanwood.media.store.XMLStore</title>
-				<para>
-				This store has now been depercated. Please use the &apos;org.stanwood.media.store.xmlstore.XMLStore2&apos; instead.
-				</para>
-				<para>
-				This store is used to store the show information in a XML file called &apos;.show.xml. &apos;. 
-               	This is located in the directory were the show is located. It can hold all
- 				of the information of the Shows, Seasons, Episodes and Specials. This store
- 				can be read and written too, and it's also possible too lookup the show id 
- 				of the show in the current directory.
-				</para>
-			</sect2>
+				This store is used to store the tv show and film information in a XML file called &apos;.mediaManager-xmlStore.xml&apos;.
+ 				This file will be locationed in the root of the media directory and can store multiple films/tv shows. This
+ 				store can also be used when searching for tv show and film ID's. 				
+				</para>				
+			</sect2>			
 			<sect2>
 				<title>org.stanwood.media.store.SapphireStore</title>
 				<para>
@@ -175,41 +165,81 @@
                      </itemizedlist>
 				</para>
 			</sect2>
-             <sect2>
-                     <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
-                     <para>
-                     This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
-                     information can be read by iTunes.   
-                     </para>
-             </sect2>
-             <sect2>
-             		<title>org.stanwood.media.store.mythtv.MythTVStore</title>
-             		<para>
-             		This is a write only store that is used to store Film information in a 
-             		<ulink url="http://www.mythtv.org/">Myth TV</ulink> database hosted in a 
-                    MySQL database. .
-             		</para>
-             		<para>  				
- 					Every time film information is fetched from a source, he film information is 
- 					inserted/updated in the Myth TV database. Cover images are also fetched and 
- 					placed in a directory (which is configured via a parameter). The location of 
- 					these images is inserted with the film into the database.
-					</para>
-					<para>
-					This store has several required parameters:
-					  <itemizedlist>
-					       <listitem><para><literal>DatabaseHost</literal>The host name of the database server</para></listitem>
-					  	   <listitem><para><literal>DatabaseName</literal>The name of the Myth TV database</para></listitem>
-					       <listitem><para><literal>DatabaseUser</literal>The user name used to access the Myth TV database</para></listitem>
-					       <listitem><para><literal>DatabasePassword</literal>The password of the user used to access the Myth TV database</para></listitem>
-					  </itemizedlist>
-					  This store has these optional parameters:
-					  <itemizedlist>
-					       <listitem><para><literal>CoversPath</literal>If set to a directory, then covers images are stored in the directory</para></listitem>
-					  </itemizedlist>
-					</para>
-             </sect2>
-		</sect1>				
+            <sect2>
+                 <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
+                 <para>
+                 This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
+                 information can be read by iTunes.   
+                 </para>
+            </sect2>            
+		</sect1>	
+		<sect1>
+			<title>Actions</title>
+			<para>
+				Actions are tasks that are to be performed upon media files by the application &mmmanager;. The
+				following actions are provided:  
+			</para>		
+			<sect2>
+                 <title>org.stanwood.media.actions.command.ExecuteSystemCommandAction</title>
+                 <para>This action is used execute a system command upon media files and directories</para>
+                 <para> 
+                 This action supports the following parameters, which are all optional:
+                 	<itemizedlist>
+                      	<listitem><para><literal>commandOnFile</literal> A command to execute on finding acceptable media files.</para></listitem>
+                      	<listitem><para><literal>commandOnDirectory</literal> A command to execute on finding acceptable directories within the media directory.</para></listitem>
+                      	<listitem><para><literal>extensions</literal> A comma separated list of media file extensions to accept.</para></listitem>
+                      	<listitem><para><literal>newFile</literal> If this command creates a new file, then the name should be in this parameter.</para></listitem>
+                      	<listitem><para><literal>deletedFile</literal> If this command deletes a new file, then the name should be in this parameter.</para></listitem>
+                      	<listitem><para><literal>abortIfFileExists</literal> The name of a file, that if it exists, then this action will not perform.</para></listitem>                      	                      	
+                     </itemizedlist>                  
+                 </para>
+                 <para>
+                 Parameters can also have variable in them. These can be any of the pattern variables, as well as
+                 the following special variables:
+	                 <itemizedlist>
+	                      	<listitem><para><literal>$NEWFILE</literal> The value of the &apos;newFile&apos; parameter.</para></listitem>
+	                      	<listitem><para><literal>$DELETEDFILE</literal> The value of the &apos;deletedFile&apos; parameter.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE_NAME</literal> The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE_EXT</literal> The extension of the current media file been processed.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE_DIR</literal> The directory the current media file is in.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE</literal> The full path of the current media file.</para></listitem>
+	                      	<listitem><para><literal>$HOME</literal> The current users home directory.</para></listitem>
+	                 </itemizedlist>                      	
+                 </para>
+            </sect2>    	
+            <sect2>
+                 <title>org.stanwood.media.actions.podcast.PodCastAction</title>
+                 <para>This action is used create a pod cast of media that it finds. It will
+ 						add order the  most recent media files by the date they were last modified.                   
+                 </para>
+                 <para> 
+                 This action supports the following parameters:
+                 	<itemizedlist>
+						 <listitem><para><literal>mediaDirURL</literal> - This is a required parameter that specifies the URL used to find the root media directory.</para></listitem>
+						 <listitem><para><literal>fileLocation</literal> - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</para></listitem>
+						 <listitem><para><literal>numberEntries</literal> - The maximum number of entries in the feed. The default if not set is unlimited.</para></listitem>
+						 <listitem><para><literal>extensions</literal> - A comma separated list of media file extensions to accept.</para></listitem>
+						 <listitem><para><literal>restrictPattern</literal> - This can be used to restrict the media files. It can contain standard rename patterns with the value.</para></listitem>
+						 <listitem><para><literal>feedTitle</literal> - Used to give a title to the RSS feed.</para></listitem>
+						 <listitem><para><literal>feedDescription</literal> - Used to give a description to the RSS feed.</para></listitem>                 	
+                     </itemizedlist>                  
+                 </para>
+                 <para>
+                 	 Parameters can also have variable in them. These can be any of the following special variables:
+	                 <itemizedlist>	                    
+	                      	<listitem><para><literal>$HOME</literal> The current users home directory.</para></listitem>
+	                 </itemizedlist>                      	
+                 </para>
+            </sect2>
+            <sect2 id="renameaction">
+                 <title>org.stanwood.media.actions.rename.RenameAction</title>
+                 <para>
+                     This action is used to rename media files in a media directory based on a pattern 
+                     found in the configuration file. The action can also move the file to different
+                     directory if the pattern has directories in it.               
+                 </para>                               
+            </sect2>
+		</sect1>
 	</chapter>
 	<chapter id="installation">
 		<title>Installation</title>
@@ -233,118 +263,169 @@
 				</orderedlist>				
 			</para>
 			<para>
-				This will install the the application and a script too launch it. The script is located at <command>/usr/bin/media-renamer</command>
+				This will install the the application and a scripts too launch it. 
 			</para>
 		</sect1>		
 		<sect1>
-			<title>2. Any platform static Jar Disturbution</title>
+			<title>2. Installer</title>
 			<para>
-				Their is a static jar distribution avaliable on the downloads page. This will run on any platform with the
-				correct JRE. Simply download it too your system, and type the command:
-				<cmdsynopsis><command>java -jar MediaInfoFetcher-&version;-static-bin.jar </command><arg>options</arg></cmdsynopsis>
-			    This can be used to rename media files and uses the same command line parameters 
-			    as the <link linkend="mediarenamercmd">media-renamer</link> script.
+				Their is a generic java installer that will run on any platform. Execute the following command upon 
+				the installer jar file to start the installer:
+				<cmdsynopsis><command>java -jar &apptitle;-&version;-install.jar </command><arg>options</arg></cmdsynopsis>
+				This will prompt you for the location to install the application and create start menu links to
+				the documentation. 			    
+			</para>
+			<para>
+				Their are also platform specific installers that can be launched easier on some platforms. 
+				Here are the names of the installers and the platforms they run on:
+				<itemizedlist>
+	               	<listitem><para><literal>&apptitle;-&version;-install.sh</literal> - Linux installer</para></listitem>
+	               	<listitem><para><literal>&apptitle;-&version;-install.windows.zip</literal> - Windows installer</para></listitem>
+	               	<listitem><para><literal>&apptitle;-&version;-install.macosx.dmg</literal> - Mac OSX installer</para></listitem>
+	            </itemizedlist>
 			</para>
 		</sect1>
 	</chapter>
 	<chapter id="usage">
 		<title>CLI Usage</title>
 		<para></para>
-		<sect1 id="mediarenamercmd">
-			<title id="mediarenamercmd.title">&mediarenamer;</title>
+		<sect1 id="mediamanagercmd">
+			<title id="mediamanagercmd.title">&mmmanager;</title>
 			<para>
-				The &mediarenamer; command is used to rename media files such as TV Shows in a directory with the correct names.
-				The information is fetched from sources and the information to when performing the renaming. In order that 
-				it does not have to fetch the data every time, the data is cached in stores.
-				<cmdsynopsis>
-					<command>media-renamer</command>
+				The &mmmanager; command is used to managed a media directory. It reads
+ 				the configuration file to work out which sources, stores and actions are to be used
+ 				with media directory. Then the actions are performed on the media directory.
+ 				<cmdsynopsis>
+					<command>&mmmanager;</command>
 					<arg>-h</arg>
-					<arg>-s <replaceable>showId</replaceable></arg>
-					<arg>-d <replaceable>media directory</replaceable></arg>
-					<arg>-p <replaceable>rename pattern</replaceable></arg>
-					<arg>-o <replaceable>source id</replaceable></arg>
-					<arg>-r</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
-					<arg>-m <replaceable>TV|FILM</replaceable></arg>
-					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>
+					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>									
+					<arg>-d <replaceable>media directory</replaceable></arg>															
+					<arg>-t </arg>
+					<arg>-u </arg>
 				</cmdsynopsis>
 			</para>
 			<para>
 				The command has the following options:
 				<itemizedlist>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
-					<listitem><para><literal>-s, --showid</literal> The ID of the movie/show. If not present, then it will search for the show id. Only usable in TV mode.</para></listitem>
-					<listitem><para><literal>-d, --dir</literal> The directory to look for media. If not present use the current directory.</para></listitem>
-					<listitem><para><literal>-p, --pattern</literal> The pattern used to rename files. Defaults to "%s %e - %t.%x" if not present.</para></listitem>
-					<listitem><para><literal>-o, --source</literal> The id if the source too look up meta data in. Defaults too tvcom if not present.</para></listitem>
-					<listitem><para><literal>-r, --refresh</literal> If this option is present, it will make the stores get regenerated from source.</para></listitem>
-					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml</para></listitem>
-					<listitem><para><literal>-m, --mode</literal> The mode that the tool will work in. Either FILM or TV.</para></listitem>
+					<listitem><para><literal>-d, --dir</literal> A requried option give the location of the media directory to manage</para></listitem>
+					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
 					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
-					<listitem><para><literal>-R, --recursive</literal> Also process subdirectories</para></listitem>
+					<listitem><para><literal>-t, --test</literal> Enable test mode that cause no changes to be written to the filesystem.</para></listitem>
+					<listitem><para><literal>-u, --noupdate</literal> If option is given, the XBMC addon scrapers are not updated.</para></listitem>
 				</itemizedlist>				
 			</para>			
-			<para>
-				The &mediarenamer; command has two modes of operations. These are TV and Film modes.
-				If mode can be used by setting the <literal>--mode</literal> option on the command line.
-				If the mode option is not given, then the command chooses a default mode. First of it checks
-				to see if the <literal>--showid</literal> option has been used. If it has, then the 
-				mode is set to TV. Next it checks the path of the media directory to see if any
-				of the directory names in the path contains the names "Films" or "Movies". If it does,
-				then the mode is set to Film, otherwise it is set to TV.
-			</para>						
-			<para>
-				It is possible to configure which sources and stores are used by the application.
-				This is done by using a configuration file. If the <literal>--config</literal> option
-				is used, then the file passed into this is the configuration file that will be used.
-				If the <literal>--config</literal> option is not used, then first off the application
-				looks for a configuration file located at <filename>/etc/mediafetcher-conf.xml</filename>.
-				If that can't be found, then it uses in built defaults. For more information on the configuration
-				files, see the <link linkend="configuration">Configuration section</link>.
+		</sect1>
+		<sect1 id="mediamovecmd">
+			<title id="mediamovecmd.title">&mmmovemedia;</title>
+			<para>			
+ 				The &mmmanager; command is used to move media files into a directory. It then uses the sources 
+ 				and stores with the media file and performs the actions on it. The media files can be either files
+ 				or directories. 
+ 				<cmdsynopsis>
+					<command>&mmmovemedia;</command>
+					<arg>-h</arg>
+					<arg>-c <replaceable>config file</replaceable></arg>
+					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>									
+					<arg>-d <replaceable>media directory</replaceable></arg>															
+					<arg>-t </arg>
+					<arg>-u </arg>					
+					<arg>&lt;media file/directory...&gt;</arg>
+				</cmdsynopsis>
 			</para>
-			<sect2>
-				<title>TV Mode</title>				
-				<para>
-					The &mediarenamer; command presumes that each TV show's media files are contained 
-					in a directory. It also has the ability to search for the TV Shows id by using the
-					directory name as the name of the show, so it would be beneficial if the media
-					files for each show are in a directory with the shows name. 								
-				</para>
-				<para>
-					Too override the show ID been used, use the <literal>--showid</literal> option on 
-					the CLI. If you are using stores, they will store the show id (if they support
-					this functionality). This can then be used when searching for a show id instead
-					of the directory name.				
-				</para>
-			</sect2>
-			<sect2>
-				<title>Film Mode</title>
-				<para>
-					When the &mediarenamer; command is used in film mode, it will treat all the media
-					files it finds as Films. It looks up the ID's from the file names. First the file names
-					are tidied up, then stores and sources are searched using the file names. If the 
-					Film is found, then it is renamed using either the default pattern or the one given 
-					via the <literal>--pattern</literal> option.
-				</para>
-			</sect2>
-			<sect2>
-				<title>Pattern</title>
-				<para>Each of the files that is renamed is done according to a pattern. A pattern 
-				is a text string that contains tokens. These tokens are replaced by the
-				show/episode information.  
-				</para>
-				<para>
-					The following list contains the meaning for each token:
+			<para>
+				The command has the following options:
+				<itemizedlist>
+					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
+					<listitem><para><literal>-d, --dir</literal> A requried option give the location of the media directory to manage</para></listitem>
+					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
+					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
+					<listitem><para><literal>-t, --test</literal> Enable test mode that cause no changes to be written to the filesystem.</para></listitem>
+					<listitem><para><literal>-u, --noupdate</literal> If option is given, the XBMC addon scrapers are not updated.</para></listitem>
+				</itemizedlist>								
+			</para>			
+		</sect1>
+		<sect1>
+			<title id="mmxbmccmd.title">&mmxbmc;</title>
+			<para>
+			The &mmxbmc; command is used to manage XBMC addons. It has the sub commands and arguments
+	 		listed below.
+	 		</para>
+	 		<para><literal>usage: mm-xbmc [--global-options] &lt;command&gt; [--command-options] [arguments]</literal></para>
+	 		<sect2>
+	 			<title>Global options:</title>
+	 			<para>
+		 			<itemizedlist>
+						<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
+						<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
+						<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
+					</itemizedlist>								
+	 			</para>	 			
+	 		</sect2> 
+	 		<sect2>
+	 			<title>Commands:</title>	 			
+	 			<para>
+	 				<itemizedlist>
+						<listitem><para><literal>list</literal> - Lists the installed XBMC addons</para></listitem>
+						<listitem><para><literal>update</literal> - Update the installed XBMC addons to the latest versions</para></listitem>
+						<listitem><para><literal>install</literal> - Install a new XBMC addon</para></listitem>
+						<listitem><para><literal>remove</literal> - Install a new XBMC addon</para></listitem>						
+					</itemizedlist>
+	 			</para>
+	 		</sect2>
+		</sect1>
+	</chapter>
+	<chapter id="configuration">		
+		<title>Configuration</title>
+		<para></para>
+		<sect1>
+			<title></title>		
+			<para>The applications and the API make use of a XML configuration file. This stores information
+					about the media directories and how they should be managed.
+			</para>
+			<para>
+				The applications have CLI options that can be used too tell it which configuration
+				file too use. If this option is not present, then it will look for the file at the 
+				location <filename>/etc/mediamanager-conf.xml</filename> and <filename>$HOME/.mediaManager/mediamanager-conf.xml</filename>. 
+				If these can't be found, then a default configuration file will be created at			
+				<filename>$HOME/.mediaManager/mediamanager-conf.xml</filename>.
+			</para>		
+		</sect1>
+		<sect1>
+			<title>Mode</title>
+			<para>Media directories can operate in different modes. This effects how the media is handled and
+			      which pattern tokens can be used. The currently supported modes are:
+			    <itemizedlist>
+					<listitem><para><literal>TV_SHOW</literal> - Media files are tv episodes</para></listitem>											
+					<listitem><para><literal>FILM</literal> - Media files are films</para></listitem>
+				</itemizedlist>
+			 </para>		    
+		</sect1>
+		<sect1>
+			<title>Patterns</title>
+			<para>A pattern can be associated with a media directory. This is used by actions like the 
+			      Renameaction to rename file media files and change the directory structure.
+			</para>
+			<para>
+				The following list contains the meaning for each token:
 					<itemizedlist>
 					 	<listitem><para><literal>%h</literal> - show Id</para></listitem>
- 						<listitem><para><literal>%s</literal> - seaspn number</para></listitem> 
+ 						<listitem><para><literal>%s</literal> - season number</para></listitem> 
  						<listitem><para><literal>%e</literal> - episode number</para></listitem>
  						<listitem><para><literal>%n</literal> - show name</para></listitem>
  						<listitem><para><literal>%t</literal> - episode title or film title</para></listitem>
  						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
+ 						<listitem><para><literal>%p</literal> - part number</para></listitem>
+ 						<listitem><para><literal>%y</literal> - year</para></listitem>
  						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
 					</itemizedlist>
-				</para>				
+				</para>	
+				<para>
+				The patterns also support the syntax <literal>&quot;{ Part %p }&quot;</literal>. The braces 
+				means the contents inside are optional. So in this case if the media does not have a part number,
+				then it would be added to the filename.
+				</para>						
 				<example>
 					<title>Examples:</title>
 					<para>
@@ -356,77 +437,54 @@
 					     	<listitem><para>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</para></listitem>
 					     </itemizedlist>
 					</para>
-				</example>				
-			</sect2>
+				</example>      
 		</sect1>
-	</chapter>
-	<chapter id="configuration">
-		<title>Configuration</title>
-		<para>The applications and the API make use of a XML configuration file. This
-			  tells them which sources and stores should be used.
-		</para>
-		<para>
-			The applications have CLI options that can be used too tell it which configuration
-			file too use. If this option is not present, then it will look for the file at the 
-			location <filename>/etc/mediafetcher-conf.xml</filename>. If this can't be found,
-			it will fall back too using default settings.
-		</para>
-		<para>			
-			<example>		
-				<title>The default configuration file</title>
-				<programlisting>
-			<![CDATA[<config>
-       <sources>
-              <!-- www.tv.com TV Show information source -->
-			  <source id="org.stanwood.media.source.TVCOMSource"/>
+		<sect1>
+			<title>Ignore</title>
+			<para>
+				It's possible a multiple regular expressions to a media directory which are compared agaist each
+				media file when performing actions. If they do mach, then the media file is ignored.
+				<example>
+					<title>Ignore patterns</title>
+					<programlisting>	
+					<![CDATA[<mediaManager>
+	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ Part %p}.%x">
+		<ignore>.*[S|s]amples.*</ignore>
+		<ignore>.*temp.*</ignore>
+	</mediaDirectory>						
+</mediaManager>							
+					]]>
+					</programlisting>
+				</example>
+			</para>
 			
-			  <!-- www.imdb.com The film information source -->
-			  <source id="org.stanwood.media.source.IMDBSource"/>
-       </sources>
-       <stores>
-               <!-- Caches data in memory while the application is running -->
-               <store id="org.stanwood.media.store.memory.MemoryStore"/>
-
-               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
-        </stores>
-</config>]]>			
-				</programlisting>
-			</example>			
-		</para>
-		<para>
-			Some of the stores and sources can also have parameters, the following example shows how to setup 
-			the MythTVStore so that it can find the Database that it stores the metadata in.
-			<example>		
-				<title>Configuration file using parameters</title>
-				<programlisting>
-			<![CDATA[<config>
-       <sources>
-              <!-- www.tv.com TV Show information source -->
-			  <source id="org.stanwood.media.source.TVCOMSource"/>
-			
-			  <!-- www.imdb.com The film information source -->
-			  <source id="org.stanwood.media.source.IMDBSource"/>
-       </sources>
-       <stores>
-               <!-- Caches data in memory while the application is running -->
-               <store id="org.stanwood.media.store.memory.MemoryStore"/>
-
-               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
-                
-               <!-- A Store for saving Show/Movies meta data into in a mythtv database -->
-               <store id="org.stanwood.media.store.mythtv.MythTVStore">
-               		<param name="DatabaseHost" value="localhost"/>
-               		<param name="DatabaseName" value="mythtv"/>
-               		<param name="DatabaseUser" value="mythuser"/>
-               		<param name="DatabasePassword" value="secret"/>
-               </store>      
-        </stores>
-</config>]]>			
-				</programlisting>
-			</example>	
-		</para>
+		</sect1>
+		<sect1>
+			<title>Examples</title>
+			<para>			
+				<example>		
+					<title>The default configuration file</title>
+					<programlisting>
+				<![CDATA[<config>
+	       <sources>
+	              <!-- www.tv.com TV Show information source -->
+				  <source id="org.stanwood.media.source.TVCOMSource"/>
+				
+				  <!-- www.imdb.com The film information source -->
+				  <source id="org.stanwood.media.source.IMDBSource"/>
+	       </sources>
+	       <stores>
+	               <!-- Caches data in memory while the application is running -->
+	               <store id="org.stanwood.media.store.memory.MemoryStore"/>
+	
+	               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
+	                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
+	        </stores>
+	</config>]]>			
+					</programlisting>
+				</example>			
+			</para>
+		</sect1>	
 	</chapter>
 	<chapter id="credits-and-licenses">
 		<title>Credits and Licenses</title>
@@ -438,7 +496,7 @@
 			</listitem>
 		</itemizedlist>
 		<para>
-        	Documentation copyright 2008-2009, John-Paul Stanford
+        	Documentation copyright &copyrightdate;, &copyholder;
             <email>dev@stanwood.org.uk</email>
 		</para>		
 	</chapter>

@@ -165,9 +165,10 @@ public class CLIManageAddons extends AbstractLauncher {
 	 * usage: mm-xbmc [--global-options] <command> [--command-options] [arguments]
 	 *
 	 * Global options:
-	 *   --config_file, -c <info|debug|file>
+	 *   --config_file, -c <file>
 	 *                                 The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
-	 *   --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
+	 *   --log_config, -l <info|debug|file>
+	 *                                 The log config mode [<INFO>|<DEBUG>|<log4j config file>]
 	 *   --help, -h                    Show the help
 	 *
 	 * Commands:

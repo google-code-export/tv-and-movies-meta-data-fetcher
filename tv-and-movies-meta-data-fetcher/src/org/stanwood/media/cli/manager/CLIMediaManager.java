@@ -30,7 +30,7 @@ import org.stanwood.media.source.xbmc.updater.IConsole;
  * <p>
  * It has the following usage:
  * <code>
- *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u]
+ *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-u]
  *
  *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
  *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
