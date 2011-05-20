@@ -14,6 +14,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.stanwood.media.Controller;
+import org.stanwood.media.logging.StanwoodException;
 
 /**
  * This is the base class of all CLI command launchers
@@ -222,7 +223,12 @@ public abstract class BaseLauncher implements ICLICommand {
 	}
 
 	protected void fatal(Exception e) {
-		fatal(e.getMessage());
+		if (e instanceof StanwoodException) {
+			fatal(((StanwoodException)e).printException());
+		}
+		else {
+			fatal(e.getMessage());
+		}
 	}
 
 	/**

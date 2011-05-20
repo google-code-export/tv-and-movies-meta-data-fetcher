@@ -17,6 +17,9 @@ public class PatternMatcher {
 	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 
 	private String normalizeText(String text) {
+		if (text==null) {
+			return null;
+		}
 		text = text.replaceAll(":|/","-");
 		text = text.replaceAll("!",".");
 		return text;

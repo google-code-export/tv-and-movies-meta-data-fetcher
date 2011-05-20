@@ -152,6 +152,7 @@ public class HybridFilmSource implements ISource {
 
 		if (tagChimpFilm!=null && imdbFilm!=null) {
 			Film film = new Film(filmId);
+			film.setTitle(imdbFilm.getTitle());
 			film.setCertifications(imdbFilm.getCertifications());
 			film.setChapters(tagChimpFilm.getChapters());
 			film.setDate(imdbFilm.getDate());
