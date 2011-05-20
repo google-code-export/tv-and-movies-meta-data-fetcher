@@ -5,19 +5,24 @@ Version 2.0
 -----------
 	 
 *Inprogress*    - Create macosx installer
-*Not started*   - Add a getting started guide and link to a button in the installer
-*Not started*   - Update user guide
+					- Also update install guide
+*Not started*   - Update example configuration files
+*Inprogress*    - Update user guide
 *Needs Testing* - Test the hybrid source works correct
 *Needs Testing* - Test generated podcasts with iTunes
+*Needs Testing* - Test TV Show renaming
 
 Version 2.0.1
 -------------
 
 Bug fixes
+Add a getting started guide and link to a button in the installer
+Add more linux distribution packages.
 
 Version 2.1
 -----------
 
+Add tool to update metadata of mp4/m4v file
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
 Add remove from store command line tool
@@ -33,3 +38,4 @@ Add support for TV to the TagChimp Source
 Database store
 Deamon mode
 UPnP server
+Replace windows .bat files with native .exe launchers

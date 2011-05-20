@@ -26,7 +26,7 @@ import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * <p>This action is used execute a system command</p>
+ * <p>This action is used execute a system command upon media files and directories</p>
  * <p>This action supports the following parameters:
  * <ul>
  * <li>commandOnFile - A command to execute on finding acceptable media files</li>

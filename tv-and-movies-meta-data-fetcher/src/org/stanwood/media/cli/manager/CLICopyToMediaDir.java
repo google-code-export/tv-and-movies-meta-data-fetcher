@@ -26,14 +26,14 @@ import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
- * This is a command line launcher that is used to move media files into a media directory. It reads
- * the configuration file to work out which sources, stores and actions are to be used
- * with media directory. Then the actions are performed on the media directory.
+ * The mm-move-into-media-directory command is used to move media files into a directory. It then uses
+ * the sources and stores with the media file and performs the actions on it. The media files can be
+ * either files or directories.
  * </p>
  * <p>
  * It has the following usage:
  * <code>
- *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u] <media files...>
+ *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-u] <media files...>
  *
  *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
  *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.

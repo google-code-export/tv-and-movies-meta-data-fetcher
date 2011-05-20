@@ -274,13 +274,23 @@
 		
 		<unzip src="docbook.zip" dest="${basedir}/docbook"/>
 		
+		<mkdir dir="${userguide.dir}/xml-updated"/>		
+		<copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>		
+		
+		<replace file="${userguide.dir}/xml-updated/docbook.xml">
+			<replacefilter token="@@version@@" value="${project.version}"/>
+			<replacefilter token="@@name@@" value="${ant.project.name}"/>
+			<replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+			<replacefilter token="@@mode@@" value="0"/>
+		</replace>
+		
 	    <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
-	            basedir="${userguide.dir}/xml"
+	            basedir="${userguide.dir}/xml-updated"
 	            extension=".fo"
 	            destdir="${fo.dir}" />
 				
 		<xslt  style="${docbook.home}/html/docbook.xsl"	         	     	
-			            basedir="${userguide.dir}/xml"
+			            basedir="${userguide.dir}/xml-updated"
 			            extension=".html"
 			            destdir="${userguide.dir}/html" />	
 		
@@ -291,6 +301,7 @@
 		
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
+		<delete dir="${userguide.dir}/xml-updated"/>
 	</target>
 		
 	<target name="installer" depends="jars">		

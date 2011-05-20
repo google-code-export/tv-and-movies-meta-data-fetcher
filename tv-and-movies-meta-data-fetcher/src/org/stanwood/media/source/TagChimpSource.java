@@ -33,9 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * This class is a source used to retrieve information about films from {@link "www.tagchimp.com"}. This source has the
- * option parameter "regexpToReplace". This is used when searching for a film via the film's filename. The parameter is
- * a regular expression, that when found in the filename, is removed.
+ * This class is a source used to retrieve information about films from {@link "www.tagchimp.com"}.
  */
 public class TagChimpSource extends XMLParser implements ISource {
 
