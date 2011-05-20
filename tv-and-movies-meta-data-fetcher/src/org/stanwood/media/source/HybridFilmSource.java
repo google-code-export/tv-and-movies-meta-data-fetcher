@@ -30,7 +30,9 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCSource;
 
 /**
  * This class is a source used to retrieve the best film information it can. It
@@ -56,7 +58,9 @@ public class HybridFilmSource implements ISource {
 	@Override
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 		try {
-			imdbSource =dir.getSource(dir.getDefaultSourceID(Mode.FILM));
+			String sourceId = dir.getDefaultSourceID(Mode.FILM);
+			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
+			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
 		} catch (XBMCException e) {
 			throw new SourceException("Unable to create file source",e);
 		}
@@ -203,16 +207,18 @@ public class HybridFilmSource implements ISource {
 
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
-			SearchResult result = source.searchMedia(name, mode, part);
-			if (result!=null) {
-				if (id.length()>0) {
+			if (source!=null) {
+				SearchResult result = source.searchMedia(name, mode, part);
+				if (result!=null) {
+					if (id.length()>0) {
+						id.append("|");
+					}
+					id.append(result.getSourceId());
 					id.append("|");
+					id.append(result.getId());
+					newUrl = result.getUrl();
+					part = result.getPart();
 				}
-				id.append(result.getSourceId());
-				id.append("|");
-				id.append(result.getId());
-				newUrl = result.getUrl();
-				part = result.getPart();
 			}
 
 		}
