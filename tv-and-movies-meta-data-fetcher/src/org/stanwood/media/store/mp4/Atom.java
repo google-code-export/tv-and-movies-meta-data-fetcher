@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.store.mp4;
 
+import com.coremedia.iso.boxes.AbstractBox;
+import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 
 
@@ -136,10 +138,20 @@ public class Atom {
 
 	/**
 	 * This is called to set the value in the box
-	 * @param b The box that's haveing it's value set
+	 * @param b The box that's having it's value set
+	 * @throws MP4Exception Throw if their is a problem
 	 */
-	public void updateBoxValue(AbstractAppleMetaDataBox b) {
-		b.setValue(getValue());
+	public void updateBoxValue(AbstractBox b) throws MP4Exception {
+		if (b instanceof AbstractAppleMetaDataBox) {
+			((AbstractAppleMetaDataBox)b).setValue(getValue());
+		}
 	}
 
+	/**
+	 * This can return a box if this atom can create the box
+	 * @return The box or null if not supported
+	 */
+	public Box getBox() {
+		return null;
+	}
 }

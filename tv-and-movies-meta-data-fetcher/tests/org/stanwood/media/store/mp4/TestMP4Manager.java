@@ -39,7 +39,7 @@ public class TestMP4Manager {
 		Assert.assertTrue(mp4File.exists());
 
 		IMP4Manager ap = new MP4Manager();
-		List<Atom> atoms = ap.listAttoms(mp4File);
+		List<Atom> atoms = ap.listAtoms(mp4File);
 
 		Assert.assertEquals(0,atoms.size());
 	}
@@ -55,7 +55,7 @@ public class TestMP4Manager {
 		Assert.assertTrue(mp4File.exists());
 
 		IMP4Manager ap = new MP4Manager();
-		List<Atom> atoms = ap.listAttoms(mp4File);
+		List<Atom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {
@@ -105,7 +105,7 @@ public class TestMP4Manager {
 		IMP4Manager ap = new MP4Manager();
 		ap.updateEpsiode(mp4File, episode);
 
-		List<Atom> atoms = ap.listAttoms(mp4File);
+		List<Atom> atoms = ap.listAtoms(mp4File);
 		Assert.assertEquals(10,atoms.size());
 		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
 		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
@@ -150,7 +150,7 @@ public class TestMP4Manager {
 		IMP4Manager ap = new MP4Manager();
 		ap.updateFilm(mp4File, film,null);
 
-		List<Atom> atoms = ap.listAttoms(mp4File);
+		List<Atom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {

@@ -18,7 +18,7 @@ public interface IMP4Manager {
 	 * @return A list of atoms
 	 * @throws MP4Exception Thrown if their is a problem reading the MP4 file
 	 */
-	public List<Atom> listAttoms(File mp4File) throws MP4Exception ;
+	public List<Atom> listAtoms(File mp4File) throws MP4Exception ;
 
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode

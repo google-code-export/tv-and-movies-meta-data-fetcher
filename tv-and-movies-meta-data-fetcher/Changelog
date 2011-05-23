@@ -1,3 +1,5 @@
+* Mon May 23 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- Encode part numbers as disk numbers into MP4's
 * Fri May 20 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Added tool to move a media file into a media directory
 * Thu May 19 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98

@@ -76,6 +76,9 @@ public class HybridFilmSource implements ISource {
 			}
 			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
 			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
+			if (imdbSource==null) {
+				throw new XBMCException("Unable to find source with id: " + sourceId);
+			}
 		} catch (XBMCException e) {
 			throw new SourceException("Unable to create file source",e);
 		}
