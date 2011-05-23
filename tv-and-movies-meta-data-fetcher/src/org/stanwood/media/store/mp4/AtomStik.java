@@ -1,6 +1,6 @@
 package org.stanwood.media.store.mp4;
 
-import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
+import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;
 
 /**
@@ -105,7 +105,7 @@ public class AtomStik extends Atom {
 
 	/** {@inheritDoc} */
 	@Override
-	public void updateBoxValue(AbstractAppleMetaDataBox b) {
+	public void updateBoxValue(AbstractBox b) {
 		if (b instanceof AppleMediaTypeBox) {
 			AppleMediaTypeBox box = (AppleMediaTypeBox)b;
 			box.setValue(getValue());

@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.util.FileHelper;
 
 import com.coremedia.iso.IsoBufferWrapper;
@@ -25,6 +26,7 @@ import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.IsoFileConvenienceHelper;
 import com.coremedia.iso.IsoOutputStream;
 import com.coremedia.iso.PropertyBoxParserImpl;
+import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.AbstractContainerBox;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.MetaBox;
@@ -55,7 +57,7 @@ public class MP4Manager implements IMP4Manager {
 	 * @throws MP4Exception Thrown if their is a problem reading the MP4 file
 	 */
 	@Override
-	public List<Atom> listAttoms(File mp4File) throws MP4Exception {
+	public List<Atom> listAtoms(File mp4File) throws MP4Exception {
 		try {
 			// http://code.google.com/p/mp4parser/
 			List<Atom> atoms = new ArrayList<Atom>();
@@ -89,6 +91,7 @@ public class MP4Manager implements IMP4Manager {
 			properties.setProperty("ilst-"+"ﾩday", AppleRecordingYearBox.class.getName()+"()");
 			properties.setProperty("ilst-"+"ﾩnam", AppleTrackTitleBox.class.getName()+"()");
 			properties.setProperty("ilst-"+"ﾩgen", AppleCustomGenreBox.class.getName()+"()");
+			properties.setProperty("ilst-"+"disk", AppleDiscNumberBox.class.getName()+"()");
 		    return properties;
 		}
 		catch (IOException e) {
@@ -134,7 +137,19 @@ public class MP4Manager implements IMP4Manager {
 			Atom a = AtomFactory.createAtom(type,b.getValue());
 			return a;
 		}
-		throw new MP4Exception("Unknown atom table: " + box.getClass());
+		else  if (box instanceof AppleDiscNumberBox) {
+			AppleDiscNumberBox b = (AppleDiscNumberBox)box;
+			Atom a = AtomFactory.createDiskAtom(b.getDiskNumber(),b.getNumberOfDisks());
+
+			return a;
+		}
+		else {
+			if (log.isDebugEnabled()) {
+				log.debug("Unknown atom type: " + new String(box.getType()));
+			}
+			return AtomFactory.createUnkownAtom(type,box);
+		}
+
 	}
 
 	static long toLong(byte b) {
@@ -282,6 +297,9 @@ public class MP4Manager implements IMP4Manager {
 	}
 
 	private Box createBox(Atom atom, Properties properties) throws MP4Exception {
+		if (atom.getBox()!=null) {
+			return atom.getBox();
+		}
 		String prop = properties.getProperty("ilst-"+atom.getName());
 		if (prop==null) {
 			throw new MP4Exception("Unable to create MP4 box with name '"+atom.getName()+"'");
@@ -296,7 +314,7 @@ public class MP4Manager implements IMP4Manager {
 				String className = prop.substring(0,prop.length()-2);
 				try {
 					Class<?> c = Class.forName(className);
-					AbstractAppleMetaDataBox b = (AbstractAppleMetaDataBox ) c.newInstance();
+					AbstractBox b = (AbstractBox ) c.newInstance();
 					atom.updateBoxValue(b);
 					return b;
 				} catch (ClassNotFoundException e) {
@@ -324,13 +342,20 @@ public class MP4Manager implements IMP4Manager {
 	@Override
 	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
+		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE_OLD));
 		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
-//		if (part!=null) {
-//			atoms.add(AtomFactory.createAtom("disk", String.valueOf(part)));
-//		}
+//		atoms.add(AtomFactory.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
+		if (part!=null) {
+			byte total =0;
+			for (VideoFile vf : film.getFiles()) {
+				if (vf.getPart()!=null && vf.getPart()>total) {
+					total = (byte)(int)vf.getPart();
+				}
+			}
+			atoms.add(AtomFactory.createDiskAtom((byte)(int)part,total));
+		}
 
 		if (film.getImageURL() != null) {
 			File artwork;

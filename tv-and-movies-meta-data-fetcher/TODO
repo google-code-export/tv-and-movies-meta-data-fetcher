@@ -11,7 +11,7 @@ Version 2.0
 *Needs Testing* - Test generated podcasts with iTunes
 *Needs Testing* - Test generated podcasts for TV Shows
 *Needs Testing* - Test TV Show renaming
-*Needs Testing* - Test that mp4 store does not overwrite existing atoms (Like chapters)
+*Needs Testing* - Test MP4 store with TV Shows
 
 Version 2.0.1
 -------------
@@ -23,6 +23,7 @@ Add more linux distribution packages.
 Version 2.1
 -----------
 
+Updated to latest version of MP4 parser
 Add tool to update metadata of mp4/m4v file
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
