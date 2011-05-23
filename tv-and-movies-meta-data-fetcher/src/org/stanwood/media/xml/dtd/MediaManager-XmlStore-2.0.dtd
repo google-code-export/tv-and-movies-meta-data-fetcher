@@ -10,7 +10,7 @@
 <!ELEMENT genres (genre*)>
 
 <!ATTLIST show
-  id       NMTOKENS  #REQUIRED     
+  id       CDATA     #REQUIRED     
   imageUrl CDATA     #IMPLIED
   name     CDATA     #IMPLIED
   sourceId CDATA     #REQUIRED
@@ -58,7 +58,7 @@
 <!ELEMENT film (description?,rating?,country?,genres?,certifications?,directors?,writers?,actors?,chapters?,file*)>
 
 <!ATTLIST film
-	id            NMTOKENS  #REQUIRED
+	id            CDATA     #REQUIRED
 	imageUrl      CDATA     #IMPLIED 
 	rating        CDATA     #IMPLIED
 	releaseDate   CDATA     #IMPLIED
