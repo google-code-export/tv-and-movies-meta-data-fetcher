@@ -105,7 +105,17 @@
 				find the best information it can about a film. It's main use to to combine the extra information
 				film chapter information from the <literal>TagChimpSource</literal> source with the information in 
 				the <literal>XBMCSource</literal>. 				
-				</para>											
+				</para>									
+				<para>
+				This source supports the following parameters:
+				<itemizedlist>
+                 	<listitem>
+                 		<para>
+                 			<literal>xbmcSourceId</literal> Id of XBMC source to use, if parameter is not specified, then the default is used.
+                 		</para>
+                 	</listitem>
+                </itemizedlist>
+				</para>		
 			</sect2>
 		</sect1>
 		<sect1>
