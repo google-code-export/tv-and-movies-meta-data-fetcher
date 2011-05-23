@@ -219,7 +219,6 @@ public class HybridFilmSource implements ISource {
 
 		StringBuilder id = new StringBuilder();
 		String newUrl = null;
-		Integer newPart = null;
 
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
@@ -238,7 +237,7 @@ public class HybridFilmSource implements ISource {
 						throw new SourceException("Invalid URL retuned from search results: " + result.getUrl(),e);
 					}
 					newUrl = result.getUrl();
-					part = result.getPart();
+
 				}
 				else {
 					return null;
@@ -247,7 +246,7 @@ public class HybridFilmSource implements ISource {
 
 		}
 		if (id!=null && id.length()>0) {
-			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,newPart);
+			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,part);
 			return result;
 		}
 
