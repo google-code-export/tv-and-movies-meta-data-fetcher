@@ -298,7 +298,6 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			catch (XMLParserNotFoundException e) {
 	    				// Ignore if not found
 	    			}
-	    			System.out.println(XMLParser.domToStr(doc));
 	    			String plot = getStringFromXML(doc, "details/plot/text()");
 	    			film.setDescription(plot);
 	    			film.setId(filmId);

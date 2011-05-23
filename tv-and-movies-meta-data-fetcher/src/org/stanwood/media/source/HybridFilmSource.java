@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.stanwood.media.MediaDirectory;
@@ -37,14 +39,24 @@ import org.stanwood.media.source.xbmc.XBMCSource;
 /**
  * This class is a source used to retrieve the best film information it can. It
  * does this by calling other sources and picking the best information from them.
+ * <p>This source supports the following parameters:
+ * <ul>
+ * <li>xbmcSourceId - Id of XBMC source to use, if parameter is not specified, then the default is used.</li>
+ * </ul>
+ * </p>
  */
 public class HybridFilmSource implements ISource {
 
+	private final static String PARAM_KEY_XBMC_SOURCE_ID = "xbmcSourceId";
+
 	private ISource imdbSource;
 	private ISource tagChimpSource = new TagChimpSource();
+	private Map<String,URL> urls = new HashMap<String,URL>();
 
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "hybridFilm";
+
+	private String xbmcSourceId = null;
 
 	/**
 	 * Used to create a instance of the source
@@ -59,6 +71,9 @@ public class HybridFilmSource implements ISource {
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 		try {
 			String sourceId = dir.getDefaultSourceID(Mode.FILM);
+			if (xbmcSourceId != null) {
+				sourceId = xbmcSourceId;
+			}
 			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
 			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
 		} catch (XBMCException e) {
@@ -143,10 +158,10 @@ public class HybridFilmSource implements ISource {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
 			if (key.equals(imdbSource.getSourceId())) {
-				imdbFilm = imdbSource.getFilm(value,url,file);
+				imdbFilm = imdbSource.getFilm(value,urls.get(key+"|"+value),file);
 			}
 			else if (key.equals(tagChimpSource.getSourceId())) {
-				tagChimpFilm = tagChimpSource.getFilm(value,url,file);
+				tagChimpFilm = tagChimpSource.getFilm(value,urls.get(key+"|"+value),file);
 			}
 		}
 
@@ -217,8 +232,16 @@ public class HybridFilmSource implements ISource {
 					id.append(result.getSourceId());
 					id.append("|");
 					id.append(result.getId());
+					try {
+						urls.put(result.getSourceId()+"|"+result.getId(),new URL(result.getUrl()));
+					} catch (MalformedURLException e) {
+						throw new SourceException("Invalid URL retuned from search results: " + result.getUrl(),e);
+					}
 					newUrl = result.getUrl();
 					part = result.getPart();
+				}
+				else {
+					return null;
 				}
 			}
 
@@ -233,28 +256,46 @@ public class HybridFilmSource implements ISource {
 
 	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
-	 * <p>This source does not support any parameters.</p>
+	 * <p>This source supports the following parameters:
+	 * <ul>
+	 * <li>xbmcSourceId - Id of XBMC source to use, if parameter is not specified, then the default is used.</li>
+	 * </ul>
+	 * </p>
 	 * @param key The key of the parameter
 	 * @param value The value of the parameter
 	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
-		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID)) {
+			xbmcSourceId = value;
+		}
+		else {
+			throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		}
 	}
 
 
 
 	/**
 	 * <p>Used to get the value of a source parameter. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
-	 * <p>This source does not support any parameters.</p>
+	 * <p>This source supports the following parameters:
+	 * <ul>
+	 * <li>xbmcSourceId - Id of XBMC source to use, if parameter is not specified, then the default is used.</li>
+	 * </ul>
+	 * </p>
 	 * @param key The key of the parameter
 	 * @return The value of the parameter
 	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID)) {
+			return xbmcSourceId;
+		}
+		else {
+			throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		}
 	}
 
 }

@@ -2,8 +2,10 @@ package org.stanwood.media.source;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -280,7 +282,8 @@ public class TagChimpSource extends XMLParser implements ISource {
 		film.setCertifications(certs);
 	}
 
-	private URL getSearchUrl(String query) throws MalformedURLException {
+	private URL getSearchUrl(String query) throws MalformedURLException, UnsupportedEncodingException {
+		query = URLEncoder.encode(query,"UTF-8");
 		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=search&totalChapters=X&title="+query);
 	}
 
