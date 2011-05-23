@@ -328,9 +328,9 @@ public class MP4Manager implements IMP4Manager {
 		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
-		if (part!=null) {
-			atoms.add(AtomFactory.createAtom("disk", String.valueOf(part)));
-		}
+//		if (part!=null) {
+//			atoms.add(AtomFactory.createAtom("disk", String.valueOf(part)));
+//		}
 
 		if (film.getImageURL() != null) {
 			File artwork;
