@@ -20,7 +20,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 	private java.util.Map<String, java.util.List<String>> responseHeader = null;
 	private int responseCode = -1;
 	private String MIMEtype = null;
-	private String charset = null;
+	private String charset = "ISO-8859-1";
 
 	private InputStream content;
 

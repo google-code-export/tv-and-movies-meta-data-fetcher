@@ -159,11 +159,11 @@ public class TestTagChimpSource {
 				System.out.println("Fetching URL: " + strUrl);
 				Matcher m = TAGCHIMP_SEARCH_PATTERN.matcher(strUrl);
 				if (m.matches()) {
-					return new Stream(Data.class.getResourceAsStream("tagchimp-search-"+getSearchName(m.group(1))+".html"),"text/html","UTF-8",url.toExternalForm());
+					return new Stream(Data.class.getResourceAsStream("tagchimp-search-"+getSearchName(m.group(1))+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 				}
 				m = TAGCHIMP_FILM_PATTERN.matcher(strUrl);
 				if (m.matches()) {
-					return new Stream(Data.class.getResourceAsStream("tagchimp-film-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
+					return new Stream(Data.class.getResourceAsStream("tagchimp-film-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 				}
 				throw new IOException("Unable to find test data for url: " + url);
 			}

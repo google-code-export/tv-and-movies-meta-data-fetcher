@@ -1,6 +1,7 @@
 package org.stanwood.media.util;
 
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * This class is used to get a input stream and the details of the stream when downloading
@@ -12,6 +13,7 @@ public class Stream {
 	private InputStream inputStream;
 	private String charset;
 	private String cacheKey;
+	private URL url;
 
 	/**
 	 * The constructor
@@ -19,12 +21,14 @@ public class Stream {
 	 * @param mimeType The mime type of the stream
 	 * @param charset The charset type of the stream
 	 * @param cacheKey When caching the stream, use the cache key
+	 * @param url The URL the stream was read from
 	 */
-	public Stream(InputStream is, String mimeType,String charset,String cacheKey) {
+	public Stream(InputStream is, String mimeType,String charset,String cacheKey,URL url) {
 		this.inputStream = is;
 		this.mineType = mimeType;
 		this.charset =charset;
 		this.cacheKey = cacheKey;
+		this.url = url;
 	}
 
 	/**
@@ -57,5 +61,13 @@ public class Stream {
 	 */
 	public String getCacheKey() {
 		return cacheKey;
+	}
+
+	/**
+	 * Used to get the URL the stream was read from
+	 * @return The URL the stream was read from
+	 */
+	public URL getURL() {
+		return url;
 	}
 }
