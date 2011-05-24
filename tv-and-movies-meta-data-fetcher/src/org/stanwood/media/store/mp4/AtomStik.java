@@ -11,7 +11,7 @@ public class AtomStik extends Atom {
 	/** Used to represent the values of the atom */
 	public enum Value {
 		 /** The old movie type */
-		 MOVIE_OLD("0", "Movie (is now 9)"),
+		 MOVIE("0", "Movie"),
 		 /** The music type */
 	     MUSIC("1", "Music"),
 	     /** Audio book type */
@@ -19,7 +19,7 @@ public class AtomStik extends Atom {
 	     /** Music video type */
 	     MUSIC_VIDEO("6", "Music Video"),
 	     /** Movie type */
-	     MOVIE("9", "Movie"),
+	     SHORT_FILM("9", "Short Film"),
 	     /** TV show type */
 	     TV_SHOW("10", "TV Show"),
 	     /** Booklet type */

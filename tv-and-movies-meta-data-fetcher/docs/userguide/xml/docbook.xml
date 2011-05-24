@@ -474,27 +474,118 @@
 			
 		</sect1>
 		<sect1>
+			<title>Plugins</title>
+			<para>
+			It is possible to extend &apptitle; with plugins. Plugins are capable of adding new Sources, Stores
+			and Actions. Plugins must extend the correct interfaces like the internal Sources, Stores and Actions.
+			They must then be packaged into a .jar file and imported into MediaManager. The following example shows 
+			the configuration file entries needed to tell &apptitle; about a plugin. 
+			<example>
+				<title>Registering plguins</title>
+				<programlisting>
+				<![CDATA[<mediaManager>
+	<plugins>
+		<plugin jar="$HOME/.mediaManager/plguins/myplugin.jar" class="com.mm.plugins.MyPlugin"/>
+	</plugins>						
+</mediaManager>	
+				]]>
+				</programlisting>
+			</example> 
+			</para>			
+		</sect1>
+		<sect1>
 			<title>Examples</title>
 			<para>			
 				<example>		
 					<title>The default configuration file</title>
 					<programlisting>
-				<![CDATA[<config>
-	       <sources>
-	              <!-- www.tv.com TV Show information source -->
-				  <source id="org.stanwood.media.source.TVCOMSource"/>
-				
-				  <!-- www.imdb.com The film information source -->
-				  <source id="org.stanwood.media.source.IMDBSource"/>
-	       </sources>
-	       <stores>
-	               <!-- Caches data in memory while the application is running -->
-	               <store id="org.stanwood.media.store.memory.MemoryStore"/>
+				<![CDATA[<mediaManager>	
+	<global>
+		<!-- Used to define the location where configuration settings are stored -->
+		<configDirectory>$HOME/.mediaManager</configDirectory>
+	</global>
+
+	<!-- Example Film media directory -->
+	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x">
+		<!-- The default extensions have been overriden for this directory so that the media manager
+	     will only consider .avi and .m4v files as media files. -->
+		<extensions>
+			<extension>avi</extension>
+			<extension>m4v</extension>
+		</extensions>
+		<sources>
+			<source id="org.stanwood.media.source.xbmc.XBMCSource"/>
+		</sources>
+		<stores>
+			<!-- Update MP4 files with meta data -->
+			<store id="org.stanwood.media.store.mp4.MP4ITunesStore"/>
+			<!-- Cache film info in a XML Store -->			
+			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
+		</stores>
+		<actions>
+			<!-- Make sure files and directories have the correct owner. Only works on a unix system,
+			     when MediaManager is running as root. -->
+			<action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="chown jp.users &quot;$MEDIAFILE&quot;"/>
+                    <param name="commandOnDirectory" value="chown jp.users &quot;$MEDIAFILE&quot;"/>
+            </action>
+            
+            <!-- Make sure files and directories have the correct permissions. Only works on a unix system,
+			     when MediaManager is running as root. -->
+            <action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="chmod 660 &quot;$MEDIAFILE&quot;"/>
+                    <param name="commandOnDirectory" value="chmod 770 &quot;$MEDIAFILE&quot;"/>
+            </action>
+            
+			<!-- Give all the media the correct name based on the pattern -->
+			<action id="org.stanwood.media.actions.rename.RenameAction"/>	
+			
+			<!-- Create a potcast of the newest films, using the default number of entries -->
+			<action id="org.stanwood.media.actions.podcast.PodCastAction">
+                    <param name="mediaDirURL" value="http://my.media.com/podcasts/Films"/>
+                    <param name="fileLocation" value="rss.xml"/>
+                    <param name="extensions" value="m4v"/>
+            </action>	
+            
+            <!-- Encode any .avi files into .m4v files using the HandBrakeCLI application -->
+            <action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="/usr/bin/HandBrakeCLI -i &quot;$MEDIAFILE&quot; -o &quot;$NEWFILE&quot; preset=&apos;AppleTV 2&apos;"/>
+                    <param name="newFile" value="$MEDIAFILE_DIR/$MEDIAFILE_NAME.m4v"/>
+                    <param name="extensions" value="avi"/>
+                    <param name="abortIfFileExists" value="$NEWFILE"/>
+            </action>											
+		</actions>
+	</mediaDirectory>
 	
-	               <!-- A Store for saving Show/Movies in a XML file in the current directory -->
-	                <store id="org.stanwood.media.store.xmlstore.XMLStore2"/>
-	        </stores>
-	</config>]]>			
+	<!-- Example TV show media directory -->
+	<mediaDirectory directory="/media/TV" mode="TV_SHOW" pattern="%n/Season %s/%sx%e - %t.%x">
+		<sources>
+			<source id="org.stanwood.media.source.xbmc.XBMCSource">
+				<param name="posters" value="true"/>
+			</source>
+		</sources>
+		<stores>
+			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
+		</stores>
+		<actions>
+			<!-- Give all the media the correct name based on the pattern -->
+			<action id="org.stanwood.media.actions.rename.RenameAction"/>
+			
+			<!-- Create per show RSS video podcasts that contain the most recent 5 show episodes -->
+			<action id="org.stanwood.media.actions.podcast.PodCastAction">
+                <param name="mediaDirURL" value="http://my.media.com/podcasts/TV"/>
+                <param name="numberEntries" value="5"/>
+                <param name="fileLocation" value="%n/rss.xml"/>
+                <param name="extensions" value="avi,mkv,mp4,m4v"/>
+            </action>
+		</actions>		
+	</mediaDirectory>
+	 
+	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
+	 <!--
+	 <XBMCAddons directory="$HOME/.mediaManager/xbmc" locale="en"/> 
+	  -->	 
+</mediaManager>]]>			
 					</programlisting>
 				</example>			
 			</para>

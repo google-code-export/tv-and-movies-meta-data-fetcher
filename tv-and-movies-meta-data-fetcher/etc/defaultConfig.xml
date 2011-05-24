@@ -5,44 +5,80 @@
 	</global>
 
 	<!-- Example Film media directory -->
-	<!-- The default extensions have been overriden for this directory so that the media manager
+	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x">
+		<!-- The default extensions have been overriden for this directory so that the media manager
 	     will only consider .avi and .m4v files as media files. -->
-	<!-- 	
-	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ Part %p}.%x">
 		<extensions>
 			<extension>avi</extension>
 			<extension>m4v</extension>
-		<extensions>
+		</extensions>
 		<sources>
 			<source id="org.stanwood.media.source.xbmc.XBMCSource"/>
 		</sources>
 		<stores>
+			<!-- Update MP4 files with meta data -->
+			<store id="org.stanwood.media.store.mp4.MP4ITunesStore"/>
+			<!-- Cache film info in a XML Store -->			
 			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
 		</stores>
 		<actions>
-			<action id="org.stanwood.media.actions.rename.RenameAction">
-				<param key="refresh" value="false"/>				
-			</action>
+			<!-- Make sure files and directories have the correct owner. Only works on a unix system,
+			     when MediaManager is running as root. -->
+			<action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="chown jp.users &quot;$MEDIAFILE&quot;"/>
+                    <param name="commandOnDirectory" value="chown jp.users &quot;$MEDIAFILE&quot;"/>
+            </action>
+            
+            <!-- Make sure files and directories have the correct permissions. Only works on a unix system,
+			     when MediaManager is running as root. -->
+            <action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="chmod 660 &quot;$MEDIAFILE&quot;"/>
+                    <param name="commandOnDirectory" value="chmod 770 &quot;$MEDIAFILE&quot;"/>
+            </action>
+            
+			<!-- Give all the media the correct name based on the pattern -->
+			<action id="org.stanwood.media.actions.rename.RenameAction"/>	
+			
+			<!-- Create a potcast of the newest films, using the default number of entries -->
+			<action id="org.stanwood.media.actions.podcast.PodCastAction">
+                    <param name="mediaDirURL" value="http://my.media.com/podcasts/Films"/>
+                    <param name="fileLocation" value="rss.xml"/>
+                    <param name="extensions" value="m4v"/>
+            </action>	
+            
+            <!-- Encode any .avi files into .m4v files using the HandBrakeCLI application -->
+            <action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction">
+                    <param name="commandOnFile" value="/usr/bin/HandBrakeCLI -i &quot;$MEDIAFILE&quot; -o &quot;$NEWFILE&quot; preset=&apos;AppleTV 2&apos;"/>
+                    <param name="newFile" value="$MEDIAFILE_DIR/$MEDIAFILE_NAME.m4v"/>
+                    <param name="extensions" value="avi"/>
+                    <param name="abortIfFileExists" value="$NEWFILE"/>
+            </action>											
 		</actions>
 	</mediaDirectory>
-	 -->
 	
 	<!-- Example TV show media directory -->
-	<!-- 
-	<mediaDirectory directory="/media/TV" mode="TV_SHOW" pattern="%n/Season %s/%e - %t.%x">
+	<mediaDirectory directory="/media/TV" mode="TV_SHOW" pattern="%n/Season %s/%sx%e - %t.%x">
 		<sources>
 			<source id="org.stanwood.media.source.xbmc.XBMCSource">
-				<param key="posters" value="true"/>
+				<param name="posters" value="true"/>
 			</source>
 		</sources>
 		<stores>
 			<store id="org.stanwood.media.store.xmlstore.XMLStore2"/>			
 		</stores>
 		<actions>
+			<!-- Give all the media the correct name based on the pattern -->
 			<action id="org.stanwood.media.actions.rename.RenameAction"/>
-		</actions>
+			
+			<!-- Create per show RSS video podcasts that contain the most recent 5 show episodes -->
+			<action id="org.stanwood.media.actions.podcast.PodCastAction">
+                <param name="mediaDirURL" value="http://my.media.com/podcasts/TV"/>
+                <param name="numberEntries" value="5"/>
+                <param name="fileLocation" value="%n/rss.xml"/>
+                <param name="extensions" value="avi,mkv,mp4,m4v"/>
+            </action>
+		</actions>		
 	</mediaDirectory>
-	 -->
 	 
 	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
 	 <!--

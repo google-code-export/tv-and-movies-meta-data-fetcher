@@ -342,7 +342,7 @@ public class MP4Manager implements IMP4Manager {
 	@Override
 	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE_OLD));
+		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
 		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
