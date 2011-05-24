@@ -60,7 +60,6 @@ public class PodCastAction extends AbstractAction {
 	private final static String PARAM_FEED_TITLE_KEY = "feedTitle";
 	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription";
 
-//	private List<IFeedFile>feedFiles = new ArrayList<IFeedFile>();
 	private SortedSet<IFeedFile>feedFiles = null;
 	private Integer numEntries = null;
 	private MediaDirectory dir;
@@ -109,20 +108,35 @@ public class PodCastAction extends AbstractAction {
 			if (feedFile.exists()) {
 				RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,this.dir.getMediaDirConfig() );
 				rssFeed.parse();
-				feedFiles.addAll(rssFeed.getEntries());
-//				Collections.sort(feedFiles, new Comparator<IFeedFile>() {
-//					@Override
-//					public int compare(IFeedFile o1, IFeedFile o2) {
-//						return o1.compareTo(o2);
-//					}
-//				});
-
+				for (IFeedFile ff : rssFeed.getEntries()) {
+					if (!containsFeedFile(ff)) {
+						feedFiles.add(ff);
+					}
+				}
 			}
 
 			currentFeedFile = feedFile;
 		}
 		catch (Exception e) {
 			throw new ActionException("Unable unable to parse RSS feed",e);
+		}
+	}
+
+	private boolean containsFeedFile(IFeedFile ff1) {
+		for (IFeedFile ff2 : feedFiles) {
+			if (ff2.hashCode()==ff1.hashCode()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void removeIfFound(IFeedFile ff) {
+		Iterator<IFeedFile>it = feedFiles.iterator();
+		while (it.hasNext()) {
+			if (it.next().hashCode()==ff.hashCode()) {
+				it.remove();
+			}
 		}
 	}
 
@@ -137,12 +151,6 @@ public class PodCastAction extends AbstractAction {
 			rssFeed.setTitle(feedTitle);
 			rssFeed.setDescription(feedDescription);
 			rssFeed.setLink(new URL(mediaDirUrl));
-//			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
-//				@Override
-//				public int compare(IFeedFile o1, IFeedFile o2) {
-//					return o1.compareTo(o2);
-//				}
-//			});
 			for (IFeedFile file : feedFiles) {
 				rssFeed.addEntry(file);
 			}
@@ -218,14 +226,8 @@ public class PodCastAction extends AbstractAction {
 	}
 
 	protected void addFileToList(IFeedFile feedFile) {
-//		int index = Collections.binarySearch(feedFiles,feedFile);
-//		if (index < 0) {
-//		    feedFiles.add(-index-1,feedFile);
-//		}
-//		else {
-			feedFiles.add(feedFile);
-//		}
-
+		removeIfFound(feedFile);
+		feedFiles.add(feedFile);
 
 		if (numEntries!=null && feedFiles.size()>numEntries) {
 			Iterator<IFeedFile> it = feedFiles.iterator();
