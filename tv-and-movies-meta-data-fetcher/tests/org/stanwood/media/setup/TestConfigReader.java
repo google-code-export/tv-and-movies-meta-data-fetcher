@@ -431,26 +431,26 @@ public class TestConfigReader {
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 	}
 
-	/**
-	 * Used to test parsing of default config file
-	 * @throws Exception  Thrown if their are any problems
-	 */
-	@Test
-	public void testParseDefaultConfigFile() throws Exception {
-		ConfigReader configReader = null;
-		InputStream is = null;
-		try {
-			is = ConfigReader.class.getResourceAsStream("defaultConfig.xml");
-			configReader = new ConfigReader(is);
-			configReader.parse();
-		}
-		finally {
-			if (is!=null) {
-				is.close();
-			}
-		}
-
-	}
+//	/**
+//	 * Used to test parsing of default config file
+//	 * @throws Exception  Thrown if their are any problems
+//	 */
+//	@Test
+//	public void testParseDefaultConfigFile() throws Exception {
+//		ConfigReader configReader = null;
+//		InputStream is = null;
+//		try {
+//			is = ConfigReader.class.getResourceAsStream("defaultConfig.xml");
+//			configReader = new ConfigReader(is);
+//			configReader.parse();
+//		}
+//		finally {
+//			if (is!=null) {
+//				is.close();
+//			}
+//		}
+//
+//	}
 
 	private ConfigReader createConfigReader(StringBuilder testConfig)
 	throws IOException, FileNotFoundException, ConfigException {

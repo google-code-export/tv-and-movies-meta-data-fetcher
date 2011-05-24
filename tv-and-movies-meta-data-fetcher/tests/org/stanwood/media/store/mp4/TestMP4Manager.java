@@ -167,7 +167,7 @@ public class TestMP4Manager {
 		Assert.assertEquals("A test description",atoms.get(2).getValue());
 		Assert.assertEquals("desc",atoms.get(2).getName());
 		Assert.assertEquals("Movie",((AtomStik)atoms.get(3)).getTypedValue().getDescription());
-		Assert.assertEquals("9",((AtomStik)atoms.get(3)).getTypedValue().getId());
+		Assert.assertEquals("0",((AtomStik)atoms.get(3)).getTypedValue().getId());
 		Assert.assertEquals("stik",atoms.get(3).getName());
 		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(4).getValue().replaceAll("0 ... ", "0 "));
 		Assert.assertEquals("©day",atoms.get(4).getName());
