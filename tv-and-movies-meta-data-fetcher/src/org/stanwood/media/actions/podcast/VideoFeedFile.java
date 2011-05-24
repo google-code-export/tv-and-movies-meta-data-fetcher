@@ -115,7 +115,7 @@ public class VideoFeedFile implements IFeedFile {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((file == null) ? 0 : file.hashCode());
+		result = prime * result + ((file == null) ? 0 : file.getAbsolutePath().hashCode());
 		return result;
 	}
 
@@ -136,7 +136,7 @@ public class VideoFeedFile implements IFeedFile {
 			if (other.file != null) {
 				return false;
 			}
-		} else if (!file.equals(other.file)) {
+		} else if (!file.getAbsolutePath().equals(other.file.getAbsolutePath())) {
 			return false;
 		}
 		return true;
