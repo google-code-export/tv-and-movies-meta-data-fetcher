@@ -7,7 +7,6 @@ import java.io.StringWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.Stream;
 
@@ -98,9 +97,9 @@ public abstract class StreamProcessor {
 					if (str.length()>0) {
 						data = str;
 
-						if (contentType.equals("text/html")) {
-							data = StringEscapeUtils.unescapeHtml(data);
-						}
+//						if (contentType.equals("text/html")) {
+//							data = StringEscapeUtils.unescapeHtml(data);
+//						}
 
 					}
 				}
