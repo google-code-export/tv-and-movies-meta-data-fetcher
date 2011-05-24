@@ -226,7 +226,7 @@
                  This action supports the following parameters:
                  	<itemizedlist>
 						 <listitem><para><literal>mediaDirURL</literal> - This is a required parameter that specifies the URL used to find the root media directory.</para></listitem>
-						 <listitem><para><literal>fileLocation</literal> - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</para></listitem>
+						 <listitem><para><literal>fileLocation</literal> - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory. It can contain standard rename patterns with the value.</para></listitem>
 						 <listitem><para><literal>numberEntries</literal> - The maximum number of entries in the feed. The default if not set is unlimited.</para></listitem>
 						 <listitem><para><literal>extensions</literal> - A comma separated list of media file extensions to accept.</para></listitem>
 						 <listitem><para><literal>restrictPattern</literal> - This can be used to restrict the media files. It can contain standard rename patterns with the value.</para></listitem>
@@ -236,8 +236,12 @@
                  </para>
                  <para>
                  	 Parameters can also have variable in them. These can be any of the following special variables:
-	                 <itemizedlist>	                    
-	                      	<listitem><para><literal>$HOME</literal> The current users home directory.</para></listitem>
+	                 <itemizedlist>	                 	                   
+	                      	<listitem><para><literal>$MEDIAFILE_NAME</literal> The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE_EXT</literal> The extension of the current media file been processed.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE_DIR</literal> The directory the current media file is in.</para></listitem>
+	                      	<listitem><para><literal>$MEDIAFILE</literal> The full path of the current media file.</para></listitem>
+	                        <listitem><para><literal>$HOME</literal> The current users home directory.</para></listitem>
 	                 </itemizedlist>                      	
                  </para>
             </sect2>

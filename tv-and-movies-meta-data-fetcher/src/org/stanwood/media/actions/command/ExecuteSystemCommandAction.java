@@ -17,8 +17,6 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.actions.rename.PatternException;
-import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -144,27 +142,8 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		if (deletedFile!=null) {
 			s = s.replaceAll("\\$DELETEDFILE", Matcher.quoteReplacement(deletedFile));
 		}
-		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
 
-		if (dir!=null && video!=null) {
-			String ext = FileHelper.getExtension(new File(s));
-			try {
-				PatternMatcher pm = new PatternMatcher();
-				if (video instanceof Film) {
-					s = pm.getNewFilmName(dir.getMediaDirConfig(), s, (Film)video, ext, null);
-				}
-				else if (video instanceof Episode) {
-					s = pm.getNewTVShowName(dir.getMediaDirConfig(), s, (Episode)video, ext);
-				}
-			} catch (PatternException e) {
-				throw new ActionException("Unable to translate pattern",e);
-			}
-		}
-
-
+		s = resolvePatterns(dir, s, video, mediaFile, null);
 		return s;
 	}
 

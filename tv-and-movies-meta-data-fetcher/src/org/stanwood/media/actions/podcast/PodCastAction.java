@@ -15,8 +15,6 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.actions.rename.PatternException;
-import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
@@ -30,7 +28,7 @@ import org.stanwood.media.util.FileHelper;
  * <p>This action supports the following parameters:
  * <ul>
  * <li>mediaDirURL - This is a required parameter that specifies the URL used to find the root media directory.</li>
- * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</li>
+ * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory. It can contain standard rename patterns with the value.</li>
  * <li>numberEntries - The maximum number of entries in the feed. The default if not set is unlimited.</li>
  * <li>extensions - A comma separated list of media file extensions to accept.</li>
  * <li>restrictPattern - This can be used to restrict the media files. It can contain standard rename patterns with the value.</li>
@@ -42,6 +40,10 @@ import org.stanwood.media.util.FileHelper;
  * Parameters can also have variable in them. The following variables cane be used:
  * <ul>
  * <li>$HOME - The current users home directory.</li>
+ * <li>$MEDIAFILE_NAME - The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</li>
+ * <li>$MEDIAFILE_EXT - The extension of the current media file been processed.</li>
+ * <li>$MEDIAFILE_DIR - The directory the current media file is in.</li>
+ * <li>$MEDIAFILE - The full path of the current media file.</li>
  * </ul>
  * </p>
  */
@@ -57,16 +59,17 @@ public class PodCastAction extends AbstractAction {
 	private final static String PARAM_FEED_TITLE_KEY = "feedTitle";
 	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription";
 
-	private List<IFeedFile>feedFiles = null;
+	private List<IFeedFile>feedFiles = new ArrayList<IFeedFile>();
 	private Integer numEntries = null;
 	private MediaDirectory dir;
 	private String fileLocation;
 	private String mediaDirUrl;
 	private String restricted;
 	private List<String> extensions;
-	private PatternMatcher pm = new PatternMatcher();
+
 	private String feedDescription = "";
 	private String feedTitle = "";
+	private File currentFeedFile = null;
 
 	/**
 	 * Used to setup the action and parse the podcast if it already exists
@@ -80,13 +83,19 @@ public class PodCastAction extends AbstractAction {
 			log.debug("Init PodCast Action");
 		}
 		this.dir = dir;
-		feedFiles = new ArrayList<IFeedFile>();
+	}
 
+	protected void parseFeed(IVideo video,File mediaFile,Integer part) throws ActionException {
 		try {
-			File feedFile = getFeedFile();
-
+			File feedFile = getFeedFile(video,mediaFile,part);
+			if (currentFeedFile !=null && feedFile.equals(currentFeedFile)) {
+				return ;
+			}
+			if (currentFeedFile!=null) {
+				writeFeed(currentFeedFile);
+			}
 			if (feedFile.exists()) {
-				RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig() );
+				RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,this.dir.getMediaDirConfig() );
 				rssFeed.parse();
 				feedFiles.addAll(rssFeed.getEntries());
 				Collections.sort(feedFiles, new Comparator<IFeedFile>() {
@@ -95,10 +104,42 @@ public class PodCastAction extends AbstractAction {
 						return o1.compareTo(o2);
 					}
 				});
+
 			}
+
+			currentFeedFile = feedFile;
 		}
 		catch (Exception e) {
 			throw new ActionException("Unable unable to parse RSS feed",e);
+		}
+	}
+
+	protected void writeFeed(File feedFile) throws ActionException {
+		if (isTestMode()) {
+			log.info("Podcast feed not written as in test mode: " + feedFile);
+			return;
+		}
+		try {
+			RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig());
+			rssFeed.createNewFeed();
+			rssFeed.setTitle(feedTitle);
+			rssFeed.setDescription(feedDescription);
+			rssFeed.setLink(new URL(mediaDirUrl));
+			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
+				@Override
+				public int compare(IFeedFile o1, IFeedFile o2) {
+					return o1.compareTo(o2);
+				}
+			});
+			for (IFeedFile file : feedFiles) {
+				rssFeed.addEntry(file);
+			}
+
+			rssFeed.write();
+			feedFiles = new ArrayList<IFeedFile>();
+			log.info("Written Podcast feed: " + feedFile);
+		} catch (Exception e) {
+			throw new ActionException("Unable to write pod case",e);
 		}
 	}
 
@@ -125,47 +166,42 @@ public class PodCastAction extends AbstractAction {
 	/** {@inheritDoc} */
 	@Override
 	public void perform(MediaDirectory dir, Episode episode, File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
+
 		String ext = FileHelper.getExtension(mediaFile);
 		if (extensions!=null) {
 			if (!extensions.contains(ext)) {
 				return;
 			}
 		}
-		try {
-			if (restricted!=null && !mediaFile.getAbsolutePath().startsWith(dir.getPath(pm.getNewTVShowName(dir.getMediaDirConfig(), restricted, episode,  ext)).getAbsolutePath())) {
+		if (restricted!=null) {
+			String r = resolvePatterns(dir,restricted,episode,mediaFile,null);
+			if (!mediaFile.getAbsolutePath().startsWith(dir.getPath(r).getAbsolutePath())) {
 				return;
 			}
-			perform(dir,(IVideo)episode,mediaFile,actionEventHandler);
-		} catch (PatternException e) {
-			throw new ActionException("Unable to calculate the '"+PARAM_RESTRICT_PATTERN+"' pattern",e);
 		}
-
-
+		parseFeed(episode,mediaFile,null);
+		perform(dir,(IVideo)episode,mediaFile,actionEventHandler);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,IActionEventHandler actionEventHandler) throws ActionException {
+
 		String ext = FileHelper.getExtension(mediaFile);
 		if (extensions!=null) {
 			if (!extensions.contains(ext)) {
 				return;
 			}
 		}
-		try {
-			if (restricted!=null && !mediaFile.getAbsolutePath().startsWith(dir.getPath(pm.getNewFilmName(dir.getMediaDirConfig(), restricted, film,  ext,part)).getAbsolutePath())) {
-				return;
-			}
-			perform(dir,film,mediaFile,actionEventHandler);
-		} catch (PatternException e) {
-			throw new ActionException("Unable to calculate the '"+PARAM_RESTRICT_PATTERN+"' pattern",e);
+		if (restricted!=null && !mediaFile.getAbsolutePath().startsWith(dir.getPath(resolvePatterns(dir,restricted, film,mediaFile,part)).getAbsolutePath())) {
+			return;
 		}
+		parseFeed(film,mediaFile,part);
+		perform(dir,film,mediaFile,actionEventHandler);
 	}
 
 	private void perform(MediaDirectory dir, IVideo video, File file,IActionEventHandler actionEventHandler) throws ActionException {
-
 		IFeedFile feedFile = FeedFileFactory.createFile(file,dir.getMediaDirConfig(),video,mediaDirUrl );
-
 		addFileToList(feedFile);
 	}
 
@@ -192,35 +228,15 @@ public class PodCastAction extends AbstractAction {
 	 */
 	@Override
 	public void finished(MediaDirectory dir) throws ActionException {
-		if (isTestMode()) {
-			return;
+		if (currentFeedFile!=null) {
+			writeFeed(currentFeedFile);
 		}
-		File feedFile = getFeedFile();
-		try {
-			RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig());
-			rssFeed.createNewFeed();
-			rssFeed.setTitle(feedTitle);
-			rssFeed.setDescription(feedDescription);
-			rssFeed.setLink(new URL(mediaDirUrl));
-			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
-				@Override
-				public int compare(IFeedFile o1, IFeedFile o2) {
-					return o1.compareTo(o2);
-				}
-			});
-			for (IFeedFile file : feedFiles) {
-				rssFeed.addEntry(file);
-			}
-
-			rssFeed.write();
-		} catch (Exception e) {
-			throw new ActionException("Unable to write pod case",e);
-		}
-		log.info("Written Podcast feed: " + feedFile);
 	}
 
-	private File getFeedFile() {
-		String loc = fileLocation;
+
+
+	private File getFeedFile(IVideo video,File mediaFile,Integer part) throws ActionException {
+		String loc = resolvePatterns(dir,fileLocation, video, mediaFile, part);
 		return dir.getPath(loc);
 	}
 
@@ -229,7 +245,7 @@ public class PodCastAction extends AbstractAction {
 	 * <p>
 	 * <ul>
 	 * <li>mediaDirURL - This is a required parameter that specifies the URL used to find the root media directory.</li>
-	 * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory.</li>
+	 * <li>fileLocation - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory. It can contain standard rename patterns with the value.</li>
 	 * <li>numberEntries - The maximum number of entries in the feed. The default if not set is unlimited.</li>
 	 * <li>extensions - A comma separated list of media file extensions to accept.</li>
 	 * <li>restrictPattern - This can be used to restrict the media files. It can contain standard rename patterns with the value.</li>
