@@ -604,6 +604,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "XBMCSource: "+id;
