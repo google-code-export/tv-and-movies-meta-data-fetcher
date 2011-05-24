@@ -3,6 +3,14 @@ package org.stanwood.media.actions;
 import java.io.File;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.PatternException;
+import org.stanwood.media.actions.rename.PatternMatcher;
+import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
+import org.stanwood.media.model.Mode;
+import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Helper class that actions should extends so that they only have to
@@ -10,6 +18,7 @@ import org.stanwood.media.MediaDirectory;
  */
 public abstract class AbstractAction implements IAction {
 
+	private final static PatternMatcher PM = new PatternMatcher();
 	private boolean testMode;
 
 	/** {@inheritDoc} */
@@ -38,6 +47,31 @@ public abstract class AbstractAction implements IAction {
 	/** {@inheritDoc} */
 	@Override
 	public void finished(MediaDirectory dir) throws ActionException {
+
+	}
+
+	protected String resolvePatterns(MediaDirectory dir,String input,IVideo video,File mediaFile,Integer part) throws ActionException {
+		String s = input;
+		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
+
+		if (video!=null && dir!=null) {
+			MediaDirConfig dirConfig = dir.getMediaDirConfig();
+			try {
+				String ext = FileHelper.getExtension(mediaFile);
+				if (dirConfig.getMode() == Mode.TV_SHOW) {
+					s = PM.getNewTVShowName(dirConfig, s, (Episode)video,  ext);
+				}
+				else {
+					s = PM.getNewFilmName(dirConfig, s, (Film)video,  ext,part);
+				}
+			} catch (PatternException e) {
+				throw new ActionException("Unable to resolve the pattern '"+input+"'",e);
+			}
+		}
+		return s;
 
 	}
 }
