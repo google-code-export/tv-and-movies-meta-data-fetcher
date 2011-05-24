@@ -165,7 +165,7 @@ public abstract class StreamProcessor {
 	}
 
 
-	public String unescapeHTML(String source) {
+	private String unescapeHTML(String source) {
 	      int i, j;
 
 	      boolean continueLoop;
