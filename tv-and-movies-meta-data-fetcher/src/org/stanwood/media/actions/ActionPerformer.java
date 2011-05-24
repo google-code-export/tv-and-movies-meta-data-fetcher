@@ -297,7 +297,7 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 			if (film==null) {
-				log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"'");
+				log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"' for file '" +file.getAbsolutePath()+"'");
 				return null;
 			}
 			if (!testMode) {
