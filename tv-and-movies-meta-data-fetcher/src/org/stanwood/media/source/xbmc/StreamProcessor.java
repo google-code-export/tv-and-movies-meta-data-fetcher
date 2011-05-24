@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -20,6 +22,34 @@ public abstract class StreamProcessor {
 
 	private Stream stream = null;
 	private String forcedContentType = null;
+
+	private static Map<String,String> HTML_ENTITIES;
+	  static {
+	    HTML_ENTITIES = new HashMap<String,String>();
+//	    HTML_ENTITIES.put("&lt;","<")    ; HTML_ENTITIES.put("&gt;",">");
+//	    HTML_ENTITIES.put("&amp;","&")   ; HTML_ENTITIES.put("&quot;","\"");
+	    HTML_ENTITIES.put("&agrave;","à"); HTML_ENTITIES.put("&Agrave;","À");
+	    HTML_ENTITIES.put("&acirc;","â") ; HTML_ENTITIES.put("&auml;","ä");
+	    HTML_ENTITIES.put("&Auml;","Ä")  ; HTML_ENTITIES.put("&Acirc;","Â");
+	    HTML_ENTITIES.put("&aring;","å") ; HTML_ENTITIES.put("&Aring;","Å");
+	    HTML_ENTITIES.put("&aelig;","æ") ; HTML_ENTITIES.put("&AElig;","Æ" );
+	    HTML_ENTITIES.put("&ccedil;","ç"); HTML_ENTITIES.put("&Ccedil;","Ç");
+	    HTML_ENTITIES.put("&eacute;","é"); HTML_ENTITIES.put("&Eacute;","É" );
+	    HTML_ENTITIES.put("&egrave;","è"); HTML_ENTITIES.put("&Egrave;","È");
+	    HTML_ENTITIES.put("&ecirc;","ê") ; HTML_ENTITIES.put("&Ecirc;","Ê");
+	    HTML_ENTITIES.put("&euml;","ë")  ; HTML_ENTITIES.put("&Euml;","Ë");
+	    HTML_ENTITIES.put("&iuml;","ï")  ; HTML_ENTITIES.put("&Iuml;","Ï");
+	    HTML_ENTITIES.put("&ocirc;","ô") ; HTML_ENTITIES.put("&Ocirc;","Ô");
+	    HTML_ENTITIES.put("&ouml;","ö")  ; HTML_ENTITIES.put("&Ouml;","Ö");
+	    HTML_ENTITIES.put("&oslash;","ø") ; HTML_ENTITIES.put("&Oslash;","Ø");
+	    HTML_ENTITIES.put("&szlig;","ß") ; HTML_ENTITIES.put("&ugrave;","ù");
+	    HTML_ENTITIES.put("&Ugrave;","Ù"); HTML_ENTITIES.put("&ucirc;","û");
+	    HTML_ENTITIES.put("&Ucirc;","Û") ; HTML_ENTITIES.put("&uuml;","ü");
+	    HTML_ENTITIES.put("&Uuml;","Ü")  ; HTML_ENTITIES.put("&nbsp;"," ");
+	    HTML_ENTITIES.put("&copy;","\u00a9");
+	    HTML_ENTITIES.put("&reg;","\u00ae");
+	    HTML_ENTITIES.put("&euro;","\u20a0");
+	  }
 
 	/**
 	 * Used to create a instance of the class.
@@ -87,7 +117,7 @@ public abstract class StreamProcessor {
 				StringWriter sw = null;
 				String data = null;
 				try {
-					r = new InputStreamReader(stream.getInputStream());
+					r = new InputStreamReader(stream.getInputStream(),stream.getCharset());
 					sw = new StringWriter();
 					char[] buffer = new char[1024];
 					for (int n; (n = r.read(buffer)) != -1; ) {
@@ -97,9 +127,9 @@ public abstract class StreamProcessor {
 					if (str.length()>0) {
 						data = str;
 
-//						if (contentType.equals("text/html")) {
-//							data = StringEscapeUtils.unescapeHtml(data);
-//						}
+						if (contentType.equals("text/html")) {
+							data = unescapeHTML(data);
+						}
 
 					}
 				}
@@ -117,7 +147,10 @@ public abstract class StreamProcessor {
 			}
 		}
 		catch (IOException e) {
-			throw new SourceException("Unable to read stream",e);
+			throw new SourceException("Unable to read stream for URL: " + stream.getURL(),e);
+		}
+		catch (SourceException e) {
+			throw new SourceException("Unable to read stream for URL: " + stream.getURL(),e);
 		}
 		finally {
 			if (stream!=null) {
@@ -129,6 +162,35 @@ public abstract class StreamProcessor {
 				stream = null;
 			}
 		}
+	}
+
+
+	public String unescapeHTML(String source) {
+	      int i, j;
+
+	      boolean continueLoop;
+	      int skip = 0;
+	      do {
+	         continueLoop = false;
+	         i = source.indexOf("&", skip);
+	         if (i > -1) {
+	           j = source.indexOf(";", i);
+	           if (j > i) {
+	             String entityToLookFor = source.substring(i, j + 1);
+	             String value = HTML_ENTITIES.get(entityToLookFor);
+	             if (value != null) {
+	               source = source.substring(0, i)
+	                        + value + source.substring(j + 1);
+	               continueLoop = true;
+	             }
+	             else if (value == null){
+	                skip = i+1;
+	                continueLoop = true;
+	             }
+	           }
+	         }
+	      } while (continueLoop);
+	      return source;
 	}
 
 	/**

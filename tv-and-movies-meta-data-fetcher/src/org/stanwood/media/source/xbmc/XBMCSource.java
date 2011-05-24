@@ -524,6 +524,7 @@ public class XBMCSource extends XMLParser implements ISource {
 				public void processContents(String contents) throws SourceException {
 					try {
 		    			Document doc = addon.getScraper(mode).getGetSearchResults(contents, name);
+//		    			System.out.println(XMLParser.domToStr(doc));
 						NodeList entities = XPathAPI.selectNodeList(doc, "*/entity");
 
 						for (int i=0;i<entities.getLength();i++) {
@@ -602,4 +603,11 @@ public class XBMCSource extends XMLParser implements ISource {
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 
 	}
+
+	@Override
+	public String toString() {
+		return "XBMCSource: "+id;
+	}
+
+
 }

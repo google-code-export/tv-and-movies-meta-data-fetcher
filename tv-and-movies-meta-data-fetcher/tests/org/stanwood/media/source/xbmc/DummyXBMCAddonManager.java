@@ -51,42 +51,42 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		System.out.println("Fetching URL: " + strUrl);
 		Matcher m = TVDB_SEARCH_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("tvdb-search-"+getSearchName(m.group(1))+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("tvdb-search-"+getSearchName(m.group(1))+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = THE_MOVIE_DB_SEARCH.matcher(strUrl);
 		if (m.matches()) {
 			String term = getSearchName(m.group(1));
 			term=term.replaceAll("\\+","-");
 			term=term.replaceAll("\\%..","");
-			return new Stream(Data.class.getResourceAsStream("themoviedb-search-"+term+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("themoviedb-search-"+term+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = THE_MOVIE_DB_IMDB_LOOKUP.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("themoviedb-imdbLookup-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = IDBM_COMBINED.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("imdb-combined-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("imdb-combined-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 		}
 		m = IDBM_POSTERS.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("imdb-posters-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("imdb-posters-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 		}
 		m = THE_MOVIE_DB_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("themoviedb-film-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = THE_MOVIE_DB_IMAGES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("themoviedb-images-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = IDBM_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("imdb-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm());
+			return new Stream(Data.class.getResourceAsStream("imdb-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		m = TVDB_SERIES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"application/zip","UTF-8",url.toExternalForm());
+			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"application/zip","UTF-8",url.toExternalForm(),url);
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}

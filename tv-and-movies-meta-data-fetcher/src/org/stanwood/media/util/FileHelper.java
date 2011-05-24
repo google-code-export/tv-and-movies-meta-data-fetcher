@@ -545,10 +545,10 @@ public class FileHelper {
 		WebFileInputStream is = new WebFileInputStream(url);
 		String MIME = is.getMIMEType();
 		if (MIME.equals("application/zip")) {
-			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm());
+			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm(),url);
 		}
 		else {
-			return new Stream(is,MIME,is.getCharset(),url.toExternalForm());
+			return new Stream(is,MIME,is.getCharset(),url.toExternalForm(),url);
 		}
 
 	}
