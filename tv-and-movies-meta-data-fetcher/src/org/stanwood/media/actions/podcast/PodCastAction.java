@@ -3,11 +3,12 @@ package org.stanwood.media.actions.podcast;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +60,8 @@ public class PodCastAction extends AbstractAction {
 	private final static String PARAM_FEED_TITLE_KEY = "feedTitle";
 	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription";
 
-	private List<IFeedFile>feedFiles = new ArrayList<IFeedFile>();
+//	private List<IFeedFile>feedFiles = new ArrayList<IFeedFile>();
+	private SortedSet<IFeedFile>feedFiles = null;
 	private Integer numEntries = null;
 	private MediaDirectory dir;
 	private String fileLocation;
@@ -78,11 +80,21 @@ public class PodCastAction extends AbstractAction {
 	 */
 	@Override
 	public void init(MediaDirectory dir) throws ActionException {
+		createNewFeedFiles();
 		validateParameters();
 		if (log.isDebugEnabled()) {
 			log.debug("Init PodCast Action");
 		}
 		this.dir = dir;
+	}
+
+	private void createNewFeedFiles() {
+		feedFiles = new TreeSet<IFeedFile>(new Comparator<IFeedFile>() {
+			@Override
+			public int compare(IFeedFile o1, IFeedFile o2) {
+				return o1.compareTo(o2);
+			}
+		});
 	}
 
 	protected void parseFeed(IVideo video,File mediaFile,Integer part) throws ActionException {
@@ -98,12 +110,12 @@ public class PodCastAction extends AbstractAction {
 				RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,this.dir.getMediaDirConfig() );
 				rssFeed.parse();
 				feedFiles.addAll(rssFeed.getEntries());
-				Collections.sort(feedFiles, new Comparator<IFeedFile>() {
-					@Override
-					public int compare(IFeedFile o1, IFeedFile o2) {
-						return o1.compareTo(o2);
-					}
-				});
+//				Collections.sort(feedFiles, new Comparator<IFeedFile>() {
+//					@Override
+//					public int compare(IFeedFile o1, IFeedFile o2) {
+//						return o1.compareTo(o2);
+//					}
+//				});
 
 			}
 
@@ -125,18 +137,18 @@ public class PodCastAction extends AbstractAction {
 			rssFeed.setTitle(feedTitle);
 			rssFeed.setDescription(feedDescription);
 			rssFeed.setLink(new URL(mediaDirUrl));
-			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
-				@Override
-				public int compare(IFeedFile o1, IFeedFile o2) {
-					return o1.compareTo(o2);
-				}
-			});
+//			Collections.sort(feedFiles, new Comparator<IFeedFile>() {
+//				@Override
+//				public int compare(IFeedFile o1, IFeedFile o2) {
+//					return o1.compareTo(o2);
+//				}
+//			});
 			for (IFeedFile file : feedFiles) {
 				rssFeed.addEntry(file);
 			}
 
 			rssFeed.write();
-			feedFiles = new ArrayList<IFeedFile>();
+			createNewFeedFiles();
 			log.info("Written Podcast feed: " + feedFile);
 		} catch (Exception e) {
 			throw new ActionException("Unable to write pod case",e);
@@ -206,13 +218,14 @@ public class PodCastAction extends AbstractAction {
 	}
 
 	protected void addFileToList(IFeedFile feedFile) {
-		int index = Collections.binarySearch(feedFiles,feedFile);
-		if (index < 0) {
-		    feedFiles.add(-index-1,feedFile);
-		}
-		else {
+//		int index = Collections.binarySearch(feedFiles,feedFile);
+//		if (index < 0) {
+//		    feedFiles.add(-index-1,feedFile);
+//		}
+//		else {
 			feedFiles.add(feedFile);
-		}
+//		}
+
 
 		if (numEntries!=null && feedFiles.size()>numEntries) {
 			Iterator<IFeedFile> it = feedFiles.iterator();
