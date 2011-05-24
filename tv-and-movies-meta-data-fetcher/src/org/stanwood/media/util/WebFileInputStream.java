@@ -71,6 +71,12 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 			else if (responseCode==500) {
 				throw new IOException("The server genereated a error for the '"+url.toExternalForm()+"'");
 			}
+			else if (responseCode==403) {
+				throw new IOException("The url '"+url.toExternalForm()+"' was forbidden");
+			}
+			else {
+				throw new IOException("Unable to read teh contens of the url '"+url.toExternalForm()+"' as it retured a responce of "+responseCode);
+			}
 		}
 
 		final String type = conn.getContentType();
