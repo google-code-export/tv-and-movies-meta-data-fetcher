@@ -977,10 +977,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern,File rootMediaDir) throws XMLParserException {
 		SearchResult result = null;
 
+		String query = quoteXPathQuery(makePathRelativeToMediaDir(episodeFile,rootMediaDir));
 		// search for show by file name
-		NodeList showNodes = selectNodeList(store,"show/file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(episodeFile,rootMediaDir))+"]");
+		NodeList showNodes = selectNodeList(store,"show/season/episode/file[@location="+query+"]");
 		if (showNodes!=null && showNodes.getLength()>0) {
-			Element showEl = (Element)showNodes.item(0).getParentNode();
+			Element showEl = (Element)showNodes.item(0).getParentNode().getParentNode().getParentNode();
 			Integer part = null;
 			if (!((Element)showNodes.item(0)).getAttribute("part").equals("")) {
 				part = Integer.parseInt(((Element)showNodes.item(0)).getAttribute("part"));
