@@ -3,7 +3,6 @@ package org.stanwood.media.search;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,10 +19,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_YEAR2 = Pattern.compile("(^.+)\\.(\\d\\d\\d\\d)\\.(.*$)");
 	private final static Pattern PATTERN_EXT = Pattern.compile("(^.*)\\.(.+)$");
 	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$");
-	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
-
-	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"};
-
 
 	static {
 		strategies.add(new ReversePatternSearchStrategy(Token.TITLE,true));
@@ -46,12 +41,12 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder end= new StringBuilder(m.group(3));
 						SearchHelper.replaceWithSpaces(start);
 						SearchHelper.replaceWithSpaces(end);
-						if (hasIgnoredTokens(start)) {
+						if (SearchHelper.hasIgnoredTokens(start)) {
 							term.delete(0, term.length());
 							term.append(end);
 							return new SearchDetails(term.toString().trim(), year,null);
 						}
-						else if (hasIgnoredTokens(end)) {
+						else if (SearchHelper.hasIgnoredTokens(end)) {
 							term.delete(0, term.length());
 							term.append(start);
 							return new SearchDetails(term.toString().trim(), year,null);
@@ -73,9 +68,9 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 				String year = extractYear(term);
 				Integer part = SearchHelper.extractPart(term);
 				removeUpToHyphon(term);
-				removeIgnoredTokens(term);
+				SearchHelper.removeIgnoredTokens(term);
 				SearchHelper.replaceWithSpaces(term);
-				trimRubishFromEnds(term);
+				SearchHelper.trimRubishFromEnds(term);
 
 				String sTerm = term.toString();
 				if (sTerm.length()==0) {
@@ -119,37 +114,6 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			term.delete(0, term.length());
 			term.append(first);
 		}
-	}
-
-	private static void removeIgnoredTokens(StringBuilder term) {
-		for (String it : IGNORED_TOKENS) {
-			int pos = -1;
-			while ((pos = term.indexOf(it))!=-1) {
-				term.replace(pos, pos+it.length(), "");
-			}
-		}
-	}
-
-	private static void trimRubishFromEnds(StringBuilder term) {
-		Matcher m = PATTERN_STRIP_CHARS.matcher(term);
-		if (m.matches()) {
-			String first = m.group(1);
-			term.delete(0, term.length());
-			term.append(first);
-		}
-	}
-
-	private static boolean hasIgnoredTokens(StringBuilder term) {
-		StringTokenizer tok = new StringTokenizer(term.toString()," -");
-		while (tok.hasMoreTokens()) {
-			String token = tok.nextToken();
-			for (String it : IGNORED_TOKENS) {
-				if (token.equalsIgnoreCase(it)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
