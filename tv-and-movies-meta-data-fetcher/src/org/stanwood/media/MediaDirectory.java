@@ -281,14 +281,20 @@ public class MediaDirectory {
 			log.info("Reading episode from sources");
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
-					episode = source.getEpisode(season, episodeNum,episodeFile);
-					if (episode != null) {
-						for (IStore store : stores) {
-							store.cacheEpisode(rootMediaDir,episodeFile, episode);
+				try {
+					if (source.getSourceId().equals(sourceId)) {
+						episode = source.getEpisode(season, episodeNum,episodeFile);
+						if (episode != null) {
+							for (IStore store : stores) {
+								store.cacheEpisode(rootMediaDir,episodeFile, episode);
+							}
+							break;
 						}
-						break;
 					}
+				}
+				catch (SourceException e) {
+					log.error(e.getMessage(),e);
+					return null;
 				}
 			}
 		}
