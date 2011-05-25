@@ -23,7 +23,7 @@ public class BaseCLITest extends XBMCAddonTestBase {
 	 * @throws Exception Thrown if their are any problems
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setBaseCLITest() throws Exception {
 		CLIManageAddons.setExitHandler(new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {
@@ -47,7 +47,7 @@ public class BaseCLITest extends XBMCAddonTestBase {
 	 */
 	protected void reset() throws Exception{
 		tearDown();
-		setUp();
+		setBaseCLITest();
 	}
 
 

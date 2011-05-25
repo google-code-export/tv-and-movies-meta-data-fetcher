@@ -44,7 +44,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @throws Exception Thrown if their are any problems
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUpApp() throws Exception {
 		CLIMediaManager.setExitHandler(new IExitHandler() {
 			@Override
 			public void exit(int exitCode) {

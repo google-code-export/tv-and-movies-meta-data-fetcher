@@ -355,6 +355,7 @@
 		</zip>
 		
 		<!-- Create a native mac installer -->
+		<!--
 		<copy todir="${dist.dir}/wrappers/izpack2app">
 			<fileset dir="${installer.dir}/Mac-App-Template" includes="**/*"/>
 		</copy>
@@ -367,6 +368,7 @@
 		</exec>
 		
 		<delete dir="${dist.dir}/wrappers"/>
+		-->
 	</target>
 
 	<target name="dist" depends="clean,run-tests,javadoc,docs,jars,installer"/>	
