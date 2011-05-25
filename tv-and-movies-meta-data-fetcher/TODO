@@ -4,11 +4,7 @@ TODO
 Version 2.0
 -----------
 	 
-*Inprogress*    - Create macosx installer
-					- Also update install guide
 *Needs Testing* - Test generated podcasts with iTunes
-*Needs Testing* - Test TV Show renaming
-*Needs Testing* - Test MP4 store with TV Shows
 
 Version 2.0.1
 -------------
@@ -16,6 +12,8 @@ Version 2.0.1
 Bug fixes
 Add a getting started guide and link to a button in the installer
 Add more linux distribution packages.
+Make application translateable
+Make native MacOSX installer
 
 Version 2.1
 -----------

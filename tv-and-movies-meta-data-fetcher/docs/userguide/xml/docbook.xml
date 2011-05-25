@@ -295,8 +295,11 @@
 				<itemizedlist>
 	               	<listitem><para><literal>&apptitle;-&version;-install.sh</literal> - Linux installer</para></listitem>
 	               	<listitem><para><literal>&apptitle;-&version;-install.windows.zip</literal> - Windows installer</para></listitem>
-	               	<listitem><para><literal>&apptitle;-&version;-install.macosx.dmg</literal> - Mac OSX installer</para></listitem>
+	               	<listitem><para><literal>&apptitle;-&version;-install.jar</literal> - Any Platform installer (including Mac OSX)</para></listitem>
 	            </itemizedlist>
+			</para>
+			<para>
+				More installation guides can be found on the <ulink url="http://code.google.com/p/tv-and-movies-meta-data-fetcher/w/list">&apptitle; Wiki</ulink>
 			</para>
 		</sect1>
 	</chapter>
