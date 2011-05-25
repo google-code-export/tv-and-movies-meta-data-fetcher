@@ -97,8 +97,8 @@ public class PodCastAction extends AbstractAction {
 	}
 
 	protected void parseFeed(IVideo video,File mediaFile,Integer part) throws ActionException {
+		File feedFile = getFeedFile(video,mediaFile,part);
 		try {
-			File feedFile = getFeedFile(video,mediaFile,part);
 			if (currentFeedFile !=null && feedFile.equals(currentFeedFile)) {
 				return ;
 			}
@@ -118,7 +118,7 @@ public class PodCastAction extends AbstractAction {
 			currentFeedFile = feedFile;
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable unable to parse RSS feed",e);
+			throw new ActionException("Unable to parse RSS feed: " + feedFile ,e);
 		}
 	}
 
