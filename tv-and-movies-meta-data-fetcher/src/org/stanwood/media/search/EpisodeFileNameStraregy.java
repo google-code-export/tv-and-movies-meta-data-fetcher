@@ -26,21 +26,28 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 
 		Matcher m = PATTERN_EP1.matcher(term);
 		if (m.matches()) {
-			return new SearchDetails(m.group(1), null, null);
+			return createSearchDetails(m.group(1));
 		}
 		m = PATTERN_EP2.matcher(term);
 		if (m.matches()) {
-			return new SearchDetails(m.group(1), null, null);
+			return createSearchDetails(m.group(1));
 		}
 		m = PATTERN_EP3.matcher(term);
 		if (m.matches()) {
-			return new SearchDetails(m.group(1), null, null);
+			return createSearchDetails(m.group(1));
 		}
 		m = PATTERN_EP4.matcher(term);
 		if (m.matches()) {
-			return new SearchDetails(m.group(1), null, null);
+			return createSearchDetails(m.group(1));
 		}
 		return null;
+	}
+
+	protected SearchDetails createSearchDetails(String rawTerm) {
+		StringBuilder term = new StringBuilder(rawTerm);
+		SearchHelper.removeIgnoredTokens(term);
+		SearchHelper.trimRubishFromEnds(term);
+		return new SearchDetails(term.toString(), null, null);
 	}
 
 }

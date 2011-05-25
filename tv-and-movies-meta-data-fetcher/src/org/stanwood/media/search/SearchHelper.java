@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.search;
 
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,9 @@ public class SearchHelper {
 	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
 
 	private static final String STRIPED_CHARS[] = {"?","'",","};
+
+	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"};
+	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
 
 	/**
 	 * This is a helper method that will replace the dot's sometimes found in place of spaces of filenames.
@@ -141,5 +145,49 @@ public class SearchHelper {
 			term.append(last);
 		}
 		return part;
+	}
+
+	/**
+	 * Used to remove tokens that should be ignored from a search term
+	 * @param term The search term
+	 */
+	public static void removeIgnoredTokens(StringBuilder term) {
+		for (String it : IGNORED_TOKENS) {
+			int pos = -1;
+			while ((pos = term.indexOf(it))!=-1) {
+				term.replace(pos, pos+it.length(), "");
+			}
+		}
+	}
+
+	/**
+	 * Used to check if a search term has ignored tokens
+	 * @param term The search term
+	 * @return True if ignore tokens are found
+	 */
+	public static boolean hasIgnoredTokens(StringBuilder term) {
+		StringTokenizer tok = new StringTokenizer(term.toString()," -");
+		while (tok.hasMoreTokens()) {
+			String token = tok.nextToken();
+			for (String it : IGNORED_TOKENS) {
+				if (token.equalsIgnoreCase(it)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Used to strip white space from either end of the search terms
+	 * @param term The search term
+	 */
+	public static void trimRubishFromEnds(StringBuilder term) {
+		Matcher m = PATTERN_STRIP_CHARS.matcher(term);
+		if (m.matches()) {
+			String first = m.group(1);
+			term.delete(0, term.length());
+			term.append(first);
+		}
 	}
 }
