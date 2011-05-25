@@ -133,14 +133,20 @@ public class MediaDirectory {
 			URL showUrl = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
-				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
-					show = source.getShow(searchResult.getId(),showUrl,episodeFile);
-					if (show != null) {
-						for (IStore store : stores) {
-							store.cacheShow(rootMediaDir,episodeFile, show);
+				try {
+					if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
+						show = source.getShow(searchResult.getId(),showUrl,episodeFile);
+						if (show != null) {
+							for (IStore store : stores) {
+								store.cacheShow(rootMediaDir,episodeFile, show);
+							}
+							break;
 						}
-						break;
 					}
+				}
+				catch (SourceException e) {
+					log.error(e.getMessage(),e);
+					return null;
 				}
 			}
 		}
@@ -182,16 +188,22 @@ public class MediaDirectory {
 			URL url = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
-					film = source.getFilm(searchResult.getId(),url,filmFile);
-					if (film != null) {
-						for (IStore store : stores) {
-							if (!controller.isTestRun()) {
-								store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+				try {
+					if (source.getSourceId().equals(sourceId)) {
+						film = source.getFilm(searchResult.getId(),url,filmFile);
+						if (film != null) {
+							for (IStore store : stores) {
+								if (!controller.isTestRun()) {
+									store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+								}
 							}
+							break;
 						}
-						break;
 					}
+				}
+				catch (SourceException e) {
+					log.error(e.getMessage(),e);
+					return null;
 				}
 			}
 		}
@@ -232,14 +244,20 @@ public class MediaDirectory {
 		if (season == null) {
 			log.info("Reading season from sources");
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
-					season = source.getSeason(show, seasonNum);
-					if (season != null) {
-						for (IStore store : stores) {
-							store.cacheSeason(rootMediaDir,episodeFile, season);
+				try {
+					if (source.getSourceId().equals(sourceId)) {
+						season = source.getSeason(show, seasonNum);
+						if (season != null) {
+							for (IStore store : stores) {
+								store.cacheSeason(rootMediaDir,episodeFile, season);
+							}
+							break;
 						}
-						break;
 					}
+				}
+				catch (SourceException e) {
+					log.error(e.getMessage(),e);
+					return null;
 				}
 			}
 		}
