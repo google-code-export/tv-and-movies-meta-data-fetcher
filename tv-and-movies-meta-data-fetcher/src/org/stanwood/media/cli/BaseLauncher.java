@@ -224,7 +224,7 @@ public abstract class BaseLauncher implements ICLICommand {
 
 	protected void fatal(Exception e) {
 		if (e instanceof StanwoodException) {
-			fatal(((StanwoodException)e).printException());
+			fatal(((StanwoodException)e).printException(null));
 		}
 		else {
 			fatal(e.getMessage());
