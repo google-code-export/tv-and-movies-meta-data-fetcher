@@ -89,6 +89,28 @@ public class SearchHelper {
 	}
 
 	/**
+	 * This is used to replace hyphens characters with spaces in the search term
+	 * @param term The search term
+	 */
+	public static void replaceHyphens(StringBuilder term) {
+		int pos = -1;
+		int currentPos = 0;
+		while ((pos = term.indexOf("-",currentPos))!=-1) {
+			boolean doit=true;
+			if (pos>=0 && term.charAt(pos-1)==' ') {
+				doit = false;
+			}
+			if (pos+1<term.length() && term.charAt(pos+1)==' ') {
+				doit = false;
+			}
+			if (doit) {
+				term.replace(pos, pos+1, " ");
+			}
+			currentPos = pos+1;
+		}
+	}
+
+	/**
 	 * This is used to replace word seperator characters such as underscores with spaces.
 	 * @param term The search term
 	 */
