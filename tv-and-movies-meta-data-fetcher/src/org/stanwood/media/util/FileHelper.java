@@ -583,7 +583,11 @@ public class FileHelper {
 	 */
 	public static String getExtension(File file) {
 		String fileName = file.getAbsolutePath();
-		return fileName.substring(fileName.lastIndexOf(".")+1);
+		int pos = fileName.lastIndexOf(".");
+		if (pos==-1) {
+			return "";
+		}
+		return fileName.substring(pos+1);
 	}
 
 	/**
@@ -593,7 +597,11 @@ public class FileHelper {
 	 */
 	public static String getName(File file) {
 		String fileName = file.getName();
-		return fileName.substring(0,fileName.lastIndexOf("."));
+		int pos = fileName.lastIndexOf(".");
+		if (pos==-1) {
+			return fileName;
+		}
+		return fileName.substring(0,pos);
 	}
 
 
