@@ -18,6 +18,7 @@ Make native MacOSX installer
 Version 2.1
 -----------
 
+Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins. 
 Encode rating into MP4's
 Updated to latest version of MP4 parser

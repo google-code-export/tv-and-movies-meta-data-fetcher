@@ -59,13 +59,17 @@ public class StanwoodException extends Exception {
 	}
 
 	/**
-	 * Used to pretty print the exception details and it's causes
+	 * Used to pretty print the exception details and it's causes. If the message is the same as
+	 * the start root message, then it's not printed.
+	 * @param msg If a message is been logged, then this is the message. Otherwise false
 	 * @return the pretty print results
 	 */
-	public String printException() {
+	public String printException(String msg) {
 		StringBuilder result = new StringBuilder();
 
-		result.append(getLocalizedMessage());
+		if (msg==null || !msg.equals(getLocalizedMessage())) {
+			result.append(getLocalizedMessage());
+		}
 		Throwable cause = this;
 		while (true) {
 			if (cause.getCause()==null || cause.getCause()==cause) {

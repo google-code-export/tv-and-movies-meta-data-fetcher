@@ -200,8 +200,8 @@ public class StreamAppender extends AppenderSkeleton {
 	 */
 	protected void subAppend(LoggingEvent event) {
 		PrintStream stream = getStream(event.getLevel());
-		stream.print(this.layout.format(event));
-
+		String msg = this.layout.format(event);
+		stream.print(msg);
 
 		if (layout.ignoresThrowable()) {
 			boolean renderStack = true;
@@ -222,7 +222,7 @@ public class StreamAppender extends AppenderSkeleton {
 				}
 			}
 			else {
-				stream.print(((StanwoodException)event.getThrowableInformation().getThrowable()).printException());
+				stream.print(((StanwoodException)event.getThrowableInformation().getThrowable()).printException(msg));
 				stream.print(Layout.LINE_SEP);
 			}
 		}
