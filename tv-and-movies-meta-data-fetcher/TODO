@@ -5,6 +5,7 @@ Version 2.0
 -----------
 	 
 *Needs Testing* - Test generated podcasts with iTunes
+					- URL encode url's
 
 Version 2.0.1
 -------------
