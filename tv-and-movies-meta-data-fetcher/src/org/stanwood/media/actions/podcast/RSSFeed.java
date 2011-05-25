@@ -153,7 +153,11 @@ public class RSSFeed {
 		List<SyndEntry> rssEntries = feed.getEntries();
 		for (SyndEntry rssE : rssEntries) {
 			File file = new File(dirConfig.getMediaDir(),rssE.getLink().substring(baseUrl.length()+1));
-			files.add(FeedFileFactory.createFile(file, dirConfig, rssE.getTitle(),rssE.getDescription().getValue(), baseUrl));
+			String description = "";
+			if (rssE.getDescription()!=null) {
+				description = rssE.getDescription().getValue();
+			}
+			files.add(FeedFileFactory.createFile(file, dirConfig, rssE.getTitle(),description, baseUrl));
 		}
 		return files;
 	}
