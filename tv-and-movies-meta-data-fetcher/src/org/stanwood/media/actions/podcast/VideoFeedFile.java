@@ -1,8 +1,10 @@
 package org.stanwood.media.actions.podcast;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import org.stanwood.media.setup.MediaDirConfig;
@@ -27,8 +29,9 @@ public class VideoFeedFile implements IFeedFile {
 	 * @param baseUrl The base URL of the feed
 	 * @param contentType The content type of the file
 	 * @throws MalformedURLException Thrown if their is a problem create URL's
+	 * @throws UnsupportedEncodingException Thrown if the URL can't be encoded
 	 */
-	public VideoFeedFile(File file,MediaDirConfig dirConfig, String title,String description, String baseUrl,String contentType) throws MalformedURLException {
+	public VideoFeedFile(File file,MediaDirConfig dirConfig, String title,String description, String baseUrl,String contentType) throws MalformedURLException, UnsupportedEncodingException {
 		this.file = file;
 		this.contentType =contentType;
 		this.title = title;
@@ -38,7 +41,7 @@ public class VideoFeedFile implements IFeedFile {
 		if (!File.separator.equals("/")) {
 			relPath = relPath.replaceAll("\\"+File.separator, "/");
 		}
-		url = new URL(baseUrl+"/"+relPath);
+		url = new URL(URLEncoder.encode(baseUrl+"/"+relPath,"UTF-8"));
 	}
 
 	/** {@inheritDoc} */

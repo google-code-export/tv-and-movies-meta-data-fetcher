@@ -26,7 +26,11 @@ public enum Token {
 	/** the token for "part number" */
 	PART('p',"(\\d+)",ValueType.INTEGER),
 	/** the token for the "year" */
-	YEAR('y',"(\\d+)",ValueType.INTEGER);
+	YEAR('y',"(\\d+)",ValueType.INTEGER),
+	/** the token for the show or film image URL */
+	IMAGE('i',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING),
+	/** the token for the show or film short summary */
+	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING);
 
 	private char tok;
 	private String pattern;

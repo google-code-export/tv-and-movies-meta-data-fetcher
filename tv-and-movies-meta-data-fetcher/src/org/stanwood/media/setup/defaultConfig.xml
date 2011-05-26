@@ -76,6 +76,8 @@
                 <param name="numberEntries" value="5"/>
                 <param name="fileLocation" value="%n/rss.xml"/>
                 <param name="extensions" value="avi,mkv,mp4,m4v"/>
+                <param name="feedDescription" value="%u"/>
+                <param name="feedTitle" value="%n"/>
             </action>
 		</actions>		
 	</mediaDirectory>

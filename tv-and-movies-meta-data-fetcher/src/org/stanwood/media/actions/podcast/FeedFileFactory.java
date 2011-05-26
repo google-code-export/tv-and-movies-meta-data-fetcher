@@ -1,6 +1,7 @@
 package org.stanwood.media.actions.podcast;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.actions.ActionException;
@@ -54,6 +55,8 @@ public class FeedFileFactory {
 			throw new ActionException("Unsupport file format '"+ext+"' of file '"+file.getAbsolutePath()+"'");
 		}
 		catch (MalformedURLException e) {
+			throw new ActionException("Unable to create media file URL",e);
+		} catch (UnsupportedEncodingException e) {
 			throw new ActionException("Unable to create media file URL",e);
 		}
 	}
