@@ -70,7 +70,10 @@ public class PodCastAction extends AbstractAction {
 
 	private String feedDescription = "";
 	private String feedTitle = "";
+
 	private File currentFeedFile = null;
+	private Integer currentPart = null;
+	private IVideo currentVideo = null;
 
 	/**
 	 * Used to setup the action and parse the podcast if it already exists
@@ -116,6 +119,8 @@ public class PodCastAction extends AbstractAction {
 			}
 
 			currentFeedFile = feedFile;
+			currentVideo = video;
+			currentPart = part;
 		}
 		catch (Exception e) {
 			throw new ActionException("Unable to parse RSS feed: " + feedFile ,e);
@@ -148,8 +153,8 @@ public class PodCastAction extends AbstractAction {
 		try {
 			RSSFeed rssFeed = new RSSFeed(feedFile,mediaDirUrl,dir.getMediaDirConfig());
 			rssFeed.createNewFeed();
-			rssFeed.setTitle(feedTitle);
-			rssFeed.setDescription(feedDescription);
+			rssFeed.setTitle(resolvePatterns(dir, feedTitle, currentVideo, currentFeedFile, currentPart));
+			rssFeed.setDescription(resolvePatterns(dir, feedDescription, currentVideo, currentFeedFile, currentPart));
 			rssFeed.setLink(new URL(mediaDirUrl));
 			for (IFeedFile file : feedFiles) {
 				rssFeed.addEntry(file);

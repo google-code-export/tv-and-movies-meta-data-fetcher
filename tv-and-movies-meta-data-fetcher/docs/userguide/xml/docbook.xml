@@ -230,8 +230,8 @@
 						 <listitem><para><literal>numberEntries</literal> - The maximum number of entries in the feed. The default if not set is unlimited.</para></listitem>
 						 <listitem><para><literal>extensions</literal> - A comma separated list of media file extensions to accept.</para></listitem>
 						 <listitem><para><literal>restrictPattern</literal> - This can be used to restrict the media files. It can contain standard rename patterns with the value.</para></listitem>
-						 <listitem><para><literal>feedTitle</literal> - Used to give a title to the RSS feed.</para></listitem>
-						 <listitem><para><literal>feedDescription</literal> - Used to give a description to the RSS feed.</para></listitem>                 	
+						 <listitem><para><literal>feedTitle</literal> - Used to give a title to the RSS feed. It can contain standard rename patterns with the value.</para></listitem>
+						 <listitem><para><literal>feedDescription</literal> - Used to give a description to the RSS feed. It can contain standard rename patterns with the value.</para></listitem>                 	
                      </itemizedlist>                  
                  </para>
                  <para>
@@ -251,7 +251,13 @@
                      This action is used to rename media files in a media directory based on a pattern 
                      found in the configuration file. The action can also move the file to different
                      directory if the pattern has directories in it.               
-                 </para>                               
+                 </para>
+                 <para> 
+                 This action supports the following parameters:
+                 	    <itemizedlist>
+						      <listitem><para><literal>pruneEmptyFolders</literal> - If true, then after renaming, empty folders will be deleted.</para></listitem>
+                        </itemizedlist>                      	
+                 </para>                        
             </sect2>
 		</sect1>
 	</chapter>
@@ -435,6 +441,8 @@
  						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
  						<listitem><para><literal>%p</literal> - part number</para></listitem>
  						<listitem><para><literal>%y</literal> - year</para></listitem>
+ 						<listitem><para><literal>%i</literal> - the show or film image URL</para></listitem>
+ 						<listitem><para><literal>%u</literal> - the show or film short summary</para></listitem>
  						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
 					</itemizedlist>
 				</para>	
@@ -580,6 +588,8 @@
                 <param name="numberEntries" value="5"/>
                 <param name="fileLocation" value="%n/rss.xml"/>
                 <param name="extensions" value="avi,mkv,mp4,m4v"/>
+                <param name="feedDescription" value="%u"/>
+                <param name="feedTitle" value="%n"/>
             </action>
 		</actions>		
 	</mediaDirectory>

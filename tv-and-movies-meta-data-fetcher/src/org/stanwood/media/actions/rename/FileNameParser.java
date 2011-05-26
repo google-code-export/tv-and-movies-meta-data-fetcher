@@ -55,8 +55,7 @@ public class FileNameParser {
 			Pattern.compile("^([\\d])[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile("^([\\d]{1,2})[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*season\\s([\\d]+)\\sepisode\\s([\\d]+).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*S([\\d]{2,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*S([\\d]{1,1}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
+			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
 			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE)
 	};

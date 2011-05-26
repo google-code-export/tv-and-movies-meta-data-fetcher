@@ -51,6 +51,12 @@ public class PatternMatcher {
 		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(film.getId()));
 		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
 		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(film.getTitle()));
+		if (film.getSummary()!=null) {
+			newName = newName.replaceAll(Token.SUMMARY.getFull(), normalizeText(film.getSummary()));
+		}
+		if (film.getImageURL()!=null) {
+			newName = newName.replaceAll(Token.IMAGE.getFull(), normalizeText(film.getImageURL().toExternalForm()));
+		}
 		if (part!=null) {
 			newName = newName.replaceAll(Token.PART.getFull(), String.valueOf(part));
 		}
@@ -72,6 +78,12 @@ public class PatternMatcher {
 		newName = newName.replaceAll(Token.EPISODE.getFull(), episodeNum);
 		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
 		newName = newName.replaceAll(Token.SHOW_NAME.getFull(), normalizeText(show.getName()));
+		if (show.getShortSummary()!=null) {
+			newName = newName.replaceAll(Token.SUMMARY.getFull(), normalizeText(show.getShortSummary()));
+		}
+		if (show.getImageURL()!=null) {
+			newName = newName.replaceAll(Token.IMAGE.getFull(), normalizeText(show.getImageURL().toExternalForm()));
+		}
 		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(episode.getTitle()));
 		newName = newName.replaceAll(Token.EXT.getFull(), normalizeText(ext));
 		if (episode.getDate()!=null) {
