@@ -180,7 +180,7 @@ public class RenameAction extends AbstractAction {
 			List<File> files = FileHelper.listFiles(dir);
 			if (files.size()==0) {
 				try {
-					if (!isTestMode()) {
+					if (isTestMode()) {
 						log.info("Empty directory '"+dir.getAbsolutePath()+"' not deleted as in test mode");
 					}
 					else {
