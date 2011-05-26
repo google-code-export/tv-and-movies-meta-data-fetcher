@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -162,7 +163,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			}
 
 			ActionPerformer renamer = new ActionPerformer(actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
-			renamer.performActions(newFiles);
+			renamer.performActions(newFiles,new HashSet<File>());
 
 			return true;
 		} catch (ActionException e) {

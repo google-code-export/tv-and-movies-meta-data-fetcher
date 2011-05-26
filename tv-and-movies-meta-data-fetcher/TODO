@@ -15,6 +15,7 @@ Add a getting started guide and link to a button in the installer
 Add more linux distribution packages.
 Make application translateable
 Make native MacOSX installer
+Make native Windows installer
 
 Version 2.1
 -----------
