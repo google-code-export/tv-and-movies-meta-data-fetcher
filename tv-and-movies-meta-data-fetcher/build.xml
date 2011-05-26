@@ -348,7 +348,7 @@
 		<chmod file="${dist.dir}/wrappers/izpack2exe/upx" perm="ugo+x"/>
 		
 		<exec dir="${dist.dir}/wrappers/izpack2exe" executable="./izpack2exe.py" failonerror="true">
-			<arg value="--file=&quot;${installer.dir}/install.xml&quot;"/>
+			<arg value="- -file=&quot;${installer.dir}/install.xml&quot;"/>
 		</exec>
 		
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-install-windows.zip" compress="true">
