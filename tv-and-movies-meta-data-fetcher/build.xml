@@ -340,6 +340,7 @@
 		<chmod file="${dist.dir}/${ant.project.name}-${project.version}-install.sh" perm="ugo+rx"/>
 		
 		<!-- Make a native setup.exe out of the installer -->
+		<!--
 		<unzip src="${installer.dir}/installer-wrappers.zip" dest="${dist.dir}"/>		
 		<chmod file="${dist.dir}/wrappers/izpack2exe/izpack2exe.py" perm="ugo+x"/>
 		<chmod file="${dist.dir}/wrappers/izpack2exe/7za" perm="ugo+x"/>
@@ -353,6 +354,7 @@
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-install-windows.zip" compress="true">
 			<zipfileset file="${dist.dir}/wrappers/izpack2exe/setup.exe" prefix=""/>
 		</zip>
+		-->
 		
 		<!-- Create a native mac installer -->
 		<!--
