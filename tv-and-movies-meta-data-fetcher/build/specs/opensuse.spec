@@ -1,5 +1,5 @@
 #
-# spec file for package MediaManager 1.98
+# spec file for package MediaManager %%version%%
 #
 # Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
@@ -44,6 +44,7 @@ BuildRequires:  xmlgraphics-batik >= 1.7
 %endif
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
+Release:        0
 License:        GPL
 Group:          Applications/Internet
 URL:            http://code.google.com/p/tv-and-movies-meta-data-fetcher/

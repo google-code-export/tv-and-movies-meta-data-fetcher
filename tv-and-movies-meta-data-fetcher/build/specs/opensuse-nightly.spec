@@ -1,5 +1,5 @@
 #
-# spec file for package MediaManager 1.98
+# spec file for package MediaManager %%version%%
 #
 # Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
