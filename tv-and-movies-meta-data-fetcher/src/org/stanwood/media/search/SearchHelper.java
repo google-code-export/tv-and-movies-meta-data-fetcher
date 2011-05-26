@@ -154,7 +154,7 @@ public class SearchHelper {
 	public static void removeIgnoredTokens(StringBuilder term) {
 		for (String it : IGNORED_TOKENS) {
 			int pos = -1;
-			while ((pos = term.indexOf(it))!=-1) {
+			while ((pos = term.toString().toLowerCase().indexOf(it.toLowerCase()))!=-1) {
 				term.replace(pos, pos+it.length(), "");
 			}
 		}
