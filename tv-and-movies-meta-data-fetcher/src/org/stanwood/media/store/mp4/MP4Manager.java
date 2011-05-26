@@ -186,6 +186,7 @@ public class MP4Manager implements IMP4Manager {
 	}
 
 	private void update(File mp4File, List<Atom> atoms) throws MP4Exception {
+		log.info("Updating metadata in MP4 file: "+mp4File);
 		Properties properties = getProperties();
 		IsoFile isoFile = getIsoFile(mp4File,properties);
 		FileOutputStream os = null;
