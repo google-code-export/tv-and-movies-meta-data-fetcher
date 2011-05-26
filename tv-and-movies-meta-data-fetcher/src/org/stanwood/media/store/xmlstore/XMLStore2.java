@@ -680,10 +680,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void parseRating(IVideoRating film, Element node) throws XMLParserException {
-		int numberOfVotes = getIntegerFromXML(node, "rating/@numberOfVotes");
-		float rating = getFloatFromXML(node, "rating/@value");
+		try {
+			int numberOfVotes = getIntegerFromXML(node, "rating/@numberOfVotes");
+			float rating = getFloatFromXML(node, "rating/@value");
 
-		film.setRating(new Rating(rating,numberOfVotes));
+			film.setRating(new Rating(rating,numberOfVotes));
+		}
+		catch (XMLParserNotFoundException e) {
+			// Ignore, not found
+		}
 	}
 
 	private void writeRating(IVideoRating video, Element node) {
