@@ -56,7 +56,6 @@ public class ActionPerformer implements IActionEventHandler {
 	private MediaDirectory dir;
 	private List<IAction> actions;
 
-	private ArrayList<File> dirs;
 
 
 
@@ -83,23 +82,31 @@ public class ActionPerformer implements IActionEventHandler {
 	 */
 	public void performActions() throws ActionException {
 		List<File> sortedFiles = findMediaFiles();
+		Set<File> dirs = findDirs();
 
-		performActions(sortedFiles);
+		performActions(sortedFiles,dirs);
+	}
+
+	private Set<File> findDirs() {
+		Set<File>dirs = new HashSet<File>();
+		findDirs(dirs, dir.getMediaDirConfig().getMediaDir());
+		return dirs;
 	}
 
 	/**
 	 * Used to perform the actions
 	 * @param files The files to perform the actions on
+	 * @param dirs The directories with the media directory
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
-	public void performActions(List<File> files) throws ActionException {
+	public void performActions(List<File> files,Set<File> dirs) throws ActionException {
 		for (IAction action : actions) {
 			action.init(dir);
 		}
 
 		log.info(("Processing "+files.size()+" files"));
 		performActionsFiles(files);
-		performActionsDirs(files);
+		performActionsDirs(dirs);
 
 		for (IStore store : dir.getStores()) {
 			try {
@@ -117,8 +124,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 	protected List<File> findMediaFiles() throws ActionException {
 		List<File>mediaFiles = new ArrayList<File>();
-		dirs = new ArrayList<File>();
-		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles,dirs);
+		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles);
 		List<File> sortedFiles = new ArrayList<File>();
 		for (File file : mediaFiles) {
 			if (dir.getMediaDirConfig().getIgnorePatterns()!=null) {
@@ -139,7 +145,7 @@ public class ActionPerformer implements IActionEventHandler {
 		return sortedFiles;
 	}
 
-	private void findMediaFiles(File parentDir,List<File>mediaFiles,List<File>mediaDirs) throws ActionException {
+	private void findMediaFiles(File parentDir,List<File>mediaFiles) throws ActionException {
 		if (log.isDebugEnabled()) {
 			log.debug("Tidying show names in the directory : " + parentDir);
 		}
@@ -171,8 +177,7 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 		});
 		for (File dir : dirs) {
-			mediaDirs.add(dir);
-			findMediaFiles(dir,mediaFiles,mediaDirs);
+			findMediaFiles(dir,mediaFiles);
 		}
 	}
 
@@ -201,14 +206,19 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	private void performActionsDirs(List<File> files) throws ActionException {
-		log.info(("Processing "+files.size()+" dirs"));
-		Set<File> dirs = new HashSet<File>();
-		for (File file : files) {
-			if (!dir.getMediaDirConfig().getMediaDir().equals(file.getParentFile())) {
-				dirs.add(file.getParentFile());
+	private void findDirs(Set<File>dirs,File parent) {
+		for (File file : parent.listFiles()) {
+			if (file.isDirectory()) {
+				findDirs(dirs,file);
+				dirs.add(file);
 			}
 		}
+	}
+
+	private void performActionsDirs(Set<File>dirs) throws ActionException {
+		log.info(("Processing "+dirs.size()+" dirs"));
+
+
 		for (File d : dirs) {
 			for (IAction action : actions) {
 				action.performOnDirectory(dir, d,this);
