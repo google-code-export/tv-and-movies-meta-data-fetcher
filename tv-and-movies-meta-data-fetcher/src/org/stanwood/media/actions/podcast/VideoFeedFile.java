@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 
 import org.stanwood.media.setup.MediaDirConfig;
@@ -41,7 +40,7 @@ public class VideoFeedFile implements IFeedFile {
 		if (!File.separator.equals("/")) {
 			relPath = relPath.replaceAll("\\"+File.separator, "/");
 		}
-		url = new URL(URLEncoder.encode(baseUrl+"/"+relPath,"UTF-8"));
+		url = new URL(baseUrl+"/"+relPath.replaceAll(" ", "+"));
 	}
 
 	/** {@inheritDoc} */
