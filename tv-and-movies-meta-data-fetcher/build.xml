@@ -90,6 +90,8 @@
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${api.docs.dir}" />
 		<mkdir dir="${reports.dir}"/>
+		
+		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
 	</target>
 
 	<target name="compile" depends="init,antlr" description="compile the source ">
@@ -214,8 +216,7 @@
 	</target>
 
 	<target name="jars" description="generate the distribution">
-		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
-
+		
 		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
 			<fileset dir="${src.dir}" />
 			<fileset dir="${test.src.dir}" />			
