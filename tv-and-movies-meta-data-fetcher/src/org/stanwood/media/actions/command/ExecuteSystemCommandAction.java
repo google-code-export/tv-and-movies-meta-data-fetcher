@@ -108,7 +108,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 				exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
 				exec.execute(cmdLine);
 			} catch (IOException e) {
-				throw new ActionException("Unable to execute system command: " + cmdLine.toString());
+				throw new ActionException("Unable to execute system command: " + cmdLine.toString(),e);
 			}
 		}
 	}
