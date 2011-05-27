@@ -6,39 +6,39 @@
     <description />
     <item>
       <title>The Usual Suspects</title>
-      <link>http://blah.com/Films/The Usual Suspects (2009).avi</link>
+      <link>http://blah.com/Films/The%20Usual%20Suspects%20(2009).m4v</link>
       <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
-      <enclosure url="http://blah.com/Films/The Usual Suspects (2009).avi" type="video/avi" />
-      <pubDate>Wed, 18 May 2011 09:10:10 GMT</pubDate>
-      <guid>http://blah.com/Films/The Usual Suspects (2009).avi</guid>
-      <dc:date>2011-05-18T09:10:10Z</dc:date>
-    </item>
-    <item>
-      <title>The Usual Suspects</title>
-      <link>http://blah.com/Films/The Usual Suspects (2009) Part 1.avi</link>
-      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
-      <enclosure url="http://blah.com/Films/The Usual Suspects (2009) Part 1.avi" type="video/avi" />
-      <pubDate>Mon, 18 Apr 2011 09:10:10 GMT</pubDate>
-      <guid>http://blah.com/Films/The Usual Suspects (2009) Part 1.avi</guid>
-      <dc:date>2011-04-18T09:10:10Z</dc:date>
-    </item>
-    <item>
-      <title>The Usual Suspects</title>
-      <link>http://blah.com/Films/The Usual Suspects (2009) Part 2.avi</link>
-      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
-      <enclosure url="http://blah.com/Films/The Usual Suspects (2009) Part 2.avi" type="video/avi" />
-      <pubDate>Mon, 18 Apr 2011 09:10:10 GMT</pubDate>
-      <guid>http://blah.com/Films/The Usual Suspects (2009) Part 2.avi</guid>
-      <dc:date>2011-04-18T09:10:10Z</dc:date>
-    </item>
-    <item>
-      <title>The Usual Suspects</title>
-      <link>http://blah.com/Films/The Usual Suspects (2009).m4v</link>
-      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
-      <enclosure url="http://blah.com/Films/The Usual Suspects (2009).m4v" type="video/x-m4v" />
+      <enclosure url="http://blah.com/Films/The%20Usual%20Suspects%20(2009).m4v" type="video/x-m4v" />
       <pubDate>Fri, 18 Feb 2011 10:10:10 GMT</pubDate>
-      <guid>http://blah.com/Films/The Usual Suspects (2009).m4v</guid>
+      <guid>http://blah.com/Films/The%20Usual%20Suspects%20(2009).m4v</guid>
       <dc:date>2011-02-18T10:10:10Z</dc:date>
+    </item>
+    <item>
+      <title>The Usual Suspects</title>
+      <link>http://blah.com/Films/The%20Usual%20Suspects%20(2009).avi</link>
+      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
+      <enclosure url="http://blah.com/Films/The%20Usual%20Suspects%20(2009).avi" type="video/avi" />
+      <pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>
+      <guid>http://blah.com/Films/The%20Usual%20Suspects%20(2009).avi</guid>
+      <dc:date>1970-01-01T00:00:00Z</dc:date>
+    </item>
+    <item>
+      <title>The Usual Suspects</title>
+      <link>http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%201.avi</link>
+      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
+      <enclosure url="http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%201.avi" type="video/avi" />
+      <pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>
+      <guid>http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%201.avi</guid>
+      <dc:date>1970-01-01T00:00:00Z</dc:date>
+    </item>
+    <item>
+      <title>The Usual Suspects</title>
+      <link>http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%202.avi</link>
+      <description>A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.</description>
+      <enclosure url="http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%202.avi" type="video/avi" />
+      <pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>
+      <guid>http://blah.com/Films/The%20Usual%20Suspects%20(2009)%20Part%202.avi</guid>
+      <dc:date>1970-01-01T00:00:00Z</dc:date>
     </item>
   </channel>
 </rss>
