@@ -187,8 +187,36 @@ public class MP4Manager implements IMP4Manager {
 			atoms.add(AtomFactory.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(AtomFactory.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
 		}
+		File artwork = null;
+		try {
+			URL imageUrl = null;
+			if (episode.getImageURL()!=null) {
+				imageUrl = episode.getImageURL();
+			}
+			else if (episode.getSeason().getShow().getImageURL()!=null) {
+				imageUrl = episode.getSeason().getShow().getImageURL();
+			}
+			if (imageUrl != null) {
+				try {
+					artwork = downloadToTempFile(imageUrl);
+					atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
+				} catch (IOException e) {
+					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
+					return;
+				}
+			}
 
-		update(mp4File, atoms);
+			update(mp4File, atoms);
+		}
+		finally {
+			if (artwork!=null) {
+				try {
+					FileHelper.delete(artwork);
+				} catch (IOException e) {
+					log.error("Unable to delete temp file",e);
+				}
+			}
+		}
 	}
 
 	private void update(File mp4File, List<Atom> atoms) throws MP4Exception {
@@ -371,33 +399,37 @@ public class MP4Manager implements IMP4Manager {
 			atoms.add(AtomFactory.createDiskAtom((byte)(int)part,total));
 		}
 
-		if (film.getImageURL() != null) {
-			File artwork;
-			try {
-				artwork = downloadToTempFile(film.getImageURL());
-				atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
-			} catch (IOException e) {
-				log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
-				return;
+		File artwork = null;
+		try {
+			if (film.getImageURL() != null) {
+				try {
+					artwork = downloadToTempFile(film.getImageURL());
+					atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
+				} catch (IOException e) {
+					log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
+					return;
+				}
+			}
+			if (film.getPreferredGenre() != null) {
+				atoms.add(AtomFactory.createAtom("©gen", film.getPreferredGenre()));
+				atoms.add(AtomFactory.createAtom("catg", film.getPreferredGenre()));
+			} else {
+				if (film.getGenres().size() > 0) {
+					atoms.add(AtomFactory.createAtom("©gen", film.getGenres().get(0)));
+					atoms.add(AtomFactory.createAtom("catg", film.getGenres().get(0)));
+				}
+			}
+			update(mp4File, atoms);
+		}
+		finally {
+			if (artwork!=null) {
+				try {
+					FileHelper.delete(artwork);
+				} catch (IOException e) {
+					log.error("Unable to delete temp file",e);
+				}
 			}
 		}
-		if (film.getPreferredGenre() != null) {
-			atoms.add(AtomFactory.createAtom("©gen", film.getPreferredGenre()));
-			atoms.add(AtomFactory.createAtom("catg", film.getPreferredGenre()));
-		} else {
-			if (film.getGenres().size() > 0) {
-				atoms.add(AtomFactory.createAtom("©gen", film.getGenres().get(0)));
-				atoms.add(AtomFactory.createAtom("catg", film.getGenres().get(0)));
-			}
-		}
-		update(mp4File, atoms);
-//		if (newPart) {
-//			for (VideoFile vf : film.getFiles()) {
-//				if (!vf.getLocation().equals(mp4File)) {
-//					updateFilm(vf.getLocation(),film,vf.getPart());
-//				}
-//			}
-//		}
 	}
 
 	private File downloadToTempFile(URL url) throws IOException {
