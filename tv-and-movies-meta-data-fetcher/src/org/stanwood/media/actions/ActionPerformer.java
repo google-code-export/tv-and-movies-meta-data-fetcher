@@ -380,7 +380,9 @@ public class ActionPerformer implements IActionEventHandler {
 					for (VideoFile vf : film.getFiles()) {
 						if (!vf.getLocation().equals(file)) {
 							for (IStore store : dir.getStores()) {
-								store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(), film, vf.getPart());
+								if (vf.getLocation().exists()) {
+									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(), film, vf.getPart());
+								}
 							}
 						}
 					}
