@@ -73,7 +73,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 
 			String pattern = "%t{ (%y)}{ Part %p}.%x";
 			mmXBMCCmd(mediaDir, pattern,"--log_config","NOINIT","install","metadata.imdb.com");
-			mmXBMCCmd(mediaDir, pattern,"--log_config","DEBUG","update");
+			mmXBMCCmd(mediaDir, pattern,"--log_config","INFO","update");
 			mmManagerCmd(mediaDir, pattern);
 
 			List<String>files = FileHelper.listFilesAsStrings(mediaDir);

@@ -40,6 +40,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -210,6 +211,9 @@ public class ActionPerformer implements IActionEventHandler {
 							if (vf.getLocation().equals(file)) {
 								part = vf.getPart();
 							}
+						}
+						if (part == null) {
+							part = SearchHelper.extractPart(new StringBuilder(file.getName()));
 						}
 						action.perform(dir,film,file,part,this);
 					}
