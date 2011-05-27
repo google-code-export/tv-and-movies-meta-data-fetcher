@@ -58,8 +58,6 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 
 	private static final List<Option> OPTIONS;
 
-
-
 	private MediaDirectory rootMediaDir = null;
 	private boolean xbmcUpdate = true;
 
@@ -72,10 +70,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
 
-
 	private static IExitHandler exitHandler = null;
-
-
 
 	static {
 		OPTIONS = new ArrayList<Option>();

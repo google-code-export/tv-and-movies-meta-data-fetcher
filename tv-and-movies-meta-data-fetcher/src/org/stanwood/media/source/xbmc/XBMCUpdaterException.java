@@ -5,6 +5,8 @@ package org.stanwood.media.source.xbmc;
  */
 public class XBMCUpdaterException extends XBMCException {
 
+	private static final long serialVersionUID = 2290371584372769846L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialised, and may subsequently be initialised by a

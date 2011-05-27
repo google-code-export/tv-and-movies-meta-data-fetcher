@@ -3,6 +3,8 @@ package org.stanwood.media.actions.rename;
 /** Thrown if their is a problem related to rename patters */
 public class PatternException extends Exception {
 
+	private static final long serialVersionUID = 2511891757382988708L;
+
 	/**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialised, and may subsequently be initialised by

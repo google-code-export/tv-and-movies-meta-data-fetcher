@@ -8,6 +8,8 @@ import java.util.TreeSet;
  */
 public class VideoFileSet extends TreeSet<VideoFile> {
 
+	private static final long serialVersionUID = -2055733997633542890L;
+
 	/**
 	 * The constructor
 	 */

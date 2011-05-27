@@ -5,6 +5,7 @@ package org.stanwood.media.source.xbmc.cli;
  */
 public class ExitException extends RuntimeException {
 
+	private static final long serialVersionUID = 5695668024923550586L;
 	private int exitCode;
 
 	/**

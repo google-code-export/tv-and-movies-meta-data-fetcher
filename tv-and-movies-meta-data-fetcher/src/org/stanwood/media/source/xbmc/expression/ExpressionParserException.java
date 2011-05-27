@@ -6,7 +6,9 @@ package org.stanwood.media.source.xbmc.expression;
  */
 public class ExpressionParserException extends RuntimeException {
 
-    /** Constructs a new exception with <code>null</code> as its
+	private static final long serialVersionUID = 8626682231398024461L;
+
+	/** Constructs a new exception with <code>null</code> as its
      * detail message.  The cause is not initialised, and may subsequently be
      * initialised by a call to {@link #initCause}.
      */

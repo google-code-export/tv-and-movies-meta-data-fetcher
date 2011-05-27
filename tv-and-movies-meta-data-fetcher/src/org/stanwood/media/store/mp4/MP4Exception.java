@@ -6,6 +6,9 @@ import org.stanwood.media.logging.StanwoodException;
  * This exception is throw if their is problems relating to MP4 files
  */
 public class MP4Exception extends StanwoodException {
+
+	private static final long serialVersionUID = -844678567792798160L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
