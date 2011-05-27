@@ -172,7 +172,9 @@ public class MP4Manager implements IMP4Manager {
 		atoms.add(AtomFactory.createAtom("tvsh", episode.getSeason().getShow().getName()));
 		atoms.add(AtomFactory.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
 		atoms.add(AtomFactory.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
-		atoms.add(AtomFactory.createAtom("©day", episode.getDate().toString()));
+		if (episode.getDate()!=null) {
+			atoms.add(AtomFactory.createAtom("©day", episode.getDate().toString()));
+		}
 		atoms.add(AtomFactory.createAtom("©nam", episode.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", episode.getSummary()));
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
@@ -344,7 +346,9 @@ public class MP4Manager implements IMP4Manager {
 	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
-		atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
+		if (film.getDate()!=null) {
+			atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
+		}
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
 //		atoms.add(AtomFactory.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
