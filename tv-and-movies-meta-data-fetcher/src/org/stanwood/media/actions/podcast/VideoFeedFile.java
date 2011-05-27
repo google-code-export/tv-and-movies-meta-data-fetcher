@@ -40,7 +40,7 @@ public class VideoFeedFile implements IFeedFile {
 		if (!File.separator.equals("/")) {
 			relPath = relPath.replaceAll("\\"+File.separator, "/");
 		}
-		url = new URL(baseUrl+"/"+relPath.replaceAll(" ", "+"));
+		url = new URL(baseUrl+"/"+relPath.replaceAll(" ", "%20"));
 	}
 
 	/** {@inheritDoc} */
