@@ -349,6 +349,9 @@ public class ActionPerformer implements IActionEventHandler {
 	}
 
 	private Film getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
+		if (!file.exists()) {
+			return null;
+		}
 		boolean refresh = false;
 		try {
 			Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
