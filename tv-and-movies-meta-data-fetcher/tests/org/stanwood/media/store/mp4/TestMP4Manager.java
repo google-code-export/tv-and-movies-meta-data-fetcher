@@ -118,7 +118,7 @@ public class TestMP4Manager {
 		Assert.assertEquals("tvsn",atoms.get(3).getName());
 		Assert.assertEquals("3",atoms.get(4).getValue());
 		Assert.assertEquals("tves",atoms.get(4).getName());
-		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(5).getValue().replaceAll("0 ... ", "0 "));
+		Assert.assertEquals("2005",atoms.get(5).getValue());
 		Assert.assertEquals("©day",atoms.get(5).getName());
 		Assert.assertEquals("Test Episode",atoms.get(6).getValue());
 		Assert.assertEquals("©nam",atoms.get(6).getName());
@@ -169,7 +169,7 @@ public class TestMP4Manager {
 		Assert.assertEquals("Movie",((AtomStik)atoms.get(3)).getTypedValue().getDescription());
 		Assert.assertEquals("0",((AtomStik)atoms.get(3)).getTypedValue().getId());
 		Assert.assertEquals("stik",atoms.get(3).getName());
-		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(4).getValue().replaceAll("0 ... ", "0 "));
+		Assert.assertEquals("2005",atoms.get(4).getValue());
 		Assert.assertEquals("©day",atoms.get(4).getName());
 		Assert.assertEquals("SciFi",atoms.get(5).getValue());
 		Assert.assertEquals("©gen",atoms.get(5).getName());
