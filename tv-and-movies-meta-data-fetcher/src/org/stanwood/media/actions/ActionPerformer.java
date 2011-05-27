@@ -312,15 +312,31 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 			if (!testMode) {
 				boolean found = false;
+				Integer maxPart = 0;
 				for (VideoFile vf : film.getFiles()) {
 					if (vf.getLocation().equals(file)) {
 						found = true;
-						break;
+					}
+					if (result.getPart()!=null) {
+						if (vf.getPart()!=null && vf.getPart()>maxPart) {
+							maxPart = vf.getPart();
+						}
 					}
 				}
 				if (!found) {
 					for (IStore store : dir.getStores()) {
 						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
+					}
+				}
+
+				// Update existing stores with new part
+				if (result.getPart()!=null && result.getPart()>maxPart) {
+					for (VideoFile vf : film.getFiles()) {
+						if (!vf.getLocation().equals(file)) {
+							for (IStore store : dir.getStores()) {
+								store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(), film, vf.getPart());
+							}
+						}
 					}
 				}
 			}

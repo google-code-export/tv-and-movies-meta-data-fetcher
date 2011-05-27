@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -48,6 +50,8 @@ public class MP4Manager implements IMP4Manager {
 	// http://help.mp3tag.de/main_tags.html
 
 	private final static Log log = LogFactory.getLog(MP4Manager.class);
+
+	private final DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
 
 	/**
 	 * Used to get a list of atoms in the MP4 file.
@@ -173,7 +177,7 @@ public class MP4Manager implements IMP4Manager {
 		atoms.add(AtomFactory.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
 		atoms.add(AtomFactory.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
 		if (episode.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("©day", episode.getDate().toString()));
+			atoms.add(AtomFactory.createAtom("©day", YEAR_DF.format(episode.getDate())));
 		}
 		atoms.add(AtomFactory.createAtom("©nam", episode.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", episode.getSummary()));
@@ -344,10 +348,11 @@ public class MP4Manager implements IMP4Manager {
 	 */
 	@Override
 	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
+		boolean newPart = false;
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
 		if (film.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("©day", film.getDate().toString()));
+			atoms.add(AtomFactory.createAtom("©day", YEAR_DF.format(film.getDate())));
 		}
 		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
 		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
@@ -358,6 +363,11 @@ public class MP4Manager implements IMP4Manager {
 				if (vf.getPart()!=null && vf.getPart()>total) {
 					total = (byte)(int)vf.getPart();
 				}
+			}
+
+			if (part>total) {
+				newPart = true;
+				total = (byte)(int)part;
 			}
 			atoms.add(AtomFactory.createDiskAtom((byte)(int)part,total));
 		}
@@ -382,6 +392,13 @@ public class MP4Manager implements IMP4Manager {
 			}
 		}
 		update(mp4File, atoms);
+//		if (newPart) {
+//			for (VideoFile vf : film.getFiles()) {
+//				if (!vf.getLocation().equals(mp4File)) {
+//					updateFilm(vf.getLocation(),film,vf.getPart());
+//				}
+//			}
+//		}
 	}
 
 	private File downloadToTempFile(URL url) throws IOException {
