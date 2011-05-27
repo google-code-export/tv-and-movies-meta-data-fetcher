@@ -567,8 +567,10 @@ public class FileHelper {
 			@Override
 			public void run() {
 				if (file.exists()) {
-					if (!file.delete() || file.exists()) {
-						log.error("Unable to delete temp file: " + file);
+					try {
+						FileHelper.delete(file);
+					} catch (IOException e) {
+						log.error("Unable to delete temp file: " + file,e);
 					}
 				}
 			}
