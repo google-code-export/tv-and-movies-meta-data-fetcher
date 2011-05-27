@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.FileNameParser;
 import org.stanwood.media.actions.rename.ParsedFileName;
+import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -40,6 +41,8 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.search.ReversePatternSearchStrategy;
+import org.stanwood.media.search.SearchDetails;
 import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
@@ -206,15 +209,7 @@ public class ActionPerformer implements IActionEventHandler {
 				Film film = getFilm(file);
 				if (film!=null) {
 					for (IAction action : actions) {
-						Integer part = null;
-						for (VideoFile vf : film.getFiles()) {
-							if (vf.getLocation().equals(file)) {
-								part = vf.getPart();
-							}
-						}
-						if (part == null) {
-							part = SearchHelper.extractPart(new StringBuilder(file.getName()));
-						}
+						Integer part = getFilmPart(file, film);
 						action.perform(dir,film,file,part,this);
 					}
 				}
@@ -229,6 +224,26 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 
 		}
+	}
+
+	protected Integer getFilmPart(File file, Film film) {
+		Integer part = null;
+		for (VideoFile vf : film.getFiles()) {
+			if (vf.getLocation().equals(file)) {
+				part = vf.getPart();
+			}
+		}
+		if (part == null) {
+			part = SearchHelper.extractPart(new StringBuilder(file.getName()));
+		}
+		if (part == null) {
+			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false);
+			SearchDetails result = rp.getSearch(file, dir.getMediaDirConfig().getMediaDir(), dir.getMediaDirConfig().getPattern(), dir);
+			if (result!=null) {
+				part = result.getPart();
+			}
+		}
+		return part;
 	}
 
 	private void findDirs(Set<File>dirs,File parent) {
