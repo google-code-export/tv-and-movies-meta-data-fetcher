@@ -213,6 +213,7 @@ public class MP4Manager implements IMP4Manager {
 			isoFile.getBox(new IsoOutputStream(os));
 			FileHelper.delete(mp4File);
 			FileHelper.copy(newFile, mp4File);
+			FileHelper.delete(newFile);
 			if (log.isDebugEnabled()) {
 				log.debug("Created mp4 file '"+mp4File.getAbsolutePath()+"' with size " + mp4File.length());
 			}
