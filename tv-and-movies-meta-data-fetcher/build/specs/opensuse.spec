@@ -127,6 +127,8 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_bindir}/mm-java
 %{_bindir}/mm-manager
 %{_bindir}/mm-xbmc
+%{_bindir}/mm-copy-store-to-store
+%{_bindir}/mm-move-into-media-directory
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*
