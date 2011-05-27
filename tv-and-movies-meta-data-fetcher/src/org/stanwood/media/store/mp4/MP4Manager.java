@@ -220,18 +220,43 @@ public class MP4Manager implements IMP4Manager {
 	}
 
 	private void update(File mp4File, List<Atom> atoms) throws MP4Exception {
+
+
 		log.info("Updating metadata in MP4 file: "+mp4File);
 		Properties properties = getProperties();
 		IsoFile isoFile = getIsoFile(mp4File,properties);
 		FileOutputStream os = null;
 		try {
 			isoFile.parse();
+			AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
+	        if (appleItemListBox!=null) {
+		        Box[] boxes = appleItemListBox.getBoxes();
+		        for (Box b : boxes) {
+		        	for (Atom a : atoms) {
+		        		String type = new String(b.getType());
+		        		String name =a.getName();
+		        		if (name.equals(type)) {
+		        			appleItemListBox.removeBox(b);
+		        			System.out.println("1remove Box: " + new String(b.getType()));
+		        			break;
+		        		}
+		        		if (name.startsWith("©")) {
+		        			if (name.substring(1).equals(type.substring(1))) {
+			        			appleItemListBox.removeBox(b);
+			        			System.out.println("2remove Box: " + new String(b.getType()));
+			        			break;
+			        		}
+		        		}
+		        	}
+		        }
+	        }
+
 			for (Atom atom : atoms) {
 				if (atom.getName().equals("covr")) {
-					writeArtworkFiled(isoFile,atom,properties);
+					writeArtworkFiled(isoFile,atom,appleItemListBox);
 				}
 				else {
-					writeTextField(isoFile,atom,properties);
+					writeTextField(isoFile,atom,appleItemListBox,properties);
 				}
 			}
 
@@ -261,9 +286,7 @@ public class MP4Manager implements IMP4Manager {
 
 	}
 
-	private void writeArtworkFiled(IsoFile isoFile, Atom atom,Properties properties) throws IOException {
-		AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
-
+	private void writeArtworkFiled(IsoFile isoFile, Atom atom,AppleItemListBox appleItemListBox) throws IOException {
 		String name = atom.getName();
 		if (atom.getName().equals("covr")) {
 			AppleCoverBox box = (AppleCoverBox) IsoFileConvenienceHelper.get(appleItemListBox, name);
@@ -295,13 +318,20 @@ public class MP4Manager implements IMP4Manager {
 		}
 	}
 
-	private void writeTextField(IsoFile isoFile, Atom atom,Properties properties) throws MP4Exception {
-		AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
-
+	private void writeTextField(IsoFile isoFile, Atom atom,AppleItemListBox appleItemListBox,Properties properties) throws MP4Exception {
 		String name = atom.getName();
 		Box box = IsoFileConvenienceHelper.get(appleItemListBox, name);
 		if (box!=null) {
 			appleItemListBox.removeBox(box);
+			System.out.println("3remove Box: " + new String(box.getType()));
+		}
+		if (name.startsWith("©")) {
+			String newName = "ﾩ"+name.substring(1);
+			box = IsoFileConvenienceHelper.get(appleItemListBox, newName);
+			if (box!=null) {
+				appleItemListBox.removeBox(box);
+				System.out.println("4remove Box: " + new String(box.getType()));
+			}
 		}
 
 		box = createBox(atom,properties);

@@ -7,6 +7,7 @@ import org.stanwood.media.logging.StanwoodException;
  */
 public class ActionException extends StanwoodException {
 
+	private static final long serialVersionUID = 4898516978127889297L;
 
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.

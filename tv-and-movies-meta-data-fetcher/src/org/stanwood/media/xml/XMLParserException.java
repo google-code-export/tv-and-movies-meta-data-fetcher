@@ -7,6 +7,8 @@ import org.stanwood.media.logging.StanwoodException;
  */
 public class XMLParserException extends StanwoodException {
 
+	private static final long serialVersionUID = -917103512979185034L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a

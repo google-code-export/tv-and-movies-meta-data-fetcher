@@ -5,6 +5,8 @@ package org.stanwood.media.source.xbmc;
  */
 public class XBMCFunctionNotFoundException extends XBMCException {
 
+	private static final long serialVersionUID = 3739234453030343810L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialised, and may subsequently be initialised by a

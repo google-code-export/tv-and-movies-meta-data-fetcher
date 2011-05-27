@@ -7,6 +7,8 @@ import org.stanwood.media.source.SourceException;
  */
 public class XBMCException extends SourceException {
 
+	private static final long serialVersionUID = 8560870501490435519L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialised, and may subsequently be initialised by a
