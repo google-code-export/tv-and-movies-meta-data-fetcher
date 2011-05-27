@@ -6,7 +6,8 @@ Version 2.0
 	 
 *Needs Testing* - Test generated podcasts with iTunes
 					- URL encode url's
-*Not started*   - Add date to the MP4 files
+*Needs Testing* - Add date to the MP4 files
+*Not started*   - Find way to refresh MP4 stores
 
 Version 2.0.1
 -------------
