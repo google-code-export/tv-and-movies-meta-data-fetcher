@@ -56,11 +56,7 @@ public class ActionPerformer implements IActionEventHandler {
 	private MediaDirectory dir;
 	private List<IAction> actions;
 
-
-
-
 	private boolean testMode;
-
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -181,16 +177,41 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
+	private Film getFilm(File file) throws ActionException {
+		try {
+			for (IStore store : dir.getStores()) {
+				Film film = store.getFilm(dir,file);
+				if (film!=null) {
+					return film;
+				}
+			}
+			SearchResult result = findFilm(dir, file);
+			if (result!=null) {
+				Film film = getFilm(result,dir,file);
+				if (film!=null) {
+					return film;
+				}
+			}
+			return null;
+		}
+		catch (StoreException e) {
+			throw new ActionException("Unable to read film details from stores",e);
+		}
+	}
+
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
 			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-				SearchResult result = findFilm(dir, file);
-				if (result!=null) {
-					Film film = getFilm(result,dir,file);
-					if (film!=null) {
-						for (IAction action : actions) {
-							action.perform(dir,film,file,result.getPart(),this);
+				Film film = getFilm(file);
+				if (film!=null) {
+					for (IAction action : actions) {
+						Integer part = null;
+						for (VideoFile vf : film.getFiles()) {
+							if (vf.getLocation().equals(file)) {
+								part = vf.getPart();
+							}
 						}
+						action.perform(dir,film,file,part,this);
 					}
 				}
 			}
@@ -270,6 +291,12 @@ public class ActionPerformer implements IActionEventHandler {
 	private Episode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
 		boolean refresh = false;
 		try {
+			for (IStore store : dir.getStores()) {
+				Episode ep = store.getEpisode(dir,file);
+				if (ep!=null) {
+					return ep;
+				}
+			}
 			SearchResult result = searchForId(dir,file);
 			if (result==null) {
 				log.error("Unable to find show id for file '"+file+"'");

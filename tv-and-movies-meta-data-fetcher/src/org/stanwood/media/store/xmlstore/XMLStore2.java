@@ -581,7 +581,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public Episode getEpisode(File rootMediaDir, File episodeFile, Season season, int episodeNum)
-			throws StoreException, MalformedURLException, IOException {
+			throws StoreException, MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
@@ -604,11 +604,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @return The film, or null if it can't be found
 	 * @throws StoreException Thrown if their is a problem retrieving the data
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException,
-			IOException {
+	public Film getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
@@ -705,7 +703,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public Season getSeason(File rootMediaDir, File episodeFile, Show show, int seasonNum) throws StoreException,
-			IOException {
+	MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
@@ -867,11 +865,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @return The show if it can be found, otherwise null.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
 	public Show getShow(File rootMediaDir, File episodeFile, String showId) throws StoreException,
-			MalformedURLException, IOException {
+			MalformedURLException {
 
 		Document doc = getCache(rootMediaDir);
 
@@ -1110,6 +1107,73 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse store XML",e);
+		}
+	}
+
+	private Element getNodeWithFile(MediaDirectory dir,File file) throws StoreException, XMLParserException {
+		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
+		Document cache = getCache(rootMediaDir);
+		for (Node fileNode : selectNodeList(cache, "//file")) {
+			Element el = (Element)fileNode;
+			File location = new File(dir.getMediaDirConfig().getMediaDir(),el.getAttribute("location"));
+			if (location.equals(file)) {
+				return (Element)fileNode.getParentNode();
+			}
+		}
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Episode getEpisode(MediaDirectory dir, File file) throws StoreException {
+		try {
+			File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
+			Element episodeNode = getNodeWithFile(dir,file);
+			if (episodeNode==null || !episodeNode.getNodeName().equals("episode")) {
+				return null;
+			}
+			Element seasonNode = (Element) episodeNode.getParentNode();
+			if (seasonNode==null || !seasonNode.getNodeName().equals("season")) {
+				return null;
+			}
+			Element showNode = (Element) seasonNode.getParentNode();
+			if (showNode==null || !showNode.getNodeName().equals("show")) {
+				return null;
+			}
+
+			Show show = getShow(rootMediaDir,file,showNode.getAttribute("id"));
+			if (show==null) {
+				return null;
+			}
+			Season season = getSeason(rootMediaDir,file,show,Integer.parseInt(seasonNode.getAttribute("number")));
+			if (season==null) {
+				return null;
+			}
+			Episode episode = getEpisode(rootMediaDir, file, season, Integer.parseInt(episodeNode.getAttribute("number")));
+
+			return episode;
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse store XML",e);
+		} catch (MalformedURLException e) {
+			throw new StoreException("Unable to create URL",e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+		try {
+			File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
+			Element filmNode = getNodeWithFile(dir,file);
+			if (filmNode==null || !filmNode.getNodeName().equals("film")) {
+				return null;
+			}
+			Film film = getFilm(rootMediaDir,file,filmNode.getAttribute("id"));
+			return film;
+		} catch (XMLParserException e) {
+			throw new StoreException("Unable to parse store XML",e);
+		} catch (MalformedURLException e) {
+			throw new StoreException("Unable to create URL",e);
 		}
 	}
 

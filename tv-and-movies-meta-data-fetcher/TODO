@@ -8,6 +8,7 @@ Version 2.0
 					- URL encode url's
 *Needs Testing* - Add date to the MP4 files
 *Not started*   - Find way to refresh MP4 stores
+*Not started*   - ActionPerformer.getTVEpisode() should be able to look up via filename first in stores
 
 Version 2.0.1
 -------------

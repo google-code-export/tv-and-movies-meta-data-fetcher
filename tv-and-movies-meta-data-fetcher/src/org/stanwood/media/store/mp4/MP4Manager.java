@@ -348,7 +348,6 @@ public class MP4Manager implements IMP4Manager {
 	 */
 	@Override
 	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
-		boolean newPart = false;
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
 		if (film.getDate()!=null) {
@@ -366,7 +365,6 @@ public class MP4Manager implements IMP4Manager {
 			}
 
 			if (part>total) {
-				newPart = true;
 				total = (byte)(int)part;
 			}
 			atoms.add(AtomFactory.createDiskAtom((byte)(int)part,total));
