@@ -204,4 +204,23 @@ public interface IStore  {
 	 */
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException;
 
+	/**
+	 * This is used to get a episode from a store via it's file name. If it can't be found,
+	 * then this will return null.
+	 * @param dir The media directory
+	 * @param file The media file
+	 * @return The episode or null if it can't be found
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public Episode getEpisode(MediaDirectory dir, File file) throws StoreException;
+
+	/**
+	 * This is used to get a film from a store via it's file name. If it can't be found,
+	 * then this will return null.
+	 * @param dir The media directory
+	 * @param file The media file
+	 * @return The film or null if it can't be found
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public Film getFilm(MediaDirectory dir, File file) throws StoreException;
 }

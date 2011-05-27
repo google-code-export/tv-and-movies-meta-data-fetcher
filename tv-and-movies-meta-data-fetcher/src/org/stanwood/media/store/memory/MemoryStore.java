@@ -290,4 +290,39 @@ public class MemoryStore implements IStore {
 			}
 		}
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Episode getEpisode(MediaDirectory dir, File file)
+			throws StoreException {
+		for (CacheShow show : shows) {
+			for (CacheSeason season : show.getSeasons()) {
+				for (Episode episode : season.getEpisodes()) {
+					Iterator<VideoFile> it  = episode.getFiles().iterator();
+					while (it.hasNext()) {
+						VideoFile f = it.next();
+						if (f.getLocation().equals(file)) {
+							return episode;
+						}
+					}
+				}
+				for (Episode special : season.getSpecials()) {
+					Iterator<VideoFile> it  = special.getFiles().iterator();
+					while (it.hasNext()) {
+						VideoFile f = it.next();
+						if (f.getLocation().equals(file)) {
+							return special;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+		return films.get(file);
+	}
 }

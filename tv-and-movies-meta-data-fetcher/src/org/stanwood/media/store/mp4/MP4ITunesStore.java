@@ -217,4 +217,17 @@ public class MP4ITunesStore implements IStore {
 	public void fileDeleted(MediaDirectory dir, File file) {
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Episode getEpisode(MediaDirectory dir, File file)
+			throws StoreException {
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+		return null;
+	}
+
 }
