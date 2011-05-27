@@ -7,8 +7,8 @@ Version 2.0
 *Needs Testing* - Test generated podcasts with iTunes
 					- URL encode url's
 *Needs Testing* - Add date to the MP4 files
-*Not started*   - Find way to refresh MP4 stores
-*Not started*   - ActionPerformer.getTVEpisode() should be able to look up via filename first in stores
+*Needs Testing* - Find way to refresh MP4 stores
+*Needs Testing* - Test RPM's work corectly had have all the scripts
 
 Version 2.0.1
 -------------
@@ -27,7 +27,6 @@ Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins. 
 Encode rating into MP4's
 Updated to latest version of MP4 parser
-Add tool to update metadata of mp4/m4v file
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
 Add remove from store command line tool

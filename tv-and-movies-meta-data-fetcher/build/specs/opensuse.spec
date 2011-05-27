@@ -97,6 +97,8 @@ popd
 %__install -m 755 build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
 %__install -m 755 build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
 %__install -m 755 build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
+%__install -m 755 build/scripts/opensuse/mm-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
+%__install -m 755 build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs

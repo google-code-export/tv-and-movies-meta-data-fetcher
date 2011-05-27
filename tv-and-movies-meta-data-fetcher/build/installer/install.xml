@@ -94,6 +94,12 @@
 			<executable targetfile="$INSTALL_PATH/bin/mm-manager">
 				<os family="unix"/>
 			</executable>
+			<file src="@{installer.dir}/scripts/unix/mm-copy-store-to-store" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-copy-store-to-store">
+				<os family="unix"/>
+			</executable>
 			<file src="@{installer.dir}/scripts/unix/mm-move-into-media-directory" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
 			</file>
@@ -119,6 +125,9 @@
 			<file src="@{installer.dir}/scripts/windows/mm-move-into-media-directory.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>
+			<file src="@{installer.dir}/scripts/windows/mm-copy-store-to-store.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>		
 			<file src="@{installer.dir}/scripts/windows/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>			
