@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Set jvm heap initial and maximum sizes (in megabytes).
+JAVA_HEAP_INIT_SIZE=64
+JAVA_HEAP_MAX_SIZE=192
+
+# Find a java installation.
+if [ -z "$JAVA_HOME" ]; then
+        echo "Warning: \$JAVA_HOME environment variable not set! Consider setting it."
+        echo "          Attempting to locate java..."
+        j=`which java 2>/dev/null`
+        if [ -z "$j" ]; then
+                echo "Failed to locate the java virtual machine! Bailing..."
+                exit 1
+        else
+                echo "Found a virtual machine at: $j..."
+                JAVA="$j"
+        fi
+else
+        JAVA="$JAVA_HOME/bin/java"
+fi
+
+# Main class
+MAIN=org.stanwood.media.store.mp4.CLIListAtoms
+
+# Libraries location
+LIB_DIR=/usr/share/java
+
+# Launch application.
+CLASSPATH=/usr/share/java/MediaManager.jar
+CLASSPATH=$CLASSPATH:jakarta-commons-cli.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-lang.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-exec.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-logging.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-exec.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/isoparser.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/log4j.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jdom.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/ROME.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/antlr-runtime.jar
+
+# Launch Application
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
