@@ -237,13 +237,11 @@ public class MP4Manager implements IMP4Manager {
 		        		String name =a.getName();
 		        		if (name.equals(type)) {
 		        			appleItemListBox.removeBox(b);
-		        			System.out.println("1remove Box: " + new String(b.getType()));
 		        			break;
 		        		}
 		        		if (name.startsWith("©")) {
 		        			if (name.substring(1).equals(type.substring(1))) {
 			        			appleItemListBox.removeBox(b);
-			        			System.out.println("2remove Box: " + new String(b.getType()));
 			        			break;
 			        		}
 		        		}
@@ -323,14 +321,12 @@ public class MP4Manager implements IMP4Manager {
 		Box box = IsoFileConvenienceHelper.get(appleItemListBox, name);
 		if (box!=null) {
 			appleItemListBox.removeBox(box);
-			System.out.println("3remove Box: " + new String(box.getType()));
 		}
 		if (name.startsWith("©")) {
 			String newName = "ﾩ"+name.substring(1);
 			box = IsoFileConvenienceHelper.get(appleItemListBox, newName);
 			if (box!=null) {
 				appleItemListBox.removeBox(box);
-				System.out.println("4remove Box: " + new String(box.getType()));
 			}
 		}
 
