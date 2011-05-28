@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
@@ -18,6 +19,9 @@ import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.search.ReversePatternSearchStrategy;
+import org.stanwood.media.search.SearchDetails;
+import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.xbmc.XBMCException;
@@ -136,13 +140,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 			for (File mediaFile : files) {
 				if (dirConfig.getMode()==Mode.FILM) {
 					Film f = fromStore.getFilm(rootMediaDir, mediaFile);
-					Integer part = null;
-					for (VideoFile vf : f.getFiles()) {
-						if (vf.getLocation().equals(mediaFile)) {
-							part = vf.getPart();
-							break;
-						}
-					}
+					Integer part =getFilmPart(mediaFile,f);
 					toStore.cacheFilm(dirConfig.getMediaDir(), mediaFile, f, part);
 				}
 				else {
@@ -158,6 +156,28 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		}
 		return false;
+	}
+
+	protected Integer getFilmPart(File file, Film film) {
+		Integer part = null;
+		if (film.getFiles()!=null) {
+			for (VideoFile vf : film.getFiles()) {
+				if (vf.getLocation().equals(file)) {
+					part = vf.getPart();
+				}
+			}
+		}
+		if (part == null) {
+			part = SearchHelper.extractPart(new StringBuilder(file.getName()));
+		}
+		if (part == null) {
+			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false);
+			SearchDetails result = rp.getSearch(file, rootMediaDir.getMediaDirConfig().getMediaDir(), rootMediaDir.getMediaDirConfig().getPattern(),rootMediaDir);
+			if (result!=null) {
+				part = result.getPart();
+			}
+		}
+		return part;
 	}
 
 	private void doUpdateCheck() {
