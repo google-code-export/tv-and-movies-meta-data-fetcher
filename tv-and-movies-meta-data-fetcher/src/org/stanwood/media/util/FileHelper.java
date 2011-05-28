@@ -606,5 +606,12 @@ public class FileHelper {
 		return fileName.substring(0,pos);
 	}
 
+	/**
+	 * Used to get the current working directory
+	 * @return the current working directory
+	 */
+	public static File getWorkingDirectory() {
+		return new File( System.getProperty("user.dir"));
+	}
 
 }
