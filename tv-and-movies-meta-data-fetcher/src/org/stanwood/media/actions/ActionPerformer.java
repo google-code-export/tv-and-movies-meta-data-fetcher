@@ -228,9 +228,11 @@ public class ActionPerformer implements IActionEventHandler {
 
 	protected Integer getFilmPart(File file, Film film) {
 		Integer part = null;
-		for (VideoFile vf : film.getFiles()) {
-			if (vf.getLocation().equals(file)) {
-				part = vf.getPart();
+		if (film.getFiles()!=null) {
+			for (VideoFile vf : film.getFiles()) {
+				if (vf.getLocation().equals(file)) {
+					part = vf.getPart();
+				}
 			}
 		}
 		if (part == null) {
