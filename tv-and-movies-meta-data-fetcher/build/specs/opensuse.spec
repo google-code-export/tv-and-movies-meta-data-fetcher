@@ -99,6 +99,7 @@ popd
 %__install -m 755 build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
 %__install -m 755 build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
 %__install -m 755 build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
+%__install -m 755 build/scripts/opensuse/mm-mp4-list-atoms %{buildroot}%{_bindir}/mm-mp4-list-atoms
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs
@@ -129,6 +130,7 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_bindir}/mm-xbmc
 %{_bindir}/mm-copy-store-to-store
 %{_bindir}/mm-move-into-media-directory
+%{_bindir}/mm-mp4-list-atoms
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*

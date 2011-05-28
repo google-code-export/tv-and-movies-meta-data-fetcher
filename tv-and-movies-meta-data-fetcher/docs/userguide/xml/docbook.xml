@@ -6,6 +6,7 @@
 	<!ENTITY mmxbmc "mm-xbmc">
 	<!ENTITY mmmovemedia "mm-move-into-media-directory">
 	<!ENTITY mmcopystore "mm-copy-store-to-store">
+	<!ENTITY mmlistatoms "mm-mp4-list-atoms">
 	<!ENTITY copyrightdate "2007-2011">
 	<!ENTITY copyholder "John-Paul Stanford">
 ]>
@@ -373,7 +374,7 @@
 		<sect1 id="mediamovecmd">
 			<title id="mediamovecmd.title">&mmmovemedia;</title>
 			<para>			
- 				The &mmmanager; command is used to move media files into a directory. It then uses the sources 
+ 				The &mmmovemedia; command is used to move media files into a directory. It then uses the sources 
  				and stores with the media file and performs the actions on it. The media files can be either files
  				or directories. 
  				<cmdsynopsis>
@@ -399,6 +400,24 @@
 				</itemizedlist>								
 			</para>			
 		</sect1>
+		<sect1 id="mp4listatomscmd">
+			<title id="mp4listatomscmd.title">&mmlistatoms;</title>
+			<para>			
+ 				The &mmlistatoms; command is used to list the Apple atoms in a MP4/M4V media file which is given as a argument. It can
+ 				be used to check the metadata that iTunes will see.
+ 				<cmdsynopsis>
+					<command>&mmlistatoms;</command>
+					<arg>-h</arg>							
+					<arg>&lt;media file&gt;</arg>
+				</cmdsynopsis>
+			</para>
+			<para>
+				The command has the following options:
+				<itemizedlist>
+					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>					
+				</itemizedlist>								
+			</para>			
+		</sect1>		
 		<sect1>
 			<title id="mmxbmccmd.title">&mmxbmc;</title>
 			<para>

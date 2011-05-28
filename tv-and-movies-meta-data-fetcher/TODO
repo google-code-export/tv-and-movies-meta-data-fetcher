@@ -4,6 +4,8 @@ TODO
 Version 2.0
 -----------
 
+*Needs Testing* - Check coverart can be listed with mm-mp4-list-atoms
+*Needs Testing* - Check installer still works windows/linux
 *Needs Testing* - Test RPM's work correctly had have all the scripts
 
 Version 2.0.1
