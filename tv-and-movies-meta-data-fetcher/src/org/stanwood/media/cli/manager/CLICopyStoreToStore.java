@@ -28,6 +28,7 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
@@ -256,7 +257,18 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 		else {
 			files = new ArrayList<File>();
 			for (String s : cmd.getArgs()) {
-				files.add(new File(s));
+				File file = null;
+				if (s.startsWith(File.separator)) {
+					file = new File(s);
+				}
+				else {
+					file = new File(FileHelper.getWorkingDirectory(),s);
+				}
+				if (!file.exists()) {
+					fatal("Unable to find file: "+file);
+					return false;
+				}
+				files.add(file);
 			}
 		}
 
