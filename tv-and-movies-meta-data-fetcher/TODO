@@ -19,6 +19,7 @@ Make native Windows installer
 Version 2.1
 -----------
 
+Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins. 
 Encode rating into MP4's

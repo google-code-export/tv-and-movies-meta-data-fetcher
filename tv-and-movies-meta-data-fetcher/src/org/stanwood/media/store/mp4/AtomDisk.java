@@ -2,6 +2,8 @@ package org.stanwood.media.store.mp4;
 
 import java.util.StringTokenizer;
 
+import org.stanwood.media.store.mp4.boxes.AppleDiscNumberBox;
+
 import com.coremedia.iso.boxes.AbstractBox;
 
 /**
@@ -16,7 +18,7 @@ public class AtomDisk extends Atom {
 	 * @param total The total number of disks
 	 */
 	public AtomDisk(String name, Byte disk,Byte total) {
-		super(name, ""+disk+"/"+total);
+		super("Disk Number",name, ""+disk+"/"+total);
 	}
 
 	/**
@@ -25,7 +27,7 @@ public class AtomDisk extends Atom {
 	 * @param value Parse the value in the format disk/total
 	 */
 	public AtomDisk(String name, String value) {
-		super(name,null);
+		super("Disk Number",name,null);
 		StringTokenizer tok = new StringTokenizer(getValue(),"/");
 		setValue(tok.nextToken()+"/"+tok.nextToken());
 	}

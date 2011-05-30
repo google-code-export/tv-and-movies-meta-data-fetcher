@@ -28,17 +28,19 @@ import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
  */
 public class Atom {
 
-
 	private String name;
 	private String value;
+	private String displayName;
 
 	/**
 	 * Used to create a instance of the atom and set the name and value
+	 * @param displayName The displayName
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 */
-	public Atom(String name, String value) {
+	public Atom(String displayName,String name, String value) {
 		setName(name);
+		setDisplayName(displayName);
 		setValue(value);
 	}
 
@@ -154,4 +156,22 @@ public class Atom {
 	public Box getBox() {
 		return null;
 	}
+
+	/**
+	 * Gets the display name
+	 * @return the display name
+	 */
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	/**
+	 * Used to set the display name
+	 * @param displayName The display name
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+
 }

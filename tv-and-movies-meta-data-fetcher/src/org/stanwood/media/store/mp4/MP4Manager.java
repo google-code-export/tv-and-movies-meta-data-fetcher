@@ -40,10 +40,7 @@ import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 import com.coremedia.iso.boxes.apple.AppleCoverBox;
-import com.coremedia.iso.boxes.apple.AppleCustomGenreBox;
 import com.coremedia.iso.boxes.apple.AppleItemListBox;
-import com.coremedia.iso.boxes.apple.AppleRecordingYearBox;
-import com.coremedia.iso.boxes.apple.AppleTrackTitleBox;
 
 /**
  * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"} It is used
@@ -72,7 +69,6 @@ public class MP4Manager implements IMP4Manager {
 
 			IsoFile isoFile = getIsoFile(mp4File,getProperties());
 	        isoFile.parse();
-
 	        AppleItemListBox appleItemListBox = (AppleItemListBox) IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta/ilst");
 	        if (appleItemListBox!=null) {
 		        List<Box> boxes = appleItemListBox.getBoxes();
@@ -95,13 +91,11 @@ public class MP4Manager implements IMP4Manager {
 		InputStream is = null;
 		try {
 			Properties properties = new Properties();
-			is = MP4Manager.class.getResourceAsStream("default.properties");
+			is = MP4Manager.class.getResourceAsStream("/isoparser-default.properties");
 			properties.load(is);
 			properties.setProperty("ilst-"+"catg", GenericStringBox.class.getName()+"(type)");
-			properties.setProperty("ilst-"+"ﾩday", AppleRecordingYearBox.class.getName()+"()");
-			properties.setProperty("ilst-"+"ﾩnam", AppleTrackTitleBox.class.getName()+"()");
-			properties.setProperty("ilst-"+"ﾩgen", AppleCustomGenreBox.class.getName()+"()");
 			properties.setProperty("ilst-"+"disk", AppleDiscNumberBox.class.getName()+"()");
+			properties.setProperty("meta",MetaBox.class.getName()+"()");
 		    return properties;
 		}
 		catch (IOException e) {
@@ -143,18 +137,18 @@ public class MP4Manager implements IMP4Manager {
 	private Atom getAtomTextValue(Box box) throws MP4Exception, IOException {
 		String type = new String(box.getType(),Charset.forName("ISO-8859-1"));
 		if (box instanceof AppleCoverBox ) {
-			Atom a = AtomFactory.createAtom(type,((AppleCoverBox) box).getDisplayName());
+			Atom a = AtomFactory.createAtom(((AppleCoverBox) box).getDisplayName(),type,((AppleCoverBox) box).getDisplayName());
 			return a;
 		}
 		else if (box instanceof AbstractAppleMetaDataBox ) {
 			AbstractAppleMetaDataBox b = (AbstractAppleMetaDataBox)box;
 
-			Atom a = AtomFactory.createAtom(type,b.getValue());
+			Atom a = AtomFactory.createAtom(b.getDisplayName(),type,b.getValue());
 			return a;
 		}
 		else if (box instanceof GenericStringBox) {
 			GenericStringBox b = (GenericStringBox)box;
-			Atom a = AtomFactory.createAtom(type,b.getValue());
+			Atom a = AtomFactory.createAtom(b.getDisplayName(),type,b.getValue());
 			return a;
 		}
 		else  if (box instanceof AppleDiscNumberBox) {
@@ -165,7 +159,7 @@ public class MP4Manager implements IMP4Manager {
 		}
 		else {
 			if (log.isDebugEnabled()) {
-				log.debug("Unknown atom type: " + new String(box.getType()));
+				log.debug("Unknown atom type: " + new String(box.getType(),Charset.forName("ISO-8859-1")));
 			}
 			return AtomFactory.createUnkownAtom(type,box);
 		}
@@ -188,20 +182,20 @@ public class MP4Manager implements IMP4Manager {
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.TV_SHOW));
-		atoms.add(AtomFactory.createAtom("tven", episode.getEpisodeId()));
-		atoms.add(AtomFactory.createAtom("tvsh", episode.getSeason().getShow().getName()));
-		atoms.add(AtomFactory.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
-		atoms.add(AtomFactory.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
+		atoms.add(AtomFactory.createAtom("","tven", episode.getEpisodeId()));
+		atoms.add(AtomFactory.createAtom("","tvsh", episode.getSeason().getShow().getName()));
+		atoms.add(AtomFactory.createAtom("","tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
+		atoms.add(AtomFactory.createAtom("","tves", String.valueOf(episode.getEpisodeNumber())));
 		if (episode.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("©day", YEAR_DF.format(episode.getDate())));
+			atoms.add(AtomFactory.createAtom("","©day", YEAR_DF.format(episode.getDate())));
 		}
-		atoms.add(AtomFactory.createAtom("©nam", episode.getTitle()));
-		atoms.add(AtomFactory.createAtom("desc", episode.getSummary()));
+		atoms.add(AtomFactory.createAtom("","©nam", episode.getTitle()));
+		atoms.add(AtomFactory.createAtom("","desc", episode.getSummary()));
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
-			atoms.add(AtomFactory.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
-			atoms.add(AtomFactory.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(AtomFactory.createAtom("","©gen", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(AtomFactory.createAtom("","catg", episode.getSeason().getShow().getGenres().get(0)));
 		}
 		File artwork = null;
 		try {
@@ -215,7 +209,7 @@ public class MP4Manager implements IMP4Manager {
 			if (imageUrl != null) {
 				try {
 					artwork = downloadToTempFile(imageUrl);
-					atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
+					atoms.add(AtomFactory.createAtom("","covr", artwork.getAbsolutePath()));
 				} catch (IOException e) {
 					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
 					return;
@@ -249,7 +243,7 @@ public class MP4Manager implements IMP4Manager {
 		        List<Box> boxes = appleItemListBox.getBoxes();
 		        for (Box b : boxes) {
 		        	for (Atom a : atoms) {
-		        		String type = new String(b.getType());
+		        		String type = new String(b.getType(),Charset.forName("ISO-8859-1"));
 		        		String name =a.getName();
 		        		if (name.equals(type)) {
 		        			appleItemListBox.removeBox(b);
@@ -422,10 +416,10 @@ public class MP4Manager implements IMP4Manager {
 		List<Atom> atoms = new ArrayList<Atom>();
 		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
 		if (film.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("©day", YEAR_DF.format(film.getDate())));
+			atoms.add(AtomFactory.createAtom("","©day", YEAR_DF.format(film.getDate())));
 		}
-		atoms.add(AtomFactory.createAtom("©nam", film.getTitle()));
-		atoms.add(AtomFactory.createAtom("desc", film.getDescription()));
+		atoms.add(AtomFactory.createAtom("","©nam", film.getTitle()));
+		atoms.add(AtomFactory.createAtom("","desc", film.getDescription()));
 //		atoms.add(AtomFactory.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
 		if (part!=null) {
 			byte total =0;
@@ -446,19 +440,19 @@ public class MP4Manager implements IMP4Manager {
 			if (film.getImageURL() != null) {
 				try {
 					artwork = downloadToTempFile(film.getImageURL());
-					atoms.add(AtomFactory.createAtom("covr", artwork.getAbsolutePath()));
+					atoms.add(AtomFactory.createAtom("","covr", artwork.getAbsolutePath()));
 				} catch (IOException e) {
 					log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
 					return;
 				}
 			}
 			if (film.getPreferredGenre() != null) {
-				atoms.add(AtomFactory.createAtom("©gen", film.getPreferredGenre()));
-				atoms.add(AtomFactory.createAtom("catg", film.getPreferredGenre()));
+				atoms.add(AtomFactory.createAtom("","©gen", film.getPreferredGenre()));
+				atoms.add(AtomFactory.createAtom("","catg", film.getPreferredGenre()));
 			} else {
 				if (film.getGenres().size() > 0) {
-					atoms.add(AtomFactory.createAtom("©gen", film.getGenres().get(0)));
-					atoms.add(AtomFactory.createAtom("catg", film.getGenres().get(0)));
+					atoms.add(AtomFactory.createAtom("","©gen", film.getGenres().get(0)));
+					atoms.add(AtomFactory.createAtom("","catg", film.getGenres().get(0)));
 				}
 			}
 			update(mp4File, atoms);
