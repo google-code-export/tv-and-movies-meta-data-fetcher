@@ -59,12 +59,17 @@ public class CLIListAtoms extends BaseLauncher {
 		try {
 			info("Reading atoms...");
 			List<Atom> atoms = mp4Manager.listAtoms(mp4File);
-			for (Atom a : atoms) {
-				String value = a.getValue();
-				if (value==null) {
-					value = "<unknown>";
+			if (atoms==null || atoms.size()==0) {
+				info("No metadata atoms found.");
+			}
+			else {
+				for (Atom a : atoms) {
+					String value = a.getValue();
+					if (value==null) {
+						value = "<unknown>";
+					}
+					getStdout().println(a.getName()+" = " + value);
 				}
-				getStdout().println(a.getName()+" = " + value);
 			}
 		} catch (MP4Exception e) {
 			fatal(e);
