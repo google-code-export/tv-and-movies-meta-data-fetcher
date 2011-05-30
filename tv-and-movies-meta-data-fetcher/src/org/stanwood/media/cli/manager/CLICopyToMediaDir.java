@@ -134,6 +134,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			List<File>newFiles = new ArrayList<File>();
 			for (File from : files) {
 				try {
+					info("Moving file '"+from+"' info media directory...");
 					File toFile =new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName());
 					FileHelper.move(from, toFile);
 					if (toFile.isDirectory()) {
