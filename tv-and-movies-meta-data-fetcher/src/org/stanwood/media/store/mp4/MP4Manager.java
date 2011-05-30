@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.store.mp4.boxes.AppleDiscNumberBox;
+import org.stanwood.media.store.mp4.boxes.GenericStringBox;
 import org.stanwood.media.util.FileHelper;
 
 import com.coremedia.iso.IsoBufferWrapper;
@@ -31,8 +33,10 @@ import com.coremedia.iso.PropertyBoxParserImpl;
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.AbstractContainerBox;
 import com.coremedia.iso.boxes.Box;
+import com.coremedia.iso.boxes.ContainerBox;
 import com.coremedia.iso.boxes.MetaBox;
 import com.coremedia.iso.boxes.MovieBox;
+import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 import com.coremedia.iso.boxes.apple.AppleCoverBox;
@@ -71,10 +75,12 @@ public class MP4Manager implements IMP4Manager {
 
 	        AppleItemListBox appleItemListBox = (AppleItemListBox) IsoFileConvenienceHelper.get(isoFile, "moov/udta/meta/ilst");
 	        if (appleItemListBox!=null) {
-		        Box[] boxes = appleItemListBox.getBoxes();
+		        List<Box> boxes = appleItemListBox.getBoxes();
 				if (boxes !=null) {
 			        for (Box box : boxes) {
-			        	atoms.add(getAtomTextValue(box));
+			        	if (!(box instanceof UnknownBox)) {
+ 			        		atoms.add(getAtomTextValue(box));
+			        	}
 			        }
 				}
 	        }
@@ -111,9 +117,19 @@ public class MP4Manager implements IMP4Manager {
 
 	}
 
-	private IsoFile getIsoFile(File mp4File,Properties properties) throws MP4Exception {
+	private IsoFile getIsoFile(final File mp4File,Properties properties) throws MP4Exception {
 		try {
-		    PropertyBoxParserImpl boxParser = new PropertyBoxParserImpl(properties);
+		    PropertyBoxParserImpl boxParser = new PropertyBoxParserImpl(properties) {
+		    	@Override
+				public AbstractBox parseBox(IsoBufferWrapper in, ContainerBox parent, Box lastMovieFragmentBox) throws IOException {
+		    		AbstractBox box = super.parseBox(in,parent,lastMovieFragmentBox);
+		    		if (box==null) {
+		    			throw new IOException("Parse error parsing file: " + mp4File);
+		    		}
+
+		    		return box;
+		    	}
+		    };
 
 			IsoBufferWrapper isoBufferWrapper = new IsoBufferWrapper(mp4File);
 			IsoFile isoFile = new IsoFile(isoBufferWrapper,boxParser);
@@ -230,7 +246,7 @@ public class MP4Manager implements IMP4Manager {
 			isoFile.parse();
 			AppleItemListBox appleItemListBox = findAppleItemListBox(isoFile);
 	        if (appleItemListBox!=null) {
-		        Box[] boxes = appleItemListBox.getBoxes();
+		        List<Box> boxes = appleItemListBox.getBoxes();
 		        for (Box b : boxes) {
 		        	for (Atom a : atoms) {
 		        		String type = new String(b.getType());
