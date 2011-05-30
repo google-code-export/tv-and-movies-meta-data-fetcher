@@ -71,7 +71,7 @@ public class AtomStik extends Atom {
 	 * @param value The value
 	 */
 	public AtomStik(String value) {
-		super("stik", value);
+		super("Media Type","stik", value);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4;
 
+
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.Box;
 
@@ -16,7 +17,7 @@ public class AtomUnknown extends Atom {
 	 * @param box The box that was read
 	 */
 	public AtomUnknown(String name, Box box) {
-		super(name, null);
+		super("Unknown",name, null);
 		this.box = box;
 	}
 

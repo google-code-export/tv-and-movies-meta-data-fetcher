@@ -11,22 +11,20 @@ public class AtomFactory {
 
 	/**
 	 * Used to create a atom
+	 * @param displayName The display name
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 * @return the atom
 	 */
-	public static Atom createAtom(String name, String value) {
+	public static Atom createAtom(String displayName,String name, String value) {
 		if (name.equals("stik")) {
 			return new AtomStik(value);
-		}
-		else if (name.equals("rtng")) {
-			return new Atom(name,value);
 		}
 		else if (name.equals("disk")) {
 			return new AtomDisk(name,value);
 		}
 		else {
-			return new Atom(name,value);
+			return new Atom(displayName,name,value);
 		}
 	}
 
@@ -36,7 +34,7 @@ public class AtomFactory {
 	 * @return The atom
 	 */
 	public static Atom createAtom(Value value) {
-		return createAtom("stik",value.getId());
+		return createAtom("Media Type","stik",value.getId());
 	}
 
 	/**

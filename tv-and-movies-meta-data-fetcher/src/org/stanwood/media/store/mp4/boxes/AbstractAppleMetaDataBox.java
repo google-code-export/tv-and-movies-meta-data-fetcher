@@ -1,11 +1,11 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.boxes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
 
 import com.coremedia.iso.BoxParser;
 import com.coremedia.iso.IsoBufferWrapper;
@@ -18,92 +18,57 @@ import com.coremedia.iso.boxes.ContainerBox;
 import com.coremedia.iso.boxes.apple.AppleDataBox;
 
 /**
- * Used to store the disk numbers of media
+ *
  */
-public class AppleDiscNumberBox extends AbstractBox implements ContainerBox {
+public abstract class AbstractAppleMetaDataBox extends AbstractBox implements ContainerBox {
+    private static Logger LOG = Logger.getLogger(AbstractAppleMetaDataBox.class.getName());
+    AppleDataBox appleDataBox = new AppleDataBox();
 
-	private final static Log log = LogFactory.getLog(AppleDiscNumberBox.class);
-
-	private static final String TYPE = "disk";
-	AppleDataBox appleDataBox = new AppleDataBox();
-
-	/** the constructor */
-	public AppleDiscNumberBox() {
-		super(IsoFile.fourCCtoBytes(TYPE));
+    /**
+     * The constructor
+     * @param type The type
+     */
+    public AbstractAppleMetaDataBox(byte[] type) {
+		super(type);
 	}
 
-	/** {@inheritDoc} */
+    /**
+     * The constructor
+     * @param type The type
+     */
+    public AbstractAppleMetaDataBox(String type) {
+        super(IsoFile.fourCCtoBytes(type));
+    }
+
+    /** {@inheritDoc} */
 	@Override
-	public String getDisplayName() {
-		return "iTunes disk Number";
-	}
-
-	/**
-	 * @param disk the actual disk number
-	 * @param of number of tracks overall
-	 */
-	public void setDiskNumber(byte disk, byte of) {
-		appleDataBox = new AppleDataBox();
-		appleDataBox.setVersion(0);
-		appleDataBox.setFlags(0);
-		appleDataBox.setFourBytes(new byte[4]);
-		appleDataBox.setContent(new byte[] { 0, 0, 0, disk, 0, of, 0, 0 });
-	}
-
-	/**
-	 * Used to get the disk number
-	 * @return The disk number
-	 */
-	public byte getDiskNumber() {
-		return appleDataBox.getContent()[3];
-	}
-
-	/**
-	 * Used to get the total number of disks
-	 * @return The total number of disks
-	 */
-	public byte getNumberOfDisks() {
-		return appleDataBox.getContent()[5];
-	}
-
-	/**
-	 * Used to set the total number of disks
-	 * @param numberOfDisks Used to set the total number of disks
-	 */
-	public void setNumberOfTracks(byte numberOfDisks) {
-		byte[] content = appleDataBox.getContent();
-		content[5] = numberOfDisks;
-		appleDataBox.setContent(content);
-	}
-
-	/**
-	 * Used to set the disk number
-	 * @param diskNumber The disk number
-	 */
-	public void setDiskNumber(byte diskNumber) {
-		byte[] content = appleDataBox.getContent();
-		content[3] = diskNumber;
-		appleDataBox.setContent(content);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Box[] getBoxes() {
-        return new Box[]{ appleDataBox};
+	public List<Box> getBoxes() {
+        return Collections.singletonList((Box) appleDataBox);
     }
 
 	/** {@inheritDoc} */
     @Override
-	public <T extends Box> T[] getBoxes(Class<T> clazz) {
+	public void setBoxes(List<Box> boxes) {
+        if (boxes.size() == 1 && boxes.get(0) instanceof AppleDataBox) {
+            appleDataBox = (AppleDataBox) boxes.get(0);
+        } else {
+            throw new IllegalArgumentException("This box only accepts one AppleDataBox child");
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+	public <T extends Box> List<T> getBoxes(Class<T> clazz) {
         return getBoxes(clazz, false);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
 	@Override
-	public <T extends Box> T[] getBoxes(Class<T> clazz, boolean recursive) {
+	public <T extends Box> List<T> getBoxes(Class<T> clazz, boolean recursive) {
+        //todo recursive?
         if (clazz.isAssignableFrom(appleDataBox.getClass())) {
-            return (T[]) new Box[] {appleDataBox};
+            return (List<T>) Collections.singletonList(appleDataBox);
         }
         return null;
     }
@@ -152,8 +117,8 @@ public class AppleDiscNumberBox extends AbstractBox implements ContainerBox {
     }
 
     /**
-     * Used to parse the value from a string
-     * @param value The value from a string
+     * Used to set the value
+     * @param value The value
      */
     public void setValue(String value) {
         if (appleDataBox.getFlags() == 1) {
@@ -185,7 +150,7 @@ public class AppleDiscNumberBox extends AbstractBox implements ContainerBox {
             } catch (IOException e) {
                 throw new Error(e);
             }
-            appleDataBox.setContent(content);
+            appleDataBox.setContent(baos.toByteArray());
         } else if (appleDataBox.getFlags() == 0) {
             appleDataBox = new AppleDataBox();
             appleDataBox.setVersion(0);
@@ -194,13 +159,12 @@ public class AppleDiscNumberBox extends AbstractBox implements ContainerBox {
             appleDataBox.setContent(hexStringToByteArray(value));
 
         } else {
-            log.warn("Don't know how to handle appleDataBox with flag=" + appleDataBox.getFlags());
+            LOG.warning("Don't know how to handle appleDataBox with flag=" + appleDataBox.getFlags());
         }
     }
 
-    /**
-     * Used to get the value
-     * @return The value
+    /** Used to get the value of the box
+     * @return get the value
      */
     public String getValue() {
         if (appleDataBox.getFlags() == 1) {
@@ -230,4 +194,6 @@ public class AppleDiscNumberBox extends AbstractBox implements ContainerBox {
         }
         return data;
     }
+
+
 }

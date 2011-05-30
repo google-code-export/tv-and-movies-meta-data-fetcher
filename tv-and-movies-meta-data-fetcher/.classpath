@@ -15,7 +15,7 @@
 	<classpathentry kind="lib" path="libs/run-time/rome-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/jdom.jar"/>
 	<classpathentry kind="lib" path="libs/installer/IzPack-compiler-4.3.4-RC1.jar"/>
+	<classpathentry kind="lib" path="libs/run-time/isoparser-svn.r145.jar" sourcepath="/mounts/home/jp/isoparser/mp4parser/isoparser/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="libs/run-time/isoparser-svn.r114.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
