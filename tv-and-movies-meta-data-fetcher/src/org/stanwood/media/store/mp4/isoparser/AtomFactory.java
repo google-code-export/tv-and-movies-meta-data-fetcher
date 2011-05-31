@@ -1,6 +1,6 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.isoparser;
 
-import org.stanwood.media.store.mp4.AtomStik.Value;
+import org.stanwood.media.store.mp4.isoparser.AtomStik.Value;
 
 import com.coremedia.iso.boxes.Box;
 

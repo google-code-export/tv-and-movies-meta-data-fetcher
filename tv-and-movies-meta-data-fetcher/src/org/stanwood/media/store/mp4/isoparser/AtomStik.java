@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.isoparser;
 
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;

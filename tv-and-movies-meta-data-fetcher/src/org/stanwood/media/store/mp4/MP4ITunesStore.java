@@ -30,6 +30,7 @@ import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
 
 /**
  * <p>
@@ -57,7 +58,7 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeEpisode(File file, Episode episode) throws StoreException {
-		IMP4Manager ap = new MP4Manager();
+		IMP4Manager ap = new ISOParserMP4Manager();
 		try {
 			ap.updateEpsiode(file,episode);
 		} catch (MP4Exception e) {
@@ -148,7 +149,7 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeFilm(File filmFile, Film film, Integer part) throws StoreException {
-		IMP4Manager ap = new MP4Manager();
+		IMP4Manager ap = new ISOParserMP4Manager();
 		try {
 			ap.updateFilm(filmFile,film,part);
 		} catch (MP4Exception e) {

@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.isoparser;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,8 +21,11 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.VideoFile;
-import org.stanwood.media.store.mp4.boxes.AppleDiscNumberBox;
-import org.stanwood.media.store.mp4.boxes.GenericStringBox;
+import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.IMP4Manager;
+import org.stanwood.media.store.mp4.MP4Exception;
+import org.stanwood.media.store.mp4.isoparser.boxes.AppleDiscNumberBox;
+import org.stanwood.media.store.mp4.isoparser.boxes.GenericStringBox;
 import org.stanwood.media.util.FileHelper;
 
 import com.coremedia.iso.IsoBufferWrapper;
@@ -46,11 +49,11 @@ import com.coremedia.iso.boxes.apple.AppleItemListBox;
  * This class is a wrapper the the atomic parsley application {@link "http://atomicparsley.sourceforge.net/"} It is used
  * to store and retrieve atoms to a MP4 file.
  */
-public class MP4Manager implements IMP4Manager {
+public class ISOParserMP4Manager implements IMP4Manager {
 
 	// http://help.mp3tag.de/main_tags.html
 
-	private final static Log log = LogFactory.getLog(MP4Manager.class);
+	private final static Log log = LogFactory.getLog(ISOParserMP4Manager.class);
 
 	private final DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
 
@@ -62,10 +65,10 @@ public class MP4Manager implements IMP4Manager {
 	 * @throws MP4Exception Thrown if their is a problem reading the MP4 file
 	 */
 	@Override
-	public List<Atom> listAtoms(File mp4File) throws MP4Exception {
+	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		try {
 			// http://code.google.com/p/mp4parser/
-			List<Atom> atoms = new ArrayList<Atom>();
+			List<IAtom> atoms = new ArrayList<IAtom>();
 
 			IsoFile isoFile = getIsoFile(mp4File,getProperties());
 	        isoFile.parse();
@@ -91,7 +94,7 @@ public class MP4Manager implements IMP4Manager {
 		InputStream is = null;
 		try {
 			Properties properties = new Properties();
-			is = MP4Manager.class.getResourceAsStream("/isoparser-default.properties");
+			is = ISOParserMP4Manager.class.getResourceAsStream("/isoparser-default.properties");
 			properties.load(is);
 			properties.setProperty("ilst-"+"catg", GenericStringBox.class.getName()+"(type)");
 			properties.setProperty("ilst-"+"disk", AppleDiscNumberBox.class.getName()+"()");

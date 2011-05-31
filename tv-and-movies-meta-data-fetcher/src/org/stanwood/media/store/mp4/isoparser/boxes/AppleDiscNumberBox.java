@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.boxes;
+package org.stanwood.media.store.mp4.isoparser.boxes;
 
 import com.coremedia.iso.boxes.ContainerBox;
 import com.coremedia.iso.boxes.apple.AppleDataBox;

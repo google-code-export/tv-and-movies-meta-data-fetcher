@@ -1,8 +1,9 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.isoparser;
 
 import java.util.StringTokenizer;
 
-import org.stanwood.media.store.mp4.boxes.AppleDiscNumberBox;
+import org.stanwood.media.store.mp4.MP4Exception;
+import org.stanwood.media.store.mp4.isoparser.boxes.AppleDiscNumberBox;
 
 import com.coremedia.iso.boxes.AbstractBox;
 
