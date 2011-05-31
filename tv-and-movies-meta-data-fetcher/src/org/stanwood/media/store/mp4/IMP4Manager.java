@@ -3,9 +3,6 @@ package org.stanwood.media.store.mp4;
 import java.io.File;
 import java.util.List;
 
-import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
-
 /**
  * This interface should be implemented by classes that manager mp4 files
  */
@@ -20,24 +17,37 @@ public interface IMP4Manager {
 	 */
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception ;
 
-	/**
-	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
-	 *
-	 * @param mp4File The MP4 file
-	 * @param episode The episode details
-	 * @throws MP4Exception Thrown if their is a problem updating the atoms
-	 */
-	public void updateEpsiode(File mp4File, Episode episode) throws MP4Exception;
+
+	 /**
+	  * Used to add atoms to a MP4 file.
+	  * @param mp4File The MP4 file
+	  * @param atoms The atoms to add to the file
+ 	  * @throws MP4Exception Thrown if their is a problem updating the atoms
+	  */
+	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception;
 
 	/**
-	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
-	 * Film atoms and artwork.
-	 *
-	 * @param mp4File The MP4 file
-	 * @param film The film details
-	 * @param part The part number of the film, or null if it does not have parts
-	 * @throws MP4Exception Thrown if their is a problem updating the atoms
+	 * Used to create a atom
+	 * @param name The name of the atom
+	 * @param value The value of the atom
+	 * @return the atom
 	 */
-	public void updateFilm(File mp4File, Film film, Integer part) throws MP4Exception;
+	public IAtom createAtom(String name, String value);
+
+	/**
+	 * Used to create a &quot;stik&quot; atom
+	 * @param value The atom value
+	 * @return The atom
+	 */
+	public IAtom createAtom(StikValue value);
+
+	/**
+	 * Used to create a disk number box
+	 * @param diskNumber The disk number
+	 * @param numberOfDisks The total number of disks
+	 * @return The atom
+	 */
+	public IAtom createDiskAtom(byte diskNumber, byte numberOfDisks);
+
 
 }

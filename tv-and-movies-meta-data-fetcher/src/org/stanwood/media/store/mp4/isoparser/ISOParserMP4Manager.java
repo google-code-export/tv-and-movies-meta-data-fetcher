@@ -1,29 +1,22 @@
 package org.stanwood.media.store.mp4.isoparser;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
-import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.store.mp4.AtomNameLookup;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4Exception;
+import org.stanwood.media.store.mp4.StikValue;
 import org.stanwood.media.store.mp4.isoparser.boxes.AppleDiscNumberBox;
 import org.stanwood.media.store.mp4.isoparser.boxes.GenericStringBox;
 import org.stanwood.media.util.FileHelper;
@@ -43,6 +36,7 @@ import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 import com.coremedia.iso.boxes.apple.AppleCoverBox;
+import com.coremedia.iso.boxes.apple.AppleDataBox;
 import com.coremedia.iso.boxes.apple.AppleItemListBox;
 
 /**
@@ -54,8 +48,7 @@ public class ISOParserMP4Manager implements IMP4Manager {
 	// http://help.mp3tag.de/main_tags.html
 
 	private final static Log log = LogFactory.getLog(ISOParserMP4Manager.class);
-
-	private final DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
+	private final static AtomNameLookup nameLookup = new AtomNameLookup();
 
 	/**
 	 * Used to get a list of atoms in the MP4 file.
@@ -140,23 +133,32 @@ public class ISOParserMP4Manager implements IMP4Manager {
 	private Atom getAtomTextValue(Box box) throws MP4Exception, IOException {
 		String type = new String(box.getType(),Charset.forName("ISO-8859-1"));
 		if (box instanceof AppleCoverBox ) {
-			Atom a = AtomFactory.createAtom(((AppleCoverBox) box).getDisplayName(),type,((AppleCoverBox) box).getDisplayName());
+			AppleCoverBox b = ((AppleCoverBox) box);
+			AppleDataBox b1 = (AppleDataBox) b.getBoxes().get(0);
+			String artType ="UNKNOWN";
+			if (b1.getFlags()==0xe) {
+				artType = "COVERART_PNG";
+			}
+			else if (b1.getFlags()==0xd) {
+				artType = "COVERART_JPEG";
+			}
+			Atom a = createAtom(b.getDisplayName(),type,"Artwork of type "+artType+" and size "+ b1.getContent().length);
 			return a;
 		}
 		else if (box instanceof AbstractAppleMetaDataBox ) {
 			AbstractAppleMetaDataBox b = (AbstractAppleMetaDataBox)box;
 
-			Atom a = AtomFactory.createAtom(b.getDisplayName(),type,b.getValue());
+			Atom a = createAtom(b.getDisplayName(),type,b.getValue());
 			return a;
 		}
 		else if (box instanceof GenericStringBox) {
 			GenericStringBox b = (GenericStringBox)box;
-			Atom a = AtomFactory.createAtom(b.getDisplayName(),type,b.getValue());
+			Atom a = createAtom(b.getDisplayName(),type,b.getValue());
 			return a;
 		}
 		else  if (box instanceof AppleDiscNumberBox) {
 			AppleDiscNumberBox b = (AppleDiscNumberBox)box;
-			Atom a = AtomFactory.createDiskAtom(b.getDiskNumber(),b.getNumberOfDisks());
+			Atom a = createDiskAtom(b.getDiskNumber(),b.getNumberOfDisks());
 
 			return a;
 		}
@@ -164,7 +166,7 @@ public class ISOParserMP4Manager implements IMP4Manager {
 			if (log.isDebugEnabled()) {
 				log.debug("Unknown atom type: " + new String(box.getType(),Charset.forName("ISO-8859-1")));
 			}
-			return AtomFactory.createUnkownAtom(type,box);
+			return createUnkownAtom(type,box);
 		}
 
 	}
@@ -173,68 +175,9 @@ public class ISOParserMP4Manager implements IMP4Manager {
         return b < 0 ? b + 256 : b;
     }
 
-	/**
-	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
-	 *
-	 * @param mp4File The MP4 file
-	 * @param episode The episode details
-	 * @throws MP4Exception Thrown if their is a problem updating the atoms
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public void updateEpsiode(File mp4File, Episode episode) throws MP4Exception {
-		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
-		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(AtomFactory.createAtom(AtomStik.Value.TV_SHOW));
-		atoms.add(AtomFactory.createAtom("","tven", episode.getEpisodeId()));
-		atoms.add(AtomFactory.createAtom("","tvsh", episode.getSeason().getShow().getName()));
-		atoms.add(AtomFactory.createAtom("","tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
-		atoms.add(AtomFactory.createAtom("","tves", String.valueOf(episode.getEpisodeNumber())));
-		if (episode.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("","©day", YEAR_DF.format(episode.getDate())));
-		}
-		atoms.add(AtomFactory.createAtom("","©nam", episode.getTitle()));
-		atoms.add(AtomFactory.createAtom("","desc", episode.getSummary()));
-//		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
-
-		if (episode.getSeason().getShow().getGenres().size() > 0) {
-			atoms.add(AtomFactory.createAtom("","©gen", episode.getSeason().getShow().getGenres().get(0)));
-			atoms.add(AtomFactory.createAtom("","catg", episode.getSeason().getShow().getGenres().get(0)));
-		}
-		File artwork = null;
-		try {
-			URL imageUrl = null;
-			if (episode.getImageURL()!=null) {
-				imageUrl = episode.getImageURL();
-			}
-			else if (episode.getSeason().getShow().getImageURL()!=null) {
-				imageUrl = episode.getSeason().getShow().getImageURL();
-			}
-			if (imageUrl != null) {
-				try {
-					artwork = downloadToTempFile(imageUrl);
-					atoms.add(AtomFactory.createAtom("","covr", artwork.getAbsolutePath()));
-				} catch (IOException e) {
-					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
-					return;
-				}
-			}
-
-			update(mp4File, atoms);
-		}
-		finally {
-			if (artwork!=null) {
-				try {
-					FileHelper.delete(artwork);
-				} catch (IOException e) {
-					log.error("Unable to delete temp file",e);
-				}
-			}
-		}
-	}
-
-	private void update(File mp4File, List<Atom> atoms) throws MP4Exception {
-
-
+	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
 		log.info("Updating metadata in MP4 file: "+mp4File);
 		Properties properties = getProperties();
 		IsoFile isoFile = getIsoFile(mp4File,properties);
@@ -245,7 +188,7 @@ public class ISOParserMP4Manager implements IMP4Manager {
 	        if (appleItemListBox!=null) {
 		        List<Box> boxes = appleItemListBox.getBoxes();
 		        for (Box b : boxes) {
-		        	for (Atom a : atoms) {
+		        	for (IAtom a : atoms) {
 		        		String type = new String(b.getType(),Charset.forName("ISO-8859-1"));
 		        		String name =a.getName();
 		        		if (name.equals(type)) {
@@ -262,12 +205,12 @@ public class ISOParserMP4Manager implements IMP4Manager {
 		        }
 	        }
 
-			for (Atom atom : atoms) {
+			for (IAtom atom : atoms) {
 				if (atom.getName().equals("covr")) {
-					writeArtworkFiled(isoFile,atom,appleItemListBox);
+					writeArtworkFiled(isoFile,(Atom)atom,appleItemListBox);
 				}
 				else {
-					writeTextField(isoFile,atom,appleItemListBox,properties);
+					writeTextField(isoFile,(Atom)atom,appleItemListBox,properties);
 				}
 			}
 
@@ -405,104 +348,68 @@ public class ISOParserMP4Manager implements IMP4Manager {
 		throw new MP4Exception("Unable to create box of type: " +atom.getName() );
 	}
 
+
 	/**
-	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
-	 * Film atoms and artwork.
-	 *
-	 * @param mp4File The MP4 file
-	 * @param film The film details
-	 * @param part The part number of the film, or null if it does not have parts
-	 * @throws MP4Exception Thrown if their is a problem updating the atoms
+	 * Used to create a atom
+	 * @param displayName The display name
+	 * @param name The name of the atom
+	 * @param value The value of the atom
+	 * @return the atom
+	 */
+	public Atom createAtom(String displayName,String name, String value) {
+		if (name.equals("stik")) {
+			return new AtomStik(value);
+		}
+		else if (name.equals("disk")) {
+			return new AtomDisk(name,value);
+		}
+		else {
+			if (displayName == null || displayName.equals("")) {
+				displayName = getDisplayName(name);
+			}
+			return new Atom(displayName,name,value);
+		}
+	}
+
+	private String getDisplayName(String name) {
+		return nameLookup.getDisplayName(name);
+	}
+
+	/**
+	 * Used to create a &quot;stik&quot; atom
+	 * @param value The atom value
+	 * @return The atom
 	 */
 	@Override
-	public void updateFilm(File mp4File, Film film,Integer part) throws MP4Exception {
-		List<Atom> atoms = new ArrayList<Atom>();
-		atoms.add(AtomFactory.createAtom(AtomStik.Value.MOVIE));
-		if (film.getDate()!=null) {
-			atoms.add(AtomFactory.createAtom("","©day", YEAR_DF.format(film.getDate())));
-		}
-		atoms.add(AtomFactory.createAtom("","©nam", film.getTitle()));
-		atoms.add(AtomFactory.createAtom("","desc", film.getDescription()));
-//		atoms.add(AtomFactory.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
-		if (part!=null) {
-			byte total =0;
-			for (VideoFile vf : film.getFiles()) {
-				if (vf.getPart()!=null && vf.getPart()>total) {
-					total = (byte)(int)vf.getPart();
-				}
-			}
-
-			if (part>total) {
-				total = (byte)(int)part;
-			}
-			atoms.add(AtomFactory.createDiskAtom((byte)(int)part,total));
-		}
-
-		File artwork = null;
-		try {
-			if (film.getImageURL() != null) {
-				try {
-					artwork = downloadToTempFile(film.getImageURL());
-					atoms.add(AtomFactory.createAtom("","covr", artwork.getAbsolutePath()));
-				} catch (IOException e) {
-					log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
-					return;
-				}
-			}
-			if (film.getPreferredGenre() != null) {
-				atoms.add(AtomFactory.createAtom("","©gen", film.getPreferredGenre()));
-				atoms.add(AtomFactory.createAtom("","catg", film.getPreferredGenre()));
-			} else {
-				if (film.getGenres().size() > 0) {
-					atoms.add(AtomFactory.createAtom("","©gen", film.getGenres().get(0)));
-					atoms.add(AtomFactory.createAtom("","catg", film.getGenres().get(0)));
-				}
-			}
-			update(mp4File, atoms);
-		}
-		finally {
-			if (artwork!=null) {
-				try {
-					FileHelper.delete(artwork);
-				} catch (IOException e) {
-					log.error("Unable to delete temp file",e);
-				}
-			}
-		}
+	public Atom createAtom(StikValue value) {
+		return createAtom("Media Type","stik",value.getId());
 	}
 
-	private File downloadToTempFile(URL url) throws IOException {
-		File file = FileHelper.createTempFile("artwork", ".jpg");
-		if (!file.delete()) {
-			throw new IOException("Unable to delete temp file "+file.getAbsolutePath());
-		}
-		OutputStream out = null;
-		URLConnection conn = null;
-		InputStream in = null;
-		try {
-			out = new BufferedOutputStream(new FileOutputStream(file));
-			conn = url.openConnection();
-			in = conn.getInputStream();
-			byte[] buffer = new byte[1024];
-			int numRead;
-			long numWritten = 0;
-			while ((numRead = in.read(buffer)) != -1) {
-				out.write(buffer, 0, numRead);
-				numWritten += numRead;
-			}
-			file.deleteOnExit();
-			return file;
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException ioe) {
-				log.error("Unable to close file: " + file);
-			}
-		}
+	/**
+	 * Used to create a unknown atom box
+	 * @param type The type of the box
+	 * @param box The box
+	 * @return The atom
+	 */
+	public Atom createUnkownAtom(String type, Box box) {
+		return new AtomUnknown(type,box);
 	}
+
+	/**
+	 * Used to create a disk number box
+	 * @param diskNumber The disk number
+	 * @param numberOfDisks The total number of disks
+	 * @return The atom
+	 */
+	@Override
+	public Atom createDiskAtom( byte diskNumber,byte numberOfDisks) {
+		return new AtomDisk("disk",diskNumber,numberOfDisks);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IAtom createAtom(String name, String value) {
+		return createAtom(null,name, value);
+	}
+
 }
