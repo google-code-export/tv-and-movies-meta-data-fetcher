@@ -142,7 +142,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				if (dirConfig.getMode()==Mode.FILM) {
 					Film f = fromStore.getFilm(rootMediaDir, mediaFile);
 					if (f==null) {
-						fatal("Unable to find file for file: " + mediaFile);
+						fatal("Unable to find film details for file: " + mediaFile);
 						return false;
 					}
 					Integer part =getFilmPart(mediaFile,f);
