@@ -226,6 +226,7 @@ public class MP4ITunesStore implements IStore {
 			else {
 				mp4Manager=new ISOParserMP4Manager();
 			}
+			System.out.println("Using mp4 manager: " + mp4Manager.getClass());
 		}
 		return mp4Manager;
 	}
