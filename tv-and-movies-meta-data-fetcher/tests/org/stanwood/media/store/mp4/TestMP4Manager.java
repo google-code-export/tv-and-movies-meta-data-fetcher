@@ -40,7 +40,7 @@ public class TestMP4Manager {
 		File mp4File = new File(url.toURI());
 		Assert.assertTrue(mp4File.exists());
 
-		IMP4Manager ap = new ISOParserMP4Manager();
+		IMP4Manager ap = createMP4Manager();
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 
 		Assert.assertEquals(0,atoms.size());
@@ -56,7 +56,7 @@ public class TestMP4Manager {
 		File mp4File = new File(url.toURI());
 		Assert.assertTrue(mp4File.exists());
 
-		IMP4Manager ap = new ISOParserMP4Manager();
+		IMP4Manager ap = createMP4Manager();
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<IAtom>() {
 			@Override
@@ -104,13 +104,14 @@ public class TestMP4Manager {
 		}
 		FileHelper.copy(srcFile, mp4File);
 		Episode episode = createTestEpisode();
-		IMP4Manager ap = new ISOParserMP4Manager();
-		ap.updateEpsiode(mp4File, episode);
+		IMP4Manager ap = createMP4Manager();
+		MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Assert.assertEquals(10,atoms.size());
-		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
-		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
+//		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
+//		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
+		Assert.assertEquals("stik=10",atoms.get(0).toString());
 		Assert.assertEquals("stik",atoms.get(0).getName());
 		Assert.assertEquals("34567",atoms.get(1).getValue());
 		Assert.assertEquals("tven",atoms.get(1).getName());
@@ -132,6 +133,11 @@ public class TestMP4Manager {
 		Assert.assertEquals("catg",atoms.get(9).getName());
 	}
 
+	protected IMP4Manager createMP4Manager() {
+		return new ISOParserMP4Manager();
+//		return new MP4Manager();
+	}
+
 	/**
 	 * Used to test that a film meta data can be written to a .mp4 file
 	 * @throws Exception Thrown if the test produces any errors
@@ -149,8 +155,8 @@ public class TestMP4Manager {
 		FileHelper.copy(srcFile, mp4File);
 		Film film = createTestFilm();
 
-		IMP4Manager ap = new ISOParserMP4Manager();
-		ap.updateFilm(mp4File, film,null);
+		IMP4Manager ap = createMP4Manager();
+		MP4ITunesStore.updateFilm(ap,mp4File, film,null);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<IAtom>() {
@@ -164,7 +170,8 @@ public class TestMP4Manager {
 
 		Assert.assertEquals("SciFi",atoms.get(0).getValue());
 		Assert.assertEquals("catg",atoms.get(0).getName());
-		Assert.assertEquals("iTunes Cover",atoms.get(1).getValue());
+//		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
+		Assert.assertTrue(atoms.get(1).getValue().startsWith("Artwork of type COVERART_JPEG and size "));
 		Assert.assertEquals("covr",atoms.get(1).getName());
 		Assert.assertEquals("A test description",atoms.get(2).getValue());
 		Assert.assertEquals("desc",atoms.get(2).getName());

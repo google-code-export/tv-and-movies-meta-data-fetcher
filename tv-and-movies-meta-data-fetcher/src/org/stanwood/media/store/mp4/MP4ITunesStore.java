@@ -16,10 +16,22 @@
  */
 package org.stanwood.media.store.mp4;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -27,10 +39,12 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
@@ -40,6 +54,11 @@ import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
  * </p>
  */
 public class MP4ITunesStore implements IStore {
+
+	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
+	private IMP4Manager mp4Manager;
+	private Class<? extends IMP4Manager> manager;
+
 
 	/**
 	 * This is used to store episode information of a TVShow MP4 file into the
@@ -58,9 +77,8 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeEpisode(File file, Episode episode) throws StoreException {
-		IMP4Manager ap = new ISOParserMP4Manager();
 		try {
-			ap.updateEpsiode(file,episode);
+			updateEpsiode(getMP4Manager(),file,episode);
 		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
@@ -149,9 +167,8 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void writeFilm(File filmFile, Film film, Integer part) throws StoreException {
-		IMP4Manager ap = new ISOParserMP4Manager();
 		try {
-			ap.updateFilm(filmFile,film,part);
+			updateFilm(getMP4Manager(),filmFile,film,part);
 		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
@@ -197,15 +214,40 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
+	private IMP4Manager getMP4Manager() throws StoreException {
+		if (mp4Manager==null) {
+			if (manager!=null) {
+				try {
+					mp4Manager = manager.newInstance();
+				} catch (Exception e) {
+					throw new StoreException("Unable to create manager: " + manager.getClass(),e);
+				}
+			}
+			else {
+				mp4Manager=new ISOParserMP4Manager();
+			}
+		}
+		return mp4Manager;
+	}
+
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	@Override
-	public void setParameter(String key, String value) {
+	public void setParameter(String key, String value) throws StoreException {
+		if (key.equalsIgnoreCase("manager")) {
+			try {
+				manager = (Class<? extends IMP4Manager>) Class.forName(value);
+			} catch (ClassNotFoundException e) {
+				throw new StoreException("Unable to find MP4 manager class: " + value,e);
+			}
+		}
+		throw new StoreException("Unsupported parameter '" + key+"'");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getParameter(String key) {
-		return null;
+	public String getParameter(String key) throws StoreException {
+		throw new StoreException("Unsupported parameter '" + key+"'");
 	}
 
 	/** {@inheritDoc} */
@@ -231,4 +273,164 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
+	/**
+	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
+	 * @param mp4Manager MP4 Manager
+	 * @param mp4File The MP4 file
+	 * @param episode The episode details
+	 * @throws MP4Exception Thrown if their is a problem updating the atoms
+	 */
+	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, Episode episode) throws MP4Exception {
+
+		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
+		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
+		List<IAtom> atoms = new ArrayList<IAtom>();
+		atoms.add(mp4Manager.createAtom(StikValue.TV_SHOW));
+		atoms.add(mp4Manager.createAtom("tven", episode.getEpisodeId()));
+		atoms.add(mp4Manager.createAtom("tvsh", episode.getSeason().getShow().getName()));
+		atoms.add(mp4Manager.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
+		atoms.add(mp4Manager.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
+		if (episode.getDate()!=null) {
+			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(episode.getDate())));
+		}
+		atoms.add(mp4Manager.createAtom("©nam", episode.getTitle()));
+		atoms.add(mp4Manager.createAtom("desc", episode.getSummary()));
+//		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
+
+		if (episode.getSeason().getShow().getGenres().size() > 0) {
+			atoms.add(mp4Manager.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(mp4Manager.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
+		}
+		File artwork = null;
+		try {
+			URL imageUrl = null;
+			if (episode.getImageURL()!=null) {
+				imageUrl = episode.getImageURL();
+			}
+			else if (episode.getSeason().getShow().getImageURL()!=null) {
+				imageUrl = episode.getSeason().getShow().getImageURL();
+			}
+			if (imageUrl != null) {
+				try {
+					artwork = downloadToTempFile(imageUrl);
+					atoms.add(mp4Manager.createAtom("covr", artwork.getAbsolutePath()));
+				} catch (IOException e) {
+					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
+					return;
+				}
+			}
+
+			mp4Manager.update(mp4File, atoms);
+		}
+		finally {
+			if (artwork!=null) {
+				try {
+					FileHelper.delete(artwork);
+				} catch (IOException e) {
+					log.error("Unable to delete temp file",e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
+	 * Film atoms and artwork.
+	 * @param mp4Manager MP4 Manager
+	 * @param mp4File The MP4 file
+	 * @param film The film details
+	 * @param part The part number of the film, or null if it does not have parts
+	 * @throws MP4Exception Thrown if their is a problem updating the atoms
+	 */
+	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, Film film,Integer part) throws MP4Exception {
+		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
+		List<IAtom> atoms = new ArrayList<IAtom>();
+		atoms.add(mp4Manager.createAtom(StikValue.MOVIE));
+		if (film.getDate()!=null) {
+			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(film.getDate())));
+		}
+		atoms.add(mp4Manager.createAtom("©nam", film.getTitle()));
+		atoms.add(mp4Manager.createAtom("desc", film.getDescription()));
+//		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
+		if (part!=null) {
+			byte total =0;
+			for (VideoFile vf : film.getFiles()) {
+				if (vf.getPart()!=null && vf.getPart()>total) {
+					total = (byte)(int)vf.getPart();
+				}
+			}
+
+			if (part>total) {
+				total = (byte)(int)part;
+			}
+			atoms.add(mp4Manager.createDiskAtom((byte)(int)part,total));
+		}
+
+		File artwork = null;
+		try {
+			if (film.getImageURL() != null) {
+				try {
+					artwork = downloadToTempFile(film.getImageURL());
+					atoms.add(mp4Manager.createAtom("covr", artwork.getAbsolutePath()));
+				} catch (IOException e) {
+					log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
+					return;
+				}
+			}
+			if (film.getPreferredGenre() != null) {
+				atoms.add(mp4Manager.createAtom("©gen", film.getPreferredGenre()));
+				atoms.add(mp4Manager.createAtom("catg", film.getPreferredGenre()));
+			} else {
+				if (film.getGenres().size() > 0) {
+					atoms.add(mp4Manager.createAtom("©gen", film.getGenres().get(0)));
+					atoms.add(mp4Manager.createAtom("catg", film.getGenres().get(0)));
+				}
+			}
+			mp4Manager.update(mp4File, atoms);
+		}
+		finally {
+			if (artwork!=null) {
+				try {
+					FileHelper.delete(artwork);
+				} catch (IOException e) {
+					log.error("Unable to delete temp file",e);
+				}
+			}
+		}
+	}
+
+	private static File downloadToTempFile(URL url) throws IOException {
+		File file = FileHelper.createTempFile("artwork", ".jpg");
+		if (!file.delete()) {
+			throw new IOException("Unable to delete temp file "+file.getAbsolutePath());
+		}
+		OutputStream out = null;
+		URLConnection conn = null;
+		InputStream in = null;
+		try {
+			out = new BufferedOutputStream(new FileOutputStream(file));
+			conn = url.openConnection();
+			in = conn.getInputStream();
+			byte[] buffer = new byte[1024];
+			int numRead;
+			long numWritten = 0;
+			while ((numRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, numRead);
+				numWritten += numRead;
+			}
+			file.deleteOnExit();
+			return file;
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			} catch (IOException ioe) {
+				log.error("Unable to close file: " + file);
+			}
+		}
+	}
 }

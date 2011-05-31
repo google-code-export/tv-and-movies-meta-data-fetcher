@@ -1,5 +1,7 @@
 package org.stanwood.media.store.mp4.isoparser;
 
+import org.stanwood.media.store.mp4.StikValue;
+
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;
 
@@ -8,63 +10,6 @@ import com.coremedia.iso.boxes.apple.AppleMediaTypeBox;
  */
 public class AtomStik extends Atom {
 
-	/** Used to represent the values of the atom */
-	public enum Value {
-		 /** The old movie type */
-		 MOVIE("0", "Movie"),
-		 /** The music type */
-	     MUSIC("1", "Music"),
-	     /** Audio book type */
-	     AUDIO_BOOK("2", "Audiobook"),
-	     /** Music video type */
-	     MUSIC_VIDEO("6", "Music Video"),
-	     /** Movie type */
-	     SHORT_FILM("9", "Short Film"),
-	     /** TV show type */
-	     TV_SHOW("10", "TV Show"),
-	     /** Booklet type */
-	     BOOKLET("11", "Booklet"),
-	     /** Ring tone type */
-	     RINGTONE("14", "Ringtone");
-
-		private String id;
-		private String desc;
-
-		private Value(String id, String desc) {
-			this.id = id;
-			this.desc = desc;
-		}
-
-		/**
-		 * Get the description of the atom value
-		 * @return the description of the atom value
-		 */
-		public String getDescription() {
-			return desc;
-		}
-
-		/**
-		 * Get the atom value associated with a ID
-		 * @param value The id
-		 * @return the atom value
-		 */
-		public static Value fromId(String value) {
-			for (Value v : values()) {
-				if (v.id.equals(value)) {
-					return v;
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * Get the atom value id
-		 * @return the atom value id
-		 */
-		public String getId() {
-			return id;
-		}
-	}
 
 	/**
 	 * The constructor
@@ -78,8 +23,8 @@ public class AtomStik extends Atom {
 	 * Used to set the value of the atom
 	 * @param value the value of the atom
 	 */
-	public void setTypedValue(Value value) {
-		setValue(value.id);
+	public void setTypedValue(StikValue value) {
+		setValue(value.getId());
 	}
 
 	/** {@inheritDoc} */
@@ -99,8 +44,8 @@ public class AtomStik extends Atom {
 	 * Used to get the value of the atom
 	 * @return The value of the atom
 	 */
-	public Value getTypedValue() {
-		return Value.fromId(getValue());
+	public StikValue getTypedValue() {
+		return StikValue.fromId(getValue());
 	}
 
 	/** {@inheritDoc} */
