@@ -9,6 +9,7 @@ import org.apache.commons.cli.Options;
 import org.stanwood.media.cli.BaseLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
 
 /**
  * <p>This is a CLI application used to print the atoms in a MP4 file</p>
@@ -55,15 +56,15 @@ public class CLIListAtoms extends BaseLauncher {
 
 	@Override
 	protected boolean run() {
-		MP4Manager mp4Manager = new MP4Manager();
+		IMP4Manager mp4Manager = new ISOParserMP4Manager();
 		try {
 			info("Reading atoms...");
-			List<Atom> atoms = mp4Manager.listAtoms(mp4File);
+			List<IAtom> atoms = mp4Manager.listAtoms(mp4File);
 			if (atoms==null || atoms.size()==0) {
 				info("No metadata atoms found.");
 			}
 			else {
-				for (Atom a : atoms) {
+				for (IAtom a : atoms) {
 					String value = a.getValue();
 					if (value==null) {
 						value = "<unknown>";

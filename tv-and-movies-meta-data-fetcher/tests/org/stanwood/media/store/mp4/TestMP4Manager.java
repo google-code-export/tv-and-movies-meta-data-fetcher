@@ -18,11 +18,13 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.store.mp4.isoparser.AtomStik;
+import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * Used to test the {@link MP4Manager} class.
+ * Used to test the {@link ISOParserMP4Manager} class.
  */
 public class TestMP4Manager {
 
@@ -38,8 +40,8 @@ public class TestMP4Manager {
 		File mp4File = new File(url.toURI());
 		Assert.assertTrue(mp4File.exists());
 
-		IMP4Manager ap = new MP4Manager();
-		List<Atom> atoms = ap.listAtoms(mp4File);
+		IMP4Manager ap = new ISOParserMP4Manager();
+		List<IAtom> atoms = ap.listAtoms(mp4File);
 
 		Assert.assertEquals(0,atoms.size());
 	}
@@ -54,11 +56,11 @@ public class TestMP4Manager {
 		File mp4File = new File(url.toURI());
 		Assert.assertTrue(mp4File.exists());
 
-		IMP4Manager ap = new MP4Manager();
-		List<Atom> atoms = ap.listAtoms(mp4File);
-		Collections.sort(atoms, new Comparator<Atom>() {
+		IMP4Manager ap = new ISOParserMP4Manager();
+		List<IAtom> atoms = ap.listAtoms(mp4File);
+		Collections.sort(atoms, new Comparator<IAtom>() {
 			@Override
-			public int compare(Atom o1, Atom o2) {
+			public int compare(IAtom o1, IAtom o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
@@ -102,10 +104,10 @@ public class TestMP4Manager {
 		}
 		FileHelper.copy(srcFile, mp4File);
 		Episode episode = createTestEpisode();
-		IMP4Manager ap = new MP4Manager();
+		IMP4Manager ap = new ISOParserMP4Manager();
 		ap.updateEpsiode(mp4File, episode);
 
-		List<Atom> atoms = ap.listAtoms(mp4File);
+		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Assert.assertEquals(10,atoms.size());
 		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
 		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
@@ -147,13 +149,13 @@ public class TestMP4Manager {
 		FileHelper.copy(srcFile, mp4File);
 		Film film = createTestFilm();
 
-		IMP4Manager ap = new MP4Manager();
+		IMP4Manager ap = new ISOParserMP4Manager();
 		ap.updateFilm(mp4File, film,null);
 
-		List<Atom> atoms = ap.listAtoms(mp4File);
-		Collections.sort(atoms, new Comparator<Atom>() {
+		List<IAtom> atoms = ap.listAtoms(mp4File);
+		Collections.sort(atoms, new Comparator<IAtom>() {
 			@Override
-			public int compare(Atom o1, Atom o2) {
+			public int compare(IAtom o1, IAtom o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});

@@ -14,7 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.isoparser;
+
+import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.MP4Exception;
 
 import com.coremedia.iso.boxes.AbstractBox;
 import com.coremedia.iso.boxes.Box;
@@ -26,7 +29,7 @@ import com.coremedia.iso.boxes.apple.AbstractAppleMetaDataBox;
 /**
  * Used to store mp4 atom information.
  */
-public class Atom {
+public class Atom implements IAtom {
 
 	private String name;
 	private String value;

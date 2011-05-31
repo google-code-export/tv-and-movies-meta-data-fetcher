@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.boxes;
+package org.stanwood.media.store.mp4.isoparser.boxes;
 
 import java.nio.charset.Charset;
 
