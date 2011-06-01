@@ -65,16 +65,16 @@ public class TestMP4Manager {
 		});
 
 		Assert.assertEquals(10,atoms.size());
-		Assert.assertEquals("catg=SciFi",atoms.get(0).toString());
-		Assert.assertEquals("desc=This is a test show summary",atoms.get(1).toString());
-		Assert.assertEquals("stik=10",atoms.get(2).toString());
-		Assert.assertEquals("tven=103",atoms.get(3).toString());
-		Assert.assertEquals("tves=3",atoms.get(4).toString());
-		Assert.assertEquals("tvsh=Test Show Name",atoms.get(5).toString());
-		Assert.assertEquals("tvsn=1",atoms.get(6).toString());
-		Assert.assertEquals("©day=Thu Nov 10 00:00:00 2005",atoms.get(7).toString());
-		Assert.assertEquals("©gen=SciFi",atoms.get(8).toString());
-		Assert.assertEquals("©nam=Test Episode",atoms.get(9).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(0).toString());
+		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(1).toString());
+		Assert.assertEquals("Media type: [stik=10]",atoms.get(2).toString());
+		Assert.assertEquals("Episode ID: [tven=103]",atoms.get(3).toString());
+		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(4).toString());
+		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(5).toString());
+		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(6).toString());
+		Assert.assertEquals("Release year: [©day=Thu Nov 10 00:00:00 GMT 2005]",atoms.get(7).toString());
+		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(8).toString());
+		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(9).toString());
 	}
 
 	/**
