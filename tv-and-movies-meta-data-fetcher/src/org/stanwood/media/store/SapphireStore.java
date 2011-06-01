@@ -406,4 +406,9 @@ public class SapphireStore implements IStore {
 	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
 		return null;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void init() throws StoreException {
+	}
 }

@@ -1177,4 +1177,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void init() throws StoreException {
+	}
+
 }

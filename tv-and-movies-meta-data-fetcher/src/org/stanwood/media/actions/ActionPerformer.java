@@ -100,6 +100,10 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions(List<File> files,Set<File> dirs) throws ActionException {
+		if (!initStores()) {
+			throw new ActionException("Unable to setup stores as one or more failed to initalise");
+		}
+
 		for (IAction action : actions) {
 			action.init(dir);
 		}
@@ -120,6 +124,20 @@ public class ActionPerformer implements IActionEventHandler {
 			action.finished(dir);
 		}
 		log.info("Finished");
+	}
+
+	private boolean initStores() {
+		boolean hasErrors = false;
+		for (IStore store : dir.getStores()) {
+			try {
+				store.init();
+			}
+			catch (StoreException e ) {
+				log.debug(e.getMessage(),e);
+				hasErrors = true;
+			}
+		}
+		return !hasErrors;
 	}
 
 	protected List<File> findMediaFiles() throws ActionException {

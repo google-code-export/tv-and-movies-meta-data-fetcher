@@ -2,8 +2,11 @@ package org.stanwood.media.store.mp4.mp4v2;
 
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
+import org.stanwood.media.store.mp4.mp4v2.lib.MP4TagArtwork;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4Tags;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
+
+import com.sun.jna.Memory;
 
 /**
  * Used to store mp4 artwork atom data
@@ -32,13 +35,14 @@ public class MP4v2AtomArtwork extends AbstractMP4v2Atom implements IAtom {
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(MP4Tags tags) {
-		//TODO remove old artwork?
-//		MP4TagArtwork artwork = new MP4TagArtwork();
-//		artwork.data = data;
-//		artwork.size = size;
-//		artwork.type = MP4TagArtworkType.fromValue(type.getIntValue());
-//
-//		getLib().MP4TagsSetArtwork(tags, type, artwork);
+
+		MP4TagArtwork artwork = new MP4TagArtwork();
+		artwork.data = new Memory(data.length);
+		artwork.data.write(0,data,0,data.length);
+		artwork.size = size;
+		artwork.type = type.getIntValue();
+
+//		getLib().MP4TagsSetArtwork(tags, artwork.type,artwork);
 	}
 
 	/**

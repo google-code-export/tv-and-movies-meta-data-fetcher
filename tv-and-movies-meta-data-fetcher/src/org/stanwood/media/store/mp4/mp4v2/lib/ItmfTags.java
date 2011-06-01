@@ -21,7 +21,7 @@ public interface ItmfTags {
 	 *
 	 *  @return structure with all tags missing.
 	 */
-	public MP4Tags MP4TagsAlloc();
+	public MP4Tags.ByReference MP4TagsAlloc();
 
 	/** Fetch data from mp4 file and populate structure.
 	 *
@@ -85,9 +85,9 @@ public interface ItmfTags {
 	public void MP4TagsSetSortComposer    ( MP4Tags tags, String value );
 	public void MP4TagsSetSortTVShow      ( MP4Tags tags, String value );
 
-	public void MP4TagsAddArtwork         ( MP4Tags tags, MP4TagArtwork.ByReference artwork );
-	public void MP4TagsSetArtwork         ( MP4Tags tags, int type, MP4TagArtwork.ByReference artwork );
-	public void MP4TagsRemoveArtwork      ( MP4Tags tags, int type );
+	public void MP4TagsAddArtwork         ( MP4Tags tags, MP4TagArtwork artwork );
+	public void MP4TagsSetArtwork         ( MP4Tags tags, MP4TagArtworkType type, MP4TagArtwork artwork );
+	public void MP4TagsRemoveArtwork      ( MP4Tags tags, MP4TagArtworkType type );
 
 	public void MP4TagsSetCopyright       ( MP4Tags tags, String value );
 	public void MP4TagsSetEncodingTool    ( MP4Tags tags, String value );
