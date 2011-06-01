@@ -65,11 +65,7 @@ public class CLIListAtoms extends BaseLauncher {
 			}
 			else {
 				for (IAtom a : atoms) {
-					String value = a.getValue();
-					if (value==null) {
-						value = "<unknown>";
-					}
-					getStdout().println(a.getDisplayName()+" ["+a.getName()+"] = " + value);
+					getStdout().println(a.toString());
 				}
 			}
 		} catch (MP4Exception e) {

@@ -18,6 +18,7 @@ package org.stanwood.media.store.mp4;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -43,7 +45,7 @@ import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
+import org.stanwood.media.store.mp4.mp4v2.MP4v2Manager;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -58,7 +60,6 @@ public class MP4ITunesStore implements IStore {
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager;
-
 
 	/**
 	 * This is used to store episode information of a TVShow MP4 file into the
@@ -224,9 +225,13 @@ public class MP4ITunesStore implements IStore {
 				}
 			}
 			else {
-				mp4Manager=new ISOParserMP4Manager();
+				mp4Manager=new MP4v2Manager();
 			}
-			System.out.println("Using mp4 manager: " + mp4Manager.getClass());
+			try {
+				mp4Manager.init();
+			} catch (MP4Exception e) {
+				throw new StoreException("Unable to setup the store",e);
+			}
 		}
 		return mp4Manager;
 	}
@@ -286,11 +291,11 @@ public class MP4ITunesStore implements IStore {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom(StikValue.TV_SHOW));
+		atoms.add(mp4Manager.createAtom("stik",StikValue.TV_SHOW.getId()));
 		atoms.add(mp4Manager.createAtom("tven", episode.getEpisodeId()));
 		atoms.add(mp4Manager.createAtom("tvsh", episode.getSeason().getShow().getName()));
-		atoms.add(mp4Manager.createAtom("tvsn", String.valueOf(episode.getSeason().getSeasonNumber())));
-		atoms.add(mp4Manager.createAtom("tves", String.valueOf(episode.getEpisodeNumber())));
+		atoms.add(mp4Manager.createAtom("tvsn", episode.getSeason().getSeasonNumber()));
+		atoms.add(mp4Manager.createAtom("tves", episode.getEpisodeNumber()));
 		if (episode.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(episode.getDate())));
 		}
@@ -302,26 +307,40 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(mp4Manager.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
 		}
+		IAtom artworkAtom = getArtworkAtom(mp4Manager, mp4File, episode);
+		if (artworkAtom!=null) {
+			atoms.add(artworkAtom);
+		}
+		mp4Manager.update(mp4File, atoms);
+	}
+
+	protected static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File,
+			IVideo video) {
 		File artwork = null;
 		try {
 			URL imageUrl = null;
-			if (episode.getImageURL()!=null) {
-				imageUrl = episode.getImageURL();
+			if (video instanceof Episode) {
+				Episode episode = (Episode)video;
+				if (episode.getImageURL()!=null) {
+					imageUrl = episode.getImageURL();
+				}
+				else if (episode.getSeason().getShow().getImageURL()!=null) {
+					imageUrl = episode.getSeason().getShow().getImageURL();
+				}
 			}
-			else if (episode.getSeason().getShow().getImageURL()!=null) {
-				imageUrl = episode.getSeason().getShow().getImageURL();
+			else if (video instanceof Film) {
+				imageUrl = ((Film) video).getImageURL();
 			}
 			if (imageUrl != null) {
 				try {
 					artwork = downloadToTempFile(imageUrl);
-					atoms.add(mp4Manager.createAtom("covr", artwork.getAbsolutePath()));
+					byte data[] = getBytesFromFile(artwork);
+					return mp4Manager.createAtom("covr", MP4ArtworkType.MP4_ART_JPEG,data.length,data );
+
 				} catch (IOException e) {
 					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
-					return;
 				}
 			}
-
-			mp4Manager.update(mp4File, atoms);
 		}
 		finally {
 			if (artwork!=null) {
@@ -332,6 +351,7 @@ public class MP4ITunesStore implements IStore {
 				}
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -346,12 +366,13 @@ public class MP4ITunesStore implements IStore {
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, Film film,Integer part) throws MP4Exception {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom(StikValue.MOVIE));
+		atoms.add(mp4Manager.createAtom("stik",StikValue.MOVIE.getId()));
 		if (film.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(film.getDate())));
 		}
 		atoms.add(mp4Manager.createAtom("©nam", film.getTitle()));
-		atoms.add(mp4Manager.createAtom("desc", film.getDescription()));
+		atoms.add(mp4Manager.createAtom("desc", film.getSummary()));
+		atoms.add(mp4Manager.createAtom("ldes", film.getDescription()));
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
 		if (part!=null) {
 			byte total =0;
@@ -364,40 +385,23 @@ public class MP4ITunesStore implements IStore {
 			if (part>total) {
 				total = (byte)(int)part;
 			}
-			atoms.add(mp4Manager.createDiskAtom((byte)(int)part,total));
+			atoms.add(mp4Manager.createAtom("disk",(byte)(int)part,total));
 		}
 
-		File artwork = null;
-		try {
-			if (film.getImageURL() != null) {
-				try {
-					artwork = downloadToTempFile(film.getImageURL());
-					atoms.add(mp4Manager.createAtom("covr", artwork.getAbsolutePath()));
-				} catch (IOException e) {
-					log.error("Unable to download artwork from " + film.getImageURL().toExternalForm()+". Unable to update " + mp4File.getName(),e);
-					return;
-				}
-			}
-			if (film.getPreferredGenre() != null) {
-				atoms.add(mp4Manager.createAtom("©gen", film.getPreferredGenre()));
-				atoms.add(mp4Manager.createAtom("catg", film.getPreferredGenre()));
-			} else {
-				if (film.getGenres().size() > 0) {
-					atoms.add(mp4Manager.createAtom("©gen", film.getGenres().get(0)));
-					atoms.add(mp4Manager.createAtom("catg", film.getGenres().get(0)));
-				}
-			}
-			mp4Manager.update(mp4File, atoms);
-		}
-		finally {
-			if (artwork!=null) {
-				try {
-					FileHelper.delete(artwork);
-				} catch (IOException e) {
-					log.error("Unable to delete temp file",e);
-				}
+		if (film.getPreferredGenre() != null) {
+			atoms.add(mp4Manager.createAtom("©gen", film.getPreferredGenre()));
+			atoms.add(mp4Manager.createAtom("catg", film.getPreferredGenre()));
+		} else {
+			if (film.getGenres().size() > 0) {
+				atoms.add(mp4Manager.createAtom("©gen", film.getGenres().get(0)));
+				atoms.add(mp4Manager.createAtom("catg", film.getGenres().get(0)));
 			}
 		}
+		IAtom artworkAtom = getArtworkAtom(mp4Manager,mp4File,film);
+		if (artworkAtom!=null) {
+			atoms.add(artworkAtom);
+		}
+		mp4Manager.update(mp4File, atoms);
 	}
 
 	private static File downloadToTempFile(URL url) throws IOException {
@@ -433,5 +437,51 @@ public class MP4ITunesStore implements IStore {
 				log.error("Unable to close file: " + file);
 			}
 		}
+	}
+
+	// Returns the contents of the file in a byte array.
+	private static byte[] getBytesFromFile(File file) throws IOException {
+		InputStream is = null;
+		try {
+			is = new FileInputStream(file);
+
+		    // Get the size of the file
+		    long length = file.length();
+
+		    // You cannot create an array using a long type.
+		    // It needs to be an int type.
+		    // Before converting to an int type, check
+		    // to ensure that file is not larger than Integer.MAX_VALUE.
+		    if (length > Integer.MAX_VALUE) {
+		        // File is too large
+		    }
+
+		    // Create the byte array to hold the data
+		    byte[] bytes = new byte[(int)length];
+
+		    // Read in the bytes
+		    int offset = 0;
+		    int numRead = 0;
+		    while (offset < bytes.length
+		           && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+		        offset += numRead;
+		    }
+
+		    // Ensure all the bytes have been read in
+		    if (offset < bytes.length) {
+		        throw new IOException("Could not completely read file "+file.getName());
+		    }
+		    return bytes;
+		}
+	    // Close the input stream and return bytes
+	    finally {
+	    	try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException ioe) {
+				log.error("Unable to close file: " + file);
+			}
+	    }
 	}
 }

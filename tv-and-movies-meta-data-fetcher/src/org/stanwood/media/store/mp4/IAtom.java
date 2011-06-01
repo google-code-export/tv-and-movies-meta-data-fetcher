@@ -17,17 +17,17 @@ public interface IAtom {
 	 */
 	public void setName(String name);
 
-	/**
-	 * Used to get the value of the atom
-	 * @return The value of the atom
-	 */
-	public String getValue();
-
-	/**
-	 * Used to set the value of the atom
-	 * @param value The value of the atom
-	 */
-	public void setValue(String value);
+//	/**
+//	 * Used to get the value of the atom
+//	 * @return The value of the atom
+//	 */
+//	public String getValue();
+//
+//	/**
+//	 * Used to set the value of the atom
+//	 * @param value The value of the atom
+//	 */
+//	public void setValue(String value);
 
 	/**
 	 * Gets the display name

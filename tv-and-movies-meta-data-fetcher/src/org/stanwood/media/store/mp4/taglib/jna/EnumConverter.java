@@ -7,9 +7,11 @@ import com.sun.jna.FromNativeContext;
 import com.sun.jna.ToNativeContext;
 import com.sun.jna.TypeConverter;
 
+@SuppressWarnings("all")
 public class EnumConverter implements TypeConverter {
 
 	private final static Log log = LogFactory.getLog(EnumConverter.class);
+
 
     @Override
 	public Object fromNative(Object input, FromNativeContext context) {
@@ -35,7 +37,7 @@ public class EnumConverter implements TypeConverter {
     @Override
 	public Object toNative(Object input, ToNativeContext context) {
         JnaEnum j = (JnaEnum) input;
-        return new Integer(j.getIntValue());
+        return Integer.valueOf(j.getIntValue());
     }
 
     @Override

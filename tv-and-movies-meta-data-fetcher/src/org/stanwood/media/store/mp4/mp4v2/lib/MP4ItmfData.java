@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 
 import com.sun.jna.Structure;
 

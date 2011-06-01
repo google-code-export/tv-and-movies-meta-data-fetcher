@@ -35,19 +35,38 @@ public interface IMP4Manager {
 	public IAtom createAtom(String name, String value);
 
 	/**
-	 * Used to create a &quot;stik&quot; atom
-	 * @param value The atom value
+	 * Used to create a range atom
+	 * @param name The name of the atom
+	 * @param number The number of items in the rage
+	 * @param total The total number possible
 	 * @return The atom
 	 */
-	public IAtom createAtom(StikValue value);
+	public IAtom createAtom(String name,short number, short total);
 
 	/**
-	 * Used to create a disk number box
-	 * @param diskNumber The disk number
-	 * @param numberOfDisks The total number of disks
+	 * Used to create a number atom
+	 * @param name The name of the atom
+	 * @param value The value of the atom
 	 * @return The atom
 	 */
-	public IAtom createDiskAtom(byte diskNumber, byte numberOfDisks);
+	public IAtom createAtom(String name, int value);
+
+	/**
+	 * Used to create a artwork atom
+	 * @param name The name of the atom
+	 * @param type The artwork type
+	 * @param size The size of the artwork
+	 * @param data The data in the artwork
+	 * @return The atom
+	 */
+	public IAtom createAtom(String name, MP4ArtworkType type, int size, byte[] data);
+
+
+	/**
+	 * Used to setup the manager
+	 * @throws MP4Exception Thrown if their is a problem setup up the manager
+	 */
+	public void init() throws MP4Exception;
 
 
 }

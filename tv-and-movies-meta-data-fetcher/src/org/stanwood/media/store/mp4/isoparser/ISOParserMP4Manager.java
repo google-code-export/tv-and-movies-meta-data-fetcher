@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.store.mp4.AtomNameLookup;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
+import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.StikValue;
 import org.stanwood.media.store.mp4.isoparser.boxes.AppleDiscNumberBox;
@@ -158,7 +159,7 @@ public class ISOParserMP4Manager implements IMP4Manager {
 		}
 		else  if (box instanceof AppleDiscNumberBox) {
 			AppleDiscNumberBox b = (AppleDiscNumberBox)box;
-			Atom a = createDiskAtom(b.getDiskNumber(),b.getNumberOfDisks());
+			Atom a = createAtom("disk",b.getDiskNumber(),b.getNumberOfDisks());
 
 			return a;
 		}
@@ -380,9 +381,8 @@ public class ISOParserMP4Manager implements IMP4Manager {
 	 * @param value The atom value
 	 * @return The atom
 	 */
-	@Override
-	public Atom createAtom(StikValue value) {
-		return createAtom("Media Type","stik",value.getId());
+	public IAtom createAtom(StikValue value) {
+		return createAtom("stik",value.getId());
 	}
 
 	/**
@@ -402,14 +402,32 @@ public class ISOParserMP4Manager implements IMP4Manager {
 	 * @return The atom
 	 */
 	@Override
-	public Atom createDiskAtom( byte diskNumber,byte numberOfDisks) {
-		return new AtomDisk("disk",diskNumber,numberOfDisks);
+	public Atom createAtom( String name,short diskNumber,short numberOfDisks) {
+		return new AtomDisk(name,(byte)diskNumber,(byte)numberOfDisks);
 	}
 
+	/** {@inheritDoc} */
 	/** {@inheritDoc} */
 	@Override
 	public IAtom createAtom(String name, String value) {
 		return createAtom(null,name, value);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IAtom createAtom(String name, int value) {
+		return createAtom("Media Type","stik",String.valueOf(value));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IAtom createAtom(String name, MP4ArtworkType type, int size,byte[] data) {
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void init() throws MP4Exception {
 	}
 
 }

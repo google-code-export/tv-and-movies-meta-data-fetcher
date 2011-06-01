@@ -24,7 +24,7 @@ public class AtomStik extends Atom {
 	 * @param value the value of the atom
 	 */
 	public void setTypedValue(StikValue value) {
-		setValue(value.getId());
+		setValue(String.valueOf(value.getId()));
 	}
 
 	/** {@inheritDoc} */
@@ -45,7 +45,7 @@ public class AtomStik extends Atom {
 	 * @return The value of the atom
 	 */
 	public StikValue getTypedValue() {
-		return StikValue.fromId(getValue());
+		return StikValue.fromId(Byte.parseByte(getValue()));
 	}
 
 	/** {@inheritDoc} */

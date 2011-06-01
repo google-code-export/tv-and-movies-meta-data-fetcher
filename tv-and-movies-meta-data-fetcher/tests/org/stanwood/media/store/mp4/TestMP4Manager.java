@@ -18,7 +18,6 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.store.mp4.isoparser.AtomStik;
 import org.stanwood.media.store.mp4.isoparser.ISOParserMP4Manager;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
@@ -66,26 +65,16 @@ public class TestMP4Manager {
 		});
 
 		Assert.assertEquals(10,atoms.size());
-		Assert.assertEquals("catg",atoms.get(0).getName());
-		Assert.assertEquals("SciFi",atoms.get(0).getValue());
-		Assert.assertEquals("desc",atoms.get(1).getName());
-		Assert.assertEquals("This is a test show summary",atoms.get(1).getValue());
-		Assert.assertEquals("stik",atoms.get(2).getName());
-		Assert.assertEquals("10",atoms.get(2).getValue());
-		Assert.assertEquals("tven",atoms.get(3).getName());
-		Assert.assertEquals("103",atoms.get(3).getValue());
-		Assert.assertEquals("tves",atoms.get(4).getName());
-		Assert.assertEquals("3",atoms.get(4).getValue());
-		Assert.assertEquals("tvsh",atoms.get(5).getName());
-		Assert.assertEquals("Test Show Name",atoms.get(5).getValue());
-		Assert.assertEquals("tvsn",atoms.get(6).getName());
-		Assert.assertEquals("1",atoms.get(6).getValue());
-		Assert.assertEquals("©day",atoms.get(7).getName());
-		Assert.assertEquals("Thu Nov 10 00:00:00 2005",atoms.get(7).getValue().replaceAll("0 ... ", "0 "));
-		Assert.assertEquals("©gen",atoms.get(8).getName());
-		Assert.assertEquals("SciFi",atoms.get(8).getValue());
-		Assert.assertEquals("©nam",atoms.get(9).getName());
-		Assert.assertEquals("Test Episode",atoms.get(9).getValue());
+		Assert.assertEquals("catg=SciFi",atoms.get(0).toString());
+		Assert.assertEquals("desc=This is a test show summary",atoms.get(1).toString());
+		Assert.assertEquals("stik=10",atoms.get(2).toString());
+		Assert.assertEquals("tven=103",atoms.get(3).toString());
+		Assert.assertEquals("tves=3",atoms.get(4).toString());
+		Assert.assertEquals("tvsh=Test Show Name",atoms.get(5).toString());
+		Assert.assertEquals("tvsn=1",atoms.get(6).toString());
+		Assert.assertEquals("©day=Thu Nov 10 00:00:00 2005",atoms.get(7).toString());
+		Assert.assertEquals("©gen=SciFi",atoms.get(8).toString());
+		Assert.assertEquals("©nam=Test Episode",atoms.get(9).toString());
 	}
 
 	/**
@@ -112,25 +101,16 @@ public class TestMP4Manager {
 //		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
 //		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
 		Assert.assertEquals("stik=10",atoms.get(0).toString());
-		Assert.assertEquals("stik",atoms.get(0).getName());
-		Assert.assertEquals("34567",atoms.get(1).getValue());
-		Assert.assertEquals("tven",atoms.get(1).getName());
-		Assert.assertEquals("Test Show Name",atoms.get(2).getValue());
-		Assert.assertEquals("tvsh",atoms.get(2).getName());
-		Assert.assertEquals("1",atoms.get(3).getValue());
-		Assert.assertEquals("tvsn",atoms.get(3).getName());
-		Assert.assertEquals("3",atoms.get(4).getValue());
-		Assert.assertEquals("tves",atoms.get(4).getName());
-		Assert.assertEquals("2005",atoms.get(5).getValue());
-		Assert.assertEquals("©day",atoms.get(5).getName());
-		Assert.assertEquals("Test Episode",atoms.get(6).getValue());
-		Assert.assertEquals("©nam",atoms.get(6).getName());
-		Assert.assertEquals("This is a test show summary",atoms.get(7).getValue());
-		Assert.assertEquals("desc",atoms.get(7).getName());
-		Assert.assertEquals("SciFi",atoms.get(8).getValue());
-		Assert.assertEquals("©gen",atoms.get(8).getName());
-		Assert.assertEquals("SciFi",atoms.get(9).getValue());
-		Assert.assertEquals("catg",atoms.get(9).getName());
+		Assert.assertEquals("stik",atoms.get(0).toString());
+		Assert.assertEquals("tven=34567",atoms.get(1).toString());
+		Assert.assertEquals("tvsh=Test Show Name",atoms.get(2).toString());
+		Assert.assertEquals("tvsn=1",atoms.get(3).toString());
+		Assert.assertEquals("tves=3",atoms.get(4).toString());
+		Assert.assertEquals("©day=2005",atoms.get(5).toString());
+		Assert.assertEquals("©nam=Test Episode",atoms.get(6).toString());
+		Assert.assertEquals("desc=This is a test show summary",atoms.get(7).toString());
+		Assert.assertEquals("©gen=SciFi",atoms.get(8).toString());
+		Assert.assertEquals("catg=SciFi",atoms.get(9).toString());
 	}
 
 	protected IMP4Manager createMP4Manager() {
@@ -168,22 +148,14 @@ public class TestMP4Manager {
 
 		Assert.assertEquals(7,atoms.size());
 
-		Assert.assertEquals("SciFi",atoms.get(0).getValue());
-		Assert.assertEquals("catg",atoms.get(0).getName());
+		Assert.assertEquals("catg=SciFi",atoms.get(0).toString());
 //		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
-		Assert.assertTrue(atoms.get(1).getValue().startsWith("Artwork of type COVERART_JPEG and size "));
-		Assert.assertEquals("covr",atoms.get(1).getName());
-		Assert.assertEquals("A test description",atoms.get(2).getValue());
-		Assert.assertEquals("desc",atoms.get(2).getName());
-		Assert.assertEquals("Movie",((AtomStik)atoms.get(3)).getTypedValue().getDescription());
-		Assert.assertEquals("0",((AtomStik)atoms.get(3)).getTypedValue().getId());
-		Assert.assertEquals("stik",atoms.get(3).getName());
-		Assert.assertEquals("2005",atoms.get(4).getValue());
-		Assert.assertEquals("©day",atoms.get(4).getName());
-		Assert.assertEquals("SciFi",atoms.get(5).getValue());
-		Assert.assertEquals("©gen",atoms.get(5).getName());
-		Assert.assertEquals("Test film name",atoms.get(6).getValue());
-		Assert.assertEquals("©nam",atoms.get(6).getName());
+		Assert.assertTrue(atoms.get(1).toString().startsWith("covr=Artwork of type COVERART_JPEG and size "));
+		Assert.assertEquals("desc=A test description",atoms.get(2).toString());
+		Assert.assertEquals("stik=0",atoms.get(3).toString());
+		Assert.assertEquals("©day=2005",atoms.get(4).toString());
+		Assert.assertEquals("©gen=SciFi",atoms.get(5).toString());
+		Assert.assertEquals("©nam=Test film name",atoms.get(6).toString());
 	}
 
 	private Film createTestFilm() throws Exception {

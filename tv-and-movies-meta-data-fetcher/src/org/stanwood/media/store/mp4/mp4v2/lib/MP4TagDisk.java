@@ -1,7 +1,8 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 
 import com.sun.jna.Structure;
 
+@SuppressWarnings("all")
 public class MP4TagDisk extends Structure {
 	public short index;
 	public short total;
