@@ -17,7 +17,6 @@ Requires:       jakarta-commons-logging >= 1.0.4
 Requires:       log4j >= 1.2.15
 Requires:       mysql-connector-java >= 5.1.6
 Requires:		antlr-java >= 3.1.3
-Requires:		isoparser
 Requires:       ROME >= 1.0
 Requires:       jdom >= 1.1
 BuildRequires:  jpackage-utils
@@ -26,7 +25,6 @@ BuildRequires:  jakarta-commons-cli = 1.0
 BuildRequires:	jakarta-commons-lang >= 2.4
 BuildRequires:  jakarta-commons-exec >= 1.1
 BuildRequires:  jakarta-commons-logging >= 1.0.4
-BuildRequires:	isoparser
 BuildRequires:  java >= 1.6
 BuildRequires:  java-devel >= 1.6
 BuildRequires:  log4j >= 1.2.15
@@ -37,7 +35,6 @@ BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
-BuildRequires:	isoparser
 %if 0%{?suse_version} >= 1140
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7

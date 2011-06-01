@@ -23,7 +23,7 @@ import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * Used to test the {@link ISOParserMP4Manager} class.
+ * Used to test the {@link MP4v2Manager} class.
  */
 public class TestMP4Manager {
 
