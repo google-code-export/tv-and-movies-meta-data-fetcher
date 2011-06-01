@@ -36,18 +36,11 @@ MAIN=org.stanwood.media.cli.manager.CLICopyToMediaDir
 LIB_DIR=$SCRIPT_PATH/../lib
 
 # Launch application.
-CLASSPATH=$LIB_DIR/MediaManager-1.98.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/antlr-runtime-3.1.3.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-cli-1.1.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-exec-1.1.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-lang-2.6.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-logging-1.0.4.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/isoparser-svn.r145.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/jdom.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/log4j-1.2.15.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/mysql-connector-java-5.1.6.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/rome-1.0.jar
-
+CLASSPATH=""
+for FILE in `find $LIB_DIR -name "*.jar"` 
+do
+	CLASSPATH=$CLASSPATH:$FILE	
+done
 
 # Launch Application
 exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
