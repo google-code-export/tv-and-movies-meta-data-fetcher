@@ -33,7 +33,6 @@ CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-lang.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-exec.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-logging.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-cli.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/isoparser.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/log4j.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jdom.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/ROME.jar
