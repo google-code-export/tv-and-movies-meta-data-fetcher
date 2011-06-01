@@ -64,10 +64,10 @@ public class MP4v2Manager implements IMP4Manager {
 				atoms.add(createAtom("tven",tags.tvEpisodeID.getString(0)));
 			}
 			if (tags.tvSeason!=null) {
-				atoms.add(createAtom("tvsn",tags.mediaType.getByte(0)));
+				atoms.add(createAtom("tvsn",tags.tvSeason.getValue()));
 			}
 			if (tags.tvEpisode!=null) {
-				atoms.add(createAtom("tves",tags.mediaType.getByte(0)));
+				atoms.add(createAtom("tves",tags.tvEpisode.getValue()));
 			}
 			if (tags.description!=null) {
 				atoms.add(createAtom("desc",tags.description.getString(0)));
