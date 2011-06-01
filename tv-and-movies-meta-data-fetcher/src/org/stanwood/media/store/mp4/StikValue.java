@@ -4,26 +4,26 @@ package org.stanwood.media.store.mp4;
 /** Used to represent the values of the atom */
 public enum StikValue {
 	/** The old movie type */
-	 MOVIE("0", "Movie"),
+	MOVIE((byte)0, "Movie"),
 	 /** The music type */
-    MUSIC("1", "Music"),
+    MUSIC((byte)1, "Music"),
     /** Audio book type */
-    AUDIO_BOOK("2", "Audiobook"),
+    AUDIO_BOOK((byte)2, "Audiobook"),
     /** Music video type */
-    MUSIC_VIDEO("6", "Music Video"),
+    MUSIC_VIDEO((byte)6, "Music Video"),
     /** Movie type */
-    SHORT_FILM("9", "Short Film"),
+    SHORT_FILM((byte)9, "Short Film"),
     /** TV show type */
-    TV_SHOW("10", "TV Show"),
+    TV_SHOW((byte)10, "TV Show"),
     /** Booklet type */
-    BOOKLET("11", "Booklet"),
+    BOOKLET((byte)11, "Booklet"),
     /** Ring tone type */
-    RINGTONE("14", "Ringtone");
+    RINGTONE((byte)14, "Ringtone");
 
-	private String id;
+	private byte id;
 	private String desc;
 
-	private StikValue(String id, String desc) {
+	private StikValue(byte id, String desc) {
 		this.id = id;
 		this.desc = desc;
 	}
@@ -41,9 +41,9 @@ public enum StikValue {
 	 * @param value The id
 	 * @return the atom value
 	 */
-	public static StikValue fromId(String value) {
+	public static StikValue fromId(int value) {
 		for (StikValue v : values()) {
-			if (v.id.equals(value)) {
+			if (v.id==value) {
 				return v;
 			}
 		}
@@ -54,7 +54,7 @@ public enum StikValue {
 	 * Get the atom value id
 	 * @return the atom value id
 	 */
-	public String getId() {
+	public byte getId() {
 		return id;
 	}
 

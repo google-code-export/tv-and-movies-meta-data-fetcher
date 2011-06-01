@@ -19,15 +19,17 @@ public class AtomNameLookup {
 		names.put("tvsh","TV show name");
 		names.put("tvsn","TV season number");
 		names.put("tves","TV episode number");
-		names.put("©day","Media year");
+		names.put("©day","Release year");
 		names.put("©nam","Title");
 		names.put("desc","Summary");
 		names.put("©gen","Genre");
-		names.put("catg","Genre");
+		names.put("catg","Category");
+		names.put("gnre","Genre type");
 		names.put("©too","Encoder");
 		names.put("covr","Cover artwork");
-		names.put("rtng","Rating");
+		names.put("rtng","Advisory");
 		names.put("disk","Disk number");
+		names.put("ldes","Long description");
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
@@ -6,6 +6,7 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.ShortByReference;
 
+@SuppressWarnings("all")
 public class MP4Tags extends Structure {
 
 	/**
@@ -70,7 +71,7 @@ public class MP4Tags extends Structure {
 	/// C type : const char*
 	public Pointer sortTVShow;
 	/// C type : const MP4TagArtwork*
-	public org.stanwood.media.store.mp4.taglib.MP4TagArtwork.ByReference artwork;
+	public MP4TagArtwork.ByReference artwork;
 	public int artworkCount;
 	/// C type : const char*
 	public Pointer copyright;

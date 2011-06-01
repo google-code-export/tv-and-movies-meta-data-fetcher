@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 
 import org.stanwood.media.store.mp4.taglib.jna.JnaEnum;
 
@@ -55,12 +55,21 @@ public enum MP4ItmfBasicType implements JnaEnum<MP4ItmfBasicType>{
 		this.value = value;
 	}
 
+	/**
+	 * Used to get the value
+	 * @return the value
+	 */
 	@Override
 	public int getIntValue() {
         return this.value;
     }
 
-    @Override
+	/**
+	 * Used to get the type from the value
+	 * @param i the value
+	 */
+    @SuppressWarnings("static-access")
+	@Override
 	public MP4ItmfBasicType getForValue(int i) {
         for (MP4ItmfBasicType o : this.values()) {
             if (o.getIntValue() == i) {

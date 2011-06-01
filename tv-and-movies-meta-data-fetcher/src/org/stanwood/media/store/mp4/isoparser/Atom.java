@@ -52,6 +52,7 @@ public class Atom implements IAtom {
 	 *
 	 * @return The name of the atom
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -62,6 +63,7 @@ public class Atom implements IAtom {
 	 * @param name
 	 *            The name of the atom
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -164,6 +166,7 @@ public class Atom implements IAtom {
 	 * Gets the display name
 	 * @return the display name
 	 */
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -172,9 +175,9 @@ public class Atom implements IAtom {
 	 * Used to set the display name
 	 * @param displayName The display name
 	 */
+	@Override
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-
 
 }

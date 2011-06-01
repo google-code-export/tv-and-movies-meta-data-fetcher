@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 /**
@@ -6,6 +6,7 @@ import com.sun.jna.Structure;
  * a tool written by <a href="http://ochafik.free.fr/">Olivier Chafik</a> that <a href="http://code.google.com/p/jnaerator/wiki/CreditsAndLicense">uses a few opensource projects.</a>.<br>
  * For help, please visit <a href="http://nativelibs4java.googlecode.com/">NativeLibs4Java</a> , <a href="http://rococoa.dev.java.net/">Rococoa</a>, or <a href="http://jna.dev.java.net/">JNA</a>.
  */
+@SuppressWarnings("all")
 public class MP4TagArtwork extends Structure {
 	/**
 	 * < raw picture data<br>
@@ -19,7 +20,7 @@ public class MP4TagArtwork extends Structure {
 	 * < data type<br>
 	 * C type : MP4TagArtworkType
 	 */
-	public int type;
+	public MP4TagArtworkType type;
 	public MP4TagArtwork() {
 		super();
 		initFieldOrder();
@@ -35,7 +36,7 @@ public class MP4TagArtwork extends Structure {
 	 * < data type<br>
 	 * C type : MP4TagArtworkType
 	 */
-	public MP4TagArtwork(Pointer data, int size, int type) {
+	public MP4TagArtwork(Pointer data, int size, MP4TagArtworkType type) {
 		super();
 		this.data = data;
 		this.size = size;

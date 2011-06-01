@@ -1,5 +1,6 @@
-package org.stanwood.media.store.mp4.taglib;
+package org.stanwood.media.store.mp4.mp4v2.lib;
 
+@SuppressWarnings("all")
 public interface MP4v2File {
 
 	/** Dump mp4 file contents as ASCII.
