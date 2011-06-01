@@ -44,9 +44,8 @@ public class MP4v2Manager implements IMP4Manager {
 		int fileHandle = lib.MP4Read(mp4File.getAbsolutePath(),0);
 //		lib.MP4SetVerbosity(fileHandle,MP4v2File.MP4_DETAILS_ALL);
 		try {
+
 			MP4Tags tags = lib.MP4TagsAlloc();
-//			MP4Tags tags = new MP4Tags();
-			System.out.println("fetching tags: " + fileHandle);
 			lib.MP4TagsFetch(tags, fileHandle);
 			System.out.println("Fetched tags: ");
 			if (tags.name!=null) {
