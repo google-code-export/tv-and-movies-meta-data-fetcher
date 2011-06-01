@@ -223,4 +223,11 @@ public interface IStore  {
 	 * @throws StoreException Thrown if their are any problems
 	 */
 	public Film getFilm(MediaDirectory dir, File file) throws StoreException;
+
+	/**
+	 * Called to initialise the stores and check all their resources can be found. This
+	 * is called before performing any actions.
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public void init() throws StoreException;
 }

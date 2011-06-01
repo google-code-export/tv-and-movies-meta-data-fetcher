@@ -325,4 +325,9 @@ public class MemoryStore implements IStore {
 	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
 		return films.get(file);
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void init() throws StoreException {
+	}
 }

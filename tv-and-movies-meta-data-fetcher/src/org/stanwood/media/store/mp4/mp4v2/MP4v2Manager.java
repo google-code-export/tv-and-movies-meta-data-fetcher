@@ -8,7 +8,6 @@ import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4Exception;
-import org.stanwood.media.store.mp4.mp4v2.lib.MP4TagArtwork;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4Tags;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
 
@@ -23,20 +22,33 @@ public class MP4v2Manager implements IMP4Manager {
 	public MP4v2Manager() {
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 * @throws MP4Exception */
 	@Override
-	public void init() {
-		lib = MP4v2Library.INSTANCE;
+	public void init() throws MP4Exception {
+		try {
+			lib = MP4v2Library.INSTANCE;
+		}
+		catch (Throwable t) {
+			throw new MP4Exception("Unable to load native 'mp4v2' library",t);
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
+		if (!mp4File.exists()) {
+			throw new MP4Exception("Unable to find mp4 file: " + mp4File);
+		}
 		List<IAtom>atoms = new ArrayList<IAtom>();
 		int fileHandle = lib.MP4Read(mp4File.getAbsolutePath(),0);
+//		lib.MP4SetVerbosity(fileHandle,MP4v2File.MP4_DETAILS_ALL);
 		try {
 			MP4Tags tags = lib.MP4TagsAlloc();
+//			MP4Tags tags = new MP4Tags();
+			System.out.println("fetching tags: " + fileHandle);
 			lib.MP4TagsFetch(tags, fileHandle);
+			System.out.println("Fetched tags: ");
 			if (tags.name!=null) {
 				atoms.add(createAtom("©nam", tags.name.getString(0)));
 			}
@@ -64,12 +76,14 @@ public class MP4v2Manager implements IMP4Manager {
 			if (tags.longDescription!=null) {
 				atoms.add(createAtom("ldes",tags.longDescription.getString(0)));
 			}
-			if( tags.artworkCount >0 ) {
-				MP4TagArtwork art = tags.artwork;
-				for (int i=0;i<tags.artworkCount;i++) {
-					createAtom("covr",MP4ArtworkType.getForValue(art.type.getIntValue()),art.size,art.data.getByteArray(0, art.size));
-				}
-			}
+//			tags.artwork.
+//			if( tags.artworkCount >0 ) {
+//				MP4TagArtwork art = tags.artwork;
+//				if (art!=null) {
+//					createAtom("covr",MP4ArtworkType.getForValue(art.type.getIntValue()),art.size,art.data.getByteArray(0, art.size));
+//				}
+
+//			}
 			if (tags.encodingTool !=null) {
 				atoms.add(createAtom("©too",tags.encodingTool.getString(0)));
 			}

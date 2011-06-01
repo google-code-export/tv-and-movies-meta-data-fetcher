@@ -3,6 +3,55 @@ package org.stanwood.media.store.mp4.mp4v2.lib;
 @SuppressWarnings("all")
 public interface MP4v2File {
 
+	/** Verbosity bitmask: all possible details. */
+	public final static int MP4_DETAILS_ALL = 0xFFFFFFFF;
+	/** Verbosity bit: reasons for errors. */
+	public final static int MP4_DETAILS_ERROR = 0x00000001;
+	/** Verbosity bit: warnings. */
+	public final static int MP4_DETAILS_WARNING = 0x00000002;
+	/** Verbosity bit: read operations. */
+	public final static int MP4_DETAILS_READ = 0x00000004;
+	/** Verbosity bit: write operations. */
+	public final static int MP4_DETAILS_WRITE = 0x00000008;
+	/** Verbosity bit: find property operations. */
+	public final static int MP4_DETAILS_FIND = 0x00000010;
+	/** Verbosity bit: per table entry details. */
+	public final static int MP4_DETAILS_TABLE = 0x00000020;
+	/** Verbosity bit: per sample details. */
+	public final static int MP4_DETAILS_SAMPLE = 0x00000040;
+	/** Verbosity bit: per RTP hint details. */
+	public final static int MP4_DETAILS_HINT = 0x00000080;
+	/** Verbosity bit: ISMA details. */
+	public final static int MP4_DETAILS_ISMA = 0x00000100;
+	/** Verbosity bit: edit details. */
+	public final static int MP4_DETAILS_EDIT = 0x00000200;
+
+	/** Set verbosity level for diagnostic information.
+	 *
+	 * MP4SetVerbosity allows control over the level of diagnostic information
+	 * printed out by the library. It can be called at any time. Since much is
+	 * done  by  the library when opening an mp4 file, functions such as
+	 * MP4Create(), MP4Modify(), and MP4Read() include a parameter for the.
+	 *
+	 *  @param hFile handle of file for operation.
+	 *  @param verbosity bitmask of the following bits or <b>0</b> for none:
+	 *  <ul>
+	 *      <li>{@link #MP4_DETAILS_ALL}</li>
+	 *      <li>{@link #MP4_DETAILS_ERROR}</li>
+	 *      <li>{@link #MP4_DETAILS_WARNING}</li>
+	 *      <li>{@link #MP4_DETAILS_READ}</li>
+	 *      <li>{@link #MP4_DETAILS_WRITE}</li>
+	 *      <li>{@link #MP4_DETAILS_FIND}</li>
+	 *      <li>{@link #MP4_DETAILS_TABLE}</li>
+	 *      <li>{@link #MP4_DETAILS_SAMPLE}</li>
+	 *      <li>{@link #MP4_DETAILS_HINT}</li>
+	 *      <li>{@link #MP4_DETAILS_ISMA}</li>
+	 *      <li>{@link #MP4_DETAILS_EDIT}</li>
+	 *  </ul>
+	 *  @see MP4GetVerbosity().
+	 */
+	public void MP4SetVerbosity( int hFile, int verbosity );
+
 	/** Dump mp4 file contents as ASCII.
 	 *
 	 *  Dump is an invaluable debugging tool in that in can reveal all the details
@@ -24,7 +73,7 @@ public interface MP4v2File {
 	 *
 	 *  @return <b>true</b> on success, <b>false</b> on failure.
 	 *
-	 *  @see MP4SetVerbosity().
+	 *  @see #MP4SetVerbosity(int, int)
 	 */
 	boolean MP4Dump(int hFile,String tpDumpFile,boolean dumpImplicits);
 
@@ -88,6 +137,7 @@ public interface MP4v2File {
 	 *  @return On success a handle of the newly created file for use in
 	 *      subsequent calls to the library.
 	 *      On error, #MP4_INVALID_FILE_HANDLE.
+	 *  @see #MP4SetVerbosity(int, int)
 	 */
 	int MP4Create(String fileName,int verbosity,int flags);
 
@@ -109,6 +159,8 @@ public interface MP4v2File {
 	 *  @return On success a handle of the target file for use in subsequent calls
 	 *      to the library.
 	 *      On error, #MP4_INVALID_FILE_HANDLE.
+	 *
+	 *  @see #MP4SetVerbosity(int, int)
 	 */
 	int MP4Modify(String fileName,int verbosity,int flags);
 
@@ -146,6 +198,8 @@ public interface MP4v2File {
 	 *      should print to stdout during its functioning.
 	 *
 	 *  @return <b>true</b> on success, <b>false</b> on failure.
+	 *
+	 *  @see #MP4SetVerbosity(int, int)
 	 */
 	boolean MP4Optimize(String fileName,String newFileName,int verbosity);
 
@@ -164,7 +218,7 @@ public interface MP4v2File {
 	 *  @return On success a handle of the file for use in subsequent calls to
 	 *      the library.
 	 *      On error, #MP4_INVALID_FILE_HANDLE.
-	 *
+	 * @see #MP4SetVerbosity(int, int)
 	 */
 	public int MP4Read(String fileName,int verbosity);
 
@@ -187,7 +241,7 @@ public interface MP4v2File {
 	 *      the library.
 	 *      On error, #MP4_INVALID_FILE_HANDLE.
 	 *
-	 *  @see MP4SetVerbosity() for <b>verbosity</b> values.
+	 *  @see #MP4SetVerbosity(int, int) for <b>verbosity</b> values.
 	 */
 //	public MP4ReadProvider(String fileName,int verbosity,const MP4FileProvider* fileProvider );
 }

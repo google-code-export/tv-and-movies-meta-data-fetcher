@@ -20,7 +20,7 @@ public class MP4TagArtwork extends Structure {
 	 * < data type<br>
 	 * C type : MP4TagArtworkType
 	 */
-	public MP4TagArtworkType type;
+	public int type;
 	public MP4TagArtwork() {
 		super();
 		initFieldOrder();
@@ -36,7 +36,7 @@ public class MP4TagArtwork extends Structure {
 	 * < data type<br>
 	 * C type : MP4TagArtworkType
 	 */
-	public MP4TagArtwork(Pointer data, int size, MP4TagArtworkType type) {
+	public MP4TagArtwork(Pointer data, int size, int type) {
 		super();
 		this.data = data;
 		this.size = size;

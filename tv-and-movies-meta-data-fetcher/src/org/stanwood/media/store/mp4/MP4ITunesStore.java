@@ -61,6 +61,16 @@ public class MP4ITunesStore implements IStore {
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager;
 
+	/** {@inheritDoc} */
+	@Override
+	public void init() throws StoreException {
+		try {
+			getMP4Manager().init();
+		} catch (MP4Exception e) {
+			throw new StoreException("Unable to setup the store",e);
+		}
+	}
+
 	/**
 	 * This is used to store episode information of a TVShow MP4 file into the
 	 * file as meta data so that iTunes can read it.
@@ -226,11 +236,6 @@ public class MP4ITunesStore implements IStore {
 			}
 			else {
 				mp4Manager=new MP4v2Manager();
-			}
-			try {
-				mp4Manager.init();
-			} catch (MP4Exception e) {
-				throw new StoreException("Unable to setup the store",e);
 			}
 		}
 		return mp4Manager;
