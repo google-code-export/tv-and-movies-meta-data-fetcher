@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
 import org.stanwood.media.util.FileHelper;
 
@@ -15,6 +17,8 @@ import com.sun.jna.Platform;
  * Used to help with the native library mappings
  */
 public class LibraryHelper {
+
+	private final static Log log = LogFactory.getLog(LibraryHelper.class);
 
 	/**
 	 * Used to load the library and setup it's options
@@ -29,16 +33,40 @@ public class LibraryHelper {
 	}
 
 	public static MP4v2Library loadMP4v2Library() {
+		String libName = "mp4v2";
 		try {
 			// try load from the system
-			return (MP4v2Library) loadLibrary("mp4v2",MP4v2Library.class);
+			return (MP4v2Library) loadLibrary(libName,MP4v2Library.class);
 		}
 		catch (Error e) {
-
+			if (log.isDebugEnabled()) {
+				log.debug("Unable to find system version of library '"+libName+"'",e);
+			}
+		}
+		String nativePath = getArchPath(libName);
+		try {
+			String nativeDir = System.getenv("MM_NATIVE_DIR");
+			if (nativeDir!=null && !nativeDir.equals("")) {
+				String path =new File(nativeDir+File.separator+nativePath).getAbsolutePath();
+				return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
+			}
+		}
+		catch (Error e1) {
+			if (log.isDebugEnabled()) {
+				log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1);
+			}
+		}
+		try {
 			// If this is a test, find within the project
-			String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+getArchPath("mp4v2")).getAbsolutePath();
+			String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath();
 			return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
 		}
+		catch (Error e1) {
+			if (log.isDebugEnabled()) {
+				log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
+			}
+		}
+		throw new Error("Unable to load native library '"+libName+"'");
 	}
 
 	private static String getArchPath(String libName) {
