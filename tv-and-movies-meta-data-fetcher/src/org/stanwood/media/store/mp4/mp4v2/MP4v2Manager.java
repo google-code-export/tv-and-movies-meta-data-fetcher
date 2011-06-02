@@ -99,6 +99,9 @@ public class MP4v2Manager implements IMP4Manager {
 		if (tags.longDescription!=null) {
 			atoms.add(createAtom("ldes",tags.longDescription.getString(0)));
 		}
+		if (tags.artist!=null) {
+			atoms.add(createAtom("©ART",tags.artist.getString(0)));
+		}
 		if( tags.artworkCount >0 ) {
 			MP4TagArtwork artworks[] = (MP4TagArtwork [])tags.artwork.toArray(new MP4TagArtwork[tags.artworkCount]);
 			for (MP4TagArtwork art : artworks) {

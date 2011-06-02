@@ -171,17 +171,18 @@ public class TestMP4Manager {
 			}
 		});
 
-		Assert.assertEquals(9,atoms.size());
+		Assert.assertEquals(10,atoms.size());
 
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(0).toString());
 		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9487]",atoms.get(1).toString());
 		Assert.assertEquals("Summary: [desc=A test summary]",atoms.get(2).toString());
 		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(3).toString());
 		Assert.assertEquals("Media type: [stik=0]",atoms.get(4).toString());
-		Assert.assertEquals("Release year: [©day=2005]",atoms.get(5).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(6).toString());
-		Assert.assertEquals("Title: [©nam=Test film name]",atoms.get(7).toString());
-		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(8).toString());
+		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(5).toString());
+		Assert.assertEquals("Release year: [©day=2005]",atoms.get(6).toString());
+		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(7).toString());
+		Assert.assertEquals("Title: [©nam=Test film name]",atoms.get(8).toString());
+		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(9).toString());
 	}
 
 	private Film createTestFilm() throws Exception {
