@@ -78,12 +78,38 @@ public class TestMP4Manager {
 	}
 
 	/**
+	 * This is used to test what happens when the file does not contain apple metadata box
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testWriteThatFailesBecauseNoAppleContainer() throws Exception {
+		URL url = Data.class.getResource("a_video.mp4");
+		File srcFile = new File(url.toURI());
+		Assert.assertTrue(srcFile.exists());
+
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
+		if (!mp4File.delete()) {
+			throw new IOException("Unable to delete file");
+		}
+		FileHelper.copy(srcFile, mp4File);
+		Episode episode = createTestEpisode();
+		IMP4Manager ap = createMP4Manager();
+		try {
+			MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
+			Assert.fail("Did not detect the exception");
+		}
+		catch (MP4Exception e) {
+			Assert.assertTrue(e.getMessage().contains("does not have apple metadata container box"));
+		}
+	}
+
+	/**
 	 * Used to test that the episode details can be written to the MP4 file.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
 	@Test
 	public void testWriteEpsiode() throws Exception {
-		URL url = Data.class.getResource("a_video.mp4");
+		URL url = Data.class.getResource("a_video2.mp4");
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
 
@@ -97,20 +123,18 @@ public class TestMP4Manager {
 		MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
-		Assert.assertEquals(10,atoms.size());
-//		Assert.assertEquals("TV Show",((AtomStik)atoms.get(0)).getTypedValue().getDescription());
-//		Assert.assertEquals("10",((AtomStik)atoms.get(0)).getTypedValue().getId());
-		Assert.assertEquals("stik=10",atoms.get(0).toString());
-		Assert.assertEquals("stik",atoms.get(0).toString());
-		Assert.assertEquals("tven=34567",atoms.get(1).toString());
-		Assert.assertEquals("tvsh=Test Show Name",atoms.get(2).toString());
-		Assert.assertEquals("tvsn=1",atoms.get(3).toString());
-		Assert.assertEquals("tves=3",atoms.get(4).toString());
-		Assert.assertEquals("©day=2005",atoms.get(5).toString());
-		Assert.assertEquals("©nam=Test Episode",atoms.get(6).toString());
-		Assert.assertEquals("desc=This is a test show summary",atoms.get(7).toString());
-		Assert.assertEquals("©gen=SciFi",atoms.get(8).toString());
-		Assert.assertEquals("catg=SciFi",atoms.get(9).toString());
+		Assert.assertEquals(11,atoms.size());
+		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(0).toString());
+		Assert.assertEquals("Release year: [©day=2005]",atoms.get(1).toString());
+		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(2).toString());
+		Assert.assertEquals("Episode ID: [tven=34567]",atoms.get(3).toString());
+		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(4).toString());
+		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(5).toString());
+		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(6).toString());
+		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(7).toString());
+		Assert.assertEquals("Media type: [stik=10]",atoms.get(8).toString());
+		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(9).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(10).toString());
 	}
 
 	protected IMP4Manager createMP4Manager() throws MP4Exception {
@@ -125,7 +149,7 @@ public class TestMP4Manager {
 	 */
 	@Test
 	public void testWriteFilm() throws Exception {
-		URL url = Data.class.getResource("a_video.mp4");
+		URL url = Data.class.getResource("a_video2.mp4");
 		File srcFile = new File(url.toURI());
 		Assert.assertTrue(srcFile.exists());
 
@@ -147,9 +171,9 @@ public class TestMP4Manager {
 			}
 		});
 
-		Assert.assertEquals(7,atoms.size());
+		Assert.assertEquals(8,atoms.size());
 
-		Assert.assertEquals("catg=SciFi",atoms.get(0).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(0).toString());
 //		Assert.assertEquals("Artwork of type COVERART_JPEG and size 9495",atoms.get(1).getValue());
 		Assert.assertTrue(atoms.get(1).toString().startsWith("covr=Artwork of type COVERART_JPEG and size "));
 		Assert.assertEquals("desc=A test description",atoms.get(2).toString());

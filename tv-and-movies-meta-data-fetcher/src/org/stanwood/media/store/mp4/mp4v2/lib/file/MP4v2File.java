@@ -1,7 +1,10 @@
-package org.stanwood.media.store.mp4.mp4v2.lib;
+package org.stanwood.media.store.mp4.mp4v2.lib.file;
 
 @SuppressWarnings("all")
 public interface MP4v2File {
+
+	/** Invalid file handle, NULL value in C */
+	public static final int MP4_INVALID_FILE_HANDLE = 0;
 
 	/** Verbosity bitmask: all possible details. */
 	public final static int MP4_DETAILS_ALL = 0xFFFFFFFF;
@@ -25,6 +28,7 @@ public interface MP4v2File {
 	public final static int MP4_DETAILS_ISMA = 0x00000100;
 	/** Verbosity bit: edit details. */
 	public final static int MP4_DETAILS_EDIT = 0x00000200;
+
 
 	/** Set verbosity level for diagnostic information.
 	 *
