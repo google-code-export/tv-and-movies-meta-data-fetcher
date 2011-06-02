@@ -13,6 +13,7 @@ import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
 import org.stanwood.media.store.mp4.mp4v2.lib.file.MP4v2File;
 import org.stanwood.media.store.mp4.mp4v2.lib.itmfgeneric.MP4ItmfItemList.ByReference;
+import org.stanwood.media.store.mp4.mp4v2.lib.itmftags.MP4TagArtwork;
 import org.stanwood.media.store.mp4.mp4v2.lib.itmftags.MP4Tags;
 
 /**
@@ -98,14 +99,12 @@ public class MP4v2Manager implements IMP4Manager {
 		if (tags.longDescription!=null) {
 			atoms.add(createAtom("ldes",tags.longDescription.getString(0)));
 		}
-//			tags.artwork.
-//			if( tags.artworkCount >0 ) {
-//				MP4TagArtwork art = tags.artwork;
-//				if (art!=null) {
-//					createAtom("covr",MP4ArtworkType.getForValue(art.type.getIntValue()),art.size,art.data.getByteArray(0, art.size));
-//				}
-
-//			}
+		if( tags.artworkCount >0 ) {
+			MP4TagArtwork artworks[] = (MP4TagArtwork [])tags.artwork.toArray(new MP4TagArtwork[tags.artworkCount]);
+			for (MP4TagArtwork art : artworks) {
+				atoms.add(createAtom("covr",MP4ArtworkType.getForValue(art.type),art.size,art.data.getByteArray(0, art.size)));
+			}
+		}
 		if (tags.encodingTool !=null) {
 			atoms.add(createAtom("©too",tags.encodingTool.getString(0)));
 		}
@@ -127,7 +126,6 @@ public class MP4v2Manager implements IMP4Manager {
 		return atoms;
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
@@ -148,7 +146,6 @@ public class MP4v2Manager implements IMP4Manager {
 		if (log.isDebugEnabled()) {
 			log.debug("MP4 modified '" + mp4File+"'");
 		}
-
 	}
 
 	private void checkAppleListItemBoxExists(int fileHandle,File mp4File) throws MP4Exception {
@@ -160,7 +157,7 @@ public class MP4v2Manager implements IMP4Manager {
 			}
 		}
 		finally {
-			lib.MP4ItmfItemListFree(list);
+//			lib.MP4ItmfItemListFree(list);
 		}
 	}
 
