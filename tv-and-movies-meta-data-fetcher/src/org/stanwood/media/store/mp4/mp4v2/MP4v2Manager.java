@@ -153,9 +153,14 @@ public class MP4v2Manager implements IMP4Manager {
 
 	private void checkAppleListItemBoxExists(int fileHandle,File mp4File) throws MP4Exception {
 		// TODO find a way of adding a apple container metadata box if it's not found
-		ByReference value1 = lib.MP4ItmfGetItems(fileHandle);
-		if (value1.elements==null) {
-			throw new MP4Exception("MP4 File '"+mp4File+"' does not have apple metadata container box, so don't know how to update it");
+		ByReference list = lib.MP4ItmfGetItems(fileHandle);
+		try {
+			if (list.elements==null) {
+				throw new MP4Exception("MP4 File '"+mp4File+"' does not have apple metadata container box, so don't know how to update it");
+			}
+		}
+		finally {
+			lib.MP4ItmfItemListFree(list);
 		}
 	}
 
