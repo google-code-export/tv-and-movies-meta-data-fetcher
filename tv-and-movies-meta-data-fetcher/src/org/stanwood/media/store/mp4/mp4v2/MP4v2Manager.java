@@ -166,6 +166,12 @@ public class MP4v2Manager implements IMP4Manager {
 		try {
 			tags = lib.MP4TagsAlloc();
 			lib.MP4TagsFetch(tags, fileHandle);
+			if (hasArtwrokAtom(atoms)) {
+				for (int i=0;i<tags.artworkCount;i++) {
+					lib.MP4TagsRemoveArtwork(tags, i);
+				}
+			}
+
 			for (IAtom atom : atoms) {
 				((AbstractMP4v2Atom)atom).writeAtom(tags);
 
@@ -178,6 +184,15 @@ public class MP4v2Manager implements IMP4Manager {
 				tags = null;
 			}
 		}
+	}
+
+	private boolean hasArtwrokAtom(List<IAtom> atoms) {
+		for (IAtom atom : atoms) {
+			if (atom.getName().equals("covr")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** {@inheritDoc} */
