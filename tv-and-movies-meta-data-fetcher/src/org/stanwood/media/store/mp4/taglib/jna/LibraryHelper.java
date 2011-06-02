@@ -11,7 +11,6 @@ import org.stanwood.media.util.FileHelper;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
 
 /**
  * Used to help with the native library mappings
