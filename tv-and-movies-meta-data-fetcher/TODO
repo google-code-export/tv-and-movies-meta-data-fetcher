@@ -4,7 +4,11 @@ TODO
 Version 2.0
 -----------
 
-*Needs Testing* - Check installer still works windows/linux
+*Needs Testing* - Check installer still works windows/linux, check scripts work
+*Inprogress*    - Create new MP4 managed bases on native lib MP4v2
+					* JNA jar to all the places that have libs
+					* Look to ship windows, linux and maxos version of the native lib with the project.
+*Not Started*   - Make stores have a init phase at the start that can be used to check that native libs work correctly					
 
 Version 2.0.1
 -------------
