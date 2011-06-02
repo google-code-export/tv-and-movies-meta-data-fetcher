@@ -16,7 +16,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/run-time/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/installer/IzPack-compiler-4.3.4-RC1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/jna-3.2.7.jar" sourcepath="/home/jp/workspaces/Java/jna/src"/>
-	<classpathentry exported="true" kind="lib" path="libs/run-time/platform-3.2.7.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
