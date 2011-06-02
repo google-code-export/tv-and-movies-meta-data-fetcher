@@ -8,7 +8,8 @@ Version 2.0
 *Inprogress*    - Create new MP4 managed bases on native lib MP4v2
 					* JNA jar to all the places that have libs
 					* Look to ship windows, linux and maxos version of the native lib with the project.
-*Not Started*   - Remove old mp4 artwork when adding new					
+					* Remove use of platform.jar
+*Inprogress*    - Update spec files so that things build
 
 Version 2.0.1
 -------------

@@ -42,5 +42,8 @@ do
 	CLASSPATH=$CLASSPATH:$FILE	
 done 
 
+# Native lib location
+export MM_NATIVE_DIR=$SCRIPT_PATH/../native
+
 # Launch Application
 exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
