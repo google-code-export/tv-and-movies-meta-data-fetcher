@@ -1,7 +1,5 @@
 package org.stanwood.media.store.mp4.mp4v2.lib.itmftags;
 
-import org.stanwood.media.store.mp4.mp4v2.lib.itmftags.MP4Tags.ByReference;
-
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
@@ -88,8 +86,8 @@ public interface ItmfTags {
 	public void MP4TagsSetSortTVShow      ( MP4Tags tags, String value );
 
 	public void MP4TagsAddArtwork         ( MP4Tags tags, MP4TagArtwork artwork );
-	public void MP4TagsSetArtwork         ( MP4Tags tags, MP4TagArtworkType type, MP4TagArtwork artwork );
-	public void MP4TagsRemoveArtwork      ( MP4Tags tags, MP4TagArtworkType type );
+	public void MP4TagsSetArtwork         ( MP4Tags tags, int type, MP4TagArtwork artwork );
+	public void MP4TagsRemoveArtwork      ( MP4Tags tags, int type );
 
 	public void MP4TagsSetCopyright       ( MP4Tags tags, String value );
 	public void MP4TagsSetEncodingTool    ( MP4Tags tags, String value );

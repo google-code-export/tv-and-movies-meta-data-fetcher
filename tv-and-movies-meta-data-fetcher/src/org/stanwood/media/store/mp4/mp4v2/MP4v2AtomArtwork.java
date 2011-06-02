@@ -35,14 +35,14 @@ public class MP4v2AtomArtwork extends AbstractMP4v2Atom implements IAtom {
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(MP4Tags tags) {
-
+		//TODO remove old artwork
 		MP4TagArtwork artwork = new MP4TagArtwork();
 		artwork.data = new Memory(data.length);
 		artwork.data.write(0,data,0,data.length);
 		artwork.size = size;
 		artwork.type = type.getIntValue();
 
-//		getLib().MP4TagsSetArtwork(tags, artwork.type,artwork);
+		getLib().MP4TagsAddArtwork(tags, artwork);
 	}
 
 	/**
