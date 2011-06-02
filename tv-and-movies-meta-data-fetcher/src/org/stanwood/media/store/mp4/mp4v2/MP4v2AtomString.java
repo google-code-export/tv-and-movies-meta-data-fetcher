@@ -61,5 +61,8 @@ public class MP4v2AtomString extends AbstractMP4v2Atom implements IAtom {
 		else if (getName().equals("©too")) {
 			getLib().MP4TagsSetEncodingTool(tags, value);
 		}
+		else if (getName().equals("©ART")) {
+			getLib().MP4TagsSetArtist(tags, value);
+		}
 	}
 }

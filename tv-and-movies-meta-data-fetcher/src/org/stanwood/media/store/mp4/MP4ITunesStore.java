@@ -378,6 +378,11 @@ public class MP4ITunesStore implements IStore {
 		atoms.add(mp4Manager.createAtom("©nam", film.getTitle()));
 		atoms.add(mp4Manager.createAtom("desc", film.getSummary()));
 		atoms.add(mp4Manager.createAtom("ldes", film.getDescription()));
+		if (film.getDirectors()!=null) {
+			for (String director : film.getDirectors()) {
+				atoms.add(mp4Manager.createAtom("©ART", director));
+			}
+		}
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
 		if (part!=null) {
 			byte total =0;
