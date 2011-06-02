@@ -122,6 +122,23 @@ public interface ItmfGeneric {
 	 *  @param hFile handle of file to operate on.
 	 *  @return On succes, list of items, which must be free'd. On failure, NULL.
 	 */
-	MP4ItmfItemList.ByReference MP4ItmfGetItems( int hFile );
+	public MP4ItmfItemList.ByReference MP4ItmfGetItems( int hFile );
+
+	/** Allocate an item on the heap.
+	 *  @param code four-char code identifying atom type. NULL-terminated.
+	 *  @param numData number of data elements to allocate. Must be >= 1.
+	 *  @return newly allocated item.
+	 */
+	public MP4ItmfItem.ByReference MP4ItmfItemAlloc( String code, int numData );
+
+	/** Free an item (deep free).
+	 *  @param item to be free'd.
+	 */
+	public void MP4ItmfItemFree( MP4ItmfItem.ByReference item );
+
+	/** Free an item list (deep free).
+	 *  @param itemList to be free'd.
+	 */
+	public void MP4ItmfItemListFree( MP4ItmfItemList.ByReference itemList );
 
 }
