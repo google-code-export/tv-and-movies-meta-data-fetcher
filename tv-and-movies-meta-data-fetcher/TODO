@@ -8,7 +8,6 @@ Version 2.0
 *Inprogress*    - Create new MP4 managed bases on native lib MP4v2
 					* JNA jar to all the places that have libs
 					* Look to ship windows, linux and maxos version of the native lib with the project.
-*Not Started*   - Make stores have a init phase at the start that can be used to check that native libs work correctly					
 
 Version 2.0.1
 -------------
@@ -23,6 +22,7 @@ Make native Windows installer
 Version 2.1
 -----------
 
+Find a way of adding a apple container metadata box if it's not found
 Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins. 

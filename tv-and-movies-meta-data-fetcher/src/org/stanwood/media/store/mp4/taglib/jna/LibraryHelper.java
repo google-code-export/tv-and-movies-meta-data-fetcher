@@ -25,14 +25,23 @@ public class LibraryHelper {
 	 * @param name The name of the lib
 	 * @param interfaceClass The interface it's mapped to
 	 * @return The lib
+	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
-	public static Object loadLibrary(String name, Class<?> interfaceClass) {
+	public static Object loadLibrary(String name, Class<?> interfaceClass) throws UnsatisfiedLinkError {
 		Map<String, Object> options = new HashMap<String, Object>();
     	options.put(Library.OPTION_TYPE_MAPPER, new TypeMapper());
         return Native.loadLibrary(name,interfaceClass);
 	}
 
-	public static MP4v2Library loadMP4v2Library() {
+	/**
+	 * Used to load the libmp4v2 library. This will first try to load it from the system.
+     * If this fails, it checks a environment variable MM_NATIVE_DIR for the location of native
+     * libraries and load from their. If this fails, it checks for a native folder in the current
+     * working directory (This is mainly for tests).
+	 * @return The library
+	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
+	 */
+	public static MP4v2Library loadMP4v2Library() throws UnsatisfiedLinkError {
 		String libName = "mp4v2";
 		try {
 			// try load from the system
@@ -66,7 +75,7 @@ public class LibraryHelper {
 				log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
 			}
 		}
-		throw new Error("Unable to load native library '"+libName+"'");
+		throw new UnsatisfiedLinkError("Unable to load native library '"+libName+"'");
 	}
 
 	private static String getArchPath(String libName) {

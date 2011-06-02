@@ -1,8 +1,8 @@
 package org.stanwood.media.store.mp4.mp4v2;
 
 import org.stanwood.media.store.mp4.IAtom;
-import org.stanwood.media.store.mp4.mp4v2.lib.MP4Tags;
 import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
+import org.stanwood.media.store.mp4.mp4v2.lib.itmftags.MP4Tags;
 
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.IntByReference;

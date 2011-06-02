@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.mp4v2.lib;
+package org.stanwood.media.store.mp4.mp4v2.lib.itmftags;
 
 import org.stanwood.media.store.mp4.taglib.jna.JnaEnum;
 
