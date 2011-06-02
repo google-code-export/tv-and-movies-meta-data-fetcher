@@ -111,7 +111,7 @@ public class LibraryHelper {
 			result.append("lib"+libName+".dylib");
 			break;
 		case Platform.WINDOWS:
-			result.append("lib"+libName+".so");
+			result.append(libName+".dll");
 			break;
 		default:
 			throw new Error("No native lib " + libName+ " for this platform");
