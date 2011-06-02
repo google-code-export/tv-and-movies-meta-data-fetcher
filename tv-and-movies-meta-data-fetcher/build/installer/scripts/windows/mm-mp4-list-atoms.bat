@@ -20,6 +20,8 @@ REM Setup class path
 set CLASSPATH=
 for /f %%a IN (‘dir /b %LIB_DIR&/*.jar’) do set CLASSPATH=%CLASSPATH%;%%a 
 
+REM Native lib location
+set MM_NATIVE_DIR=..\native
 
 REM Launch app
 call %JAVA% -Xms%JAVA_HEAP_INIT_SIZE%M -Xmx%JAVA_HEAP_MAX_SIZE%M -classpath %CLASSPATH% %MAIN% %1 %2 %3 %4 %5 %6 %7 %8 %9
