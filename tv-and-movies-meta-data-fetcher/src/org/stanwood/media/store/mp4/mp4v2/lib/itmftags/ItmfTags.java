@@ -5,9 +5,58 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.ShortByReference;
 
-/**
- * itmf_tags.h mapping
- */
+/**************************************************************************//**
+*
+*  mp4_itmf_tags MP4v2 iTMF (iTunes Metadata Format) Tags
+*
+*
+*  This is a high-level API used to manage iTMF metadata.
+*
+*  It provides more type-safety and simplified memory management as compared
+*  to iTMF Generic API.
+*
+*  At the heart of this API is a read-only structure that holds all known
+*  items and their current values. The value is always a pointer which if
+*  NULL indicates its corresponding atom does not exist. Thus, one must
+*  always check if the pointer is non-NULL before attempting to extract
+*  its value.
+*
+*  The structure may not be directly modified. Instead, <b>set</b> functions
+*  corresponding to each item are used to modify the backing-store of
+*  the read-only structure. Setting the value ptr to NULL will effectively
+*  remove it. Setting the value ptr to real data will immediately make a
+*  copy of the value in the backing-store and the read-only structure
+*  will correctly reflect the change.
+*
+*  The hidden data cache memory is automatically managed. Thus the user need
+*  only guarantee the data is available during the lifetime of the set-function
+*  call.
+*
+*  <b>iTMF Tags read workflow:</b>
+*  <ul>
+*      <li>MP4TagsAlloc()</li>
+*      <li>MP4TagsFetch()</li>
+*      <li>inspect each tag of interest...</li>
+*      <li>MP4TagsStore() (if modified)</li>
+*      <li>MP4TagsFree()</li>
+*  </ul>
+*  <b>iTMF Tags read/modify/add/remove workflow:</b>
+*  <ul>
+*      <li>MP4TagsAlloc()</li>
+*      <li>MP4TagsFetch()</li>
+*      <li>inspect each tag of interest...</li>
+*      <li>MP4TagsSetName(), MP4TagsSetArtist()...</li>
+*      <li>MP4TagsStore()</li>
+*      <li>MP4TagsFree()</li>
+*  </ul>
+*  <p>Warning:<br/>
+*  Care must be taken when using multiple mechanisms to modify an open mp4
+*  file as it is not thread-safe, nor does it permit overlapping different
+*  API workflows which have a begin/end to their workflow. That is to say
+*  do not interleave an iTMF Generic workflow with an iTMF Tags workflow.
+*  </p>
+*
+*****************************************************************************/
 @SuppressWarnings("all")
 public interface ItmfTags {
 
