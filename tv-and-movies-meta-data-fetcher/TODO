@@ -4,7 +4,7 @@ TODO
 Version 2.0
 -----------
 
-*Needs Testing* - Check installer still works windows/linux, check scripts work
+*Needs Testing* - Check installer still works windows, check scripts work
 *Inprogress*    - Create new MP4 managed bases on native lib MP4v2
 					* Look to ship windows, linux and maxos version of the native lib with the project.
 *Inprogress*    - Update spec files so that things build
