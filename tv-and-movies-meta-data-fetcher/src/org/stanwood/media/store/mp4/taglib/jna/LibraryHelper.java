@@ -41,39 +41,46 @@ public class LibraryHelper {
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
 	public static MP4v2Library loadMP4v2Library() throws UnsatisfiedLinkError {
+		String method = System.getenv("MM_LIB_LOAD_METHOD");
 		Error error = null;
 		String libName = "mp4v2";
-		try {
-			// try load from the system
-			return (MP4v2Library) loadLibrary(libName,MP4v2Library.class);
-		}
-		catch (Error e) {
-			if (log.isDebugEnabled()) {
-				log.debug("Unable to find system version of library '"+libName+"'",e);
+		if (method==null || method.length()==0 || method.equals("system")) {
+			try {
+				// try load from the system
+				return (MP4v2Library) loadLibrary(libName,MP4v2Library.class);
+			}
+			catch (Error e) {
+				if (log.isDebugEnabled()) {
+					log.debug("Unable to find system version of library '"+libName+"'",e);
+				}
 			}
 		}
 		String nativePath = getArchPath(libName);
-		try {
-			String nativeDir = System.getenv("MM_NATIVE_DIR");
-			if (nativeDir!=null && !nativeDir.equals("")) {
-				String path =new File(nativeDir+File.separator+nativePath).getAbsolutePath();
+		if (method==null || method.length()==0 || method.equals("installed")) {
+			try {
+				String nativeDir = System.getenv("MM_NATIVE_DIR");
+				if (nativeDir!=null && !nativeDir.equals("")) {
+					String path =new File(nativeDir+File.separator+nativePath).getAbsolutePath();
+					return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
+				}
+			}
+			catch (Error e1) {
+				error = e1;
+				if (log.isDebugEnabled()) {
+					log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1);
+				}
+			}
+		}
+		if (method==null || method.length()==0 || method.equals("project")) {
+			try {
+				// If this is a test, find within the project
+				String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath();
 				return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
 			}
-		}
-		catch (Error e1) {
-			error = e1;
-			if (log.isDebugEnabled()) {
-				log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1);
-			}
-		}
-		try {
-			// If this is a test, find within the project
-			String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath();
-			return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
-		}
-		catch (Error e1) {
-			if (log.isDebugEnabled()) {
-				log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
+			catch (Error e1) {
+				if (log.isDebugEnabled()) {
+					log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
+				}
 			}
 		}
 		if (error!=null) {
