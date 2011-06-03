@@ -354,12 +354,19 @@ public class FileHelper {
 	 */
 	public static String readFileContents(File file) throws IOException {
 		StringBuilder results = new StringBuilder();
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String str;
-		while ((str = in.readLine()) != null) {
-			results.append(str + LS);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new FileReader(file));
+			String str;
+			while ((str = in.readLine()) != null) {
+				results.append(str + LS);
+			}
 		}
-		in.close();
+		finally {
+			if (in!=null) {
+				in.close();
+			}
+		}
 		return results.toString();
 	}
 
@@ -374,14 +381,21 @@ public class FileHelper {
 		if (inputStream==null) {
 			throw new IOException("Input stream is null, probally unable to find file");
 		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-		StringBuilder results = new StringBuilder();
-		String str;
-		while ((str = in.readLine()) != null) {
-			results.append(str + LS);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuilder results = new StringBuilder();
+			String str;
+			while ((str = in.readLine()) != null) {
+				results.append(str + LS);
+			}
+			return results.toString();
 		}
-		in.close();
-		return results.toString();
+		finally {
+			if (in!=null) {
+				in.close();
+			}
+		}
 	}
 
 	/**
