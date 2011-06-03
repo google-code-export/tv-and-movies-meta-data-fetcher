@@ -10,6 +10,7 @@
 	<property name="test.build.dir" location="${basedir}/tests-bin" />
 	<property name="dist.dir" location="${basedir}/dist" />
 	<property name="libs.dir" location="${basedir}/libs" />
+	<property name="native.dir" location="${basedir}/native" />	
 	<property name="etc.dir" location="${basedir}/etc" />
 	<property name="rpm.dir" location="${basedir}/rpm" />
 	<property name="docs.dir" location="${basedir}/docs"/>
