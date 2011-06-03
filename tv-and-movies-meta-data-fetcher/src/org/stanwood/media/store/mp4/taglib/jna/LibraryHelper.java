@@ -41,6 +41,7 @@ public class LibraryHelper {
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
 	public static MP4v2Library loadMP4v2Library() throws UnsatisfiedLinkError {
+		Error error = null;
 		String libName = "mp4v2";
 		try {
 			// try load from the system
@@ -60,6 +61,7 @@ public class LibraryHelper {
 			}
 		}
 		catch (Error e1) {
+			error = e1;
 			if (log.isDebugEnabled()) {
 				log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1);
 			}
@@ -73,6 +75,9 @@ public class LibraryHelper {
 			if (log.isDebugEnabled()) {
 				log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
 			}
+		}
+		if (error!=null) {
+			log.error(error.getLocalizedMessage(),error);
 		}
 		throw new UnsatisfiedLinkError("Unable to load native library '"+libName+"'");
 	}
