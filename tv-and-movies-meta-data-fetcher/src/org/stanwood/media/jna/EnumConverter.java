@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib.jna;
+package org.stanwood.media.jna;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
