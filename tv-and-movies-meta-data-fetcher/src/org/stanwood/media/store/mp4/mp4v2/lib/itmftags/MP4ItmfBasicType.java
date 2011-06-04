@@ -1,6 +1,6 @@
 package org.stanwood.media.store.mp4.mp4v2.lib.itmftags;
 
-import org.stanwood.media.store.mp4.taglib.jna.JnaEnum;
+import org.stanwood.media.jna.JnaEnum;
 
 /** Basic types of value data as enumerated in spec. */
 public enum MP4ItmfBasicType implements JnaEnum<MP4ItmfBasicType>{

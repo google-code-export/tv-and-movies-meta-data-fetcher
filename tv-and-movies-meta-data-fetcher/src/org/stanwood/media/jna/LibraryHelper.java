@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib.jna;
+package org.stanwood.media.jna;
 
 import java.io.File;
 import java.util.HashMap;
@@ -89,8 +89,10 @@ public class LibraryHelper {
 		throw new UnsatisfiedLinkError("Unable to load native library '"+libName+"'");
 	}
 
+
+
 	private static String getArchPath(String libName) {
-		StringBuilder result = new StringBuilder();
+		StringBuilder result = new StringBuilder("libs"+File.separator);
 		switch (Platform.getOSType()) {
 		case Platform.LINUX :
 			result.append("linux");

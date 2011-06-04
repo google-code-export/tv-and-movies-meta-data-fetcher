@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib.jna;
+package org.stanwood.media.jna;
 
 /**
  * Should be extended by JNA enums to make a typesafe mapping to C enums

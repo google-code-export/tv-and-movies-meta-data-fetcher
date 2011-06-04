@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4.taglib.jna;
+package org.stanwood.media.jna;
 
 
 import com.sun.jna.DefaultTypeMapper;

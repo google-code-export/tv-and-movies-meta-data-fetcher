@@ -1,9 +1,9 @@
 package org.stanwood.media.store.mp4.mp4v2.lib;
 
+import org.stanwood.media.jna.LibraryHelper;
 import org.stanwood.media.store.mp4.mp4v2.lib.file.MP4v2File;
 import org.stanwood.media.store.mp4.mp4v2.lib.itmfgeneric.ItmfGeneric;
 import org.stanwood.media.store.mp4.mp4v2.lib.itmftags.ItmfTags;
-import org.stanwood.media.store.mp4.taglib.jna.LibraryHelper;
 
 import com.sun.jna.Library;
 

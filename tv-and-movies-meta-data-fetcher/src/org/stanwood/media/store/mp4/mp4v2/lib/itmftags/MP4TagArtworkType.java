@@ -1,7 +1,7 @@
 package org.stanwood.media.store.mp4.mp4v2.lib.itmftags;
 
+import org.stanwood.media.jna.JnaEnum;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
-import org.stanwood.media.store.mp4.taglib.jna.JnaEnum;
 
 /** Enumeration of possible MP4TagArtwork::type values. */
 @SuppressWarnings("all")

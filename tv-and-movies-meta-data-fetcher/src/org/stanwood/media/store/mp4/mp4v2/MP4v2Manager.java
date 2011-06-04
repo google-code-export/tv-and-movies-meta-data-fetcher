@@ -34,7 +34,7 @@ public class MP4v2Manager implements IMP4Manager {
 	@Override
 	public void init() throws MP4Exception {
 		try {
-			lib = MP4v2Library.INSTANCE;
+			lib = new LibWrapper(MP4v2Library.INSTANCE);
 		}
 		catch (Throwable t) {
 			throw new MP4Exception("Unable to load native 'mp4v2' library",t);
