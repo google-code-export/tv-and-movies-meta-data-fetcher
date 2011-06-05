@@ -9,7 +9,7 @@ import org.apache.commons.cli.Options;
 import org.stanwood.media.cli.BaseLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.store.mp4.mp4v2.MP4v2Manager;
+import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
 
 /**
  * <p>This is a CLI application used to print the atoms in a MP4 file</p>
@@ -56,7 +56,7 @@ public class CLIListAtoms extends BaseLauncher {
 
 	@Override
 	protected boolean run() {
-		IMP4Manager mp4Manager = new MP4v2Manager();
+		IMP4Manager mp4Manager = new MP4v2CLIManager();
 		try {
 			mp4Manager.init();
 			info("Reading atoms...");
@@ -66,7 +66,9 @@ public class CLIListAtoms extends BaseLauncher {
 			}
 			else {
 				for (IAtom a : atoms) {
-					getStdout().println(a.toString());
+					if (a!=null) {
+						getStdout().println(a.toString());
+					}
 				}
 			}
 		} catch (MP4Exception e) {

@@ -31,6 +31,7 @@ public class AtomNameLookup {
 		names.put("disk","Disk number");
 		names.put("ldes","Long description");
 		names.put("©ART","Artist");
+		names.put("hdvd","HD Video");
 	}
 
 	/**

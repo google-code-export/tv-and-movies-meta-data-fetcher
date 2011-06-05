@@ -69,4 +69,7 @@ public interface IMP4Manager {
 	public void init() throws MP4Exception;
 
 
+	public void setParameter(String key, String value);
+
+
 }
