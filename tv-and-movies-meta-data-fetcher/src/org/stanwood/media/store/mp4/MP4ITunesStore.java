@@ -45,7 +45,7 @@ import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.mp4.mp4v2.MP4v2Manager;
+import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -59,7 +59,11 @@ public class MP4ITunesStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 	private IMP4Manager mp4Manager;
-	private Class<? extends IMP4Manager> manager;
+	private Class<? extends IMP4Manager> manager = MP4v2CLIManager.class;
+	private String mp4infoPath = "mp4info";
+	private String mp4artPath = "mp4art";
+	private String mp4tagsPath = "mp4tags";
+	private String mp4filePath = "mp4file";
 
 	/** {@inheritDoc} */
 	@Override
@@ -227,16 +231,15 @@ public class MP4ITunesStore implements IStore {
 
 	private IMP4Manager getMP4Manager() throws StoreException {
 		if (mp4Manager==null) {
-			if (manager!=null) {
-				try {
-					mp4Manager = manager.newInstance();
-				} catch (Exception e) {
-					throw new StoreException("Unable to create manager: " + manager.getClass(),e);
-				}
+			try {
+				mp4Manager = manager.newInstance();
+			} catch (Exception e) {
+				throw new StoreException("Unable to create manager: " + manager.getClass(),e);
 			}
-			else {
-				mp4Manager=new MP4v2Manager();
-			}
+
+			mp4Manager.setParameter("mp4art",mp4artPath);
+			mp4Manager.setParameter("mp4tags",mp4tagsPath);
+			mp4Manager.setParameter("mp4info",mp4infoPath);
 		}
 		return mp4Manager;
 	}
@@ -252,12 +255,36 @@ public class MP4ITunesStore implements IStore {
 				throw new StoreException("Unable to find MP4 manager class: " + value,e);
 			}
 		}
+		else if (key.equalsIgnoreCase("mp4art")){
+			mp4artPath = value;
+		}
+		else if (key.equalsIgnoreCase("mp4info")) {
+			mp4infoPath = value;
+		}
+		else if (key.equalsIgnoreCase("mp4tags")) {
+			mp4tagsPath = value;
+		}
+		else if (key.equalsIgnoreCase("mp4file")) {
+			mp4filePath = value;
+		}
 		throw new StoreException("Unsupported parameter '" + key+"'");
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) throws StoreException {
+		if (key.equalsIgnoreCase("manager")) {
+			return manager.getName();
+		}
+		else if (key.equalsIgnoreCase("mp4art")){
+			return mp4artPath;
+		}
+		else if (key.equalsIgnoreCase("mp4info")) {
+			return mp4infoPath;
+		}
+		else if (key.equalsIgnoreCase("mp4tags")) {
+			return mp4tagsPath;
+		}
 		throw new StoreException("Unsupported parameter '" + key+"'");
 	}
 

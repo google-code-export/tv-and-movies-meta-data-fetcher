@@ -18,7 +18,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.store.mp4.mp4v2.MP4v2Manager;
+import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 
@@ -138,7 +138,7 @@ public class TestMP4Manager {
 	}
 
 	protected IMP4Manager createMP4Manager() throws MP4Exception {
-		MP4v2Manager manager = new MP4v2Manager();
+		MP4v2CLIManager manager = new MP4v2CLIManager();
 		manager.init();
 		return manager;
 	}
