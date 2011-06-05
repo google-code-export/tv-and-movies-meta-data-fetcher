@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.store.mp4.mp4v2.lib.MP4v2Library;
 import org.stanwood.media.util.FileHelper;
 
 import com.sun.jna.Library;
@@ -26,28 +25,31 @@ public class LibraryHelper {
 	 * @return The lib
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
-	public static Object loadLibrary(String name, Class<?> interfaceClass) throws UnsatisfiedLinkError {
+	public static Object loadLibraryWithOptions(String name, Class<?> interfaceClass) throws UnsatisfiedLinkError {
 		Map<String, Object> options = new HashMap<String, Object>();
     	options.put(Library.OPTION_TYPE_MAPPER, new TypeMapper());
-        return Native.loadLibrary(name,interfaceClass);
+        Object lib = Native.loadLibrary(name,interfaceClass);
+        return lib;
 	}
 
 	/**
-	 * Used to load the libmp4v2 library. This will first try to load it from the system.
+	 * <p>Used to load a native library. This will first try to load it from the system.
      * If this fails, it checks a environment variable MM_NATIVE_DIR for the location of native
      * libraries and load from their. If this fails, it checks for a native folder in the current
-     * working directory (This is mainly for tests).
+     * working directory (This is mainly for tests).</p>
+     * @param libName The name of the library
+     * @param interfaceClass The name of the class the library will implement
 	 * @return The library
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
-	public static MP4v2Library loadMP4v2Library() throws UnsatisfiedLinkError {
+	public static Object loadLibrary(String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
 		String method = System.getenv("MM_LIB_LOAD_METHOD");
 		Error error = null;
-		String libName = "mp4v2";
+
 		if (method==null || method.length()==0 || method.equals("system")) {
 			try {
 				// try load from the system
-				return (MP4v2Library) loadLibrary(libName,MP4v2Library.class);
+				return loadLibraryWithOptions(libName,interfaceClass);
 			}
 			catch (Error e) {
 				if (log.isDebugEnabled()) {
@@ -61,7 +63,7 @@ public class LibraryHelper {
 				String nativeDir = System.getenv("MM_NATIVE_DIR");
 				if (nativeDir!=null && !nativeDir.equals("")) {
 					String path =new File(nativeDir+File.separator+nativePath).getAbsolutePath();
-					return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
+					return loadLibraryWithOptions(path,interfaceClass);
 				}
 			}
 			catch (Error e1) {
@@ -75,7 +77,7 @@ public class LibraryHelper {
 			try {
 				// If this is a test, find within the project
 				String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath();
-				return (MP4v2Library) loadLibrary(path,MP4v2Library.class);
+				return loadLibraryWithOptions(path,interfaceClass);
 			}
 			catch (Error e1) {
 				if (log.isDebugEnabled()) {
@@ -131,4 +133,6 @@ public class LibraryHelper {
 		}
 		return result.toString();
 	}
+
+
 }
