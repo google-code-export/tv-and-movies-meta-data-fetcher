@@ -38,7 +38,7 @@ public class LibraryHelper {
      * libraries and load from their. If this fails, it checks for a native folder in the current
      * working directory (This is mainly for tests).</p>
      * @param libName The name of the library
-     * @param interfaceClass The name of the class the library will implement
+     * @param interfaceClass The name of the class the library will implement4
 	 * @return The library
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
