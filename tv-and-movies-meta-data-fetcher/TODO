@@ -8,14 +8,11 @@ Version 2.0
 *Not Started*   - Update docs of MP4ITunesStore
 *Inprogress*    - Create native patched exe's of the mp4tags app.
 					- Build a zip file for load to the website of native apps.
-					- Make sure if running via installer version or project version that the patched version
+					- Make sure if running via installer version that the patched version
 					  can be found.
 					- Document how to download and install the native package
 *Not Started*   - Update installer to install native apps
-*Not Started*   - add --version option
 *Inprogress*    - compile patched version of mp4tags for all platforms
-
-
 
 Version 2.0.1
 -------------

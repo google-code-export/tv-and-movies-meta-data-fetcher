@@ -18,6 +18,7 @@ import org.stanwood.media.logging.LogConfig;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This class should be extended by classes that have a main method used to lauch them
@@ -30,6 +31,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	private final static String LOG_CONFIG_OPTION = "l";
 	private final static String CONFIG_FILE_OPTION = "c";
+	private final static String VERSION_OPTION = "v";
 
 	private File configFile = null;
 	private Controller controller;
@@ -60,6 +62,9 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		o = new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml");
 		o.setArgName("file");
 		addOption(o);
+
+		o = new Option(VERSION_OPTION,"version",false,"Display the version");
+		addOption(o);
 	}
 
 	/**
@@ -83,6 +88,9 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		if (cmd.hasOption(CONFIG_FILE_OPTION)) {
 			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));
 		}
+		if (cmd.hasOption(VERSION_OPTION)) {
+			printVersion();
+		}
 		try {
 			processConfig();
 			controller = new Controller(config);
@@ -98,6 +106,21 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		}
 
 		return processOptions(args,cmd);
+	}
+
+	private void printVersion() {
+		try {
+			String version = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim();
+			info(version);
+			info("Copyright (C) 2011 John-Paul Stanford <dev@stanwood.org.uk>");
+			info("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.");
+			info("This is free software: you are free to change and redistribute it.");
+			info("There is NO WARRANTY");
+			info("");
+			info("Written by John-Paul Stanford.");
+		} catch (IOException e) {
+			fatal(e);
+		}
 	}
 
 	private boolean processConfig() throws FileNotFoundException, ConfigException {
