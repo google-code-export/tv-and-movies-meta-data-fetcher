@@ -12,8 +12,6 @@ Version 2.0
 					  can be found.
 					- Document how to download and install the native package
 *Not Started*   - Update installer to install native apps
-*Not Started*   - Add warning when not using patched mp4tags
-*Not Started*   - make tag list command take config file
 *Not Started*   - add --version option
 *Inprogress*    - compile patched version of mp4tags for all platforms
 

@@ -24,6 +24,7 @@ import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4Exception;
+import org.stanwood.media.store.mp4.MP4ITunesStore;
 
 /**
  * A new MP4 manager based on the MP4v2 command line tools {@link "http://code.google.com/p/mp4v2/"}.
@@ -359,6 +360,12 @@ public class MP4v2CLIManager implements IMP4Manager {
 		if (!checkTagsCommand()) {
 			log.error("Unable to find command "+mp4tagsPath+".");
 			errors = true;
+		}
+		if (!extended) {
+			log.warn("The found version of 'mp4tags' application does not support setting some mp4 " +
+					 "box types. This only a limited set of meta data can be written to mp4/m4v " +
+					 "files. The documentation for the '"+MP4ITunesStore.class.getName()+"' gives details " +
+					 "on downloading a newer version and using that instead.");
 		}
 		if (errors) {
 			throw new MP4Exception("One or more of the mp4v2 system commands could not be found.");

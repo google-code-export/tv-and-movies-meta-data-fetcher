@@ -407,14 +407,18 @@
  				be used to check the metadata that iTunes will see.
  				<cmdsynopsis>
 					<command>&mmlistatoms;</command>
-					<arg>-h</arg>							
+					<arg>-h</arg>		
+					<arg>-c <replaceable>config file</replaceable></arg>
+					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>					
 					<arg>&lt;media file&gt;</arg>
 				</cmdsynopsis>
 			</para>
 			<para>
 				The command has the following options:
 				<itemizedlist>
-					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>					
+					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
+					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
+					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>					
 				</itemizedlist>								
 			</para>			
 		</sect1>		

@@ -248,7 +248,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	private IMP4Manager getMP4Manager() throws StoreException {
+	IMP4Manager getMP4Manager() throws StoreException {
 		if (mp4Manager==null) {
 			try {
 				mp4Manager = manager.newInstance();

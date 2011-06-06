@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,6 +156,14 @@ public class Controller {
 			mediaDirs.put(mediaDir, dir);
 		}
 		return dir;
+	}
+
+	/**
+	 * Used to get a list of media directory locations
+	 * @return Media directory locations
+	 */
+	public Collection<File> getMediaDirectiores() {
+		return configReader.getMediaDirectiores();
 	}
 
 	/**
