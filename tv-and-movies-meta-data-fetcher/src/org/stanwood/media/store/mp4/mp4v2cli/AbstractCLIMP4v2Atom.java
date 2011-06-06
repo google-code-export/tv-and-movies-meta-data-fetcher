@@ -1,9 +1,11 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+import java.io.File;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.AtomNameLookup;
 import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.MP4Exception;
 
 /**
  * Base class for atoms
@@ -50,5 +52,5 @@ public abstract class AbstractCLIMP4v2Atom implements IAtom {
 		this.name = name;
 	}
 
-	abstract public void writeAtom(List<String> args);
+	abstract public void writeAtom(File mp4File,boolean extended,List<Object> args) throws MP4Exception;
 }

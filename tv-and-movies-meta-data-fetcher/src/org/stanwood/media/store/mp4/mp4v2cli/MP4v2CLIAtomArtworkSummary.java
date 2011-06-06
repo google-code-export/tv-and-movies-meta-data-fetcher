@@ -1,15 +1,27 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+import java.io.File;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
 
+/**
+ * The artwork summary atom. This cannot be written back to the file as it just
+ * allows
+ */
 public class MP4v2CLIAtomArtworkSummary extends AbstractCLIMP4v2Atom implements IAtom {
 
 	private long size;
 	private MP4ArtworkType artType;
 
+	/**
+	 * The artwork summary constructor
+	 * @param name Name of the atom
+	 * @param index The index in the file of the artwork
+	 * @param size The size of the artwork
+	 * @param artType The type of the artwork
+	 */
 	public MP4v2CLIAtomArtworkSummary(String name,int index, long size, MP4ArtworkType artType) {
 		super(name);
 		this.size = size;
@@ -37,7 +49,7 @@ public class MP4v2CLIAtomArtworkSummary extends AbstractCLIMP4v2Atom implements 
 
 	/** {@inheritDoc}*/
 	@Override
-	public void writeAtom(List<String> args) {
+	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
 		throw new UnsupportedOperationException("The summary artwork atom can not be wrttien to a mp4 file");
 	}
 }

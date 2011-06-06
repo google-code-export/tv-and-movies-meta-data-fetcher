@@ -6,20 +6,22 @@ package org.stanwood.media.store.mp4;
 public enum MP4ArtworkType {
 
 	/** Unknown type */
-	MP4_ART_UNDEFINED(0),
+	MP4_ART_UNDEFINED(0,".data"),
 	/** Windows BMP type */
-    MP4_ART_BMP(1),
+    MP4_ART_BMP(1,".bmp"),
     /** Gif type */
-    MP4_ART_GIF(2),
+    MP4_ART_GIF(2,".gif"),
     /** JPEG type */
-    MP4_ART_JPEG(3),
+    MP4_ART_JPEG(3,".jpeg"),
     /** PNG type */
-    MP4_ART_PNG(4);
+    MP4_ART_PNG(4,".png");
 
     private int value;
+    private String extension;
 
-	private MP4ArtworkType(int value) {
+	private MP4ArtworkType(int value,String extension) {
 		this.value = value;
+		this.extension = extension;
 	}
 
 	/**
@@ -43,5 +45,13 @@ public enum MP4ArtworkType {
         }
         return MP4_ART_UNDEFINED;
     }
+
+	/**
+	 * Get the file extension
+	 * @return the file extension
+	 */
+	public String getExtension() {
+		return extension;
+	}
 
 }

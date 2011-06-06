@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+import java.io.File;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
@@ -14,7 +15,6 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 
 	/**
 	 * The constructor
-	 * @param lib The mp4v2 lib used to perform operations on the file
 	 * @param name The name of the atom
 	 * @param number the number of items in the rage
 	 * @param total the maximum number in the range
@@ -27,7 +27,7 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 
 	/** {@inheritDoc} */
 	@Override
-	public void writeAtom(List<String>args) {
+	public void writeAtom(File mp4File,boolean extended,List<Object>args) {
 		if (getName().equals("disk")) {
 			args.add("-disk");
 			args.add(String.valueOf(number));

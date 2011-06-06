@@ -123,22 +123,27 @@ public class TestMP4Manager {
 		MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
+		for (IAtom a : atoms) {
+			System.out.println(a.toString());
+		}
 		Assert.assertEquals(11,atoms.size());
-		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(0).toString());
-		Assert.assertEquals("Release year: [©day=2005]",atoms.get(1).toString());
-		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(2).toString());
-		Assert.assertEquals("Episode ID: [tven=34567]",atoms.get(3).toString());
-		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(4).toString());
-		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(5).toString());
-		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(6).toString());
-		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(7).toString());
-		Assert.assertEquals("Media type: [stik=10]",atoms.get(8).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(9).toString());
-		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(10).toString());
+		int index = 0;
+		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+		Assert.assertEquals("Release year: [©day=2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Media type: [stik=10]",atoms.get(index++).toString());
+		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(index++).toString());
+		Assert.assertEquals("Episode ID: [tven=34567]",atoms.get(index++).toString());
+		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(index++).toString());
+		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(index++).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
 	}
 
 	protected IMP4Manager createMP4Manager() throws MP4Exception {
 		MP4v2CLIManager manager = new MP4v2CLIManager();
+		manager.setParameter("mp4tags", "/home/johsta01/nobackup/mp4v2/build/mp4tags");
 		manager.init();
 		return manager;
 	}
@@ -161,7 +166,7 @@ public class TestMP4Manager {
 		Film film = createTestFilm();
 
 		IMP4Manager ap = createMP4Manager();
-		MP4ITunesStore.updateFilm(ap,mp4File, film,null);
+		MP4ITunesStore.updateFilm(ap,mp4File, film,1);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<IAtom>() {
@@ -171,18 +176,19 @@ public class TestMP4Manager {
 			}
 		});
 
-		Assert.assertEquals(10,atoms.size());
-
-		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(0).toString());
-		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9487]",atoms.get(1).toString());
-		Assert.assertEquals("Summary: [desc=A test summary]",atoms.get(2).toString());
-		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(3).toString());
-		Assert.assertEquals("Media type: [stik=0]",atoms.get(4).toString());
-		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(5).toString());
-		Assert.assertEquals("Release year: [©day=2005]",atoms.get(6).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(7).toString());
-		Assert.assertEquals("Title: [©nam=Test film name]",atoms.get(8).toString());
-		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(9).toString());
+		Assert.assertEquals(11,atoms.size());
+		int index=0;
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9487]",atoms.get(index++).toString());
+		Assert.assertEquals("Summary: [desc=A test summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Disk number: [disk=1 of 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());
+		Assert.assertEquals("Media type: [stik=6]",atoms.get(index++).toString());
+		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
+		Assert.assertEquals("Release year: [©day=2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Title: [©nam=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
 	}
 
 	private Film createTestFilm() throws Exception {

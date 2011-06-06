@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+import java.io.File;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
@@ -33,7 +34,7 @@ public class MP4v2CLIAtomInteger extends AbstractCLIMP4v2Atom implements IAtom {
 
 	/** {@inheritDoc} */
 	@Override
-	public void writeAtom(List<String> args) {
+	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
 		if (getName().equals("tvsn")) {
 			args.add("-season");
 			args.add(String.valueOf(value));
@@ -48,10 +49,18 @@ public class MP4v2CLIAtomInteger extends AbstractCLIMP4v2Atom implements IAtom {
 			args.add(mediaType);
 		}
 		else if (getName().equals("rtng")) {
-//			getLib().MP4TagsSetContentRating(tags, new ByteByReference((byte)value));
-		}
-		else if (getName().equals("gnre")) {
-//			getLib().MP4TagsSetGenreType(tags, new ShortByReference((short)value));
+			if (extended) {
+				args.add("-rating");
+				if (value==2) {
+					args.add("clean");
+				}
+				else if (value==4) {
+					args.add("explicit");
+				}
+				else {
+					args.add("none");
+				}
+			}
 		}
 		else {
 			throw new UnsupportedOperationException("Atom type '"+getName()+"' not supported");
@@ -63,13 +72,13 @@ public class MP4v2CLIAtomInteger extends AbstractCLIMP4v2Atom implements IAtom {
 		case 0: return "oldmovie";
 		case 1: return "normal";
 		case 2: return "audiobook";
-		case 3: return "musicvideo";
-		case 4: return "movie";
-		case 5: return "tvshow";
-		case 6: return "booklet";
-		case 7: return "ringtone";
+		case 6: return "musicvideo";
+		case 9: return "movie";
+		case 10: return "tvshow";
+		case 11: return "booklet";
+		case 14: return "ringtone";
 		}
-		return "";
+		throw new UnsupportedOperationException("Unsupoorted media type of "+value);
 	}
 
 }

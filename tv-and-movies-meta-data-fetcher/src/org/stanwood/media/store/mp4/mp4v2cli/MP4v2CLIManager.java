@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
+import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
@@ -42,6 +45,8 @@ public class MP4v2CLIManager implements IMP4Manager {
 	private String mp4tagsPath = "mp4tags";
 	private String mp4filePath = "mp4file";
 
+	private boolean extended = false;
+
 	/** {@inheritDoc} */
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
@@ -49,7 +54,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 			throw new MP4Exception("Unable to find mp4 file: " + mp4File);
 		}
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		String output = getCommandOutput(mp4infoPath,mp4File.getAbsolutePath());
+		String output = getCommandOutput(true,false,true,mp4infoPath,mp4File);
 
 
 		BufferedReader reader = null;
@@ -93,7 +98,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	}
 
 	private void parseArtwork(List<IAtom> atoms, File mp4File) throws MP4Exception {
-		String output = getCommandOutput(mp4artPath,"--list",mp4File.getAbsolutePath());
+		String output = getCommandOutput(true,false,true,mp4artPath,"--list",mp4File);
 
 		BufferedReader reader = null;
 		try {
@@ -139,7 +144,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		return  MP4ArtworkType.MP4_ART_UNDEFINED;
 	}
 
-	private IAtom parseAtom(String key, String value) {
+	private IAtom parseAtom(String key, String value) throws MP4Exception {
 		IAtom atom = null;
 		if (isBoolean(key)) {
 			int ivalue = 0;
@@ -151,7 +156,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		else if (isNumber(key)) {
 			if (key.equals("stik")) {
 				int ivalue = -1;
-				if (value.equalsIgnoreCase("Movie")) {
+				if (value.equalsIgnoreCase("Old Movie")) {
 					ivalue = 0;
 				}
 				else if (value.equalsIgnoreCase("Normal")) {
@@ -161,6 +166,9 @@ public class MP4v2CLIManager implements IMP4Manager {
 					ivalue = 2;
 				}
 				else if (value.equalsIgnoreCase("Music Video")) {
+					ivalue = 6;
+				}
+				else if (value.equalsIgnoreCase("Movie")) {
 					ivalue = 6;
 				}
 				else if (value.equalsIgnoreCase("TV Show")) {
@@ -193,7 +201,12 @@ public class MP4v2CLIManager implements IMP4Manager {
 		}
 		else if (isRange(key)) {
 			Matcher m = RANGE_PATTERN.matcher(value);
-			atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
+			if (m.matches()) {
+				atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
+			}
+			else {
+				throw new MP4Exception("Unable to parse range from '"+value+"'");
+			}
 		}
 		else if (isArtwork(key)) {
 			// Handle else where
@@ -317,8 +330,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	/** {@inheritDoc} */
 	@Override
 	public IAtom createAtom(String name,MP4ArtworkType type, int size, byte data[]) {
-//		return new MP4v2CLIAtomArtwork(name,type,size,data);
-		throw new UnsupportedOperationException();
+		return new MP4v2CLIAtomArtwork(this,name,type,size,data);
 	}
 
 	/**
@@ -336,12 +348,12 @@ public class MP4v2CLIManager implements IMP4Manager {
 			log.error("Unable to find command "+mp4artPath+".");
 			errors = true;
 		}
-		if (!checkCommand(mp4tagsPath)) {
-			log.error("Unable to find command "+mp4tagsPath+".");
-			errors = true;
-		}
 		if (!checkCommand(mp4filePath)) {
 			log.error("Unable to find command "+mp4filePath+".");
+			errors = true;
+		}
+		if (!checkTagsCommand()) {
+			log.error("Unable to find command "+mp4tagsPath+".");
 			errors = true;
 		}
 		if (errors) {
@@ -351,40 +363,74 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkCommand(String cmd) {
 		try {
-			getCommandOutput(cmd);
+			getCommandOutput(true,true,false,cmd);
 		}
 		catch (MP4Exception e) {
-			if (e.getMessage().contains("a non zero exit code")) {
-				return true;
-			}
-			else if (e.getCause()!=null && e.getCause().getMessage().contains("exited with an error")) {
-				return true;
-			}
 			return false;
 		}
 		return true;
 	}
 
-	private String getCommandOutput(String command,String ... args) throws MP4Exception {
+	private boolean checkTagsCommand() {
+		try {
+			String output = getCommandOutput(true,true,false,mp4tagsPath);
+			if (output.contains("-category") && output.contains("-longdesc") && output.contains("-rating")) {
+				extended = true;
+			}
+		}
+		catch (MP4Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	String getCommandOutput(boolean captureStdout,boolean captureStderr,boolean failOnExitCode,String command,Object ... args) throws MP4Exception {
 		CommandLine cmdLine= new CommandLine(command);
-		for (String arg : args) {
-			cmdLine.addArgument(arg,false);
+		for (Object arg : args) {
+			if (arg instanceof File) {
+				cmdLine.addArgument(((File)arg).getAbsolutePath(),false);
+			}
+			else if (arg instanceof String) {
+				cmdLine.addArgument((String)arg,false);
+			}
 		}
 		Executor exec = new DefaultExecutor();
+		exec.setExitValues(new int[] {0,1,2,3});
+
 		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-//			 new LoggerOutputStream(Level.ERROR)
-			exec.setStreamHandler(new PumpStreamHandler(out,System.err));
+			ByteArrayOutputStream capture = new ByteArrayOutputStream();
+			OutputStream out = new LoggerOutputStream(Level.INFO);
+			if (captureStdout) {
+				out = capture;
+			}
+			OutputStream err = new LoggerOutputStream(Level.ERROR);
+			if (captureStderr) {
+				err = capture;
+			}
+			exec.setStreamHandler(new PumpStreamHandler(out,err));
 			int exitCode = exec.execute(cmdLine);
-			if (exitCode!=0) {
+			if (failOnExitCode && exitCode!=0) {
 				throw new MP4Exception("System command returned a non zero exit code '"+exitCode+"' :"+cmdLine.toString());
 			}
-			return out.toString();
+			return capture.toString();
 		} catch (IOException e) {
 			throw new MP4Exception("Unable to execute system command: " + cmdLine.toString(),e);
 		}
 	}
 
+	/**
+	 * <p>Used to set the managers parameters.</p>
+	 * <p>This manager has following optional parameters:
+	 * 	<ul>
+	 * 		<li>mp4art - The path to the mp4art command</li>
+	 *      <li>mp4info - The path to the mp4info command</li>
+	 *      <li>mp4tags - The path to the mp4tags command</li>
+	 *      <li>mp4file - The path to the mp4file command</li>
+	 *  </ul>
+	 * </p>
+	 * @param key The name of the parameter
+	 * @param value The value of the parameter
+	 */
 	@Override
 	public void setParameter(String key, String value) {
 		if (key.equalsIgnoreCase("mp4art")){
@@ -417,17 +463,24 @@ public class MP4v2CLIManager implements IMP4Manager {
 		}
 		checkAppleListItemBoxExists(mp4File);
 		if (hasArtwrokAtom(atoms)) {
-			getCommandOutput(mp4artPath, "--remove","--art-any",mp4File.getAbsolutePath());
+			try {
+				getCommandOutput(true,false,true,mp4artPath, "--remove","--art-any",mp4File);
+			}
+			catch (MP4Exception e) {
+				if (e.getMessage().contains("non zero exit code")) {
+					// This is ok as their was no art
+				}
+			}
 		}
 
-		List<String>args = new ArrayList<String>();
+		List<Object>args = new ArrayList<Object>();
 		for (IAtom atom : atoms) {
-			((AbstractCLIMP4v2Atom)atom).writeAtom(args);
+			((AbstractCLIMP4v2Atom)atom).writeAtom(mp4File,extended,args);
 
 		}
 		// TODO handle artwork
-		args.add( mp4File.getAbsolutePath());
-		getCommandOutput(mp4tagsPath,args.toArray(new String[args.size()]));
+		args.add(mp4File);
+		getCommandOutput(true,false,true,mp4tagsPath,args.toArray(new Object[args.size()]));
 
 		if (log.isDebugEnabled()) {
 			log.debug("MP4 modified '" + mp4File+"'");
@@ -435,7 +488,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	}
 
 	private void checkAppleListItemBoxExists(File mp4File) throws MP4Exception {
-		String output = getCommandOutput(mp4filePath, "--list",mp4File.getAbsolutePath());
+		String output = getCommandOutput(true,false,true,mp4filePath, "--list",mp4File);
 		BufferedReader reader = null;
 		try {
 			reader =new BufferedReader(new StringReader(output));
@@ -461,6 +514,10 @@ public class MP4v2CLIManager implements IMP4Manager {
 			}
 		}
 		throw new MP4Exception("MP4 File '"+mp4File+"' does not have apple metadata container box, so don't know how to update it");
+	}
+
+	String getMP4ArtCommand() {
+		return mp4artPath;
 	}
 
 }
