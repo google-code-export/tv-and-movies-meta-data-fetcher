@@ -143,7 +143,6 @@ public class TestMP4Manager {
 
 	protected IMP4Manager createMP4Manager() throws MP4Exception {
 		MP4v2CLIManager manager = new MP4v2CLIManager();
-		manager.setParameter("mp4tags", "/home/johsta01/nobackup/mp4v2/build/mp4tags");
 		manager.init();
 		return manager;
 	}
