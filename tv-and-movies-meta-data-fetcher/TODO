@@ -5,9 +5,13 @@ Version 2.0
 -----------
 
 *Needs Testing* - Check installer still works windows, check scripts work
-*Inprogress*    - Create new MP4 managed bases on native lib MP4v2
-					* Look to ship windows, linux and maxos version of the native lib with the project.
-*Inprogress*    - Update spec files so that things build
+*Not Started*   - Update docs of MP4ITunesStore
+*Inprogress*    - Create native patched exe's of the mp4tags app.
+					- Build a zip file for load to the website of native apps.
+					- Make sure if running via installer version or project version that the patched version
+					  can be found.
+					- Document how to download and install the native package
+*Not Started*   - Update installer to install native apps 					  
 
 Version 2.0.1
 -------------

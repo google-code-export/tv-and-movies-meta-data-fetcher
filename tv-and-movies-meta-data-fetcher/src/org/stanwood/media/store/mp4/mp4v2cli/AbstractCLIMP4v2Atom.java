@@ -20,7 +20,6 @@ public abstract class AbstractCLIMP4v2Atom implements IAtom {
 
 	/**
 	 * The constructor
-	 * @param lib The mp4v2 lib used to perform operations on the file
 	 * @param name The name of the atom
 	 */
 	public AbstractCLIMP4v2Atom(String name) {
@@ -52,5 +51,12 @@ public abstract class AbstractCLIMP4v2Atom implements IAtom {
 		this.name = name;
 	}
 
+	/**
+	 * Used to get the arguments need to write a atom to the mp4 file
+	 * @param mp4File The mp4 file
+	 * @param extended true if we have the patched mp4tags program support active
+	 * @param args The argument list to add to
+	 * @throws MP4Exception Thrown if their are any problems
+	 */
 	abstract public void writeAtom(File mp4File,boolean extended,List<Object> args) throws MP4Exception;
 }

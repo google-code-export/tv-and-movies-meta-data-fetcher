@@ -1,3 +1,5 @@
+* Mon Jun 6 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
+- New MP4 manager based on the command line tools of MP4v2
 * Sat May 28 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Added new command "mm-mp4-list-atoms" which will list the atoms a mp4/m4v file.
 - Added new command "mm-copy-store-to-store" which copies metadata between stores.

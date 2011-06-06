@@ -54,6 +54,24 @@ import org.stanwood.media.util.FileHelper;
  * by iTunes. This allows iTuness to use the meta data retrieved by this tool and this tool
  * too use the meta data of iTunes.
  * </p>
+ * <p>
+ * In order to function, store uses the command line tools provided by the MP4v2 project
+ * {@link "http://code.google.com/p/mp4v2/"}. These must be installed on the PATH, or pointed
+ * to by the optional store parameters.
+ * </p>
+ * <p>
+ * The mp4tags application does not support the setting of all fields that this store can handle,
+ * a patched version of this file can be downloaded or installed via the installer. A warning will
+ * be printed if this was not found.
+ * </p>
+ * <p>This manager has following optional parameters:
+ * 	<ul>
+ * 		<li>mp4art - The path to the mp4art command</li>
+ *      <li>mp4info - The path to the mp4info command</li>
+ *      <li>mp4tags - The path to the mp4tags command</li>
+ *      <li>mp4file - The path to the mp4file command</li>
+ *  </ul>
+ * </p>
  */
 public class MP4ITunesStore implements IStore {
 
@@ -240,6 +258,7 @@ public class MP4ITunesStore implements IStore {
 			mp4Manager.setParameter("mp4art",mp4artPath);
 			mp4Manager.setParameter("mp4tags",mp4tagsPath);
 			mp4Manager.setParameter("mp4info",mp4infoPath);
+			mp4Manager.setParameter("mp4file",mp4filePath);
 		}
 		return mp4Manager;
 	}

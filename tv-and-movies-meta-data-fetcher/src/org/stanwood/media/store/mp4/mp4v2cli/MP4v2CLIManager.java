@@ -24,6 +24,9 @@ import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4Exception;
 
+/**
+ * A new MP4 manager based on the MP4v2 command line tools {@link "http://code.google.com/p/mp4v2/"}.
+ */
 public class MP4v2CLIManager implements IMP4Manager {
 
 	private final static Log log = LogFactory.getLog(MP4v2CLIManager.class);
@@ -35,7 +38,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	private static final Pattern FILE_LIST_PATTERN = Pattern.compile("^(.*?) +(.*?) +(.*?) +(.*)$",Pattern.CASE_INSENSITIVE);
 
 	private String ATOM_BOOLEAN_KEYS[] = new String[] {"hdvd"};
-	private String ATOM_STRING_KEYS[] = new String[] {"©nam","©day","tvsh","desc","ldes","©ART","©too","©gen","catg","tven"};
+//	private String ATOM_STRING_KEYS[] = new String[] {"©nam","©day","tvsh","desc","ldes","©ART","©too","©gen","catg","tven"};
 	private String ATOM_NUMBER_KEYS[] = new String[] {"stik","rtng","tvsn","tves"};
 	private String ATOM_RANGE_KEYS[] = new String[] {"disk"};
 	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"};
@@ -456,6 +459,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
 		if (log.isDebugEnabled()) {

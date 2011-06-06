@@ -68,7 +68,11 @@ public interface IMP4Manager {
 	 */
 	public void init() throws MP4Exception;
 
-
+	/**
+	 * Used to set parameters on the manager
+	 * @param key The key of the parameter
+	 * @param value The name of the parameter
+	 */
 	public void setParameter(String key, String value);
 
 
