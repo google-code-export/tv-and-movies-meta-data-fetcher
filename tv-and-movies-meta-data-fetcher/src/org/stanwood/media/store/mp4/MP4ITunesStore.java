@@ -34,6 +34,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
@@ -78,10 +79,10 @@ public class MP4ITunesStore implements IStore {
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager = MP4v2CLIManager.class;
-	private String mp4infoPath = "mp4info";
-	private String mp4artPath = "mp4art";
-	private String mp4tagsPath = "mp4tags";
-	private String mp4filePath = "mp4file";
+	private String mp4infoPath = NativeHelper.getNativeApplication("mp4info");
+	private String mp4artPath = NativeHelper.getNativeApplication("mp4art");
+	private String mp4tagsPath = NativeHelper.getNativeApplication("mp4tags");
+	private String mp4filePath = NativeHelper.getNativeApplication("mp4file");
 
 	/** {@inheritDoc} */
 	@Override

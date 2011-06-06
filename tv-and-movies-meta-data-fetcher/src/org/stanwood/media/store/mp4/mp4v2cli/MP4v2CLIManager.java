@@ -18,6 +18,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
+import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
@@ -43,10 +44,10 @@ public class MP4v2CLIManager implements IMP4Manager {
 	private String ATOM_RANGE_KEYS[] = new String[] {"disk"};
 	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"};
 
-	private String mp4artPath = "mp4art";
-	private String mp4infoPath = "mp4info";
-	private String mp4tagsPath = "mp4tags";
-	private String mp4filePath = "mp4file";
+	private String mp4artPath = NativeHelper.getNativeApplication("mp4art");
+	private String mp4infoPath = NativeHelper.getNativeApplication("mp4info");
+	private String mp4tagsPath = NativeHelper.getNativeApplication("mp4tags");
+	private String mp4filePath = NativeHelper.getNativeApplication("mp4file");
 
 	private boolean extended = false;
 
@@ -482,7 +483,6 @@ public class MP4v2CLIManager implements IMP4Manager {
 			((AbstractCLIMP4v2Atom)atom).writeAtom(mp4File,extended,args);
 
 		}
-		// TODO handle artwork
 		args.add(mp4File);
 		getCommandOutput(true,false,true,mp4tagsPath,args.toArray(new Object[args.size()]));
 

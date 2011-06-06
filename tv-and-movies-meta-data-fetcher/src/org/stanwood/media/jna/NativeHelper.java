@@ -12,11 +12,11 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 
 /**
- * Used to help with the native library mappings
+ * Used to help with the native libraries and command line tools
  */
-public class LibraryHelper {
+public class NativeHelper {
 
-	private final static Log log = LogFactory.getLog(LibraryHelper.class);
+	private final static Log log = LogFactory.getLog(NativeHelper.class);
 
 	/**
 	 * Used to load the library and setup it's options
@@ -33,6 +33,40 @@ public class LibraryHelper {
 	}
 
 	/**
+	 * Used to get the path to a native application.
+	 * @param appName The application name
+	 * @return The app name to execute
+	 */
+	public static String getNativeApplication(String appName) {
+		String method = System.getenv("MM_EXE_LOCATE_METHOD");
+		appName = getAppName(appName);
+		String nativePath = getAppArchPath(appName);
+		if (method==null || method.length()==0 || method.equals("installed")) {
+			String nativeDir = System.getenv("MM_NATIVE_DIR");
+			if (nativeDir!=null && !nativeDir.equals("")) {
+				File f =new File(nativeDir+File.separator+nativePath);
+				if (f.exists()) {
+					return f.getAbsolutePath();
+				}
+			}
+		}
+		if (method==null || method.length()==0 || method.equals("project")) {
+			File f =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath);
+			if (f.exists()) {
+				return f.getAbsolutePath();
+			}
+		}
+		return appName;
+	}
+
+	private static String getAppName(String appName) {
+		if (Platform.isWindows()) {
+			return appName+".exe";
+		}
+		return appName;
+	}
+
+	/**
 	 * <p>Used to load a native library. This will first try to load it from the system.
      * If this fails, it checks a environment variable MM_NATIVE_DIR for the location of native
      * libraries and load from their. If this fails, it checks for a native folder in the current
@@ -45,19 +79,7 @@ public class LibraryHelper {
 	public static Object loadLibrary(String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
 		String method = System.getenv("MM_LIB_LOAD_METHOD");
 		Error error = null;
-
-		if (method==null || method.length()==0 || method.equals("system")) {
-			try {
-				// try load from the system
-				return loadLibraryWithOptions(libName,interfaceClass);
-			}
-			catch (Error e) {
-				if (log.isDebugEnabled()) {
-					log.debug("Unable to find system version of library '"+libName+"'",e);
-				}
-			}
-		}
-		String nativePath = getArchPath(libName);
+		String nativePath = getLibArchPath(libName);
 		if (method==null || method.length()==0 || method.equals("installed")) {
 			try {
 				String nativeDir = System.getenv("MM_NATIVE_DIR");
@@ -91,9 +113,48 @@ public class LibraryHelper {
 		throw new UnsatisfiedLinkError("Unable to load native library '"+libName+"'");
 	}
 
+	private static String getAppArchPath(String appName) {
+		StringBuilder result = new StringBuilder("apps"+File.separator);
+		switch (Platform.getOSType()) {
+		case Platform.LINUX :
+			result.append("linux");
+			break;
+		case Platform.MAC:
+			result.append("mac");
+			break;
+		case Platform.WINDOWS:
+			result.append("windows");
+			break;
+		default:
+			throw new Error("No native application '" + appName+ "' for this platform");
+		}
+		result.append(File.separator);
+		result.append("x86");
+		result.append(File.separator);
+		if (Platform.is64Bit()) {
+			result.append("64");
+		}
+		else {
+			result.append("32");
+		}
+		result.append(File.separator);
+		switch (Platform.getOSType()) {
+		case Platform.LINUX :
+			result.append(appName);
+			break;
+		case Platform.MAC:
+			result.append(appName);
+			break;
+		case Platform.WINDOWS:
+			result.append(appName);
+			break;
+		default:
+			throw new Error("No native application '" + appName+ "' for this platform");
+		}
+		return result.toString();
+	}
 
-
-	private static String getArchPath(String libName) {
+	private static String getLibArchPath(String libName) {
 		StringBuilder result = new StringBuilder("libs"+File.separator);
 		switch (Platform.getOSType()) {
 		case Platform.LINUX :
