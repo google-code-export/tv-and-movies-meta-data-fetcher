@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+import java.io.File;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
@@ -13,7 +14,6 @@ public class MP4v2CLIAtomString extends AbstractCLIMP4v2Atom implements IAtom {
 
 	/**
 	 * The constructor
-	 * @param lib The mp4v2 lib used to perform operations on the file
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 */
@@ -33,9 +33,9 @@ public class MP4v2CLIAtomString extends AbstractCLIMP4v2Atom implements IAtom {
 
 	/** {@inheritDoc} */
 	@Override
-	public void writeAtom(List<String> args) {
+	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
 		if (getName().equals("©nam")) {
-			args.add("-name");
+			args.add("-song");
 			args.add(value);
 		}
 		else if (getName().equals("©day")) {
@@ -63,8 +63,10 @@ public class MP4v2CLIAtomString extends AbstractCLIMP4v2Atom implements IAtom {
 			args.add(value);
 		}
 		else if (getName().equals("catg")) {
-//			args.add("-year");
-//			args.add(value);
+			if (extended) {
+				args.add("-category");
+				args.add(value);
+			}
 		}
 		else if (getName().equals("©too")) {
 			args.add("-tool");
