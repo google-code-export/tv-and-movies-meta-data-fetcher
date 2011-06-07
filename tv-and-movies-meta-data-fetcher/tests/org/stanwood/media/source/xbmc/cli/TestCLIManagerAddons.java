@@ -46,6 +46,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		expected.append("usage: mm-xbmc [--global-options] <command> [--command-options] [arguments]"+FileHelper.LS);
 		expected.append(""+FileHelper.LS);
 		expected.append("Global options:"+FileHelper.LS);
+		expected.append("  --version, -v                 Display the version"+FileHelper.LS);
 		expected.append("  --config_file, -c <file>      The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"+FileHelper.LS);
 		expected.append("  --log_config, -l <info|debug|file>"+FileHelper.LS);
 		expected.append("                                The log config mode [<INFO>|<DEBUG>|<log4j config file>]"+FileHelper.LS);
