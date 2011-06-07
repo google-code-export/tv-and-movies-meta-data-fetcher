@@ -13,6 +13,9 @@ Version 2.0
 					- Document how to download and install the native package
 *Not Started*   - Update installer to install native apps
 *Inprogress*    - compile patched version of mp4tags for all platforms
+*Inprogress*    - Add native apps to native folder
+*Inprogress*    - Change config to allow specifying of native folders
+					- Make lib and app lookup look in the specified zip/dir
 
 Version 2.0.1
 -------------

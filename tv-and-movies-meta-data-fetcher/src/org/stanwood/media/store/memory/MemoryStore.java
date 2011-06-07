@@ -328,6 +328,6 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init() throws StoreException {
+	public void init(File nativeDir) throws StoreException {
 	}
 }

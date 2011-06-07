@@ -59,21 +59,23 @@ public class ActionPerformer implements IActionEventHandler {
 	private List<String> exts;
 	private MediaDirectory dir;
 	private List<IAction> actions;
-
 	private boolean testMode;
+	private File nativeFolder;
 
 	/**
 	 * Constructor used to create a instance of the class
+	 * @param nativeFolder
 	 * @param actions List of actions to perform
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
 	 * @param testMode True if test mode is enabled
 	 */
-	public ActionPerformer(List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
+	public ActionPerformer(File nativeFolder, List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
 		this.dir = dir;
 		this.exts = exts;
 		this.actions = actions;
 		this.testMode =testMode;
+		this.nativeFolder = nativeFolder;
 	}
 
 	/**
@@ -130,7 +132,7 @@ public class ActionPerformer implements IActionEventHandler {
 		boolean hasErrors = false;
 		for (IStore store : dir.getStores()) {
 			try {
-				store.init();
+				store.init(nativeFolder);
 			}
 			catch (StoreException e ) {
 				log.debug(e.getMessage(),e);

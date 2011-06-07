@@ -64,9 +64,10 @@ public interface IMP4Manager {
 
 	/**
 	 * Used to setup the manager
+	 * @param nativeDir The native folder been used or configured. Null if can't be found
 	 * @throws MP4Exception Thrown if their is a problem setup up the manager
 	 */
-	public void init() throws MP4Exception;
+	public void init(File nativeDir) throws MP4Exception;
 
 	/**
 	 * Used to set parameters on the manager

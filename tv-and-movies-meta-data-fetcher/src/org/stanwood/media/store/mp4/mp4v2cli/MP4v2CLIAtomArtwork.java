@@ -32,7 +32,7 @@ public class MP4v2CLIAtomArtwork extends AbstractCLIMP4v2Atom implements IAtom {
 		super(name);
 		this.type = type;
 		this.size = size;
-		this.data = data;
+		this.data = data.clone();
 		this.manager = manager;
 	}
 

@@ -8,12 +8,9 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
 
 /**
@@ -64,15 +61,8 @@ public class CLIListAtoms extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try {
-			IMP4Manager mp4Manager;
-			MP4ITunesStore store = findStore();
-			if (store!=null) {
-				mp4Manager = store.getMP4Manager();
-			}
-			else {
-				mp4Manager = new MP4v2CLIManager();
-				mp4Manager.init();
-			}
+			IMP4Manager mp4Manager = new MP4v2CLIManager();
+			mp4Manager.init(getController().getNativeFolder());
 
 			info("Reading atoms...");
 			List<IAtom> atoms = mp4Manager.listAtoms(mp4File);
@@ -91,18 +81,6 @@ public class CLIListAtoms extends AbstractLauncher {
 			return false;
 		}
 		return true;
-	}
-
-	private MP4ITunesStore findStore() throws ConfigException {
-		for (File f : getController().getMediaDirectiores()) {
-			MediaDirectory dir = getController().getMediaDirectory(f);
-			for (IStore store : dir.getStores()) {
-				if (store instanceof MP4ITunesStore) {
-					return (MP4ITunesStore) store;
-				}
-			}
-		}
-		return null;
 	}
 
 	static synchronized void setExitHandler(IExitHandler handler) {

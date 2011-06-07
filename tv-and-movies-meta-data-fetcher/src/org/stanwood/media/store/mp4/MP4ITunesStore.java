@@ -79,16 +79,28 @@ public class MP4ITunesStore implements IStore {
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager = MP4v2CLIManager.class;
-	private String mp4infoPath = NativeHelper.getNativeApplication("mp4info");
-	private String mp4artPath = NativeHelper.getNativeApplication("mp4art");
-	private String mp4tagsPath = NativeHelper.getNativeApplication("mp4tags");
-	private String mp4filePath = NativeHelper.getNativeApplication("mp4file");
+	private String mp4infoPath;
+	private String mp4artPath;
+	private String mp4tagsPath;
+	private String mp4filePath;
 
 	/** {@inheritDoc} */
 	@Override
-	public void init() throws StoreException {
+	public void init(File nativeDir) throws StoreException {
+		if (mp4infoPath == null) {
+			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info");
+		}
+		if (mp4artPath == null) {
+			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art");
+		}
+		if (mp4tagsPath == null) {
+			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags");
+		}
+		if (mp4filePath == null) {
+			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file");
+		}
 		try {
-			getMP4Manager().init();
+			getMP4Manager().init(nativeDir);
 		} catch (MP4Exception e) {
 			throw new StoreException("Unable to setup the store",e);
 		}

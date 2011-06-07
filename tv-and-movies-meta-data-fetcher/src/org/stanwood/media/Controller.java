@@ -231,4 +231,11 @@ public class Controller {
 		return testMode;
 	}
 
+	/**
+	 * Used to find the native folder. Null is returend if it could not be found
+	 * @return The native folder, or null if not found
+	 */
+	public File getNativeFolder() {
+		return configReader.getNativeFolder();
+	}
 }

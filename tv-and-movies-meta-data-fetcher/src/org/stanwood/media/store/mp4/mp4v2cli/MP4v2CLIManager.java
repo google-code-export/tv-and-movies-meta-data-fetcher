@@ -45,10 +45,10 @@ public class MP4v2CLIManager implements IMP4Manager {
 	private String ATOM_RANGE_KEYS[] = new String[] {"disk"};
 	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"};
 
-	private String mp4artPath = NativeHelper.getNativeApplication("mp4art");
-	private String mp4infoPath = NativeHelper.getNativeApplication("mp4info");
-	private String mp4tagsPath = NativeHelper.getNativeApplication("mp4tags");
-	private String mp4filePath = NativeHelper.getNativeApplication("mp4file");
+	private String mp4artPath = null;
+	private String mp4infoPath = null;
+	private String mp4tagsPath = null;
+	private String mp4filePath = null;
 
 	private boolean extended = false;
 
@@ -343,7 +343,19 @@ public class MP4v2CLIManager implements IMP4Manager {
 	 * @throws MP4Exception Thrown if their is a problem locating the commands
 	 */
 	@Override
-	public void init() throws MP4Exception {
+	public void init(File nativeDir) throws MP4Exception {
+		if (mp4infoPath == null) {
+			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info");
+		}
+		if (mp4artPath == null) {
+			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art");
+		}
+		if (mp4tagsPath == null) {
+			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags");
+		}
+		if (mp4filePath == null) {
+			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file");
+		}
 		boolean errors = false;
 		if (!checkCommand(mp4infoPath)) {
 			log.error("Unable to find command "+mp4infoPath+".");

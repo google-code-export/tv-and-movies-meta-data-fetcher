@@ -71,6 +71,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private List<Plugin> plugins = new ArrayList<Plugin>();
 	private File configDir;
+	private File nativeFolder;
 
 	/**
 	 * The constructor used to create a instance of the configuration reader
@@ -544,5 +545,22 @@ public class ConfigReader extends BaseConfigReader {
 			mediaDirs.add(c.getMediaDir());
 		}
 		return mediaDirs;
+	}
+
+	/**
+	 * Used to find the native folder. Null is returend if it could not be found
+	 * @return The native folder, or null if not found
+	 */
+	public File getNativeFolder() {
+		if (nativeFolder==null) {
+			String nativeDir = System.getenv("MM_NATIVE_DIR");
+			if (nativeDir!=null && nativeDir.length()>0) {
+				nativeFolder = new File(nativeDir);
+			}
+			else {
+
+			}
+		}
+		return nativeFolder;
 	}
 }
