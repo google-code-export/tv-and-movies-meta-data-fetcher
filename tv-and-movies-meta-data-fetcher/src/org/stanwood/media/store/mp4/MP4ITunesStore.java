@@ -51,9 +51,9 @@ import org.stanwood.media.util.FileHelper;
 
 /**
  * <p>
- * This store is used to store and retrieve film/TV show information from .mp4/.m4v files used
- * by iTunes. This allows iTuness to use the meta data retrieved by this tool and this tool
- * too use the meta data of iTunes.
+ * This store is used to store Film/TV show information in .mp4/.m4v files used
+ * by iTunes. This allows iTunes to use the meta data and see the files complete with
+ * their meta data.
  * </p>
  * <p>
  * In order to function, store uses the command line tools provided by the MP4v2 project

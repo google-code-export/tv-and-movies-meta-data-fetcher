@@ -9,7 +9,7 @@
 		  					<xs:element name="plugin" type="plugin"/>
 		  				</xs:sequence>
 		  			</xs:complexType>
-		  		</xs:element>
+		  		</xs:element>		  		
   				<xs:element name="XBMCAddons" minOccurs="0" maxOccurs="1">
   					<xs:complexType>
 	  					<xs:attribute name="directory" type="xs:string"/>
@@ -19,8 +19,9 @@
   				<xs:element name="global" minOccurs="0" maxOccurs="1">
   					<xs:complexType>  							  				
   						<xs:sequence>
-  							<xs:element name="configDirectory" type="pathElement"/>	  						
-  						</xs:sequence>
+  							<xs:element name="configDirectory" type="pathElement"/>
+  						    <xs:element name="native" type="pathElement"/>	  						     					
+  						</xs:sequence>  						
   					</xs:complexType>
   				</xs:element>
 	  			<xs:element name="mediaDirectory" minOccurs="0" maxOccurs="unbounded">  
@@ -83,6 +84,8 @@
   		<xs:attribute name="jar" type="xs:string" use="required"/>
   		<xs:attribute name="class" type="xs:string" use="required"/>
   	</xs:complexType>
+  	
+  	
 
 	<xs:complexType name="store">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">

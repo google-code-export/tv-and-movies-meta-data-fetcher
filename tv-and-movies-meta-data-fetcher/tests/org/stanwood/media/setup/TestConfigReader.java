@@ -423,11 +423,13 @@ public class TestConfigReader {
 		testConfig.append("<mediaManager>"+LS);
 		testConfig.append("  <global>"+LS);
 		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+LS);
+		testConfig.append("    <native>/This/is/a/test</native>"+LS);
 		testConfig.append("  </global>"+LS);
 		testConfig.append("</mediaManager>"+LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
+		Assert.assertEquals("/This/is/a/test",configReader.getNativeFolder().getAbsolutePath());
 	}
 
 //	/**
