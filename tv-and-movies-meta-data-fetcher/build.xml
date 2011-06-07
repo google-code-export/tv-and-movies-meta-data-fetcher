@@ -246,7 +246,9 @@
 			<zipfileset file="${basedir}/docbook.zip" prefix="${ant.project.name}-${project.version}"/>
 		</zip>
 		
-		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-native.zip" basedir="${native.dir}"/>
+		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-native.zip">
+			<zipfileset dir="${native.dir}" prefix="native"/>
+		</zip>
 		
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." compress="true" />
 
