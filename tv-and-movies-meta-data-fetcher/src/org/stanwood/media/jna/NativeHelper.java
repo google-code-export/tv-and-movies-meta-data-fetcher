@@ -34,17 +34,17 @@ public class NativeHelper {
 
 	/**
 	 * Used to get the path to a native application.
+	 * @param nativeDir The directory that contains the native libs and apps
 	 * @param appName The application name
 	 * @return The app name to execute
 	 */
-	public static String getNativeApplication(String appName) {
+	public static String getNativeApplication(File nativeDir,String appName) {
 		String method = System.getenv("MM_EXE_LOCATE_METHOD");
 		appName = getAppName(appName);
 		String nativePath = getAppArchPath(appName);
 		if (method==null || method.length()==0 || method.equals("installed")) {
-			String nativeDir = System.getenv("MM_NATIVE_DIR");
-			if (nativeDir!=null && !nativeDir.equals("")) {
-				File f =new File(nativeDir+File.separator+nativePath);
+			if (nativeDir!=null) {
+				File f =new File(nativeDir,nativePath);
 				if (f.exists()) {
 					return f.getAbsolutePath();
 				}
@@ -71,20 +71,20 @@ public class NativeHelper {
      * If this fails, it checks a environment variable MM_NATIVE_DIR for the location of native
      * libraries and load from their. If this fails, it checks for a native folder in the current
      * working directory (This is mainly for tests).</p>
+     * @param nativeDir The directory that contains the native libs and apps
      * @param libName The name of the library
      * @param interfaceClass The name of the class the library will implement4
 	 * @return The library
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
-	public static Object loadLibrary(String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
+	public static Object loadLibrary(File nativeDir,String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
 		String method = System.getenv("MM_LIB_LOAD_METHOD");
 		Error error = null;
 		String nativePath = getLibArchPath(libName);
 		if (method==null || method.length()==0 || method.equals("installed")) {
 			try {
-				String nativeDir = System.getenv("MM_NATIVE_DIR");
-				if (nativeDir!=null && !nativeDir.equals("")) {
-					String path =new File(nativeDir+File.separator+nativePath).getAbsolutePath();
+				if (nativeDir!=null) {
+					String path =new File(nativeDir,nativePath).getAbsolutePath();
 					return loadLibraryWithOptions(path,interfaceClass);
 				}
 			}

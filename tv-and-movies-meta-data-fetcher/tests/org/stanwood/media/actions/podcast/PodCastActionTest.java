@@ -296,7 +296,7 @@ public class PodCastActionTest {
 			exts.add(ext);
 		}
 
-		ActionPerformer ap = new ActionPerformer(actions,mediaDir,exts,false);
+		ActionPerformer ap = new ActionPerformer(null,actions,mediaDir,exts,false);
 		ap.performActions();
 	}
 

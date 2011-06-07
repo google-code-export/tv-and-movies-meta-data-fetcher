@@ -227,7 +227,8 @@ public interface IStore  {
 	/**
 	 * Called to initialise the stores and check all their resources can be found. This
 	 * is called before performing any actions.
+	 * @param nativeDir The native folder been used or configured. Null if can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public void init() throws StoreException;
+	public void init(File nativeDir) throws StoreException;
 }
