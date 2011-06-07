@@ -98,6 +98,7 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
+
 	private void parseMediaDirs(Document doc) throws XMLParserException, ConfigException {
 		List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
 		for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) {
@@ -448,6 +449,10 @@ public class ConfigReader extends BaseConfigReader {
 			if (dir.trim().length()>0) {
 				configDir =new File(dir);
 			}
+			String value = parseString(getStringFromXML(node, "native/text()"));
+			if (value!=null && !value.equals("")) {
+				nativeFolder = new File(value);
+			}
 		}
 	}
 
@@ -556,9 +561,6 @@ public class ConfigReader extends BaseConfigReader {
 			String nativeDir = System.getenv("MM_NATIVE_DIR");
 			if (nativeDir!=null && nativeDir.length()>0) {
 				nativeFolder = new File(nativeDir);
-			}
-			else {
-
 			}
 		}
 		return nativeFolder;

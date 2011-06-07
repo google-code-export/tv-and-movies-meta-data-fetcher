@@ -180,8 +180,33 @@
             <sect2>
                  <title>org.stanwood.media.store.mp4.MP4ITunesStore</title>
                  <para>
-                 This store is a write only store, that is used to store meta data for films and TV shows in .mp4 and m4v files. This
-                 information can be read by iTunes.   
+                 This store is used to store Film/TV show information in .mp4/.m4v files used
+ 				 by iTunes. This allows iTunes to use the meta data and see the files complete with
+ 				 their meta data.
+                 </para>
+                 <para>
+                 In order for this store to function, it uses command line tools provided by the
+                 <ulink url="http://code.google.com/p/mp4v2/">MP4v2</ulink> project. 
+                 </para>
+                 <para>
+                 &apptitle; should be able to find these tools if it was installed using the installer.
+                 However if it was installed via linux packages then it will look for them on the system
+                 path. It's also possible to tell it where to look for them. See the Configuration chapter or
+                 the optional parameters for the store.                 
+                 </para>
+                 <para>
+                 The mp4tags application does not support the setting of all fields that this store can handle,
+                 a patched version of this command os installed via the installer. It can also be downloaded
+                 from the &apptitle; website. A warning will be printed if this was not found.
+                 </para>
+                 <para>
+                 This manager has following optional parameters:
+                 <itemizedlist>
+                 	<listitem><para>mp4art - The path to the mp4art command</para></listitem>
+                 	<listitem><para>mp4info - The path to the mp4info command</para></listitem>
+                 	<listitem><para>mp4tags - The path to the mp4tags command</para></listitem>
+                 	<listitem><para>mp4file - The path to the mp4file command</para></listitem>
+                 </itemizedlist>
                  </para>
             </sect2>            
 		</sect1>	
@@ -516,7 +541,7 @@
 					     </itemizedlist>
 					</para>
 				</example>      
-		</sect1>
+		</sect1>		
 		<sect1>
 			<title>Ignore</title>
 			<para>
@@ -556,6 +581,27 @@
 				</programlisting>
 			</example> 
 			</para>			
+		</sect1>
+		<sect1>
+			<title>Global Settings</title>
+			<para>
+			Their are some global settings which can be configured. Belowe is a list of settings:
+			<itemizedlist>
+				<listitem><para>configDirectory - The location of the local configuration directory</para></listitem>
+				<listitem><para>native - A directory which contains the native applications/libraries used by &apptitle;</para></listitem>
+			</itemizedlist>
+			<example>		
+					<title>Gloab settings</title>
+					<programlisting>
+				<![CDATA[<mediaManager>	
+	<global>
+		<configDirectory>$HOME/.mediaManager</configDirectory>
+		<native>$HOME/.mediaManager/native</native>
+	</global>
+				]]>
+				</programlisting>
+			</example> 
+			</para>
 		</sect1>
 		<sect1>
 			<title>Examples</title>
