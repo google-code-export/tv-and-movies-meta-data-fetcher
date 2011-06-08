@@ -33,7 +33,7 @@ BuildRequires:  log4j >= 1.2.15
 BuildRequires:  ant
 BuildRequires:  fop >= 0.95
 BuildRequires:  ant-trax
-BuildRequires:  xalan-j2
+# BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
@@ -70,7 +70,7 @@ Javadoc for MediaManager application and API.
 %setup -q
  
 %build
-export CLASSPATH=$CLASSPATH:/usr/share/java/xalan-j2-serializer.jar
+# export CLASSPATH=$CLASSPATH:/usr/share/java/xalan-j2-serializer.jar
 %if 0%{?suse_version} >= 1140
 %ant -buildfile opensuse-11.4-build.xml \
      -Dlib.dir=%{_javadir} \
