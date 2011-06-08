@@ -3,6 +3,7 @@ package org.stanwood.media.logging;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * A layout for the console that prints the message and if not a info mesage, also
@@ -33,6 +34,7 @@ public class ConsoleLayout extends Layout {
 	    	sbuf.append(": ");
 	    }
 	    sbuf.append(event.getMessage());
+	    sbuf.append(FileHelper.LS);
 		return sbuf.toString();
 	}
 
