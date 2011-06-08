@@ -191,8 +191,8 @@
                  <para>
                  &apptitle; should be able to find these tools if it was installed using the installer.
                  However if it was installed via linux packages then it will look for them on the system
-                 path. It's also possible to tell it where to look for them. See the Configuration chapter or
-                 the optional parameters for the store.                 
+                 path. It's also possible to tell it where to look for them. See the <xref linkend="native"/> 
+                 chapter or the optional parameters of the store for more information.                 
                  </para>
                  <para>
                  The mp4tags application does not support the setting of all fields that this store can handle,
@@ -582,7 +582,31 @@
 			</example> 
 			</para>			
 		</sect1>
-		<sect1>
+		<sect1 id="native">
+			<title>Native applications and libraries</title>
+			<para>
+			Some parts of &apptitle; depend on native applications/libraries to function. Usally &apptitle;
+			runs on any platform that supports Java 1.6. However these parts need native applcations, so
+			they must either be installed on the system or &apptitle; must be told how to find them. If they
+			can't be found, then parts of &apptitle; that use then will be disabled. 
+			</para>			
+			<para> 
+			If &apptitle; was installed via the installer, then the native folder will have been installed 
+			already and it should find then. If installing from a linux package, then their is a chance 
+			that native applications and libraries won't be found. &apptitle; will fist look for them
+			in a folder pointed to by configuration, then an envoriment varaible MM_NATIVE_DIR and lastly
+			on the system path.			
+			</para>
+			<para>
+			If they are not install, then they can be downloaded from the media manager website at
+			<ulink url="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&can=2&q=">http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&can=2&q=</ulink>.
+			The native folder should be unzipped from the downloaded file and pointed to by the 
+			configuration. See the section <xref linkend="nativesetting"/>.
+			</para>
+		</sect1>
+			
+		
+		<sect1 id="globalsettings">
 			<title>Global Settings</title>
 			<para>
 			Their are some global settings which can be configured. Belowe is a list of settings:
@@ -590,6 +614,12 @@
 				<listitem><para>configDirectory - The location of the local configuration directory</para></listitem>
 				<listitem><para>native - A directory which contains the native applications/libraries used by &apptitle;</para></listitem>
 			</itemizedlist>
+			</para>
+			<para id="nativesetting">
+			The native setting is used to specify the location of a directory containg the native applications and
+			libraries that &apptitle; depends on. See the <xref linkend="native"/> section for mare information.
+			</para>
+			<para>
 			<example>		
 					<title>Gloab settings</title>
 					<programlisting>
