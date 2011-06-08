@@ -599,7 +599,7 @@
 			</para>
 			<para>
 			If they are not install, then they can be downloaded from the media manager website at
-			<ulink url="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&can=2&q=">http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&can=2&q=</ulink>.
+			<ulink url="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&amp;can=2&amp;q=">http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=&apptitle;-&version;-native.zip&amp;can=2&amp;q=</ulink>.
 			The native folder should be unzipped from the downloaded file and pointed to by the 
 			configuration. See the section <xref linkend="nativesetting"/>.
 			</para>
