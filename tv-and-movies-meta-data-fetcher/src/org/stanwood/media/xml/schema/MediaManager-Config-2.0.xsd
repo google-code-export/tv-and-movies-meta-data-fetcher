@@ -19,8 +19,8 @@
   				<xs:element name="global" minOccurs="0" maxOccurs="1">
   					<xs:complexType>  							  				
   						<xs:sequence>
-  							<xs:element name="configDirectory" type="pathElement"/>
-  						    <xs:element name="native" type="pathElement"/>	  						     					
+  							<xs:element name="configDirectory" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						    <xs:element name="native" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					
   						</xs:sequence>  						
   					</xs:complexType>
   				</xs:element>

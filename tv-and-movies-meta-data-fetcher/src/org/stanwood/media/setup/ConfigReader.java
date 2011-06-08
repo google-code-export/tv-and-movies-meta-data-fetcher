@@ -42,6 +42,7 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
+import org.stanwood.media.xml.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -445,13 +446,23 @@ public class ConfigReader extends BaseConfigReader {
 	private void parseGlobal(Document configNode) throws XMLParserException {
 		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global");
 		if (node!=null) {
-			String dir = parseString(getStringFromXML(node, "configDirectory/text()"));
-			if (dir.trim().length()>0) {
-				configDir =new File(dir);
+			try {
+				String dir = parseString(getStringFromXML(node, "configDirectory/text()"));
+				if (dir.trim().length()>0) {
+					configDir =new File(dir);
+				}
 			}
-			String value = parseString(getStringFromXML(node, "native/text()"));
-			if (value!=null && !value.equals("")) {
-				nativeFolder = new File(value);
+			catch (XMLParserNotFoundException e) {
+				// Ignore
+			}
+			try {
+				String value = parseString(getStringFromXML(node, "native/text()"));
+				if (value!=null && !value.equals("")) {
+					nativeFolder = new File(value);
+				}
+			}
+			catch (XMLParserNotFoundException e) {
+				// Ignore
 			}
 		}
 	}
