@@ -30,10 +30,11 @@ BuildRequires:  jakarta-commons-logging >= 1.0.4
 BuildRequires:  java >= 1.6
 BuildRequires:  java-devel >= 1.6
 BuildRequires:  log4j >= 1.2.15
-BuildRequires:  ant
 BuildRequires:  fop >= 0.95
+BuildRequires:  ant
 BuildRequires:  ant-trax
-# BuildRequires:  xalan-j2
+BuildRequires:  ant-apache-xalan2
+BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
