@@ -8,7 +8,6 @@ Version 2.0
 *Inprogress*    - Create native patched exe's of the mp4tags app.
 					- Make sure if running via installer version that the patched version
 					  can be found.
-					- Document how to download and install the native package
 *Not Started*   - Update installer to install native apps
 *Inprogress*    - compile patched version of mp4tags for all platforms
 *Inprogress*    - Add native apps to native folder
