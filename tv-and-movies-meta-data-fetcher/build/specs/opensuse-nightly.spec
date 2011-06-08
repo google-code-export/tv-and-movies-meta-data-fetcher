@@ -1,7 +1,7 @@
 #
 # spec file for package MediaManager %%version%%
 #
-# Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
+# Copyright (C) 2008-2011 John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
