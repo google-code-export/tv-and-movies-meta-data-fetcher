@@ -373,7 +373,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 			log.error("Unable to find command "+mp4tagsPath+".");
 			errors = true;
 		}
-		if (!extended) {
+		if (mp4tagsPath!=null && !extended) {
 			log.warn("The found version of 'mp4tags' application does not support setting some mp4 " +
 					 "box types. This only a limited set of meta data can be written to mp4/m4v " +
 					 "files. The documentation for the '"+MP4ITunesStore.class.getName()+"' gives details " +
