@@ -386,7 +386,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkCommand(String cmd) {
 		try {
-			getCommandOutput(false,false,false,cmd);
+			getCommandOutput(true,true,false,cmd);
 		}
 		catch (MP4Exception e) {
 			return false;
