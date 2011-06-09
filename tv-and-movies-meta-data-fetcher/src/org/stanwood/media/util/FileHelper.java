@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -628,4 +629,26 @@ public class FileHelper {
 		return new File( System.getProperty("user.dir"));
 	}
 
+	public static File resolveRelativePaths(File path) {
+		String segments[] = path.getAbsolutePath().split(Pattern.quote(File.separator));
+		List<String>newSegments = new ArrayList<String>();
+		for (String seg : segments) {
+			if (seg.equals("..")) {
+				newSegments.remove(newSegments.size()-1);
+			}
+			else {
+				newSegments.add(seg);
+			}
+		}
+		File result = null;
+		for (String seg : newSegments) {
+			if (result == null) {
+				result = new File(seg);
+			}
+			else {
+				result = new File(result,seg);
+			}
+		}
+		return result;
+	}
 }
