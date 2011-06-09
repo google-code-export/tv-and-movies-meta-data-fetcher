@@ -79,19 +79,11 @@
 			<fileset targetdir="$INSTALL_PATH/lib" dir="@{libs.dir}/run-time" includes="*.jar"/>
         </pack>
 		
-		<pack name="3rd Party Native Libraries" required="yes" installGroups="Libraries">
+		<pack name="3rd Party Native Applications &amp; Libraries" required="yes" installGroups="Libraries">
 			<description>The native libraries need by the the command line and GUI tools</description>
 			
 			<!-- Install all the libs -->							
-			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native" includes="**/*.so">
-				<os family="unix"/>
-			</fileset>										
-			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native" includes="**/*.dylib">				
-				<os family="unix"/>
-			</fileset>
-			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native" includes="**/*.dll">				
-				<os family="windows"/>
-			</fileset>			
+			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native"/>						
 		</pack>
 		
 		<pack name="Application Libaray" required="yes" installGroups="Libraries">
