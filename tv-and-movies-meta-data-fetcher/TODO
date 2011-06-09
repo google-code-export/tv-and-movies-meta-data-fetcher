@@ -4,13 +4,7 @@ TODO
 Version 2.0
 -----------
 
-*Needs Testing* - Check installer still works windows, check scripts work
-*Inprogress*    - Create native patched exe's of the mp4tags app.
-					- Make sure if running via installer version that the patched version
-					  can be found.
-*Not Started*   - Update installer to install native apps
-*Inprogress*    - compile patched version of mp4tags for all platforms
-*Inprogress*    - Add native apps to native folder
+*Inprogress*    - Check that everything works on mac
 
 Version 2.0.1
 -------------
