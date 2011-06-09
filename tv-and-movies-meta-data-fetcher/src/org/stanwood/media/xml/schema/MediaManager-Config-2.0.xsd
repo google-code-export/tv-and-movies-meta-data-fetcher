@@ -14,6 +14,7 @@
   					<xs:complexType>
 	  					<xs:attribute name="directory" type="xs:string"/>
 	  					<xs:attribute name="locale" type="xs:string"/>
+	  					<xs:attribute name="addonSite" type="xs:string"/>
   					</xs:complexType>
   				</xs:element>
   				<xs:element name="global" minOccurs="0" maxOccurs="1">

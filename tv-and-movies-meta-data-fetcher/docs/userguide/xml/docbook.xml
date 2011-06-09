@@ -91,6 +91,37 @@
                       	</listitem>
                      </itemizedlist> 
 				</para>
+				<sect3>
+					<title>Configuration</title>
+					<para>
+					In addition to the source parameters, their is also a section of the configuration file that 
+					holds settings for all the XBMC sources. The XBMCAddon element in the configuration file has the 
+					following optional attributes:
+					<itemizedlist>
+                      	<listitem>
+                      		<para><literal>directory</literal> - The directory one system to store addons. Defaults to
+                      		 "$HOME/.mediaManager/addons".</para>
+                      		<para><literal>locale</literal> - The locale to use with the addons. Defaults to "en".</para>
+                      		<para><literal>addonSite</literal> - The site to install addons from. Defaults to 
+                      		"http://mirrors.xbmc.org/addons/dharma".</para>
+                      	</listitem>
+                     </itemizedlist>
+                    <example>
+						<title>XBMC settings example</title>
+							<programlisting>
+<![CDATA[<mediaManager>
+	
+
+	<XBMCAddons directory="$HOME/.mediaManager/addons"
+	            locale="en"
+	            addonSite="http://mirrors.xbmc.org/addons/dharma"/>					
+</mediaManager>	
+				]]>
+							</programlisting>
+						</example> 
+					</para>
+				</sect3>
+				
 			</sect2>
 			<sect2>
 				<title>org.stanwood.media.source.TagChimpSource</title>
