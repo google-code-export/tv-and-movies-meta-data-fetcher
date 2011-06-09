@@ -59,6 +59,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%sx%e - %t.%x";
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x";
+	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/dharma";
 
 	/** The default location to store configuration */
 	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager");
@@ -73,6 +74,8 @@ public class ConfigReader extends BaseConfigReader {
 	private List<Plugin> plugins = new ArrayList<Plugin>();
 	private File configDir;
 	private File nativeFolder;
+
+	private String xbmcAddonSite = DEFAULT_XBMC_ADDON_DIR;
 
 	/**
 	 * The constructor used to create a instance of the configuration reader
@@ -434,11 +437,15 @@ public class ConfigReader extends BaseConfigReader {
 		if (node!=null) {
 			String dir = parseString(node.getAttribute("directory"));
 			if (dir.trim().length()>0) {
-				xbmcAddonDir =new File(dir);
+				xbmcAddonDir =FileHelper.resolveRelativePaths(new File(dir));
 			}
 			String locale = parseString(node.getAttribute("locale"));
 			if (locale.trim().length()>0) {
 				xbmcLocale = new Locale(locale);
+			}
+			String addonSite = parseString(node.getAttribute("addonSite"));
+			if (addonSite.trim().length()>0) {
+				xbmcAddonSite = addonSite;
 			}
 		}
 	}
@@ -575,5 +582,9 @@ public class ConfigReader extends BaseConfigReader {
 			}
 		}
 		return nativeFolder;
+	}
+
+	public String getXBMCAddonSiteUrl() {
+		return xbmcAddonSite;
 	}
 }

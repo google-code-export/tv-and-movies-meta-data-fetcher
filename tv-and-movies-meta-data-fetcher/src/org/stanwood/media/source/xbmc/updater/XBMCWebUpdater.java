@@ -39,13 +39,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private final static Log log = LogFactory.getLog(XBMCWebUpdater.class);
 
-	private final static String UPDATE_SITE_URL = "http://mirrors.xbmc.org/addons/dharma/addons.xml";
-	private final static String UPDATE_SITE_MD5 = "http://mirrors.xbmc.org/addons/dharma/addons.xml.md5";
-	private final static String UPDATE_SITE_DATA_DIR = "http://mirrors.xbmc.org/addons/dharma";
-
 	private XBMCAddonManager mgr;
 
 	private File addonsDir;
+
+	private String updateSiteDataDir;
+	private String updateSiteAddonsURL;
+	private String updateSiteAddonsMD5URL;
 
 	/**
 	 * The constructor
@@ -54,6 +54,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	 */
 	public XBMCWebUpdater(ConfigReader config) throws XBMCException {
 		try {
+			updateSiteDataDir = config.getXBMCAddonSiteUrl();
+			updateSiteAddonsURL = updateSiteDataDir+"/addons.xml";
+			updateSiteAddonsMD5URL = updateSiteDataDir+"/addons.xml.md5";
 			addonsDir = config.getXBMCAddonDir();
 		}
 		catch (ConfigException e) {
@@ -333,7 +336,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 		String actualMD5;
 		try {
-			actualMD5 = mgr.downloadFile(new URL(UPDATE_SITE_URL),newAddon);
+			actualMD5 = mgr.downloadFile(new URL(updateSiteAddonsURL),newAddon);
 
 		}
 		catch (MalformedURLException e) {
@@ -374,7 +377,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		File newAddonMD5 = new File(addonsDir,"addon.md5.new");
 		String expectedMD5;
 		try {
-			mgr.downloadFile(new URL(UPDATE_SITE_MD5),newAddonMD5);
+			mgr.downloadFile(new URL(updateSiteAddonsMD5URL),newAddonMD5);
 			expectedMD5 = FileHelper.readFileContents(newAddonMD5).trim();
 			FileHelper.delete(newAddonMD5);
 		}
@@ -426,7 +429,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 
 			String filename = plugin+"-"+version.toString()+".zip";
-			URL url = new URL(UPDATE_SITE_DATA_DIR+"/"+plugin+"/"+filename);
+			URL url = new URL(updateSiteDataDir+"/"+plugin+"/"+filename);
 			File zipFile = new File(newPluginsDir,filename);
 			mgr.downloadFile(url,zipFile);
 			FileInputStream fis = null;
