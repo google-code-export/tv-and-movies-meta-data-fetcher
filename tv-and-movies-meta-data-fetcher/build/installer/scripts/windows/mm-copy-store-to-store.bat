@@ -30,7 +30,7 @@ set CLASSPATH=%CLASSPATH%;%LIB_DIR%\mysql-connector-java-5.1.6.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\rome-1.0.jar
 
 REM Native lib location
-set MM_NATIVE_DIR=..\native
+set MM_NATIVE_DIR=%~dp0..\native
 
 REM Launch app
 call %JAVA% -Xms%JAVA_HEAP_INIT_SIZE%M -Xmx%JAVA_HEAP_MAX_SIZE%M -classpath %CLASSPATH% %MAIN% %1 %2 %3 %4 %5 %6 %7 %8 %9
