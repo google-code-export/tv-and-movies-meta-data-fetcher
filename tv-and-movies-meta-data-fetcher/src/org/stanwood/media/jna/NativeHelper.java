@@ -40,21 +40,43 @@ public class NativeHelper {
 	 */
 	public static String getNativeApplication(File nativeDir,String appName) {
 		String method = System.getenv("MM_EXE_LOCATE_METHOD");
+		if (log.isDebugEnabled()) {
+			log.debug("Getting native application, method forced to: " + method);
+			log.debug("Using native directory: " + nativeDir.getAbsolutePath());
+		}
 		appName = getAppName(appName);
 		String nativePath = getAppArchPath(appName);
+		if (log.isDebugEnabled()) {
+			log.debug("App Native Path: " + nativePath);
+		}
 		if (method==null || method.length()==0 || method.equals("installed")) {
 			if (nativeDir!=null) {
 				File f =new File(nativeDir,nativePath);
+				if (log.isDebugEnabled()) {
+					log.debug("Checking via install: " + f.getAbsolutePath());
+				}
 				if (f.exists()) {
+					if (log.isDebugEnabled()) {
+						log.debug("Found: " + f.getAbsolutePath());
+					}
 					return f.getAbsolutePath();
 				}
 			}
 		}
 		if (method==null || method.length()==0 || method.equals("project")) {
 			File f =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath);
+			if (log.isDebugEnabled()) {
+				log.debug("Checking via project: " + f.getAbsolutePath());
+			}
 			if (f.exists()) {
+				if (log.isDebugEnabled()) {
+					log.debug("Found: " + f.getAbsolutePath());
+				}
 				return f.getAbsolutePath();
 			}
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Did not find so just return it for use on system path: " + appName);
 		}
 		return appName;
 	}
