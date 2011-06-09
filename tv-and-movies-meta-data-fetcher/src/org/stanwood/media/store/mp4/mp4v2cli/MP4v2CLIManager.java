@@ -358,19 +358,19 @@ public class MP4v2CLIManager implements IMP4Manager {
 		}
 		boolean errors = false;
 		if (!checkCommand(mp4infoPath)) {
-			log.error("Unable to find command "+mp4infoPath+".");
+			log.error("Unable to find or execute command '"+mp4infoPath+"'.");
 			errors = true;
 		}
 		if (!checkCommand(mp4artPath)) {
-			log.error("Unable to find command "+mp4artPath+".");
+			log.error("Unable to find or execute command '"+mp4artPath+"'.");
 			errors = true;
 		}
 		if (!checkCommand(mp4filePath)) {
-			log.error("Unable to find command "+mp4filePath+".");
+			log.error("Unable to find or execute command '"+mp4filePath+"'.");
 			errors = true;
 		}
 		if (!checkTagsCommand()) {
-			log.error("Unable to find command "+mp4tagsPath+".");
+			log.error("Unable to find or execute command '"+mp4tagsPath+"'.");
 			errors = true;
 		}
 		if (mp4tagsPath!=null && !extended) {
@@ -386,7 +386,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkCommand(String cmd) {
 		try {
-			getCommandOutput(true,true,false,cmd);
+			getCommandOutput(false,false,false,cmd);
 		}
 		catch (MP4Exception e) {
 			return false;
