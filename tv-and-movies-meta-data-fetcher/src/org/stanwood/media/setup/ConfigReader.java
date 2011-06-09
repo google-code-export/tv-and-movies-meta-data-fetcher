@@ -449,7 +449,7 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				String dir = parseString(getStringFromXML(node, "configDirectory/text()"));
 				if (dir.trim().length()>0) {
-					configDir =new File(dir);
+					configDir =FileHelper.resolveRelativePaths(new File(dir));
 				}
 			}
 			catch (XMLParserNotFoundException e) {
@@ -458,7 +458,7 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				String value = parseString(getStringFromXML(node, "native/text()"));
 				if (value!=null && !value.equals("")) {
-					nativeFolder = new File(value);
+					nativeFolder = FileHelper.resolveRelativePaths(new File(value));
 				}
 			}
 			catch (XMLParserNotFoundException e) {
@@ -571,7 +571,7 @@ public class ConfigReader extends BaseConfigReader {
 		if (nativeFolder==null) {
 			String nativeDir = System.getenv("MM_NATIVE_DIR");
 			if (nativeDir!=null && nativeDir.length()>0) {
-				nativeFolder = new File(nativeDir);
+				nativeFolder = FileHelper.resolveRelativePaths(new File(nativeDir));
 			}
 		}
 		return nativeFolder;
