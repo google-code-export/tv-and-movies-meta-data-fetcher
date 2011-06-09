@@ -4,6 +4,13 @@
 		<configDirectory>$HOME/.mediaManager</configDirectory>
 	</global>
 
+ 	<!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
+	<!--
+	 <XBMCAddons directory="$HOME/.mediaManager/xbmc" 
+	             locale="en"
+	             addonSite="http://mirrors.xbmc.org/addons/dharma"/> 
+	-->	 
+
 	<!-- Example Film media directory -->
 	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x">
 		<!-- The default extensions have been overriden for this directory so that the media manager
@@ -82,8 +89,5 @@
 		</actions>		
 	</mediaDirectory>
 	 
-	 <!-- Used to change the location and locale of the XBMC addons been used by the XBMC source -->
-	 <!--
-	 <XBMCAddons directory="$HOME/.mediaManager/xbmc" locale="en"/> 
-	  -->	 
+	
 </mediaManager>

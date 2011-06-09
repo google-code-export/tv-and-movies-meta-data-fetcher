@@ -241,7 +241,7 @@ public class TestConfigReader {
 	 * @throws Exception Thrown if their are any problems
 	 */
 	@Test
-	public void testXBMCSettings() throws Exception {
+	public void testXBMCSettings1() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		File mediaDir = FileHelper.createTmpDir("media");
@@ -249,13 +249,14 @@ public class TestConfigReader {
 
 			StringBuilder testConfig = new StringBuilder();
 			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\"/>"+LS);
+			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
 			testConfig.append("  </mediaDirectory>"+LS);
 			testConfig.append("</mediaManager>"+LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			Assert.assertEquals("/home/blah",configReader.getXBMCAddonDir().getAbsolutePath());
+			Assert.assertEquals("http://blah.com/addons",configReader.getXBMCAddonSiteUrl());
 			Assert.assertEquals(Locale.FRENCH,configReader.getXBMCLocale());
 		}
 		finally {
