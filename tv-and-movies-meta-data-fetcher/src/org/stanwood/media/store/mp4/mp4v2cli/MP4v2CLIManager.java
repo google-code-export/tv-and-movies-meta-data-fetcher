@@ -386,9 +386,13 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkCommand(String cmd) {
 		try {
-			getCommandOutput(true,true,false,cmd);
+			boolean capture = log.isDebugEnabled();
+			getCommandOutput(capture,capture,false,cmd);
 		}
 		catch (MP4Exception e) {
+			if (log.isDebugEnabled()) {
+				log.debug("Command failed",e);
+			}
 			return false;
 		}
 		return true;
