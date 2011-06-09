@@ -488,7 +488,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		checkAppleListItemBoxExists(mp4File);
 		if (hasArtwrokAtom(atoms)) {
 			try {
-				getCommandOutput(true,false,true,mp4artPath, "--remove","--art-any",mp4File);
+				getCommandOutput(true,true,true,mp4artPath, "--remove","--art-any",mp4File);
 			}
 			catch (MP4Exception e) {
 				if (e.getMessage().contains("non zero exit code")) {
