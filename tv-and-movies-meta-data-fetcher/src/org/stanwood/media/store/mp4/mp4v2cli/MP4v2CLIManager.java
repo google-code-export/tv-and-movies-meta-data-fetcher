@@ -386,7 +386,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkCommand(String cmd) {
 		try {
-			boolean capture = log.isDebugEnabled();
+			boolean capture = !log.isDebugEnabled();
 			getCommandOutput(capture,capture,false,cmd);
 		}
 		catch (MP4Exception e) {
@@ -400,7 +400,8 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkTagsCommand() {
 		try {
-			String output = getCommandOutput(true,true,false,mp4tagsPath);
+			boolean capture = !log.isDebugEnabled();
+			String output = getCommandOutput(capture,capture,false,mp4tagsPath);
 			if (output.contains("-category") && output.contains("-longdesc") && output.contains("-rating")) {
 				extended = true;
 			}
