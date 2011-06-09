@@ -83,7 +83,20 @@
 			<description>The native libraries need by the the command line and GUI tools</description>
 			
 			<!-- Install all the libs -->							
-			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native"/>						
+			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native"/>
+			
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4tags" os="unix"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4info" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4file" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4art" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4tags" os="unix"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4info" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4file" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4art" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4tags" os="mac"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4info" os="mac"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4file" os="mac"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4art" os="mac"/>
 		</pack>
 		
 		<pack name="Application Libaray" required="yes" installGroups="Libraries">
