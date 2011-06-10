@@ -44,6 +44,7 @@ import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.SimpleErrorHandler;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -1038,6 +1039,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 		Document cache = getCache(rootMediaDir);
 		try {
+			// Remove file elements when the actual file can't be found
 			boolean changed = false;
 			for (Node fileNode : selectNodeList(cache, "//file")) {
 				Element el = (Element)fileNode;
@@ -1050,6 +1052,36 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					changed = true;
 				}
 			}
+
+			// Remove any nodes which don't have media
+			for (Node filmNode : selectNodeList(cache, "store/film")) {
+				if (!hasFileNodes(filmNode)) {
+					filmNode.getParentNode().removeChild(filmNode);
+					changed = true;
+				}
+			}
+
+			for (Node showNode : selectNodeList(cache, "store/show")) {
+				for (Node seasonNode : selectNodeList(showNode, "season")) {
+					for (Node episodeNode : selectNodeList(seasonNode, "episode")) {
+						if (!hasFileNodes(episodeNode)) {
+							episodeNode.removeChild(episodeNode);
+							changed = true;
+						}
+					}
+					for (Node episodeNode : selectNodeList(seasonNode, "special")) {
+						if (!hasFileNodes(episodeNode)) {
+							episodeNode.removeChild(episodeNode);
+							changed = true;
+						}
+					}
+					if (!hasFileNodes(seasonNode)) {
+						showNode.removeChild(seasonNode);
+						changed = true;
+					}
+				}
+			}
+
 			if (changed) {
 				File cacheFile = getCacheFile(rootMediaDir,FILENAME);
 				writeCache(cacheFile, cache);
@@ -1057,6 +1089,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to parse store XML",e);
 		}
+	}
+
+	private boolean hasFileNodes(Node parentNode) throws XMLParserException{
+		IterableNodeList nodes = selectNodeList(parentNode, "//file");
+		return !(nodes==null || nodes.getLength()==0);
 	}
 
 	/** {@inheritDoc} */

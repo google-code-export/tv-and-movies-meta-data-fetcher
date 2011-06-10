@@ -6,6 +6,8 @@ Version 2.0
 
 *Inprogress*    - Check that everything works on mac
 *Inprogress*    - Check XBMC updater
+*Not started*   - Stop their been duplicate entries for episodes in XML store
+*Not started*   - Even if something has the correct name, process it if it's not stored
 
 Version 2.0.1
 -------------
@@ -29,7 +31,6 @@ Updated to latest version of MP4 parser
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
 Add remove from store command line tool
-Remove stuff from the XML Store that has no files associated with it
 Extend patterns
 	* Allow formatting of elements like dates
 	* Allow formatting of strings to take only part of the string
