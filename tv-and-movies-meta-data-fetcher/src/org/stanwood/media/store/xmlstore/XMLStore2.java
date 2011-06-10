@@ -86,47 +86,23 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		Element seasonNode = getSeasonNode(rootMediaDir,season,doc);
 		if (episode.isSpecial()) {
-			cacheSpecial(rootMediaDir,episodeFile,doc, show, seasonNode, episode);
+			cacheEpisode("special",rootMediaDir,episodeFile,doc, show, seasonNode, episode);
 		} else {
-			cacheEpisode(rootMediaDir,episodeFile,doc, show, seasonNode, episode);
+			cacheEpisode("episode",rootMediaDir,episodeFile,doc, show, seasonNode, episode);
 		}
 	}
 
-	private void cacheEpisode(File rootMediaDir,File episodeFile,Document doc, Show show, Element seasonNode,
+	private void cacheEpisode(String nodeName,File rootMediaDir,File episodeFile,Document doc, Show show, Element seasonNode,
 			Episode episode) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache episode");
 		}
 		try {
-			Node node = selectSingleNode(seasonNode, "episode[number="+ episode.getEpisodeNumber() + "]");
+			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null));
+			Node node = selectSingleNode(seasonNode, nodeName+"[number="+ episode.getEpisodeNumber() + "]");
 			if (node == null) {
-				node = doc.createElement("episode");
+				node = doc.createElement(nodeName);
 				((Element) node).setAttribute("number", String.valueOf(episode.getEpisodeNumber()));
-				seasonNode.appendChild(node);
-			}
-
-			writeEpisodeCommonData(doc, episode, node,episodeFile,rootMediaDir);
-
-			File cacheFile = getCacheFile(rootMediaDir,FILENAME);
-			writeCache(cacheFile, doc);
-		} catch (XMLParserException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
-		}
-	}
-
-	private void cacheSpecial(File rootMediaDir,File episodeFile,Document doc, Show show,Element seasonNode,
-			Episode episode) throws StoreException {
-		if (log.isDebugEnabled()) {
-			log.debug("cache special");
-		}
-
-		try {
-			Node node = selectSingleNode(seasonNode, "special[number="+ episode.getEpisodeNumber() + "]");
-			if (node == null) {
-				node = doc.createElement("special");
-				((Element) node).setAttribute("number", String.valueOf(episode
-						.getEpisodeNumber()));
 				seasonNode.appendChild(node);
 			}
 
