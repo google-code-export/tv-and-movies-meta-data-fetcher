@@ -1065,13 +1065,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				for (Node seasonNode : selectNodeList(showNode, "season")) {
 					for (Node episodeNode : selectNodeList(seasonNode, "episode")) {
 						if (!hasFileNodes(episodeNode)) {
-							episodeNode.removeChild(episodeNode);
+							seasonNode.removeChild(episodeNode);
 							changed = true;
 						}
 					}
 					for (Node episodeNode : selectNodeList(seasonNode, "special")) {
 						if (!hasFileNodes(episodeNode)) {
-							episodeNode.removeChild(episodeNode);
+							seasonNode.removeChild(episodeNode);
 							changed = true;
 						}
 					}
@@ -1079,6 +1079,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 						showNode.removeChild(seasonNode);
 						changed = true;
 					}
+				}
+				if (!hasFileNodes(showNode)) {
+					showNode.getParentNode().removeChild(showNode);
+					changed = true;
 				}
 			}
 
@@ -1092,7 +1096,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private boolean hasFileNodes(Node parentNode) throws XMLParserException{
-		IterableNodeList nodes = selectNodeList(parentNode, "//file");
+		IterableNodeList nodes = selectNodeList(parentNode, ".//file");
 		return !(nodes==null || nodes.getLength()==0);
 	}
 
