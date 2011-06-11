@@ -362,7 +362,23 @@ public class ActionPerformer implements IActionEventHandler {
 					Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
 					if (episode==null) {
 						log.error("Unable to find episode number for file '"+file+"'");
+						return null;
 					}
+
+					boolean found = false;
+					if (episode.getFiles()!=null) {
+						for (VideoFile vf : episode.getFiles()) {
+							if (vf.getLocation().equals(file)) {
+								found = true;
+							}
+						}
+					}
+					if (!found) {
+						for (IStore store : dir.getStores()) {
+							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
+						}
+					}
+
 					return episode;
 				}
 			}
