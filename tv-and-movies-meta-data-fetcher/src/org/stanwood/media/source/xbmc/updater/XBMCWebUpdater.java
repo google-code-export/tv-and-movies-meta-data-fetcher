@@ -293,6 +293,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	protected int updatePlugins(IConsole console,File oldAddon, File newAddon,
 			Set<String> plugins) throws XMLParserException, IOException,
 			XBMCUpdaterException, XBMCException {
+
 		Document newAddonDoc = XMLParser.strToDom(newAddon);
 		Document oldAddonDoc = null;
 		if (oldAddon.exists()) {
@@ -303,31 +304,52 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		if (!newPluginsDir.mkdir() && !newPluginsDir.exists()) {
 			throw new XBMCUpdaterException("Unable to create working directory: " +newPluginsDir);
 		}
+		try {
+			List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
+			updatePlugins(console,uninstalledAddons,newAddonDoc,oldAddonDoc,plugins,addonsDir,newPluginsDir);
 
-		List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
-		updatePlugins(console,uninstalledAddons,newAddonDoc,oldAddonDoc,plugins,addonsDir,newPluginsDir);
-
-		int count = 0;
-		for (File f : newPluginsDir.listFiles()) {
-			if (f.isDirectory()) {
-				File oldPluginDir = new File(addonsDir,f.getName());
-				if (oldPluginDir.exists()) {
-					FileHelper.delete(oldPluginDir);
+			int count = 0;
+			for (File f : newPluginsDir.listFiles()) {
+				if (f.isDirectory()) {
+					File oldPluginDir = new File(addonsDir,f.getName());
+					if (oldPluginDir.exists()) {
+						FileHelper.delete(oldPluginDir);
+					}
+					FileHelper.move(f, oldPluginDir);
+					console.info("Installed plugin '"+f.getName()+"'");
+					count++;
 				}
-				FileHelper.move(f, oldPluginDir);
-				console.info("Installed plugin '"+f.getName()+"'");
-				count++;
 			}
-		}
 
-		FileHelper.delete(newPluginsDir);
+			FileHelper.delete(newPluginsDir);
 
-		if (oldAddon.exists()) {
-			FileHelper.delete(oldAddon);
+			if (oldAddon.exists()) {
+				FileHelper.delete(oldAddon);
+			}
+			FileHelper.move(newAddon, oldAddon);
+			mgr.registerAddons();
+			return count;
 		}
-		FileHelper.move(newAddon, oldAddon);
-		mgr.registerAddons();
-		return count;
+		catch (XBMCUpdaterException e) {
+			// Something went wrong, so tidy up
+			try {
+				if (newPluginsDir.exists()) {
+					FileHelper.delete(newPluginsDir);
+				}
+			}
+			catch (IOException e1) {
+				log.error("Unable to delete file",e);
+			}
+			try {
+				if (newAddon.exists()) {
+					FileHelper.delete(newAddon);
+				}
+			}
+			catch (IOException e1) {
+				log.error("Unable to delete file",e);
+			}
+			throw e;
+		}
 	}
 
 	protected File downloadLatestAddonXML() throws IOException,
@@ -423,14 +445,15 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	private void downloadNewPlugin(IConsole console,String plugin,File newPluginsDir,Version version) throws XBMCUpdaterException {
+		String filename = plugin+"-"+version.toString()+".zip";
+		File zipFile = new File(newPluginsDir,filename);
 		try {
 			if (new File(newPluginsDir,plugin).exists()) {
 				return ;
 			}
 
-			String filename = plugin+"-"+version.toString()+".zip";
 			URL url = new URL(updateSiteDataDir+"/"+plugin+"/"+filename);
-			File zipFile = new File(newPluginsDir,filename);
+
 			mgr.downloadFile(url,zipFile);
 			FileInputStream fis = null;
 			try {
@@ -440,15 +463,22 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 					throw new XBMCUpdaterException("Failed to unzip plugin '"+zipFile+"'");
 				}
 				FileHelper.delete(zipFile);
+				console.info("Downloaded plugin '"+plugin+"' version="+version.toString());
 			}
 			finally {
 				if (fis!=null) {
 					fis.close();
 				}
 			}
-			console.info("Downloaded plugin '"+plugin+"' version="+version.toString());
 		}
 		catch (IOException e) {
+			if (zipFile.exists()) {
+				try {
+					FileHelper.delete(zipFile);
+				} catch (IOException e1) {
+					log.error("Unable to delete file:" + zipFile);
+				}
+			}
 			throw new XBMCUpdaterException("Unable to download new pluign : " + plugin,e);
 		}
 	}
