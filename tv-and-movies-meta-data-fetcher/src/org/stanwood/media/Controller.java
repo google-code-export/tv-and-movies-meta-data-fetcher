@@ -95,6 +95,10 @@ public class Controller {
 				log.error(e.getMessage(), e);
 			}
 		}
+		if (xbmcMgr == null) {
+			log.fatal("Unable to read XBMC addons");
+			System.exit(2);
+		}
 		this.testMode = testMode;
 		registerPlugins();
 	}
