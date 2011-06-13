@@ -223,12 +223,33 @@ public class FileHelper {
 				out.flush();
 				return bytesToHexString(md.digest());
 			}
+			catch (IOException e ) {
+				if (dest.exists()) {
+					try {
+						FileHelper.delete(dest);
+					}
+					catch (IOException e1) {
+						log.error("Unable to delete file: " + dest,e1);
+					}
+				}
+				throw e;
+			}
 			finally {
 				if (is!=null) {
-					is.close();
+					try {
+						is.close();
+					}
+					catch (IOException e) {
+						log.error("Unable to close stream",e);
+					}
 				}
 				if (out != null) {
-					out.close();
+					try {
+						out.close();
+					}
+					catch (IOException e) {
+						log.error("Unable to close stream",e);
+					}
 				}
 			}
 		}
