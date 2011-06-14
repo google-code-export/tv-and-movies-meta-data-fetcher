@@ -359,14 +359,13 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		String actualMD5;
 		try {
 			actualMD5 = mgr.downloadFile(new URL(updateSiteAddonsURL),newAddon);
-
 		}
 		catch (MalformedURLException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL: "+updateSiteAddonsURL,e);
 		}
 
 		String expectedMD5 = readMD5(addonsDir);
-		if (!expectedMD5.equals(actualMD5)) {
+		if (expectedMD5!=null && !expectedMD5.equals(actualMD5)) {
 			if (log.isDebugEnabled()) {
 				log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]");
 			}
@@ -404,7 +403,11 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			FileHelper.delete(newAddonMD5);
 		}
 		catch (MalformedURLException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL",e);
+			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL: " +updateSiteAddonsMD5URL,e);
+		}
+		catch (IOException e) {
+			log.error("Unable to download md5, so can't check downloaded file is correct: " +updateSiteAddonsMD5URL ,e);
+			expectedMD5 = null;
 		}
 		return expectedMD5;
 	}
