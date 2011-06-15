@@ -93,7 +93,7 @@ public class XBMCAddonManager implements IContentFetcher {
 		addons = new HashMap<String,XBMCAddon>();
 		try {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
-				if (f.isDirectory()) {
+				if (f.isDirectory() && !f.getName().equals("newplugins")) {
 					XBMCAddon addon = new XBMCAddon(this,f,config.getXBMCLocale());
 					if (log.isDebugEnabled()) {
 						log.debug("Registered addon " + addon.getId());
