@@ -37,6 +37,7 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 	}
 
 	private Set<String> plugins;
+	private boolean pluginsSpecified;
 
 	/**
 	 * The constructor
@@ -52,7 +53,7 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 	@Override
 	protected boolean run() {
 		try {
-			if (plugins.size()>0) {
+			if (pluginsSpecified) {
 				getUpdater().update(getConsole(),plugins);
 			}
 			else {
@@ -68,6 +69,7 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
+		pluginsSpecified = cmd.getArgList() != null && cmd.getArgList().size()>0;
 		plugins = new HashSet<String>();
 		try {
 			Set<AddonDetails> addons = getUpdater().listAddons(getConsole());

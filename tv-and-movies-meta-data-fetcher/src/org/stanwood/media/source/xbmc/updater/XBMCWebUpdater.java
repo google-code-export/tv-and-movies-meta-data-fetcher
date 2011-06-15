@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -244,8 +242,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	private int installPlugins(IConsole console,Set<String> plugins,File newAddon) throws XBMCException {
 		mgr.unregisterAddons();
 		try {
-			File oldAddon = new File(addonsDir,"addon.xml");
-			return updatePlugins(console,oldAddon, newAddon, plugins);
+			return updatePlugins(console, newAddon, plugins);
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
@@ -259,10 +256,8 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	public int update(IConsole console,Set<String> pluginList) throws XBMCException {
 		mgr.unregisterAddons();
 		try {
-			File oldAddon = new File(addonsDir,"addon.xml");
 			File newAddon = downloadLatestAddonXML();
-
-			return updatePlugins(console,oldAddon, newAddon, pluginList);
+			return updatePlugins(console, newAddon, pluginList);
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
@@ -276,12 +271,11 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	public int update(IConsole console) throws XBMCException {
 		mgr.unregisterAddons();
 		try {
-			File oldAddon = new File(addonsDir,"addon.xml");
 			File newAddon = downloadLatestAddonXML();
 
-			Set<String> pluginList = getListOfPluginsToUpdate(console,addonsDir,newAddon, oldAddon);
+			Set<String> pluginList = getListOfPluginsToUpdate(console,addonsDir,newAddon);
 
-			return updatePlugins(console,oldAddon, newAddon, pluginList);
+			return updatePlugins(console, newAddon, pluginList);
 		}
 		catch (IOException e) {
 			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
@@ -290,15 +284,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 	}
 
-	protected int updatePlugins(IConsole console,File oldAddon, File newAddon,
-			Set<String> plugins) throws XMLParserException, IOException,
+	protected int updatePlugins(IConsole console, File newAddon,Set<String> plugins) throws XMLParserException, IOException,
 			XBMCUpdaterException, XBMCException {
 
 		Document newAddonDoc = XMLParser.strToDom(newAddon);
-		Document oldAddonDoc = null;
-		if (oldAddon.exists()) {
-			oldAddonDoc = XMLParser.strToDom(oldAddon);
-		}
 
 		File newPluginsDir = new File(addonsDir,"newplugins");
 		if (!newPluginsDir.mkdir() && !newPluginsDir.exists()) {
@@ -306,7 +295,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		}
 		try {
 			List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
-			updatePlugins(console,uninstalledAddons,newAddonDoc,oldAddonDoc,plugins,addonsDir,newPluginsDir);
+			updatePlugins(console,uninstalledAddons,newAddonDoc,plugins,addonsDir,newPluginsDir);
 
 			int count = 0;
 			for (File f : newPluginsDir.listFiles()) {
@@ -323,10 +312,6 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 			FileHelper.delete(newPluginsDir);
 
-			if (oldAddon.exists()) {
-				FileHelper.delete(oldAddon);
-			}
-			FileHelper.move(newAddon, oldAddon);
 			mgr.registerAddons();
 			return count;
 		}
@@ -338,17 +323,20 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				}
 			}
 			catch (IOException e1) {
-				log.error("Unable to delete file",e);
+				log.error("Unable to delete directory: " + newPluginsDir,e);
 			}
+
+			throw e;
+		}
+		finally {
 			try {
 				if (newAddon.exists()) {
 					FileHelper.delete(newAddon);
 				}
 			}
 			catch (IOException e1) {
-				log.error("Unable to delete file",e);
+				log.error("Unable to delete file:" + newAddon,e1);
 			}
-			throw e;
 		}
 	}
 
@@ -374,17 +362,17 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return newAddon;
 	}
 
-	private Set<String> getListOfPluginsToUpdate(IConsole console,File addonsDir,File newAddon, File oldAddon) throws IOException, XBMCUpdaterException {
+	private Set<String> getListOfPluginsToUpdate(IConsole console,File addonsDir,File newAddon) throws IOException, XBMCUpdaterException {
 		Set<String>pluginList;
-		if (!oldAddon.exists()) {
+		if ((!addonsDir.exists()) || getAddonCount(addonsDir)==0) {
 			pluginList = getDefaultPlugins();
 		}
 		else {
-			if (checkFilesSame(oldAddon,newAddon)) {
-				console.info("No XBMC Scraper updates found.");
-				pluginList = new HashSet<String>();
-				return pluginList;
-			}
+//			if (checkFilesSame(oldAddon,newAddon)) {
+//				console.info("No XBMC Scraper updates found.");
+//				pluginList = new HashSet<String>();
+//				return pluginList;
+//			}
 			pluginList = new HashSet<String>();
 			for (AddonDetails addon : getInstalledAddons(addonsDir)) {
 				pluginList.add(addon.getId());
@@ -412,7 +400,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		return expectedMD5;
 	}
 
-	private void updatePlugins(IConsole console,List<AddonDetails> uninstalledAddons,Document newAddonDoc,Document oldAddonDoc,
+	private void updatePlugins(IConsole console,List<AddonDetails> uninstalledAddons,Document newAddonDoc,
 			Set<String> pluginList, File addonsDir, File newPluginsDir) throws XMLParserException, XBMCUpdaterException {
 		for (String plugin : pluginList) {
 			Set<String> requiredPlugins = null;
@@ -420,8 +408,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				if (addonDetails.getId().equals(plugin)) {
 					requiredPlugins = addonDetails.getRequiredAddons();
 					Version oldVersion = null;
-					if (oldAddonDoc!=null) {
-						oldVersion = new Version(getStringFromXML(oldAddonDoc, "/addons/addon[@id='"+plugin+"']/@version"));
+					AddonDetails ad = readPluginDetails(addonsDir,plugin);
+					if (ad!=null) {
+						oldVersion = ad.getInstalledVersion();
 					}
 					if (oldVersion == null || addonDetails.getAvaliableVersion().compareTo(oldVersion)>0) {
 						downloadNewPlugin(console,plugin,newPluginsDir,addonDetails.getAvaliableVersion());
@@ -430,9 +419,18 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 
 			if (requiredPlugins!=null) {
-				updatePlugins(console,uninstalledAddons,newAddonDoc, oldAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
+				updatePlugins(console,uninstalledAddons,newAddonDoc, requiredPlugins, addonsDir, newPluginsDir);
 			}
 		}
+	}
+
+	private AddonDetails readPluginDetails(File addonsDir, String pluginId) throws XBMCUpdaterException {
+		for (File dir : addonsDir.listFiles()) {
+			if (dir.isDirectory() && dir.getName().startsWith(pluginId)) {
+				return readPluginDetails(dir);
+			}
+		}
+		return null;
 	}
 
 	private List<AddonDetails> getRequiredPlugins(Document newAddonDoc, String plugin) throws XMLParserException {
@@ -501,31 +499,50 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 		});
 		for (File dir : dirs) {
-			File pluginXml = new File(dir,"addon.xml");
-			if (pluginXml.exists()) {
-				try {
-					Document d = XMLParser.strToDom(pluginXml);
-					String strVersion = getStringFromXML(d,"/addon/@version");
-					AddonDetails ad = new AddonDetails(dir.getName(),new Version(strVersion),new Version(strVersion),AddonStatus.INSTALLED);
-					Set<String>required = new HashSet<String>();
-					for (Node node : selectNodeList(d, "/addon/requires/import")) {
-						required.add(((Element)node).getAttribute("addon"));
-//						((Element)node).getAttribute("version");
-					}
-					ad.setRequiredAddons(required);
-					plugins.add(ad);
-				}
-				catch (XMLParserException e) {
-					throw new XBMCUpdaterException("Unable to reader plugin version",e);
-				}
-				catch (IOException e) {
-					throw new XBMCUpdaterException("Unable to reader plugin version",e);
-				}
-
+			AddonDetails ad = readPluginDetails(dir);
+			if (ad!=null) {
+				plugins.add(ad);
 			}
 		}
 
 		return plugins;
+	}
+
+	private int getAddonCount(File addonDir) {
+		int count = 0;
+		for (File f : addonDir.listFiles()) {
+			if (f.isDirectory() && !f.getName().equals("newplugins")) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	private AddonDetails readPluginDetails(File dir) throws XBMCUpdaterException {
+		AddonDetails ad = null;
+		File pluginXml = new File(dir,"addon.xml");
+		if (pluginXml.exists()) {
+
+			try {
+				Document d = XMLParser.strToDom(pluginXml);
+				String strVersion = getStringFromXML(d,"/addon/@version");
+				ad = new AddonDetails(dir.getName(),new Version(strVersion),new Version(strVersion),AddonStatus.INSTALLED);
+				Set<String>required = new HashSet<String>();
+				for (Node node : selectNodeList(d, "/addon/requires/import")) {
+					required.add(((Element)node).getAttribute("addon"));
+				}
+				ad.setRequiredAddons(required);
+
+			}
+			catch (XMLParserException e) {
+				throw new XBMCUpdaterException("Unable to reader plugin version",e);
+			}
+			catch (IOException e) {
+				throw new XBMCUpdaterException("Unable to reader plugin version",e);
+			}
+
+		}
+		return ad;
 	}
 
 	private Set<String> getDefaultPlugins() {
@@ -534,82 +551,5 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		defaultPlugins.add("metadata.tvdb.com");
 		defaultPlugins.add("metadata.imdb.com");
 		return defaultPlugins;
-	}
-
-	private boolean checkFilesSame(File file1, File file2) throws IOException {
-		InputStream is1 = null;
-		InputStream is2 = null;
-		if(file1.length() != file2.length()) {
-			return false;
-		}
-
-		try {
-			is1 = new FileInputStream(file1);
-			is2 = new FileInputStream(file2);
-
-			return inputStreamEquals(is1, is2);
-
-		} catch (Exception ei) {
-			return false;
-		} finally {
-			if(is1 != null) {
-				is1.close();
-			}
-			if(is2 != null) {
-				is2.close();
-			}
-		}
-
-	}
-
-	private static boolean inputStreamEquals(InputStream is1, InputStream is2) {
-		int bufsize = 1024;
-		byte buff1[] = new byte[bufsize];
-		byte buff2[] = new byte[bufsize];
-
-
-		if(is1 == is2) {
-			return true;
-		}
-		if(is1 == null && is2 == null) {
-			return true;
-		}
-		if(is1 == null || is2 == null) {
-			return false;
-		}
-		try {
-			int read1 = -1;
-			int read2 = -1;
-
-			do {
-				int offset1 = 0;
-				while (offset1 < bufsize && (read1 = is1.read(buff1, offset1, bufsize-offset1)) >= 0) {
-            		offset1 += read1;
-        		}
-
-				int offset2 = 0;
-				while (offset2 < bufsize && (read2 = is2.read(buff2, offset2, bufsize-offset2)) >= 0) {
-					offset2 += read2;
-        		}
-				if(offset1 != offset2) {
-					return false;
-				}
-				if(offset1 != bufsize) {
-					Arrays.fill(buff1, offset1, bufsize, (byte)0);
-					Arrays.fill(buff2, offset2, bufsize, (byte)0);
-				}
-				if(!Arrays.equals(buff1, buff2)) {
-					return false;
-				}
-			} while(read1 >= 0 && read2 >= 0);
-			if(read1 < 0 && read2 < 0)
-			 {
-				return true;	// both at EOF
-			}
-			return false;
-
-		} catch (IOException ei) {
-			return false;
-		}
 	}
 }
