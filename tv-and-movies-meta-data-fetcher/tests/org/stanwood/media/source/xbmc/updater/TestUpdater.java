@@ -140,9 +140,8 @@ public class TestUpdater extends XBMCAddonTestBase {
 		List<String> files = FileHelper.listFilesAsStrings(addonsDir);
 		Collections.sort(files);
 
-		Assert.assertEquals(102, files.size());
+		Assert.assertEquals(101, files.size());
 //		int index=0;
-//		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"addon.xml");
 //		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"metadata.common.hdtrailers.net/addon.xml");
 //		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"metadata.common.hdtrailers.net/hdtrailers.xml");
 //		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"metadata.common.imdb.com/addon.xml");
