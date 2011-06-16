@@ -5,9 +5,7 @@ Version 2.0
 -----------
 
 *Inprogress*    - Check that everything works on mac
-*Inprogress*    - Check XBMC updater
-*Not started*   - Stop their been duplicate entries for episodes in XML store
-*Not started*   - Even if something has the correct name, process it if it's not stored
+*Inprogress*    - Check the linux RPM's are been created
 
 Version 2.0.1
 -------------
