@@ -423,7 +423,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 			}
 		}
 		Executor exec = new DefaultExecutor();
-		exec.setExitValues(new int[] {0,1,2,3});
+		exec.setExitValues(new int[] {0,1,2,3,4,5,6,7,8,9});
 
 		try {
 			ByteArrayOutputStream capture = new ByteArrayOutputStream();
