@@ -386,6 +386,10 @@ public class ActionPerformer implements IActionEventHandler {
 				}
 			}
 		}
+		catch (SourceException e) {
+			log.error("Unable to find media details due to error",e);
+			return null;
+		}
 		catch (Exception e) {
 			throw new ActionException("Unable to get TV epsiode details for file '"+file.getAbsolutePath()+"'",e);
 		}
