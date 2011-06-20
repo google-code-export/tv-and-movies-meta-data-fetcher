@@ -364,7 +364,9 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(episode.getDate())));
 		}
 		atoms.add(mp4Manager.createAtom("©nam", episode.getTitle()));
-		atoms.add(mp4Manager.createAtom("desc", episode.getSummary()));
+		if (episode.getSummary()!=null && episode.getSummary().length()>0) {
+			atoms.add(mp4Manager.createAtom("desc", episode.getSummary()));
+		}
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
@@ -435,8 +437,12 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(film.getDate())));
 		}
 		atoms.add(mp4Manager.createAtom("©nam", film.getTitle()));
-		atoms.add(mp4Manager.createAtom("desc", film.getSummary()));
-		atoms.add(mp4Manager.createAtom("ldes", film.getDescription()));
+		if (film.getSummary()!=null && film.getSummary().length()>0) {
+			atoms.add(mp4Manager.createAtom("desc", film.getSummary()));
+		}
+		if (film.getDescription()!=null && film.getDescription().length()>0) {
+			atoms.add(mp4Manager.createAtom("ldes", film.getDescription()));
+		}
 		if (film.getDirectors()!=null) {
 			for (String director : film.getDirectors()) {
 				atoms.add(mp4Manager.createAtom("©ART", director));
