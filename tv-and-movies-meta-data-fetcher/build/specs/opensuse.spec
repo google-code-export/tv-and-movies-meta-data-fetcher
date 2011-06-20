@@ -33,7 +33,7 @@ BuildRequires:  log4j >= 1.2.15
 BuildRequires:  fop >= 0.95
 BuildRequires:  ant
 BuildRequires:  ant-trax
-BuildRequires:  ant-apache-xalan2
+#BuildRequires:  ant-apache-xalan2
 BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
