@@ -532,8 +532,8 @@
 				file used to do this. It has the following attributes:
 				<itemizedlist>
 					<listitem><para><literal>directory</literal> - The location of the media directory.</para></listitem>
-					<listitem><para><literal>mode</literal> - The type of media. . See <link linkend="mode"/>.</para></listitem>											
-					<listitem><para><literal>pattern</literal> - The rename pattern. See <link linkend="patterns"/>. </para></listitem>
+					<listitem><para><literal>mode</literal> - The type of media. . See <xref linkend="mode"/>.</para></listitem>											
+					<listitem><para><literal>pattern</literal> - The rename pattern. See <xref linkend="patterns"/>. </para></listitem>
 					<listitem><para><literal>ignoreSeen</literal> - option attribute, if set to true then once a file is seen it will not be processed again</para></listitem>
 				</itemizedlist>
 			</para>
