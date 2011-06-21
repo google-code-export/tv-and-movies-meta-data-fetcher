@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -98,7 +99,7 @@ public class SeenDatabase extends XMLParser {
 			for (Entry<File,Set<SeenEntry>> e : entries.entrySet()) {
 				ps.println("  <mediaDir dir=\""+e.getKey()+"\">");
 				for (SeenEntry entry : e.getValue()) {
-					ps.println("    <file path=\""+entry.getFileName()+"\" lastModified=\""+entry.getLastModified()+"\"/>");
+					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>");
 				}
 				ps.println("  </mediaDir>");
 			}
