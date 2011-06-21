@@ -1,16 +1,11 @@
 package org.stanwood.media.actions;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -27,8 +22,7 @@ public class TestSeenDatabase {
 		File configDir = FileHelper.createTmpDir("config");
 		File mediaDir = FileHelper.createTmpDir("config");
 		try {
-			ConfigReader config = createConfigReader(configDir);
-			SeenDatabase db = new SeenDatabase(config);
+			SeenDatabase db = new SeenDatabase(configDir);
 
 			db.markAsSeen(mediaDir,createFile(mediaDir,"test1.avi"));
 			File test2 = createFile(mediaDir,"test2.avi");
@@ -67,8 +61,7 @@ public class TestSeenDatabase {
 		File configDir = FileHelper.createTmpDir("config");
 		File mediaDir = FileHelper.createTmpDir("config");
 		try {
-			ConfigReader config = createConfigReader(configDir);
-			SeenDatabase db = new SeenDatabase(config);
+			SeenDatabase db = new SeenDatabase(configDir);
 
 			File test1 = createFile(mediaDir,"test1.avi");
 			db.markAsSeen(mediaDir,test1);
@@ -86,7 +79,7 @@ public class TestSeenDatabase {
 			Assert.assertTrue(orgTime!=test2.lastModified());
 			db.write();
 
-			db = new SeenDatabase(config);
+			db = new SeenDatabase(configDir);
 			Assert.assertFalse(db.isSeen(mediaDir, test1));
 			Assert.assertFalse(db.isSeen(mediaDir, test2));
 			Assert.assertFalse(db.isSeen(mediaDir, test3));
@@ -97,7 +90,6 @@ public class TestSeenDatabase {
 			Assert.assertTrue(db.isSeen(mediaDir, test2));
 			Assert.assertFalse(db.isSeen(mediaDir, test3));
 			Assert.assertFalse(db.isSeen(mediaDir, test4));
-//			System.out.println(FileHelper.readFileContents(new File(configDir,"seenFiles.xml")));
 		}
 		finally {
 			FileHelper.delete(configDir);
@@ -113,33 +105,5 @@ public class TestSeenDatabase {
 		return file;
 	}
 
-	private ConfigReader createConfigReader(File configDir) throws FileNotFoundException, ConfigException, IOException {
-		StringBuilder testConfig = new StringBuilder();
-		testConfig.append("<mediaManager>"+FileHelper.LS);
-		testConfig.append("  <global>"+FileHelper.LS);
-		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS);
-		testConfig.append("  </global>"+FileHelper.LS);
-		testConfig.append("</mediaManager>"+FileHelper.LS);
-		return createConfigReader(testConfig);
 
-	}
-
-	private ConfigReader createConfigReader(StringBuilder testConfig)
-	throws IOException, FileNotFoundException, ConfigException {
-		File configFile = FileHelper.createTmpFileWithContents(testConfig);
-		ConfigReader configReader = null;
-		InputStream is = null;
-		try {
-			is = new FileInputStream(configFile);
-			configReader = new ConfigReader(is);
-			configReader.parse();
-		}
-		finally {
-			if (is!=null) {
-				is.close();
-			}
-		}
-		return configReader;
-	}
 }
-;

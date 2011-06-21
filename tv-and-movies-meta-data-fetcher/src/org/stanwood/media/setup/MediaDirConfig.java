@@ -19,6 +19,7 @@ public class MediaDirConfig {
 	private List<ActionConfig>actions;
 	private List<String> extensions;
 	private List<Pattern> ignorePatterns;
+	private boolean ignoreSeen;
 
 	/**
 	 * Used to get the media directory location
@@ -149,4 +150,22 @@ public class MediaDirConfig {
 	public List<Pattern> getIgnorePatterns() {
 		return ignorePatterns;
 	}
+
+	/**
+	 * Should seen files be ignored in the media directory
+	 * @return true if seen files should be ignored
+	 */
+	public boolean getIgnoreSeen() {
+		return ignoreSeen;
+	}
+
+	/**
+	 * Used to set if seen files be ignored in the media directory
+	 * @param ignoreSeen true if seen files should be ignored
+	 */
+	public void setIgnoreSeen(boolean ignoreSeen) {
+		this.ignoreSeen = ignoreSeen;
+	}
+
+
 }

@@ -41,7 +41,7 @@ public class TestConfigReader {
 //			testConfig.append("              version=\"2.0\""+LS);
 //			testConfig.append("<mediaManager"+LS);
 			testConfig.append(">"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" ignoreSeen=\"true\" >"+LS);
 			testConfig.append("    <sources>"+LS);
 			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
@@ -75,6 +75,7 @@ public class TestConfigReader {
 			Assert.assertNotNull(dirConfig);
 			Assert.assertEquals("%e.%x",dirConfig.getPattern());
 			Assert.assertEquals(Mode.TV_SHOW,dirConfig.getMode());
+			Assert.assertTrue(dirConfig.getIgnoreSeen());
 
 			List<SourceConfig> sources = dirConfig.getSources();
 			Assert.assertEquals(1,sources.size());
@@ -134,6 +135,7 @@ public class TestConfigReader {
 
 
 			MediaDirConfig dirConfig = configReader.getMediaDirectory(mediaDir);
+			Assert.assertFalse(dirConfig.getIgnoreSeen());
 
 			Assert.assertNotNull(dirConfig.getIgnorePatterns());
 			Assert.assertEquals(3,dirConfig.getIgnorePatterns().size());

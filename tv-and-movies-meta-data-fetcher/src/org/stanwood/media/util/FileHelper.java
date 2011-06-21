@@ -650,6 +650,11 @@ public class FileHelper {
 		return new File( System.getProperty("user.dir"));
 	}
 
+	/**
+	 * Used to convert relative paths to absolute paths. This will remove .. from the path
+	 * @param path The relative path
+	 * @return The absolute path
+	 */
 	public static File resolveRelativePaths(File path) {
 		String segments[] = path.getAbsolutePath().split(Pattern.quote(File.separator));
 		List<String>newSegments = new ArrayList<String>();

@@ -242,4 +242,13 @@ public class Controller {
 	public File getNativeFolder() {
 		return configReader.getNativeFolder();
 	}
+
+	/**
+	 * Get the location of the media directory
+	 * @return The location of the media directory
+	 * @throws ConfigException Thrown if their is a problem
+	 */
+	public File getConfigDir() throws ConfigException {
+		return configReader.getConfigDir();
+	}
 }
