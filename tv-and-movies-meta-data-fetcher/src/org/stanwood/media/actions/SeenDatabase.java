@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -29,11 +27,10 @@ public class SeenDatabase extends XMLParser {
 
 	/**
 	 * The constructor
-	 * @param config The configuration
-	 * @throws ConfigException Thrown if their is a problem
+	 * @param configDir The configuration directory
 	 */
-	public SeenDatabase(ConfigReader config) throws ConfigException {
-		seenFile = new File(config.getConfigDir(),"seenFiles.xml");
+	public SeenDatabase(File configDir) {
+		seenFile = new File(configDir,"seenFiles.xml");
 	}
 
 	/**

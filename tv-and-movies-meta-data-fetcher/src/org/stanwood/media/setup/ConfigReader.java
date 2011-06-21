@@ -137,9 +137,15 @@ public class ConfigReader extends BaseConfigReader {
 					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
 				}
 			}
+			String ignoreSeenValue = dirNode.getAttribute("ignoreSeen");
+			boolean ignoreSeen = false;
+			if (ignoreSeenValue!=null && ignoreSeenValue.length()>0) {
+				ignoreSeen = Boolean.parseBoolean(ignoreSeenValue);
+			}
 
 			dirConfig.setPattern(pattern);
 			dirConfig.setMode(mode);
+			dirConfig.setIgnoreSeen(ignoreSeen);
 
 			dirConfig.setSources(readSources(node));
 			dirConfig.setStores(readStores(node));
@@ -584,6 +590,10 @@ public class ConfigReader extends BaseConfigReader {
 		return nativeFolder;
 	}
 
+	/**
+	 * Used to get the addon site url
+	 * @return the addon site url
+	 */
 	public String getXBMCAddonSiteUrl() {
 		return xbmcAddonSite;
 	}

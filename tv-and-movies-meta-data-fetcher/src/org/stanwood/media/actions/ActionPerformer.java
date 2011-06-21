@@ -18,12 +18,14 @@ package org.stanwood.media.actions;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -48,6 +50,7 @@ import org.stanwood.media.search.SearchHelper;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.xml.XMLParserException;
 
 
 /**
@@ -62,21 +65,26 @@ public class ActionPerformer implements IActionEventHandler {
 	private List<IAction> actions;
 	private boolean testMode;
 	private File nativeFolder;
+	private File configDir;
+
+	private SeenDatabase seenDb;
 
 	/**
 	 * Constructor used to create a instance of the class
+	 * @param configDir The configuration directory
 	 * @param nativeFolder
 	 * @param actions List of actions to perform
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
 	 * @param testMode True if test mode is enabled
 	 */
-	public ActionPerformer(File nativeFolder, List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
+	public ActionPerformer(File configDir,File nativeFolder, List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
 		this.dir = dir;
 		this.exts = exts;
 		this.actions = actions;
 		this.testMode =testMode;
 		this.nativeFolder = nativeFolder;
+		this.configDir = configDir;
 	}
 
 	/**
@@ -84,10 +92,30 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions() throws ActionException {
+		if (dir.getMediaDirConfig().getIgnoreSeen()) {
+			try {
+				seenDb= new SeenDatabase(configDir);
+				seenDb.read();
+			}
+			catch (IOException e) {
+				throw new ActionException("Unable to read seen file database",e);
+			}
+			catch (XMLParserException e) {
+				throw new ActionException("Unable to read seen file database",e);
+			}
+		}
+
 		List<File> sortedFiles = findMediaFiles();
 		Set<File> dirs = findDirs();
 
 		performActions(sortedFiles,dirs);
+		if (seenDb!=null) {
+			try {
+				seenDb.write();
+			} catch (FileNotFoundException e) {
+				throw new ActionException("Unable to write seen file database",e);
+			}
+		}
 	}
 
 	private Set<File> findDirs() {
@@ -126,6 +154,7 @@ public class ActionPerformer implements IActionEventHandler {
 		for (IAction action : actions) {
 			action.finished(dir);
 		}
+
 		log.info("Finished");
 	}
 
@@ -165,6 +194,18 @@ public class ActionPerformer implements IActionEventHandler {
 				return arg0.getAbsolutePath().compareTo(arg1.getAbsolutePath());
 			}
 		});
+
+		if (seenDb!=null) {
+			Iterator<File> it = sortedFiles.iterator();
+			while (it.hasNext()) {
+				File f = it.next();
+				if (seenDb.isSeen(dir.getMediaDirConfig().getMediaDir(), f)) {
+					log.info("File '"+f.getAbsolutePath()+"' ignored as it has been seen before");
+					it.remove();
+				}
+			}
+		}
+
 		return sortedFiles;
 	}
 
@@ -245,7 +286,9 @@ public class ActionPerformer implements IActionEventHandler {
 					}
 				}
 			}
-
+			if (seenDb!=null) {
+				seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+			}
 		}
 	}
 
