@@ -524,56 +524,70 @@
 				<filename>$HOME/.mediaManager/mediamanager-conf.xml</filename>.
 			</para>		
 		</sect1>
-		<sect1>
-			<title>Mode</title>
-			<para>Media directories can operate in different modes. This effects how the media is handled and
-			      which pattern tokens can be used. The currently supported modes are:
-			    <itemizedlist>
-					<listitem><para><literal>TV_SHOW</literal> - Media files are tv episodes</para></listitem>											
-					<listitem><para><literal>FILM</literal> - Media files are films</para></listitem>
-				</itemizedlist>
-			 </para>		    
-		</sect1>
-		<sect1>
-			<title>Patterns</title>
-			<para>A pattern can be associated with a media directory. This is used by actions like the 
-			      Renameaction to rename file media files and change the directory structure.
-			</para>
+		<sect1 id="mediadirectory">
+			<title>Media directories</title>
 			<para>
-				The following list contains the meaning for each token:
-					<itemizedlist>
-					 	<listitem><para><literal>%h</literal> - show Id</para></listitem>
- 						<listitem><para><literal>%s</literal> - season number</para></listitem> 
- 						<listitem><para><literal>%e</literal> - episode number</para></listitem>
- 						<listitem><para><literal>%n</literal> - show name</para></listitem>
- 						<listitem><para><literal>%t</literal> - episode title or film title</para></listitem>
- 						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
- 						<listitem><para><literal>%p</literal> - part number</para></listitem>
- 						<listitem><para><literal>%y</literal> - year</para></listitem>
- 						<listitem><para><literal>%i</literal> - the show or film image URL</para></listitem>
- 						<listitem><para><literal>%u</literal> - the show or film short summary</para></listitem>
- 						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
+				&apptitle; is used to manage media in media directories, this means you need to 
+				tell it about the media directories. Their is a mediaDirectory entity in the configuration
+				file used to do this. It has the following attributes:
+				<itemizedlist>
+					<listitem><para><literal>directory</literal> - The location of the media directory.</para></listitem>
+					<listitem><para><literal>mode</literal> - The type of media. . See <link linkend="mode"/>.</para></listitem>											
+					<listitem><para><literal>pattern</literal> - The rename pattern. See <link linkend="patterns"/>. </para></listitem>
+					<listitem><para><literal>ignoreSeen</literal> - option attribute, if set to true then once a file is seen it will not be processed again</para></listitem>
+				</itemizedlist>
+			</para>
+			<sect2 id="mode">
+				<title>Mode</title>
+				<para>Media directories can operate in different modes. This effects how the media is handled and
+				      which pattern tokens can be used. The currently supported modes are:
+				    <itemizedlist>
+						<listitem><para><literal>TV_SHOW</literal> - Media files are tv episodes</para></listitem>											
+						<listitem><para><literal>FILM</literal> - Media files are films</para></listitem>
 					</itemizedlist>
-				</para>	
+				 </para>		    
+			</sect2>
+			<sect2 id="patterns">
+				<title>Patterns</title>
+				<para>A pattern can be associated with a media directory. This is used by actions like the 
+				      Renameaction to rename file media files and change the directory structure.
+				</para>
 				<para>
-				The patterns also support the syntax <literal>&quot;{ Part %p }&quot;</literal>. The braces 
-				means the contents inside are optional. So in this case if the media does not have a part number,
-				then it would be added to the filename.
-				</para>						
-				<example>
-					<title>Examples:</title>
+					The following list contains the meaning for each token:
+						<itemizedlist>
+						 	<listitem><para><literal>%h</literal> - show Id</para></listitem>
+	 						<listitem><para><literal>%s</literal> - season number</para></listitem> 
+	 						<listitem><para><literal>%e</literal> - episode number</para></listitem>
+	 						<listitem><para><literal>%n</literal> - show name</para></listitem>
+	 						<listitem><para><literal>%t</literal> - episode title or film title</para></listitem>
+	 						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
+	 						<listitem><para><literal>%p</literal> - part number</para></listitem>
+	 						<listitem><para><literal>%y</literal> - year</para></listitem>
+	 						<listitem><para><literal>%i</literal> - the show or film image URL</para></listitem>
+	 						<listitem><para><literal>%u</literal> - the show or film short summary</para></listitem>
+	 						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
+						</itemizedlist>
+					</para>	
 					<para>
-						The following options show what happens when they are used to rename 
-					     the 4th episode of the 2nd season of the show heroes.
-					     <itemizedlist>
-					     	<listitem><para>"S%s E%e - %t.%x" = "S2 E04 - The Kindness of Strangers.avi"</para></listitem>
-					     	<listitem><para>"%sx%e.%n.%t.%x" = "2x04.Heroes.The Kindness of Strangers.avi"</para></listitem>
-					     	<listitem><para>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</para></listitem>
-					     </itemizedlist>
-					</para>
-				</example>      
-		</sect1>		
-		<sect1>
+					The patterns also support the syntax <literal>&quot;{ Part %p }&quot;</literal>. The braces 
+					means the contents inside are optional. So in this case if the media does not have a part number,
+					then it would be added to the filename.
+					</para>						
+					<example>
+						<title>Examples:</title>
+						<para>
+							The following options show what happens when they are used to rename 
+						     the 4th episode of the 2nd season of the show heroes.
+						     <itemizedlist>
+						     	<listitem><para>"S%s E%e - %t.%x" = "S2 E04 - The Kindness of Strangers.avi"</para></listitem>
+						     	<listitem><para>"%sx%e.%n.%t.%x" = "2x04.Heroes.The Kindness of Strangers.avi"</para></listitem>
+						     	<listitem><para>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</para></listitem>
+						     </itemizedlist>
+						</para>
+					</example>      
+				</sect2>					
+		</sect1>
+		<sect1 id="ignore">
 			<title>Ignore</title>
 			<para>
 				It's possible a multiple regular expressions to a media directory which are compared agaist each
@@ -593,7 +607,7 @@
 			</para>
 			
 		</sect1>
-		<sect1>
+		<sect1 id="plugins">
 			<title>Plugins</title>
 			<para>
 			It is possible to extend &apptitle; with plugins. Plugins are capable of adding new Sources, Stores
@@ -664,7 +678,7 @@
 			</example> 
 			</para>
 		</sect1>
-		<sect1>
+		<sect1 id="examples">
 			<title>Examples</title>
 			<para>			
 				<example>		
@@ -677,7 +691,7 @@
 	</global>
 
 	<!-- Example Film media directory -->
-	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x">
+	<mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x" ignoreSeen="true">
 		<!-- The default extensions have been overriden for this directory so that the media manager
 	     will only consider .avi and .m4v files as media files. -->
 		<extensions>
