@@ -1,0 +1,145 @@
+package org.stanwood.media.actions;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
+import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.util.FileHelper;
+
+/**
+ * This is used to test the class {@link SeenDatabase}
+ */
+public class TestSeenDatabase {
+
+	/**
+	 * Test that files can be marked as seen and checked
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testDatabase() throws Exception {
+		File configDir = FileHelper.createTmpDir("config");
+		File mediaDir = FileHelper.createTmpDir("config");
+		try {
+			ConfigReader config = createConfigReader(configDir);
+			SeenDatabase db = new SeenDatabase(config);
+
+			db.markAsSeen(mediaDir,createFile(mediaDir,"test1.avi"));
+			File test2 = createFile(mediaDir,"test2.avi");
+			db.markAsSeen(mediaDir,test2);
+			createFile(mediaDir,"test3.avi");
+			createFile(mediaDir,"test4.avi");
+
+			Assert.assertTrue(db.isSeen(mediaDir, new File(mediaDir,"test1.avi")));
+			Assert.assertTrue(db.isSeen(mediaDir, test2));
+			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test3.avi")));
+			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test4.avi")));
+
+			long orgTime = test2.lastModified();
+			if (!test2.setLastModified(orgTime+1000)) {
+				throw new IOException("Unable to set time");
+			}
+			Assert.assertTrue(orgTime!=test2.lastModified());
+
+			Assert.assertTrue(db.isSeen(mediaDir, new File(mediaDir,"test1.avi")));
+			Assert.assertFalse(db.isSeen(mediaDir, test2));
+			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test3.avi")));
+			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test4.avi")));
+		}
+		finally {
+			FileHelper.delete(configDir);
+			FileHelper.delete(mediaDir);
+		}
+	}
+
+	/**
+	 * Used to test that reading and writing work correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testReadWrite() throws Exception {
+		File configDir = FileHelper.createTmpDir("config");
+		File mediaDir = FileHelper.createTmpDir("config");
+		try {
+			ConfigReader config = createConfigReader(configDir);
+			SeenDatabase db = new SeenDatabase(config);
+
+			File test1 = createFile(mediaDir,"test1.avi");
+			db.markAsSeen(mediaDir,test1);
+			File test2 = createFile(mediaDir,"test2.avi");
+			File test3 = createFile(mediaDir,"test3.avi");
+			File test4 =createFile(mediaDir,"test4.avi");
+
+			Assert.assertTrue(db.isSeen(mediaDir, new File(mediaDir,"test1.avi")));
+			long orgTime = test2.lastModified();
+			if (!test2.setLastModified(orgTime+1000)) {
+				throw new IOException("Unable to set time");
+			}
+			db.markAsSeen(mediaDir,test2);
+
+			Assert.assertTrue(orgTime!=test2.lastModified());
+			db.write();
+
+			db = new SeenDatabase(config);
+			Assert.assertFalse(db.isSeen(mediaDir, test1));
+			Assert.assertFalse(db.isSeen(mediaDir, test2));
+			Assert.assertFalse(db.isSeen(mediaDir, test3));
+			Assert.assertFalse(db.isSeen(mediaDir, test4));
+
+			db.read();
+			Assert.assertTrue(db.isSeen(mediaDir, test1));
+			Assert.assertTrue(db.isSeen(mediaDir, test2));
+			Assert.assertFalse(db.isSeen(mediaDir, test3));
+			Assert.assertFalse(db.isSeen(mediaDir, test4));
+//			System.out.println(FileHelper.readFileContents(new File(configDir,"seenFiles.xml")));
+		}
+		finally {
+			FileHelper.delete(configDir);
+			FileHelper.delete(mediaDir);
+		}
+	}
+
+	private File createFile(File mediaDir, String name) throws IOException {
+		File file = new File(mediaDir,name);
+		if (!file.createNewFile() && !file.exists()) {
+			throw new IOException("Unable to create file: " + file);
+		}
+		return file;
+	}
+
+	private ConfigReader createConfigReader(File configDir) throws FileNotFoundException, ConfigException, IOException {
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <global>"+FileHelper.LS);
+		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS);
+		testConfig.append("  </global>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
+		return createConfigReader(testConfig);
+
+	}
+
+	private ConfigReader createConfigReader(StringBuilder testConfig)
+	throws IOException, FileNotFoundException, ConfigException {
+		File configFile = FileHelper.createTmpFileWithContents(testConfig);
+		ConfigReader configReader = null;
+		InputStream is = null;
+		try {
+			is = new FileInputStream(configFile);
+			configReader = new ConfigReader(is);
+			configReader.parse();
+		}
+		finally {
+			if (is!=null) {
+				is.close();
+			}
+		}
+		return configReader;
+	}
+}
+;
