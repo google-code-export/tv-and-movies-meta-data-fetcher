@@ -117,16 +117,18 @@ public class SeenDatabase extends XMLParser {
 	 * @throws XMLParserException Thrown if possible to parse file
 	 */
 	public void read() throws FileNotFoundException, XMLParserException {
-		Document doc = XMLParser.parse(seenFile, null);
 		entries = new HashMap<File,Set<SeenEntry>>();
-		for (Node mediaDirNode : selectNodeList(doc, "seen/mediaDir")) {
-			Element mediaDirEl = (Element)mediaDirNode;
-			File mediaDir = new File(mediaDirEl.getAttribute("dir"));
-			for (Node fileNode : selectNodeList(mediaDirEl,"file")) {
-				Element fileElement = (Element)fileNode;
-				String path = fileElement.getAttribute("path");
-				long lastModified = Long.parseLong(fileElement.getAttribute("lastModified"));
-				markAsSeen(mediaDir, lastModified, path);
+		if (seenFile.exists()) {
+			Document doc = XMLParser.parse(seenFile, null);
+			for (Node mediaDirNode : selectNodeList(doc, "seen/mediaDir")) {
+				Element mediaDirEl = (Element)mediaDirNode;
+				File mediaDir = new File(mediaDirEl.getAttribute("dir"));
+				for (Node fileNode : selectNodeList(mediaDirEl,"file")) {
+					Element fileElement = (Element)fileNode;
+					String path = fileElement.getAttribute("path");
+					long lastModified = Long.parseLong(fileElement.getAttribute("lastModified"));
+					markAsSeen(mediaDir, lastModified, path);
+				}
 			}
 		}
 	}
