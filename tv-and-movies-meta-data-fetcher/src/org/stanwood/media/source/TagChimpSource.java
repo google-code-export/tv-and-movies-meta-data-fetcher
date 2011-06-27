@@ -167,7 +167,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	/** {@inheritDoc} */
 	@Override
-	public SearchResult searchMedia(final String name, final Mode mode, final Integer part) throws SourceException {
+	public SearchResult searchMedia(final String name,final String year, final Mode mode, final Integer part) throws SourceException {
 		if (mode != Mode.FILM) {
 			return null;
 		}

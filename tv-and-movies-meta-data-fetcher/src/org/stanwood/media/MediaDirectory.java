@@ -81,7 +81,10 @@ public class MediaDirectory {
 				if (name==null) {
 					return null;
 				}
-				return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
+				if (year==null) {
+					year ="";
+				}
+				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile);
 			}
 		};
 
@@ -91,9 +94,12 @@ public class MediaDirectory {
 				if (name==null) {
 					return null;
 				}
+				if (year==null) {
+					year ="";
+				}
 				StringBuilder term = new StringBuilder(name);
 				SearchHelper.removeUnwantedCharacters(term);
-				return searchMedia(term.toString(),dirConfig.getMode(),part,dirConfig,mediaFile);
+				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile);
 			}
 		};
 	}
@@ -397,7 +403,7 @@ public class MediaDirectory {
 		return s.search(mediaFile,this);
 	}
 
-	private SearchResult searchMedia(String name, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException, SourceException {
+	private SearchResult searchMedia(String name,String year, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException, SourceException {
 		SearchResult result = null;
 		for (IStore store : stores) {
 			result = store.searchMedia(name,mode,part,dirConfig,mediaFile);
@@ -407,7 +413,7 @@ public class MediaDirectory {
 		}
 
 		for (ISource source : sources) {
-			result = source.searchMedia(name,mode,part);
+			result = source.searchMedia(name,year,mode,part);
 			if (result != null) {
 				return result;
 			}
