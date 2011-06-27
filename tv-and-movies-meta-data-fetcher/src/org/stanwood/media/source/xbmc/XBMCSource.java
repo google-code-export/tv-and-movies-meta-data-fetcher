@@ -511,14 +511,14 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	/** {@inheritDoc} */
 	@Override
-	public SearchResult searchMedia(final String name,final Mode mode,final Integer part) throws SourceException {
+	public SearchResult searchMedia(final String name,final String year,final Mode mode,final Integer part) throws SourceException {
 		if (!addon.supportsMode(mode)) {
 			return null;
 		}
 
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
-			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, ""));
+			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, year));
 			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 				@Override
 				public void processContents(String contents) throws SourceException {

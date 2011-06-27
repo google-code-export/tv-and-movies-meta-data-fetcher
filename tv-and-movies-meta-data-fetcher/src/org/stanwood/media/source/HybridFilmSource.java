@@ -213,7 +213,7 @@ public class HybridFilmSource implements ISource {
 
 	/** {@inheritDoc} */
 	@Override
-	public SearchResult searchMedia(String name, Mode mode, Integer part)
+	public SearchResult searchMedia(String name,String year, Mode mode, Integer part)
 			throws SourceException {
 
 		if (mode != Mode.FILM) {
@@ -226,7 +226,7 @@ public class HybridFilmSource implements ISource {
 		ISource sources[] = new ISource[] {imdbSource,tagChimpSource};
 		for (ISource source : sources) {
 			if (source!=null) {
-				SearchResult result = source.searchMedia(name, mode, part);
+				SearchResult result = source.searchMedia(name,year, mode, part);
 				if (result!=null) {
 					if (id.length()>0) {
 						id.append("|");

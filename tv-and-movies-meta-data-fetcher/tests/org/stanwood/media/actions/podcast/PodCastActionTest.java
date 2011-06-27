@@ -398,7 +398,7 @@ public class PodCastActionTest {
 
 		/** {@inheritDoc} */
 		@Override
-		public SearchResult searchMedia(String name, Mode mode, Integer part)
+		public SearchResult searchMedia(String name,String year, Mode mode, Integer part)
 				throws SourceException {
 			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part);
 		}

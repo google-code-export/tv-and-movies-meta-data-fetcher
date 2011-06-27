@@ -25,7 +25,7 @@ Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins. 
 Encode rating into MP4's
-Updated to latest version of MP4 parser
+Implement a pure java MP4 Manager
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
 Add remove from store command line tool

@@ -49,7 +49,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 	public void testSource() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
-		SearchResult result = source.searchMedia("Iron Man",Mode.FILM,1);
+		SearchResult result = source.searchMedia("Iron Man","",Mode.FILM,1);
 		Assert.assertEquals("1726",result.getId());
 		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726", result.getUrl());
 
@@ -111,7 +111,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 	@Test
 	public void testEncodings() throws Exception {
 		XBMCSource source = getXBMCSource("metadata.themoviedb.org");
-		SearchResult result = source.searchMedia("Dude Where’s My Car",Mode.FILM,1);
+		SearchResult result = source.searchMedia("Dude Where’s My Car","",Mode.FILM,1);
 		Assert.assertEquals("8859",result.getId());
 		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/8859", result.getUrl());
 

@@ -127,11 +127,12 @@ public interface ISource {
 	/**
 	 * This is called to search the source for media details
  	 * @param name The search term
+ 	 * @param year The year to search for or empty string if not needed
 	 * @param mode The mode of the search
 	 * @param part The part number to search for
 	 * @return The search result or NULL if it could not be found
 	 * @throws SourceException Thrown if their is a problem with the source
 	 */
-	public SearchResult searchMedia(String name, Mode mode, Integer part) throws SourceException;
+	public SearchResult searchMedia(String name,String year, Mode mode, Integer part) throws SourceException;
 
 }
