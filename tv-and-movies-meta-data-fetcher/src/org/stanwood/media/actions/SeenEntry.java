@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public class SeenEntry implements Serializable {
 
+	private static final long serialVersionUID = 1687449172780260088L;
+
 	private String fileName;
 	private long lastModified;
 
