@@ -16,7 +16,7 @@ public enum Token {
 	/** the token for "season number" */
 	SEASON('s',"(\\d+)",ValueType.INTEGER),
 	/** the token for "extension" */
-	EXT('x',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
+	EXT('x',"([^\\.\\"+File.separatorChar+"]*?)$",ValueType.STRING),
 	/** the token for "episode or film title" */
 	TITLE('t',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
 	/** add a % char */
