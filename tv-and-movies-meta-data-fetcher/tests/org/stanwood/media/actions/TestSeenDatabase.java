@@ -11,6 +11,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This is used to test the class {@link SeenDatabase}
  */
+@SuppressWarnings("nls")
 public class TestSeenDatabase {
 
 	/**

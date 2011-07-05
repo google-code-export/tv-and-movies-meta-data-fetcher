@@ -10,6 +10,7 @@ import java.net.URL;
 /**
  * This is a help class for tests that need to create NFO files
  */
+@SuppressWarnings("nls")
 public class NFOHelper {
 
 	/**

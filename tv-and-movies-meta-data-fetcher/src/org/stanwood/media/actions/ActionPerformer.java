@@ -21,6 +21,7 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,10 +99,10 @@ public class ActionPerformer implements IActionEventHandler {
 				seenDb.read();
 			}
 			catch (IOException e) {
-				throw new ActionException("Unable to read seen file database",e);
+				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
 			}
 			catch (XMLParserException e) {
-				throw new ActionException("Unable to read seen file database",e);
+				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
 			}
 		}
 
@@ -113,7 +114,7 @@ public class ActionPerformer implements IActionEventHandler {
 			try {
 				seenDb.write();
 			} catch (FileNotFoundException e) {
-				throw new ActionException("Unable to write seen file database",e);
+				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_WRITE_SEEN_DATABASE"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -132,14 +133,14 @@ public class ActionPerformer implements IActionEventHandler {
 	 */
 	public void performActions(List<File> files,Set<File> dirs) throws ActionException {
 		if (!initStores()) {
-			throw new ActionException("Unable to setup stores as one or more failed to initalise");
+			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_SETUP_STORES")); //$NON-NLS-1$
 		}
 
 		for (IAction action : actions) {
 			action.init(dir);
 		}
 
-		log.info(("Processing "+files.size()+" files"));
+		log.info((MessageFormat.format(Messages.getString("ActionPerformer.PROCESSING_FILES"),files.size()))); //$NON-NLS-1$
 		performActionsFiles(files);
 		performActionsDirs(dirs);
 
@@ -147,7 +148,7 @@ public class ActionPerformer implements IActionEventHandler {
 			try {
 				store.performedActions(dir);
 			} catch (StoreException e) {
-				log.error("Unable to clean up store: " + store.getClass().getName(),e);
+				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_CLEAN_STORES"),store.getClass().getName()),e); //$NON-NLS-1$
 			}
 		}
 
@@ -155,7 +156,7 @@ public class ActionPerformer implements IActionEventHandler {
 			action.finished(dir);
 		}
 
-		log.info("Finished");
+		log.info(Messages.getString("ActionPerformer.FINISHED")); //$NON-NLS-1$
 	}
 
 	private boolean initStores() {
@@ -200,7 +201,7 @@ public class ActionPerformer implements IActionEventHandler {
 			while (it.hasNext()) {
 				File f = it.next();
 				if (seenDb.isSeen(dir.getMediaDirConfig().getMediaDir(), f)) {
-					log.info("File '"+f.getAbsolutePath()+"' ignored as it has been seen before");
+					log.info(MessageFormat.format(Messages.getString("ActionPerformer.INGORED_SEEN_FILE"),f.getAbsolutePath())); //$NON-NLS-1$
 					it.remove();
 				}
 			}
@@ -211,7 +212,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 	private void findMediaFiles(File parentDir,List<File>mediaFiles) throws ActionException {
 		if (log.isDebugEnabled()) {
-			log.debug("Tidying show names in the directory : " + parentDir);
+			log.debug(MessageFormat.format(Messages.getString("ActionPerformer.TIDYING_SHOW_NAMES_IN_DIR"),parentDir)); //$NON-NLS-1$
 		}
 		File files[] = parentDir.listFiles(new FileFilter() {
 			@Override
@@ -219,7 +220,7 @@ public class ActionPerformer implements IActionEventHandler {
 				if (file.isFile()) {
 					String name = file.getName();
 					for (String ext : exts) {
-						if (name.toLowerCase().endsWith("."+ext.toLowerCase())) {
+						if (name.toLowerCase().endsWith("."+ext.toLowerCase())) { //$NON-NLS-1$
 							return true;
 						}
 					}
@@ -263,7 +264,7 @@ public class ActionPerformer implements IActionEventHandler {
 			return null;
 		}
 		catch (StoreException e) {
-			throw new ActionException("Unable to read film details from stores",e);
+			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_TO_READ_FILE_DETAILS"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -324,7 +325,7 @@ public class ActionPerformer implements IActionEventHandler {
 	}
 
 	private void performActionsDirs(Set<File>dirs) throws ActionException {
-		log.info(("Processing "+dirs.size()+" dirs"));
+		log.info((MessageFormat.format(Messages.getString("ActionPerformer.PROCESSING_DIRS"),dirs.size()))); //$NON-NLS-1$
 
 
 		for (File d : dirs) {
@@ -332,7 +333,7 @@ public class ActionPerformer implements IActionEventHandler {
 				action.performOnDirectory(dir, d,this);
 			}
 		}
-		log.info("Finished");
+		log.info(Messages.getString("ActionPerformer.FINISHED")); //$NON-NLS-1$
 	}
 
 	/**
@@ -356,7 +357,7 @@ public class ActionPerformer implements IActionEventHandler {
 			try {
 				store.fileDeleted(dir,file);
 			} catch (StoreException e) {
-				log.error("Unable to process action file deleted event",e);
+				log.error(Messages.getString("ActionPerformer.UNABLE_TO_PROCESS_ACTION_FILE_DELETED_EVENT"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -371,7 +372,7 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
 		} catch (StoreException e) {
-			throw new ActionException("Unable to rename file",e);
+			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_RENAME_FILE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -386,28 +387,28 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 			SearchResult result = searchForId(dir,file);
 			if (result==null) {
-				log.error("Unable to find show id for file '"+file+"'");
+				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_SHOW_ID_FOR_FILE"),file)); //$NON-NLS-1$
 				return null;
 			}
 
 			Show show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
 			if (show == null) {
-				log.fatal("Unable to find show details for file '"+file+"'");
+				log.fatal(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_FIND_SHOW_DETAILS_FOR_FILE"),file)); //$NON-NLS-1$
 				return null;
 			}
 
 			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
 			if (data==null) {
-				log.error("Unable to workout the season and/or episode number for file '" + file.getName()+"'");
+				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_WORKOUT_SEASON_AND_EPISODE_NUMBER_FOR_FILE"),file.getName())); //$NON-NLS-1$
 			}
 			else {
 				Season season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
 				if (season == null) {
-					log.error("Unable to find season number for file '"+file+"'");
+					log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABVLE_TO_FIMD_SEASON"),file)); //$NON-NLS-1$
 				} else {
 					Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
 					if (episode==null) {
-						log.error("Unable to find episode number for file '"+file+"'");
+						log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_EPISODE_NUMBER"),file)); //$NON-NLS-1$
 						return null;
 					}
 
@@ -430,11 +431,11 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 		}
 		catch (SourceException e) {
-			log.error("Unable to find media details due to error",e);
+			log.error(Messages.getString("ActionPerformer.UNABLE_FIND_MEDIA_DETAILS"),e); //$NON-NLS-1$
 			return null;
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to get TV epsiode details for file '"+file.getAbsolutePath()+"'",e);
+			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_GET_TV_EPISODE_DETAILS"),file.getAbsolutePath()),e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -447,7 +448,7 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 			if (film==null) {
-				log.error("Unable to find film with id  '" + result.getId() +"' and source '"+result.getSourceId()+"' for file '" +file.getAbsolutePath()+"'");
+				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
 			}
 			if (!testMode) {
@@ -485,7 +486,7 @@ public class ActionPerformer implements IActionEventHandler {
 			return film;
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to find film for file '" + file.getAbsolutePath()+"'",e);
+			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -493,17 +494,17 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			SearchResult result = searchForId(dir,file);
 			if (result==null) {
-				log.error("Unable to find film id for file '"+file.getName()+"'");
+				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
 			}
 			return result;
 		}
 		catch (SourceException e) {
-			log.error("Unable to search for film: " + file,e);
+			log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNALBE_SEARCH_FOR_FILM"),file.getAbsolutePath()),e); //$NON-NLS-1$
 			return null;
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to find film for file '" + file.getAbsolutePath()+"'",e);
+			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath()),e); //$NON-NLS-1$
 		}
 	}
 

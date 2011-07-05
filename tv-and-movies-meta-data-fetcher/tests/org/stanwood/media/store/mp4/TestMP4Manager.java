@@ -25,6 +25,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the {@link MP4v2CLIManager} class.
  */
+@SuppressWarnings("nls")
 public class TestMP4Manager {
 
 	private SimpleDateFormat DF = new SimpleDateFormat("dd-MM-yyyy");

@@ -26,6 +26,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * A test class used to test the class {@link FilmSearcher}
  */
+@SuppressWarnings("nls")
 public class TestFilmSearcher {
 
 	/**

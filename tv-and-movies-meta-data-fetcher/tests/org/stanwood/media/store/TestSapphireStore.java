@@ -43,6 +43,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the {@link SapphireStore} class.
  */
+@SuppressWarnings("nls")
 public class TestSapphireStore  {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");

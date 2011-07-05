@@ -23,6 +23,7 @@ import org.stanwood.media.util.FileHelper;
  * This is a test class used to test that NFO files are handled correctly by the media
  * manager application.
  */
+@SuppressWarnings("nls")
 public class TestNFOFilms extends XBMCAddonTestBase {
 
 	static int exitCode;

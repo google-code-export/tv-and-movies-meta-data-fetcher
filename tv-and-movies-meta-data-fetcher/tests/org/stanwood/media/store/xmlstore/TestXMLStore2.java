@@ -24,6 +24,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the {@link XMLStore2} class.
  */
+@SuppressWarnings("nls")
 public class TestXMLStore2 {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");

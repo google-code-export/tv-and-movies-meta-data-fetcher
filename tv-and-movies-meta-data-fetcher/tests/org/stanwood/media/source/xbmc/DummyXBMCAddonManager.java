@@ -17,6 +17,7 @@ import org.stanwood.media.util.Stream;
  * This is a dummy XBMCAddonManager that fetches data from the test source tree instead of from the web. This
  * allows tests to run agaist a known set of data
  */
+@SuppressWarnings("nls")
 public class DummyXBMCAddonManager extends XBMCAddonManager {
 
 	private static final Pattern TVDB_SEARCH_PATTERN = Pattern.compile(".*thetvdb.*GetSeries.*seriesname\\=(.+?)\\&.*");

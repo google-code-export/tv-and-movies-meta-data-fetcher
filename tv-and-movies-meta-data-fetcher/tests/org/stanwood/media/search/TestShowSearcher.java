@@ -24,6 +24,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test that the class {@link ShowSearcher} works as expected
  */
+@SuppressWarnings("nls")
 public class TestShowSearcher {
 
 	private Map<File,String> patterns = new HashMap<File,String>();

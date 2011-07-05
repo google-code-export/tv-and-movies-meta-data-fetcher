@@ -18,6 +18,7 @@ import org.stanwood.media.xml.XMLParser;
 /**
  * This test is used to test that film information can be correctly retrieved from XBMC sources
  */
+@SuppressWarnings("nls")
 public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
 	/**

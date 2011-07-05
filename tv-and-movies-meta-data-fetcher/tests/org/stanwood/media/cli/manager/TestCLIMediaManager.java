@@ -33,6 +33,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This is a test class used to test the class {@link CLIMediaManager}.
  */
+@SuppressWarnings("nls")
 public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 	private final static String LS = System.getProperty("line.separator");

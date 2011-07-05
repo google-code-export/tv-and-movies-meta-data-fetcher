@@ -31,7 +31,7 @@ public class SeenDatabase extends XMLParser {
 	 * @param configDir The configuration directory
 	 */
 	public SeenDatabase(File configDir) {
-		seenFile = new File(configDir,"seenFiles.xml");
+		seenFile = new File(configDir,"seenFiles.xml"); //$NON-NLS-1$
 	}
 
 	/**
@@ -95,15 +95,15 @@ public class SeenDatabase extends XMLParser {
 		PrintStream ps = null;
 		try {
 			ps = new PrintStream(seenFile);
-			ps.println("<seen>");
+			ps.println("<seen>"); //$NON-NLS-1$
 			for (Entry<File,Set<SeenEntry>> e : entries.entrySet()) {
-				ps.println("  <mediaDir dir=\""+e.getKey()+"\">");
+				ps.println("  <mediaDir dir=\""+e.getKey()+"\">"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (SeenEntry entry : e.getValue()) {
-					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>");
+					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
-				ps.println("  </mediaDir>");
+				ps.println("  </mediaDir>"); //$NON-NLS-1$
 			}
-			ps.println("</seen>");
+			ps.println("</seen>"); //$NON-NLS-1$
 		}
 		finally {
 			if (ps!=null) {
@@ -121,13 +121,13 @@ public class SeenDatabase extends XMLParser {
 		entries = new HashMap<File,Set<SeenEntry>>();
 		if (seenFile.exists()) {
 			Document doc = XMLParser.parse(seenFile, null);
-			for (Node mediaDirNode : selectNodeList(doc, "seen/mediaDir")) {
+			for (Node mediaDirNode : selectNodeList(doc, "seen/mediaDir")) { //$NON-NLS-1$
 				Element mediaDirEl = (Element)mediaDirNode;
-				File mediaDir = new File(mediaDirEl.getAttribute("dir"));
-				for (Node fileNode : selectNodeList(mediaDirEl,"file")) {
+				File mediaDir = new File(mediaDirEl.getAttribute("dir")); //$NON-NLS-1$
+				for (Node fileNode : selectNodeList(mediaDirEl,"file")) { //$NON-NLS-1$
 					Element fileElement = (Element)fileNode;
-					String path = fileElement.getAttribute("path");
-					long lastModified = Long.parseLong(fileElement.getAttribute("lastModified"));
+					String path = fileElement.getAttribute("path"); //$NON-NLS-1$
+					long lastModified = Long.parseLong(fileElement.getAttribute("lastModified")); //$NON-NLS-1$
 					markAsSeen(mediaDir, lastModified, path);
 				}
 			}

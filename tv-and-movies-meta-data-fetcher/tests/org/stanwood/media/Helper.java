@@ -21,6 +21,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 /**
  * A helper class for tests
  */
+@SuppressWarnings("nls")
 public class Helper {
 
 	/**

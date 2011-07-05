@@ -2,6 +2,7 @@ package org.stanwood.media.actions.podcast;
 
 import java.io.File;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -52,13 +53,13 @@ public class PodCastAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(PodCastAction.class);
 
-	private final static String PARAM_MEDIA_DIR_URL = "mediaDirURL";
-	private final static String PARAM_NUMBER_ENTRIES = "numberEntries";
-	private final static String PARAM_FILE_LOCATION = "fileLocation";
-	private final static String PARAM_RESTRICT_PATTERN = "restrictPattern";
-	private final static String PARAM_EXTENSIONS_KEY = "extensions";
-	private final static String PARAM_FEED_TITLE_KEY = "feedTitle";
-	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription";
+	private final static String PARAM_MEDIA_DIR_URL = "mediaDirURL"; //$NON-NLS-1$
+	private final static String PARAM_NUMBER_ENTRIES = "numberEntries"; //$NON-NLS-1$
+	private final static String PARAM_FILE_LOCATION = "fileLocation"; //$NON-NLS-1$
+	private final static String PARAM_RESTRICT_PATTERN = "restrictPattern"; //$NON-NLS-1$
+	private final static String PARAM_EXTENSIONS_KEY = "extensions"; //$NON-NLS-1$
+	private final static String PARAM_FEED_TITLE_KEY = "feedTitle"; //$NON-NLS-1$
+	private final static String PARAM_FEED_DESCRIPTION_KEY = "feedDescription"; //$NON-NLS-1$
 
 	private SortedSet<IFeedFile>feedFiles = null;
 	private Integer numEntries = null;
@@ -123,7 +124,7 @@ public class PodCastAction extends AbstractAction {
 			currentPart = part;
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to parse RSS feed: " + feedFile ,e);
+			throw new ActionException(MessageFormat.format("Unable to parse RSS feed: {0}",feedFile) ,e);
 		}
 	}
 
@@ -147,7 +148,7 @@ public class PodCastAction extends AbstractAction {
 
 	protected void writeFeed(File feedFile) throws ActionException {
 		if (isTestMode()) {
-			log.info("Podcast feed not written as in test mode: " + feedFile);
+			log.info(MessageFormat.format("Podcast feed not written as in test mode: {0}" ,feedFile));
 			return;
 		}
 		try {
@@ -162,7 +163,7 @@ public class PodCastAction extends AbstractAction {
 
 			rssFeed.write();
 			createNewFeedFiles();
-			log.info("Written Podcast feed: " + feedFile);
+			log.info(MessageFormat.format("Written Podcast feed: {0}",feedFile));
 		} catch (Exception e) {
 			throw new ActionException("Unable to write pod case",e);
 		}
@@ -180,9 +181,9 @@ public class PodCastAction extends AbstractAction {
 			StringBuilder buffer = new StringBuilder("Missing required parameters for PodCastAction: ");
 			for (int i=0;i<missingParams.size();i++) {
 				if (i>0) {
-					buffer.append(", ");
+					buffer.append(", "); //$NON-NLS-1$
 				}
-				buffer.append("'"+missingParams.get(i)+"'");
+				buffer.append("'"+missingParams.get(i)+"'"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			throw new ActionException(buffer.toString());
 		}
@@ -284,7 +285,7 @@ public class PodCastAction extends AbstractAction {
 				numEntries = Integer.parseInt(value);
 			}
 			catch (NumberFormatException e) {
-				throw new ActionException("Invalid number '"+value+"' for parameter '"+key+"'");
+				throw new ActionException(MessageFormat.format("Invalid number '{0}' for parameter '{1}'",value,key));
 			}
 		}
 		else if (key.equalsIgnoreCase(PARAM_MEDIA_DIR_URL)) {
@@ -310,11 +311,7 @@ public class PodCastAction extends AbstractAction {
 			feedDescription = value;
 		}
 		else {
-			throw new ActionException("Unsupported parameter '"+key+"'");
+			throw new ActionException(MessageFormat.format("Unsupported parameter '{0}'",key));
 		}
 	}
-
-
-
-
 }

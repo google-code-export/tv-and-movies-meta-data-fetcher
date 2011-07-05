@@ -2,6 +2,7 @@ package org.stanwood.media.actions.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,12 +52,12 @@ import org.stanwood.media.util.FileHelper;
  */
 public class ExecuteSystemCommandAction extends AbstractAction {
 
-	private final static String PARAM_CMD_ON_FILE_KEY = "commandOnFile";
-	private final static String PARAM_CMD_ON_DIR_KEY = "commandOnDirectory";
-	private final static String PARAM_EXTENSIONS_KEY = "extensions";
-	private final static String PARAM_NEW_FILE_KEY = "newFile";
-	private final static String PARAM_DELETED_FILE_KEY = "deletedFile";
-	private final static String PARAM_ABORT_IF_FILE_EXISTS = "abortIfFileExists";
+	private final static String PARAM_CMD_ON_FILE_KEY = "commandOnFile"; //$NON-NLS-1$
+	private final static String PARAM_CMD_ON_DIR_KEY = "commandOnDirectory"; //$NON-NLS-1$
+	private final static String PARAM_EXTENSIONS_KEY = "extensions"; //$NON-NLS-1$
+	private final static String PARAM_NEW_FILE_KEY = "newFile"; //$NON-NLS-1$
+	private final static String PARAM_DELETED_FILE_KEY = "deletedFile"; //$NON-NLS-1$
+	private final static String PARAM_ABORT_IF_FILE_EXISTS = "abortIfFileExists"; //$NON-NLS-1$
 
 	private String fileCmd;
 	private String dirCmd;
@@ -108,7 +109,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 				exec.setStreamHandler(new PumpStreamHandler(new LoggerOutputStream(Level.INFO), new LoggerOutputStream(Level.ERROR)));
 				exec.execute(cmdLine);
 			} catch (IOException e) {
-				throw new ActionException("Unable to execute system command: " + cmdLine.toString(),e);
+				throw new ActionException(MessageFormat.format(Messages.getString("ExecuteSystemCommandAction.UNABLE_TO_EXEC_SYS_COMMAND") ,cmdLine.toString()),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -137,10 +138,10 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	private String replaceVars(String cmd,File mediaFile,MediaDirectory dir,IVideo video) throws ActionException {
 		String s=cmd;
 		if (newFile!=null) {
-			s = s.replaceAll("\\$NEWFILE",Matcher.quoteReplacement(newFile));
+			s = s.replaceAll("\\$NEWFILE",Matcher.quoteReplacement(newFile)); //$NON-NLS-1$
 		}
 		if (deletedFile!=null) {
-			s = s.replaceAll("\\$DELETEDFILE", Matcher.quoteReplacement(deletedFile));
+			s = s.replaceAll("\\$DELETEDFILE", Matcher.quoteReplacement(deletedFile)); //$NON-NLS-1$
 		}
 
 		s = resolvePatterns(dir, s, video, mediaFile, null);
@@ -173,7 +174,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			this.deletedFile = value;
 		}
 		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY)) {
-			StringTokenizer tok = new StringTokenizer(value,",");
+			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			this.extensions = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
@@ -186,7 +187,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 			this.abortIfFileExists = value;
 		}
  		else {
-			throw new ActionException("Unsupported parameter for action '"+key+"'");
+			throw new ActionException(MessageFormat.format(Messages.getString("ExecuteSystemCommandAction.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
 	}
 

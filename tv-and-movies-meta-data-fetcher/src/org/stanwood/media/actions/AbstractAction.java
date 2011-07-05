@@ -1,6 +1,7 @@
 package org.stanwood.media.actions;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.PatternException;
@@ -52,10 +53,10 @@ public abstract class AbstractAction implements IAction {
 
 	protected String resolvePatterns(MediaDirectory dir,String input,IVideo video,File mediaFile,Integer part) throws ActionException {
 		String s = input;
-		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));
-		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));
+		s =	s.replaceAll("\\$MEDIAFILE_NAME", FileHelper.getName(mediaFile).replaceAll(" ", "\\\\ ")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		s =	s.replaceAll("\\$MEDIAFILE_EXT", FileHelper.getExtension(mediaFile).replaceAll(" ", "\\\\ "));  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		s =	s.replaceAll("\\$MEDIAFILE_DIR", mediaFile.getParent().replaceAll(" ", "\\\\ "));   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		s =	s.replaceAll("\\$MEDIAFILE", mediaFile.getAbsolutePath().replaceAll(" ", "\\\\ "));   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
 		if (video!=null && dir!=null) {
 			MediaDirConfig dirConfig = dir.getMediaDirConfig();
@@ -68,7 +69,7 @@ public abstract class AbstractAction implements IAction {
 					s = PM.getNewFilmName(dirConfig, s, (Film)video,  ext,part);
 				}
 			} catch (PatternException e) {
-				throw new ActionException("Unable to resolve the pattern '"+input+"'",e);
+				throw new ActionException(MessageFormat.format(Messages.getString("AbstractAction.UNABLE_TO_RESOLVE_PATTERN"),input),e); //$NON-NLS-1$
 			}
 		}
 		return s;

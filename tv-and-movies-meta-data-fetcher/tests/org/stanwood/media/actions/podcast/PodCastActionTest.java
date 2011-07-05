@@ -38,6 +38,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This is a test of the action {@link PodCastAction}
  */
+@SuppressWarnings("nls")
 public class PodCastActionTest {
 
 	private final static String EXTS[] = new String[] {"avi","mkv","mov","mpg","mp4","m4a","m4v","srt","sub","divx"};

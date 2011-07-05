@@ -14,6 +14,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This is a base class for tests of XBMC Addons
  */
+@SuppressWarnings("nls")
 public class XBMCAddonTestBase {
 
 	private static File tmpDir;

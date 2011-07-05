@@ -3,6 +3,7 @@ package org.stanwood.media.actions.podcast;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +34,7 @@ public class RSSFeed {
 
 	private final static Log log = LogFactory.getLog(RSSFeed.class);
 
-	private final static String FEED_TYPE = "rss_2.0";
+	private final static String FEED_TYPE = "rss_2.0"; //$NON-NLS-1$
 
 	private SyndFeed feed;
 	private File feedFile;
@@ -67,7 +68,7 @@ public class RSSFeed {
 	 * Used to create a new feed
 	 */
 	public void createNewFeed() {
-		log.info("Creating new rss feed " + feedFile);
+		log.info(MessageFormat.format("Creating new rss feed {0}",feedFile));
 		feed = new SyndFeedImpl();
 		feed.setFeedType(FEED_TYPE);
 	}
@@ -153,7 +154,7 @@ public class RSSFeed {
 		List<SyndEntry> rssEntries = feed.getEntries();
 		for (SyndEntry rssE : rssEntries) {
 			File file = new File(dirConfig.getMediaDir(),rssE.getLink().substring(baseUrl.length()+1));
-			String description = "";
+			String description = ""; //$NON-NLS-1$
 			if (rssE.getDescription()!=null) {
 				description = rssE.getDescription().getValue();
 			}
@@ -186,7 +187,7 @@ public class RSSFeed {
 
 		if (file.getDescription() != null) {
 			SyndContent description = new SyndContentImpl();
-			description.setType("text/plain");
+			description.setType("text/plain"); //$NON-NLS-1$
 			description.setValue(file.getDescription());
 			entry.setDescription(description);
 		}
@@ -215,12 +216,12 @@ public class RSSFeed {
 				File entryFile = new File(rssDir, fileName);
 				if (entryFile.exists()) {
 					if (!entryFile.delete()) {
-						log.error("Unable to delete file : " + entryFile);
+						log.error(MessageFormat.format("Unable to delete file: {0}",entryFile));
 					}
 				}
 
 				it.remove();
-				log.info("Old entry " + link + " removed from feed");
+				log.info(MessageFormat.format("Old entry {0} removed from feed",link));
 			}
 		}
 	}
