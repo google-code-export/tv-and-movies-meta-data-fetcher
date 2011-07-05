@@ -49,15 +49,15 @@ import org.stanwood.media.source.xbmc.expression.ValueType;
 public class FileNameParser {
 
 	private static Pattern PATTERNS[] = new Pattern[] {
-			Pattern.compile(".*[s]([\\d]+)[e]([\\d]+).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*[s]([\\d]+)\\.[e]([\\d]+).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*([\\d]+)[x]([\\d]+).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile("^([\\d])[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile("^([\\d]{1,2})[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*season\\s([\\d]+)\\sepisode\\s([\\d]+).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE),
-			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE)
+			Pattern.compile(".*[s]([\\d]+)[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*[s]([\\d]+)\\.[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*([\\d]+)[x]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile("^([\\d])[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile("^([\\d]{1,2})[\\s]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*season\\s([\\d]+)\\sepisode\\s([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
 	};
 
 
@@ -101,19 +101,19 @@ public class FileNameParser {
 
 	private static Map<Token, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
 		List<String>groups = new ArrayList<String>();
-		Pattern p = Pattern.compile("(%.)");
-		renamePattern = renamePattern.replaceAll("\\"+File.separator,"\\\\"+File.separator );
-		renamePattern = renamePattern.replaceAll("\\.","\\\\." );
+		Pattern p = Pattern.compile("(%.)"); //$NON-NLS-1$
+		renamePattern = renamePattern.replaceAll("\\"+File.separator,"\\\\"+File.separator );  //$NON-NLS-1$//$NON-NLS-2$
+		renamePattern = renamePattern.replaceAll("\\.","\\\\." );  //$NON-NLS-1$//$NON-NLS-2$
 		StringBuffer buffer = new StringBuffer();
 		Matcher m = p.matcher(renamePattern);
 		while (m.find()) {
 			String group = m.group();
 			if (Token.fromFull(group).getType()==ValueType.INTEGER){
-				m.appendReplacement(buffer,"([\\\\d]+)");
+				m.appendReplacement(buffer,"([\\\\d]+)"); //$NON-NLS-1$
 				groups.add(group);
 			}
 			else {
-				m.appendReplacement(buffer,"(.*)");
+				m.appendReplacement(buffer,"(.*)"); //$NON-NLS-1$
 				groups.add(group);
 			}
 		}

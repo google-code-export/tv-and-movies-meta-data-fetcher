@@ -69,8 +69,8 @@ public class PodCastAction extends AbstractAction {
 	private String restricted;
 	private List<String> extensions;
 
-	private String feedDescription = "";
-	private String feedTitle = "";
+	private String feedDescription = ""; //$NON-NLS-1$
+	private String feedTitle = ""; //$NON-NLS-1$
 
 	private File currentFeedFile = null;
 	private Integer currentPart = null;
@@ -86,7 +86,7 @@ public class PodCastAction extends AbstractAction {
 		createNewFeedFiles();
 		validateParameters();
 		if (log.isDebugEnabled()) {
-			log.debug("Init PodCast Action");
+			log.debug(Messages.getString("PodCastAction.INIT_PODCAST_ACTION")); //$NON-NLS-1$
 		}
 		this.dir = dir;
 	}
@@ -124,7 +124,7 @@ public class PodCastAction extends AbstractAction {
 			currentPart = part;
 		}
 		catch (Exception e) {
-			throw new ActionException(MessageFormat.format("Unable to parse RSS feed: {0}",feedFile) ,e);
+			throw new ActionException(MessageFormat.format(Messages.getString("PodCastAction.UNABLE_PARSE_RSS_FEED"),feedFile) ,e); //$NON-NLS-1$
 		}
 	}
 
@@ -148,7 +148,7 @@ public class PodCastAction extends AbstractAction {
 
 	protected void writeFeed(File feedFile) throws ActionException {
 		if (isTestMode()) {
-			log.info(MessageFormat.format("Podcast feed not written as in test mode: {0}" ,feedFile));
+			log.info(MessageFormat.format(Messages.getString("PodCastAction.PODCAST_FEED_NOT_WRITTEN_TEST_MODE") ,feedFile)); //$NON-NLS-1$
 			return;
 		}
 		try {
@@ -163,9 +163,9 @@ public class PodCastAction extends AbstractAction {
 
 			rssFeed.write();
 			createNewFeedFiles();
-			log.info(MessageFormat.format("Written Podcast feed: {0}",feedFile));
+			log.info(MessageFormat.format(Messages.getString("PodCastAction.WRITTEN_FEED"),feedFile)); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new ActionException("Unable to write pod case",e);
+			throw new ActionException(Messages.getString("PodCastAction.UNABLE_TO_WRITE_PODCAST"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -178,7 +178,7 @@ public class PodCastAction extends AbstractAction {
 			missingParams.add(PARAM_MEDIA_DIR_URL);
 		}
 		if (missingParams.size()>0) {
-			StringBuilder buffer = new StringBuilder("Missing required parameters for PodCastAction: ");
+			StringBuilder buffer = new StringBuilder(Messages.getString("PodCastAction.MISSING_REQUIRED_PARAM")); //$NON-NLS-1$
 			for (int i=0;i<missingParams.size();i++) {
 				if (i>0) {
 					buffer.append(", "); //$NON-NLS-1$
@@ -285,7 +285,7 @@ public class PodCastAction extends AbstractAction {
 				numEntries = Integer.parseInt(value);
 			}
 			catch (NumberFormatException e) {
-				throw new ActionException(MessageFormat.format("Invalid number '{0}' for parameter '{1}'",value,key));
+				throw new ActionException(MessageFormat.format(Messages.getString("PodCastAction.INVALIID_NUMBER_FOR_PARAM"),value,key)); //$NON-NLS-1$
 			}
 		}
 		else if (key.equalsIgnoreCase(PARAM_MEDIA_DIR_URL)) {
@@ -298,7 +298,7 @@ public class PodCastAction extends AbstractAction {
 			restricted = value;
 		}
 		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY)) {
-			StringTokenizer tok = new StringTokenizer(value,",");
+			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			this.extensions = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
@@ -311,7 +311,7 @@ public class PodCastAction extends AbstractAction {
 			feedDescription = value;
 		}
 		else {
-			throw new ActionException(MessageFormat.format("Unsupported parameter '{0}'",key));
+			throw new ActionException(MessageFormat.format(Messages.getString("PodCastAction.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
 	}
 }

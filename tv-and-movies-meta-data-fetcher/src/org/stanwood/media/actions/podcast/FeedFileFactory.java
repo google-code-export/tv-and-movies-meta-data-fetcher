@@ -44,21 +44,21 @@ public class FeedFileFactory {
 			if (ext.equals("mp4")) { //$NON-NLS-1$
 				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/mp4"); //$NON-NLS-1$
 			}
-			else if (ext.equals("m4v")) {
+			else if (ext.equals("m4v")) { //$NON-NLS-1$
 				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-m4v"); //$NON-NLS-1$
 			}
-			else if (ext.equals("avi")) {
+			else if (ext.equals("avi")) { //$NON-NLS-1$
 				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/avi"); //$NON-NLS-1$
 			}
-			else if (ext.equals("mkv")) {
+			else if (ext.equals("mkv")) { //$NON-NLS-1$
 				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-matroska"); //$NON-NLS-1$
 			}
-			throw new ActionException(MessageFormat.format("Unsupport file format '{0}' of file '{1}'",ext,file.getAbsolutePath()));
+			throw new ActionException(MessageFormat.format(Messages.getString("FeedFileFactory.UNSUPPORTED_FILE_FORMAT"),ext,file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		catch (MalformedURLException e) {
-			throw new ActionException("Unable to create media file URL",e);
+			throw new ActionException(Messages.getString("FeedFileFactory.UNABLE_TO_CREATE_URL"),e); //$NON-NLS-1$
 		} catch (UnsupportedEncodingException e) {
-			throw new ActionException("Unable to create media file URL",e);
+			throw new ActionException(Messages.getString("FeedFileFactory.UNABLE_TO_CREATE_URL"),e); //$NON-NLS-1$
 		}
 	}
 }

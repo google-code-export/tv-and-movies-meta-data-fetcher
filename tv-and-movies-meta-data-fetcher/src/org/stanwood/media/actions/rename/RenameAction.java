@@ -32,7 +32,7 @@ public class RenameAction extends AbstractAction {
 	private final static Log log = LogFactory.getLog(RenameAction.class);
 
 	/** The key of the pruneEmptyFolders parameter for this action. */
-	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders";
+	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders"; //$NON-NLS-1$
 
 	private boolean pruneEmptyFolders = false;
 

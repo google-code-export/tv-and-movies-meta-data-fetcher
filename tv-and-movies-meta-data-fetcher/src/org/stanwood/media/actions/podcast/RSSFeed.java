@@ -68,7 +68,7 @@ public class RSSFeed {
 	 * Used to create a new feed
 	 */
 	public void createNewFeed() {
-		log.info(MessageFormat.format("Creating new rss feed {0}",feedFile));
+		log.info(MessageFormat.format(Messages.getString("RSSFeed.CREATING_NEW_FEED"),feedFile)); //$NON-NLS-1$
 		feed = new SyndFeedImpl();
 		feed.setFeedType(FEED_TYPE);
 	}
@@ -115,7 +115,7 @@ public class RSSFeed {
 				image.setTitle(feed.getTitle());
 			}
 			else {
-				image.setTitle("No Title");
+				image.setTitle(Messages.getString("RSSFeed.NO_TITLE")); //$NON-NLS-1$
 			}
 			feed.setImage(image);
 		}
@@ -128,17 +128,17 @@ public class RSSFeed {
 	 */
 	public void write() throws IOException, FeedException {
 		if (feed==null) {
-			throw new FeedException("parse() or createNewFeed() must be called before writing the feed");
+			throw new FeedException(Messages.getString("RSSFeed.MUST_BE_CALLED_BEFORE_WRITE")); //$NON-NLS-1$
 		}
 		SyndFeedOutput output = new SyndFeedOutput();
 		if (feed.getTitle()==null) {
-			throw new FeedException("Unable to write feed, feed has no title");
+			throw new FeedException(Messages.getString("RSSFeed.UNABLE_WRITE_NO_TITLE")); //$NON-NLS-1$
 		}
 		if (feed.getDescription()==null) {
-			throw new FeedException("Unable to write feed, feed has no description");
+			throw new FeedException(Messages.getString("RSSFeed.UNABLE_WRITE_NO_DESCRIPTION")); //$NON-NLS-1$
 		}
 		if (feed.getLink()==null) {
-			throw new FeedException("Unable to write feed, feed has no link");
+			throw new FeedException(Messages.getString("RSSFeed.UNABLE_WRITE_NO_LINK")); //$NON-NLS-1$
 		}
 		output.output(feed, feedFile);
 	}
@@ -216,12 +216,12 @@ public class RSSFeed {
 				File entryFile = new File(rssDir, fileName);
 				if (entryFile.exists()) {
 					if (!entryFile.delete()) {
-						log.error(MessageFormat.format("Unable to delete file: {0}",entryFile));
+						log.error(MessageFormat.format(Messages.getString("RSSFeed.UNABLE_TO_DELETE"),entryFile)); //$NON-NLS-1$
 					}
 				}
 
 				it.remove();
-				log.info(MessageFormat.format("Old entry {0} removed from feed",link));
+				log.info(MessageFormat.format(Messages.getString("RSSFeed.OLD_ENTRY_REMOVED"),link)); //$NON-NLS-1$
 			}
 		}
 	}
