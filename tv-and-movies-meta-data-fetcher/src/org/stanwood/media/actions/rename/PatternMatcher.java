@@ -14,14 +14,14 @@ import org.stanwood.media.setup.MediaDirConfig;
  */
 public class PatternMatcher {
 
-	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
+	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 
 	private String normalizeText(String text) {
 		if (text==null) {
 			return null;
 		}
-		text = text.replaceAll(":|/","-");
-		text = text.replaceAll("!",".");
+		text = text.replaceAll(":|/","-"); //$NON-NLS-1$ //$NON-NLS-2$
+		text = text.replaceAll("!",".");  //$NON-NLS-1$//$NON-NLS-2$
 		return text;
 	}
 
@@ -49,7 +49,7 @@ public class PatternMatcher {
 
 	private String processFilmName(String newName, Film film, String ext,Integer part) {
 		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(film.getId()));
-		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
+		newName = newName.replaceAll(Token.PERCENT.getFull(), "%"); //$NON-NLS-1$
 		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(film.getTitle()));
 		if (film.getSummary()!=null) {
 			newName = newName.replaceAll(Token.SUMMARY.getFull(), normalizeText(film.getSummary()));
@@ -72,11 +72,11 @@ public class PatternMatcher {
 		newName = newName.replaceAll(Token.SEASON.getFull(), String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
 		if (episodeNum.length()==1) {
-			episodeNum = "0" +episodeNum;
+			episodeNum = "0" +episodeNum; //$NON-NLS-1$
 		}
 
 		newName = newName.replaceAll(Token.EPISODE.getFull(), episodeNum);
-		newName = newName.replaceAll(Token.PERCENT.getFull(), "%");
+		newName = newName.replaceAll(Token.PERCENT.getFull(), "%"); //$NON-NLS-1$
 		newName = newName.replaceAll(Token.SHOW_NAME.getFull(), normalizeText(show.getName()));
 		if (show.getShortSummary()!=null) {
 			newName = newName.replaceAll(Token.SUMMARY.getFull(), normalizeText(show.getShortSummary()));
@@ -123,9 +123,9 @@ public class PatternMatcher {
 	public static boolean validPattern(String pattern) {
 
 		for (Token token : Token.values()) {
-			pattern = pattern.replaceAll(token.getFull(), "");
+			pattern = pattern.replaceAll(token.getFull(), ""); //$NON-NLS-1$
 		}
-		return !pattern.contains("%");
+		return !pattern.contains("%"); //$NON-NLS-1$
 	}
 
 	private static abstract class PatternProcessor {
