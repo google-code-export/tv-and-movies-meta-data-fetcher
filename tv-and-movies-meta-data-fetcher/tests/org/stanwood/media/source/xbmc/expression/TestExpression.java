@@ -7,6 +7,7 @@ import org.junit.Test;
 /**
  * Used to test the evaluation of expressions
  */
+@SuppressWarnings("nls")
 public class TestExpression {
 
 	/**

@@ -1,5 +1,6 @@
 package org.stanwood.media.actions.command;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -10,10 +11,10 @@ import java.util.StringTokenizer;
 public final class ExecParseUtils {
 
 	/** The whitespace char */
-	public static final String WHITESPACE = " ";
+	public static final String WHITESPACE = " "; //$NON-NLS-1$
 
 	/** The quote char */
-	public static final String QUOTE_CHAR = "\"";
+	public static final String QUOTE_CHAR = "\""; //$NON-NLS-1$
 
 	private ExecParseUtils() {
 	}
@@ -70,7 +71,7 @@ public final class ExecParseUtils {
 	        }
 	    }
 	    if (quotedText.length() > 0) {
-	        throw new IllegalArgumentException("Invalid quoting found in args " + quotedText);
+	        throw new IllegalArgumentException(MessageFormat.format(Messages.getString("INVALID_QUOTING0"),quotedText)); //$NON-NLS-1$
 	    }
 	    return tokens;
 	}
@@ -85,7 +86,7 @@ public final class ExecParseUtils {
 	    if (input == null || input.trim().length() == 0) {
 	        return false;
 	    }
-	    return input.matches("(^" + QUOTE_CHAR + "{1}([^" + QUOTE_CHAR + "]+)" + QUOTE_CHAR + "{1})");
+	    return input.matches("(^" + QUOTE_CHAR + "{1}([^" + QUOTE_CHAR + "]+)" + QUOTE_CHAR + "{1})");    //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 	}
 
 	/**
@@ -98,6 +99,6 @@ public final class ExecParseUtils {
 	    if (input == null || input.trim().length() == 0) {
 	        return false;
 	    }
-	    return input.matches("(^" + QUOTE_CHAR + "{2}([^" + QUOTE_CHAR + "]+)" + QUOTE_CHAR + "{2})");
+	    return input.matches("(^" + QUOTE_CHAR + "{2}([^" + QUOTE_CHAR + "]+)" + QUOTE_CHAR + "{2})"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 }

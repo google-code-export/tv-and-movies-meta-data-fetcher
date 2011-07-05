@@ -20,6 +20,7 @@ import org.stanwood.media.xml.XMLParser;
 /**
  * This test is used to test that TV show information can be correctly retrieved from XBMC sources
  */
+@SuppressWarnings("nls")
 public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 	private static final SimpleDateFormat EPISODE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");

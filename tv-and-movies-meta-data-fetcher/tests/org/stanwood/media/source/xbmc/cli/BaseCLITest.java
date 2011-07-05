@@ -11,6 +11,7 @@ import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.util.FileHelper;
 
 /** A base class for all launcher command line tests */
+@SuppressWarnings("nls")
 public class BaseCLITest extends XBMCAddonTestBase {
 
 	protected static int exitCode;

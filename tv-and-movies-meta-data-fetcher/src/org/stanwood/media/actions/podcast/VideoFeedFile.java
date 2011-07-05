@@ -37,10 +37,10 @@ public class VideoFeedFile implements IFeedFile {
 		this.description = description;
 
 		String relPath = makePathRelativeToMediaDir(file,dirConfig.getMediaDir());
-		if (!File.separator.equals("/")) {
-			relPath = relPath.replaceAll("\\"+File.separator, "/");
+		if (!File.separator.equals("/")) { //$NON-NLS-1$
+			relPath = relPath.replaceAll("\\"+File.separator, "/"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		url = new URL(baseUrl+"/"+relPath.replaceAll(" ", "%20"));
+		url = new URL(baseUrl+"/"+relPath.replaceAll(" ", "%20"));  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/** {@inheritDoc} */
@@ -94,7 +94,7 @@ public class VideoFeedFile implements IFeedFile {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "VideoFile: " +file.getAbsolutePath();
+		return "VideoFile: " +file.getAbsolutePath(); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */

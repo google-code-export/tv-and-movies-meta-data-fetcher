@@ -7,6 +7,7 @@ import org.junit.Test;
 /**
  * Used to test the class {@link Version}
  */
+@SuppressWarnings("nls")
 public class TestVersion {
 
 	/**

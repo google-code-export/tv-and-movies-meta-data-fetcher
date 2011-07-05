@@ -9,6 +9,7 @@ import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.util.FileHelper;
 
 /** Used to test the class {@link FileNameParser} */
+@SuppressWarnings("nls")
 public class TestFileNameParser {
 
 	/**

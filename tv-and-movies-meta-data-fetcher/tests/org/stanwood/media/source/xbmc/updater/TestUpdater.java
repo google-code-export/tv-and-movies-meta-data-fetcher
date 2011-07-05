@@ -21,6 +21,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This is a test class used to test that the {@link XBMCWebUpdater} class functions as expected.
  */
+@SuppressWarnings("nls")
 public class TestUpdater extends XBMCAddonTestBase {
 
 	private static IConsole console;

@@ -38,6 +38,7 @@ import org.stanwood.media.model.Show;
  * This class in used to make it easier to find all the test resources. They can be found
  * relative to this class.
  */
+@SuppressWarnings("nls")
 public class Data {
 
 	/** Film Source id to use in test data */

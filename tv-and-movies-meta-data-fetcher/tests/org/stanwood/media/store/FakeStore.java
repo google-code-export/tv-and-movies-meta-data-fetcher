@@ -32,6 +32,7 @@ import org.stanwood.media.setup.MediaDirConfig;
 /**
  * This is a fake store that is used for testing of a stores params.
  */
+@SuppressWarnings("nls")
 public class FakeStore implements IStore {
 
 	/** This is used to test that a param was test */

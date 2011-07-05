@@ -8,6 +8,7 @@ import org.junit.Test;
 /**
  * Used to test the class {@link FileHelper}
  */
+@SuppressWarnings("nls")
 public class TestFileHelper {
 
 	/**

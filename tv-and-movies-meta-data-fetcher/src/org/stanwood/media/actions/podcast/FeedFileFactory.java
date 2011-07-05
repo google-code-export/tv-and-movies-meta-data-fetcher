@@ -3,6 +3,7 @@ package org.stanwood.media.actions.podcast;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.text.MessageFormat;
 
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.model.IVideo;
@@ -40,19 +41,19 @@ public class FeedFileFactory {
 	public static IFeedFile createFile(File file,MediaDirConfig dirConfig, String title,String description, String baseUrl) throws ActionException {
 		try {
 			String ext = FileHelper.getExtension(file).toLowerCase();
-			if (ext.equals("mp4")) {
-				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/mp4");
+			if (ext.equals("mp4")) { //$NON-NLS-1$
+				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/mp4"); //$NON-NLS-1$
 			}
 			else if (ext.equals("m4v")) {
-				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-m4v");
+				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-m4v"); //$NON-NLS-1$
 			}
 			else if (ext.equals("avi")) {
-				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/avi");
+				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/avi"); //$NON-NLS-1$
 			}
 			else if (ext.equals("mkv")) {
-				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-matroska");
+				return new VideoFeedFile(file,dirConfig,title,description,baseUrl,"video/x-matroska"); //$NON-NLS-1$
 			}
-			throw new ActionException("Unsupport file format '"+ext+"' of file '"+file.getAbsolutePath()+"'");
+			throw new ActionException(MessageFormat.format("Unsupport file format '{0}' of file '{1}'",ext,file.getAbsolutePath()));
 		}
 		catch (MalformedURLException e) {
 			throw new ActionException("Unable to create media file URL",e);

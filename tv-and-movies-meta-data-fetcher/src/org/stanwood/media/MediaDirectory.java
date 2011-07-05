@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -68,7 +69,7 @@ public class MediaDirectory {
 				source.setMediaDirConfig(this);
 			}
 		} catch (SourceException e) {
-			throw new ConfigException("Unable to setup the sources",e);
+			throw new ConfigException(Messages.getString("MediaDirectory.UNABLE_TO_SETUP_SOURCES"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -82,7 +83,7 @@ public class MediaDirectory {
 					return null;
 				}
 				if (year==null) {
-					year ="";
+					year =""; //$NON-NLS-1$
 				}
 				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile);
 			}
@@ -95,7 +96,7 @@ public class MediaDirectory {
 					return null;
 				}
 				if (year==null) {
-					year ="";
+					year =""; //$NON-NLS-1$
 				}
 				StringBuilder term = new StringBuilder(name);
 				SearchHelper.removeUnwantedCharacters(term);
@@ -135,12 +136,12 @@ public class MediaDirectory {
 		}
 
 		if (show == null) {
-			log.info("Reading show from sources");
+			log.info(Messages.getString("MediaDirectory.UNABLE_TO_READ_FROM_SOURCES")); //$NON-NLS-1$
 			URL showUrl = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				try {
-					if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) {
+					if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) { //$NON-NLS-1$
 						show = source.getShow(searchResult.getId(),showUrl,episodeFile);
 						if (show != null) {
 							for (IStore store : stores) {
@@ -190,7 +191,7 @@ public class MediaDirectory {
 		}
 
 		if (film == null) {
-			log.info("Reading film details from sources with id '" + searchResult.getSourceId()+":"+searchResult.getId()+"'");
+			log.info(MessageFormat.format(Messages.getString("MediaDirectory.READING_FILE_FROM_SOURCE_WITH_ID"),searchResult.getSourceId(),searchResult.getId() )); //$NON-NLS-1$
 			URL url = new URL(searchResult.getUrl());
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
@@ -248,7 +249,7 @@ public class MediaDirectory {
 		}
 
 		if (season == null) {
-			log.info("Reading season from sources");
+			log.info(Messages.getString("MediaDirectory.READING_SEASON_FROM_SOURCE")); //$NON-NLS-1$
 			for (ISource source : sources) {
 				try {
 					if (source.getSourceId().equals(sourceId)) {
@@ -302,7 +303,7 @@ public class MediaDirectory {
 		}
 
 		if (episode == null) {
-			log.info("Reading episode from sources");
+			log.info(Messages.getString("MediaDirectory.READING_EPISODE_FROM_SOURCES")); //$NON-NLS-1$
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				try {
@@ -358,7 +359,7 @@ public class MediaDirectory {
 		}
 
 		if (episode == null) {
-			log.info("Reading special from sources");
+			log.info(Messages.getString("MediaDirectory.READING_SPECIAL_FROM_SOURCES")); //$NON-NLS-1$
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getSourceId().equals(sourceId)) {
@@ -520,7 +521,7 @@ public class MediaDirectory {
 	 */
 	public File getPath(String name) {
 		File dir = getMediaDirConfig().getMediaDir();
-		StringTokenizer tok = new StringTokenizer(name,""+File.separatorChar);
+		StringTokenizer tok = new StringTokenizer(name,""+File.separatorChar); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			dir = new File(dir,tok.nextToken());
 		}

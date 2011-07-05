@@ -40,6 +40,7 @@ import org.stanwood.media.util.Stream;
 /**
  * Used to test the {@link TagChimpSource} class.
  */
+@SuppressWarnings("nls")
 public class TestTagChimpSource {
 
 	private static final Pattern TAGCHIMP_FILM_PATTERN = Pattern.compile(".*tagchimp\\.com.*id\\=(.+?)");

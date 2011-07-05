@@ -10,6 +10,7 @@ import org.stanwood.media.actions.rename.Token;
  * Used to test that the Film Search works as expecteded with looking for the details
  * in the files name.
  */
+@SuppressWarnings("nls")
 public class TestReversePatternSearchStrategy {
 
 	/**

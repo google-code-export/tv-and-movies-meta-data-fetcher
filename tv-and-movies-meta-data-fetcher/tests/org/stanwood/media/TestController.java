@@ -37,6 +37,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the {@link Controller} class.
  */
+@SuppressWarnings("nls")
 public class TestController extends XBMCAddonTestBase  {
 
 	private final static String LS = System.getProperty("line.separator");

@@ -19,6 +19,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Test the config reader
  */
+@SuppressWarnings("nls")
 public class TestConfigReader {
 
 	private final static String LS = System.getProperty("line.separator");

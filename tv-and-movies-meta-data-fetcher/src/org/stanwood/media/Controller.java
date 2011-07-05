@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class Controller {
 			}
 		}
 		if (xbmcMgr == null) {
-			log.fatal("Unable to read XBMC addons");
+			log.fatal(Messages.getString("Controller.UNABLE_TO_READ_XBMC_ADDONS")); //$NON-NLS-1$
 			System.exit(2);
 		}
 		this.testMode = testMode;
@@ -107,7 +108,7 @@ public class Controller {
 	private void registerPlugins() throws ConfigException {
 		for (Plugin plugin : configReader.getPlugins()) {
 			try {
-				URL url = new URL("jar:file:"+plugin.getJar()+"!/");
+				URL url = new URL("jar:file:"+plugin.getJar()+"!/");  //$NON-NLS-1$//$NON-NLS-2$
 				URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
 				Class<?> clazz = clazzLoader.loadClass(plugin.getPluginClass());
 				if (ISource.class.isAssignableFrom(clazz)) {
@@ -122,9 +123,9 @@ public class Controller {
 
 			}
 			catch (MalformedURLException e) {
-				throw new ConfigException("Unable to register plugin " +plugin.toString(),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
 			} catch (ClassNotFoundException e) {
-				throw new ConfigException("Unable to register plugin " +plugin.toString(),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -185,7 +186,7 @@ public class Controller {
 			Class<? extends ISource> c = Class.forName(className).asSubclass(ISource.class);
 			return c;
 		} catch (ClassNotFoundException e) {
-			throw new ConfigException("Unable to add source because source '"+ className + "' can't be found", e);
+			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_SOURCE_NOT_FOUND"),className), e); //$NON-NLS-1$
 		}
 
 	}
@@ -204,7 +205,7 @@ public class Controller {
 		try {
 			return Class.forName(className).asSubclass(IStore.class);
 		} catch (ClassNotFoundException e) {
-			throw new ConfigException("Unable to add store because store '"+ className + "' can't be found", e);
+			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_STORE_NOT_FOUND"),className), e); //$NON-NLS-1$
 		}
 	}
 
@@ -222,7 +223,7 @@ public class Controller {
 		try {
 			return Class.forName(className).asSubclass(IAction.class);
 		} catch (ClassNotFoundException e) {
-			throw new ConfigException("Unable to add action because action '"+ className + "' can't be found", e);
+			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_ACTION_NOT_FOUND"),className), e); //$NON-NLS-1$
 		}
 	}
 

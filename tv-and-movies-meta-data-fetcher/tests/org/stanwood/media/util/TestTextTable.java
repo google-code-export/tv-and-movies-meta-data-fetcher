@@ -7,6 +7,7 @@ import org.junit.Test;
 /**
  * Used to test the class {@link TextTable}
  */
+@SuppressWarnings("nls")
 public class TestTextTable {
 
 	/**

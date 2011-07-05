@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 /**
  * Used to test the {@link XMLParser}
  */
+@SuppressWarnings("nls")
 public class TestXMLParser {
 
 	/**
