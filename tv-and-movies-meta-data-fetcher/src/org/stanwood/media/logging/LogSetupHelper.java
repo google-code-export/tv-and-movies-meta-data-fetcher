@@ -52,7 +52,7 @@ public class LogSetupHelper {
 	 * @param configName The name of the configuration file stored in the same package as this class.
 	 */
 	public static void initLogingInternalConfigFile(String configName) {
-		if (!configName.equals("")) {
+		if (!configName.equals("")) { //$NON-NLS-1$
 			resetLogging();
 			PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
 		}
@@ -65,7 +65,7 @@ public class LogSetupHelper {
 	 */
 	public static void initLogging(OutputStream stdout, OutputStream stderr) {
 		resetLogging();
-		PatternLayout layout = new PatternLayout("%m%n");
+		PatternLayout layout = new PatternLayout("%m%n"); //$NON-NLS-1$
 		Logger.getRootLogger().addAppender(new StreamAppender(layout,new PrintStream(stdout),new PrintStream(stderr)));
 	}
 

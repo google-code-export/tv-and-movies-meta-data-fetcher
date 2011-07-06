@@ -6,17 +6,17 @@ package org.stanwood.media.logging;
 public enum LogConfig {
 
 	/** The info log configuration */
-	INFO("info.log4j.properties"),
+	INFO("info.log4j.properties"), //$NON-NLS-1$
 	/** The info with exceptions log configuration */
-	INFOEX("infoex.log4j.properties"),
+	INFOEX("infoex.log4j.properties"), //$NON-NLS-1$
 	/** The error log configuration */
-	ERROR("error.log4j.properties"),
+	ERROR("error.log4j.properties"), //$NON-NLS-1$
 	/** The error with exceptions log configuration */
-	ERROREX("errorex.log4j.properties"),
+	ERROREX("errorex.log4j.properties"), //$NON-NLS-1$
 	/** The debug log configuration */
-	DEBUG("debug.log4j.properties"),
+	DEBUG("debug.log4j.properties"), //$NON-NLS-1$
 	/** Don't change the logging settings */
-	NOINIT("");
+	NOINIT(""); //$NON-NLS-1$
 
 	private String filename;
 

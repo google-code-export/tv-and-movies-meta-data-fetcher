@@ -26,26 +26,26 @@ public final class Platform {
     private static final int osType;
 
     static {
-        String osName = System.getProperty("os.name");
-        if (osName.startsWith("Linux")) {
+        String osName = System.getProperty("os.name"); //$NON-NLS-1$
+        if (osName.startsWith("Linux")) { //$NON-NLS-1$
             osType = LINUX;
         }
-        else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
+        else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) { //$NON-NLS-1$ //$NON-NLS-2$
             osType = MAC;
         }
-        else if (osName.startsWith("Windows CE")) {
+        else if (osName.startsWith("Windows CE")) { //$NON-NLS-1$
             osType = WINDOWSCE;
         }
-        else if (osName.startsWith("Windows")) {
+        else if (osName.startsWith("Windows")) { //$NON-NLS-1$
             osType = WINDOWS;
         }
-        else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) {
+        else if (osName.startsWith("Solaris") || osName.startsWith("SunOS")) { //$NON-NLS-1$ //$NON-NLS-2$
             osType = SOLARIS;
         }
-        else if (osName.startsWith("FreeBSD")) {
+        else if (osName.startsWith("FreeBSD")) { //$NON-NLS-1$
             osType = FREEBSD;
         }
-        else if (osName.startsWith("OpenBSD")) {
+        else if (osName.startsWith("OpenBSD")) { //$NON-NLS-1$
             osType = OPENBSD;
         }
         else {
@@ -90,21 +90,21 @@ public final class Platform {
         return osType == WINDOWS;
     }
     public static final boolean hasRuntimeExec() {
-        if (isWindowsCE() && "J9".equals(System.getProperty("java.vm.name"))) {
+        if (isWindowsCE() && "J9".equals(System.getProperty("java.vm.name"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
         return true;
     }
     public static final boolean is64Bit() {
-        String model = System.getProperty("sun.arch.data.model");
+        String model = System.getProperty("sun.arch.data.model"); //$NON-NLS-1$
         if (model != null) {
-			return "64".equals(model);
+			return "64".equals(model); //$NON-NLS-1$
 		}
-        String arch = System.getProperty("os.arch").toLowerCase();
-        if ("x86_64".equals(arch)
-            || "ppc64".equals(arch)
-            || "sparcv9".equals(arch)
-            || "amd64".equals(arch)) {
+        String arch = System.getProperty("os.arch").toLowerCase(); //$NON-NLS-1$
+        if ("x86_64".equals(arch) //$NON-NLS-1$
+            || "ppc64".equals(arch) //$NON-NLS-1$
+            || "sparcv9".equals(arch) //$NON-NLS-1$
+            || "amd64".equals(arch)) { //$NON-NLS-1$
             return true;
         }
         return Native.POINTER_SIZE == 8;

@@ -27,12 +27,12 @@ import java.util.regex.Pattern;
  */
 public class SearchHelper {
 
-	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE);
+	private final static Pattern PATTERN_PART = Pattern.compile("(^.+)(?:cd|part) *(\\d+)(.*$)",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	private static final String STRIPED_CHARS[] = {"?","'",","};
+	private static final String STRIPED_CHARS[] = {"?","'",","};   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"};
-	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$");
+	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$"); //$NON-NLS-1$
 
 	/**
 	 * This is a helper method that will replace the dot's sometimes found in place of spaces of filenames.
@@ -42,7 +42,7 @@ public class SearchHelper {
 	public static void replaceDots(StringBuilder term) {
 		int pos = -1;
 		int currentPos = 0;
-		while ((pos = term.indexOf(".",currentPos))!=-1) {
+		while ((pos = term.indexOf(".",currentPos))!=-1) { //$NON-NLS-1$
 			boolean doit=true;
 			if (pos>=0 && term.charAt(pos-1)==' ') {
 				doit = false;
@@ -51,7 +51,7 @@ public class SearchHelper {
 				doit = false;
 			}
 			if (doit) {
-				term.replace(pos, pos+1, " ");
+				term.replace(pos, pos+1, " "); //$NON-NLS-1$
 			}
 			currentPos = pos+1;
 		}
@@ -65,7 +65,7 @@ public class SearchHelper {
 		for (String c : STRIPED_CHARS) {
 			int pos = -1;
 			while ((pos = term.indexOf(c))!=-1) {
-				term.replace(pos, pos+c.length(), "");
+				term.replace(pos, pos+c.length(), ""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class SearchHelper {
 	public static void replaceUnderscore(StringBuilder term) {
 		int pos = -1;
 		int currentPos = 0;
-		while ((pos = term.indexOf("_",currentPos))!=-1) {
+		while ((pos = term.indexOf("_",currentPos))!=-1) { //$NON-NLS-1$
 			boolean doit=true;
 			if (pos>=0 && term.charAt(pos-1)==' ') {
 				doit = false;
@@ -86,7 +86,7 @@ public class SearchHelper {
 				doit = false;
 			}
 			if (doit) {
-				term.replace(pos, pos+1, " ");
+				term.replace(pos, pos+1, " "); //$NON-NLS-1$
 			}
 			currentPos = pos+1;
 		}
@@ -99,7 +99,7 @@ public class SearchHelper {
 	public static void replaceHyphens(StringBuilder term) {
 		int pos = -1;
 		int currentPos = 0;
-		while ((pos = term.indexOf("-",currentPos))!=-1) {
+		while ((pos = term.indexOf("-",currentPos))!=-1) { //$NON-NLS-1$
 			boolean doit=true;
 			if (pos>=0 && term.charAt(pos-1)==' ') {
 				doit = false;
@@ -108,7 +108,7 @@ public class SearchHelper {
 				doit = false;
 			}
 			if (doit) {
-				term.replace(pos, pos+1, " ");
+				term.replace(pos, pos+1, " "); //$NON-NLS-1$
 			}
 			currentPos = pos+1;
 		}
@@ -155,7 +155,7 @@ public class SearchHelper {
 		for (String it : IGNORED_TOKENS) {
 			int pos = -1;
 			while ((pos = term.toString().toLowerCase().indexOf(it.toLowerCase()))!=-1) {
-				term.replace(pos, pos+it.length(), "");
+				term.replace(pos, pos+it.length(), ""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -166,7 +166,7 @@ public class SearchHelper {
 	 * @return True if ignore tokens are found
 	 */
 	public static boolean hasIgnoredTokens(StringBuilder term) {
-		StringTokenizer tok = new StringTokenizer(term.toString()," -");
+		StringTokenizer tok = new StringTokenizer(term.toString()," -"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
 			for (String it : IGNORED_TOKENS) {

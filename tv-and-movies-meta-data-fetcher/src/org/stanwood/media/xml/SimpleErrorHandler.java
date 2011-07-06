@@ -33,7 +33,7 @@ public class SimpleErrorHandler extends XMLErrorHandler {
 	}
 
 	/**
-	 * Used to print warings when they occur while validating the XML file
+	 * Used to print warnings when they occur while validating the XML file
 	 * @param e The exception that is been processed
 	 */
 	@Override

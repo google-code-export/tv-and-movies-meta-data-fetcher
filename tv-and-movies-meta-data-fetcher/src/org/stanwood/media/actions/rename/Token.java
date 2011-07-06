@@ -10,27 +10,27 @@ import org.stanwood.media.source.xbmc.expression.ValueType;
 public enum Token {
 
 	/** the token for "show name" */
-	SHOW_NAME('n',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
+	SHOW_NAME('n',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "episode number" */
-	EPISODE('e',"(\\d+)",ValueType.INTEGER),
+	EPISODE('e',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "season number" */
-	SEASON('s',"(\\d+)",ValueType.INTEGER),
+	SEASON('s',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "extension" */
-	EXT('x',"([^\\.\\"+File.separatorChar+"]*?)$",ValueType.STRING),
+	EXT('x',"([^\\.\\"+File.separatorChar+"]*?)$",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "episode or film title" */
-	TITLE('t',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),
+	TITLE('t',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),  //$NON-NLS-1$//$NON-NLS-2$
 	/** add a % char */
-	PERCENT('%',"%",ValueType.STRING),
+	PERCENT('%',"%",ValueType.STRING), //$NON-NLS-1$
 	/** the token for "show Id" */
-	ID('h',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING),
+	ID('h',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "part number" */
-	PART('p',"(\\d+)",ValueType.INTEGER),
+	PART('p',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for the "year" */
-	YEAR('y',"(\\d+)",ValueType.INTEGER),
+	YEAR('y',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for the show or film image URL */
-	IMAGE('i',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING),
+	IMAGE('i',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for the show or film short summary */
-	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING);
+	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private char tok;
 	private String pattern;
@@ -47,7 +47,7 @@ public enum Token {
 	 * @return The full token name
 	 */
 	public String getFull() {
-		return "%"+tok;
+		return "%"+tok; //$NON-NLS-1$
 	}
 
 	/**

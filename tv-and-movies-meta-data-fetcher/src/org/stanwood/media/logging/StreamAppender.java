@@ -17,6 +17,7 @@
 package org.stanwood.media.logging;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
@@ -141,22 +142,22 @@ public class StreamAppender extends AppenderSkeleton {
 	 */
 	protected boolean checkEntryConditions() {
 		if (this.closed) {
-			LogLog.warn("Not allowed to write to a closed appender.");
+			LogLog.warn(Messages.getString("StreamAppender.APPENDER_CLOSED")); //$NON-NLS-1$
 			return false;
 		}
 
 		if (this.errorStream == null) {
-			errorHandler.error("No error stream set for the appender named [" + name + "].");
+			errorHandler.error(MessageFormat.format(Messages.getString("StreamAppender.NO_ERROR_STREAM"),name)); //$NON-NLS-1$
 			return false;
 		}
 
 		if (this.outputStream == null) {
-			errorHandler.error("No output stream set for the appender named [" + name + "].");
+			errorHandler.error(MessageFormat.format(Messages.getString("StreamAppender.NO_OUTPUT_STREAM"),name)); //$NON-NLS-1$
 			return false;
 		}
 
 		if (this.layout == null) {
-			errorHandler.error("No layout set for the appender named [" + name + "].");
+			errorHandler.error(MessageFormat.format(Messages.getString("StreamAppender.NO_LAYOUT"),name)); //$NON-NLS-1$
 			return false;
 		}
 		return true;

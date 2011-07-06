@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,19 +68,19 @@ public class TagChimpSource extends XMLParser implements ISource {
 		film.setFilmUrl(url);
 		film.setSourceId(getSourceId());
 
-		StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") {
+		StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") { //$NON-NLS-1$
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = parse(contents, null);
-	    			film.setDate(RELEASE_DATE_FORMAT.parse(getStringFromXML(doc, "/items/movie/movieTags/info/releaseDate/text()")));
-	    			film.setDescription(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/longDescription/text()")," "));
+	    			film.setDate(RELEASE_DATE_FORMAT.parse(getStringFromXML(doc, "/items/movie/movieTags/info/releaseDate/text()"))); //$NON-NLS-1$
+	    			film.setDescription(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/longDescription/text()")," ")); //$NON-NLS-1$
 	    			film.setId(filmId);
-	    			film.setTitle(getStringFromXML(doc, "/items/movie/movieTags/info/movieTitle/text()"));
-	    			film.setSummary(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/shortDescription/text()")," "));
+	    			film.setTitle(getStringFromXML(doc, "/items/movie/movieTags/info/movieTitle/text()")); //$NON-NLS-1$
+	    			film.setSummary(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/shortDescription/text()")," ")); //$NON-NLS-1$
 //	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
 //	    			film.setCountry(getStringFromXML(doc, "details/country/text()"));
-	    			film.setImageURL(new URL(getStringFromXML(doc, "/items/movie/movieTags/coverArtLarge/text()")));
+	    			film.setImageURL(new URL(getStringFromXML(doc, "/items/movie/movieTags/coverArtLarge/text()"))); //$NON-NLS-1$
 
 	    			parseDirectors(film, doc);
 	    			parseActors(film, doc);
@@ -176,18 +177,18 @@ public class TagChimpSource extends XMLParser implements ISource {
 		final List<SearchResult>unlockedResults = new ArrayList<SearchResult>();
 		try {
 			URL url = getSearchUrl(name);
-			StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") {
+			StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") { //$NON-NLS-1$
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {
 						Document doc = parse(contents, null);
-						IterableNodeList entities = selectNodeList(doc, "/items/movie");
+						IterableNodeList entities = selectNodeList(doc, "/items/movie"); //$NON-NLS-1$
 						for (Node n : entities) {
-							String id = getStringFromXML(n, "tagChimpID/text()");
-							String locked = getStringFromXML(n, "locked/text()");
+							String id = getStringFromXML(n, "tagChimpID/text()"); //$NON-NLS-1$
+							String locked = getStringFromXML(n, "locked/text()"); //$NON-NLS-1$
 							SearchResult result = new SearchResult(id, getSourceId(), getFilmUrl(id).toExternalForm(), null);
-							result.setTitle(getStringFromXML(n,"movieTags/info/movieTitle/text()"));
-							if (locked.equals("yes")) {
+							result.setTitle(getStringFromXML(n,"movieTags/info/movieTitle/text()")); //$NON-NLS-1$
+							if (locked.equals("yes")) { //$NON-NLS-1$
 								lockedResults.add(result);
 							}
 							else {
@@ -228,7 +229,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	private void parseGenres(final IVideoGenre video, Document doc) throws XMLParserException {
 		List<String> genres = new ArrayList<String>();
-		for (Node genre : selectNodeList(doc, "//genre/text()")) {
+		for (Node genre : selectNodeList(doc, "//genre/text()")) { //$NON-NLS-1$
 			genres.add(genre.getTextContent());
 		}
 		video.setGenres(genres);
@@ -237,7 +238,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	private void parseWriters(final IVideo viode, Document doc)
 	throws XMLParserException {
 		List<String> writers = new ArrayList<String>();
-		for (Node writer : selectNodeList(doc, "/items/movie/movieTags/info/screenwriters/screenwriter/text()")) {
+		for (Node writer : selectNodeList(doc, "/items/movie/movieTags/info/screenwriters/screenwriter/text()")) { //$NON-NLS-1$
 			writers.add(writer.getTextContent());
 		}
 		viode.setWriters(writers);
@@ -246,7 +247,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	private void parseDirectors(final IVideo video, Document doc)
 		throws XMLParserException {
 		List<String> directors = new ArrayList<String>();
-		for (Node director : selectNodeList(doc, "/items/movie/movieTags/info/directors/director/text()")) {
+		for (Node director : selectNodeList(doc, "/items/movie/movieTags/info/directors/director/text()")) { //$NON-NLS-1$
 			directors.add(director.getTextContent());
 		}
 		video.setDirectors(directors);
@@ -256,7 +257,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 		throws XMLParserException {
 		List<Actor> actors = new ArrayList<Actor>();
 		try {
-			for (Node actor : selectNodeList(doc, "/items/movie/movieTags/info/cast/actor/text()")) {
+			for (Node actor : selectNodeList(doc, "/items/movie/movieTags/info/cast/actor/text()")) { //$NON-NLS-1$
 				actors.add(new Actor(actor.getNodeValue(),""));
 			}
 		}
@@ -268,15 +269,15 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	protected void parseChapters(Film film, Document doc) throws XMLParserException {
 		List<Chapter>chapters = new ArrayList<Chapter>();
-		for (Node chapterNode : selectNodeList(doc, "/items/movie/movieChapters/chapter")) {
-			chapters.add(new Chapter(getStringFromXML(chapterNode, "chapterTitle/text()"),getIntegerFromXML(chapterNode, "chapterNumber/text()")));
+		for (Node chapterNode : selectNodeList(doc, "/items/movie/movieChapters/chapter")) { //$NON-NLS-1$
+			chapters.add(new Chapter(getStringFromXML(chapterNode, "chapterTitle/text()"),getIntegerFromXML(chapterNode, "chapterNumber/text()"))); //$NON-NLS-1$
 		}
 		film.setChapters(chapters);
 	}
 
 	protected void parseCertification(Film film, Document doc) throws XMLParserException {
 		String type = "mpaa";
-		String cert = getStringFromXML(doc, "/items/movie/movieTags/info/rating/text()");
+		String cert = getStringFromXML(doc, "/items/movie/movieTags/info/rating/text()"); //$NON-NLS-1$
 		List<Certification>certs = new ArrayList<Certification>();
 		certs.add(new Certification(cert, type));
 		film.setCertifications(certs);
@@ -284,11 +285,11 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	private URL getSearchUrl(String query) throws MalformedURLException, UnsupportedEncodingException {
 		query = URLEncoder.encode(query,"UTF-8");
-		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=search&totalChapters=X&title="+query);
+		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=search&totalChapters=X&title="+query); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private URL getFilmUrl(String id) throws MalformedURLException {
-		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=lookup&id="+id);
+		return new URL("http://www.tagchimp.com/ape/search.php?token="+TAG_CHIMP_TOKEN+"&type=lookup&id="+id);  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	/* package for test */Stream getSource(URL url) throws IOException {
@@ -323,7 +324,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	 */
 	@Override
 	public void setParameter(String key,String value) throws SourceException {
-		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
 	}
 
 	/**
@@ -339,7 +340,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+		throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
 	}
 
 	/** {@inheritDoc} */

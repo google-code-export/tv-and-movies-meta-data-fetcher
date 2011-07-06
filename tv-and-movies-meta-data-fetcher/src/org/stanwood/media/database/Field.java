@@ -1,14 +1,14 @@
 package org.stanwood.media.database;
 
 /**
- * This is used to represent a field in a database table. It is mainly used for inserting rows into 
+ * This is used to represent a field in a database table. It is mainly used for inserting rows into
  * tables.
  */
 public class Field {
-	
+
 	private String key;
-	private Object value;	
-	
+	private Object value;
+
 	/**
 	 * Used to construct the filed.
 	 * @param key The key of the filed
@@ -19,7 +19,7 @@ public class Field {
 		this.key = key;
 		this.value = value;
 	}
-	
+
 	/**
 	 * Used to get a the key of the field in the table
 	 * @return The key of the field
@@ -27,7 +27,7 @@ public class Field {
 	public String getKey() {
 		return key;
 	}
-	
+
 	/**
 	 * Used to set the key of the field
 	 * @param key The key of the field
@@ -35,7 +35,7 @@ public class Field {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * Used to get the value of the field
 	 * @return The value of the field
@@ -43,7 +43,7 @@ public class Field {
 	public Object getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * USed to set the value of the field
 	 * @param value The value of the field
@@ -58,9 +58,9 @@ public class Field {
 	 */
 	@Override
 	public String toString() {
-		return key+"="+value;
+		return key+"="+value; //$NON-NLS-1$
 	}
-	
-	
-	
+
+
+
 }

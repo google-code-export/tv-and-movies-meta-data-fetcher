@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,10 +28,10 @@ import org.stanwood.media.source.xbmc.XBMCSource;
  */
 public class FilmNFOSearchStrategy implements ISearchStrategy {
 
-	private final static Pattern PATTERN_IMDB_URL = Pattern.compile(".*www\\.imdb\\..*/(tt\\d+).*");
+	private final static Pattern PATTERN_IMDB_URL = Pattern.compile(".*www\\.imdb\\..*/(tt\\d+).*"); //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(FilmNFOSearchStrategy.class);
-	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
-	private final static Pattern PATTERN_PART_FOLDER = Pattern.compile("^CD(\\d+)$");
+	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
+	private final static Pattern PATTERN_PART_FOLDER = Pattern.compile("^CD(\\d+)$"); //$NON-NLS-1$
 
 
 	/**
@@ -51,11 +52,11 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 			String imdbId = getIMDBIDFromFile(nfoFile);
 			if (imdbId!=null) {
 				// Look the film information up on the IMDB website
-				ISource source = mediaDir.getSource("xbmc-metadata.imdb.com");
+				ISource source = mediaDir.getSource("xbmc-metadata.imdb.com"); //$NON-NLS-1$
 				if (source instanceof XBMCSource) {
 					XBMCSource xbmcSource = (XBMCSource)source;
 					try {
-						Film film = xbmcSource.getFilm(imdbId, new URL("http://www.imdb.com/title/"+imdbId+"/"), mediaFile);
+						Film film = xbmcSource.getFilm(imdbId, new URL("http://www.imdb.com/title/"+imdbId+"/"), mediaFile); //$NON-NLS-1$ //$NON-NLS-2$
 						if (film!=null) {
 							String year = null;
 							if (film.getDate()!=null) {
@@ -69,11 +70,11 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 							return details;
 						}
 					} catch (SourceException e) {
-						log.error("Unable to look up NFO file details on IMDB.com",e);
+						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					} catch (MalformedURLException e) {
-						log.error("Unable to look up NFO file details on IMDB.com",e);
+						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					} catch (IOException e) {
-						log.error("Unable to look up NFO file details on IMDB.com",e);
+						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -107,7 +108,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 			File files[] = parentDir.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File arg0, String arg1) {
-					return StringUtils.endsWithIgnoreCase(arg1, ".nfo");
+					return StringUtils.endsWithIgnoreCase(arg1, ".nfo"); //$NON-NLS-1$
 				}
 			});
 			if (files.length==1) {
@@ -132,7 +133,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 				}
 			}
 		} catch (IOException e) {
-			log.error("Unable to read nfo file: " + nfoFile,e);
+			log.error(MessageFormat.format(Messages.getString("FilmNFOSearchStrategy.UNABLE_READ_NFO"),nfoFile) ,e); //$NON-NLS-1$
 		}
 		finally {
 			try {
@@ -144,7 +145,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 			}
 			}
 			catch (IOException e) {
-				log.error("Unable to close file streams",e);
+				log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_CLOSE_STREAMS"),e); //$NON-NLS-1$
 			}
 		}
 		return null;

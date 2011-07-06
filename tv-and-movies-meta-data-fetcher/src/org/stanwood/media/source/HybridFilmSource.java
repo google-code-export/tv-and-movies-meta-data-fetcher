@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,14 +48,14 @@ import org.stanwood.media.source.xbmc.XBMCSource;
  */
 public class HybridFilmSource implements ISource {
 
-	private final static String PARAM_KEY_XBMC_SOURCE_ID = "xbmcSourceId";
+	private final static String PARAM_KEY_XBMC_SOURCE_ID = "xbmcSourceId"; //$NON-NLS-1$
 
 	private ISource imdbSource;
 	private ISource tagChimpSource = new TagChimpSource();
 	private Map<String,URL> urls = new HashMap<String,URL>();
 
 	/** The ID of the the source */
-	public static final String SOURCE_ID = "hybridFilm";
+	public static final String SOURCE_ID = "hybridFilm"; //$NON-NLS-1$
 
 	private String xbmcSourceId = null;
 
@@ -77,7 +78,7 @@ public class HybridFilmSource implements ISource {
 			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
 			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
 			if (imdbSource==null) {
-				throw new XBMCException("Unable to find source with id: " + sourceId);
+				throw new XBMCException(MessageFormat.format("Unable to find source with id: {0}",sourceId));
 			}
 		} catch (XBMCException e) {
 			throw new SourceException("Unable to create file source",e);
@@ -156,15 +157,15 @@ public class HybridFilmSource implements ISource {
 	public Film getFilm(String filmId,URL url,File file) throws SourceException, MalformedURLException, IOException {
 		Film tagChimpFilm = null;
 		Film imdbFilm = null;
-		StringTokenizer tok = new StringTokenizer(filmId,"|");
+		StringTokenizer tok = new StringTokenizer(filmId,"|"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
 			if (key.equals(imdbSource.getSourceId())) {
-				imdbFilm = imdbSource.getFilm(value,urls.get(key+"|"+value),file);
+				imdbFilm = imdbSource.getFilm(value,urls.get(key+"|"+value),file); //$NON-NLS-1$
 			}
 			else if (key.equals(tagChimpSource.getSourceId())) {
-				tagChimpFilm = tagChimpSource.getFilm(value,urls.get(key+"|"+value),file);
+				tagChimpFilm = tagChimpSource.getFilm(value,urls.get(key+"|"+value),file); //$NON-NLS-1$
 			}
 		}
 
@@ -235,9 +236,9 @@ public class HybridFilmSource implements ISource {
 					id.append("|");
 					id.append(result.getId());
 					try {
-						urls.put(result.getSourceId()+"|"+result.getId(),new URL(result.getUrl()));
+						urls.put(result.getSourceId()+"|"+result.getId(),new URL(result.getUrl())); //$NON-NLS-1$
 					} catch (MalformedURLException e) {
-						throw new SourceException("Invalid URL retuned from search results: " + result.getUrl(),e);
+						throw new SourceException(MessageFormat.format("Invalid URL retuned from search results: {0}",result.getUrl()),e);
 					}
 					newUrl = result.getUrl();
 
@@ -273,7 +274,7 @@ public class HybridFilmSource implements ISource {
 			xbmcSourceId = value;
 		}
 		else {
-			throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+			throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
 		}
 	}
 
@@ -296,7 +297,7 @@ public class HybridFilmSource implements ISource {
 			return xbmcSourceId;
 		}
 		else {
-			throw new SourceException("Unsupported parameter '" +key+"' on source '"+getClass().getName()+"'");
+			throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
 		}
 	}
 

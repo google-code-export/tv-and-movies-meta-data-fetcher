@@ -41,13 +41,13 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 
 	@Override
 	protected void printUsage(Options options, PrintStream stdout,PrintStream stderr) {
-		stdout.println("usage: "+rootCommand.getName()+" [--global-options] " + getName() +" [--command-options]" + getPrintArguments());
-		stdout.println("");
-		stdout.println("Command Options:");
+		stdout.println(Messages.getString("AbstractSubCLICommand.USAGE")+rootCommand.getName()+" [--global-options] " + getName() +" [--command-options]" + getPrintArguments());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		stdout.println(""); //$NON-NLS-1$
+		stdout.println(Messages.getString("AbstractSubCLICommand.COMMAND_OPTIONS")); //$NON-NLS-1$
 	}
 
 	protected String getPrintArguments() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

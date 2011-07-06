@@ -17,6 +17,7 @@
 package org.stanwood.media.model;
 
 import java.security.InvalidParameterException;
+import java.text.MessageFormat;
 
 /**
  * This is used to hold the results of searching for a show id
@@ -39,13 +40,13 @@ public class SearchResult {
 	public SearchResult(String id, String sourceId,String url,Integer part) {
 		super();
 		if (id == null || id.length()==0) {
-			throw new InvalidParameterException("Invalid id ["+id+"]");
+			throw new InvalidParameterException(MessageFormat.format(Messages.getString("SearchResult.INVALID_ID"),id)); //$NON-NLS-1$
 		}
 		if (sourceId == null || sourceId.length()==0) {
-			throw new InvalidParameterException("Invalid sourceId ["+sourceId+"]");
+			throw new InvalidParameterException(MessageFormat.format(Messages.getString("SearchResult.INVALID_SOURCEID"),sourceId)); //$NON-NLS-1$
 		}
 		if (url != null && url.length()==0) {
-			throw new InvalidParameterException("Invalid url ["+url+"]");
+			throw new InvalidParameterException(MessageFormat.format(Messages.getString("SearchResult.INVALID_URL"),url)); //$NON-NLS-1$
 		}
 
 		this.id = id;
@@ -87,7 +88,7 @@ public class SearchResult {
 	 */
 	@Override
 	public String toString() {
-		return id+":"+sourceId+" - (" + url+") - ("+title+")" ;
+		return id+":"+sourceId+" - (" + url+") - ("+title+")" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	/**

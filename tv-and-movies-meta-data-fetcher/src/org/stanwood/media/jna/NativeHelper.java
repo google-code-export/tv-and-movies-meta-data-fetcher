@@ -1,6 +1,7 @@
 package org.stanwood.media.jna;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,51 +40,51 @@ public class NativeHelper {
 	 * @return The app name to execute
 	 */
 	public static String getNativeApplication(File nativeDir,String appName) {
-		String method = System.getenv("MM_EXE_LOCATE_METHOD");
+		String method = System.getenv("MM_EXE_LOCATE_METHOD"); //$NON-NLS-1$
 		if (log.isDebugEnabled()) {
-			log.debug("Getting native application, method forced to: " + method);
-			log.debug("Using native directory: " + nativeDir.getAbsolutePath());
+			log.debug("Getting native application, method forced to: " + method); //$NON-NLS-1$
+			log.debug("Using native directory: " + nativeDir.getAbsolutePath()); //$NON-NLS-1$
 		}
 		appName = getAppName(appName);
 		String nativePath = getAppArchPath(appName);
 		if (log.isDebugEnabled()) {
-			log.debug("App Native Path: " + nativePath);
+			log.debug("App Native Path: " + nativePath); //$NON-NLS-1$
 		}
-		if (method==null || method.length()==0 || method.equals("installed")) {
+		if (method==null || method.length()==0 || method.equals("installed")) { //$NON-NLS-1$
 			if (nativeDir!=null) {
 				File f =new File(nativeDir,nativePath);
 				if (log.isDebugEnabled()) {
-					log.debug("Checking via install: " + f.getAbsolutePath());
+					log.debug("Checking via install: " + f.getAbsolutePath()); //$NON-NLS-1$
 				}
 				if (f.exists()) {
 					if (log.isDebugEnabled()) {
-						log.debug("Found: " + f.getAbsolutePath());
+						log.debug("Found: " + f.getAbsolutePath()); //$NON-NLS-1$
 					}
 					return f.getAbsolutePath();
 				}
 			}
 		}
-		if (method==null || method.length()==0 || method.equals("project")) {
-			File f =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath);
+		if (method==null || method.length()==0 || method.equals("project")) { //$NON-NLS-1$
+			File f =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath); //$NON-NLS-1$
 			if (log.isDebugEnabled()) {
-				log.debug("Checking via project: " + f.getAbsolutePath());
+				log.debug("Checking via project: " + f.getAbsolutePath()); //$NON-NLS-1$
 			}
 			if (f.exists()) {
 				if (log.isDebugEnabled()) {
-					log.debug("Found: " + f.getAbsolutePath());
+					log.debug("Found: " + f.getAbsolutePath()); //$NON-NLS-1$
 				}
 				return f.getAbsolutePath();
 			}
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Did not find so just return it for use on system path: " + appName);
+			log.debug("Did not find so just return it for use on system path: " + appName); //$NON-NLS-1$
 		}
 		return appName;
 	}
 
 	private static String getAppName(String appName) {
 		if (Platform.isWindows()) {
-			return appName+".exe";
+			return appName+".exe"; //$NON-NLS-1$
 		}
 		return appName;
 	}
@@ -100,10 +101,10 @@ public class NativeHelper {
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
 	public static Object loadLibrary(File nativeDir,String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
-		String method = System.getenv("MM_LIB_LOAD_METHOD");
+		String method = System.getenv("MM_LIB_LOAD_METHOD"); //$NON-NLS-1$
 		Error error = null;
 		String nativePath = getLibArchPath(libName);
-		if (method==null || method.length()==0 || method.equals("installed")) {
+		if (method==null || method.length()==0 || method.equals("installed")) { //$NON-NLS-1$
 			try {
 				if (nativeDir!=null) {
 					String path =new File(nativeDir,nativePath).getAbsolutePath();
@@ -113,51 +114,51 @@ public class NativeHelper {
 			catch (Error e1) {
 				error = e1;
 				if (log.isDebugEnabled()) {
-					log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1);
+					log.debug("Unable to load the version of the library that is shipped with the product '"+libName+"'",e1); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
-		if (method==null || method.length()==0 || method.equals("project")) {
+		if (method==null || method.length()==0 || method.equals("project")) { //$NON-NLS-1$
 			try {
 				// If this is a test, find within the project
-				String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath();
+				String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath(); //$NON-NLS-1$
 				return loadLibraryWithOptions(path,interfaceClass);
 			}
 			catch (Error e1) {
 				if (log.isDebugEnabled()) {
-					log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);
+					log.debug("Unable to load the version of the library within the project '"+libName+"'",e1);  //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
 		if (error!=null) {
 			log.error(error.getLocalizedMessage(),error);
 		}
-		throw new UnsatisfiedLinkError("Unable to load native library '"+libName+"'");
+		throw new UnsatisfiedLinkError(MessageFormat.format(Messages.getString("NativeHelper.UNABLE_LOAD_LIB"),libName)); //$NON-NLS-1$
 	}
 
 	private static String getAppArchPath(String appName) {
-		StringBuilder result = new StringBuilder("apps"+File.separator);
+		StringBuilder result = new StringBuilder("apps"+File.separator); //$NON-NLS-1$
 		switch (Platform.getOSType()) {
 		case Platform.LINUX :
-			result.append("linux");
+			result.append("linux"); //$NON-NLS-1$
 			break;
 		case Platform.MAC:
-			result.append("mac");
+			result.append("mac"); //$NON-NLS-1$
 			break;
 		case Platform.WINDOWS:
-			result.append("windows");
+			result.append("windows"); //$NON-NLS-1$
 			break;
 		default:
-			throw new Error("No native application '" + appName+ "' for this platform");
+			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_APP_FOR_PLATFORM"),appName)); //$NON-NLS-1$
 		}
 		result.append(File.separator);
-		result.append("x86");
+		result.append("x86"); //$NON-NLS-1$
 		result.append(File.separator);
 		if (Platform.is64Bit()) {
-			result.append("64");
+			result.append("64"); //$NON-NLS-1$
 		}
 		else {
-			result.append("32");
+			result.append("32"); //$NON-NLS-1$
 		}
 		result.append(File.separator);
 		switch (Platform.getOSType()) {
@@ -171,48 +172,48 @@ public class NativeHelper {
 			result.append(appName);
 			break;
 		default:
-			throw new Error("No native application '" + appName+ "' for this platform");
+			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_APP_FOR_PLATFORM"),appName)); //$NON-NLS-1$
 		}
 		return result.toString();
 	}
 
 	private static String getLibArchPath(String libName) {
-		StringBuilder result = new StringBuilder("libs"+File.separator);
+		StringBuilder result = new StringBuilder("libs"+File.separator); //$NON-NLS-1$
 		switch (Platform.getOSType()) {
 		case Platform.LINUX :
-			result.append("linux");
+			result.append("linux"); //$NON-NLS-1$
 			break;
 		case Platform.MAC:
-			result.append("mac");
+			result.append("mac"); //$NON-NLS-1$
 			break;
 		case Platform.WINDOWS:
-			result.append("windows");
+			result.append("windows"); //$NON-NLS-1$
 			break;
 		default:
-			throw new Error("No native lib " + libName+ " for this platform");
+			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_LIB_FOR_PLATFORM"),libName)); //$NON-NLS-1$
 		}
 		result.append(File.separator);
-		result.append("x86");
+		result.append("x86"); //$NON-NLS-1$
 		result.append(File.separator);
 		if (Platform.is64Bit()) {
-			result.append("64");
+			result.append("64"); //$NON-NLS-1$
 		}
 		else {
-			result.append("32");
+			result.append("32"); //$NON-NLS-1$
 		}
 		result.append(File.separator);
 		switch (Platform.getOSType()) {
 		case Platform.LINUX :
-			result.append("lib"+libName+".so");
+			result.append("lib"+libName+".so"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case Platform.MAC:
-			result.append("lib"+libName+".dylib");
+			result.append("lib"+libName+".dylib");  //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case Platform.WINDOWS:
-			result.append("lib"+libName+".dll");
+			result.append("lib"+libName+".dll"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		default:
-			throw new Error("No native lib " + libName+ " for this platform");
+			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_LIB_FOR_PLATFORM"),libName)); //$NON-NLS-1$
 		}
 		return result.toString();
 	}

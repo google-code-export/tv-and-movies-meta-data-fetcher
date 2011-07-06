@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to write stream data to the log
@@ -14,7 +15,7 @@ import org.apache.log4j.Level;
 public class LoggerOutputStream extends OutputStream {
 
 	private final static Log log = LogFactory.getLog(LoggerOutputStream.class);
-	private final static String LINE_END = "\n";
+	private final static String LINE_END = FileHelper.LS;
 
 	private StringBuilder buffer = new StringBuilder();
 	private Level level;
@@ -78,7 +79,7 @@ public class LoggerOutputStream extends OutputStream {
 	public void close() throws IOException {
 		super.close();
 		if (buffer.length()>0) {
-			buffer.append("\n");
+			buffer.append(LINE_END);
 			checkBuffer();
 		}
 	}

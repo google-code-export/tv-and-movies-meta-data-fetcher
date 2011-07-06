@@ -3,6 +3,7 @@ package org.stanwood.media.cli.manager;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,12 +51,12 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLICopyToMediaDir.class);
 
-	private final static String ROOT_MEDIA_DIR_OPTION = "d";
-	private final static String TEST_OPTION = "t";
+	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
+	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 
-	private static final String NOUPDATE_OPTION = "u";
+	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
 
 	private MediaDirectory rootMediaDir = null;
 	private boolean xbmcUpdate = true;
@@ -71,16 +72,16 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
+		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,Messages.getString("CLICopyToMediaDir.CLI_MEDIA_DIR_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(true);
-		o.setArgName("directory");
+		o.setArgName("directory"); //$NON-NLS-1$
 		OPTIONS.add(o);
 
-		o = new Option(TEST_OPTION,"test",false,"If this option is present, then no changes are performed.");
+		o = new Option(TEST_OPTION,"test",false,Messages.getString("CLICopyToMediaDir.CLI_MEDIA_TEST_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(NOUPDATE_OPTION,"noupdate",false,"If this option is present, then the XBMC addons won't be updated");
+		o = new Option(NOUPDATE_OPTION,"noupdate",false,Messages.getString("CLICopyToMediaDir.CLI_MEDIA_NOUPDATE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -114,7 +115,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 
 
 	private CLICopyToMediaDir(IExitHandler exitHandler) {
-		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr);
+		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -134,7 +135,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			List<File>newFiles = new ArrayList<File>();
 			for (File from : files) {
 				try {
-					info("Moving file '"+from+"' info media directory...");
+					info(MessageFormat.format(Messages.getString("CLICopyToMediaDir.MOVING_FILE"),from)); //$NON-NLS-1$
 					File toFile =new File(rootMediaDir.getMediaDirConfig().getMediaDir(),from.getName());
 					FileHelper.move(from, toFile);
 					if (toFile.isDirectory()) {
@@ -179,7 +180,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 	private void doUpdateCheck() {
 		if ((!getController().isTestRun()) && xbmcUpdate) {
 			try {
-				log.info("Checking for updated XBMC plugins....");
+				log.info(Messages.getString("CLICopyToMediaDir.CHECKING_UPTODATE")); //$NON-NLS-1$
 				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
 					@Override
 					public void error(String error) {
@@ -192,12 +193,12 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 					}
 				});
 				if (count>0 ) {
-					log.info("Downloaded and installed "+count+" updates");
+					log.info(MessageFormat.format(Messages.getString("CLICopyToMediaDir.DOWNLOAD_INSTALL_UPDATE"),count)); //$NON-NLS-1$
 				}
 			} catch (XBMCUpdaterException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
 			} catch (XBMCException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -222,17 +223,17 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 					return false;
 				}
 			} else {
-				fatal("Media directory '"+dir+"' must be a writable directory");
+				fatal(MessageFormat.format(Messages.getString("CLICopyToMediaDir.MEDIA_DIR_MUST_BE_WRITABLE"),dir)); //$NON-NLS-1$
 				return false;
 			}
 			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
-				fatal("Media directory '" + dir +"' does not exist.");
+				fatal(MessageFormat.format(Messages.getString("CLICopyToMediaDir.MEDIA_DIR_NOT_EXIST"),dir)); //$NON-NLS-1$
 				return false;
 			}
 		}
 
 		if (cmd.getArgs().length==0) {
-			fatal("Missing argument giving media files to move");
+			fatal(Messages.getString("CLICopyToMediaDir.MISSING_ARG")); //$NON-NLS-1$
 			return false;
 		}
 		else {
@@ -249,7 +250,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 	}
 
 	protected String getPrintArguments() {
-		return " <media files...>";
+		return Messages.getString("CLICopyToMediaDir.MEDIA_FILES"); //$NON-NLS-1$
 	}
 
 	static synchronized void setExitHandler(IExitHandler handler) {
