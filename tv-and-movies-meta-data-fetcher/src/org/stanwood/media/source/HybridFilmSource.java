@@ -78,10 +78,10 @@ public class HybridFilmSource implements ISource {
 			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
 			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
 			if (imdbSource==null) {
-				throw new XBMCException(MessageFormat.format("Unable to find source with id: {0}",sourceId));
+				throw new XBMCException(MessageFormat.format(Messages.getString("HybridFilmSource.UNABLE_FIND_SOURCE"),sourceId)); //$NON-NLS-1$
 			}
 		} catch (XBMCException e) {
-			throw new SourceException("Unable to create file source",e);
+			throw new SourceException(Messages.getString("HybridFilmSource.UNABLE_CREATE_SOURCE1"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -230,15 +230,15 @@ public class HybridFilmSource implements ISource {
 				SearchResult result = source.searchMedia(name,year, mode, part);
 				if (result!=null) {
 					if (id.length()>0) {
-						id.append("|");
+						id.append("|"); //$NON-NLS-1$
 					}
 					id.append(result.getSourceId());
-					id.append("|");
+					id.append("|"); //$NON-NLS-1$
 					id.append(result.getId());
 					try {
 						urls.put(result.getSourceId()+"|"+result.getId(),new URL(result.getUrl())); //$NON-NLS-1$
 					} catch (MalformedURLException e) {
-						throw new SourceException(MessageFormat.format("Invalid URL retuned from search results: {0}",result.getUrl()),e);
+						throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.INVALID_URL"),result.getUrl()),e); //$NON-NLS-1$
 					}
 					newUrl = result.getUrl();
 
@@ -274,7 +274,7 @@ public class HybridFilmSource implements ISource {
 			xbmcSourceId = value;
 		}
 		else {
-			throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
+			throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.UNSUPPORTED_PARAM"),key,getClass().getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -297,7 +297,7 @@ public class HybridFilmSource implements ISource {
 			return xbmcSourceId;
 		}
 		else {
-			throw new SourceException(MessageFormat.format("Unsupported parameter '{0}' on source '{1}'",key,getClass().getName()));
+			throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.UNSUPPORTED_PARAM"),key,getClass().getName())); //$NON-NLS-1$
 		}
 	}
 

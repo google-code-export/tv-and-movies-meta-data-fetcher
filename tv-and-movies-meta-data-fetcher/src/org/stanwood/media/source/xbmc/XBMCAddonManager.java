@@ -3,6 +3,7 @@ package org.stanwood.media.source.xbmc;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	public XBMCAddon getAddon(String id) throws XBMCException {
 		XBMCAddon addon = addons.get(id);
 		if (addon==null) {
-			throw new XBMCException("Unable to find XBMC addon: " + id);
+			throw new XBMCException(MessageFormat.format("Unable to find XBMC addon: {0}" ,id));
 		}
 		return addon;
 	}
