@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -147,10 +148,10 @@ public abstract class StreamProcessor {
 			}
 		}
 		catch (IOException e) {
-			throw new SourceException("Unable to read stream for URL: " + stream.getURL(),e);
+			throw new SourceException(MessageFormat.format("Unable to read stream for URL: {0}",stream.getURL()),e);
 		}
 		catch (SourceException e) {
-			throw new SourceException("Unable to read stream for URL: " + stream.getURL(),e);
+			throw new SourceException(MessageFormat.format("Unable to read stream for URL: {0}",stream.getURL()),e);
 		}
 		finally {
 			if (stream!=null) {

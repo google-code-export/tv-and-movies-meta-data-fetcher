@@ -61,8 +61,8 @@ public class SapphireStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(SapphireStore.class);
 
-	private final static DecimalFormat EPISODE_FORMAT = new DecimalFormat("00");
-	private final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+	private final static DecimalFormat EPISODE_FORMAT = new DecimalFormat("00"); //$NON-NLS-1$
+	private final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private String preferedRating = null;
 
 
@@ -88,7 +88,7 @@ public class SapphireStore implements IStore {
 		int pos = mediaFile.getName().lastIndexOf('.');
 		if (pos != -1) {
 			String name = mediaFile.getName().substring(0, pos );
-			File xmlFile = new File(mediaFile.getParent(), name + ".xml");
+			File xmlFile = new File(mediaFile.getParent(), name + ".xml"); //$NON-NLS-1$
 			return xmlFile;
 		}
 		return null;
@@ -106,51 +106,51 @@ public class SapphireStore implements IStore {
 				Season season  = episode.getSeason();
 				Show show = episode.getSeason().getShow();
 
-				ps.println("<media>");
-				ps.println("  <title>" + episode.getTitle() + "</title>");
-				ps.println("     <summary>" + episode.getSummary() + "</summary>");
+				ps.println("<media>"); //$NON-NLS-1$
+				ps.println("  <title>" + episode.getTitle() + "</title>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <summary>" + episode.getSummary() + "</summary>"); //$NON-NLS-1$ //$NON-NLS-2$
 //				ps.println("     <description></description>");
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
-				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>");
+				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>"); //$NON-NLS-1$
 //				ps.println("     <rating>"+episode+"</rating>");
-				ps.println("     <seriesName>" + show.getName() + "</seriesName>");
+				ps.println("     <seriesName>" + show.getName() + "</seriesName>"); //$NON-NLS-1$ //$NON-NLS-2$
 				// ps.println("     <broadcaster>The CW</broadcaster>");
-				ps.println("     <episodeNumber>" + season.getSeasonNumber()+EPISODE_FORMAT.format(episode.getEpisodeNumber()) + "</episodeNumber>");
-				ps.println("     <season>" + season.getSeasonNumber() + "</season>");
-				ps.println("     <episode>" + episode.getEpisodeNumber() + "</episode>");
-				ps.println("     <published>" + DF.format(episode.getDate()) + "</published>");
-				ps.println("     <genres>");
+				ps.println("     <episodeNumber>" + season.getSeasonNumber()+EPISODE_FORMAT.format(episode.getEpisodeNumber()) + "</episodeNumber>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <season>" + season.getSeasonNumber() + "</season>");  //$NON-NLS-1$//$NON-NLS-2$
+				ps.println("     <episode>" + episode.getEpisodeNumber() + "</episode>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <published>" + DF.format(episode.getDate()) + "</published>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <genres>"); //$NON-NLS-1$
 				for (String genre : show.getGenres()) {
 					if (show.getPreferredGenre().equals(genre)) {
-						ps.println("        <genre primary=\"true\">" + genre + "</genre>");
+						ps.println("        <genre primary=\"true\">" + genre + "</genre>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					else {
-						ps.println("        <genre>" + genre + "</genre>");
+						ps.println("        <genre>" + genre + "</genre>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
-				ps.println("     </genres>");
+				ps.println("     </genres>"); //$NON-NLS-1$
 				if (episode.getActors() != null) {
-					ps.println("     <cast>");
+					ps.println("     <cast>"); //$NON-NLS-1$
 					for (Actor cast : episode.getActors()) {
-						ps.println("        <name>" + cast.getName() + "</name>");
+						ps.println("        <name>" + cast.getName() + "</name>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					ps.println("     </cast>");
+					ps.println("     </cast>"); //$NON-NLS-1$
 				}
 
 				// ps.println("     <producers>");
 				// ps.println("        <name>Rob Thomas</name>");
 				// ps.println("     </producers>");
 				if (episode.getDirectors() != null) {
-					ps.println("     <directors>");
+					ps.println("     <directors>"); //$NON-NLS-1$
 					for (String director : episode.getDirectors()) {
-						ps.println("       <name>" + director + "</name>");
+						ps.println("       <name>" + director + "</name>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					ps.println("     </directors>");
+					ps.println("     </directors>"); //$NON-NLS-1$
 				}
 
-				ps.println("</media>");
+				ps.println("</media>"); //$NON-NLS-1$
 			} finally {
 				ps.close();
 				ps = null;
@@ -170,47 +170,47 @@ public class SapphireStore implements IStore {
 			try {
 				ps = new PrintStream(new FileOutputStream(xmlFile));
 
-				ps.println("<media>");
-				ps.println("  <title>" + film.getTitle() + "</title>");
-				ps.println("     <summary>" + film.getSummary() + "</summary>");
+				ps.println("<media>"); //$NON-NLS-1$
+				ps.println("  <title>" + film.getTitle() + "</title>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <summary>" + film.getSummary() + "</summary>"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (film.getDescription()!=null) {
-					ps.println("     <description>"+film.getDescription()+"</description>");
+					ps.println("     <description>"+film.getDescription()+"</description>"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
-				ps.println("     <userStarRating>" + Math.round((film.getRating().getRating() / 10) * 5) + "</userStarRating>");
-				ps.println("     <rating>" + findCert(film.getCertifications())+"</rating>");
+				ps.println("     <userStarRating>" + Math.round((film.getRating().getRating() / 10) * 5) + "</userStarRating>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <rating>" + findCert(film.getCertifications())+"</rating>");  //$NON-NLS-1$//$NON-NLS-2$
 				// ps.println("     <broadcaster>The CW</broadcaster>");
-				ps.println("     <published>" + DF.format(film.getDate()) + "</published>");
-				ps.println("     <genres>");
+				ps.println("     <published>" + DF.format(film.getDate()) + "</published>"); //$NON-NLS-1$ //$NON-NLS-2$
+				ps.println("     <genres>"); //$NON-NLS-1$
 				for (String genre : film.getGenres()) {
 					if (genre.equals(film.getPreferredGenre())) {
-						ps.println("        <genre primary=\"true\">" + genre + "</genre>");
+						ps.println("        <genre primary=\"true\">" + genre + "</genre>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					else {
-						ps.println("        <genre>" + genre + "</genre>");
+						ps.println("        <genre>" + genre + "</genre>");  //$NON-NLS-1$//$NON-NLS-2$
 					}
 				}
-				ps.println("     </genres>");
+				ps.println("     </genres>"); //$NON-NLS-1$
 				if (film.getActors() != null) {
-					ps.println("     <cast>");
+					ps.println("     <cast>"); //$NON-NLS-1$
 					for (Actor cast : film.getActors()) {
-						ps.println("        <name>" + cast.getName() + "</name>");
+						ps.println("        <name>" + cast.getName() + "</name>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					ps.println("     </cast>");
+					ps.println("     </cast>"); //$NON-NLS-1$
 				}
 				// ps.println("     <producers>");
 				// ps.println("        <name>Rob Thomas</name>");
 				// ps.println("     </producers>");
 				if (film.getDirectors() != null) {
-					ps.println("     <directors>");
+					ps.println("     <directors>"); //$NON-NLS-1$
 					for (String director : film.getDirectors()) {
-						ps.println("       <name>" + director + "</name>");
+						ps.println("       <name>" + director + "</name>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
-				ps.println("     </directors>");
-				ps.println("</media>");
+				ps.println("     </directors>"); //$NON-NLS-1$
+				ps.println("</media>"); //$NON-NLS-1$
 			} finally {
 				ps.close();
 				ps = null;
@@ -361,7 +361,7 @@ public class SapphireStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) {
-		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
+		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) { //$NON-NLS-1$
 			preferedRating = value;
 		}
 	}
@@ -369,7 +369,7 @@ public class SapphireStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) {
-		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) {
+		if (key.equalsIgnoreCase("PreferredCertificationCounrty")) { //$NON-NLS-1$
 			return preferedRating;
 		}
 		return null;

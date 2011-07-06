@@ -111,7 +111,7 @@ public class ConfigReader extends BaseConfigReader {
 			MediaDirConfig dirConfig = new MediaDirConfig();
 			File dir = new File(dirNode.getAttribute("directory")); //$NON-NLS-1$
 			if (!dir.exists()) {
-				throw new ConfigException(MessageFormat.format("Unable to find root media directory '{0}",dir.getAbsolutePath()));
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ROOT_MEDIA_DIR"),dir.getAbsolutePath())); //$NON-NLS-1$
 			}
 			dirConfig.setMediaDir(dir);
 
@@ -122,7 +122,7 @@ public class ConfigReader extends BaseConfigReader {
 			}
 			catch (IllegalArgumentException e) {
 
-				throw new ConfigException(MessageFormat.format("Unknown mode '{0}' for media directory '{1}'. Valid modes are: {2} ",strMode,dir.getAbsolutePath(),Mode.modeList()));
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.KNOWN_MODE"),strMode,dir.getAbsolutePath(),Mode.modeList())); //$NON-NLS-1$
 			}
 
 			String pattern = dirNode.getAttribute("pattern").trim(); //$NON-NLS-1$
@@ -131,11 +131,11 @@ public class ConfigReader extends BaseConfigReader {
 				if (mode == Mode.FILM) {
 					pattern = DEFAULT_FILM_FILE_PATTERN;
 				}
-				log.warn(MessageFormat.format("No pattern given, using default: {0}",pattern));
+				log.warn(MessageFormat.format(Messages.getString("ConfigReader.NO_PATTERN"),pattern)); //$NON-NLS-1$
 			}
 			else {
 				if (!PatternMatcher.validPattern(pattern)) {
-					throw new ConfigException(MessageFormat.format("Invalid pattern '{0}' for media directory '{1}'",pattern,dir.getAbsolutePath()));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.INVALID_PATTERN"),pattern,dir.getAbsolutePath())); //$NON-NLS-1$
 				}
 			}
 			String ignoreSeenValue = dirNode.getAttribute("ignoreSeen"); //$NON-NLS-1$
@@ -193,7 +193,7 @@ public class ConfigReader extends BaseConfigReader {
 				return c;
 			}
 		}
-		throw new ConfigException(MessageFormat.format("Unable to find media directory '{0}' in the configuration",directory));
+		throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_MEDIA_DIR"),directory)); //$NON-NLS-1$
 	}
 
 	/**
@@ -262,11 +262,11 @@ public class ConfigReader extends BaseConfigReader {
 
 
 			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
 			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
 			} catch (SourceException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
 			}
 
 
@@ -309,13 +309,13 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				stores.add(store);
 			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
 			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
 			} catch (StoreException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
 			}
 		}
 		return stores;
@@ -344,13 +344,13 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				actions.add(action);
 			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
 			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
 			} catch (ActionException e) {
-				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
 			}
 		}
 		return actions;
@@ -389,7 +389,7 @@ public class ConfigReader extends BaseConfigReader {
 		File addonDir = new File(getConfigDir(),"xbmc"+File.separator+"addons"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!addonDir.exists()) {
 			if (!addonDir.mkdirs() && !addonDir.exists()) {
-				throw new ConfigException(MessageFormat.format("Unable to create xbmc addon directory: {0}" ,addonDir));
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_CREATE_XBMC_ADDON_DIR") ,addonDir)); //$NON-NLS-1$
 			}
 		}
 		return addonDir;
@@ -416,7 +416,7 @@ public class ConfigReader extends BaseConfigReader {
 		File dir = DEFAULT_MEDIA_CONFIG_DIR;
 		if (!dir.exists()) {
 			if (!dir.mkdirs() && !dir.exists()) {
-				throw new ConfigException (MessageFormat.format("Unable to create missing configuration directory: {0}",dir));
+				throw new ConfigException (MessageFormat.format(Messages.getString("ConfigReader.UNABLE_CREATE_CONFIG_DIR"),dir)); //$NON-NLS-1$
 			}
 		}
 		return dir;
@@ -559,7 +559,7 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file); //$NON-NLS-1$
 			} catch (IOException e) {
-				throw new ConfigException(MessageFormat.format("Unable to create default configuration file: {0}",file),e);
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNALBE_CREATE_CONFIG_FILE"),file),e); //$NON-NLS-1$
 			}
 		}
 		return file;
