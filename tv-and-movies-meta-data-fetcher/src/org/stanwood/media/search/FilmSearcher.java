@@ -15,10 +15,10 @@ import org.stanwood.media.actions.rename.Token;
 public abstract class FilmSearcher extends AbstractMediaSearcher {
 
 	private static List<ISearchStrategy> strategies = new ArrayList<ISearchStrategy>();
-	private final static Pattern PATTERN_YEAR = Pattern.compile("(^.+)[\\(|\\[](\\d\\d\\d\\d)[\\)|\\]](.*$)");
-	private final static Pattern PATTERN_YEAR2 = Pattern.compile("(^.+)\\.(\\d\\d\\d\\d)\\.(.*$)");
-	private final static Pattern PATTERN_EXT = Pattern.compile("(^.*)\\.(.+)$");
-	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$");
+	private final static Pattern PATTERN_YEAR = Pattern.compile("(^.+)[\\(|\\[](\\d\\d\\d\\d)[\\)|\\]](.*$)"); //$NON-NLS-1$
+	private final static Pattern PATTERN_YEAR2 = Pattern.compile("(^.+)\\.(\\d\\d\\d\\d)\\.(.*$)"); //$NON-NLS-1$
+	private final static Pattern PATTERN_EXT = Pattern.compile("(^.*)\\.(.+)$"); //$NON-NLS-1$
+	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$"); //$NON-NLS-1$
 
 	static {
 		strategies.add(new ReversePatternSearchStrategy(Token.TITLE,true));
@@ -31,7 +31,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir,
 					String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder term = new StringBuilder(mediaFile.getName());
-				if (term.indexOf(" ")==-1) {
+				if (term.indexOf(" ")==-1) { //$NON-NLS-1$
 					extractExtension(term);
 
 					Matcher m = PATTERN_YEAR2.matcher(term);

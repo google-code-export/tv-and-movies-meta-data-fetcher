@@ -11,10 +11,10 @@ import org.stanwood.media.MediaDirectory;
  */
 public class EpisodeFileNameStraregy implements ISearchStrategy {
 
-	private final static Pattern PATTERN_EP1 = Pattern.compile("(.*?) S\\d+E\\d+.*",Pattern.CASE_INSENSITIVE);
-	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?) \\d+x\\d+.*",Pattern.CASE_INSENSITIVE);
-	private final static Pattern PATTERN_EP3 = Pattern.compile("(.*?) S\\d+ E\\d+ .*",Pattern.CASE_INSENSITIVE);
-	private final static Pattern PATTERN_EP4 = Pattern.compile("(.*?) \\d\\d\\d .*",Pattern.CASE_INSENSITIVE);
+	private final static Pattern PATTERN_EP1 = Pattern.compile("(.*?) S\\d+E\\d+.*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?) \\d+x\\d+.*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private final static Pattern PATTERN_EP3 = Pattern.compile("(.*?) S\\d+ E\\d+ .*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private final static Pattern PATTERN_EP4 = Pattern.compile("(.*?) \\d\\d\\d .*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 
 	/** {@inheritDoc} */

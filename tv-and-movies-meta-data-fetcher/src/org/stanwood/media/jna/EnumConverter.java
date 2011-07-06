@@ -22,7 +22,7 @@ public class EnumConverter implements TypeConverter {
         }
         Object[] enums = targetClass.getEnumConstants();
         if (enums.length == 0) {
-            log.error("Could not convert desired enum type (), no valid values are defined: "+targetClass.getName());
+            log.error(Messages.getString("EnumConverter.COULD_NOT_CONVERT")+targetClass.getName()); //$NON-NLS-1$
             return null;
         }
         // In order to avoid nasty reflective junk and to avoid needing

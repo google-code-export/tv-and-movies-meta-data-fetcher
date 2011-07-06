@@ -1,6 +1,7 @@
 package org.stanwood.media.actions.rename;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 
 import org.stanwood.media.model.Episode;
@@ -157,7 +158,7 @@ public class PatternMatcher {
 				}
 			}
 			if (inBrace) {
-				throw new PatternException("Mismatched braces in pattern "+pattern);
+				throw new PatternException(MessageFormat.format(Messages.getString("PatternMatcher.MISMATCH_BRACES"),pattern)); //$NON-NLS-1$
 			}
 			else {
 				result.append(processName(newName.toString()));

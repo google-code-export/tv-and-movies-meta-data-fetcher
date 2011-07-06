@@ -283,7 +283,7 @@ public class Episode implements IVideo,IVideoActors,IVideoRating {
 	 */
 	@Override
 	public String toString() {
-		return "Episode - ID:" + getEpisodeId() +" Num: " + getEpisodeNumber()+" Title: " + getTitle();
+		return "Episode - ID:" + getEpisodeId() +" Num: " + getEpisodeNumber()+" Title: " + getTitle(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/** {@inheritDoc} */

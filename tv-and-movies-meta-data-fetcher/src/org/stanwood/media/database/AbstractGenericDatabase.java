@@ -31,11 +31,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractGenericDatabase implements IDatabase {
 
-	private final static Log log = LogFactory.getLog(AbstractGenericDatabase.class);		
-	
+	private final static Log log = LogFactory.getLog(AbstractGenericDatabase.class);
+
 	/**
 	 * This is used to get a non-auto-committing connection to the database from a datasource
-	 * 
+	 *
 	 * @return a connection to the database
 	 * @throws SQLException Thrown if their is a problem getting the connection to the
 	 *             database
@@ -53,44 +53,44 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 		}
 		return connection;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void commitTransactionConnection(Connection connection) throws SQLException {
-		log.debug("Committing Transacton");
+		log.debug("Committing Transacton"); //$NON-NLS-1$
 		try {
 			connection.commit();
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw e;
-		}	
+		}
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void rollbackTransactionConnection (Connection connection) {
-		log.debug("Rolling back Transaction");
-		
+		log.debug("Rolling back Transaction"); //$NON-NLS-1$
+
 		try {
 			connection.rollback();
-			
+
 			//TODO log all the roll back activities if possible?
-			
+
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
-			throw new RuntimeException("Serious error, a database roll back has failed.  See logs, now!");
+			throw new RuntimeException("Serious error, a database roll back has failed.  See logs, now!"); //$NON-NLS-1$
 		}
 	}
 
-	
+
 	/**
 	 * This is used to make sure that all DB resources are closed. If any of the
 	 * parameters are null, then they an attempt to close them is not made.
-	 * 
+	 *
 	 * @param connection	the connection to close
 	 * @param stmt			the statement to close
 	 * @param rs		    the result set to close
@@ -125,17 +125,17 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 	}
 
 	/**
-	 * This is used to close a connection. This is done in the database interface so that 
-	 * connection closure can be logged from a central location and open connection count can 
+	 * This is used to close a connection. This is done in the database interface so that
+	 * connection closure can be logged from a central location and open connection count can
 	 * be kept
 	 * @param connection The connection to close
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
 	@Override
 	public void closeConnection(Connection connection) throws SQLException {
-		connection.close();		
+		connection.close();
 	}
-	
+
 	/**
 	 * This is called to delete a table from the database It creates it's own connection too the DB
 	 * @param tableName The table to delete
@@ -149,17 +149,17 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			dropTable(connection, tableName);
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
-			return false;				
+			return false;
 		} finally {
 			closeDatabaseResources(connection, null, null);
 			connection = null;
-		}	
+		}
 		return true;
 	}
-	
+
 	/**
 	 * This is used to execute a simple SQL statement on the database.
-	 * 
+	 *
 	 * @param sql	the SQL to execute on the database
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
@@ -173,35 +173,35 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			closeDatabaseResources(connection, null, null);
 			connection = null;
 		}
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
 	 * This is used to create a PreparedStatement from the given SQL. The SQL should
 	 * contain ? were the params should be inserted.
-	 * 
+	 *
 	 * @see PreparedStatement
 	 * @param connection	a connection to the database
 	 * @param sql 			the statements SQL
-	 * @param 				params the parameters to place into the statement       
+	 * @param 				params the parameters to place into the statement
 	 * @return 				a Prepared Statement
 	 * @throws SQLException	thrown if their is a problem creating the statement
 	 */
 	@Override
 	public PreparedStatement getStatement(Connection connection, String sql,
 			Object[] params) throws SQLException {
-		
+
 		PreparedStatement stmt = null;
-		
-		log.debug("Preparing statement");
+
+		log.debug("Preparing statement"); //$NON-NLS-1$
 		stmt = getStatement(connection, sql);
-				
-		log.debug("Setting variables");
+
+		log.debug("Setting variables"); //$NON-NLS-1$
 		for (int i = 0; i < params.length; i++) {
 			if (params[i] == null) {
-				throw new RuntimeException("A null param at index " + i 
-						+ " is unsupported.");
+				throw new RuntimeException("A null param at index " + i  //$NON-NLS-1$
+						+ " is unsupported."); //$NON-NLS-1$
 			}
 			else if (params[i] instanceof String) {
 				stmt.setString(i + 1, (String) params[i]);
@@ -213,19 +213,19 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 				stmt.setBoolean(i + 1, (Boolean) params[i]);
 			} else if (params[i] instanceof Long) {
 				stmt.setLong(i + 1, (Long) params[i]);
-			} else {					
-				throw new RuntimeException("A param type of "
+			} else {
+				throw new RuntimeException("A param type of " //$NON-NLS-1$
 						+ params[i].getClass().getName()
-						+ " is unsupported.");
+						+ " is unsupported."); //$NON-NLS-1$
 			}
 		}
 		return stmt;
 	}
-	
+
 	/**
 	 * This is used to execute an update statement that takes parameters. The SQL should
 	 * contain ? were the parameters should be inserted.
-	 * 
+	 *
 	 * @param sql			the SQL to execute on the database
 	 * @param params		the parameters to insert into the SQL statement, replacing ?.
 	 * @return 				if a key was generated, then it is returned, otherwise -1
@@ -233,26 +233,26 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 	 */
 	@Override
 	public long executeUpdate(String sql, Object[] params) throws SQLException {
-		
+
 		Connection connection = null;
 		try {
 			//Get a connection
 			connection = createConnection();
 			return executeUpdate(connection, sql, params);
 		} finally {
-			closeDatabaseResources(connection, null, null);			
+			closeDatabaseResources(connection, null, null);
 		}
 
 	}
-	
+
 	/**
 	 * This is used to execute an update statement that takes parameters. The SQL should
 	 * contain ? were the parameters should be inserted.
-	 * 
-	 * @param connection	a connection to be re-used, useful for running a series of updates as a 
+	 *
+	 * @param connection	a connection to be re-used, useful for running a series of updates as a
 	 * 						transaction
 	 * @param sql			The SQL to execute on the database
-	 * @param params		the parameters to insert into the SQL statement, replacing ?.	
+	 * @param params		the parameters to insert into the SQL statement, replacing ?.
 	 * @return 				if a key was generated, then it is returned, otherwise -1
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
@@ -261,21 +261,21 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		try {			
+		try {
 			//Prepare and execute the update
 			stmt = getStatement(connection, sql, params);
 			stmt.executeUpdate();
-			
+
 			//Check for any keys
 			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
 				long key = rs.getLong(1);
 				return key;
 			}
-			
+
 			//If not return
 			return -1;
-			
+
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw e;
@@ -283,75 +283,76 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			closeDatabaseResources(null, stmt, rs);
 		}
 	}
-	
+
 	/**
 	 * This is used to insert table row into a table. The table row is made up from fields.
-	 * @param connection a connection to be re-used, useful for running a series 
+	 * @param connection a connection to be re-used, useful for running a series
 	 * @param tableName  The name of the table
 	 * @param fields     The fields of the table that are to be inserted.
-	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @return If a key was generated, then it is pass here, otherwise -1
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
-	@Override	
+	@Override
 	public long insertIntoTable(Connection connection, String tableName, List<Field> fields) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO `" + tableName + "` (");
-		boolean first = true;				
-		for (Field field : fields) {			
+		sql.append("INSERT INTO `" + tableName + "` ("); //$NON-NLS-1$ //$NON-NLS-2$
+		boolean first = true;
+		for (Field field : fields) {
 			if (!first) {
-				sql.append(",");
+				sql.append(","); //$NON-NLS-1$
 			}
-			sql.append("`");
+			sql.append("`"); //$NON-NLS-1$
 			sql.append(field.getKey());
-			sql.append("`");
+			sql.append("`"); //$NON-NLS-1$
 			first = false;
 		}
-		sql.append(") VALUES (");
+		sql.append(") VALUES ("); //$NON-NLS-1$
 		Object params[] = new Object[fields.size()];
 		for (int i=0;i<fields.size();i++) {
 			if (i==0) {
-				sql.append("?");
+				sql.append("?"); //$NON-NLS-1$
 			}
 			else {
-				sql.append(",?");
+				sql.append(",?"); //$NON-NLS-1$
 			}
 			params[i] = fields.get(i).getValue();
 		}
-		sql.append(")");
-				
-		
+		sql.append(")"); //$NON-NLS-1$
+
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		try {			
+		try {
 			//Prepare and execute the update
 			stmt = getStatement(connection, sql.toString(), params);
 			stmt.executeUpdate();
-			
+
 			//Check for any keys
 			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
 				long key = rs.getLong(1);
 				return key;
 			}
-			
+
 			//If not return
 			return -1;
-			
+
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw e;
 		} finally {
 			closeDatabaseResources(null, stmt, rs);
-		}	
+		}
 	}
 
 	/**
 	 * This is used to insert table row into a table. The table row is made up from fields.
 	 * @param tableName  The name of the table
 	 * @param fields     The fields of the table that are to be inserted.
-	 * @return If a key was generated, then it is pass here, otherwise -1 
+	 * @return If a key was generated, then it is pass here, otherwise -1
 	 * @throws SQLException Thrown if their is a problem talking to the database
 	 */
+	@Override
 	public long insertIntoTable(String tableName,List<Field> fields) throws SQLException {
 		Connection connection = null;
 		try {
@@ -359,7 +360,7 @@ public abstract class AbstractGenericDatabase implements IDatabase {
 			connection = createConnection();
 			return insertIntoTable(connection, tableName, fields);
 		} finally {
-			closeDatabaseResources(connection, null, null);			
+			closeDatabaseResources(connection, null, null);
 		}
 	}
 }

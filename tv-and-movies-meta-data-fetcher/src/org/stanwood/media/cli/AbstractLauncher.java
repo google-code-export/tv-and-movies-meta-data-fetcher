@@ -29,9 +29,9 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	private final static Log log = LogFactory.getLog(AbstractLauncher.class);
 
-	private final static String LOG_CONFIG_OPTION = "l";
-	private final static String CONFIG_FILE_OPTION = "c";
-	private final static String VERSION_OPTION = "v";
+	private final static String LOG_CONFIG_OPTION = "l"; //$NON-NLS-1$
+	private final static String CONFIG_FILE_OPTION = "c"; //$NON-NLS-1$
+	private final static String VERSION_OPTION = "v"; //$NON-NLS-1$
 
 	private File configFile = null;
 	private Controller controller;
@@ -55,15 +55,15 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 			addOption(o);
 		}
 
-		Option o = new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]");
-		o.setArgName("info|debug|file");
+		Option o = new Option(LOG_CONFIG_OPTION,"log_config",true,Messages.getString("AbstractLauncher.LOG_CONFIG_DESCRIPTION")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("info|debug|file"); //$NON-NLS-1$
 		addOption(o);
 
-		o = new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml");
-		o.setArgName("file");
+		o = new Option(CONFIG_FILE_OPTION,"config_file",true,Messages.getString("AbstractLauncher.CONFIG_FILE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("file"); //$NON-NLS-1$
 		addOption(o);
 
-		o = new Option(VERSION_OPTION,"version",false,"Display the version");
+		o = new Option(VERSION_OPTION,"version",false,Messages.getString("AbstractLauncher.VERSION_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		addOption(o);
 	}
 
@@ -80,7 +80,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	protected boolean processOptionsInternal(String args[],CommandLine cmd) {
 		String logConfig = null;
 		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
-			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION,"INFO");
+			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION,"INFO"); //$NON-NLS-1$
 		}
 		if (!initLogging(logConfig)) {
 			return false;
@@ -110,14 +110,14 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	private void printVersion() {
 		try {
-			String version = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim();
+			String version = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim(); //$NON-NLS-1$
 			info(version);
-			info("Copyright (C) 2011 John-Paul Stanford <dev@stanwood.org.uk>");
-			info("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.");
-			info("This is free software: you are free to change and redistribute it.");
-			info("There is NO WARRANTY");
-			info("");
-			info("Written by John-Paul Stanford.");
+			info("Copyright (C) 2011 John-Paul Stanford <dev@stanwood.org.uk>"); //$NON-NLS-1$
+			info("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."); //$NON-NLS-1$
+			info("This is free software: you are free to change and redistribute it."); //$NON-NLS-1$
+			info("There is NO WARRANTY"); //$NON-NLS-1$
+			info(""); //$NON-NLS-1$
+			info("Written by John-Paul Stanford."); //$NON-NLS-1$
 		} catch (IOException e) {
 			fatal(e);
 		}
@@ -129,12 +129,12 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 				configFile = ConfigReader.getDefaultConfigFile();
 
 				if (log.isDebugEnabled()) {
-					log.debug("No config file give, so using default location: " + configFile.getAbsolutePath());
+					log.debug("No config file give, so using default location: " + configFile.getAbsolutePath()); //$NON-NLS-1$
 				}
 			}
 
 			if (!configFile.exists()) {
-				fatal("Unable to find config file '" +configFile+"' so using defaults.");
+				fatal("Unable to find config file '" +configFile+"' so using defaults."); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 			else  {
@@ -149,7 +149,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 						try {
 							is.close();
 						} catch (IOException e) {
-							warn("Unable to close stream");
+							warn("Unable to close stream"); //$NON-NLS-1$
 						}
 					}
 				}
@@ -176,12 +176,12 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 				LogSetupHelper.initLogingFromConfigFile(logConfigFile);
 			}
 			else {
-				fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath());
+				fatal("Unable to find log configuraion file " + logConfigFile.getAbsolutePath()); //$NON-NLS-1$
 				return false;
 			}
 		}
 		else {
-			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+			LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties"); //$NON-NLS-1$
 		}
 
 		return true;
@@ -198,7 +198,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 			return Long.parseLong(optionValue);
 		}
 		catch (NumberFormatException e) {
-			throw new ParseException("Unable to parse number from " + optionValue);
+			throw new ParseException("Unable to parse number from " + optionValue); //$NON-NLS-1$
 		}
 	}
 

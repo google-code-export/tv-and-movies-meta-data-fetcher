@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -116,7 +117,7 @@ public class XMLParser {
 			throws XMLParserException {
 		String value = getStringFromXMLOrNull(parent,path);
 		if (value==null) {
-			throw new XMLParserNotFoundException("Unable to find path "+path+" in XML");
+			throw new XMLParserNotFoundException(MessageFormat.format("Unable to find path {0} in XML",path));
 		}
 		return value;
 	}
@@ -153,7 +154,7 @@ public class XMLParser {
 	protected URL getURLFromXML(Node parent, String path) throws MalformedURLException, XMLParserException {
 		URL value = getURLFromXMLOrNull(parent,path);
 		if (value==null) {
-			throw new XMLParserNotFoundException("Unable to find path "+path+" in XML");
+			throw new XMLParserNotFoundException(MessageFormat.format("Unable to find path {0} in XML",path));
 		}
 		return value;
 	}
@@ -302,7 +303,7 @@ public class XMLParser {
 			return new IterableNodeList(list);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parse path '" + path + "' from XML DOM",e);
+			throw new XMLParserException(MessageFormat.format("Unable to find path {0} in XML",path),e);
 		}
 	}
 
@@ -311,7 +312,7 @@ public class XMLParser {
 			return XPathAPI.selectSingleNode(contextNode, path);
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to parse path '" + path + "' from XML DOM",e);
+			throw new XMLParserException(MessageFormat.format("Unable to find path {0} in XML",path),e);
 		}
 	}
 
@@ -330,19 +331,19 @@ public class XMLParser {
 		    @Override
 		    public InputSource resolveEntity(String publicId, String systemId)
 		            throws SAXException, IOException {
-		    	if (systemId.endsWith(".xsd")) {
-		    		String schemaName= systemId.substring(systemId.lastIndexOf("/")+1);
-		    		InputStream stream = XMLParser.class.getResourceAsStream("schema/"+schemaName);
+		    	if (systemId.endsWith(".xsd")) { //$NON-NLS-1$
+		    		String schemaName= systemId.substring(systemId.lastIndexOf("/")+1); //$NON-NLS-1$
+		    		InputStream stream = XMLParser.class.getResourceAsStream("schema/"+schemaName); //$NON-NLS-1$
 		    		if (stream==null) {
-		    			throw new IOException ("Unable to find schema: " + schemaName);
+		    			throw new IOException (MessageFormat.format("Unable to find schema: {0}",schemaName));
 		    		}
 		    		return new InputSource(stream);
 		    	}
 		    	else if (publicId!=null) {
-			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) {
-			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.0.dtd");
+			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) { //$NON-NLS-1$
+			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.0.dtd"); //$NON-NLS-1$
 			    		if (stream==null) {
-			    			throw new IOException ("Unable to find dtd");
+			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
 			    		}
 			    		return new InputSource(stream);
 			        }

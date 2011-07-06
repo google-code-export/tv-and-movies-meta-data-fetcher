@@ -2,6 +2,7 @@ package org.stanwood.media.cli.manager;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,12 +47,12 @@ public class CLIMediaManager extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIMediaManager.class);
 
-	private final static String ROOT_MEDIA_DIR_OPTION = "d";
-	private final static String TEST_OPTION = "t";
+	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
+	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 
-	private static final String NOUPDATE_OPTION = "u";
+	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
 
 	private MediaDirectory rootMediaDir = null;
 	private boolean xbmcUpdate = true;
@@ -65,16 +66,16 @@ public class CLIMediaManager extends AbstractLauncher {
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
+		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,Messages.getString("CLIMediaManager.CLI_MEDIA_DIR_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(true);
-		o.setArgName("directory");
+		o.setArgName("directory"); //$NON-NLS-1$
 		OPTIONS.add(o);
 
-		o = new Option(TEST_OPTION,"test",false,"If this option is present, then no changes are performed.");
+		o = new Option(TEST_OPTION,"test",false,Messages.getString("CLIMediaManager.CLI_TEST_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(NOUPDATE_OPTION,"noupdate",false,"If this option is present, then the XBMC addons won't be updated");
+		o = new Option(NOUPDATE_OPTION,"noupdate",false,Messages.getString("CLIMediaManager.CLI_NOUPDATE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -108,7 +109,7 @@ public class CLIMediaManager extends AbstractLauncher {
 
 
 	private CLIMediaManager(IExitHandler exitHandler) {
-		super("mm-manager",OPTIONS,exitHandler,stdout,stderr);
+		super("mm-manager",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -140,7 +141,7 @@ public class CLIMediaManager extends AbstractLauncher {
 	private void doUpdateCheck() {
 		if ((!getController().isTestRun()) && xbmcUpdate) {
 			try {
-				log.info("Checking for updated XBMC plugins....");
+				log.info("Checking for updated XBMC plugins...."); //$NON-NLS-1$
 				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
 					@Override
 					public void error(String error) {
@@ -153,12 +154,12 @@ public class CLIMediaManager extends AbstractLauncher {
 					}
 				});
 				if (count>0 ) {
-					log.info("Downloaded and installed "+count+" updates");
+					log.info(MessageFormat.format(Messages.getString("CLIMediaManager.DOWNLOAD_INSTLAL_UPDATE"),count)); //$NON-NLS-1$
 				}
 			} catch (XBMCUpdaterException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLIMediaManager.UNABLE_UPDATE_ADDONS"),e); //$NON-NLS-1$
 			} catch (XBMCException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLIMediaManager.UNABLE_UPDATE_ADDONS"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -183,11 +184,11 @@ public class CLIMediaManager extends AbstractLauncher {
 					return false;
 				}
 			} else {
-				fatal("Media directory '"+dir+"' must be a writable directory");
+				fatal(MessageFormat.format(Messages.getString("CLIMediaManager.MEDIA_DIR_NOT_WRITEABLE"),dir)); //$NON-NLS-1$
 				return false;
 			}
 			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
-				fatal("Media directory '" + dir +"' does not exist.");
+				fatal(MessageFormat.format(Messages.getString("CLIMediaManager.MEDIA_DIR_NOT_EXIST"),dir)); //$NON-NLS-1$
 				return false;
 			}
 		}

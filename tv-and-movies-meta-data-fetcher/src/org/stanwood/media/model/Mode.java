@@ -21,9 +21,9 @@ package org.stanwood.media.model;
  */
 public enum Mode {
 	/** When using FILM mode files are treated as films */
-	FILM("Films"),
+	FILM(Messages.getString("Mode.FILMS")), //$NON-NLS-1$
 	/** When using TV_SHOW mode files are treated as tv show episodes */
-	TV_SHOW("TV Shows");
+	TV_SHOW(Messages.getString("Mode.TV_SHOWS")); //$NON-NLS-1$
 
 	private String displayName;
 
@@ -47,9 +47,9 @@ public enum Mode {
 		StringBuilder validModes = new StringBuilder();
 		for (Mode m : Mode.values()) {
 			if (validModes.length()>0) {
-				validModes.append(", ");
+				validModes.append(", "); //$NON-NLS-1$
 			}
-			validModes.append("'"+m+"'");
+			validModes.append("'"+m+"'");  //$NON-NLS-1$//$NON-NLS-2$
 
 		}
 		return validModes.toString();

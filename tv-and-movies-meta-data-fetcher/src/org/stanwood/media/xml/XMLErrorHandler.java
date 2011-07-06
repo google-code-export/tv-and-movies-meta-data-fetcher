@@ -1,5 +1,7 @@
 package org.stanwood.media.xml;
 
+import java.text.MessageFormat;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.ErrorHandler;
@@ -18,21 +20,21 @@ public class XMLErrorHandler implements ErrorHandler {
 	/** {@inheritDoc} */
 	@Override
 	public void warning(SAXParseException e) throws SAXException {
-		log.warn("Unable to validate xml, " + e.getMessage() + " at line " + e.getLineNumber() + ", column " + e.getColumnNumber());
+		log.warn(MessageFormat.format("Unable to validate xml, {0} at line {1}, column {2}",e.getMessage(),e.getLineNumber(), e.getColumnNumber()));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void error(SAXParseException e) throws SAXException {
 		foundErrors = true;
-		log.error("Unable to validate xml, " + e.getMessage() + " at line " + e.getLineNumber() + ", column " + e.getColumnNumber());
+		log.error(MessageFormat.format("Unable to validate xml, {0} at line {1}, column {2}",e.getMessage(),e.getLineNumber(), e.getColumnNumber()));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void fatalError(SAXParseException e) throws SAXException {
 		foundErrors = true;
-		log.fatal("Unable to validate xml, " + e.getMessage() + " at line " + e.getLineNumber() + ", column " + e.getColumnNumber());
+		log.fatal(MessageFormat.format("Unable to validate xml, {0} at line {1}, column {2}",e.getMessage(),e.getLineNumber(), e.getColumnNumber()));
 	}
 
 	/**

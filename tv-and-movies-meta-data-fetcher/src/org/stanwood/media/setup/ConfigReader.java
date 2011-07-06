@@ -19,6 +19,7 @@ package org.stanwood.media.setup;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -55,14 +56,14 @@ import org.w3c.dom.Node;
 public class ConfigReader extends BaseConfigReader {
 
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
-	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" };
+	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
-	private final static String DEFAULT_TV_FILE_PATTERN = "%sx%e - %t.%x";
-	private final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x";
-	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/dharma";
+	private final static String DEFAULT_TV_FILE_PATTERN = "%sx%e - %t.%x"; //$NON-NLS-1$
+	private final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x"; //$NON-NLS-1$
+	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/dharma"; //$NON-NLS-1$
 
 	/** The default location to store configuration */
-	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager");
+	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager"); //$NON-NLS-1$
 
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
@@ -92,52 +93,52 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public void parse() throws ConfigException {
 		try {
-			Document doc = XMLParser.parse(is, "MediaManager-Config-2.0.xsd");
+			Document doc = XMLParser.parse(is, "MediaManager-Config-2.0.xsd"); //$NON-NLS-1$
 			parseGlobal(doc);
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
 			parsePlguins(doc);
 		} catch (XMLParserException e) {
-			throw new ConfigException("Unable to parse config file: " + e.getMessage(),e);
+			throw new ConfigException(Messages.getString("ConfigReader.14") + e.getMessage(),e); //$NON-NLS-1$
 		}
 	}
 
 
 	private void parseMediaDirs(Document doc) throws XMLParserException, ConfigException {
 		List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
-		for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) {
+		for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) { //$NON-NLS-1$
 			Element dirNode = (Element) node;
 			MediaDirConfig dirConfig = new MediaDirConfig();
-			File dir = new File(dirNode.getAttribute("directory"));
+			File dir = new File(dirNode.getAttribute("directory")); //$NON-NLS-1$
 			if (!dir.exists()) {
-				throw new ConfigException("Unable to find root media directory: '"+dir.getAbsolutePath()+"'" );
+				throw new ConfigException(MessageFormat.format("Unable to find root media directory '{0}",dir.getAbsolutePath()));
 			}
 			dirConfig.setMediaDir(dir);
 
-			String strMode = dirNode.getAttribute("mode").toUpperCase();
+			String strMode = dirNode.getAttribute("mode").toUpperCase(); //$NON-NLS-1$
 			Mode mode ;
 			try {
 				mode = Mode.valueOf(strMode);
 			}
 			catch (IllegalArgumentException e) {
 
-				throw new ConfigException("Unknown mode '"+strMode+"' for media directory '"+dir.getAbsolutePath()+"'. Valid modes are "+Mode.modeList());
+				throw new ConfigException(MessageFormat.format("Unknown mode '{0}' for media directory '{1}'. Valid modes are: {2} ",strMode,dir.getAbsolutePath(),Mode.modeList()));
 			}
 
-			String pattern = dirNode.getAttribute("pattern").trim();
+			String pattern = dirNode.getAttribute("pattern").trim(); //$NON-NLS-1$
 			if (pattern.length()==0) {
 				pattern = DEFAULT_TV_FILE_PATTERN;
 				if (mode == Mode.FILM) {
 					pattern = DEFAULT_FILM_FILE_PATTERN;
 				}
-				log.warn("No pattern given, using default: " + pattern);
+				log.warn(MessageFormat.format("No pattern given, using default: {0}",pattern));
 			}
 			else {
 				if (!PatternMatcher.validPattern(pattern)) {
-					throw new ConfigException("Invalid pattern '"+pattern+"' for media directory '"+dir.getAbsolutePath()+"'");
+					throw new ConfigException(MessageFormat.format("Invalid pattern '{0}' for media directory '{1}'",pattern,dir.getAbsolutePath()));
 				}
 			}
-			String ignoreSeenValue = dirNode.getAttribute("ignoreSeen");
+			String ignoreSeenValue = dirNode.getAttribute("ignoreSeen"); //$NON-NLS-1$
 			boolean ignoreSeen = false;
 			if (ignoreSeenValue!=null && ignoreSeenValue.length()>0) {
 				ignoreSeen = Boolean.parseBoolean(ignoreSeenValue);
@@ -152,7 +153,7 @@ public class ConfigReader extends BaseConfigReader {
 			dirConfig.setActions(readActions(node));
 
 			List<String>exts = new ArrayList<String>();
-			for (Node extNode : selectNodeList(node,"extensions/extension/text()")) {
+			for (Node extNode : selectNodeList(node,"extensions/extension/text()")) { //$NON-NLS-1$
 				exts.add(extNode.getNodeValue());
 			}
 			if (exts.size()==0) {
@@ -172,7 +173,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private void parseIgnorePatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException, ConfigException {
 		List<Pattern>patterns = new ArrayList<Pattern>();
-		for (Node node : selectNodeList(dirNode,"ignore/text()")) {
+		for (Node node : selectNodeList(dirNode,"ignore/text()")) { //$NON-NLS-1$
 			patterns.add(Pattern.compile(node.getTextContent()));
 		}
 		if (patterns.size()>0) {
@@ -192,7 +193,7 @@ public class ConfigReader extends BaseConfigReader {
 				return c;
 			}
 		}
-		throw new ConfigException("Unable to find media directory '"+directory+"' in the configuration");
+		throw new ConfigException(MessageFormat.format("Unable to find media directory '{0}' in the configuration",directory));
 	}
 
 	/**
@@ -218,10 +219,10 @@ public class ConfigReader extends BaseConfigReader {
 						String scraper = null;
 						for (String key : sourceConfig.getParams().keySet()) {
 							String value = sourceConfig.getParams().get(key);
-							if (key.equals("scrapers")) {
-								StringTokenizer tok = new StringTokenizer(value,",");
+							if (key.equals("scrapers")) { //$NON-NLS-1$
+								StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 								while (tok.hasMoreTokens()) {
-									scraper = "xbmc-"+tok.nextToken();
+									scraper = "xbmc-"+tok.nextToken(); //$NON-NLS-1$
 									addons.add(scraper);
 								}
 							}
@@ -234,7 +235,7 @@ public class ConfigReader extends BaseConfigReader {
 						}
 
 						for (String key : sourceConfig.getParams().keySet()) {
-							if (!key.equals("scrapers")) {
+							if (!key.equals("scrapers")) { //$NON-NLS-1$
 								String value = sourceConfig.getParams().get(key);
 								if (xbmcSources!=null) {
 									for (ISource source : xbmcSources ) {
@@ -261,11 +262,11 @@ public class ConfigReader extends BaseConfigReader {
 
 
 			} catch (InstantiationException e) {
-				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
 			} catch (IllegalAccessException e) {
-				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
 			} catch (SourceException e) {
-				throw new ConfigException("Unable to add source '" + sourceClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add source '{0}'",sourceClass),e);
 			}
 
 
@@ -308,13 +309,13 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				stores.add(store);
 			} catch (InstantiationException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
 			} catch (IllegalAccessException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
 			} catch (StoreException e) {
-				throw new ConfigException("Unable to add store '" + storeClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add store '" + storeClass + "'",storeClass),e);
 			}
 		}
 		return stores;
@@ -343,13 +344,13 @@ public class ConfigReader extends BaseConfigReader {
 				}
 				actions.add(action);
 			} catch (InstantiationException e) {
-				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
 			} catch (IllegalAccessException e) {
-				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
 			} catch (ActionException e) {
-				throw new ConfigException("Unable to add action '" + actionClass + "' because " + e.getMessage(),e);
+				throw new ConfigException(MessageFormat.format("Unable to add action '{0}'",actionClass),e);
 			}
 		}
 		return actions;
@@ -385,10 +386,10 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private File getDefaultAddonDir() throws ConfigException {
-		File addonDir = new File(getConfigDir(),"xbmc"+File.separator+"addons");
+		File addonDir = new File(getConfigDir(),"xbmc"+File.separator+"addons"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!addonDir.exists()) {
 			if (!addonDir.mkdirs() && !addonDir.exists()) {
-				throw new ConfigException("Unable to create xbmc addon directory: " + addonDir);
+				throw new ConfigException(MessageFormat.format("Unable to create xbmc addon directory: {0}" ,addonDir));
 			}
 		}
 		return addonDir;
@@ -415,7 +416,7 @@ public class ConfigReader extends BaseConfigReader {
 		File dir = DEFAULT_MEDIA_CONFIG_DIR;
 		if (!dir.exists()) {
 			if (!dir.mkdirs() && !dir.exists()) {
-				throw new ConfigException ("Unable to create missing configuration directory: " + dir);
+				throw new ConfigException (MessageFormat.format("Unable to create missing configuration directory: {0}",dir));
 			}
 		}
 		return dir;
@@ -430,26 +431,26 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private void parsePlguins(Node doc) throws XMLParserException {
-		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) {
+		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) { //$NON-NLS-1$
 			Element pluginEl = (Element)n;
-			String jar = parseString(pluginEl.getAttribute("jar"));
-			String clazz = parseString(pluginEl.getAttribute("class"));
+			String jar = parseString(pluginEl.getAttribute("jar")); //$NON-NLS-1$
+			String clazz = parseString(pluginEl.getAttribute("class")); //$NON-NLS-1$
 			plugins.add(new Plugin(jar,clazz));
 		}
 	}
 
 	private void parseXBMCSettings(Node configNode) throws XMLParserException {
-		Element node = (Element) selectSingleNode(configNode, "/mediaManager/XBMCAddons");
+		Element node = (Element) selectSingleNode(configNode, "/mediaManager/XBMCAddons"); //$NON-NLS-1$
 		if (node!=null) {
-			String dir = parseString(node.getAttribute("directory"));
+			String dir = parseString(node.getAttribute("directory")); //$NON-NLS-1$
 			if (dir.trim().length()>0) {
 				xbmcAddonDir =FileHelper.resolveRelativePaths(new File(dir));
 			}
-			String locale = parseString(node.getAttribute("locale"));
+			String locale = parseString(node.getAttribute("locale")); //$NON-NLS-1$
 			if (locale.trim().length()>0) {
 				xbmcLocale = new Locale(locale);
 			}
-			String addonSite = parseString(node.getAttribute("addonSite"));
+			String addonSite = parseString(node.getAttribute("addonSite")); //$NON-NLS-1$
 			if (addonSite.trim().length()>0) {
 				xbmcAddonSite = addonSite;
 			}
@@ -457,10 +458,10 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private void parseGlobal(Document configNode) throws XMLParserException {
-		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global");
+		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global"); //$NON-NLS-1$
 		if (node!=null) {
 			try {
-				String dir = parseString(getStringFromXML(node, "configDirectory/text()"));
+				String dir = parseString(getStringFromXML(node, "configDirectory/text()")); //$NON-NLS-1$
 				if (dir.trim().length()>0) {
 					configDir =FileHelper.resolveRelativePaths(new File(dir));
 				}
@@ -469,8 +470,8 @@ public class ConfigReader extends BaseConfigReader {
 				// Ignore
 			}
 			try {
-				String value = parseString(getStringFromXML(node, "native/text()"));
-				if (value!=null && !value.equals("")) {
+				String value = parseString(getStringFromXML(node, "native/text()")); //$NON-NLS-1$
+				if (value!=null && !value.equals("")) { //$NON-NLS-1$
 					nativeFolder = FileHelper.resolveRelativePaths(new File(value));
 				}
 			}
@@ -482,12 +483,12 @@ public class ConfigReader extends BaseConfigReader {
 
 	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
 		List<SourceConfig> sources = new ArrayList<SourceConfig>();
-		for (Node sourceElement : selectNodeList(configNode, "sources/source")) {
+		for (Node sourceElement : selectNodeList(configNode, "sources/source")) { //$NON-NLS-1$
 			SourceConfig source = new SourceConfig();
-			source.setID(((Element)sourceElement).getAttribute("id"));
-			for (Node paramNode : selectNodeList(sourceElement, "param")) {
-				String name = ((Element)paramNode).getAttribute("name");
-				String value = parseString(((Element)paramNode).getAttribute("value"));
+			source.setID(((Element)sourceElement).getAttribute("id")); //$NON-NLS-1$
+			for (Node paramNode : selectNodeList(sourceElement, "param")) { //$NON-NLS-1$
+				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
 				source.addParam(name, value);
 			}
 
@@ -498,13 +499,13 @@ public class ConfigReader extends BaseConfigReader {
 
 	private List<StoreConfig>readStores(Node configNode) throws XMLParserException {
 		List<StoreConfig>stores = new ArrayList<StoreConfig>();
-		for (Node storeElement : selectNodeList(configNode, "stores/store")) {
+		for (Node storeElement : selectNodeList(configNode, "stores/store")) { //$NON-NLS-1$
 			StoreConfig store = new StoreConfig();
-			store.setID(((Element)storeElement).getAttribute("id"));
+			store.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
-			for (Node paramNode : selectNodeList(storeElement, "param")) {
-				String name = ((Element)paramNode).getAttribute("name");
-				String value = parseString(((Element)paramNode).getAttribute("value"));
+			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
+				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
 				store.addParam(name, value);
 			}
 
@@ -515,13 +516,13 @@ public class ConfigReader extends BaseConfigReader {
 
 	private List<ActionConfig>readActions(Node configNode) throws XMLParserException {
 		List<ActionConfig>actions = new ArrayList<ActionConfig>();
-		for (Node storeElement : selectNodeList(configNode, "actions/action")) {
+		for (Node storeElement : selectNodeList(configNode, "actions/action")) { //$NON-NLS-1$
 			ActionConfig action = new ActionConfig();
-			action.setID(((Element)storeElement).getAttribute("id"));
+			action.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
-			for (Node paramNode : selectNodeList(storeElement, "param")) {
-				String name = ((Element)paramNode).getAttribute("name");
-				String value = parseString(((Element)paramNode).getAttribute("value"));
+			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
+				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
 				action.addParam(name, value);
 			}
 
@@ -539,7 +540,7 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private String parseString(String input) {
-		input = input.replaceAll("\\$HOME", FileHelper.HOME_DIR.getAbsolutePath());
+		input = input.replaceAll("\\$HOME", FileHelper.HOME_DIR.getAbsolutePath()); //$NON-NLS-1$
 		return input;
 	}
 
@@ -549,16 +550,16 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public static File getDefaultConfigFile() throws ConfigException {
-		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
+		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml"); //$NON-NLS-1$
 		if (!file.exists()) {
-			file = new File(File.separator+"etc"+File.separator+"mediamanager-conf.xml");
+			file = new File(File.separator+"etc"+File.separator+"mediamanager-conf.xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!file.exists()) {
-			file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml");
+			file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml"); //$NON-NLS-1$
 			try {
-				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file);
+				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file); //$NON-NLS-1$
 			} catch (IOException e) {
-				throw new ConfigException("Unable to create default configuration file : " + file,e);
+				throw new ConfigException(MessageFormat.format("Unable to create default configuration file: {0}",file),e);
 			}
 		}
 		return file;
@@ -582,7 +583,7 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public File getNativeFolder() {
 		if (nativeFolder==null) {
-			String nativeDir = System.getenv("MM_NATIVE_DIR");
+			String nativeDir = System.getenv("MM_NATIVE_DIR"); //$NON-NLS-1$
 			if (nativeDir!=null && nativeDir.length()>0) {
 				nativeFolder = FileHelper.resolveRelativePaths(new File(nativeDir));
 			}

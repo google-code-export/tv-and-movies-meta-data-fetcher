@@ -2,6 +2,7 @@ package org.stanwood.media.cli.manager;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,11 +56,11 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLICopyStoreToStore.class);
 
-	private final static String ROOT_MEDIA_DIR_OPTION = "d";
-	private final static String TEST_OPTION = "t";
-	private static final String NOUPDATE_OPTION = "u";
-	private final static String TO_STORE_OPTION = "o";
-	private final static String FROM_STORE_OPTION = "f";
+	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
+	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
+	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
+	private final static String TO_STORE_OPTION = "o"; //$NON-NLS-1$
+	private final static String FROM_STORE_OPTION = "f"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 
@@ -80,26 +81,26 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,"The directory to look for media. If not present use the current directory.");
+		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,Messages.getString("CLICopyStoreToStore.CLI_MEDIA_DIR_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(true);
-		o.setArgName("directory");
+		o.setArgName("directory"); //$NON-NLS-1$
 		OPTIONS.add(o);
 
-		o = new Option(TEST_OPTION,"test",false,"If this option is present, then no changes are performed.");
+		o = new Option(TEST_OPTION,"test",false,Messages.getString("CLICopyStoreToStore.CLI_TEST_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(NOUPDATE_OPTION,"noupdate",false,"If this option is present, then the XBMC addons won't be updated");
+		o = new Option(NOUPDATE_OPTION,"noupdate",false,Messages.getString("CLICopyStoreToStore.CLI_OPTION_NO_UPDATE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(TO_STORE_OPTION,"toStore",true,"The store to write to");
-		o.setArgName("store ID");
+		o = new Option(TO_STORE_OPTION,"toStore",true,Messages.getString("CLICopyStoreToStore.CLI_STORE_TO_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("store ID"); //$NON-NLS-1$
 		o.setRequired(true);
 		OPTIONS.add(o);
 
-		o = new Option(FROM_STORE_OPTION,"fromStore",true,"The store to read from");
-		o.setArgName("store ID");
+		o = new Option(FROM_STORE_OPTION,"fromStore",true,Messages.getString("CLICopyStoreToStore.CLI_STORE_FROM_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("store ID"); //$NON-NLS-1$
 		o.setRequired(true);
 		OPTIONS.add(o);
 	}
@@ -120,7 +121,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 
 
 	private CLICopyStoreToStore(IExitHandler exitHandler) {
-		super("mm-copy-store-to-store",OPTIONS,exitHandler,stdout,stderr);
+		super("mm-copy-store-to-store",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -142,7 +143,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				if (dirConfig.getMode()==Mode.FILM) {
 					Film f = fromStore.getFilm(rootMediaDir, mediaFile);
 					if (f==null) {
-						fatal("Unable to find film details for file: " + mediaFile);
+						fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UNABLE_FIND_FILM"),mediaFile)); //$NON-NLS-1$
 						return false;
 					}
 					Integer part =getFilmPart(mediaFile,f);
@@ -152,7 +153,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					Episode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
 					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
 				}
-				log.info("Store "+toStore.getClass().getName()+" updated for file '"+mediaFile+"'");
+				log.info(MessageFormat.format(Messages.getString("CLICopyStoreToStore.STORE_UPDATED"),toStore.getClass().getName(),mediaFile)); //$NON-NLS-1$
 			}
 
 
@@ -188,7 +189,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 	private void doUpdateCheck() {
 		if ((!getController().isTestRun()) && xbmcUpdate) {
 			try {
-				log.info("Checking for updated XBMC plugins....");
+				log.info(Messages.getString("CLICopyStoreToStore.CHECKING_FOR_UPDATES")); //$NON-NLS-1$
 				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
 					@Override
 					public void error(String error) {
@@ -201,12 +202,12 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					}
 				});
 				if (count>0 ) {
-					log.info("Downloaded and installed "+count+" updates");
+					log.info(MessageFormat.format(Messages.getString("CLICopyStoreToStore.DOWNLOAD_INSTALL_UPDATE"),count)); //$NON-NLS-1$
 				}
 			} catch (XBMCUpdaterException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLICopyStoreToStore.UNABLE_TO_UPDATE_XBMC_ADDONS"),e); //$NON-NLS-1$
 			} catch (XBMCException e) {
-				log.error("Unable to update XBMC addons",e);
+				log.error(Messages.getString("CLICopyStoreToStore.UNABLE_TO_UPDATE_XBMC_ADDONS"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -231,11 +232,11 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					return false;
 				}
 			} else {
-				fatal("Media directory '"+dir+"' must be a writable directory");
+				fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.MEDIA_DIR_NOT_WRITABLE"),dir)); //$NON-NLS-1$
 				return false;
 			}
 			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
-				fatal("Media directory '" + dir +"' does not exist.");
+				fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.MEDIA_DIR_DOES_NOT_EXIST"),dir)); //$NON-NLS-1$
 				return false;
 			}
 		}
@@ -251,7 +252,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 
 
 		if (cmd.getArgs().length==0) {
-			fatal("Missing argument giving media files to move");
+			fatal(Messages.getString("CLICopyStoreToStore.MISSING_ARG")); //$NON-NLS-1$
 			return false;
 		}
 		else {
@@ -265,7 +266,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					file = new File(FileHelper.getWorkingDirectory(),s);
 				}
 				if (!file.exists()) {
-					fatal("Unable to find file: "+file);
+					fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UNABLE_FIND_FILE"),file)); //$NON-NLS-1$
 					return false;
 				}
 				files.add(file);
@@ -284,13 +285,13 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				return store;
 			}
 		}
-		fatal("Unable to find store with ID: " + id);
+		fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UNABLE_FIND_STORE"),id)); //$NON-NLS-1$
 		return null;
 	}
 
 
 	protected String getPrintArguments() {
-		return " <media files...>";
+		return Messages.getString("CLICopyStoreToStore.MEDIA_FILES"); //$NON-NLS-1$
 	}
 
 	static synchronized void setExitHandler(IExitHandler handler) {

@@ -3,6 +3,7 @@ package org.stanwood.media.actions.rename;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -50,10 +51,10 @@ public class RenameAction extends AbstractAction {
 			renameFilm(dir,film,mediaFile,part,actionEventHandler);
 		}
 		catch (SourceException e) {
-			log.error("Unable to rename file '" + mediaFile,e);
+			log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_RENAME_FILE"),mediaFile),e); //$NON-NLS-1$
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to rename file " +mediaFile,e);
+			throw new ActionException(MessageFormat.format(Messages.getString("RenameAction.UNABLE_RENAME_FILE"),mediaFile),e); //$NON-NLS-1$
 		}
 	}
 
@@ -71,10 +72,10 @@ public class RenameAction extends AbstractAction {
 			renameTVShow(dir,episode,mediaFile,actionEventHandler);
 		}
 		catch (SourceException e) {
-			log.error("Unable to rename file '" + mediaFile,e);
+			log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_RENAME_FILE"),mediaFile),e); //$NON-NLS-1$
 		}
 		catch (Exception e) {
-			throw new ActionException("Unable to rename file " +mediaFile,e);
+			throw new ActionException(MessageFormat.format(Messages.getString("RenameAction.UNABLE_RENAME_FILE"),mediaFile),e); //$NON-NLS-1$
 		}
 	}
 
@@ -93,7 +94,7 @@ public class RenameAction extends AbstractAction {
 
 	private File renameTVShow(MediaDirectory dir,Episode episode,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
 		if (episode==null) {
-			log.error("Unable to find episode for file : " + file.getAbsolutePath());
+			log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_FIND_EPISODE"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		else {
 			String ext = FileHelper.getExtension(file);
@@ -111,20 +112,20 @@ public class RenameAction extends AbstractAction {
 	private void doRename(MediaDirectory dir,File file, File newFile,IVideo video,IActionEventHandler eventHandler) throws StoreException, ActionException {
 		// Remove characters from filenames that windows and linux don't like
 		if (file.equals(newFile)) {
-			log.info("File '" + file.getAbsolutePath()+"' already has the correct name.");
+			log.info(MessageFormat.format(Messages.getString("RenameAction.FILE_HAS_CORRECT_NAME"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		else {
 			if (newFile.exists()) {
-				log.error("Unable to rename '"+file.getAbsolutePath()+"' file to '"+newFile.getAbsolutePath()+"' as it already exists.");
+				log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_RENALE_IT_EXISTS"),file.getAbsolutePath(),newFile.getAbsolutePath())); //$NON-NLS-1$
 			}
 			else {
 				if (!isTestMode()) {
 					if (!newFile.getParentFile().exists()) {
 						if (!newFile.getParentFile().mkdirs() || !newFile.getParentFile().exists()) {
-							log.error("Unable to create directories: " + newFile.getParentFile().getAbsolutePath());
+							log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_CREATE_DIR"), newFile.getParentFile().getAbsolutePath())); //$NON-NLS-1$
 						}
 					}
-					log.info("Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"'");
+					log.info(MessageFormat.format(Messages.getString("RenameAction.RENAMING"),file.getAbsolutePath(),newFile.getAbsolutePath())); //$NON-NLS-1$
 
 					File oldFile = new File(file.getAbsolutePath());
 					if (file.renameTo(newFile)) {
@@ -139,11 +140,11 @@ public class RenameAction extends AbstractAction {
 						eventHandler.sendEventRenamedFile(oldFile, newFile);
 					}
 					else {
-						log.error("Failed to rename '"+file.getAbsolutePath()+"' file too '"+newFile.getName()+"'.");
+						log.error(MessageFormat.format(Messages.getString("RenameAction.FAILED_RENAME"),file.getAbsolutePath(),newFile.getName())); //$NON-NLS-1$
 					}
 				}
 				else {
-					log.info("Not Renaming '" + file.getAbsolutePath() + "' -> '" + newFile.getAbsolutePath()+"' as it's a test run");
+					log.info(MessageFormat.format(Messages.getString("RenameAction.NOT_RENAMING_TEST_RUN"),file.getAbsolutePath(),newFile.getAbsolutePath())); //$NON-NLS-1$
 				}
 			}
 		}
@@ -163,7 +164,7 @@ public class RenameAction extends AbstractAction {
 			pruneEmptyFolders = Boolean.parseBoolean(value);
 		}
 		else {
-			throw new ActionException("Unsupported parameter "+key);
+			throw new ActionException(MessageFormat.format(Messages.getString("UNSUPPORTED_PARAM0"),key)); //$NON-NLS-1$
 		}
 	}
 
@@ -181,15 +182,15 @@ public class RenameAction extends AbstractAction {
 			if (files.size()==0) {
 				try {
 					if (isTestMode()) {
-						log.info("Empty directory '"+dir.getAbsolutePath()+"' not deleted as in test mode");
+						log.info(MessageFormat.format(Messages.getString("RenameAction.EMPTY_DIR_NOT_DELETED_TEST_RUN"),dir.getAbsolutePath())); //$NON-NLS-1$
 					}
 					else {
 						FileHelper.delete(dir);
-						log.info("Deleted empty directory '"+dir.getAbsolutePath()+"'");
+						log.info(MessageFormat.format(Messages.getString("RenameAction.DELETED_EMPTY_DIR"),dir.getAbsolutePath())); //$NON-NLS-1$
 					}
 
 				} catch (IOException e) {
-					throw new ActionException("Unable to delete empty directory '"+dir.getAbsolutePath()+"'",e);
+					throw new ActionException(MessageFormat.format(Messages.getString("RenameAction.UNABLE_DELETE_EMPTY_DIR"),dir.getAbsolutePath()),e); //$NON-NLS-1$
 				}
 			}
 		}

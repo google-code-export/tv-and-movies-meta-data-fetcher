@@ -25,9 +25,9 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 			public SearchDetails getSearch(File episodeFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
 				if (!episodeFile.getParentFile().equals(rootMediaDir)) {
 					String fullName = episodeFile.getName();
-					int pos = fullName.lastIndexOf(".");
+					int pos = fullName.lastIndexOf("."); //$NON-NLS-1$
 					String name = fullName.substring(0,pos);
-					File nfo = new File(episodeFile.getParentFile(),name+".nfo");
+					File nfo = new File(episodeFile.getParentFile(),name+".nfo"); //$NON-NLS-1$
 					if (nfo.exists()) {
 						SearchDetails result = episodeFileStrategy.getSearch(episodeFile.getParentFile(), rootMediaDir, renamePattern,mediaDir);
 						if (result!=null) {

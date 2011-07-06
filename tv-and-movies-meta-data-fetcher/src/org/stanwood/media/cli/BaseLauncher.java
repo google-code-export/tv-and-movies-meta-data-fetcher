@@ -2,6 +2,7 @@ package org.stanwood.media.cli;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.apache.commons.cli.CommandLine;
@@ -21,7 +22,7 @@ import org.stanwood.media.logging.StanwoodException;
  */
 public abstract class BaseLauncher implements ICLICommand {
 
-	private final static String HELP_OPTION_NAME = "h";
+	private final static String HELP_OPTION_NAME = "h"; //$NON-NLS-1$
 
 	private IExitHandler exitHandler;
 	private PrintStream stdout;
@@ -46,7 +47,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		this.name = name;
 
 		this.options = new Options();
-		this.helpOption = new Option(HELP_OPTION_NAME,"help",false,"Show the help");
+		this.helpOption = new Option(HELP_OPTION_NAME,"help",false,Messages.getString("BaseLauncher.HELP_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.options.addOption(helpOption);
 	}
 
@@ -72,10 +73,10 @@ public abstract class BaseLauncher implements ICLICommand {
 
 	@SuppressWarnings("unchecked")
 	private Option getOption(String name) {
-		if (name.startsWith("--")) {
+		if (name.startsWith("--")) { //$NON-NLS-1$
 			name = name.substring(2);
 		}
-		else if (name.startsWith("-")) {
+		else if (name.startsWith("-")) { //$NON-NLS-1$
 			name = name.substring(1);
 		}
 		for (Option o : (Collection<Option>)options.getOptions()) {
@@ -95,7 +96,7 @@ public abstract class BaseLauncher implements ICLICommand {
 		String subCommand = null;
 		for (int i=0;i<args.length;i++) {
 			String arg = args[i];
-			if (arg.startsWith("-")) {
+			if (arg.startsWith("-")) { //$NON-NLS-1$
 				Option o = getOption(arg);
 				if (o!=null) {
 					if (o.hasArg()) {
@@ -156,7 +157,7 @@ public abstract class BaseLauncher implements ICLICommand {
 
 	private void handleBadOption(String subCommand, String arg) {
 		if (subCommand==null) {
-			fatal("Unrecognized option: " + arg);
+			fatal(MessageFormat.format(Messages.getString("BaseLauncher.UNRECOGNIZED_OPTION"),arg)); //$NON-NLS-1$
 		}
 		else {
 			handleBadSubCommandOption(options,arg);
@@ -165,7 +166,7 @@ public abstract class BaseLauncher implements ICLICommand {
 	}
 
 	protected void handleBadSubCommandOption(Options options,String arg) {
-		fatal("Unrecognized subcommand option: " + arg);
+		fatal(MessageFormat.format(Messages.getString("BaseLauncher.UNRECONGNIZED_SUB_OPTION") ,arg)); //$NON-NLS-1$
 	}
 
 	protected boolean shouldDisplayHelp(String[] args, CommandLine cmd,
@@ -270,35 +271,35 @@ public abstract class BaseLauncher implements ICLICommand {
 //		finally {
 //			pw.close();
 //		}
-		stdout.println("");
+		stdout.println(""); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void printOptions(Options options,PrintStream stdout,PrintStream stderr) {
 		for (Option o : (Collection<Option>)options.getOptions()) {
-			stdout.print("  ");
+			stdout.print("  "); //$NON-NLS-1$
 			StringBuilder buffer = new StringBuilder();
 			boolean doneLong = false;
 			if (o.getLongOpt()!=null && o.getLongOpt().length()>0) {
-				buffer.append("--"+o.getLongOpt());
+				buffer.append("--"+o.getLongOpt()); //$NON-NLS-1$
 				doneLong = true;
 			}
 			if (o.getOpt()!=null && o.getOpt().length()>0) {
 				if (doneLong) {
-					buffer.append(", ");
+					buffer.append(", "); //$NON-NLS-1$
 				}
-				buffer.append("-"+o.getOpt());
+				buffer.append("-"+o.getOpt()); //$NON-NLS-1$
 				if (o.hasArg() && o.getArgName()!=null && o.getArgName().length()>0) {
-					buffer.append(" <" + o.getArgName()+">");
+					buffer.append(" <" + o.getArgName()+">");  //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 
 			while (buffer.length()<30) {
-				buffer.append(" ");
+				buffer.append(" "); //$NON-NLS-1$
 			}
 			stdout.print(buffer);
 			if (buffer.length()>30) {
-				stdout.print("\n                                ");
+				stdout.print("\n                                "); //$NON-NLS-1$
 			}
 			stdout.print(o.getDescription());
 			stdout.println();

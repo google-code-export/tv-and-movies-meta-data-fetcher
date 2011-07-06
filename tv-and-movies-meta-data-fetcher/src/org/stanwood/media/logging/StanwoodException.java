@@ -77,10 +77,10 @@ public class StanwoodException extends Exception {
 			}
 			cause = cause.getCause();
 			if (cause.getLocalizedMessage()!=null) {
-				result.append("\n - Caused by: "+cause.getLocalizedMessage());
+				result.append("\n - "+Messages.getString("StanwoodException.CAUSED_BY")+" "+cause.getLocalizedMessage());  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 			}
 			else {
-				result.append("\n - Caused by: "+cause.getClass().getName());
+				result.append("\n - "+Messages.getString("StanwoodException.CAUSED_BY")+" "+cause.getClass().getName());  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 			}
 		}
 

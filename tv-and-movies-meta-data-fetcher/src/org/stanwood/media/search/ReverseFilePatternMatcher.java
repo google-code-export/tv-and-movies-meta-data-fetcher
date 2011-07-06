@@ -31,16 +31,16 @@ public class ReverseFilePatternMatcher {
 		while (i<pattern.length()) {
 			char c = pattern.charAt(i);
 			if (c=='{') {
-				regexp.append("(?:");
+				regexp.append("(?:"); //$NON-NLS-1$
 			}
 			else if (c=='}') {
-				regexp.append(")?");
+				regexp.append(")?"); //$NON-NLS-1$
 			}
 			else if (c=='%') {
 				i++;
 				Token token = Token.fromToken(pattern.charAt(i));
 				if (token == Token.PERCENT) {
-					regexp.append("%");
+					regexp.append("%"); //$NON-NLS-1$
 				}
 				else {
 					tokens.add(token.getToken());
@@ -49,7 +49,7 @@ public class ReverseFilePatternMatcher {
 			}
 			else {
 				if (c=='.' || c=='$' || c=='?' || c=='^' || c=='|' || c=='(' || c==')') {
-					regexp.append("\\"+c);
+					regexp.append("\\"+c); //$NON-NLS-1$
 				}
 				else {
 					regexp.append(c);
@@ -61,7 +61,7 @@ public class ReverseFilePatternMatcher {
 	}
 
 	private boolean matchPattern(String path, List<Character> tokens, StringBuilder regexp) {
-		Pattern p = Pattern.compile("^"+regexp.toString()+"$");
+		Pattern p = Pattern.compile("^"+regexp.toString()+"$"); //$NON-NLS-1$ //$NON-NLS-2$
 		Matcher m = p.matcher(path);
 		if (m.matches()) {
 			this.values= new HashMap<Token,String>();

@@ -31,7 +31,7 @@ public class ConsoleLayout extends Layout {
 	    sbuf.setLength(0);
 	    if (!event.getLevel().equals(Level.INFO)) {
 	    	sbuf.append(event.getLevel().toString());
-	    	sbuf.append(": ");
+	    	sbuf.append(": "); //$NON-NLS-1$
 	    }
 	    sbuf.append(event.getMessage());
 	    sbuf.append(FileHelper.LS);
