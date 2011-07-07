@@ -79,7 +79,7 @@ public class XBMCAddon extends XMLParser {
 				}
 			}
 			catch (XMLParserException e) {
-				throw new XBMCException("Unable to parse the settigs file: " + settingsFile,e);
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_PARSE_SETTINGS_FILE"), settingsFile),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class XBMCAddon extends XMLParser {
 		else if (type.equals("bool")) { //$NON-NLS-1$
 			Value value = eval.eval(defaultValue);
 			if (value.getType()!=ValueType.BOOLEAN) {
-				throw new XBMCException(MessageFormat.format("Unable to get the default value for setting '{0}'",id));
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_GET_DEFAULT_VALUE_FOR_SETTING"),id)); //$NON-NLS-1$
 			}
 
 			if (eval.getVariables().get(id)==null) {
@@ -134,7 +134,7 @@ public class XBMCAddon extends XMLParser {
 			return eval.getVariables().get(id);
 		}
 		catch (ExpressionParserException e) {
-			throw new XBMCException(MessageFormat.format("Unable to get setting '{0}' for addon '{1}'",id,getId()),e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_GET_SETTING"),id,getId()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -143,7 +143,7 @@ public class XBMCAddon extends XMLParser {
 		if (doc==null) {
 //			File addonFile = new File(addonDir,"addon.xml");
 			if (!file.exists()) {
-				throw new XBMCException(MessageFormat.format("Unable to find XMBC addon file: {0}",file));
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_FILE"),file)); //$NON-NLS-1$
 			}
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -156,14 +156,14 @@ public class XBMCAddon extends XMLParser {
 				doc = builder.parse(file);
 				docs.put(file,doc);
 				if (errorHandler.hasErrors()) {
-					throw new XBMCException(MessageFormat.format("Unable to parse  XMBC addon, errors found in file: {0}",file));
+					throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_PARSE_ADDON"),file)); //$NON-NLS-1$
 				}
 			} catch (SAXException e) {
-				throw new XBMCException(MessageFormat.format("Unable to parse file: {0}",file), e);
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_PARSE_FILE"),file), e); //$NON-NLS-1$
 			} catch (IOException e) {
-				throw new XBMCException(MessageFormat.format("Unable to read file: {0}",file), e);
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_READ_FILE"),file), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {
-				throw new XBMCException(MessageFormat.format("Unable to parse file: {0}",file), e);
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_PARSE_FILE"),file), e); //$NON-NLS-1$
 			}
 		}
 		return doc;
@@ -178,7 +178,7 @@ public class XBMCAddon extends XMLParser {
 		try {
 			return getStringFromXML(getDocument(addonFile), "addon/@id"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -208,7 +208,7 @@ public class XBMCAddon extends XMLParser {
 				}
 			}
 			catch (XMLParserException e1) {
-				throw new XBMCException("Unable to parse required addons",e1);
+				throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_PARSE_REQUIRED_ADDONS"),e1); //$NON-NLS-1$
 			}
 		}
 		return requiredAddons;
@@ -223,7 +223,7 @@ public class XBMCAddon extends XMLParser {
 		try {
 			return new Version(getStringFromXML(getDocument(addonFile), "addon/@version")); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -236,7 +236,7 @@ public class XBMCAddon extends XMLParser {
 		try {
 			return getStringFromXML(getDocument(addonFile), "addon/@provider-name"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -267,7 +267,7 @@ public class XBMCAddon extends XMLParser {
 				}
 			}
 			catch (XMLParserException e1) {
-				throw new XBMCException("Unable to find scraper filename",e1);
+				throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FUND_SCRAPER_FILENAME"),e1); //$NON-NLS-1$
 			}
 //			if (extensions.size()==0) {
 //				throw new XBMCException("Unable to find the scrapper filename of addon '" + getId()+"'");
@@ -299,9 +299,9 @@ public class XBMCAddon extends XMLParser {
 	 */
 	public String getSummary() throws XBMCException {
 		try {
-			return getStringFromXML(getDocument(addonFile), "addon/extension[@point='xbmc.addon.metadata']/summary[@lang='"+locale.getLanguage()+"']/text()"); //$NON-NLS-1$
+			return getStringFromXML(getDocument(addonFile), "addon/extension[@point='xbmc.addon.metadata']/summary[@lang='"+locale.getLanguage()+"']/text()"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -312,9 +312,9 @@ public class XBMCAddon extends XMLParser {
 	 */
 	public String getDescription() throws XBMCException {
 		try {
-			return getStringFromXML(getDocument(addonFile), "addon/extension[@point='xbmc.addon.metadata']/description[@lang='"+locale.getLanguage()+"']/text()"); //$NON-NLS-1$
+			return getStringFromXML(getDocument(addonFile), "addon/extension[@point='xbmc.addon.metadata']/description[@lang='"+locale.getLanguage()+"']/text()"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -327,7 +327,7 @@ public class XBMCAddon extends XMLParser {
 		try {
 			return getStringFromXML(getDocument(addonFile), "addon/@name"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new XBMCException("Unable to find addon id",e);
+			throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_FIND_ADDON_ID"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -338,19 +338,19 @@ public class XBMCAddon extends XMLParser {
 	 * @throws XBMCException Thrown if not able to find the setting
 	 */
 	public String getInfoSetting(String key) throws XBMCException {
-		if (key.equals("language")) {
+		if (key.equals("language")) { //$NON-NLS-1$
 			return locale.getLanguage();
 		}
 
 		try {
 			Value value = eval.getVariables().get(key);
 			if (value==null) {
-				throw new XBMCException(MessageFormat.format("Unknown xbmc setting with key '{0}'",key));
+				throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNKNOWN_XBMC_SETTING"),key)); //$NON-NLS-1$
 			}
 			return value.toString();
 		}
 		catch (ExpressionParserException e) {
-			throw new XBMCException(MessageFormat.format("Unknown xbmc setting with key '{0}'",key),e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNKNOWN_XBMC_SETTING"),key),e); //$NON-NLS-1$
 		}
 	}
 
@@ -381,7 +381,7 @@ public class XBMCAddon extends XMLParser {
 				// Ignore
 			}
 			catch (XMLParserException e) {
-				throw new XBMCException("Unable to execute scraper function",e);
+				throw new XBMCException(Messages.getString("XBMCAddon.UNABLE_EXEXC_SCRAPER_FUNCTION"),e); //$NON-NLS-1$
 			}
 		}
 
@@ -396,7 +396,7 @@ public class XBMCAddon extends XMLParser {
 			}
 		}
 
-		throw new XBMCFunctionNotFoundException(MessageFormat.format("Unable to find scraper function '{0}'",functionName));
+		throw new XBMCFunctionNotFoundException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_FIND_SCRAPER_FUNCTION"),functionName)); //$NON-NLS-1$
 	}
 
 	/**
@@ -436,10 +436,10 @@ public class XBMCAddon extends XMLParser {
 				boolean result = ((BooleanValue)value).booleanValue();
 				return result;
 			}
-			throw new XBMCException(MessageFormat.format("Expression '{0}' did not evaulate to a boolean type",expression));
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.EXPRESSION_DID_NOT_EVAL_TO_BOOL"),expression)); //$NON-NLS-1$
 		}
 		catch (ExpressionParserException e) {
-			throw new XBMCException(MessageFormat.format("Unable to evaluate expression '{0}' in addon {1}" ,expression,getId()),e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_EVAL_EXPR") ,expression,getId()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -461,7 +461,7 @@ public class XBMCAddon extends XMLParser {
 			eval.getVariables().put(key,value );
 		}
 		catch (ExpressionParserException e) {
-			throw new XBMCException(MessageFormat.format("Unable to evaluate expression '{0}' in addon {1}",expression ,getId()),e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddon.UNABLE_EVAL_EXPR"),expression ,getId()),e); //$NON-NLS-1$
 		}
 	}
 

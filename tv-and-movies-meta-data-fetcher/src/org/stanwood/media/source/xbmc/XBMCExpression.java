@@ -74,8 +74,8 @@ public class XBMCExpression {
 	 * @param value A comma separated list of field numbers that should not be cleaned
 	 */
 	public void setNoClean(String value) {
-		if (!value.equals("")) {
-			StringTokenizer tok = new StringTokenizer(value,",");
+		if (!value.equals("")) { //$NON-NLS-1$
+			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			while (tok.hasMoreTokens()) {
 				int num = Integer.parseInt(tok.nextToken());
 				clean.add(num);
@@ -88,8 +88,8 @@ public class XBMCExpression {
 	 * @param value A comma separated list of field numbers that should trimmed
 	 */
 	public void setTrim(String value) {
-		if (!value.equals("")) {
-			StringTokenizer tok = new StringTokenizer(value,",");
+		if (!value.equals("")) { //$NON-NLS-1$
+			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			while (tok.hasMoreTokens()) {
 				int num = Integer.parseInt(tok.nextToken());
 				trim.add(num);

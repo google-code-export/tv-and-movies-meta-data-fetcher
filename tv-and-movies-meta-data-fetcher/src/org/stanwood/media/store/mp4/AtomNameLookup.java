@@ -13,6 +13,7 @@ public class AtomNameLookup {
 	/**
 	 * The Constructor
 	 */
+	@SuppressWarnings("nls")
 	public AtomNameLookup() {
 		names.put("stik","Media type");
 		names.put("tven","Episode ID");

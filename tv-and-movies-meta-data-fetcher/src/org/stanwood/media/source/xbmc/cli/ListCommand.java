@@ -25,8 +25,8 @@ import org.stanwood.media.util.Version;
  */
 public class ListCommand extends AbstractXBMCSubCommand {
 
-	private final static String NAME = "list";
-	private final static String DESCRIPTION = "lists the installed XBMC addons";
+	private final static String NAME = "list"; //$NON-NLS-1$
+	private final static String DESCRIPTION = Messages.getString("ListCommand.DESC"); //$NON-NLS-1$
 	private final static List<Option>OPTIONS;
 
 	static {
@@ -48,8 +48,8 @@ public class ListCommand extends AbstractXBMCSubCommand {
 	protected boolean run() {
 		try {
 			PrintStream stdout = getStdout();
-			info("XBMC Addon list:");
-			TextTable table = new TextTable(new String[] {"ID","Status","Installed Version","Avaliable Version"});
+			info(Messages.getString("ListCommand.ADDON_LIST")); //$NON-NLS-1$
+			TextTable table = new TextTable(new String[] {Messages.getString("ListCommand.ID"),Messages.getString("ListCommand.STATUS"),Messages.getString("ListCommand.INSTALLED_VERSION"),Messages.getString("ListCommand.AVALIABLE_VERSION")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			for (AddonDetails ad : getUpdater().listAddons(getConsole())) {
 				String installedVer = displayVersion(ad.getInstalledVersion());
 				String avaliableVer = displayVersion(ad.getAvaliableVersion());
@@ -67,7 +67,7 @@ public class ListCommand extends AbstractXBMCSubCommand {
 
 	private String displayVersion(Version version) {
 		if (version==null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		return version.toString();

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -53,12 +54,12 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	public XBMCWebUpdater(ConfigReader config) throws XBMCException {
 		try {
 			updateSiteDataDir = config.getXBMCAddonSiteUrl();
-			updateSiteAddonsURL = updateSiteDataDir+"/addons.xml";
-			updateSiteAddonsMD5URL = updateSiteDataDir+"/addons.xml.md5";
+			updateSiteAddonsURL = updateSiteDataDir+"/addons.xml"; //$NON-NLS-1$
+			updateSiteAddonsMD5URL = updateSiteDataDir+"/addons.xml.md5"; //$NON-NLS-1$
 			addonsDir = config.getXBMCAddonDir();
 		}
 		catch (ConfigException e) {
-			throw new XBMCException("Unable to get XBMC addon directory",e);
+			throw new XBMCException(Messages.getString("XBMCWebUpdater.UNABLE_GET_ADDON_DIR"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -103,10 +104,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 		}
 		catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to list XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_LIST_SCRAPPERS"),e); //$NON-NLS-1$
 		}
 		catch (XMLParserException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPERS"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -123,7 +124,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				Set<String>requiredPlugins = new HashSet<String>();
 
 				for (String pluginId : addonIds) {
-					Version version =  new Version(getStringFromXML(newAddonDoc, "/addons/addon[@id='"+pluginId+"']/@version"));
+					Version version =  new Version(getStringFromXML(newAddonDoc, "/addons/addon[@id='"+pluginId+"']/@version")); //$NON-NLS-1$ //$NON-NLS-2$
 					findUninstalledRequiredPlugins(pluginId,version, newAddonDoc, requiredPlugins,installedPlugins);
 				}
 
@@ -136,10 +137,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			}
 		}
 		catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to install XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.7"),e); //$NON-NLS-1$
 		}
 		catch (XMLParserException e) {
-			throw new XBMCUpdaterException("Unable to install XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.8"),e); //$NON-NLS-1$
 		}
 
 
@@ -174,17 +175,17 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	private void removeAddon(IConsole console,String id) throws XBMCUpdaterException {
-		console.info("Uninstalling addon " + id);
+		console.info(Messages.getString("XBMCWebUpdater.9") + id); //$NON-NLS-1$
 		File addonDir = new File(addonsDir,id);
 		if (addonDir.isDirectory()) {
 			try {
 				FileHelper.delete(addonDir);
 			} catch (IOException e) {
-				throw new XBMCUpdaterException("Unable to unistall addon directory:" + addonDir,e);
+				throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.10") + addonDir,e); //$NON-NLS-1$
 			}
 		}
 		else {
-			throw new XBMCUpdaterException("Unable to find addon directory:" + addonDir);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.11") + addonDir); //$NON-NLS-1$
 		}
 
 	}
@@ -213,11 +214,11 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	private List<AddonDetails> getAddonDetails(Document newAddonDoc, AddonStatus status) throws XMLParserException {
 		List<AddonDetails>addonDetails = new ArrayList<AddonDetails>();
 
-		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon")) {
-			String id = ((Element)addon).getAttribute("id");
-			String version = ((Element)addon).getAttribute("version");
+		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon")) { //$NON-NLS-1$
+			String id = ((Element)addon).getAttribute("id"); //$NON-NLS-1$
+			String version = ((Element)addon).getAttribute("version"); //$NON-NLS-1$
 			if (version.length()==0) {
-				throw new XMLParserNotFoundException("Unable to find version attribute of plugin '"+id+"'");
+				throw new XMLParserNotFoundException(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_FIND_VERSION_ATTRIB"),id)); //$NON-NLS-1$
 			}
 
 			Version newVersion = new Version(version);
@@ -245,9 +246,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			return updatePlugins(console, newAddon, plugins);
 		}
 		catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		} catch (XMLParserException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -260,9 +261,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			return updatePlugins(console, newAddon, pluginList);
 		}
 		catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		} catch (XMLParserException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -278,9 +279,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			return updatePlugins(console, newAddon, pluginList);
 		}
 		catch (IOException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		} catch (XMLParserException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers",e);
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_UPDATE_SCRAPPE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -289,9 +290,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 		Document newAddonDoc = XMLParser.strToDom(newAddon);
 
-		File newPluginsDir = new File(addonsDir,"newplugins");
+		File newPluginsDir = new File(addonsDir,"newplugins"); //$NON-NLS-1$
 		if (!newPluginsDir.mkdir() && !newPluginsDir.exists()) {
-			throw new XBMCUpdaterException("Unable to create working directory: " +newPluginsDir);
+			throw new XBMCUpdaterException(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_CREATE_WORKING_DIR"),newPluginsDir)); //$NON-NLS-1$
 		}
 		try {
 			List<AddonDetails> uninstalledAddons = getAddonDetails(newAddonDoc,AddonStatus.NOT_INSTALLED);
@@ -305,7 +306,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 						FileHelper.delete(oldPluginDir);
 					}
 					FileHelper.move(f, oldPluginDir);
-					console.info("Installed plugin '"+f.getName()+"'");
+					console.info(MessageFormat.format(Messages.getString("XBMCWebUpdater.INSTALL_PLUGIN"),f.getName())); //$NON-NLS-1$
 					count++;
 				}
 			}
@@ -323,7 +324,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				}
 			}
 			catch (IOException e1) {
-				log.error("Unable to delete directory: " + newPluginsDir,e);
+				log.error(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_DELTE_DIR"),newPluginsDir),e); //$NON-NLS-1$
 			}
 
 			throw e;
@@ -335,29 +336,29 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				}
 			}
 			catch (IOException e1) {
-				log.error("Unable to delete file:" + newAddon,e1);
+				log.error(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_DELETE_FILE"),newAddon),e1); //$NON-NLS-1$
 			}
 		}
 	}
 
 	protected File downloadLatestAddonXML() throws IOException,
 			XBMCUpdaterException {
-		File newAddon = new File(addonsDir,"addon.xml.new");
+		File newAddon = new File(addonsDir,"addon.xml.new"); //$NON-NLS-1$
 
 		String actualMD5;
 		try {
 			actualMD5 = mgr.downloadFile(new URL(updateSiteAddonsURL),newAddon);
 		}
 		catch (MalformedURLException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL: "+updateSiteAddonsURL,e);
+			throw new XBMCUpdaterException(MessageFormat.format(Messages.getString("XBMCWebUpdater.BAD_URL"),updateSiteAddonsURL),e); //$NON-NLS-1$
 		}
 
 		String expectedMD5 = readMD5(addonsDir);
 		if (expectedMD5!=null && !expectedMD5.equals(actualMD5)) {
 			if (log.isDebugEnabled()) {
-				log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]");
+				log.debug("MD5 mismatch ["+expectedMD5+"] != ["+actualMD5+"]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
-			throw new XBMCUpdaterException("Unable to check for XBMC Scraper updates, MD5 checksum failed.");
+			throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_CHECK_UPDATES")); //$NON-NLS-1$
 		}
 		return newAddon;
 	}
@@ -383,7 +384,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private String readMD5(File addonsDir) throws XBMCUpdaterException,
 			IOException {
-		File newAddonMD5 = new File(addonsDir,"addon.md5.new");
+		File newAddonMD5 = new File(addonsDir,"addon.md5.new"); //$NON-NLS-1$
 		String expectedMD5;
 		try {
 			mgr.downloadFile(new URL(updateSiteAddonsMD5URL),newAddonMD5);
@@ -391,10 +392,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 			FileHelper.delete(newAddonMD5);
 		}
 		catch (MalformedURLException e) {
-			throw new XBMCUpdaterException("Unable to update XBMC scrapers, bad URL: " +updateSiteAddonsMD5URL,e);
+			throw new XBMCUpdaterException(MessageFormat.format(Messages.getString("XBMCWebUpdater.BAD_URL"),updateSiteAddonsMD5URL),e); //$NON-NLS-1$
 		}
 		catch (IOException e) {
-			log.error("Unable to download md5, so can't check downloaded file is correct: " +updateSiteAddonsMD5URL ,e);
+			log.error(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_DOWNLOAD_MD5"),updateSiteAddonsMD5URL) ,e); //$NON-NLS-1$
 			expectedMD5 = null;
 		}
 		return expectedMD5;
@@ -436,9 +437,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	private List<AddonDetails> getRequiredPlugins(Document newAddonDoc, String plugin) throws XMLParserException {
 
 		List<AddonDetails>requiredPlugins = new ArrayList<AddonDetails>();
-		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon[@id='"+plugin+"']/requires/import")) {
-			String strVersion = ((Element)addon).getAttribute("version");
-			String rId = ((Element)addon).getAttribute("addon");
+		for (Node addon : selectNodeList(newAddonDoc, "/addons/addon[@id='"+plugin+"']/requires/import")) { //$NON-NLS-1$ //$NON-NLS-2$
+			String strVersion = ((Element)addon).getAttribute("version"); //$NON-NLS-1$
+			String rId = ((Element)addon).getAttribute("addon"); //$NON-NLS-1$
 			AddonDetails ad = new AddonDetails(rId,new Version(strVersion), new Version(strVersion),AddonStatus.NOT_INSTALLED);
 			requiredPlugins.add(ad);
 		}
@@ -446,14 +447,14 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	private void downloadNewPlugin(IConsole console,String plugin,File newPluginsDir,Version version) throws XBMCUpdaterException {
-		String filename = plugin+"-"+version.toString()+".zip";
+		String filename = plugin+"-"+version.toString()+".zip"; //$NON-NLS-1$ //$NON-NLS-2$
 		File zipFile = new File(newPluginsDir,filename);
 		try {
 			if (new File(newPluginsDir,plugin).exists()) {
 				return ;
 			}
 
-			URL url = new URL(updateSiteDataDir+"/"+plugin+"/"+filename);
+			URL url = new URL(updateSiteDataDir+"/"+plugin+"/"+filename); //$NON-NLS-1$ //$NON-NLS-2$
 
 			mgr.downloadFile(url,zipFile);
 			FileInputStream fis = null;
@@ -461,10 +462,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				fis = new FileInputStream(zipFile);
 				FileHelper.unzip(fis, newPluginsDir);
 				if (!new File(newPluginsDir,plugin).exists()) {
-					throw new XBMCUpdaterException("Failed to unzip plugin '"+zipFile+"'");
+					throw new XBMCUpdaterException(MessageFormat.format(Messages.getString("XBMCWebUpdater.FAILED_TO_UNZIP"),zipFile)); //$NON-NLS-1$
 				}
 				FileHelper.delete(zipFile);
-				console.info("Downloaded plugin '"+plugin+"' version="+version.toString());
+				console.info(MessageFormat.format(Messages.getString("XBMCWebUpdater.DOWNLOAD_PLUGIN"),plugin,version.toString())); //$NON-NLS-1$
 			}
 			finally {
 				if (fis!=null) {
@@ -477,10 +478,10 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 				try {
 					FileHelper.delete(zipFile);
 				} catch (IOException e1) {
-					log.error("Unable to delete file:" + zipFile);
+					log.error(Messages.getString("XBMCWebUpdater.UNABLE_DELETE_FILE1") + zipFile); //$NON-NLS-1$
 				}
 			}
-			throw new XBMCUpdaterException("Unable to download new pluign : " + plugin,e);
+			throw new XBMCUpdaterException(MessageFormat.format(Messages.getString("XBMCWebUpdater.UNABLE_DOWNLOAD_NEW_PLUGIN"),plugin),e); //$NON-NLS-1$
 		}
 	}
 
@@ -511,7 +512,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	private int getAddonCount(File addonDir) {
 		int count = 0;
 		for (File f : addonDir.listFiles()) {
-			if (f.isDirectory() && !f.getName().equals("newplugins")) {
+			if (f.isDirectory() && !f.getName().equals("newplugins")) { //$NON-NLS-1$
 				count++;
 			}
 		}
@@ -520,25 +521,25 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private AddonDetails readPluginDetails(File dir) throws XBMCUpdaterException {
 		AddonDetails ad = null;
-		File pluginXml = new File(dir,"addon.xml");
+		File pluginXml = new File(dir,"addon.xml"); //$NON-NLS-1$
 		if (pluginXml.exists()) {
 
 			try {
 				Document d = XMLParser.strToDom(pluginXml);
-				String strVersion = getStringFromXML(d,"/addon/@version");
+				String strVersion = getStringFromXML(d,"/addon/@version"); //$NON-NLS-1$
 				ad = new AddonDetails(dir.getName(),new Version(strVersion),new Version(strVersion),AddonStatus.INSTALLED);
 				Set<String>required = new HashSet<String>();
-				for (Node node : selectNodeList(d, "/addon/requires/import")) {
-					required.add(((Element)node).getAttribute("addon"));
+				for (Node node : selectNodeList(d, "/addon/requires/import")) { //$NON-NLS-1$
+					required.add(((Element)node).getAttribute("addon")); //$NON-NLS-1$
 				}
 				ad.setRequiredAddons(required);
 
 			}
 			catch (XMLParserException e) {
-				throw new XBMCUpdaterException("Unable to reader plugin version",e);
+				throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_READ_PLUGIN_VERSION"),e); //$NON-NLS-1$
 			}
 			catch (IOException e) {
-				throw new XBMCUpdaterException("Unable to reader plugin version",e);
+				throw new XBMCUpdaterException(Messages.getString("XBMCWebUpdater.UNABLE_READ_PLUGIN_VERSION"),e); //$NON-NLS-1$
 			}
 
 		}
@@ -547,9 +548,9 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 
 	private Set<String> getDefaultPlugins() {
 		Set<String>defaultPlugins = new HashSet<String>();
-		defaultPlugins.add("metadata.themoviedb.org");
-		defaultPlugins.add("metadata.tvdb.com");
-		defaultPlugins.add("metadata.imdb.com");
+		defaultPlugins.add("metadata.themoviedb.org"); //$NON-NLS-1$
+		defaultPlugins.add("metadata.tvdb.com"); //$NON-NLS-1$
+		defaultPlugins.add("metadata.imdb.com"); //$NON-NLS-1$
 		return defaultPlugins;
 	}
 }

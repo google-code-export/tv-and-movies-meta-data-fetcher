@@ -1,6 +1,7 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
@@ -34,22 +35,22 @@ public class MP4v2CLIAtomArtworkSummary extends AbstractCLIMP4v2Atom implements 
 	 */
 	@Override
 	public String toString() {
-		return getDisplayName()+": ["+getName() +"=Artwork of type "+getDisplayType()+" of size "+size+"]";
+		return MessageFormat.format(Messages.getString("MP4v2CLIAtomArtworkSummary.ARTWORK_TOSTRING"),getDisplayName(),getName(),getDisplayType(),size); //$NON-NLS-1$
 	}
 
 	private String getDisplayType() {
 		switch (artType) {
-			case  MP4_ART_BMP: return "BMP";
-			case  MP4_ART_JPEG: return "JPEG";
-			case  MP4_ART_PNG: return "PNG";
-			case  MP4_ART_GIF: return "GIF";
-			default: return "UNDEFINED";
+			case  MP4_ART_BMP: return "BMP"; //$NON-NLS-1$
+			case  MP4_ART_JPEG: return "JPEG"; //$NON-NLS-1$
+			case  MP4_ART_PNG: return "PNG"; //$NON-NLS-1$
+			case  MP4_ART_GIF: return "GIF"; //$NON-NLS-1$
+			default: return "UNDEFINED"; //$NON-NLS-1$
 		}
 	}
 
 	/** {@inheritDoc}*/
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
-		throw new UnsupportedOperationException("The summary artwork atom can not be wrttien to a mp4 file");
+		throw new UnsupportedOperationException(Messages.getString("MP4v2CLIAtomArtworkSummary.UNABLE_WRITE")); //$NON-NLS-1$
 	}
 }

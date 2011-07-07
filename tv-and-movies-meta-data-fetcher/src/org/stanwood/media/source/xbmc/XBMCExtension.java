@@ -2,6 +2,7 @@ package org.stanwood.media.source.xbmc;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,9 +31,9 @@ public abstract class XBMCExtension extends XMLParser {
 	private final static Log log = LogFactory.getLog(XBMCExtension.class);
 
 
-	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*?\\])");
-	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*?)\\]");
-	private final static Pattern PARAM_PATTERN = Pattern.compile("(\\$\\$\\d+)");
+	private final static Pattern INFO_PATTERN1 = Pattern.compile("(\\$INFO\\[.*?\\])"); //$NON-NLS-1$
+	private final static Pattern INFO_PATTERN2 = Pattern.compile("\\$INFO\\[(.*?)\\]"); //$NON-NLS-1$
+	private final static Pattern PARAM_PATTERN = Pattern.compile("(\\$\\$\\d+)"); //$NON-NLS-1$
 
 	private Document doc = null;
 	private String point;
@@ -55,7 +56,7 @@ public abstract class XBMCExtension extends XMLParser {
 		if (doc==null) {
 			File file = scraperFile;
 			if (!file.exists()) {
-				throw new XBMCException ("Unable to find XMBC scrapper: " + file);
+				throw new XBMCException (MessageFormat.format(Messages.getString("XBMCExtension.UNABLE_FIND_SCRAPER"),file)); //$NON-NLS-1$
 			}
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -67,14 +68,14 @@ public abstract class XBMCExtension extends XMLParser {
 				builder.setErrorHandler(errorHandler);
 				doc = builder.parse(file);
 				if (errorHandler.hasErrors()) {
-					throw new XBMCException ("Unable to parse  XMBC scrapper, errors found in file: " + file);
+					throw new XBMCException (MessageFormat.format(Messages.getString("XBMCExtension.UNABLE_PARSE_SCRAPER_HAS_ERRORS"), file)); //$NON-NLS-1$
 				}
 			} catch (SAXException e) {
-				throw new XBMCException ("Unable to parse XMBC scrapper: " + e.getMessage(), e);
+				throw new XBMCException (Messages.getString("XBMCExtension.UNABLE_PARSE_SCRAPER"), e); //$NON-NLS-1$
 			} catch (IOException e) {
-				throw new XBMCException ("Unable to read XMBC scrapper: " + e.getMessage(), e);
+				throw new XBMCException (Messages.getString("XBMCExtension.UNABLE_READ_SCRAPPER"), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {
-				throw new XBMCException ("Unable to parse  XMBC scrapper: " + e.getMessage(), e);
+				throw new XBMCException (Messages.getString("XBMCExtension.UNABLE_PARSE_SCRAPER"), e); //$NON-NLS-1$
 			}
 		}
 		return doc;
@@ -90,7 +91,7 @@ public abstract class XBMCExtension extends XMLParser {
 	 */
 	public String executeXBMCFunction(Element functionNode,Map<Integer,String> params) throws  XBMCException, XMLParserException {
 		if (log.isDebugEnabled()) {
-			log.debug("Executing function : " + functionNode.getNodeName());
+			log.debug("Executing function : " + functionNode.getNodeName()); //$NON-NLS-1$
 		}
 
 		executeChildNodes(functionNode,params);
@@ -114,7 +115,7 @@ public abstract class XBMCExtension extends XMLParser {
 					executeChildNodes(node,params);
 				}
 
-				if (node.getNodeName().equals("RegExp")) {
+				if (node.getNodeName().equals("RegExp")) { //$NON-NLS-1$
 					performRegexp(params, node);
 				}
 			}
@@ -125,8 +126,8 @@ public abstract class XBMCExtension extends XMLParser {
 		String input = getInputAttr(params,node);
 		String orgOutput = getOutputAttr(params,node);
 
-		String conditional = node.getAttribute("conditional");
-		if ( (!conditional.equals("")) && !addon.checkCondition(conditional)) {
+		String conditional = node.getAttribute("conditional"); //$NON-NLS-1$
+		if ( (!conditional.equals("")) && !addon.checkCondition(conditional)) { //$NON-NLS-1$
 			return;
 		}
 
@@ -141,7 +142,7 @@ public abstract class XBMCExtension extends XMLParser {
 				if (in.length()>50) {
 					in = in.substring(0,50);
 				}
-				log.debug("perform expr " + expression.toString() +" on [" + in+"]");
+				log.debug("perform expr " + expression.toString() +" on [" + in+"]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			Matcher m = expression.getPattern().matcher(input);
 			boolean found = false;
@@ -154,11 +155,11 @@ public abstract class XBMCExtension extends XMLParser {
 					String value = m.group(j);
 					if (value!=null) {
 						value = processValue(expression,value,j);
-						output = output.replaceAll("\\\\"+(j), Matcher.quoteReplacement(value));
+						output = output.replaceAll("\\\\"+(j), Matcher.quoteReplacement(value)); //$NON-NLS-1$
 					}
 				}
 				if (found==false && expression.getClear()) {
-					output = "";
+					output = ""; //$NON-NLS-1$
 				}
 				newOutput.append(output);
 
@@ -180,7 +181,7 @@ public abstract class XBMCExtension extends XMLParser {
 
 		if (dest!=-1) {
 			if (log.isDebugEnabled()) {
-				log.debug("Put param " + dest + " - " + output);
+				log.debug("Put param " + dest + " - " + output);  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if (appendToDest) {
 				String orgValue = params.get(Integer.valueOf(dest));
@@ -196,7 +197,7 @@ public abstract class XBMCExtension extends XMLParser {
 
 	private String processValue(XBMCExpression expression,String value,int group) {
 		if (!expression.getNoClean(group)) {
-			value = value.replaceAll("\\<.*?\\>", "");
+			value = value.replaceAll("\\<.*?\\>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		if (expression.getTrim(group)) {
@@ -206,11 +207,11 @@ public abstract class XBMCExtension extends XMLParser {
 	}
 
 	private XBMCExpression getExpression(Element node,Map<Integer, String> params) throws XBMCException {
-		Element expNode = (Element) getChildNodeByName(node, "expression");
+		Element expNode = (Element) getChildNodeByName(node, "expression"); //$NON-NLS-1$
 
 		if (expNode !=null) {
 			XBMCExpression expr = new XBMCExpression();
-			String regexp = "(.+)";
+			String regexp = "(.+)"; //$NON-NLS-1$
 			if (expNode.getTextContent().length()>0) {
 				regexp = expNode.getTextContent();
 			}
@@ -221,12 +222,12 @@ public abstract class XBMCExtension extends XMLParser {
 			Pattern p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
 			expr.setPattern(p);
 
-			expr.setNoClean(expNode.getAttribute("noclean"));
+			expr.setNoClean(expNode.getAttribute("noclean")); //$NON-NLS-1$
 
 
-			expr.setClear((expNode.getAttribute("clear").equals("yes")));
+			expr.setClear((expNode.getAttribute("clear").equals("yes"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-			expr.setRepeat((expNode.getAttribute("repeat").equals("yes")));
+			expr.setRepeat((expNode.getAttribute("repeat").equals("yes"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 			return expr;
 		}
@@ -242,7 +243,7 @@ public abstract class XBMCExtension extends XMLParser {
 			int num = Integer.parseInt(m.group().substring(2));
 			String value = params.get(num);
 			if (value==null) {
-				value = "";
+				value = ""; //$NON-NLS-1$
 			}
 
 			m.appendReplacement(buf, Matcher.quoteReplacement(value));
@@ -276,9 +277,9 @@ public abstract class XBMCExtension extends XMLParser {
 
 	private int getDestParam(Element node) {
 		int dest = -1;
-		String sDest = node.getAttribute("dest");
+		String sDest = node.getAttribute("dest"); //$NON-NLS-1$
 		if (sDest!=null && sDest.length()>0) {
-			if (sDest.endsWith("+")) {
+			if (sDest.endsWith("+")) { //$NON-NLS-1$
 				sDest = sDest.substring(0,sDest.length()-1);
 			}
 			dest = Integer.parseInt(sDest);
@@ -287,21 +288,21 @@ public abstract class XBMCExtension extends XMLParser {
 	}
 
 	private boolean shouldAppendToBuffer(Element node) {
-		String sDest = node.getAttribute("dest");
-		return (sDest.endsWith("+"));
+		String sDest = node.getAttribute("dest"); //$NON-NLS-1$
+		return (sDest.endsWith("+")); //$NON-NLS-1$
 	}
 
 	private String getInputAttr(Map<Integer, String> params, Element node) {
-		String value = node.getAttribute("input");
-		if (value==null || value.equals("")) {
-			value="$$1";
+		String value = node.getAttribute("input"); //$NON-NLS-1$
+		if (value==null || value.equals("")) { //$NON-NLS-1$
+			value="$$1"; //$NON-NLS-1$
 		}
 		value = applyParams(value,params);
 		return value;
 	}
 
 	private String getOutputAttr(Map<Integer, String> params, Element node) {
-		String value = node.getAttribute("output");
+		String value = node.getAttribute("output"); //$NON-NLS-1$
 		value = applyParams(value,params);
 		return value;
 	}
@@ -332,7 +333,12 @@ public abstract class XBMCExtension extends XMLParser {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "XBMCExtension:" + scraperFile +" : " + point;
+		StringBuilder result = new StringBuilder();
+		result.append("XBMCExtension:"); //$NON-NLS-1$
+		result.append(scraperFile);
+		result.append(" : "); //$NON-NLS-1$
+		result.append(point);
+		return result.toString();
 	}
 
 

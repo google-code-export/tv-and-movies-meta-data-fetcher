@@ -1,5 +1,6 @@
 package org.stanwood.media.source.xbmc.expression;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class ExpressionEval {
 	 */
 	public Value eval(String expression) throws ExpressionParserException {
 		if (log.isDebugEnabled()) {
-			log.debug("Evaluating expression '"+expression+"'");
+			log.debug("Evaluating expression '"+expression+"'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		try {
 			ExpressionLexer lexer = new ExpressionLexer(new ANTLRStringStream(expression));
@@ -43,12 +44,12 @@ public class ExpressionEval {
 		    parser.setVariables(variables);
 		    Value value = parser.parse().value;
 		    if (log.isDebugEnabled()) {
-		    	log.debug("Result :" +value);
+		    	log.debug("Result :" +value); //$NON-NLS-1$
 		    }
 		    return value;
 		}
 		catch (RecognitionException e) {
-			throw new ExpressionParserException("Unable to parse expression '" + expression +"'",e);
+			throw new ExpressionParserException(MessageFormat.format(Messages.getString("ExpressionEval.UNABLE_PARSE_EXPRESSION"),expression),e); //$NON-NLS-1$
 		}
    }
 }

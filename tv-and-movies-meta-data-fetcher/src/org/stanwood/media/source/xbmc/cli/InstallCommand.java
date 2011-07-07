@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.cli;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,8 +28,8 @@ import org.stanwood.media.source.xbmc.updater.AddonDetails;
  */
 public class InstallCommand extends AbstractXBMCSubCommand {
 
-	private final static String NAME = "install";
-	private final static String DESCRIPTION = "Install a new XBMC addon";
+	private final static String NAME = "install"; //$NON-NLS-1$
+	private final static String DESCRIPTION = Messages.getString("InstallCommand.INSTALL_NEW"); //$NON-NLS-1$
 	private final static List<Option>OPTIONS;
 
 	static {
@@ -55,7 +56,7 @@ public class InstallCommand extends AbstractXBMCSubCommand {
 				getUpdater().installAddons(getConsole(), plugins);
 			}
 			else {
-				fatal("Missing argument, no plugins specified");
+				fatal(Messages.getString("InstallCommand.MISSING_ARG")); //$NON-NLS-1$
 				return false;
 			}
 		} catch (XBMCException e) {
@@ -89,24 +90,24 @@ public class InstallCommand extends AbstractXBMCSubCommand {
 			if (addon.getId().equals(addonId)) {
 				switch (addon.getStatus()) {
 					case INSTALLED:
-						fatal("Addon '"+addonId+"' is already installed, so unable to install it. Try update instead.");
+						fatal(MessageFormat.format(Messages.getString("InstallCommand.ADDON_ALREADY_INSTALLED"),addonId)); //$NON-NLS-1$
 						return false;
 					case NOT_INSTALLED:
 						plugins.add(addonId);
 						return true;
 					case OUT_OF_DATE:
-						fatal("Addon '"+addonId+"' is already installed, so unable to install it. Try update instead.");
+						fatal(MessageFormat.format(Messages.getString("InstallCommand.ADDON_ALREADY_INSTALLED"),addonId)); //$NON-NLS-1$
 						return false;
 				}
 			}
 		}
-		fatal("Unable to find addon: " +addonId);
+		fatal(MessageFormat.format(Messages.getString("InstallCommand.UNABLE_FIND_ADDON"),addonId)); //$NON-NLS-1$
 		return false;
 	}
 
 	@Override
 	protected String getPrintArguments() {
-		return " <plugins...>";
+		return " "+Messages.getString("InstallCommand.PLUGINS"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

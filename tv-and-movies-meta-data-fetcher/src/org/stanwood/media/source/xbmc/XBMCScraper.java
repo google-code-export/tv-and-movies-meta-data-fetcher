@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import org.w3c.dom.Node;
  */
 public class XBMCScraper extends XBMCExtension {
 
-	private final static String ROOT_NODE_NAME = "scraper";
+	private final static String ROOT_NODE_NAME = "scraper"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(XBMCScraper.class);
 
 	private Mode mode;
@@ -62,11 +63,11 @@ public class XBMCScraper extends XBMCExtension {
 	 */
 	public Document getCreateSearchUrl(String searchTerm,String year) throws XBMCException {
 		try {
-			searchTerm = URLEncoder.encode(searchTerm,"utf-8");
+			searchTerm = URLEncoder.encode(searchTerm,"utf-8"); //$NON-NLS-1$
 		} catch (UnsupportedEncodingException e) {
-			throw new XBMCException("Unable to encode search term to URL format",e);
+			throw new XBMCException(Messages.getString("XBMCScraper.UNABLE_ENCODE_SEARCH_TERM_URL"),e); //$NON-NLS-1$
 		}
-		return executeFunctionByName("CreateSearchUrl",searchTerm,year);
+		return executeFunctionByName("CreateSearchUrl",searchTerm,year); //$NON-NLS-1$
 	}
 
 
@@ -80,7 +81,7 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems creating the search urlXML
 	 */
 	public Document getGetSearchResults(String rawHtml,String searchTerm) throws  XBMCException {
-		return executeFunctionByName("GetSearchResults",rawHtml,searchTerm);
+		return executeFunctionByName("GetSearchResults",rawHtml,searchTerm); //$NON-NLS-1$
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public Document getGetDetails(File file,String... contents) throws  XBMCException {
-		Document result = executeFunctionByName("GetDetails",contents);
+		Document result = executeFunctionByName("GetDetails",contents); //$NON-NLS-1$
 		return result;
 	}
 
@@ -103,7 +104,7 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problem
 	 */
 	public Document getEpisodeGuideUrl(String rawHtml) throws XBMCException {
-		return executeFunctionByName("EpisodeGuideUrl",rawHtml);
+		return executeFunctionByName("EpisodeGuideUrl",rawHtml); //$NON-NLS-1$
 	}
 
 
@@ -115,26 +116,26 @@ public class XBMCScraper extends XBMCExtension {
 	 */
 	public boolean getNfoUrl(String contents) throws XBMCException {
 		if (log.isDebugEnabled()) {
-			log.debug("executing scraper function with name: NfoUrl");
+			log.debug("executing scraper function with name: NfoUrl"); //$NON-NLS-1$
 		}
 		try {
 			Map<Integer, String> params = convertParams(contents);
 
-			String result = executeXBMCScraperFunction("NfoUrl",params);
+			String result = executeXBMCScraperFunction("NfoUrl",params); //$NON-NLS-1$
 
 			if (log.isDebugEnabled()) {
-				log.debug("Got result: " + result);
+				log.debug("Got result: " + result); //$NON-NLS-1$
 			}
 
 			return (result != null && result.length()>0);
 		} catch (Exception e) {
-			throw new XBMCException("Unable to execute scraper function 'NfoUrl' in addon '"+getAddon().getId()+"'",e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_EXECUTE_SCRAPER_FUNCTION"),"NfoUrl",getAddon().getId()),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private Document executeFunctionByName(String funcName,String... contents) throws  XBMCException {
 		if (log.isDebugEnabled()) {
-			log.debug("executing scraper function with name: " + funcName);
+			log.debug("executing scraper function with name: " + funcName); //$NON-NLS-1$
 		}
 		try {
 			Map<Integer, String> params = convertParams(contents);
@@ -142,24 +143,24 @@ public class XBMCScraper extends XBMCExtension {
 			String result = executeXBMCScraperFunction(funcName,params);
 
 			if (log.isDebugEnabled()) {
-				log.debug("Got result: " + result);
+				log.debug("Got result: " + result); //$NON-NLS-1$
 			}
 			if (result == null) {
-				result = "";
+				result = ""; //$NON-NLS-1$
 			}
 			Document doc = XMLParser.strToDom(result);
 			checkForError(doc,funcName);
 			resolveElements(doc);
 			return doc;
 		} catch (Exception e) {
-			throw new XBMCException("Unable to execute scraper function '"+funcName+"' in addon '"+getAddon().getId()+"'",e);
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_TO_EXECUTE_SCRAPER_FUNCTION"),funcName,getAddon().getId()),e); //$NON-NLS-1$
 		}
 	}
 
 	private void checkForError(Document doc,String functionName) throws XBMCException, XMLParserException{
-		Node node = selectSingleNode(doc, "error/text()");
+		Node node = selectSingleNode(doc, "error/text()"); //$NON-NLS-1$
 		if (node!=null) {
-			throw new XBMCException("Unable to execute function '"+functionName+"', " + node.getTextContent());
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_TO_EXECUTE_FUNCTION"),functionName,node.getTextContent())); //$NON-NLS-1$
 		}
 	}
 
@@ -171,17 +172,17 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public Document getGetEpisodeList(String html, URL showURL) throws XBMCException {
-		return executeFunctionByName("GetEpisodeList",html,showURL.toExternalForm());
+		return executeFunctionByName("GetEpisodeList",html,showURL.toExternalForm()); //$NON-NLS-1$
 	}
 
 	private void resolveElements(Document doc) throws XMLParserException,
 			XBMCException, IOException, SourceException {
-		for (Node node : selectNodeList(doc, "details/chain")) {
+		for (Node node : selectNodeList(doc, "details/chain")) { //$NON-NLS-1$
 			resolveChainNodes(doc,(Element) node);
 		}
 
 
-		for (Node node : selectNodeList(doc, "details/url")) {
+		for (Node node : selectNodeList(doc, "details/url")) { //$NON-NLS-1$
 			resolveUrlNodes(doc,(Element) node);
 		}
 	}
@@ -190,7 +191,7 @@ public class XBMCScraper extends XBMCExtension {
 			throws XBMCException {
 		Map<Integer,String>params = new HashMap<Integer,String>();
 		if (contents.length>=9) {
-			throw new XBMCException("Not allowed more than 9 params");
+			throw new XBMCException(Messages.getString("XBMCScraper.NOT_ALLOWED_MORE_9_PARAMS")); //$NON-NLS-1$
 		}
 		for (int i=0;i<contents.length;i++) {
 			params.put(i+1, contents[i]);
@@ -200,7 +201,7 @@ public class XBMCScraper extends XBMCExtension {
 
 	private void resolveChainNodes(Document doc,Element node) throws XMLParserException,
 			XBMCException {
-		String functionName = node.getAttribute("function");
+		String functionName = node.getAttribute("function"); //$NON-NLS-1$
 		String param = node.getTextContent();
 
 		Map<Integer,String> subParams = new HashMap<Integer,String>();
@@ -209,18 +210,18 @@ public class XBMCScraper extends XBMCExtension {
 		Node parent = node.getParentNode();
 		parent.removeChild(node);
 
-		for (Node n : selectNodeList(results, "details/*")) {
+		for (Node n : selectNodeList(results, "details/*")) { //$NON-NLS-1$
 			Node newNode = doc.importNode(n,true);
 			parent.appendChild(newNode);
 		}
 	}
 
 	private void resolveUrlNodes(final Document doc,final Element node) throws DOMException, XMLParserException, IOException, SourceException {
-		final String functionName = node.getAttribute("function");
+		final String functionName = node.getAttribute("function"); //$NON-NLS-1$
 		try {
 			URL url = new URL(node.getTextContent());
 
-			if (!functionName.equals("")) {
+			if (!functionName.equals("")) { //$NON-NLS-1$
 				StreamProcessor processor = new StreamProcessor(addonMgr.getStreamToURL(url)) {
 
 
@@ -231,25 +232,25 @@ public class XBMCScraper extends XBMCExtension {
 						try {
 							String s = getAddon().executeFunction(functionName, params) ;
 							if (s==null) {
-								s = "";
+								s = ""; //$NON-NLS-1$
 							}
 							Document results = strToDom(s);
 							Node parent = node.getParentNode();
 							parent.removeChild(node);
 
-							for (Node n : selectNodeList(results, "details/*")) {
+							for (Node n : selectNodeList(results, "details/*")) { //$NON-NLS-1$
 								Node newNode = doc.importNode(n,true);
 								parent.appendChild(newNode);
 							}
 						} catch (XMLParserException e) {
-							throw new SourceException("Unable to execute function '"+functionName+"'");
+							throw new SourceException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_EXECUTE_SCRAPER_FUNC"),functionName)); //$NON-NLS-1$
 						}
 					}
 				};
 				processor.handleStream();
 			}
 		} catch (MalformedURLException e) {
-			throw new XMLParserException("Invalid URL '"+node.getTextContent()+"'");
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XBMCScraper.UNVALID_URL"),node.getTextContent())); //$NON-NLS-1$
 		}
 	}
 
@@ -261,9 +262,9 @@ public class XBMCScraper extends XBMCExtension {
 	 */
 	@Override
 	public String executeXBMCScraperFunction(String functionName,Map<Integer,String> params) throws  XBMCException, XMLParserException {
-		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName);
+		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName); //$NON-NLS-1$
 		if (functionNode==null) {
-			throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
+			throw new XBMCFunctionNotFoundException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_FIND_SCRAPER_FUNCTION"),functionName)); //$NON-NLS-1$
 		}
 		return executeXBMCFunction(functionNode,params);
 	}
@@ -287,7 +288,7 @@ public class XBMCScraper extends XBMCExtension {
 	 * @throws XBMCException Thrown if their are any problems
 	 */
 	public Document getGetEpisodeDetails(String contents,String episodeId) throws  XBMCException {
-		return executeFunctionByName("GetEpisodeDetails",contents,episodeId);
+		return executeFunctionByName("GetEpisodeDetails",contents,episodeId); //$NON-NLS-1$
 	}
 
 }

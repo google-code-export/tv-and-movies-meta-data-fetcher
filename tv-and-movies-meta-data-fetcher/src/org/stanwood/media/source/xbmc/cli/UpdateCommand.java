@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.cli;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +29,8 @@ import org.stanwood.media.source.xbmc.updater.AddonDetails;
  */
 public class UpdateCommand extends AbstractXBMCSubCommand {
 
-	private final static String NAME = "update";
-	private final static String DESCRIPTION = "Update the installed XBMC addons to the latest versions";
+	private final static String NAME = "update"; //$NON-NLS-1$
+	private final static String DESCRIPTION = Messages.getString("UpdateCommand.DESC"); //$NON-NLS-1$
 	private final static List<Option>OPTIONS;
 
 	static {
@@ -91,10 +92,10 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 			if (addon.getId().equals(addonId)) {
 				switch (addon.getStatus()) {
 					case INSTALLED:
-						warn("Addon '"+addonId+"' is already uptodate, so will not be updated");
+						warn(MessageFormat.format(Messages.getString("UpdateCommand.INSTALLED_MSG"),addonId)); //$NON-NLS-1$
 						return true;
 					case NOT_INSTALLED:
-						fatal("Addon '"+addonId+"' is not installed, so unable to update it");
+						fatal(MessageFormat.format(Messages.getString("UpdateCommand.NOT_INSTALLED_MSG"),addonId)); //$NON-NLS-1$
 						return false;
 					case OUT_OF_DATE:
 						plugins.add(addonId);
@@ -102,12 +103,12 @@ public class UpdateCommand extends AbstractXBMCSubCommand {
 				}
 			}
 		}
-		fatal("Unable to find addon: " +addonId);
+		fatal(MessageFormat.format(Messages.getString("UpdateCommand.UNABLE_FIND_ADDON"),addonId)); //$NON-NLS-1$
 		return false;
 	}
 
 	@Override
 	protected String getPrintArguments() {
-		return " <plugins...>";
+		return " "+Messages.getString("UpdateCommand.PLUGINS"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

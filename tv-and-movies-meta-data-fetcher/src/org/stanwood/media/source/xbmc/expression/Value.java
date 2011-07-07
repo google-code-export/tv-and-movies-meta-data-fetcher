@@ -59,7 +59,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if their is a problem performing the operation.
 	 */
 	public Value addition(Value value) throws ExpressionParserException {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","+",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"+",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if their is a problem performing the operation.
 	 */
 	public Value divide(Value value) throws ExpressionParserException {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","/",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"/",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if their is a problem performing the operation.
 	 */
 	public Value multiply(Value value) throws ExpressionParserException {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","*",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"*",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value subtract(Value value) throws ExpressionParserException {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","-",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"-",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value not() {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","!",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"!",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value and(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","&&",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"&&",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value or(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","||",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"||",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value notequals(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","!=",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"!=",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value equals(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","==",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"==",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value greater(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'",">",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),">",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value greaterEquals(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'",">=",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),">=",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value less(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","<",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"<",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Value {
 	 * @throws ExpressionParserException Thrown if not supported by this value
 	 */
 	public Value lessEquals(Value value) {
-		throw new ExpressionParserException(MessageFormat.format("Operation \\'{0}\\' unspported on types of \\'{0}\\'","<=",type));
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("Value.UNSUPPORTED_OP"),"<=",type)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
 

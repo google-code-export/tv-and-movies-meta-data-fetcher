@@ -1,6 +1,7 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
@@ -28,14 +29,14 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object>args) {
-		if (getName().equals("disk")) {
-			args.add("-disk");
+		if (getName().equals("disk")) { //$NON-NLS-1$
+			args.add("-disk"); //$NON-NLS-1$
 			args.add(String.valueOf(number));
-			args.add("-disks");
+			args.add("-disks"); //$NON-NLS-1$
 			args.add(String.valueOf(total));
 		}
 		else {
-			throw new UnsupportedOperationException("Atom type '"+getName()+"' not supported");
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("MP4v2CLIAtomRange.ATOM_TYPE_NOT_SUPPORTED"),getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -45,6 +46,6 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 	 */
 	@Override
 	public String toString() {
-		return getDisplayName()+": ["+getName() +"="+number+" of "+total+"]";
+		return MessageFormat.format(Messages.getString("MP4v2CLIAtomRange.TOSTRING"),getDisplayName(),getName(),number,total); //$NON-NLS-1$
 	}
 }

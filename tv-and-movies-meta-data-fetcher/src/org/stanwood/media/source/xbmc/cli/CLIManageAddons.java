@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.cli;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class CLIManageAddons extends AbstractLauncher {
 	private List<String> subCommandArgs;
 
 	private CLIManageAddons(IExitHandler exitHandler) {
-		super("mm-xbmc", OPTIONS, exitHandler,stdout,stderr);
+		super("mm-xbmc", OPTIONS, exitHandler,stdout,stderr); //$NON-NLS-1$
 
 		subCommands = new ArrayList<AbstractSubCLICommand>();
 		IExitHandler subExitHandler = new IExitHandler() {
@@ -72,7 +73,7 @@ public class CLIManageAddons extends AbstractLauncher {
 		}
 		boolean found = false;
 		if (subCommand==null) {
-			fatal("No subcommand given");
+			fatal(Messages.getString("CLIManageAddons.NO_SUB_COMMAND")); //$NON-NLS-1$
 			return false;
 		}
 		subCommandArgs = new ArrayList<String>();
@@ -91,7 +92,7 @@ public class CLIManageAddons extends AbstractLauncher {
 		String[] args = cmd.getArgs();
 		if (subCommand == null) {
 			if (args.length>0) {
-				fatal("Unkown sub-command or argument '" + args[0]+"'");
+				fatal(MessageFormat.format(Messages.getString("CLIManageAddons.UNKNOWN_SUB_COMMAND_ARG"),args[0])); //$NON-NLS-1$
 				return false;
 			}
 		}
@@ -120,7 +121,7 @@ public class CLIManageAddons extends AbstractLauncher {
 
 	@Override
 	protected void handleBadSubCommandOption(Options options,String arg) {
-		stderr.println("Unrecognized subcommand option: " + arg);
+		stderr.println(MessageFormat.format(Messages.getString("CLIManageAddons.UNKNOWN_SUB_CMD_OPT"),arg)); //$NON-NLS-1$
 		subCommand.displayHelp(subCommand.getOptions(),stdout,stderr);
 		doExit(1);
 	}
@@ -129,21 +130,21 @@ public class CLIManageAddons extends AbstractLauncher {
 	@Override
 	public void displayHelp(Options options,PrintStream stdout,PrintStream stderr) {
 		printUsage(options,stdout,stderr);
-		stdout.println("Global options:");
+		stdout.println(Messages.getString("CLIManageAddons.GLOBAL_OPTS")); //$NON-NLS-1$
 		printOptions(options,stdout,stderr);
 
-		stdout.println("");
-		stdout.println("Commands:");
+		stdout.println(""); //$NON-NLS-1$
+		stdout.println(Messages.getString("CLIManageAddons.COMMANDS")); //$NON-NLS-1$
 		for (AbstractSubCLICommand command : subCommands) {
-			stdout.print("  ");
+			stdout.print("  "); //$NON-NLS-1$
 			StringBuilder buffer = new StringBuilder();
 			buffer.append(command.getName());
 			while (buffer.length()<30) {
-				buffer.append(" ");
+				buffer.append(" "); //$NON-NLS-1$
 			}
 			stdout.print(buffer);
 			if (buffer.length()>30) {
-				stdout.print("\n                                ");
+				stdout.print("\n                                "); //$NON-NLS-1$
 			}
 			stdout.println(command.getDescription());
 		}
@@ -152,8 +153,8 @@ public class CLIManageAddons extends AbstractLauncher {
 
 	@Override
 	protected void printUsage(Options options, PrintStream stdout,PrintStream stderr) {
-		stdout.println("usage: "+getName()+ " [--global-options] <command> [--command-options] [arguments]");
-		stdout.println("");
+		stdout.println(Messages.getString("CLIManageAddons.USAGE")+" "+getName()+ " [--global-options] <command> [--command-options] [arguments]");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		stdout.println(""); //$NON-NLS-1$
 	}
 
 	/**

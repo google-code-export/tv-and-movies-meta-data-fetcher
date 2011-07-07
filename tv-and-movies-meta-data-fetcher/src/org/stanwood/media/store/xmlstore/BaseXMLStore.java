@@ -46,14 +46,12 @@ public abstract class BaseXMLStore extends XMLParser {
 			XMLParser.writeXML(file,doc);
 
 			if (log.isDebugEnabled()) {
-				log.debug("Written cache to file : " + file.getAbsolutePath());
+				log.debug("Written cache to file : " + file.getAbsolutePath()); //$NON-NLS-1$
 			}
 		} catch (FileNotFoundException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
+			throw new StoreException(Messages.getString("BaseXMLStore.UNABLE_WRITE_CACHE"),e); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new StoreException("Unable to write cache: "
-					+ e.getMessage());
+			throw new StoreException(Messages.getString("BaseXMLStore.UNABLE_WRITE_CACHE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -77,7 +75,7 @@ public abstract class BaseXMLStore extends XMLParser {
 	 */
 	protected String urlToText(URL url) {
 		if (url==null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return url.toExternalForm();
 	}
