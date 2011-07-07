@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.stanwood.media.progress.IProgressMonitor;
+import org.stanwood.media.progress.SubMonitor;
+import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -114,14 +117,20 @@ public class SeenDatabase extends XMLParser {
 
 	/**
 	 * Used to read the database from disk
+	 * @param parentMonitor Progress monitor
 	 * @throws FileNotFoundException Thrown if their is a problem
 	 * @throws XMLParserException Thrown if possible to parse file
+	 *
 	 */
-	public void read() throws FileNotFoundException, XMLParserException {
+	public void read(IProgressMonitor parentMonitor) throws FileNotFoundException, XMLParserException {
+		SubMonitor progress = SubMonitor.convert(parentMonitor, 100);
+
 		entries = new HashMap<File,Set<SeenEntry>>();
 		if (seenFile.exists()) {
 			Document doc = XMLParser.parse(seenFile, null);
-			for (Node mediaDirNode : selectNodeList(doc, "seen/mediaDir")) { //$NON-NLS-1$
+			IterableNodeList nodes = selectNodeList(doc, "seen/mediaDir"); //$NON-NLS-1$
+			progress.beginTask("Reading seen database", nodes.getLength());
+			for (Node mediaDirNode : nodes) {
 				Element mediaDirEl = (Element)mediaDirNode;
 				File mediaDir = new File(mediaDirEl.getAttribute("dir")); //$NON-NLS-1$
 				for (Node fileNode : selectNodeList(mediaDirEl,"file")) { //$NON-NLS-1$
@@ -130,7 +139,9 @@ public class SeenDatabase extends XMLParser {
 					long lastModified = Long.parseLong(fileElement.getAttribute("lastModified")); //$NON-NLS-1$
 					markAsSeen(mediaDir, lastModified, path);
 				}
+				progress.worked(1);
 			}
 		}
+		progress.done();
 	}
 }

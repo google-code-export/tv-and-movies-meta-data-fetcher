@@ -6,6 +6,7 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -86,7 +87,7 @@ public class TestSeenDatabase {
 			Assert.assertFalse(db.isSeen(mediaDir, test3));
 			Assert.assertFalse(db.isSeen(mediaDir, test4));
 
-			db.read();
+			db.read(new NullProgressMonitor());
 			Assert.assertTrue(db.isSeen(mediaDir, test1));
 			Assert.assertTrue(db.isSeen(mediaDir, test2));
 			Assert.assertFalse(db.isSeen(mediaDir, test3));

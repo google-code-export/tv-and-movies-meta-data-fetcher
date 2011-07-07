@@ -17,6 +17,7 @@ import org.stanwood.media.actions.IAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
@@ -128,7 +129,7 @@ public class CLIMediaManager extends AbstractLauncher {
 
 			ActionPerformer renamer = new ActionPerformer(getController().getConfigDir(),getController().getNativeFolder(),rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
 
-			renamer.performActions();
+			renamer.performActions(new NullProgressMonitor());
 			return true;
 		} catch (ActionException e) {
 			log.error(e.getMessage(),e);
