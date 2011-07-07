@@ -29,6 +29,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
@@ -298,7 +299,7 @@ public class PodCastActionTest {
 		}
 
 		ActionPerformer ap = new ActionPerformer(null,null,actions,mediaDir,exts,false);
-		ap.performActions();
+		ap.performActions(new NullProgressMonitor());
 	}
 
 	protected PodCastAction createAction(Map<String, String> params)

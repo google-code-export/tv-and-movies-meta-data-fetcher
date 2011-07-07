@@ -45,6 +45,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
 import org.stanwood.media.search.SearchDetails;
 import org.stanwood.media.search.SearchHelper;
@@ -92,11 +93,11 @@ public class ActionPerformer implements IActionEventHandler {
 	 * Used to perform the actions
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
-	public void performActions() throws ActionException {
+	public void performActions(IProgressMonitor monitor) throws ActionException {
 		if (dir.getMediaDirConfig().getIgnoreSeen()) {
 			try {
 				seenDb= new SeenDatabase(configDir);
-				seenDb.read();
+				seenDb.read(monitor);
 			}
 			catch (IOException e) {
 				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
