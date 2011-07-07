@@ -57,9 +57,9 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 public class XMLParser {
 
 	/** The (@link {@link XMLStore2 } schema */
-	public final static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd";
+	public final static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd"; //$NON-NLS-1$
 	/** The application configuration schema */
-	public final static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema";
+	public final static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema"; //$NON-NLS-1$
 
 	/**
 	 * Used to read a integer from the XML
@@ -78,7 +78,7 @@ public class XMLParser {
 			}
 		}
 		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parser XML",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_PARSE_XML"),e); //$NON-NLS-1$
 		}
 		throw new XMLParserNotFoundException();
 	}
@@ -100,7 +100,7 @@ public class XMLParser {
 			}
 		}
 		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parser XML",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_PARSE_XML"),e); //$NON-NLS-1$
 		}
 		throw new XMLParserNotFoundException();
 	}
@@ -117,7 +117,7 @@ public class XMLParser {
 			throws XMLParserException {
 		String value = getStringFromXMLOrNull(parent,path);
 		if (value==null) {
-			throw new XMLParserNotFoundException(MessageFormat.format("Unable to find path {0} in XML",path));
+			throw new XMLParserNotFoundException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path)); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -138,7 +138,7 @@ public class XMLParser {
 			}
 		}
 		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parser XML",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_PARSE_XML"),e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -154,7 +154,7 @@ public class XMLParser {
 	protected URL getURLFromXML(Node parent, String path) throws MalformedURLException, XMLParserException {
 		URL value = getURLFromXMLOrNull(parent,path);
 		if (value==null) {
-			throw new XMLParserNotFoundException(MessageFormat.format("Unable to find path {0} in XML",path));
+			throw new XMLParserNotFoundException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path)); //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -191,7 +191,7 @@ public class XMLParser {
 			}
 		}
 		catch (TransformerException e) {
-			throw new XMLParserException("Unable to parser XML",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_PARSE_XML"),e); //$NON-NLS-1$
 		}
 		throw new XMLParserNotFoundException();
 	}
@@ -218,7 +218,7 @@ public class XMLParser {
 			}
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to convert string to XML DOM",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_CONVERT_STRING_DOM"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -242,7 +242,7 @@ public class XMLParser {
 			return d;
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to convert string to XML DOM",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_CONVERT_STRING_DOM"),e); //$NON-NLS-1$
 		}
 		finally {
 			if (fis!=null) {
@@ -271,7 +271,7 @@ public class XMLParser {
 	        return out.toString();
 		}
 		catch (Exception e) {
-			throw new XMLParserException("Unable to convert XML DOM to string",e);
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_CONVERT_DOM_TO_STRING"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -303,7 +303,7 @@ public class XMLParser {
 			return new IterableNodeList(list);
 		}
 		catch (Exception e) {
-			throw new XMLParserException(MessageFormat.format("Unable to find path {0} in XML",path),e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path),e); //$NON-NLS-1$
 		}
 	}
 
@@ -312,7 +312,7 @@ public class XMLParser {
 			return XPathAPI.selectSingleNode(contextNode, path);
 		}
 		catch (Exception e) {
-			throw new XMLParserException(MessageFormat.format("Unable to find path {0} in XML",path),e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path),e); //$NON-NLS-1$
 		}
 	}
 
@@ -335,7 +335,7 @@ public class XMLParser {
 		    		String schemaName= systemId.substring(systemId.lastIndexOf("/")+1); //$NON-NLS-1$
 		    		InputStream stream = XMLParser.class.getResourceAsStream("schema/"+schemaName); //$NON-NLS-1$
 		    		if (stream==null) {
-		    			throw new IOException (MessageFormat.format("Unable to find schema: {0}",schemaName));
+		    			throw new IOException (MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_SCHEMA"),schemaName)); //$NON-NLS-1$
 		    		}
 		    		return new InputSource(stream);
 		    	}
@@ -372,15 +372,15 @@ public class XMLParser {
 			 InputSource is = new InputSource( new StringReader( contents ) );
 			Document doc = builder.parse(is);
 			if (errorHandler.hasErrors()) {
-				throw new XMLParserException("Unable to parse XML document as it containted errors");
+				throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 			}
 			return doc;
 		} catch (SAXException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		} catch (ParserConfigurationException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		}
 	}
 
@@ -402,15 +402,15 @@ public class XMLParser {
 			builder.setErrorHandler(errorHandler);
 			Document doc = builder.parse(is);
 			if (errorHandler.hasErrors()) {
-				throw new XMLParserException("Unable to parse XML document as it containted errors");
+				throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 			}
 			return doc;
 		} catch (SAXException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		} catch (ParserConfigurationException e) {
-			throw new XMLParserException("Unable to parse XML document as it containted errors");
+			throw new XMLParserException(Messages.getString("XMLParser.XML_DOC_HAS_ERRORS")); //$NON-NLS-1$
 		}
 	}
 
@@ -419,8 +419,8 @@ public class XMLParser {
 		if (schemaName!=null) {
 			factory.setValidating(true);
 			factory.setXIncludeAware(true);
-			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName);
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$ //$NON-NLS-2$
+			factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SCHEMA_WEB_LOCATION+"/"+schemaName); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return factory;
 	}
@@ -443,15 +443,15 @@ public class XMLParser {
 			builder.setErrorHandler(errorHandler);
 			Document doc = builder.parse(file);
 			if (errorHandler.hasErrors()) {
-				throw new XMLParserException("Unable to parse XML document as it containted errors: " + file.getAbsolutePath());
+				throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_PARSE_XML1"), file.getAbsolutePath())); //$NON-NLS-1$
 			}
 			return doc;
 		} catch (SAXException e) {
-			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_PARSE_XML1"), file.getAbsolutePath()),e); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_PARSE_XML1"), file.getAbsolutePath()),e); //$NON-NLS-1$
 		} catch (ParserConfigurationException e) {
-			throw new XMLParserException("Unable to parse XML document: " + file.getAbsolutePath(),e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_PARSE_XML1"), file.getAbsolutePath()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -465,9 +465,9 @@ public class XMLParser {
 		try {
 			String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(language);
-			return schemaFactory.newSchema(new StreamSource(XMLParser.class.getResourceAsStream("schema/"+name)));
+			return schemaFactory.newSchema(new StreamSource(XMLParser.class.getResourceAsStream("schema/"+name))); //$NON-NLS-1$
 		} catch (SAXException e) {
-			throw new XMLParserException("Unable to get schema: " + name,e);
+			throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_GET_SCHEMA"),name),e); //$NON-NLS-1$
 		}
 	}
 
@@ -484,25 +484,25 @@ public class XMLParser {
 			case '&' :
 				boolean doIt = true;
 				if (value.length()>i+5) {
-					if (value.substring(i,i+4).equals("&amp;")) {
+					if (value.substring(i,i+4).equals("&amp;")) { //$NON-NLS-1$
 						doIt = false;
 					}
 				}
 				if (doIt) {
-					result.append("&amp;");
+					result.append("&amp;"); //$NON-NLS-1$
 				}
 				break;
 			case '\'' :
-				result.append("&apos;");
+				result.append("&apos;"); //$NON-NLS-1$
 				break;
 			case '<' :
-				result.append("&lt;");
+				result.append("&lt;"); //$NON-NLS-1$
 				break;
 			case '>' :
-				result.append("&gt;");
+				result.append("&gt;"); //$NON-NLS-1$
 				break;
 			case '"' :
-				result.append("&quot;");
+				result.append("&quot;"); //$NON-NLS-1$
 				break;
 			default:
 				result.append(c);
@@ -540,11 +540,11 @@ public class XMLParser {
 	 * @return the quoted query
 	 */
 	public String quoteXPathQuery(String s) {
-		if (s.contains("'")) {
-			return "\""+s+"\"";
+		if (s.contains("'")) { //$NON-NLS-1$
+			return "\""+s+"\""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
-			return "'"+s+"'";
+			return "'"+s+"'"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

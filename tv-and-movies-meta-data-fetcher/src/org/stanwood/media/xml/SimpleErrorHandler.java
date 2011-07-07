@@ -86,7 +86,7 @@ public class SimpleErrorHandler extends XMLErrorHandler {
 				try {
 					os.close();
 				} catch (IOException e1) {
-					log.error("Unable to close stream");
+					log.error(Messages.getString("SimpleErrorHandler.UNABLE_CLOSE_STREAM")); //$NON-NLS-1$
 				}
 			}
 		}
