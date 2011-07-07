@@ -106,7 +106,7 @@ public class AddonDetails {
 	 */
 	@Override
 	public String toString() {
-		return id+" : " + installedVersion + " : " + avaliableVersion +" : " + status;
+		return id+" : " + installedVersion + " : " + avaliableVersion +" : " + status; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/** {@inheritDoc} */

@@ -3,6 +3,7 @@ package org.stanwood.media.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WebFileInputStream extends InputStream {
 
-private final static String DEFAULT_USER_AGENT = "MediaManager";
+	private final static String DEFAULT_USER_AGENT = "MediaManager"; //$NON-NLS-1$
 
 	private final static Log log = LogFactory.getLog(WebFileInputStream.class);
 
@@ -20,7 +21,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 	private java.util.Map<String, java.util.List<String>> responseHeader = null;
 	private int responseCode = -1;
 	private String MIMEtype = null;
-	private String charset = "ISO-8859-1";
+	private String charset = "ISO-8859-1"; //$NON-NLS-1$
 
 	private InputStream content;
 
@@ -45,7 +46,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 		// Open a URL connection.
 		final java.net.URLConnection uconn = url.openConnection();
 		if (!(uconn instanceof java.net.HttpURLConnection)) {
-			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP.");
+			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP."); //$NON-NLS-1$
 		}
 		final java.net.HttpURLConnection conn = (java.net.HttpURLConnection) uconn;
 
@@ -53,7 +54,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 		conn.setConnectTimeout(10000); // 10 sec
 		conn.setReadTimeout(10000); // 10 sec
 		conn.setInstanceFollowRedirects(true);
-		conn.setRequestProperty("User-agent", userAgent);
+		conn.setRequestProperty("User-agent", userAgent); //$NON-NLS-1$
 
 		// Send the request.
 		conn.connect();
@@ -66,26 +67,26 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 				log.debug(getErrors(conn));
 			}
 			if (responseCode==404) {
-				throw new IOException("The url '"+url.toExternalForm()+"' was not found on the server");
+				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_404"),url.toExternalForm())); //$NON-NLS-1$
 			}
 			else if (responseCode==500) {
-				throw new IOException("The server genereated a error for the '"+url.toExternalForm()+"'");
+				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_500"),url.toExternalForm())); //$NON-NLS-1$
 			}
 			else if (responseCode==403) {
-				throw new IOException("The url '"+url.toExternalForm()+"' was forbidden");
+				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_403"),url.toExternalForm())); //$NON-NLS-1$
 			}
 			else {
-				throw new IOException("Unable to read teh contens of the url '"+url.toExternalForm()+"' as it retured a responce of "+responseCode);
+				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_OTHER"),url.toExternalForm(),responseCode)); //$NON-NLS-1$
 			}
 		}
 
 		final String type = conn.getContentType();
 		if (type != null) {
-			final String[] parts = type.split(";");
+			final String[] parts = type.split(";"); //$NON-NLS-1$
 			MIMEtype = parts[0].trim();
 			for (int i = 1; i < parts.length && charset == null; i++) {
 				final String t = parts[i].trim();
-				final int index = t.toLowerCase().indexOf("charset=");
+				final int index = t.toLowerCase().indexOf("charset="); //$NON-NLS-1$
 				if (index != -1) {
 					charset = t.substring(index + 8);
 				}
@@ -97,7 +98,7 @@ private final static String DEFAULT_USER_AGENT = "MediaManager";
 			content = (InputStream) c;
 		}
 		else {
-			throw new IOException("URL did not return a input stream: " + c.getClass());
+			throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.DID_NOT_RETURN_INPUTSTREAM"),c.getClass())); //$NON-NLS-1$
 		}
 	}
 

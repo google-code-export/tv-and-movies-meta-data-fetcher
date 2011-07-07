@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.stanwood.media.xml.XMLParserException;
@@ -11,7 +12,7 @@ import org.w3c.dom.Element;
  */
 public class XBMCLibrary extends XBMCExtension {
 
-	private static final String ROOT_NODE_NAME = "scraperfunctions";
+	private static final String ROOT_NODE_NAME = "scraperfunctions"; //$NON-NLS-1$
 
 	/**
 	 * The constructor
@@ -26,9 +27,9 @@ public class XBMCLibrary extends XBMCExtension {
 	/** {@inheritDoc} */
 	@Override
 	public String executeXBMCScraperFunction(String functionName,Map<Integer,String> params) throws  XBMCException, XMLParserException {
-		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName);
+		Element functionNode = (Element) selectSingleNode(getDocument(), ROOT_NODE_NAME+"/"+functionName); //$NON-NLS-1$
 		if (functionNode==null) {
-			throw new XBMCFunctionNotFoundException("Unable to find scraper function '" + functionName+"'");
+			throw new XBMCFunctionNotFoundException(MessageFormat.format(Messages.getString("XBMCLibrary.UNABLE_PARSE_SCRAPER_FUNC"),functionName)); //$NON-NLS-1$
 		}
 		return executeXBMCFunction(functionNode,params);
 	}

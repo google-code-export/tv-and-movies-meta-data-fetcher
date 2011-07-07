@@ -1,5 +1,7 @@
 package org.stanwood.media.source.xbmc.expression;
 
+import java.text.MessageFormat;
+
 /**
  * Used to help with expression evaluation operations
  */
@@ -42,10 +44,10 @@ public class OperationHelper {
 				return value1.lessEquals(value2);
 			}
 
-			throw new ExpressionParserException("Unsupported operation "+ op + " on " + value1.getType() + " types");
+			throw new ExpressionParserException(MessageFormat.format(Messages.getString("OperationHelper.UNSUPPORTED_OP"),op,value1.getType())); //$NON-NLS-1$
 		}
 
-		throw new ExpressionParserException("Can only perform operation on values of same type");
+		throw new ExpressionParserException(Messages.getString("OperationHelper.NOT_SAME_TYPE")); //$NON-NLS-1$
 	}
 
 	/**
@@ -60,7 +62,7 @@ public class OperationHelper {
 		case NOT:
 			return value.not();
 		}
-		throw new ExpressionParserException("Unsupported operation "+ op + " on " + value.getType() + " types");
+		throw new ExpressionParserException(MessageFormat.format(Messages.getString("OperationHelper.UNSUPPORTED_OP"),op,value.getType())); //$NON-NLS-1$
 	}
 
 }

@@ -4,21 +4,21 @@ package org.stanwood.media.store.mp4;
 /** Used to represent the values of the atom */
 public enum StikValue {
 	/** The old movie type */
-	MOVIE((byte)0, "Movie"),
+	MOVIE((byte)0, Messages.getString("StikValue.MOVIE")), //$NON-NLS-1$
 	 /** The music type */
-    MUSIC((byte)1, "Music"),
+    MUSIC((byte)1, Messages.getString("StikValue.MUSIC")), //$NON-NLS-1$
     /** Audio book type */
-    AUDIO_BOOK((byte)2, "Audiobook"),
+    AUDIO_BOOK((byte)2, Messages.getString("StikValue.AUDIOBOOK")), //$NON-NLS-1$
     /** Music video type */
-    MUSIC_VIDEO((byte)6, "Music Video"),
+    MUSIC_VIDEO((byte)6, Messages.getString("StikValue.MUSIC_VIDEO")), //$NON-NLS-1$
     /** Movie type */
-    SHORT_FILM((byte)9, "Short Film"),
+    SHORT_FILM((byte)9, Messages.getString("StikValue.SHORT_FILM")), //$NON-NLS-1$
     /** TV show type */
-    TV_SHOW((byte)10, "TV Show"),
+    TV_SHOW((byte)10, Messages.getString("StikValue.TV_SHOW")), //$NON-NLS-1$
     /** Booklet type */
-    BOOKLET((byte)11, "Booklet"),
+    BOOKLET((byte)11, Messages.getString("StikValue.BOOKLET")), //$NON-NLS-1$
     /** Ring tone type */
-    RINGTONE((byte)14, "Ringtone");
+    RINGTONE((byte)14, Messages.getString("StikValue.RINGTONE")); //$NON-NLS-1$
 
 	private byte id;
 	private String desc;

@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.cli;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -65,7 +66,7 @@ public abstract class AbstractXBMCSubCommand extends AbstractSubCLICommand {
 	protected boolean checkNoArgs(CommandLine cmd) {
 		String[] args2 = cmd.getArgs();
 		if (args2.length > 0) {
-			fatal("Unkown sub-command argument '" + args2[0] + "'");
+			fatal(MessageFormat.format(Messages.getString("AbstractXBMCSubCommand.UNKOWN_SUB_COMMAND"),args2[0])); //$NON-NLS-1$
 			return false;
 		}
 		return true;

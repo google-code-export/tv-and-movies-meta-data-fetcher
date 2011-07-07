@@ -37,7 +37,7 @@ public class TextTable {
 	 */
 	public void addRow(String row[]) {
 		if (row.length > columnNames.length || row.length < columnNames.length) {
-			throw new IllegalArgumentException("row must be the same size as the number of column names");
+			throw new IllegalArgumentException("row must be the same size as the number of column names"); //$NON-NLS-1$
 		}
 		rows.add(row);
 		updateWidths(row);
@@ -66,13 +66,13 @@ public class TextTable {
 		boolean first = true;
 		for (int column=0;column<row.length;column++) {
 			if (!first) {
-				buffer.append(" | ");
+				buffer.append(" | "); //$NON-NLS-1$
 			}
 
 			appendWithPadding(row[column],column,buffer);
 			first = false;
 		}
-		buffer.append("\n");
+		buffer.append(FileHelper.LS);
 	}
 
 	private int getMaxRowWidth() {
@@ -87,15 +87,15 @@ public class TextTable {
 	protected void printHeader(StringBuilder buffer) {
 		printRow(columnNames,buffer);
 		for (int i=0;i<getMaxRowWidth();i++) {
-			buffer.append("=");
+			buffer.append("="); //$NON-NLS-1$
 		}
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 	}
 
 	private void appendWithPadding(String value,int columnNumber,StringBuilder buffer) {
 		StringBuilder padded = new StringBuilder(value);
 		while (padded.length()<widths[columnNumber]) {
-			padded.append(" ");
+			padded.append(" "); //$NON-NLS-1$
 		}
 		buffer.append(padded);
 	}

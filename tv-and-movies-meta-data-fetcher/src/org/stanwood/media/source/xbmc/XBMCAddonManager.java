@@ -81,7 +81,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	public XBMCAddon getAddon(String id) throws XBMCException {
 		XBMCAddon addon = addons.get(id);
 		if (addon==null) {
-			throw new XBMCException(MessageFormat.format("Unable to find XBMC addon: {0}" ,id));
+			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCAddonManager.UNABLE_FIND_XBMC_ADDON") ,id)); //$NON-NLS-1$
 		}
 		return addon;
 	}
@@ -94,10 +94,10 @@ public class XBMCAddonManager implements IContentFetcher {
 		addons = new HashMap<String,XBMCAddon>();
 		try {
 			for (File f : config.getXBMCAddonDir().listFiles()) {
-				if (f.isDirectory() && !f.getName().equals("newplugins")) {
+				if (f.isDirectory() && !f.getName().equals("newplugins")) { //$NON-NLS-1$
 					XBMCAddon addon = new XBMCAddon(this,f,config.getXBMCLocale());
 					if (log.isDebugEnabled()) {
-						log.debug("Registered addon " + addon.getId());
+						log.debug("Registered addon " + addon.getId()); //$NON-NLS-1$
 					}
 					addons.put(addon.getId(),addon);
 					if (addon.hasScrapers()) {
@@ -106,7 +106,7 @@ public class XBMCAddonManager implements IContentFetcher {
 				}
 			}
 		} catch (ConfigException e) {
-			throw new XBMCException("Unable to get the addon directory",e);
+			throw new XBMCException(Messages.getString("XBMCAddonManager.UNABLE_TO_GET_ADDON_DIR"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -125,11 +125,11 @@ public class XBMCAddonManager implements IContentFetcher {
 		try {
 			Stream stream = getSource(url);
 			if (stream==null) {
-				throw new SourceException("Unable to get resource: " + url);
+				throw new SourceException(MessageFormat.format(Messages.getString("XBMCAddonManager.UNABLE_GET_RESOURCE"), url)); //$NON-NLS-1$
 			}
 			return stream;
 		} catch (IOException e) {
-			throw new SourceException("Uanble to get resource: " + url,e);
+			throw new SourceException(MessageFormat.format(Messages.getString("XBMCAddonManager.UNABLE_GET_RESOURCE"), url),e); //$NON-NLS-1$
 		}
 	}
 
@@ -150,7 +150,7 @@ public class XBMCAddonManager implements IContentFetcher {
 	public String getDefaultSourceID(Mode mode) throws XBMCException {
 		for (Entry<String,XBMCAddon> e : addons.entrySet()) {
 			if (e.getValue().supportsMode(mode)) {
-				return "xbmc-" + e.getKey();
+				return "xbmc-" + e.getKey(); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -185,7 +185,7 @@ public class XBMCAddonManager implements IContentFetcher {
 			return config.getXBMCAddonDir().list().length==0;
 		}
 		catch (ConfigException e) {
-			throw new XBMCException("Unable to find addon directory",e);
+			throw new XBMCException(Messages.getString("XBMCAddonManager.UNABLE_TO_FIND_ADDON_DIR"),e); //$NON-NLS-1$
 		}
 	}
 }

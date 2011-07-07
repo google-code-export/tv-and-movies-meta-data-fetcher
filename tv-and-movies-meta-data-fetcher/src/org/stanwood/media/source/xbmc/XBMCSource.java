@@ -127,7 +127,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			}
 			return null;
 		} catch (MalformedURLException e) {
-			throw new SourceException("Unable to parse season",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SEASON"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -165,11 +165,11 @@ public class XBMCSource extends XMLParser implements ISource {
     					}
     				}
 				} catch (XMLParserException e) {
-					throw new SourceException("Unable to parse season",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SEASON"),e); //$NON-NLS-1$
 				} catch (MalformedURLException e) {
-					throw new SourceException("Unable to parse season",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SEASON"),e); //$NON-NLS-1$
 				} catch (ParseException e) {
-					throw new SourceException("Unable to parse season",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SEASON"),e); //$NON-NLS-1$
 				}
 			}
 		};
@@ -240,10 +240,10 @@ public class XBMCSource extends XMLParser implements ISource {
 
 				}
 				catch (XMLParserException e) {
-					throw new SourceException("Unable to parse show details",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 				catch (MalformedURLException e) {
-					throw new SourceException("Unable to parse show details",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 			}
 
@@ -319,7 +319,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			film.setTitle(title);
 	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()"); //$NON-NLS-1$
 	    			if (overview==null) {
-	    				overview = "";
+	    				overview = ""; //$NON-NLS-1$
 	    			}
 	    			film.setSummary(overview);
 	    			String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -342,12 +342,12 @@ public class XBMCSource extends XMLParser implements ISource {
 //	    			film.setChapters(chapters);
 				}
 				catch (XMLParserException e) {
-					throw new SourceException("Unable to parse show details",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 				catch (MalformedURLException e) {
-					throw new SourceException("Unable to parse show details",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				} catch (ParseException e) {
-					throw new SourceException("Unable to parse show details",e);
+					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 			}
 
@@ -381,7 +381,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		List<Actor> actors = new ArrayList<Actor>();
 		try {
 			for (Node actor : selectNodeList(doc, "details/actor")) { //$NON-NLS-1$
-				String role = "";
+				String role = ""; //$NON-NLS-1$
 				try {
 					 role = getStringFromXML(actor, "role/text()"); //$NON-NLS-1$
 				}
@@ -491,11 +491,11 @@ public class XBMCSource extends XMLParser implements ISource {
 		catch (XMLParserNotFoundException e) {
 			// Ignore
 		} catch (XMLParserException e) {
-			throw new SourceException("Unable to parse episode details",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_EPISODE"),e); //$NON-NLS-1$
 		} catch (ParseException e) {
-			throw new SourceException("Unable to parse episode details",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_EPISODE"),e); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
-			throw new SourceException("Unable to parse episode details",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_EPISODE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -539,16 +539,16 @@ public class XBMCSource extends XMLParser implements ISource {
 						}
 					}
 					catch (TransformerException e) {
-						throw new SourceException("Unale to get show results",e);
+						throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_GET_SHOW_RESULTS"),e); //$NON-NLS-1$
 					}
 					catch (XMLParserException e) {
-						throw new SourceException("Unale to get show results",e);
+						throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_GET_SHOW_RESULTS"),e); //$NON-NLS-1$
 					}
 				}
 			};
 			processor.handleStream();
 		} catch (MalformedURLException e) {
-			throw new SourceException("Unable to search for show",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_SEARCH_FOR_SHOW"),e); //$NON-NLS-1$
 		}
 		if (results.size()>0) {
 			return results.get(0);
@@ -566,13 +566,13 @@ public class XBMCSource extends XMLParser implements ISource {
 			return url;
 		}
 		catch (Exception e) {
-			throw new SourceException("Unable to parse search url",e);
+			throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SEARCH_URL"),e); //$NON-NLS-1$
 		}
 	}
 
 	private void checkMode(Mode mode) throws SourceException  {
 		if (!addon.supportsMode(mode)) {
-			throw new SourceException(Messages.format("Scraper '{0}' is not of type '{1}'",addon.getId(),mode.getDisplayName()));
+			throw new SourceException(Messages.format(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.SCRAPER_WRONG_TYPE"),addon.getId(),mode.getDisplayName())); //$NON-NLS-1$
 		}
 	}
 
@@ -608,7 +608,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "XBMCSource: "+id;
+		return "XBMCSource: "+id; //$NON-NLS-1$
 	}
 
 

@@ -21,7 +21,7 @@ public class ValueFactory {
 		else if (type==ValueType.STRING) {
 			return new StringValue(type,value);
 		}
-		throw new RuntimeException("Unsuppported type");
+		throw new RuntimeException(Messages.getString("UNSUPPORTED_TYPE0")); //$NON-NLS-1$
 	}
 
 

@@ -29,27 +29,27 @@ public abstract class StreamProcessor {
 	    HTML_ENTITIES = new HashMap<String,String>();
 //	    HTML_ENTITIES.put("&lt;","<")    ; HTML_ENTITIES.put("&gt;",">");
 //	    HTML_ENTITIES.put("&amp;","&")   ; HTML_ENTITIES.put("&quot;","\"");
-	    HTML_ENTITIES.put("&agrave;","à"); HTML_ENTITIES.put("&Agrave;","À");
-	    HTML_ENTITIES.put("&acirc;","â") ; HTML_ENTITIES.put("&auml;","ä");
-	    HTML_ENTITIES.put("&Auml;","Ä")  ; HTML_ENTITIES.put("&Acirc;","Â");
-	    HTML_ENTITIES.put("&aring;","å") ; HTML_ENTITIES.put("&Aring;","Å");
-	    HTML_ENTITIES.put("&aelig;","æ") ; HTML_ENTITIES.put("&AElig;","Æ" );
-	    HTML_ENTITIES.put("&ccedil;","ç"); HTML_ENTITIES.put("&Ccedil;","Ç");
-	    HTML_ENTITIES.put("&eacute;","é"); HTML_ENTITIES.put("&Eacute;","É" );
-	    HTML_ENTITIES.put("&egrave;","è"); HTML_ENTITIES.put("&Egrave;","È");
-	    HTML_ENTITIES.put("&ecirc;","ê") ; HTML_ENTITIES.put("&Ecirc;","Ê");
-	    HTML_ENTITIES.put("&euml;","ë")  ; HTML_ENTITIES.put("&Euml;","Ë");
-	    HTML_ENTITIES.put("&iuml;","ï")  ; HTML_ENTITIES.put("&Iuml;","Ï");
-	    HTML_ENTITIES.put("&ocirc;","ô") ; HTML_ENTITIES.put("&Ocirc;","Ô");
-	    HTML_ENTITIES.put("&ouml;","ö")  ; HTML_ENTITIES.put("&Ouml;","Ö");
-	    HTML_ENTITIES.put("&oslash;","ø") ; HTML_ENTITIES.put("&Oslash;","Ø");
-	    HTML_ENTITIES.put("&szlig;","ß") ; HTML_ENTITIES.put("&ugrave;","ù");
-	    HTML_ENTITIES.put("&Ugrave;","Ù"); HTML_ENTITIES.put("&ucirc;","û");
-	    HTML_ENTITIES.put("&Ucirc;","Û") ; HTML_ENTITIES.put("&uuml;","ü");
-	    HTML_ENTITIES.put("&Uuml;","Ü")  ; HTML_ENTITIES.put("&nbsp;"," ");
-	    HTML_ENTITIES.put("&copy;","\u00a9");
-	    HTML_ENTITIES.put("&reg;","\u00ae");
-	    HTML_ENTITIES.put("&euro;","\u20a0");
+	    HTML_ENTITIES.put("&agrave;","à"); HTML_ENTITIES.put("&Agrave;","À"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&acirc;","â") ; HTML_ENTITIES.put("&auml;","ä"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&Auml;","Ä")  ; HTML_ENTITIES.put("&Acirc;","Â"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&aring;","å") ; HTML_ENTITIES.put("&Aring;","Å"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&aelig;","æ") ; HTML_ENTITIES.put("&AElig;","Æ" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&ccedil;","ç"); HTML_ENTITIES.put("&Ccedil;","Ç"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&eacute;","é"); HTML_ENTITIES.put("&Eacute;","É" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&egrave;","è"); HTML_ENTITIES.put("&Egrave;","È"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&ecirc;","ê") ; HTML_ENTITIES.put("&Ecirc;","Ê"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&euml;","ë")  ; HTML_ENTITIES.put("&Euml;","Ë"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&iuml;","ï")  ; HTML_ENTITIES.put("&Iuml;","Ï"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&ocirc;","ô") ; HTML_ENTITIES.put("&Ocirc;","Ô"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&ouml;","ö")  ; HTML_ENTITIES.put("&Ouml;","Ö"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&oslash;","ø") ; HTML_ENTITIES.put("&Oslash;","Ø"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&szlig;","ß") ; HTML_ENTITIES.put("&ugrave;","ù"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&Ugrave;","Ù"); HTML_ENTITIES.put("&ucirc;","û"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&Ucirc;","Û") ; HTML_ENTITIES.put("&uuml;","ü"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&Uuml;","Ü")  ; HTML_ENTITIES.put("&nbsp;"," "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	    HTML_ENTITIES.put("&copy;","\u00a9"); //$NON-NLS-1$ //$NON-NLS-2$
+	    HTML_ENTITIES.put("&reg;","\u00ae"); //$NON-NLS-1$ //$NON-NLS-2$
+	    HTML_ENTITIES.put("&euro;","\u20a0"); //$NON-NLS-1$ //$NON-NLS-2$
 	  }
 
 	/**
@@ -60,7 +60,7 @@ public abstract class StreamProcessor {
 	 */
 	public StreamProcessor(Stream stream,String forcedContentType) {
 		if (stream==null) {
-			throw new NullPointerException("Stream cannot be null");
+			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
 		}
 		this.stream = stream;
 		this.forcedContentType = forcedContentType;
@@ -103,7 +103,7 @@ public abstract class StreamProcessor {
 							else {
 								dest = data;
 							}
-							String encoding = "iso-8859-1";
+							String encoding = "iso-8859-1"; //$NON-NLS-1$
 							contents.append(new String(dest,encoding));
 			            }
 	                }
@@ -128,7 +128,7 @@ public abstract class StreamProcessor {
 					if (str.length()>0) {
 						data = str;
 
-						if (contentType.equals("text/html")) {
+						if (contentType.equals("text/html")) { //$NON-NLS-1$
 							data = unescapeHTML(data);
 						}
 
@@ -148,17 +148,17 @@ public abstract class StreamProcessor {
 			}
 		}
 		catch (IOException e) {
-			throw new SourceException(MessageFormat.format("Unable to read stream for URL: {0}",stream.getURL()),e);
+			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
 		}
 		catch (SourceException e) {
-			throw new SourceException(MessageFormat.format("Unable to read stream for URL: {0}",stream.getURL()),e);
+			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
 		}
 		finally {
 			if (stream!=null) {
 				try {
 					stream.getInputStream().close();
 				} catch (IOException e) {
-					throw new SourceException("Unable to close stream",e);
+					throw new SourceException(Messages.getString("StreamProcessor.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 				}
 				stream = null;
 			}
@@ -173,9 +173,9 @@ public abstract class StreamProcessor {
 	      int skip = 0;
 	      do {
 	         continueLoop = false;
-	         i = source.indexOf("&", skip);
+	         i = source.indexOf("&", skip); //$NON-NLS-1$
 	         if (i > -1) {
-	           j = source.indexOf(";", i);
+	           j = source.indexOf(";", i); //$NON-NLS-1$
 	           if (j > i) {
 	             String entityToLookFor = source.substring(i, j + 1);
 	             String value = HTML_ENTITIES.get(entityToLookFor);

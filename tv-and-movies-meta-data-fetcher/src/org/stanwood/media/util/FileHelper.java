@@ -32,6 +32,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,10 +52,10 @@ public class FileHelper {
 
 	private final static Log log = LogFactory.getLog(FileHelper.class);
 	/** A Line separator property value */
-	public final static String LS = System.getProperty("line.separator");
+	public final static String LS = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/** Stores the current users home directory */
-	public final static File HOME_DIR = new File(System.getProperty("user.home"));
+	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
 
 	private final static char HEX_DIGITS[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
@@ -66,12 +67,12 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problme creating the directory
 	 */
 	public static File createTmpDir(String name) throws IOException {
-		File dir = File.createTempFile(name, "");
+		File dir = File.createTempFile(name, ""); //$NON-NLS-1$
 		if (!dir.delete()) {
-			throw new IOException("Unable to delete file: " + dir.getAbsolutePath());
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE"),dir.getAbsolutePath())); //$NON-NLS-1$
 		}
 		if (!dir.mkdir()) {
-			throw new IOException("Unable to create directory: " + dir.getAbsolutePath());
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_CREATE_DIR"),dir.getAbsolutePath())); //$NON-NLS-1$
 		}
 
 		return dir;
@@ -86,11 +87,11 @@ public class FileHelper {
 	 */
 	public static void copy(File src, File dst) throws IOException {
 		if (dst.exists()) {
-			throw new IOException("Unable to copy " + src +" to " + dst +" as the destination already exists");
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_COPY_ALREADY_EXISTS"),src,dst)); //$NON-NLS-1$
 		}
 		if (src.isDirectory()) {
 			if (!dst.mkdir() && !dst.exists()) {
-				throw new IOException("Unable to create directory: " + dst);
+				throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_CREATE_DIR"),dst)); //$NON-NLS-1$
 			}
 			File[] files = src.listFiles();
 			for (File f : files) {
@@ -113,7 +114,7 @@ public class FileHelper {
 				try {
 					in.close();
 				} catch (IOException e) {
-					log.error("Unable to close input stream", e);
+					log.error(Messages.getString("FileHelper.UNABLE_CLOSE_INPUT_STREAM"), e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -129,7 +130,7 @@ public class FileHelper {
 	 */
 	public static void copy(InputStream in, File dst) throws IOException {
 		if (in==null) {
-			throw new NullPointerException("Stream is null");
+			throw new NullPointerException("Stream is null"); //$NON-NLS-1$
 		}
 		OutputStream out = null;
 		try {
@@ -146,14 +147,14 @@ public class FileHelper {
 				try {
 					out.close();
 				} catch (IOException e) {
-					log.error("Unable to close output stream", e);
+					log.error(Messages.getString("FileHelper.UNABLE_CLOSE_OUTPUT_STREAM"), e); //$NON-NLS-1$
 				}
 			}
 			if (in != null) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					log.error("Unable to close input stream", e);
+					log.error(Messages.getString("FileHelper.UNABLE_CLOSE_INPUT_STREAM"), e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -178,7 +179,7 @@ public class FileHelper {
 			String line;
 			while ((line = bin.readLine()) != null) {
 				for (Entry<String,String>e : params.entrySet()) {
-					line = line.replaceAll("\\$" + e.getKey() + "\\$", e.getValue());
+					line = line.replaceAll("\\$" + e.getKey() + "\\$", e.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				out.println(line);
 			}
@@ -202,7 +203,7 @@ public class FileHelper {
 	 */
 	public static String copy(URL url,File dest) throws IOException {
 		if (log.isDebugEnabled()) {
-			log.debug("Fetching: " + url);
+			log.debug("Fetching: " + url); //$NON-NLS-1$
 		}
 		try {
 			OutputStream out = null;
@@ -210,7 +211,7 @@ public class FileHelper {
 			try {
 				out = new FileOutputStream(dest);
 				is = new WebFileInputStream(url);
-				MessageDigest md = MessageDigest.getInstance("MD5");
+				MessageDigest md = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 
 				// Transfer bytes from in to out
 				byte[] buf = new byte[1024];
@@ -229,7 +230,7 @@ public class FileHelper {
 						FileHelper.delete(dest);
 					}
 					catch (IOException e1) {
-						log.error("Unable to delete file: " + dest,e1);
+						log.error(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE") ,dest),e1); //$NON-NLS-1$
 					}
 				}
 				throw e;
@@ -240,7 +241,7 @@ public class FileHelper {
 						is.close();
 					}
 					catch (IOException e) {
-						log.error("Unable to close stream",e);
+						log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 					}
 				}
 				if (out != null) {
@@ -248,13 +249,13 @@ public class FileHelper {
 						out.close();
 					}
 					catch (IOException e) {
-						log.error("Unable to close stream",e);
+						log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 					}
 				}
 			}
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new IOException("Unable to download url: " + url,e);
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DOWNLOAD_URL"),url),e); //$NON-NLS-1$
 		}
 	}
 
@@ -269,7 +270,7 @@ public class FileHelper {
 			InputStream is = null;
 			try {
 				is = new FileInputStream(file);
-				MessageDigest md = MessageDigest.getInstance("MD5");
+				MessageDigest md = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 
 				// Transfer bytes from in to out
 				byte[] buf = new byte[1024];
@@ -287,7 +288,7 @@ public class FileHelper {
 			}
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new IOException("Unable to get checksum for file: " + file,e);
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_GET_CHECKSUM_FILE"),file),e); //$NON-NLS-1$
 		}
 	}
 
@@ -360,7 +361,7 @@ public class FileHelper {
 		String str;
 		while ((str = in.readLine()) != null) {
 			if (line>=startLine && line <=endLine) {
-				ps.println(line + ": " + str);
+				ps.println(line + ": " + str); //$NON-NLS-1$
 			}
 			line++;
 		}
@@ -401,7 +402,7 @@ public class FileHelper {
 	 */
 	public static String readFileContents(InputStream inputStream) throws IOException {
 		if (inputStream==null) {
-			throw new IOException("Input stream is null, probally unable to find file");
+			throw new IOException(Messages.getString("FileHelper.INPUT_STREAM_IS_NULL")); //$NON-NLS-1$
 		}
 		BufferedReader in = null;
 		try {
@@ -503,7 +504,7 @@ public class FileHelper {
     					byte data[] = new byte[1000];
     					out = new BufferedOutputStream(new FileOutputStream(new File(destDir,entry.getName())),1000);
     					if (log.isDebugEnabled()) {
-    						log.debug("Unzipping " + entry.getName() +" with size " + entry.getSize());
+    						log.debug("Unzipping " + entry.getName() +" with size " + entry.getSize()); //$NON-NLS-1$ //$NON-NLS-2$
     					}
     					while ((count = zis.read(data,0,1000)) != -1)
     		            {
@@ -533,10 +534,10 @@ public class FileHelper {
 	 */
 	public static void move(File from, File to) throws IOException {
 		if (!from.exists()) {
-			throw new IOException("Unable to move file " + from +" to " + to +" as the source file does not exist");
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_MOVE_FILE_SRC_NOT_FOUND"),from,to)); //$NON-NLS-1$
 		}
 		if (to.exists()) {
-			throw new IOException("Unable to move file " + from +" to " + to +" the destination file already exists");
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_MOVE_FILE_DEST_ALREADY_EXISTS"),from,to)); //$NON-NLS-1$
 		}
 		copy(from, to);
 		delete(from);
@@ -553,7 +554,7 @@ public class FileHelper {
 		}
 		else {
 			if (!file.delete() && file.exists()) {
-				throw new IOException("Unable to delete file: " +file);
+				throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE"),file)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -565,7 +566,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their are any problems
 	 */
 	public static File createTmpFileWithContents(StringBuilder testConfig)  throws IOException {
-		File configFile = File.createTempFile("config", ".xml");
+		File configFile = File.createTempFile("config", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		configFile.deleteOnExit();
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
@@ -580,7 +581,7 @@ public class FileHelper {
 	public static Stream getInputStream(URL url) throws IOException {
 		WebFileInputStream is = new WebFileInputStream(url);
 		String MIME = is.getMIMEType();
-		if (MIME.equals("application/zip")) {
+		if (MIME.equals("application/zip")) { //$NON-NLS-1$
 			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm(),url);
 		}
 		else {
@@ -606,7 +607,7 @@ public class FileHelper {
 					try {
 						FileHelper.delete(file);
 					} catch (IOException e) {
-						log.error("Unable to delete temp file: " + file,e);
+						log.error(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_TEMP_FILE") ,file),e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -621,9 +622,9 @@ public class FileHelper {
 	 */
 	public static String getExtension(File file) {
 		String fileName = file.getAbsolutePath();
-		int pos = fileName.lastIndexOf(".");
+		int pos = fileName.lastIndexOf("."); //$NON-NLS-1$
 		if (pos==-1) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return fileName.substring(pos+1);
 	}
@@ -635,7 +636,7 @@ public class FileHelper {
 	 */
 	public static String getName(File file) {
 		String fileName = file.getName();
-		int pos = fileName.lastIndexOf(".");
+		int pos = fileName.lastIndexOf("."); //$NON-NLS-1$
 		if (pos==-1) {
 			return fileName;
 		}
@@ -647,7 +648,7 @@ public class FileHelper {
 	 * @return the current working directory
 	 */
 	public static File getWorkingDirectory() {
-		return new File( System.getProperty("user.dir"));
+		return new File( System.getProperty("user.dir")); //$NON-NLS-1$
 	}
 
 	/**
@@ -659,7 +660,7 @@ public class FileHelper {
 		String segments[] = path.getAbsolutePath().split(Pattern.quote(File.separator));
 		List<String>newSegments = new ArrayList<String>();
 		for (String seg : segments) {
-			if (seg.equals("..")) {
+			if (seg.equals("..")) { //$NON-NLS-1$
 				newSegments.remove(newSegments.size()-1);
 			}
 			else {

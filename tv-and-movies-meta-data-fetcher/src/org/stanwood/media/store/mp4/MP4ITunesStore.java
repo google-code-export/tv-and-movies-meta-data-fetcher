@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,21 +89,21 @@ public class MP4ITunesStore implements IStore {
 	@Override
 	public void init(File nativeDir) throws StoreException {
 		if (mp4infoPath == null) {
-			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info");
+			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info"); //$NON-NLS-1$
 		}
 		if (mp4artPath == null) {
-			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art");
+			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art"); //$NON-NLS-1$
 		}
 		if (mp4tagsPath == null) {
-			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags");
+			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags"); //$NON-NLS-1$
 		}
 		if (mp4filePath == null) {
-			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file");
+			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file"); //$NON-NLS-1$
 		}
 		try {
 			getMP4Manager().init(nativeDir);
 		} catch (MP4Exception e) {
-			throw new StoreException("Unable to setup the store",e);
+			throw new StoreException(Messages.getString("MP4ITunesStore.UNABLE_SETUP_STORE"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -116,7 +117,7 @@ public class MP4ITunesStore implements IStore {
 	@Override
 	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) throws StoreException {
 		String name = episodeFile.getName();
-		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
+		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();
 			writeEpisode(episodeFile,episode);
 		}
@@ -206,7 +207,7 @@ public class MP4ITunesStore implements IStore {
 	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
 		// TODO make use of the part number
 		String name = filmFile.getName();
-		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {
+		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();
 			writeFilm(filmFile,film,part);
 		}
@@ -265,13 +266,13 @@ public class MP4ITunesStore implements IStore {
 			try {
 				mp4Manager = manager.newInstance();
 			} catch (Exception e) {
-				throw new StoreException("Unable to create manager: " + manager.getClass(),e);
+				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CREATE_MANAGER"),manager.getClass()),e); //$NON-NLS-1$
 			}
 
-			mp4Manager.setParameter("mp4art",mp4artPath);
-			mp4Manager.setParameter("mp4tags",mp4tagsPath);
-			mp4Manager.setParameter("mp4info",mp4infoPath);
-			mp4Manager.setParameter("mp4file",mp4filePath);
+			mp4Manager.setParameter("mp4art",mp4artPath); //$NON-NLS-1$
+			mp4Manager.setParameter("mp4tags",mp4tagsPath); //$NON-NLS-1$
+			mp4Manager.setParameter("mp4info",mp4infoPath); //$NON-NLS-1$
+			mp4Manager.setParameter("mp4file",mp4filePath); //$NON-NLS-1$
 		}
 		return mp4Manager;
 	}
@@ -280,44 +281,44 @@ public class MP4ITunesStore implements IStore {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setParameter(String key, String value) throws StoreException {
-		if (key.equalsIgnoreCase("manager")) {
+		if (key.equalsIgnoreCase("manager")) { //$NON-NLS-1$
 			try {
 				manager = (Class<? extends IMP4Manager>) Class.forName(value);
 			} catch (ClassNotFoundException e) {
-				throw new StoreException("Unable to find MP4 manager class: " + value,e);
+				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_FIND_MANAGER") ,value),e); //$NON-NLS-1$
 			}
 		}
-		else if (key.equalsIgnoreCase("mp4art")){
+		else if (key.equalsIgnoreCase("mp4art")){ //$NON-NLS-1$
 			mp4artPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4info")) {
+		else if (key.equalsIgnoreCase("mp4info")) { //$NON-NLS-1$
 			mp4infoPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4tags")) {
+		else if (key.equalsIgnoreCase("mp4tags")) { //$NON-NLS-1$
 			mp4tagsPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4file")) {
+		else if (key.equalsIgnoreCase("mp4file")) { //$NON-NLS-1$
 			mp4filePath = value;
 		}
-		throw new StoreException("Unsupported parameter '" + key+"'");
+		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) throws StoreException {
-		if (key.equalsIgnoreCase("manager")) {
+		if (key.equalsIgnoreCase("manager")) { //$NON-NLS-1$
 			return manager.getName();
 		}
-		else if (key.equalsIgnoreCase("mp4art")){
+		else if (key.equalsIgnoreCase("mp4art")){ //$NON-NLS-1$
 			return mp4artPath;
 		}
-		else if (key.equalsIgnoreCase("mp4info")) {
+		else if (key.equalsIgnoreCase("mp4info")) { //$NON-NLS-1$
 			return mp4infoPath;
 		}
-		else if (key.equalsIgnoreCase("mp4tags")) {
+		else if (key.equalsIgnoreCase("mp4tags")) { //$NON-NLS-1$
 			return mp4tagsPath;
 		}
-		throw new StoreException("Unsupported parameter '" + key+"'");
+		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */
@@ -352,26 +353,26 @@ public class MP4ITunesStore implements IStore {
 	 */
 	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, Episode episode) throws MP4Exception {
 
-		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
+		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom("stik",StikValue.TV_SHOW.getId()));
-		atoms.add(mp4Manager.createAtom("tven", episode.getEpisodeId()));
-		atoms.add(mp4Manager.createAtom("tvsh", episode.getSeason().getShow().getName()));
-		atoms.add(mp4Manager.createAtom("tvsn", episode.getSeason().getSeasonNumber()));
-		atoms.add(mp4Manager.createAtom("tves", episode.getEpisodeNumber()));
+		atoms.add(mp4Manager.createAtom("stik",StikValue.TV_SHOW.getId())); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom("tven", episode.getEpisodeId())); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom("tvsh", episode.getSeason().getShow().getName())); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom("tvsn", episode.getSeason().getSeasonNumber())); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom("tves", episode.getEpisodeNumber())); //$NON-NLS-1$
 		if (episode.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(episode.getDate())));
+			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(episode.getDate()))); //$NON-NLS-1$
 		}
-		atoms.add(mp4Manager.createAtom("©nam", episode.getTitle()));
+		atoms.add(mp4Manager.createAtom("©nam", episode.getTitle())); //$NON-NLS-1$
 		if (episode.getSummary()!=null && episode.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom("desc", episode.getSummary()));
+			atoms.add(mp4Manager.createAtom("desc", episode.getSummary())); //$NON-NLS-1$
 		}
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
-			atoms.add(mp4Manager.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0)));
-			atoms.add(mp4Manager.createAtom("catg", episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(mp4Manager.createAtom("©gen", episode.getSeason().getShow().getGenres().get(0))); //$NON-NLS-1$
+			atoms.add(mp4Manager.createAtom("catg", episode.getSeason().getShow().getGenres().get(0))); //$NON-NLS-1$
 		}
 		IAtom artworkAtom = getArtworkAtom(mp4Manager, mp4File, episode);
 		if (artworkAtom!=null) {
@@ -401,10 +402,10 @@ public class MP4ITunesStore implements IStore {
 				try {
 					artwork = downloadToTempFile(imageUrl);
 					byte data[] = getBytesFromFile(artwork);
-					return mp4Manager.createAtom("covr", MP4ArtworkType.MP4_ART_JPEG,data.length,data );
+					return mp4Manager.createAtom("covr", MP4ArtworkType.MP4_ART_JPEG,data.length,data ); //$NON-NLS-1$
 
 				} catch (IOException e) {
-					log.error("Unable to download artwork from " +imageUrl+". Unable to update " + mp4File.getName(),e);
+					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DOWNLOAD_ARTWORK"),imageUrl, mp4File.getName()),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -413,7 +414,7 @@ public class MP4ITunesStore implements IStore {
 				try {
 					FileHelper.delete(artwork);
 				} catch (IOException e) {
-					log.error("Unable to delete temp file",e);
+					log.error(Messages.getString("MP4ITunesStore.UNABLE_DELETE_TEMP_FILE"),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -430,22 +431,22 @@ public class MP4ITunesStore implements IStore {
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, Film film,Integer part) throws MP4Exception {
-		DateFormat YEAR_DF = new SimpleDateFormat("yyyy");
+		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom("stik",StikValue.MOVIE.getId()));
+		atoms.add(mp4Manager.createAtom("stik",StikValue.MOVIE.getId())); //$NON-NLS-1$
 		if (film.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(film.getDate())));
+			atoms.add(mp4Manager.createAtom("©day", YEAR_DF.format(film.getDate()))); //$NON-NLS-1$
 		}
-		atoms.add(mp4Manager.createAtom("©nam", film.getTitle()));
+		atoms.add(mp4Manager.createAtom("©nam", film.getTitle())); //$NON-NLS-1$
 		if (film.getSummary()!=null && film.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom("desc", film.getSummary()));
+			atoms.add(mp4Manager.createAtom("desc", film.getSummary())); //$NON-NLS-1$
 		}
 		if (film.getDescription()!=null && film.getDescription().length()>0) {
-			atoms.add(mp4Manager.createAtom("ldes", film.getDescription()));
+			atoms.add(mp4Manager.createAtom("ldes", film.getDescription())); //$NON-NLS-1$
 		}
 		if (film.getDirectors()!=null) {
 			for (String director : film.getDirectors()) {
-				atoms.add(mp4Manager.createAtom("©ART", director));
+				atoms.add(mp4Manager.createAtom("©ART", director)); //$NON-NLS-1$
 			}
 		}
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
@@ -460,16 +461,16 @@ public class MP4ITunesStore implements IStore {
 			if (part>total) {
 				total = (byte)(int)part;
 			}
-			atoms.add(mp4Manager.createAtom("disk",(byte)(int)part,total));
+			atoms.add(mp4Manager.createAtom("disk",(byte)(int)part,total)); //$NON-NLS-1$
 		}
 
 		if (film.getPreferredGenre() != null) {
-			atoms.add(mp4Manager.createAtom("©gen", film.getPreferredGenre()));
-			atoms.add(mp4Manager.createAtom("catg", film.getPreferredGenre()));
+			atoms.add(mp4Manager.createAtom("©gen", film.getPreferredGenre())); //$NON-NLS-1$
+			atoms.add(mp4Manager.createAtom("catg", film.getPreferredGenre())); //$NON-NLS-1$
 		} else {
 			if (film.getGenres().size() > 0) {
-				atoms.add(mp4Manager.createAtom("©gen", film.getGenres().get(0)));
-				atoms.add(mp4Manager.createAtom("catg", film.getGenres().get(0)));
+				atoms.add(mp4Manager.createAtom("©gen", film.getGenres().get(0))); //$NON-NLS-1$
+				atoms.add(mp4Manager.createAtom("catg", film.getGenres().get(0))); //$NON-NLS-1$
 			}
 		}
 		IAtom artworkAtom = getArtworkAtom(mp4Manager,mp4File,film);
@@ -480,9 +481,9 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private static File downloadToTempFile(URL url) throws IOException {
-		File file = FileHelper.createTempFile("artwork", ".jpg");
+		File file = FileHelper.createTempFile("artwork", ".jpg"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!file.delete()) {
-			throw new IOException("Unable to delete temp file "+file.getAbsolutePath());
+			throw new IOException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DELETE_TEMP_FILE1"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		OutputStream out = null;
 		URLConnection conn = null;
@@ -509,7 +510,7 @@ public class MP4ITunesStore implements IStore {
 					out.close();
 				}
 			} catch (IOException ioe) {
-				log.error("Unable to close file: " + file);
+				log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CLOSE_FILE"),file)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -544,7 +545,7 @@ public class MP4ITunesStore implements IStore {
 
 		    // Ensure all the bytes have been read in
 		    if (offset < bytes.length) {
-		        throw new IOException("Could not completely read file "+file.getName());
+		        throw new IOException(MessageFormat.format(Messages.getString("MP4ITunesStore.COULD_NOT_READ_FILE"),file.getName())); //$NON-NLS-1$
 		    }
 		    return bytes;
 		}
@@ -555,7 +556,7 @@ public class MP4ITunesStore implements IStore {
 					is.close();
 				}
 			} catch (IOException ioe) {
-				log.error("Unable to close file: " + file);
+				log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CLOSE_FILE"), file)); //$NON-NLS-1$
 			}
 	    }
 	}

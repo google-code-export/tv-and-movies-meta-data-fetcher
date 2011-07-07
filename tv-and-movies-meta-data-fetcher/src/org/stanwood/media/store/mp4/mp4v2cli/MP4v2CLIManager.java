@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,17 +34,17 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private final static Log log = LogFactory.getLog(MP4v2CLIManager.class);
 
-	private final static Pattern TAG_LIST_PATTERN = Pattern.compile("^ (.+?)\\: (.+)$");
-	private final static Pattern ART_LIST_PATTERN = Pattern.compile("^ +(\\d+) +(\\d+) +([\\dabcdef]+) +(.*?) +(.*)$");
-	private final static Pattern RANGE_PATTERN = Pattern.compile("(\\d+) of (\\d+)",Pattern.CASE_INSENSITIVE);
+	private final static Pattern TAG_LIST_PATTERN = Pattern.compile("^ (.+?)\\: (.+)$"); //$NON-NLS-1$
+	private final static Pattern ART_LIST_PATTERN = Pattern.compile("^ +(\\d+) +(\\d+) +([\\dabcdef]+) +(.*?) +(.*)$"); //$NON-NLS-1$
+	private final static Pattern RANGE_PATTERN = Pattern.compile("(\\d+) of (\\d+)",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	private static final Pattern FILE_LIST_PATTERN = Pattern.compile("^(.*?) +(.*?) +(.*?) +(.*)$",Pattern.CASE_INSENSITIVE);
+	private static final Pattern FILE_LIST_PATTERN = Pattern.compile("^(.*?) +(.*?) +(.*?) +(.*)$",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	private String ATOM_BOOLEAN_KEYS[] = new String[] {"hdvd"};
+	private String ATOM_BOOLEAN_KEYS[] = new String[] {"hdvd"}; //$NON-NLS-1$
 //	private String ATOM_STRING_KEYS[] = new String[] {"©nam","©day","tvsh","desc","ldes","©ART","©too","©gen","catg","tven"};
-	private String ATOM_NUMBER_KEYS[] = new String[] {"stik","rtng","tvsn","tves"};
-	private String ATOM_RANGE_KEYS[] = new String[] {"disk"};
-	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"};
+	private String ATOM_NUMBER_KEYS[] = new String[] {"stik","rtng","tvsn","tves"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private String ATOM_RANGE_KEYS[] = new String[] {"disk"}; //$NON-NLS-1$
+	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"}; //$NON-NLS-1$
 
 	private String mp4artPath = null;
 	private String mp4infoPath = null;
@@ -56,7 +57,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		if (!mp4File.exists()) {
-			throw new MP4Exception("Unable to find mp4 file: " + mp4File);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_FIND_MP4_FILE"),mp4File)); //$NON-NLS-1$
 		}
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		String output = getCommandOutput(true,false,true,mp4infoPath,mp4File);
@@ -87,14 +88,14 @@ public class MP4v2CLIManager implements IMP4Manager {
 			}
 
 		} catch (IOException e) {
-			throw new MP4Exception("Can't list mp4 file atoms: " + mp4File,e);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.CANT_LIST_ATOMS"),mp4File),e); //$NON-NLS-1$
 		}
 		finally {
 			if (reader!=null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					log.error("Unable to close stream",e);
+					log.error(Messages.getString("MP4v2CLIManager.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -103,7 +104,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 	}
 
 	private void parseArtwork(List<IAtom> atoms, File mp4File) throws MP4Exception {
-		String output = getCommandOutput(true,false,true,mp4artPath,"--list",mp4File);
+		String output = getCommandOutput(true,false,true,mp4artPath,"--list",mp4File); //$NON-NLS-1$
 
 		BufferedReader reader = null;
 		try {
@@ -116,34 +117,34 @@ public class MP4v2CLIManager implements IMP4Manager {
 					int size = Integer.parseInt(m.group(2));
 					String type = m.group(4);
 					MP4ArtworkType artType = convertArtRawType(type);
-					atoms.add(new MP4v2CLIAtomArtworkSummary("covr",index,size,artType));
+					atoms.add(new MP4v2CLIAtomArtworkSummary("covr",index,size,artType)); //$NON-NLS-1$
 				}
 			}
 		} catch (IOException e) {
-			throw new MP4Exception("Can't read mp4 file artwork details: " + mp4File,e);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.CANT_READ_ARTWORK_DETAILS"),mp4File),e); //$NON-NLS-1$
 		}
 		finally {
 			if (reader!=null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					log.error("Unable to close stream",e);
+					log.error(Messages.getString("MP4v2CLIManager.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 				}
 			}
 		}
 	}
 
 	private MP4ArtworkType convertArtRawType(String type) {
-		if (type.equalsIgnoreCase("jpeg")) {
+		if (type.equalsIgnoreCase("jpeg")) { //$NON-NLS-1$
 			return MP4ArtworkType.MP4_ART_JPEG;
 		}
-		else if (type.equalsIgnoreCase("png")) {
+		else if (type.equalsIgnoreCase("png")) { //$NON-NLS-1$
 			return MP4ArtworkType.MP4_ART_PNG;
 		}
-		else if (type.equalsIgnoreCase("gif")) {
+		else if (type.equalsIgnoreCase("gif")) { //$NON-NLS-1$
 			return MP4ArtworkType.MP4_ART_GIF;
 		}
-		else if (type.equalsIgnoreCase("bmp")) {
+		else if (type.equalsIgnoreCase("bmp")) { //$NON-NLS-1$
 			return MP4ArtworkType.MP4_ART_BMP;
 		}
 		return  MP4ArtworkType.MP4_ART_UNDEFINED;
@@ -153,49 +154,49 @@ public class MP4v2CLIManager implements IMP4Manager {
 		IAtom atom = null;
 		if (isBoolean(key)) {
 			int ivalue = 0;
-			if (value.equalsIgnoreCase("yes")) {
+			if (value.equalsIgnoreCase("yes")) { //$NON-NLS-1$
 				ivalue = 1;
 			}
 			atom = createAtom(key, ivalue);
 		}
 		else if (isNumber(key)) {
-			if (key.equals("stik")) {
+			if (key.equals("stik")) { //$NON-NLS-1$
 				int ivalue = -1;
-				if (value.equalsIgnoreCase("Old Movie")) {
+				if (value.equalsIgnoreCase("Old Movie")) { //$NON-NLS-1$
 					ivalue = 0;
 				}
-				else if (value.equalsIgnoreCase("Normal")) {
+				else if (value.equalsIgnoreCase("Normal")) { //$NON-NLS-1$
 					ivalue = 1;
 				}
-				else if (value.equalsIgnoreCase("Audio Book")) {
+				else if (value.equalsIgnoreCase("Audio Book")) { //$NON-NLS-1$
 					ivalue = 2;
 				}
-				else if (value.equalsIgnoreCase("Music Video")) {
+				else if (value.equalsIgnoreCase("Music Video")) { //$NON-NLS-1$
 					ivalue = 6;
 				}
-				else if (value.equalsIgnoreCase("Movie")) {
+				else if (value.equalsIgnoreCase("Movie")) { //$NON-NLS-1$
 					ivalue = 6;
 				}
-				else if (value.equalsIgnoreCase("TV Show")) {
+				else if (value.equalsIgnoreCase("TV Show")) { //$NON-NLS-1$
 					ivalue = 10;
 				}
-				else if (value.equalsIgnoreCase("Booklet")) {
+				else if (value.equalsIgnoreCase("Booklet")) { //$NON-NLS-1$
 					ivalue = 11;
 				}
-				else if (value.equalsIgnoreCase("Ringtone")) {
+				else if (value.equalsIgnoreCase("Ringtone")) { //$NON-NLS-1$
 					ivalue = 14;
 				}
 				atom = createAtom(key, ivalue);
 			}
-			else if (key.equals("rtng")) {
+			else if (key.equals("rtng")) { //$NON-NLS-1$
 				int ivalue = -1;
-				if (value.equalsIgnoreCase("None")) {
+				if (value.equalsIgnoreCase("None")) { //$NON-NLS-1$
 					ivalue = 0;
 				}
-				else if (value.equalsIgnoreCase("Clean")) {
+				else if (value.equalsIgnoreCase("Clean")) { //$NON-NLS-1$
 					ivalue = 2;
 				}
-				else if (value.equalsIgnoreCase("Explicit")) {
+				else if (value.equalsIgnoreCase("Explicit")) { //$NON-NLS-1$
 					ivalue = 4;
 				}
 				atom = createAtom(key, ivalue);
@@ -210,7 +211,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 				atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
 			}
 			else {
-				throw new MP4Exception("Unable to parse range from '"+value+"'");
+				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_PARSE_RANGE"),value)); //$NON-NLS-1$
 			}
 		}
 		else if (isArtwork(key)) {
@@ -259,56 +260,56 @@ public class MP4v2CLIManager implements IMP4Manager {
 	}
 
 	private String nameToAtomKey(String name) {
-		if (name.equals("Name")) {
-			return "©nam";
+		if (name.equals("Name")) { //$NON-NLS-1$
+			return "©nam"; //$NON-NLS-1$
 		}
-		if (name.equals("Release Date")) {
-			return "©day";
+		if (name.equals("Release Date")) { //$NON-NLS-1$
+			return "©day"; //$NON-NLS-1$
 		}
-		if (name.equals("Disk")) {
-			return "disk";
+		if (name.equals("Disk")) { //$NON-NLS-1$
+			return "disk"; //$NON-NLS-1$
 		}
-		if (name.equals("TV Show")) {
-			return "tvsh";
+		if (name.equals("TV Show")) { //$NON-NLS-1$
+			return "tvsh"; //$NON-NLS-1$
 		}
-		if (name.equals("TV Episode Number")) {
-			return "tven";
+		if (name.equals("TV Episode Number")) { //$NON-NLS-1$
+			return "tven"; //$NON-NLS-1$
 		}
-		if (name.equals("TV Season")) {
-			return "tvsn";
+		if (name.equals("TV Season")) { //$NON-NLS-1$
+			return "tvsn"; //$NON-NLS-1$
 		}
-		if (name.equals("TV Episode")) {
-			return "tves";
+		if (name.equals("TV Episode")) { //$NON-NLS-1$
+			return "tves"; //$NON-NLS-1$
 		}
-		if (name.equals("Short Description")) {
-			return "desc";
+		if (name.equals("Short Description")) { //$NON-NLS-1$
+			return "desc"; //$NON-NLS-1$
 		}
-		if (name.equals("Long Description")) {
-			return "ldes";
+		if (name.equals("Long Description")) { //$NON-NLS-1$
+			return "ldes"; //$NON-NLS-1$
 		}
-		if (name.equals("Artist")) {
-			return "©ART";
+		if (name.equals("Artist")) { //$NON-NLS-1$
+			return "©ART"; //$NON-NLS-1$
 		}
-		if(name.equals("Cover Art pieces")) {
-			return "covr";
+		if(name.equals("Cover Art pieces")) { //$NON-NLS-1$
+			return "covr"; //$NON-NLS-1$
 		}
-		if (name.equals("Encoded with")) {
-			return "©too";
+		if (name.equals("Encoded with")) { //$NON-NLS-1$
+			return "©too"; //$NON-NLS-1$
 		}
-		if(name.equals("Media Type")) {
-			return "stik";
+		if(name.equals("Media Type")) { //$NON-NLS-1$
+			return "stik"; //$NON-NLS-1$
 		}
-		if(name.equals("Content Rating")) {
-			return "rtng";
+		if(name.equals("Content Rating")) { //$NON-NLS-1$
+			return "rtng"; //$NON-NLS-1$
 		}
-		if (name.equals("Genre")) {
-			return "©gen";
+		if (name.equals("Genre")) { //$NON-NLS-1$
+			return "©gen"; //$NON-NLS-1$
 		}
-		if (name.equals("Category")) {
-			return "catg";
+		if (name.equals("Category")) { //$NON-NLS-1$
+			return "catg"; //$NON-NLS-1$
 		}
-		if (name.equals("HD Video")) {
-			return "hdvd";
+		if (name.equals("HD Video")) { //$NON-NLS-1$
+			return "hdvd"; //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -345,42 +346,39 @@ public class MP4v2CLIManager implements IMP4Manager {
 	@Override
 	public void init(File nativeDir) throws MP4Exception {
 		if (mp4infoPath == null) {
-			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info");
+			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,"mp4info"); //$NON-NLS-1$
 		}
 		if (mp4artPath == null) {
-			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art");
+			mp4artPath = NativeHelper.getNativeApplication(nativeDir,"mp4art"); //$NON-NLS-1$
 		}
 		if (mp4tagsPath == null) {
-			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags");
+			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,"mp4tags"); //$NON-NLS-1$
 		}
 		if (mp4filePath == null) {
-			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file");
+			mp4filePath = NativeHelper.getNativeApplication(nativeDir,"mp4file"); //$NON-NLS-1$
 		}
 		boolean errors = false;
 		if (!checkCommand(mp4infoPath)) {
-			log.error("Unable to find or execute command '"+mp4infoPath+"'.");
+			log.error(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_EXECUTE_CMD"),mp4infoPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (!checkCommand(mp4artPath)) {
-			log.error("Unable to find or execute command '"+mp4artPath+"'.");
+			log.error(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_EXECUTE_CMD"),mp4artPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (!checkCommand(mp4filePath)) {
-			log.error("Unable to find or execute command '"+mp4filePath+"'.");
+			log.error(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_EXECUTE_CMD"),mp4filePath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (!checkTagsCommand()) {
-			log.error("Unable to find or execute command '"+mp4tagsPath+"'.");
+			log.error(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_EXECUTE_CMD"),mp4tagsPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		else if (!extended) {
-			log.warn("The found version of 'mp4tags' application does not support setting some mp4 " +
-					 "box types. This only a limited set of meta data can be written to mp4/m4v " +
-					 "files. The documentation for the '"+MP4ITunesStore.class.getName()+"' gives details " +
-					 "on downloading a newer version and using that instead.");
+			log.warn(MessageFormat.format(Messages.getString("MP4v2CLIManager.WRONG_MP4V2_VERSION"),MP4ITunesStore.class.getName())); //$NON-NLS-1$
 		}
 		if (errors) {
-			throw new MP4Exception("One or more of the mp4v2 system commands could not be found.");
+			throw new MP4Exception(Messages.getString("MP4v2CLIManager.SYSTEM_CMD_NOT_FOUND")); //$NON-NLS-1$
 		}
 	}
 
@@ -391,7 +389,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		}
 		catch (MP4Exception e) {
 			if (log.isDebugEnabled()) {
-				log.debug("Command failed",e);
+				log.debug("Command failed",e); //$NON-NLS-1$
 			}
 			return false;
 		}
@@ -402,7 +400,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 		try {
 			boolean capture = !log.isDebugEnabled();
 			String output = getCommandOutput(capture,capture,false,mp4tagsPath);
-			if (output.contains("-category") && output.contains("-longdesc") && output.contains("-rating")) {
+			if (output.contains("-category") && output.contains("-longdesc") && output.contains("-rating")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				extended = true;
 			}
 		}
@@ -438,11 +436,11 @@ public class MP4v2CLIManager implements IMP4Manager {
 			exec.setStreamHandler(new PumpStreamHandler(out,err));
 			int exitCode = exec.execute(cmdLine);
 			if (failOnExitCode && exitCode!=0) {
-				throw new MP4Exception("System command returned a non zero exit code '"+exitCode+"' :"+cmdLine.toString());
+				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.NON_ZERO_EXIT_CODE"),exitCode,cmdLine.toString())); //$NON-NLS-1$
 			}
 			return capture.toString();
 		} catch (IOException e) {
-			throw new MP4Exception("Unable to execute system command: " + cmdLine.toString(),e);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_EXECUTE_SYS_CMD") ,cmdLine.toString()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -461,23 +459,23 @@ public class MP4v2CLIManager implements IMP4Manager {
 	 */
 	@Override
 	public void setParameter(String key, String value) {
-		if (key.equalsIgnoreCase("mp4art")){
+		if (key.equalsIgnoreCase("mp4art")){ //$NON-NLS-1$
 			mp4artPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4info")) {
+		else if (key.equalsIgnoreCase("mp4info")) { //$NON-NLS-1$
 			mp4infoPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4tags")) {
+		else if (key.equalsIgnoreCase("mp4tags")) { //$NON-NLS-1$
 			mp4tagsPath = value;
 		}
-		else if (key.equalsIgnoreCase("mp4file")) {
+		else if (key.equalsIgnoreCase("mp4file")) { //$NON-NLS-1$
 			mp4filePath = value;
 		}
 	}
 
 	private boolean hasArtwrokAtom(List<IAtom> atoms) {
 		for (IAtom atom : atoms) {
-			if (atom.getName().equals("covr")) {
+			if (atom.getName().equals("covr")) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -488,15 +486,15 @@ public class MP4v2CLIManager implements IMP4Manager {
 	@Override
 	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
 		if (log.isDebugEnabled()) {
-			log.debug("Upadting MP4 file '" + mp4File+"' with "+atoms.size());
+			log.debug("Upadting MP4 file '" + mp4File+"' with "+atoms.size()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		checkAppleListItemBoxExists(mp4File);
 		if (hasArtwrokAtom(atoms)) {
 			try {
-				getCommandOutput(true,true,true,mp4artPath, "--remove","--art-any",mp4File);
+				getCommandOutput(true,true,true,mp4artPath, "--remove","--art-any",mp4File); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			catch (MP4Exception e) {
-				if (e.getMessage().contains("non zero exit code")) {
+				if (e.getMessage().contains("non zero exit code")) { //$NON-NLS-1$
 					// This is ok as their was no art
 				}
 			}
@@ -511,12 +509,12 @@ public class MP4v2CLIManager implements IMP4Manager {
 		getCommandOutput(true,false,true,mp4tagsPath,args.toArray(new Object[args.size()]));
 
 		if (log.isDebugEnabled()) {
-			log.debug("MP4 modified '" + mp4File+"'");
+			log.debug("MP4 modified '" + mp4File+"'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private void checkAppleListItemBoxExists(File mp4File) throws MP4Exception {
-		String output = getCommandOutput(true,false,true,mp4filePath, "--list",mp4File);
+		String output = getCommandOutput(true,false,true,mp4filePath, "--list",mp4File); //$NON-NLS-1$
 		BufferedReader reader = null;
 		try {
 			reader =new BufferedReader(new StringReader(output));
@@ -524,24 +522,24 @@ public class MP4v2CLIManager implements IMP4Manager {
 			while ((line = reader.readLine()) != null) {
 				Matcher m = FILE_LIST_PATTERN.matcher(line);
 				if (m.matches()) {
-					if (m.group(2).contains("mp42")) {
+					if (m.group(2).contains("mp42")) { //$NON-NLS-1$
 						return;
 					}
 				}
 			}
 		} catch (IOException e) {
-			throw new MP4Exception("Can't read mp4 file type: " + mp4File,e);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.CANT_READ_TYPE_FILE"),mp4File),e); //$NON-NLS-1$
 		}
 		finally {
 			if (reader!=null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					log.error("Unable to close stream",e);
+					log.error("Unable to close stream",e); //$NON-NLS-1$
 				}
 			}
 		}
-		throw new MP4Exception("MP4 File '"+mp4File+"' does not have apple metadata container box, so don't know how to update it");
+		throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.NOT_CORRECT_VERSION"),mp4File)); //$NON-NLS-1$
 	}
 
 	String getMP4ArtCommand() {

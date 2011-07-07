@@ -6,15 +6,15 @@ package org.stanwood.media.store.mp4;
 public enum MP4ArtworkType {
 
 	/** Unknown type */
-	MP4_ART_UNDEFINED(0,".data"),
+	MP4_ART_UNDEFINED(0,".data"), //$NON-NLS-1$
 	/** Windows BMP type */
-    MP4_ART_BMP(1,".bmp"),
+    MP4_ART_BMP(1,".bmp"), //$NON-NLS-1$
     /** Gif type */
-    MP4_ART_GIF(2,".gif"),
+    MP4_ART_GIF(2,".gif"), //$NON-NLS-1$
     /** JPEG type */
-    MP4_ART_JPEG(3,".jpeg"),
+    MP4_ART_JPEG(3,".jpeg"), //$NON-NLS-1$
     /** PNG type */
-    MP4_ART_PNG(4,".png");
+    MP4_ART_PNG(4,".png"); //$NON-NLS-1$
 
     private int value;
     private String extension;

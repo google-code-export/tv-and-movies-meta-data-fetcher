@@ -38,17 +38,17 @@ public class CLIListAtoms extends AbstractLauncher {
 	 * @param exitHandler the exit handler
 	 */
 	public CLIListAtoms(IExitHandler exitHandler) {
-		super("mm-mp4-list-atoms",new ArrayList<Option>(),exitHandler, System.out, System.err);
+		super("mm-mp4-list-atoms",new ArrayList<Option>(),exitHandler, System.out, System.err); //$NON-NLS-1$
 	}
 
 	@Override
 	protected boolean processOptions(String[] args, CommandLine cmd) {
 		if (cmd.getArgs().length==0) {
-			fatal("Missing argument, expected mp4 file name");
+			fatal(Messages.getString("CLIListAtoms.MISSING_ARG")); //$NON-NLS-1$
 			return false;
 		}
 		else if (cmd.getArgs().length>1) {
-			fatal("More than one argument, only allowed one mp4 filename as a argument");
+			fatal(Messages.getString("CLIListAtoms.MORE_THAN_ONE_ARG")); //$NON-NLS-1$
 			return false;
 		}
 		else {
@@ -64,10 +64,10 @@ public class CLIListAtoms extends AbstractLauncher {
 			IMP4Manager mp4Manager = new MP4v2CLIManager();
 			mp4Manager.init(getController().getNativeFolder());
 
-			info("Reading atoms...");
+			info(Messages.getString("CLIListAtoms.READING_ATOMS")); //$NON-NLS-1$
 			List<IAtom> atoms = mp4Manager.listAtoms(mp4File);
 			if (atoms==null || atoms.size()==0) {
-				info("No metadata atoms found.");
+				info(Messages.getString("CLIListAtoms.NO_METADATA")); //$NON-NLS-1$
 			}
 			else {
 				for (IAtom a : atoms) {
@@ -103,8 +103,8 @@ public class CLIListAtoms extends AbstractLauncher {
 
 	@Override
 	protected void printUsage(Options options, PrintStream stdout, PrintStream stderr) {
-		stdout.println("usage: mm-mp4-list-atoms [-h] [-c <file>] [-l <info|debug|file>] <mp4 file>");
-		stdout.println("");
+		stdout.println(Messages.getString("CLIListAtoms.USAGE")+"mm-mp4-list-atoms [-h] [-c <file>] [-l <info|debug|file>] <mp4 file>");  //$NON-NLS-1$//$NON-NLS-2$
+		stdout.println(""); //$NON-NLS-1$
 	}
 
 }

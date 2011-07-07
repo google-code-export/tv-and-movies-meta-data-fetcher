@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class SapphireStore implements IStore {
 		try {
 			writeEpisode(episodeFile, episode);
 		} catch (IOException e) {
-			throw new StoreException("Error creating spahire store", e);
+			throw new StoreException(Messages.getString("SapphireStore.ERROR_CREATING_STORE"), e); //$NON-NLS-1$
 		}
 	}
 
@@ -98,7 +99,7 @@ public class SapphireStore implements IStore {
 		File xmlFile = getCacheFile(file);
 		if (xmlFile != null) {
 			if (xmlFile.exists() && !xmlFile.delete()) {
-				throw new IOException("couldn't delete file " + xmlFile);
+				throw new IOException(MessageFormat.format(Messages.getString("SapphireStore.UNABLE_DELETE_FILE"),xmlFile)); //$NON-NLS-1$
 	        }
 			PrintStream ps = null;
 			try {
@@ -113,7 +114,7 @@ public class SapphireStore implements IStore {
 				// ps.println("     <publisher>Publisher</publisher>");
 				// ps.println("     <composer>Composer</composer>");
 				// ps.println("     <copyright>Copyright</copyright>");
-				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>"); //$NON-NLS-1$
+				ps.println("     <userStarRating>" + Math.round((episode.getRating().getRating() / 10) * 5) + "</userStarRating>"); //$NON-NLS-1$ //$NON-NLS-2$
 //				ps.println("     <rating>"+episode+"</rating>");
 				ps.println("     <seriesName>" + show.getName() + "</seriesName>"); //$NON-NLS-1$ //$NON-NLS-2$
 				// ps.println("     <broadcaster>The CW</broadcaster>");
@@ -156,7 +157,7 @@ public class SapphireStore implements IStore {
 				ps = null;
 			}
 		} else {
-			log.error("Unable to find extension of media file: " + file.getName());
+			log.error(MessageFormat.format(Messages.getString("SapphireStore.UNABLE_FIND_EXT"),file.getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -164,7 +165,7 @@ public class SapphireStore implements IStore {
 		File xmlFile = getCacheFile(filmFile);
 		if (xmlFile != null) {
 			if (xmlFile.exists() && !xmlFile.delete()) {
-				throw new IOException("couldn't delete file " + xmlFile);
+				throw new IOException(MessageFormat.format(Messages.getString("SapphireStore.UNABLE_DELETE_FILE"), xmlFile)); //$NON-NLS-1$
 	        }
 			PrintStream ps = null;
 			try {
@@ -216,7 +217,7 @@ public class SapphireStore implements IStore {
 				ps = null;
 			}
 		} else {
-			log.error("Unable to find extension of media file: " + filmFile.getName());
+			log.error(MessageFormat.format(Messages.getString("SapphireStore.UNABLE_FIND_EXT"),filmFile.getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -317,7 +318,7 @@ public class SapphireStore implements IStore {
 		try {
 			writeFilm(filmFile, film);
 		} catch (IOException e) {
-			throw new StoreException("Error creating spahire store", e);
+			throw new StoreException(Messages.getString("SapphireStore.ERROR_CREATING_STORE"), e); //$NON-NLS-1$
 		}
 	}
 
@@ -335,14 +336,12 @@ public class SapphireStore implements IStore {
 
 		}
 		if (newXmlFile.exists()) {
-			log.error("Unable rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
-					+ "' as it already exists.");
+			log.error(MessageFormat.format(Messages.getString("SapphireStore.UNABLE_RENAME"),oldXmlFile.getName(),newXmlFile.getName())); //$NON-NLS-1$
 		} else {
-			log.error("Renaming '" + oldXmlFile.getName() + "' -> '" + newXmlFile.getName() + "'");
+			log.error(MessageFormat.format(Messages.getString("SapphireStore.RENAMING"),oldXmlFile.getName(),newXmlFile.getName())); //$NON-NLS-1$
 
 			if (!oldXmlFile.renameTo(newXmlFile)) {
-				log.error("Failed to rename '" + oldXmlFile.getName() + "' file too '" + newXmlFile.getName()
-						+ "'.");
+				log.error(MessageFormat.format(Messages.getString("SapphireStore.9"),oldXmlFile.getName(),newXmlFile.getName())); //$NON-NLS-1$
 			}
 		}
 	}
@@ -389,7 +388,7 @@ public class SapphireStore implements IStore {
 			try {
 				FileHelper.delete(xmlFile);
 			} catch (IOException e) {
-				throw new StoreException("Unable to delete store file: " + xmlFile.getAbsolutePath(),e);
+				throw new StoreException(MessageFormat.format(Messages.getString("SapphireStore.10"),xmlFile.getAbsolutePath()),e); //$NON-NLS-1$
 			}
 		}
 	}

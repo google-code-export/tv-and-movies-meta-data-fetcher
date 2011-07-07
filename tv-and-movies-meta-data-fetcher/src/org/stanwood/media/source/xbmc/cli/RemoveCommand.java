@@ -1,6 +1,7 @@
 package org.stanwood.media.source.xbmc.cli;
 
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +27,8 @@ import org.stanwood.media.source.xbmc.updater.AddonDetails;
  */
 public class RemoveCommand extends AbstractXBMCSubCommand {
 
-	private final static String NAME = "remove";
-	private final static String DESCRIPTION = "Remove a installed XBMC addons";
+	private final static String NAME = "remove"; //$NON-NLS-1$
+	private final static String DESCRIPTION = Messages.getString("RemoveCommand.DESC"); //$NON-NLS-1$
 	private final static List<Option>OPTIONS;
 
 	static {
@@ -54,7 +55,7 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 				getUpdater().uninstallAddons(getConsole(), plugins);
 			}
 			else {
-				fatal("Missing argument, no plugins specified");
+				fatal(Messages.getString("RemoveCommand.MISSING_ARG")); //$NON-NLS-1$
 				return false;
 			}
 		} catch (XBMCException e) {
@@ -91,7 +92,7 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 						plugins.add(addonId);
 						return true;
 					case NOT_INSTALLED:
-						fatal("Addon '"+addonId+"' is not installed, so unable to remove it");
+						fatal(MessageFormat.format(Messages.getString("RemoveCommand.ADDON_NOT_INSTALLED"),addonId)); //$NON-NLS-1$
 						return false;
 					case OUT_OF_DATE:
 						plugins.add(addonId);
@@ -99,12 +100,12 @@ public class RemoveCommand extends AbstractXBMCSubCommand {
 				}
 			}
 		}
-		fatal("Unable to find addon: " +addonId);
+		fatal(MessageFormat.format(Messages.getString("RemoveCommand.UNABLE_FIND_ADDON"),addonId)); //$NON-NLS-1$
 		return false;
 	}
 
 	@Override
 	protected String getPrintArguments() {
-		return " <plugins...>";
+		return " "+Messages.getString("RemoveCommand.PLUGINS"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
