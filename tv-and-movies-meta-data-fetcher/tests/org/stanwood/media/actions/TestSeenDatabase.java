@@ -79,7 +79,7 @@ public class TestSeenDatabase {
 			db.markAsSeen(mediaDir,test2);
 
 			Assert.assertTrue(orgTime!=test2.lastModified());
-			db.write();
+			db.write(new NullProgressMonitor());
 
 			db = new SeenDatabase(configDir);
 			Assert.assertFalse(db.isSeen(mediaDir, test1));

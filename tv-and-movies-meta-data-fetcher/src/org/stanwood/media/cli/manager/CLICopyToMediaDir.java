@@ -20,6 +20,7 @@ import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
@@ -166,7 +167,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 
 
 			ActionPerformer renamer = new ActionPerformer(getController().getConfigDir(),getController().getNativeFolder(),actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
-			renamer.performActions(newFiles,new HashSet<File>());
+			renamer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
 
 			return true;
 		} catch (ActionException e) {

@@ -91,6 +91,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 	/**
 	 * Used to perform the actions
+	 * @param monitor Progress monitor
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions(IProgressMonitor monitor) throws ActionException {
@@ -107,20 +108,21 @@ public class ActionPerformer implements IActionEventHandler {
 			}
 		}
 
-		List<File> sortedFiles = findMediaFiles();
-		Set<File> dirs = findDirs();
+		List<File> sortedFiles = findMediaFiles(monitor);
+		Set<File> dirs = findDirs(monitor);
 
-		performActions(sortedFiles,dirs);
+		performActions(sortedFiles,dirs,monitor);
 		if (seenDb!=null) {
 			try {
-				seenDb.write();
+				seenDb.write(monitor);
 			} catch (FileNotFoundException e) {
 				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_WRITE_SEEN_DATABASE"),e); //$NON-NLS-1$
 			}
 		}
 	}
 
-	private Set<File> findDirs() {
+	private Set<File> findDirs(IProgressMonitor monitor) {
+		monitor.subTask(Messages.getString("ActionPerformer.SEARCHING_FOR_MEDIA_DIRS")); //$NON-NLS-1$
 		Set<File>dirs = new HashSet<File>();
 		findDirs(dirs, dir.getMediaDirConfig().getMediaDir());
 		return dirs;
@@ -130,13 +132,16 @@ public class ActionPerformer implements IActionEventHandler {
 	 * Used to perform the actions
 	 * @param files The files to perform the actions on
 	 * @param dirs The directories with the media directory
+	 * @param parentMonitor Progress monitor parent
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
-	public void performActions(List<File> files,Set<File> dirs) throws ActionException {
+	public void performActions(List<File> files,Set<File> dirs,IProgressMonitor parentMonitor) throws ActionException {
+		parentMonitor.subTask("Setup stores");
 		if (!initStores()) {
 			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_SETUP_STORES")); //$NON-NLS-1$
 		}
 
+		parentMonitor.subTask("Setup actions");
 		for (IAction action : actions) {
 			action.init(dir);
 		}
@@ -174,7 +179,8 @@ public class ActionPerformer implements IActionEventHandler {
 		return !hasErrors;
 	}
 
-	protected List<File> findMediaFiles() throws ActionException {
+	protected List<File> findMediaFiles(IProgressMonitor monitor) throws ActionException {
+		monitor.subTask(Messages.getString("ActionPerformer.SEARCHING_FOR_MEDIA_FILES")); //$NON-NLS-1$
 		List<File>mediaFiles = new ArrayList<File>();
 		findMediaFiles(dir.getMediaDirConfig().getMediaDir(),mediaFiles);
 		List<File> sortedFiles = new ArrayList<File>();
