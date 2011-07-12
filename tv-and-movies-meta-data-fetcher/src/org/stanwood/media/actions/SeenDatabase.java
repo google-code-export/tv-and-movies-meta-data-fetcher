@@ -92,21 +92,27 @@ public class SeenDatabase extends XMLParser {
 
 	/**
 	 * Used to write the database to disc
+	 * @param parentMonitor Parent progress monitor
 	 * @throws FileNotFoundException Thrown if their is a problem
 	 */
-	public void write() throws FileNotFoundException {
+	public void write(IProgressMonitor parentMonitor) throws FileNotFoundException {
+		SubMonitor progress = SubMonitor.convert(parentMonitor, 100);
 		PrintStream ps = null;
 		try {
 			ps = new PrintStream(seenFile);
 			ps.println("<seen>"); //$NON-NLS-1$
-			for (Entry<File,Set<SeenEntry>> e : entries.entrySet()) {
+			Set<Entry<File, Set<SeenEntry>>> entriesSet = entries.entrySet();
+			progress.beginTask(Messages.getString("SeenDatabase.WRITING_SEEN_DB"), entriesSet.size()); //$NON-NLS-1$
+			for (Entry<File,Set<SeenEntry>> e : entriesSet) {
 				ps.println("  <mediaDir dir=\""+e.getKey()+"\">"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (SeenEntry entry : e.getValue()) {
 					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				ps.println("  </mediaDir>"); //$NON-NLS-1$
+				progress.worked(1);
 			}
 			ps.println("</seen>"); //$NON-NLS-1$
+			progress.done();
 		}
 		finally {
 			if (ps!=null) {
@@ -129,7 +135,7 @@ public class SeenDatabase extends XMLParser {
 		if (seenFile.exists()) {
 			Document doc = XMLParser.parse(seenFile, null);
 			IterableNodeList nodes = selectNodeList(doc, "seen/mediaDir"); //$NON-NLS-1$
-			progress.beginTask("Reading seen database", nodes.getLength());
+			progress.beginTask(Messages.getString("SeenDatabase.READING_SEEN_DB"), nodes.getLength()); //$NON-NLS-1$
 			for (Node mediaDirNode : nodes) {
 				Element mediaDirEl = (Element)mediaDirNode;
 				File mediaDir = new File(mediaDirEl.getAttribute("dir")); //$NON-NLS-1$

@@ -13,12 +13,13 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Author;
 import org.stanwood.media.Controller;
+import org.stanwood.media.ProjectDetails;
 import org.stanwood.media.logging.LogConfig;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.util.FileHelper;
 
 /**
  * This class should be extended by classes that have a main method used to lauch them
@@ -110,14 +111,14 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 
 	private void printVersion() {
 		try {
-			String version = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim(); //$NON-NLS-1$
-			info(version);
-			info("Copyright (C) 2011 John-Paul Stanford <dev@stanwood.org.uk>"); //$NON-NLS-1$
-			info("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."); //$NON-NLS-1$
-			info("This is free software: you are free to change and redistribute it."); //$NON-NLS-1$
-			info("There is NO WARRANTY"); //$NON-NLS-1$
+			ProjectDetails details = new ProjectDetails();
+			info(details.getVersion().toString()+" "+details.getTitle()); //$NON-NLS-1$
+			info(details.getCopyright());
 			info(""); //$NON-NLS-1$
-			info("Written by John-Paul Stanford."); //$NON-NLS-1$
+			info(Messages.getString("AbstractLauncher.WRITTEN_BY")); //$NON-NLS-1$
+			for (Author author : details.getAuthors()) {
+				info (author.getName()+" <"+author.getEmail()+"> - " + author.getDescription()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		} catch (IOException e) {
 			fatal(e);
 		}
@@ -158,7 +159,11 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		return true;
 	}
 
-	protected Controller getController() {
+	/**
+	 * Used to get the controller
+	 * @return the controller
+	 */
+	public Controller getController() {
 		return controller;
 	}
 
