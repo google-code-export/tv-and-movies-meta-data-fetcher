@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mediaManager>
+  <plugins>
+    <plugin class="this.is.a.Test" jar="/home/test/plugin.jar"/>
+  </plugins>
+  <XBMCAddons addonSite="http://blah.com/addons" directory="/home/blah" locale="fr"/>
+  <global>
+    <configDirectory>/blah/blah1</configDirectory>
+    <native>/This/is/a/test</native>
+  </global>
+  <mediaDirectory directory="$$FILM_DIR$$"
+    ignoreSeen="true" mode="TV_SHOW" pattern="%e.%x">
+    <ignore>.*incomming.*</ignore>
+    <ignore>.*blah.*</ignore>
+    <ignore>.*[S|s]amples.*</ignore>
+    <extensions>
+      <extension>avi</extension>
+      <extension>m4v</extension>
+      <extension>qt</extension>
+    </extensions>
+    <sources>
+      <source id="org.stanwood.media.FakeSource">
+        <param name="TeSTPaRAm2" value="/blahPath/blah"/>
+      </source>
+    </sources>
+    <stores>
+      <store id="org.stanwood.media.FakeSource">
+        <param name="TeSTPaRAm2" value="/blahPath/blah"/>
+      </store>
+    </stores>
+    <actions>
+      <action id="org.stanwood.media.FakeSource">
+        <param name="TeSTPaRAm2" value="/blahPath/blah"/>
+      </action>
+    </actions>
+  </mediaDirectory>
+</mediaManager>
