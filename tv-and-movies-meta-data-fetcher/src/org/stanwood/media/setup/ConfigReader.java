@@ -104,7 +104,7 @@ public class ConfigReader extends BaseConfigReader {
 			parseMediaDirs(doc);
 			parsePlguins(doc);
 		} catch (XMLParserException e) {
-			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG") + e.getMessage(),e); //$NON-NLS-1$
+			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG"),e); //$NON-NLS-1$
 		}
 	}
 
