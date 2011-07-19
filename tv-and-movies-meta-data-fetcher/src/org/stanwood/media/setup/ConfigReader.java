@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -35,6 +37,8 @@ import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.progress.IProgressMonitor;
+import org.stanwood.media.progress.SubMonitor;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -55,6 +59,7 @@ import org.w3c.dom.Node;
  */
 public class ConfigReader extends BaseConfigReader {
 
+	private static final String SCHEMA_NAME = "MediaManager-Config-2.0.xsd"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
@@ -93,16 +98,77 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public void parse() throws ConfigException {
 		try {
-			Document doc = XMLParser.parse(is, "MediaManager-Config-2.0.xsd"); //$NON-NLS-1$
+			Document doc = XMLParser.parse(is, SCHEMA_NAME);
 			parseGlobal(doc);
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
 			parsePlguins(doc);
 		} catch (XMLParserException e) {
-			throw new ConfigException(Messages.getString("ConfigReader.14") + e.getMessage(),e); //$NON-NLS-1$
+			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG") + e.getMessage(),e); //$NON-NLS-1$
 		}
 	}
 
+	private void writeMediaDirs(StringBuilder document, IProgressMonitor progress) throws XMLParserException {
+		for (MediaDirConfig dir : mediaDir) {
+			document.append("  <mediaDirectory"); //$NON-NLS-1$
+			document.append(" directory=\""+dir.getMediaDir().getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			document.append(" mode=\""+dir.getMode()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			document.append(" pattern=\""+dir.getPattern()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			document.append(" ignoreSeen=\""+dir.getIgnoreSeen()+"\">"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+			for (Pattern p : dir.getIgnorePatterns()) {
+				document.append("    <ignore>"+p.pattern()+"</ignore>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (dir.getExtensions().size()>0 && !Arrays.equals(dir.getExtensions().toArray(new String[0]),DEFAULT_EXTS)) {
+				document.append("    <extensions>"+FileHelper.LS); //$NON-NLS-1$
+				for (String ext : dir.getExtensions()) {
+					document.append("      <extension>"+ext+"</extension>"+FileHelper.LS);  //$NON-NLS-1$//$NON-NLS-2$
+				}
+				document.append("    </extensions>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			if (dir.getSources().size()>0) {
+				document.append("    <sources>"+FileHelper.LS); //$NON-NLS-1$
+					for (SourceConfig source : dir.getSources()) {
+						document.append("      <source"); //$NON-NLS-1$
+						witeBaseMediaDirSubItem(document, source);
+						document.append("      </source>"); //$NON-NLS-1$
+					}
+				document.append("    </sources>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			if (dir.getSources().size()>0) {
+				document.append("    <stores>"+FileHelper.LS); //$NON-NLS-1$
+					for (SourceConfig source : dir.getSources()) {
+						document.append("      <store"); //$NON-NLS-1$
+						witeBaseMediaDirSubItem(document, source);
+						document.append("      </store>"); //$NON-NLS-1$
+					}
+				document.append("    </stores>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			if (dir.getSources().size()>0) {
+				document.append("    <actions>"+FileHelper.LS); //$NON-NLS-1$
+					for (SourceConfig source : dir.getSources()) {
+						document.append("      <action"); //$NON-NLS-1$
+						witeBaseMediaDirSubItem(document, source);
+						document.append("      </action>"); //$NON-NLS-1$
+					}
+				document.append("    </actions>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			document.append("  </mediaDirectory>"+FileHelper.LS); //$NON-NLS-1$
+			progress.worked(1);
+		}
+	}
+
+	protected void witeBaseMediaDirSubItem(StringBuilder document,SourceConfig subItem) {
+		document.append(" id=\""+subItem.getID()+"\"");  //$NON-NLS-1$//$NON-NLS-2$
+		document.append(">"+FileHelper.LS); //$NON-NLS-1$
+		if (subItem.getParams().entrySet().size()>0) {
+			for (Entry<String,String>e : subItem.getParams().entrySet()) {
+				document.append("        <param"); //$NON-NLS-1$
+				document.append(" name=\""+e.getKey()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+				document.append(" value=\""+e.getValue()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+				document.append("/>"+FileHelper.LS); //$NON-NLS-1$
+			}
+		}
+	}
 
 	private void parseMediaDirs(Document doc) throws XMLParserException, ConfigException {
 		List<MediaDirConfig>dirConfigs = new ArrayList<MediaDirConfig>();
@@ -170,6 +236,9 @@ public class ConfigReader extends BaseConfigReader {
 		}
 		this.mediaDir = dirConfigs;
 	}
+
+
+
 
 	private void parseIgnorePatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException, ConfigException {
 		List<Pattern>patterns = new ArrayList<Pattern>();
@@ -430,6 +499,17 @@ public class ConfigReader extends BaseConfigReader {
 		return xbmcLocale;
 	}
 
+	private void writePlugins(StringBuilder document) {
+		if (plugins.size()>0) {
+			document.append("  <plugins>"+FileHelper.LS); //$NON-NLS-1$
+			for (Plugin plugin : plugins) {
+				document.append("    <plugin jar=\""+plugin.getJar()+"\" class=\""+plugin.getPluginClass()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+
+			document.append("  </plugins>"+FileHelper.LS); //$NON-NLS-1$
+		}
+	}
+
 	private void parsePlguins(Node doc) throws XMLParserException {
 		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) { //$NON-NLS-1$
 			Element pluginEl = (Element)n;
@@ -457,6 +537,21 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
+	private void writeXBMCSettings(StringBuilder document) throws ConfigException {
+		document.append("  <XBMCAddons"); //$NON-NLS-1$
+		if (xbmcAddonDir!=null) {
+			document.append(" directory=\""+xbmcAddonDir+"\""); //$NON-NLS-1$
+		}
+		if (!xbmcLocale.equals(Locale.ENGLISH)) {
+			document.append(" locale=\""+xbmcLocale.getLanguage()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (!xbmcAddonSite.equals(DEFAULT_XBMC_ADDON_DIR)) {
+			document.append(" addonSite=\""+xbmcAddonSite+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		document.append("/>"+FileHelper.LS); //$NON-NLS-1$
+	}
+
+
 	private void parseGlobal(Document configNode) throws XMLParserException {
 		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global"); //$NON-NLS-1$
 		if (node!=null) {
@@ -479,6 +574,18 @@ public class ConfigReader extends BaseConfigReader {
 				// Ignore
 			}
 		}
+	}
+
+	private void writeGlobalSettings(StringBuilder document)
+	throws ConfigException {
+		document.append("  <global>"+FileHelper.LS); //$NON-NLS-1$
+		if (!configDir.equals(getDefaultConfigDir())) {
+			document.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (nativeFolder!=null) {
+			document.append("    <native>"+nativeFolder.getAbsolutePath()+"</native>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		document.append("  </global>"+FileHelper.LS); //$NON-NLS-1$
 	}
 
 	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
@@ -585,7 +692,7 @@ public class ConfigReader extends BaseConfigReader {
 		if (nativeFolder==null) {
 			String nativeDir = System.getenv("MM_NATIVE_DIR"); //$NON-NLS-1$
 			if (nativeDir!=null && nativeDir.length()>0) {
-				nativeFolder = FileHelper.resolveRelativePaths(new File(nativeDir));
+				return FileHelper.resolveRelativePaths(new File(nativeDir));
 			}
 		}
 		return nativeFolder;
@@ -597,5 +704,38 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public String getXBMCAddonSiteUrl() {
 		return xbmcAddonSite;
+	}
+
+	/**
+	 * Write the configuration to a file
+	 * @param monitor The progress monitor
+	 * @param file File to save the configuration to
+	 * @throws ConfigException Thrown if their is a problem
+	 */
+	public void writeConfig(IProgressMonitor monitor,File file) throws  ConfigException {
+		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+4);
+
+		try {
+			StringBuilder document = new StringBuilder();
+			document.append("<mediaManager>"+FileHelper.LS); //$NON-NLS-1$
+			writePlugins(document);
+			progress.worked(1);
+			writeXBMCSettings(document);
+			progress.worked(1);
+			writeGlobalSettings(document);
+			progress.worked(1);
+			writeMediaDirs(document,progress);
+			document.append("</mediaManager>"+FileHelper.LS); //$NON-NLS-1$
+			Document doc = XMLParser.strToDom(document.toString(),SCHEMA_NAME);
+			XMLParser.writeXML(file, doc);
+			progress.worked(1);
+		}
+		catch (Exception e) {
+			throw new ConfigException(Messages.getString("ConfigReader.UNABLE_WRITE_CONFIG"),e); //$NON-NLS-1$
+		}
+		finally {
+			progress.done();
+		}
+
 	}
 }

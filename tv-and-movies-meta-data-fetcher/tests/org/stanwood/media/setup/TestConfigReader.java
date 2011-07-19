@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.FakeSource;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.store.FakeStore;
 import org.stanwood.media.util.FileHelper;
 
@@ -434,6 +436,71 @@ public class TestConfigReader {
 		ConfigReader configReader = createConfigReader(testConfig);
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 		Assert.assertEquals("/This/is/a/test",configReader.getNativeFolder().getAbsolutePath());
+	}
+
+	/**
+	 * Used to test that configuration is written correctly
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testWriting() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("films");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <plugins>"+LS);
+			testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+LS);
+			testConfig.append("  </plugins>"+LS);
+			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+LS);
+			testConfig.append("  <global>"+LS);
+			testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+LS);
+			testConfig.append("    <native>/This/is/a/test</native>"+LS);
+			testConfig.append("  </global>"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" ignoreSeen=\"true\" >"+LS);
+			testConfig.append("    <ignore>.*incomming.*</ignore>"+LS);
+			testConfig.append("    <ignore>.*blah.*</ignore>"+LS);
+			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+LS);
+			testConfig.append("    <extensions>"+LS);
+			testConfig.append("      <extension>avi</extension>"+LS);
+			testConfig.append("      <extension>m4v</extension>"+LS);
+			testConfig.append("      <extension>qt</extension>"+LS);
+			testConfig.append("    </extensions>"+LS);
+			testConfig.append("    <sources>"+LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
+			testConfig.append("      </source>"+LS);
+			testConfig.append("    </sources>"+LS);
+			testConfig.append("    <stores>"+LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("	     </store>"+LS);
+			testConfig.append("    </stores>"+LS);
+			testConfig.append("    <actions>"+LS);
+			testConfig.append("        <action id=\"a.test.action\">"+LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\"/testPath/blah\"/>"+LS);
+			testConfig.append("        </action>"+LS);
+			testConfig.append("    </actions>"+LS);
+			testConfig.append("  </mediaDirectory>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			File tmpFile = FileHelper.createTempFile("config", ".xml");
+			configReader.writeConfig(new NullProgressMonitor(), tmpFile);
+
+			String actual = FileHelper.readFileContents(tmpFile);
+			String expected = FileHelper.readFileContents(TestConfigReader.class.getResourceAsStream("expectedWrite.xml"));
+			expected = expected.replaceAll(Pattern.quote("$$FILM_DIR$$"), mediaDir.getAbsolutePath());
+			Assert.assertEquals(expected,actual);
+
+			FileHelper.delete(tmpFile);
+
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
 	}
 
 //	/**

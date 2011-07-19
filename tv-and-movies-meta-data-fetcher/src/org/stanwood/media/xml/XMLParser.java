@@ -199,12 +199,14 @@ public class XMLParser {
 	/**
 	 * Used to convert a XML string to a DOM document
 	 * @param str The string to convert
+	 * @param schemaName the name of the schema, or null if one should not be used
 	 * @return The DOM Document
 	 * @throws XMLParserException Thrown if their is a parsing problem
 	 */
-	public static Document strToDom(String str) throws XMLParserException {
+	public static Document strToDom(String str,String schemaName) throws XMLParserException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factory = XMLParser.createFactory(schemaName);
+
 			DocumentBuilder builder = XMLParser.createDocBuilder(factory);
 
 			InputSource is = new InputSource( new StringReader( str ) );
@@ -220,6 +222,16 @@ public class XMLParser {
 		catch (Exception e) {
 			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_CONVERT_STRING_DOM"),e); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * Used to convert a XML string to a DOM document
+	 * @param str The string to convert
+	 * @return The DOM Document
+	 * @throws XMLParserException Thrown if their is a parsing problem
+	 */
+	public static Document strToDom(String str) throws XMLParserException {
+		return strToDom(str,null);
 	}
 
 	/**
@@ -414,7 +426,12 @@ public class XMLParser {
 		}
 	}
 
-	private static DocumentBuilderFactory createFactory(String schemaName) {
+	/**
+	 * Used to create a DOM document builder factory
+	 * @param schemaName The schema name, or null if one should not be used
+	 * @return The factory
+	 */
+	public static DocumentBuilderFactory createFactory(String schemaName) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		if (schemaName!=null) {
 			factory.setValidating(true);
