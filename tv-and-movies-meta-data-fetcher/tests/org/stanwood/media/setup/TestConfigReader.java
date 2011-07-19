@@ -206,7 +206,7 @@ public class TestConfigReader {
 				Assert.fail("Did not detect the exception");
 			}
 			catch (ConfigException e) {
-				Assert.assertEquals(e.getMessage(),"Unknown mode 'BLAH' for media directory '"+mediaDir.getAbsolutePath()+"'. Valid modes are 'FILM', 'TV_SHOW'");
+				Assert.assertEquals(e.getMessage(),"Unknown mode 'BLAH' for media directory '"+mediaDir.getAbsolutePath()+"'. Valid modes are: 'FILM', 'TV_SHOW'");
 			}
 
 		}
