@@ -12,6 +12,8 @@
 	<property name="docs.dir" location="${basedir}/docs"/>
 	<property name="api.docs.dir" location="${docs.dir}/api" />
 	<property name="reports.dir" location="${basedir}/reports"/>
+	<property name="dist.dir" location="${basedir}/../dist"/>
+	<property name="scripts.dir" location="${basedir}/build/scripts"/>
 	
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
@@ -179,6 +181,17 @@
 			<delete dir="${cobertura.dir}"/>
 			<delete file="cobertura.ser" />
 		</target>
+	
+		<target name="dist">
+			<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
+				<fileset dir="${src.dir}" />
+				<fileset dir="${test.src.dir}" />			
+			</jar>
+						
+			<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-apidocs.zip" basedir="${api.docs.dir}/.." compress="true" />
+			
+			<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" compress="true"/>
+		</target>
 
 		<target name="clean" description="clean up">
 			<!-- Delete the ${build} and ${dist} directory trees -->
@@ -192,6 +205,6 @@
 			<delete file="cobertura.ser" />			
 		</target>
 	
-		<target name="all" depends="clean,run-tests,javadoc"/>
+		<target name="all" depends="clean,run-tests,javadoc,dist"/>
 	
 </project>
