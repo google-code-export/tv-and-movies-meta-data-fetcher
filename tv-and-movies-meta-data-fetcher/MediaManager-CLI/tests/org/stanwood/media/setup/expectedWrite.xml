@@ -8,7 +8,7 @@
     <configDirectory>/blah/blah1</configDirectory>
     <native>/This/is/a/test</native>
   </global>
-  <mediaDirectory directory="$$FILM_DIR$$"
+  <mediaDirectory directory="$FILM_DIR$"
     ignoreSeen="true" mode="TV_SHOW" pattern="%e.%x">
     <ignore>.*incomming.*</ignore>
     <ignore>.*blah.*</ignore>

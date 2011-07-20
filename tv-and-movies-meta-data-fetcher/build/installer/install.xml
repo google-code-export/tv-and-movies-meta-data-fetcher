@@ -72,13 +72,6 @@
 	</panels>
 	
 	<packs>
-		<pack name="3rd Party Java Libraries" required="yes" installGroups="Libraries" >
-			<description>3rd Pary libraries needed by the application</description>
-			
-			<!-- Install all the libs -->
-			<fileset targetdir="$INSTALL_PATH/lib" dir="@{libs.dir}/run-time" includes="*.jar"/>
-        </pack>
-		
 		<pack name="3rd Party Native Applications &amp; Libraries" required="yes" installGroups="Libraries">
 			<description>The native libraries need by the the command line and GUI tools</description>
 			
@@ -99,78 +92,13 @@
 			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4art" os="mac"/>
 		</pack>
 		
-		<pack name="Application Libaray" required="yes" installGroups="Libraries">
-			<description>The libraries need by the the command line and GUI tools</description>
-			
-			<file src="@{dist.dir}/@{ant.project.name}-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
-		</pack>
-		
-		<pack name="CLI Application" required="yes" installGroups="Application">
-			<description>Command line application</description>
-			
-			<file src="@{installer.dir}/scripts/unix/mm-manager" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-manager">
-				<os family="unix"/>
-			</executable>
-			<file src="@{installer.dir}/scripts/unix/mm-copy-store-to-store" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-copy-store-to-store">
-				<os family="unix"/>
-			</executable>
-			<file src="@{installer.dir}/scripts/unix/mm-mp4-list-atoms" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-mp4-list-atoms">
-				<os family="unix"/>
-			</executable>
-			<file src="@{installer.dir}/scripts/unix/mm-move-into-media-directory" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-move-into-media-directory">
-				<os family="unix"/>
-			</executable>			
-			<file src="@{installer.dir}/scripts/unix/mm-xbmc" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
-				<os family="unix"/>
-			</executable>
-			<file src="@{installer.dir}/scripts/unix/mm-java" targetdir="$INSTALL_PATH/bin">
-				<os family="unix"/>
-			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-java">
-				<os family="unix"/>
-			</executable>
-			
-			<file src="@{installer.dir}/scripts/windows/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>		
-			<file src="@{installer.dir}/scripts/windows/mm-mp4-list-atoms.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>	
-			<file src="@{installer.dir}/scripts/windows/mm-move-into-media-directory.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>
-			<file src="@{installer.dir}/scripts/windows/mm-copy-store-to-store.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>		
-			<file src="@{installer.dir}/scripts/windows/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>			
-			<file src="@{installer.dir}/scripts/windows/mm-java.bat" targetdir="$INSTALL_PATH/bin">
-				<os family="windows"/>
-			</file>			
-		</pack>
-		
-		<pack name="CLI Documentation" required="no" installGroups="Documentation">
+		<pack name="Documentation" required="no" installGroups="Documentation">
 			<description>Command line documentation</description>
 			
 			<!-- Create start menu entries for docs -->
 			<singlefile src="@{docs.dir}/userguide/html/docbook.html" target="$INSTALL_PATH/docs/html/index.html"/>
 			<singlefile src="@{docs.dir}/userguide/userguide.pdf" target="$INSTALL_PATH/docs/pdf/userguide.pdf"/>
 		</pack>			
+		<xi:xinclude xmlns:xi="http://www.w3.org/2001/XInclude" href="${basedir}/MediaManager-CLI/build/installer/install-packs.xml"/>		
 	</packs>
 </installation>
