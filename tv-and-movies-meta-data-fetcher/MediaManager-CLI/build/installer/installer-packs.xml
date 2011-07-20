@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<xfragment>	
+		<pack name="CLI 3rd Party Java Libraries" required="yes" installGroups="Libraries" >
+			<description>3rd Pary libraries needed by the command line applications</description>
+			
+			<!-- Install all the libs -->
+			<fileset targetdir="$INSTALL_PATH/lib" dir="@{mm-cli.dir}/libs/run-time" includes="*.jar"/>
+        </pack>
+		
+		<pack name="CLI Application Libaray" required="yes" installGroups="Libraries">
+			<description>The libraries need by the the command line tools</description>
+			
+			<file src="@{dist.dir}/@{ant.project.name}-CLI-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
+		</pack>
+		
+		<pack name="CLI Application" required="yes" installGroups="Application">
+			<description>Command line application</description>
+			
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-manager" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-manager">
+				<os family="unix"/>
+			</executable>
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-copy-store-to-store" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-copy-store-to-store">
+				<os family="unix"/>
+			</executable>
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-mp4-list-atoms" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-mp4-list-atoms">
+				<os family="unix"/>
+			</executable>
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-move-into-media-directory" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-move-into-media-directory">
+				<os family="unix"/>
+			</executable>			
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-xbmc" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
+				<os family="unix"/>
+			</executable>
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-java" targetdir="$INSTALL_PATH/bin">
+				<os family="unix"/>
+			</file>
+			<executable targetfile="$INSTALL_PATH/bin/mm-java">
+				<os family="unix"/>
+			</executable>
+			
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>		
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-mp4-list-atoms.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>	
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-move-into-media-directory.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-copy-store-to-store.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>		
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-xbmc.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>			
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-java.bat" targetdir="$INSTALL_PATH/bin">
+				<os family="windows"/>
+			</file>			
+		</pack>		
+</xfragment>

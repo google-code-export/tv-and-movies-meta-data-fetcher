@@ -73,8 +73,7 @@
 			<mkdir dir="${api.docs.dir}" />
 			<mkdir dir="${reports.dir}"/>
 			
-			<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
-			<echo message="${ant.project.name} ${project.version}" file="${basedir}/src/org/stanwood/media/VERSION" />
+				<echo message="${ant.project.name} ${project.version}" file="${basedir}/src/org/stanwood/media/VERSION" />
 		</target>
 
 		<target name="compile" depends="init,antlr" description="compile the source ">

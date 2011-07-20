@@ -5,13 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.FakeSource;
+import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
@@ -490,10 +492,9 @@ public class TestConfigReader {
 			File tmpFile = FileHelper.createTempFile("config", ".xml");
 			configReader.writeConfig(new NullProgressMonitor(), tmpFile);
 
-			String actual = FileHelper.readFileContents(tmpFile);
-			String expected = FileHelper.readFileContents(TestConfigReader.class.getResourceAsStream("expectedWrite.xml"));
-			expected = expected.replaceAll(Pattern.quote("$$FILM_DIR$$"), mediaDir.getAbsolutePath());
-			Assert.assertEquals(expected,actual);
+			Map<String, String> params = new HashMap<String,String>();
+			params.put("FILM_DIR", mediaDir.getAbsolutePath());
+			Helper.assertXMLEquals(TestConfigReader.class.getResourceAsStream("expectedWrite.xml"),new FileInputStream(tmpFile),params);
 
 			FileHelper.delete(tmpFile);
 
