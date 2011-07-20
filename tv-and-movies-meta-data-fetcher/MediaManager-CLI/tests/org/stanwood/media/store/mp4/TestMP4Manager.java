@@ -179,7 +179,7 @@ public class TestMP4Manager {
 		Assert.assertEquals(11,atoms.size());
 		int index=0;
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9487]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9,487]",atoms.get(index++).toString());
 		Assert.assertEquals("Summary: [desc=A test summary]",atoms.get(index++).toString());
 		Assert.assertEquals("Disk number: [disk=1 of 1]",atoms.get(index++).toString());
 		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());

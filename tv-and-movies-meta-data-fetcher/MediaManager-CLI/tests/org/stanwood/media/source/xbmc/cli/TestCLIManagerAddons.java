@@ -80,7 +80,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Unrecognized option: --blah\n");
+		expected.append("Unrecognised option: --blah\n");
 		Assert.assertEquals(expected.toString(), stderr.toString());
 
 		expected = new StringBuilder();
