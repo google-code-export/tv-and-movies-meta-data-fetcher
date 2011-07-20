@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xpath.internal.XPathAPI;
-import com.sun.xml.internal.bind.marshaller.Messages;
 
 /**
  * This is a source that reads the details using XBMC addons. It is capable of reading both TV Show and Film
@@ -572,7 +572,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private void checkMode(Mode mode) throws SourceException  {
 		if (!addon.supportsMode(mode)) {
-			throw new SourceException(Messages.format(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.SCRAPER_WRONG_TYPE"),addon.getId(),mode.getDisplayName())); //$NON-NLS-1$
+			throw new SourceException(MessageFormat.format(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.SCRAPER_WRONG_TYPE"),addon.getId(),mode.getDisplayName())); //$NON-NLS-1$
 		}
 	}
 

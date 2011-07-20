@@ -1,0 +1,197 @@
+<project name="MediaManager-CLI" default="all" basedir=".">
+	
+	<!-- Allow properties to be overridden by a property file -->
+	<property file="build.properties" />
+	
+	<!-- Path properties -->
+	<property name="src.dir" location="${basedir}/src" />
+	<property name="build.dir" location="${basedir}/bin" />
+	<property name="test.src.dir" location="${basedir}/tests" />
+	<property name="test.build.dir" location="${basedir}/tests-bin" />
+	<property name="libs.dir" location="${basedir}/libs" />	
+	<property name="docs.dir" location="${basedir}/docs"/>
+	<property name="api.docs.dir" location="${docs.dir}/api" />
+	<property name="reports.dir" location="${basedir}/reports"/>
+	
+	<!-- Compiler properties -->
+	<property name="javac.source" value="1.6" />
+	<property name="javac.target" value="1.6" />
+	
+	<property name="project.version" value="CHANGEME" />
+	<property name="project.author" value="CHANGEME" />
+	<property name="project.email" value="CHANGEME" />
+	<property name="project.summary" value="CHANGEME"/>
+	
+	<!-- Lib classpaths -->
+	<path id="installer.libs.classpath">
+		<fileset dir="${libs.dir}/installer" includes="*.jar" />
+	</path>
+	<path id="run-time.libs.classpath">
+		<fileset dir="${libs.dir}/run-time" includes="*.jar" />
+	</path>
+	<path id="compile-time.libs.classpath">
+		<fileset dir="${libs.dir}/compile-time" includes="**/*.jar" />
+	</path>
+	<path id="test-time.libs.classpath">
+		<fileset dir="${libs.dir}/test-time" includes="*.jar" />
+	</path>
+	
+	<!-- Cobeture setup -->
+	<property name="cobertura.dir" value="${basedir}/cobertura" />
+	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
+	<taskdef classpathref="compile-time.libs.classpath" resource="tasks.properties" />
+	
+	<target name="antlr">				
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
+			<classpath>				
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
+			</classpath>
+			<arg value="-fo"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionLexer.g"/>			
+		</java>
+		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
+			<classpath>				
+				<path refid="run-time.libs.classpath"/>
+				<path refid="compile-time.libs.classpath"/>	
+			</classpath>
+			<arg value="-fo"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
+			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionParser.g"/>			
+		</java>
+	</target>
+	
+	<target name="init">
+			<!-- Create the time stamp -->
+			<tstamp />
+			<!-- Create the build directory structure used by compile -->
+			<mkdir dir="${build.dir}" />
+			<mkdir dir="${test.build.dir}" />
+			<mkdir dir="${api.docs.dir}" />
+			<mkdir dir="${reports.dir}"/>
+			
+			<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+			<echo message="${ant.project.name} ${project.version}" file="${basedir}/src/org/stanwood/media/VERSION" />
+		</target>
+
+		<target name="compile" depends="init,antlr" description="compile the source ">
+			<property name="cp" refid="run-time.libs.classpath" />
+			<echo message="Classpath is ${cp}" />
+
+			<!-- Compile the java code from ${src} into ${build} -->
+			<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
+				<classpath>
+					<path refid="run-time.libs.classpath" />				
+				</classpath>
+			</javac>
+
+			<copy todir="${build.dir}">
+				<fileset dir="${src.dir}" excludes="**/*.java" />
+			</copy>
+		</target>
+
+		<target name="compile-tests" depends="compile" description="compile the tests">
+			<!-- Compile the java code from ${src} into ${build} -->
+			<javac debug="true" srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}">
+				<classpath>
+					<pathelement location="${build.dir}" />
+					<path refid="run-time.libs.classpath" />
+					<path refid="test-time.libs.classpath" />                
+				</classpath>
+			</javac>
+
+			<copy todir="${test.build.dir}">
+				<fileset dir="${test.src.dir}" excludes="**/*.java" />
+			</copy>
+		</target>
+
+		<target name="javadoc">
+			<delete dir="${api.docs.dir}"/>
+	        <javadoc packagenames="org.stanwood.*"
+	            sourcepath="${src.dir}"                
+	            defaultexcludes="yes"
+	            destdir="${api.docs.dir}"
+	            author="true"
+	            version="true"
+	            use="true"
+	            windowtitle="${ant.project.name} ${project.version}">
+	        	<classpath>        		
+	        		<path refid="run-time.libs.classpath"/>
+					<path refid="compile-time.libs.classpath"/>
+	        	</classpath>
+	          <doctitle><![CDATA[<h1>]]${ant.project.name} ${project.version}<![CDATA[</h1>]]></doctitle>
+	        </javadoc>
+		</target>
+	
+		<target name="run-tests" depends="compile,compile-tests">
+			<delete dir="${cobertura.dir}"/>
+			<mkdir dir="${cobertura.dir}"/>
+			<mkdir dir="${reports.dir}/xml"/>
+			<mkdir dir="${reports.dir}/coverage"/>
+			<mkdir dir="${reports.dir}/junit"/>
+			<cobertura-instrument todir="${build.instrumented.dir}">
+			    <fileset dir="${build.dir}">
+			        <include name="**/*.class"/>
+			    </fileset>
+			</cobertura-instrument>		
+			
+			<junit fork="yes" dir="${basedir}" failureProperty="test.failed">
+				<!--
+						Specify the name of the coverage data file to use.
+						The value specified below is the default.
+					-->
+			    <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser" />
+				
+			    <classpath location="${build.instrumented.dir}"/>
+			    <classpath location="${build.dir}"/>
+				<classpath location="${test.build.dir}"/>
+				<classpath refid="compile-time.libs.classpath"/>
+				<classpath refid="run-time.libs.classpath"/>
+				<classpath refid="test-time.libs.classpath"/>
+			    
+				<formatter type="xml" />
+				<test name="${testcase}" todir="${reports.dir}/xml" if="testcase" />
+				<batchtest todir="${reports.dir}/xml" unless="testcase">
+					<fileset dir="${test.src.dir}">
+						<include name="**/Test*.java" />
+					</fileset>
+				</batchtest>
+			</junit>
+			
+			<junitreport todir="${reports.dir}/xml" >
+				
+				<fileset dir="${reports.dir}/xml">
+					<include name="TEST-*.xml"/>
+				</fileset>		  
+	   			<report format="frames" todir="${reports.dir}/junit"/>
+			</junitreport>
+						
+			<cobertura-report srcdir="${src.dir}" destdir="${reports.dir}/coverage"/>		
+			
+			<fail if="test.failed"/>
+			
+			<!--
+			<cobertura-check branchrate="67" linerate="82"/>		
+			-->		
+			
+			<delete dir="${reports.dir}/xml"/>
+			<delete dir="${cobertura.dir}"/>
+			<delete file="cobertura.ser" />
+		</target>
+
+		<target name="clean" description="clean up">
+			<!-- Delete the ${build} and ${dist} directory trees -->
+			<delete includeemptydirs="true" >
+				<fileset dir="${build.dir}" includes="**/*"/>
+				<fileset dir="${test.build.dir}" includes="**/*"/>
+			</delete>
+			<delete dir="${api.docs.dir}" />
+			<delete dir="${cobertura.dir}"/>
+			<delete dir="${reports.dir}"/>
+			<delete file="cobertura.ser" />			
+		</target>
+	
+		<target name="all" depends="clean,run-tests,javadoc"/>
+	
+</project>

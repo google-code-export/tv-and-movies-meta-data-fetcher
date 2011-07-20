@@ -65,7 +65,7 @@ public class NativeHelper {
 			}
 		}
 		if (method==null || method.length()==0 || method.equals("project")) { //$NON-NLS-1$
-			File f =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath); //$NON-NLS-1$
+			File f =new File(FileHelper.getWorkingDirectory(),".."+File.separator+"native"+File.separator+nativePath); //$NON-NLS-1$ //$NON-NLS-2$
 			if (log.isDebugEnabled()) {
 				log.debug("Checking via project: " + f.getAbsolutePath()); //$NON-NLS-1$
 			}
@@ -121,7 +121,7 @@ public class NativeHelper {
 		if (method==null || method.length()==0 || method.equals("project")) { //$NON-NLS-1$
 			try {
 				// If this is a test, find within the project
-				String path =new File(FileHelper.getWorkingDirectory(),"native"+File.separator+nativePath).getAbsolutePath(); //$NON-NLS-1$
+				String path =new File(FileHelper.getWorkingDirectory(),".."+File.separator+"native"+File.separator+nativePath).getAbsolutePath(); //$NON-NLS-1$ //$NON-NLS-2$
 				return loadLibraryWithOptions(path,interfaceClass);
 			}
 			catch (Error e1) {
