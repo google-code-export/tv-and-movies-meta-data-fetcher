@@ -540,7 +540,7 @@ public class ConfigReader extends BaseConfigReader {
 	private void writeXBMCSettings(StringBuilder document) throws ConfigException {
 		document.append("  <XBMCAddons"); //$NON-NLS-1$
 		if (xbmcAddonDir!=null) {
-			document.append(" directory=\""+xbmcAddonDir+"\""); //$NON-NLS-1$
+			document.append(" directory=\""+xbmcAddonDir+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!xbmcLocale.equals(Locale.ENGLISH)) {
 			document.append(" locale=\""+xbmcLocale.getLanguage()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
