@@ -21,21 +21,33 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.command.ExecuteSystemCommandAction;
+import org.stanwood.media.actions.podcast.PodCastAction;
+import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
+import org.stanwood.media.source.HybridFilmSource;
 import org.stanwood.media.source.ISource;
+import org.stanwood.media.source.TagChimpSource;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.SapphireStore;
+import org.stanwood.media.store.memory.MemoryStore;
+import org.stanwood.media.store.mp4.MP4ITunesStore;
+import org.stanwood.media.store.xmlstore.XMLStore2;
 
 /**
  * The controller is used to control access to the stores and and sources. This
@@ -189,6 +201,52 @@ public class Controller {
 			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_SOURCE_NOT_FOUND"),className), e); //$NON-NLS-1$
 		}
 
+	}
+
+	/**
+	 * Used to get a list of possible sources that can be used with a media directory. This
+	 * includes any that have been registered via plugins.
+	 * @return The list of sources.
+	 */
+	public List<Class<? extends ISource>> getAvalibaleSources() {
+		List<Class<? extends ISource>> result = new ArrayList<Class<? extends ISource>>();
+		result.add(TagChimpSource.class);
+		result.add(HybridFilmSource.class);
+		result.add(XBMCSource.class);
+		result.addAll(pluginSources.values());
+
+		return result;
+	}
+
+	/**
+	 * Used to get a list of possible stores that can be used with a media directory. This
+	 * includes any that have been registered via plugins.
+	 * @return The list of sources.
+	 */
+	public List<Class<? extends IStore>> getAvalibaleStores() {
+		List<Class<? extends IStore>> result = new ArrayList<Class<? extends IStore>>();
+		result.add(SapphireStore.class);
+		result.add(MemoryStore.class);
+		result.add(MP4ITunesStore.class);
+		result.add(XMLStore2.class);
+		result.addAll(pluginStores.values());
+
+		return result;
+	}
+
+	/**
+	 * Used to get a list of possible actions that can be used with a media directory. This
+	 * includes any that have been registered via plugins.
+	 * @return The list of sources.
+	 */
+	public List<Class<? extends IAction>> getAvalibaleActions() {
+		List<Class<? extends IAction>> result = new ArrayList<Class<? extends IAction>>();
+		result.add(ExecuteSystemCommandAction.class);
+		result.add(PodCastAction.class);
+		result.add(RenameAction.class);
+		result.addAll(pluginActions.values());
+
+		return result;
 	}
 
 	/**
