@@ -23,7 +23,7 @@
 	<property name="javac.target" value="1.6" />
 
 	<!-- Dist properties -->
-	<property name="project.version" value="1.98" />
+	<property name="project.version" value="2.0.98" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
