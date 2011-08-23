@@ -3,12 +3,14 @@ package org.stanwood.media.actions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.progress.IProgressMonitor;
@@ -26,7 +28,7 @@ import org.w3c.dom.Node;
  */
 public class SeenDatabase extends XMLParser {
 
-	private Map<File,Set<SeenEntry>> entries = new HashMap<File,Set<SeenEntry>>();
+	private Map<File,SortedSet<SeenEntry>> entries = new HashMap<File,SortedSet<SeenEntry>>();
 	private File seenFile;
 
 	/**
@@ -70,9 +72,14 @@ public class SeenDatabase extends XMLParser {
 
 	private void markAsSeen(File mediaDirectory,  long lastModified,
 			String path) {
-		Set<SeenEntry>entryList = entries.get(mediaDirectory);
+		SortedSet<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList==null) {
-			entryList = new HashSet<SeenEntry>();
+			entryList = new TreeSet<SeenEntry>(new Comparator<SeenEntry>() {
+				@Override
+				public int compare(SeenEntry o1, SeenEntry o2) {
+					return o1.getFileName().compareTo(o2.getFileName());
+				}
+			});
 			entries.put(mediaDirectory, entryList);
 		}
 
@@ -101,9 +108,9 @@ public class SeenDatabase extends XMLParser {
 		try {
 			ps = new PrintStream(seenFile);
 			ps.println("<seen>"); //$NON-NLS-1$
-			Set<Entry<File, Set<SeenEntry>>> entriesSet = entries.entrySet();
+			Set<Entry<File, SortedSet<SeenEntry>>> entriesSet = entries.entrySet();
 			progress.beginTask(Messages.getString("SeenDatabase.WRITING_SEEN_DB"), entriesSet.size()); //$NON-NLS-1$
-			for (Entry<File,Set<SeenEntry>> e : entriesSet) {
+			for (Entry<File,SortedSet<SeenEntry>> e : entriesSet) {
 				ps.println("  <mediaDir dir=\""+e.getKey()+"\">"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (SeenEntry entry : e.getValue()) {
 					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -131,7 +138,7 @@ public class SeenDatabase extends XMLParser {
 	public void read(IProgressMonitor parentMonitor) throws FileNotFoundException, XMLParserException {
 		SubMonitor progress = SubMonitor.convert(parentMonitor, 100);
 
-		entries = new HashMap<File,Set<SeenEntry>>();
+		entries = new HashMap<File,SortedSet<SeenEntry>>();
 		if (seenFile.exists()) {
 			Document doc = XMLParser.parse(seenFile, null);
 			IterableNodeList nodes = selectNodeList(doc, "seen/mediaDir"); //$NON-NLS-1$
@@ -149,5 +156,26 @@ public class SeenDatabase extends XMLParser {
 			}
 		}
 		progress.done();
+	}
+
+	/**
+	 * Used to notify the seen database when a file has been renamed
+	 * @param mediaDirectory The media directory the file is located in
+	 * @param oldFile The old filename
+	 * @param newFile The new filename
+	 */
+	public void renamedFile(File mediaDirectory, File oldFile, File newFile) {
+		Set<SeenEntry>entryList = entries.get(mediaDirectory);
+
+		if (entryList!=null) {
+			Iterator<SeenEntry>it = entryList.iterator();
+			while (it.hasNext()) {
+				SeenEntry entry = it.next();
+				if (entry.getFileName().equals(oldFile.getAbsolutePath())) {
+					it.remove();
+				}
+			}
+		}
+		markAsSeen(mediaDirectory, newFile);
 	}
 }

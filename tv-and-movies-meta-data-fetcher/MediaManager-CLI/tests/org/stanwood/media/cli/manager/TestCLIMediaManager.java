@@ -81,7 +81,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters", "false");
-		setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
+		setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -118,7 +118,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -152,7 +152,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
 
-		setupTestController(dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class,"",RenameAction.class);
+		setupTestController(false,dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class,"",RenameAction.class);
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -190,7 +190,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -249,7 +249,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("posters", "false");
-			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 
 			// Do the renaming
 			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
@@ -265,7 +265,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
-			setupTestController(filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 			// Do the renaming
 			CLIMediaManager.main(args);
 
@@ -317,7 +317,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Do the renaming
 			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 
-			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -330,7 +330,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
-			setupTestController(dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 			CLIMediaManager.main(args);
 
 			// Check things are still correct
@@ -347,7 +347,91 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	}
 
 	/**
+	 * This is used to check that when a file is renamed it's not put into the seen database, but
+	 * the other files are put into the database.
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testSeenDatabase() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		// Create test files
+		File dir = FileHelper.createTmpDir("show");
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("posters", "false");
+		ConfigReader config = setupTestController(true,dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
+		try {
+			File eurekaDir = new File(dir, "Heroes");
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory : " + eurekaDir.getAbsolutePath());
+			}
+
+			File f = new File(eurekaDir,"101 - Blah Blah Blah.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			if (!f.setLastModified(0) && f.lastModified()!=0) {
+				Assert.fail("Unable to set last modified date");
+			}
+
+			f = new File(eurekaDir,"S01E02 - Hello this is a test.mkv");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			if (!f.setLastModified(0) && f.lastModified()!=0) {
+				Assert.fail("Unable to set last modified date");
+			}
+
+			f = new File(eurekaDir,"s02e02 - Hello this is a test.mpg");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			if (!f.setLastModified(0) && f.lastModified()!=0) {
+				Assert.fail("Unable to set last modified date");
+			}
+			f = new File(eurekaDir,"s05e02 - This episode should never be found.mpg");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+			if (!f.setLastModified(0) && f.lastModified()!=0) {
+				Assert.fail("Unable to set last modified date");
+			}
+
+			// Do the renaming
+			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","NOINIT","--noupdate"};
+			CLIMediaManager.main(args);
+
+			// Check that things were renamed correctly
+			List<String>files = FileHelper.listFilesAsStrings(dir);
+			Assert.assertEquals(5,files.size());
+			// .show.xml
+			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"02 - Lizards.mpg").getAbsolutePath(),files.get(3));
+			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"s05e02 - This episode should never be found.mpg").getAbsolutePath(),files.get(4));
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+
+			params.put("rootMediaDir", dir.getAbsolutePath());
+			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
+
+			File seenFile = new File(config.getConfigDir(),"seenFiles.xml");
+			Assert.assertTrue(seenFile.exists());
+
+			params.put("rootMediaDir", dir.getAbsolutePath());
+			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-seendb.xml"), new FileInputStream(seenFile),params);
+			FileHelper.displayFile(seenFile, System.out);
+		} finally {
+			FileHelper.delete(dir);
+		}
+
+	}
+
+	/**
 	 * Used to setup the controller ready for testing
+	 * @param ignoreSeen True if seen files should be ignored
 	 * @param mediaDir The media directory been tested
 	 * @param pattern The pattern to use with rename operations
 	 * @param mode The mode of the test
@@ -359,10 +443,14 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @return The configuration reader
 	 * @throws Exception Thrown if their is a problem
 	 */
-	public static ConfigReader setupTestController(File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,String dummy,Class<? extends IAction> ... actions) throws Exception{
+	public static ConfigReader setupTestController(boolean ignoreSeen,File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,String dummy,Class<? extends IAction> ... actions) throws Exception{
+		File configDir = FileHelper.createTmpDir("configDir");
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
-		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\"  >"+LS);
+		testConfig.append("  <global>"+LS);
+		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+LS);
+		testConfig.append("  </global>"+LS);
+		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\" ignoreSeen=\""+ignoreSeen+"\" >"+LS);
 		if (source!=null) {
 			testConfig.append("    <sources>"+LS);
 			testConfig.append("      <source id=\""+source.getName()+"\">"+LS);

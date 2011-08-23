@@ -136,12 +136,12 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions(List<File> files,Set<File> dirs,IProgressMonitor parentMonitor) throws ActionException {
-		parentMonitor.subTask("Setup stores");
+		parentMonitor.subTask(Messages.getString("ActionPerformer.SETUP_STORES")); //$NON-NLS-1$
 		if (!initStores()) {
 			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_SETUP_STORES")); //$NON-NLS-1$
 		}
 
-		parentMonitor.subTask("Setup actions");
+		parentMonitor.subTask(Messages.getString("ActionPerformer.SETUP_ACTIONS")); //$NON-NLS-1$
 		for (IAction action : actions) {
 			action.init(dir);
 		}
@@ -284,6 +284,9 @@ public class ActionPerformer implements IActionEventHandler {
 						Integer part = getFilmPart(file, film);
 						action.perform(dir,film,file,part,this);
 					}
+					if (seenDb!=null && file.exists()) {
+						seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+					}
 				}
 			}
 			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
@@ -292,11 +295,12 @@ public class ActionPerformer implements IActionEventHandler {
 					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);
 					}
+					if (seenDb!=null && file.exists()) {
+						seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+					}
 				}
 			}
-			if (seenDb!=null) {
-				seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
-			}
+
 		}
 	}
 
@@ -378,6 +382,9 @@ public class ActionPerformer implements IActionEventHandler {
 	public void sendEventRenamedFile(File oldFile, File newFile) throws ActionException {
 		try {
 			dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+			if (seenDb!=null) {
+				seenDb.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+			}
 		} catch (StoreException e) {
 			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_RENAME_FILE"),e); //$NON-NLS-1$
 		}

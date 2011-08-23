@@ -103,14 +103,14 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		params.put("posters","false");
 		params.put("trailer","false");
 //		params.put("scrapers", "metadata.imdb.com");
-		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
 		String args[] = new String[] {"-d",mediaDir.getAbsolutePath(),"--log_config","NOINIT","--noupdate"};
 		CLIMediaManager.main(args);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
-		TestCLIMediaManager.setupTestController(mediaDir,pattern,Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
 		CLIManageAddons.main(cmd);
 	}
 
