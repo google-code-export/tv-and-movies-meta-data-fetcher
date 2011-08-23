@@ -1,3 +1,6 @@
+* Tue Aug 23 2011 John-Paul.stanford <dev@stanwood.org.uk> - v2.0.89
+- Files are no longer marked as seen if the media info can't be found.
+- Once a file has been renamed the seendb is updated.
 * Mon Jun 21 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
 - Add a seen file data base and the ability to ignore files that have been seen
 * Mon Jun 6 2011 John-Paul.Stanford <dev@stanwood.org.uk> - v1.98
