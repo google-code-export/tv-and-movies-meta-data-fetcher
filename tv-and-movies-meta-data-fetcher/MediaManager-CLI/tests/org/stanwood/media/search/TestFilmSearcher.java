@@ -119,7 +119,7 @@ public class TestFilmSearcher {
 	}
 
 	static MediaDirectory getMediaDir(File mediaDir,String pattern,Mode mode) throws Exception {
-		ConfigReader config = TestCLIMediaManager.setupTestController(mediaDir, pattern, mode, null,null,null,null);
+		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir, pattern, mode, null,null,null,null);
 		Controller controller = new Controller(config);
 		return new MediaDirectory(controller, config, mediaDir);
 	}
