@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -350,28 +351,32 @@ public class TagChimpSource extends XMLParser implements ISource {
 	}
 
 	private static String stripLineBreaks(String string, String replaceWith) {
-	      int len = string.length();
-	      StringBuffer buffer = new StringBuffer(len);
-	      for (int i = 0; i < len; i++) {
-	          char c = string.charAt(i);
+		int len = string.length();
+		StringBuffer buffer = new StringBuffer(len);
+		for (int i = 0; i < len; i++) {
+			char c = string.charAt(i);
 
-	          // skip \n, \r, \r\n
-	          switch (c) {
-	              case '\n':
-	              case '\r': // do lookahead
-	                  if (i + 1 < len && string.charAt(i + 1) == '\n') {
-	                      i++;
-	                  }
+			// skip \n, \r, \r\n
+			switch (c) {
+			case '\n':
+			case '\r': // do lookahead
+				if (i + 1 < len && string.charAt(i + 1) == '\n') {
+					i++;
+				}
 
-	                  buffer.append(replaceWith);
-	                  break;
-	              default:
-	                  buffer.append(c);
-	          }
-	      }
+				buffer.append(replaceWith);
+				break;
+			default:
+				buffer.append(c);
+			}
+		}
 
-	      return buffer.toString().replaceAll(replaceWith+replaceWith, replaceWith);
-	  }
+		return buffer.toString().replaceAll(replaceWith + replaceWith, replaceWith);
+	}
 
-
+	/** {@inheritDoc} */
+	@Override
+	public ParameterType[] getParameters() {
+		return new ParameterType[0];
+	}
 }

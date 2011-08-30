@@ -15,6 +15,7 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.log4j.Level;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
@@ -52,12 +53,13 @@ import org.stanwood.media.util.FileHelper;
  */
 public class ExecuteSystemCommandAction extends AbstractAction {
 
-	private final static String PARAM_CMD_ON_FILE_KEY = "commandOnFile"; //$NON-NLS-1$
-	private final static String PARAM_CMD_ON_DIR_KEY = "commandOnDirectory"; //$NON-NLS-1$
-	private final static String PARAM_EXTENSIONS_KEY = "extensions"; //$NON-NLS-1$
-	private final static String PARAM_NEW_FILE_KEY = "newFile"; //$NON-NLS-1$
-	private final static String PARAM_DELETED_FILE_KEY = "deletedFile"; //$NON-NLS-1$
-	private final static String PARAM_ABORT_IF_FILE_EXISTS = "abortIfFileExists"; //$NON-NLS-1$
+	private final static ParameterType PARAM_CMD_ON_FILE_KEY = new ParameterType("commandOnFile",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_CMD_ON_DIR_KEY = new ParameterType("commandOnDirectory",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_EXTENSIONS_KEY = new ParameterType("extensions",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_NEW_FILE_KEY = new ParameterType("newFile",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_DELETED_FILE_KEY = new ParameterType("deletedFile",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_ABORT_IF_FILE_EXISTS = new ParameterType("abortIfFileExists",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_TYPES[] = {PARAM_CMD_ON_FILE_KEY,PARAM_CMD_ON_DIR_KEY,PARAM_EXTENSIONS_KEY,PARAM_NEW_FILE_KEY,PARAM_DELETED_FILE_KEY,PARAM_ABORT_IF_FILE_EXISTS};
 
 	private String fileCmd;
 	private String dirCmd;
@@ -164,26 +166,26 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	 */
 	@Override
 	public void setParameter(String key, String value) throws ActionException {
-		if (key.equalsIgnoreCase(PARAM_CMD_ON_FILE_KEY)) {
+		if (key.equalsIgnoreCase(PARAM_CMD_ON_FILE_KEY.getName())) {
 			this.fileCmd = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_NEW_FILE_KEY)) {
+		else if (key.equalsIgnoreCase(PARAM_NEW_FILE_KEY.getName())) {
 			this.newFile = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_DELETED_FILE_KEY)) {
+		else if (key.equalsIgnoreCase(PARAM_DELETED_FILE_KEY.getName())) {
 			this.deletedFile = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY)) {
+		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY.getName())) {
 			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			this.extensions = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
 			}
 		}
-		else if (key.equalsIgnoreCase(PARAM_CMD_ON_DIR_KEY)) {
+		else if (key.equalsIgnoreCase(PARAM_CMD_ON_DIR_KEY.getName())) {
 			this.dirCmd = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_ABORT_IF_FILE_EXISTS)) {
+		else if (key.equalsIgnoreCase(PARAM_ABORT_IF_FILE_EXISTS.getName())) {
 			this.abortIfFileExists = value;
 		}
  		else {
@@ -222,8 +224,11 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 		perform(dir,mediaFile,actionEventHandler,film);
 	}
 
-
-
+	/** {@inheritDoc} */
+	@Override
+	public ParameterType[] getParameters() {
+		return PARAM_TYPES;
+	}
 
 
 }

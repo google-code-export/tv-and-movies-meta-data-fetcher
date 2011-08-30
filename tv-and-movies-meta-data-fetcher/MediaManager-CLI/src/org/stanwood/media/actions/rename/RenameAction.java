@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
@@ -33,7 +34,8 @@ public class RenameAction extends AbstractAction {
 	private final static Log log = LogFactory.getLog(RenameAction.class);
 
 	/** The key of the pruneEmptyFolders parameter for this action. */
-	public static final String PARAM_KEY_PRUNE_EMPTY_FOLDERS = "pruneEmptyFolders"; //$NON-NLS-1$
+	public static final ParameterType PARAM_KEY_PRUNE_EMPTY_FOLDERS = new ParameterType("pruneEmptyFolders",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_TYPES[] = {PARAM_KEY_PRUNE_EMPTY_FOLDERS};
 
 	private boolean pruneEmptyFolders = false;
 
@@ -160,7 +162,7 @@ public class RenameAction extends AbstractAction {
 	 */
 	@Override
 	public void setParameter(String key,String value) throws ActionException {
-		if (key.equalsIgnoreCase(PARAM_KEY_PRUNE_EMPTY_FOLDERS)) {
+		if (key.equalsIgnoreCase(PARAM_KEY_PRUNE_EMPTY_FOLDERS.getName())) {
 			pruneEmptyFolders = Boolean.parseBoolean(value);
 		}
 		else {
@@ -196,6 +198,10 @@ public class RenameAction extends AbstractAction {
 		}
 	}
 
-
+	/** {@inheritDoc} */
+	@Override
+	public ParameterType[] getParameters() {
+		return PARAM_TYPES;
+	}
 
 }

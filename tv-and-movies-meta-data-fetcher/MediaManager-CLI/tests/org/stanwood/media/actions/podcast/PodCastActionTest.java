@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
@@ -403,6 +404,12 @@ public class PodCastActionTest {
 		public SearchResult searchMedia(String name,String year, Mode mode, Integer part)
 				throws SourceException {
 			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part);
+		}
+
+		@Override
+		public ParameterType[] getParameters() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	};
 }

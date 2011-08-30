@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -231,4 +232,10 @@ public interface IStore  {
 	 * @throws StoreException Thrown if their are any problems
 	 */
 	public void init(File nativeDir) throws StoreException;
+
+	/**
+	 * Used to get a list of parameters
+	 * @return The list of parameters
+	 */
+	public ParameterType[] getParameters();
 }

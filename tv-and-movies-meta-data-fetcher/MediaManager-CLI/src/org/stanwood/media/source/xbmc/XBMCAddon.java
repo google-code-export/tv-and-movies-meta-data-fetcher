@@ -138,6 +138,14 @@ public class XBMCAddon extends XMLParser {
 		}
 	}
 
+	/**
+	 * Used to get the addon settings
+	 * @return The addon settings
+	 */
+	public Map<String,Value>getSettings() {
+		return eval.getVariables();
+	}
+
 	private Document getDocument(File file) throws XBMCException {
 		Document doc = docs.get(file);
 		if (doc==null) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
+ *  Copyright (C) 2008-2011  John-Paul.Stanford <dev@stanwood.org.uk>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
