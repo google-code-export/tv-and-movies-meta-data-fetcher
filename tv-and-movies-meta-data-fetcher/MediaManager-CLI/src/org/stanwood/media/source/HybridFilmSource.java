@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -48,7 +49,8 @@ import org.stanwood.media.source.xbmc.XBMCSource;
  */
 public class HybridFilmSource implements ISource {
 
-	private final static String PARAM_KEY_XBMC_SOURCE_ID = "xbmcSourceId"; //$NON-NLS-1$
+	private final static ParameterType PARAM_KEY_XBMC_SOURCE_ID = new ParameterType("xbmcSourceId",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_XBMC_SOURCE_ID};
 
 	private ISource imdbSource;
 	private ISource tagChimpSource = new TagChimpSource();
@@ -270,7 +272,7 @@ public class HybridFilmSource implements ISource {
 	 */
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
-		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID)) {
+		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID.getName())) {
 			xbmcSourceId = value;
 		}
 		else {
@@ -293,7 +295,7 @@ public class HybridFilmSource implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID)) {
+		if (key.equals(PARAM_KEY_XBMC_SOURCE_ID.getName())) {
 			return xbmcSourceId;
 		}
 		else {
@@ -301,4 +303,9 @@ public class HybridFilmSource implements ISource {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public ParameterType[] getParameters() {
+		return PARAM_TYPES;
+	}
 }

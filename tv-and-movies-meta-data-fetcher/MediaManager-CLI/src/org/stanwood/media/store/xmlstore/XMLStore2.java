@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -1195,6 +1196,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void init(File nativeDir) throws StoreException {
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ParameterType[] getParameters() {
+		return new ParameterType[0];
 	}
 
 }

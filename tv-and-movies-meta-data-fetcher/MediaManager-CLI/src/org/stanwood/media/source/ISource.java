@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -116,6 +117,12 @@ public interface ISource {
 	 * @throws SourceException Throw if the key is not supported by this source.
 	 */
 	public String getParameter(String key) throws SourceException;
+
+	/**
+	 * Used to get a list of parameters
+	 * @return The list of parameters
+	 */
+	public ParameterType[] getParameters();
 
 	/**
 	 * Called to tell the source which media directory is been processed
