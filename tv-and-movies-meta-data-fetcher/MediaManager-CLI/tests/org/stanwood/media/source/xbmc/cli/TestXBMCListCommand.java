@@ -14,7 +14,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the XBMC addon list command
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "unchecked", "nls" })
 public class TestXBMCListCommand extends BaseCLITest {
 
 	/**
