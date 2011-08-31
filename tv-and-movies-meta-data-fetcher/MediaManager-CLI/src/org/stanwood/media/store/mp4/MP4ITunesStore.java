@@ -67,7 +67,7 @@ import org.stanwood.media.util.FileHelper;
  * a patched version of this file can be downloaded or installed via the installer. A warning will
  * be printed if this was not found.
  * </p>
- * <p>This manager has following optional parameters:
+ * <p>This store has following optional parameters:
  * 	<ul>
  * 		<li>mp4art - The path to the mp4art command</li>
  *      <li>mp4info - The path to the mp4info command</li>
