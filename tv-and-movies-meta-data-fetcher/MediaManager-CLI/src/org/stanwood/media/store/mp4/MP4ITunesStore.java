@@ -503,10 +503,10 @@ public class MP4ITunesStore implements IStore {
 			in = conn.getInputStream();
 			byte[] buffer = new byte[1024];
 			int numRead;
-			long numWritten = 0;
+
 			while ((numRead = in.read(buffer)) != -1) {
 				out.write(buffer, 0, numRead);
-				numWritten += numRead;
+
 			}
 			file.deleteOnExit();
 			return file;
@@ -573,6 +573,6 @@ public class MP4ITunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public ParameterType[] getParameters() {
-		return PARAM_TYPES;
+		return PARAM_TYPES.clone();
 	}
 }
