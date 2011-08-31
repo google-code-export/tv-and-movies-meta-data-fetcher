@@ -693,6 +693,7 @@ public final class SubMonitor implements IProgressMonitor {
 	 * </pre></code>
 	 *
 	 * @param totalWork number of ticks to consume from the receiver
+	 * @param suppressFlags The suppression flags
 	 * @return new sub progress monitor that may be used in place of a new SubMonitor
 	 */
 	public SubMonitor newChild(int totalWork, int suppressFlags) {

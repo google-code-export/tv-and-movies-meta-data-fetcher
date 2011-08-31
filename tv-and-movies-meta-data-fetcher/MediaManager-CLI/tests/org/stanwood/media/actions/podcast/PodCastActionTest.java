@@ -323,6 +323,7 @@ public class PodCastActionTest {
 		return f;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static MediaDirectory getMediaDir(File mediaDir,String pattern,Mode mode) throws Exception {
 		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir, pattern, mode, DummySource.class,null,null,null);
 		Controller controller = new Controller(config);
@@ -406,6 +407,7 @@ public class PodCastActionTest {
 			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ParameterType[] getParameters() {
 			// TODO Auto-generated method stub
