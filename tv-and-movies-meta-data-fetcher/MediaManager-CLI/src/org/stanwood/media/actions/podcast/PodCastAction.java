@@ -54,13 +54,13 @@ public class PodCastAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(PodCastAction.class);
 
-	private final static ParameterType PARAM_MEDIA_DIR_URL = new ParameterType("mediaDirURL",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_NUMBER_ENTRIES = new ParameterType("numberEntries",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_FILE_LOCATION = new ParameterType("fileLocation",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_RESTRICT_PATTERN = new ParameterType("restrictPattern",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_EXTENSIONS_KEY = new ParameterType("extensions",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_FEED_TITLE_KEY = new ParameterType("feedTitle",String.class); //$NON-NLS-1$
-	private final static ParameterType PARAM_FEED_DESCRIPTION_KEY = new ParameterType("feedDescription",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_MEDIA_DIR_URL = new ParameterType("mediaDirURL",String.class,true); //$NON-NLS-1$
+	private final static ParameterType PARAM_NUMBER_ENTRIES = new ParameterType("numberEntries",String.class,false); //$NON-NLS-1$
+	private final static ParameterType PARAM_FILE_LOCATION = new ParameterType("fileLocation",String.class,true); //$NON-NLS-1$
+	private final static ParameterType PARAM_RESTRICT_PATTERN = new ParameterType("restrictPattern",String.class,false); //$NON-NLS-1$
+	private final static ParameterType PARAM_EXTENSIONS_KEY = new ParameterType("extensions",String.class,false); //$NON-NLS-1$
+	private final static ParameterType PARAM_FEED_TITLE_KEY = new ParameterType("feedTitle",String.class,false); //$NON-NLS-1$
+	private final static ParameterType PARAM_FEED_DESCRIPTION_KEY = new ParameterType("feedDescription",String.class,false); //$NON-NLS-1$
 
 	private final static ParameterType PARAM_TYPES[] = {PARAM_MEDIA_DIR_URL,PARAM_NUMBER_ENTRIES,PARAM_FILE_LOCATION,
 		                                                PARAM_RESTRICT_PATTERN,PARAM_EXTENSIONS_KEY,PARAM_FEED_TITLE_KEY,
