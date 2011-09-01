@@ -78,11 +78,11 @@ import org.stanwood.media.util.FileHelper;
  */
 public class MP4ITunesStore implements IStore {
 
-	private static final ParameterType PARAM_MP4FILE_KEY = new ParameterType("mp4file",String.class); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4TAGS_KEY = new ParameterType("mp4tags",String.class); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4INFO_KEY = new ParameterType("mp4info",String.class); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4ART_KEY = new ParameterType("mp4art",String.class); //$NON-NLS-1$
-	private static final ParameterType PARAM_MANAGER_KEY = new ParameterType("manager",String.class); //$NON-NLS-1$
+	private static final ParameterType PARAM_MP4FILE_KEY = new ParameterType("mp4file",String.class,false); //$NON-NLS-1$
+	private static final ParameterType PARAM_MP4TAGS_KEY = new ParameterType("mp4tags",String.class,false); //$NON-NLS-1$
+	private static final ParameterType PARAM_MP4INFO_KEY = new ParameterType("mp4info",String.class,false); //$NON-NLS-1$
+	private static final ParameterType PARAM_MP4ART_KEY = new ParameterType("mp4art",String.class,false); //$NON-NLS-1$
+	private static final ParameterType PARAM_MANAGER_KEY = new ParameterType("manager",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_MP4FILE_KEY,PARAM_MP4TAGS_KEY,PARAM_MP4INFO_KEY,PARAM_MP4ART_KEY,PARAM_MANAGER_KEY};
 
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);

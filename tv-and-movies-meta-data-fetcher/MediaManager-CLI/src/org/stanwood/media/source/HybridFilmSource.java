@@ -49,7 +49,7 @@ import org.stanwood.media.source.xbmc.XBMCSource;
  */
 public class HybridFilmSource implements ISource {
 
-	private final static ParameterType PARAM_KEY_XBMC_SOURCE_ID = new ParameterType("xbmcSourceId",String.class); //$NON-NLS-1$
+	private final static ParameterType PARAM_KEY_XBMC_SOURCE_ID = new ParameterType("xbmcSourceId",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_XBMC_SOURCE_ID};
 
 	private ISource imdbSource;

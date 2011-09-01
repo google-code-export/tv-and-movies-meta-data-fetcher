@@ -23,16 +23,19 @@ public class ParameterType {
 
 	private String name;
 	private Class<?>type;
+	private boolean required;
 
 	/**
 	 * The constructor
 	 * @param name The name of the parameter
 	 * @param type The type of the parameter
+	 * @param required Is this a required parameter
 	 */
-	public ParameterType(String name, Class<?> type) {
+	public ParameterType(String name, Class<?> type,boolean required) {
 		super();
 		this.name = name;
 		this.type = type;
+		this.required = required;
 	}
 
 	/**
@@ -65,6 +68,22 @@ public class ParameterType {
 	 */
 	public void setType(Class<?> type) {
 		this.type = type;
+	}
+
+	/**
+	 * Returns true if this is a required parameter
+	 * @return true if this is a required parameter
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+
+	/**
+	 * Used to set if this is a required parameter
+	 * @param required true if this is a required parameter
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 

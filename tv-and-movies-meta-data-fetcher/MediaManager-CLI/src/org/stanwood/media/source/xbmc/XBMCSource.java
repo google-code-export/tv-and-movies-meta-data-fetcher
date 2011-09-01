@@ -623,12 +623,12 @@ public class XBMCSource extends XMLParser implements ISource {
 		List<ParameterType>types = new ArrayList<ParameterType>();
 		for (Entry<String,Value> e : settings.entrySet()) {
 			if (e.getValue().getType().equals(ValueType.INTEGER)) {
-				types.add(new ParameterType(e.getKey(),Integer.class));
+				types.add(new ParameterType(e.getKey(),Integer.class,false));
 			}
 			else if (e.getValue().getType().equals(ValueType.BOOLEAN)) {
-				types.add(new ParameterType(e.getKey(),Boolean.class));
+				types.add(new ParameterType(e.getKey(),Boolean.class,false));
 			} else {
-				types.add(new ParameterType(e.getKey(),String.class));
+				types.add(new ParameterType(e.getKey(),String.class,false));
 			}
 		}
 		return types.toArray(new ParameterType[types.size()]);
