@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.ParameterType;
+import org.stanwood.media.extensions.IExtension;
+import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -37,7 +38,7 @@ import org.stanwood.media.source.SourceException;
  * Next time the information is needed, it can be retrieved from the store.
  * This makes retrieving information a lot faster.
  */
-public interface IStore  {
+public interface IStore extends IExtension  {
 
 	/**
 	 * This is used to write a episode or special too the store

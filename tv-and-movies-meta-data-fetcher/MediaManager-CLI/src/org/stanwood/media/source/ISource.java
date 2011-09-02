@@ -22,7 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.ParameterType;
+import org.stanwood.media.extensions.IExtension;
+import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -33,7 +34,7 @@ import org.stanwood.media.model.Show;
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
  */
-public interface ISource {
+public interface ISource extends IExtension {
 
 	/**
 	 * Called to retrieve the information on a episode

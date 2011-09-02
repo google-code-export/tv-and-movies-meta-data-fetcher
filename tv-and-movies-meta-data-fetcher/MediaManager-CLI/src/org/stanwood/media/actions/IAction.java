@@ -3,7 +3,8 @@ package org.stanwood.media.actions;
 import java.io.File;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.ParameterType;
+import org.stanwood.media.extensions.IExtension;
+import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 
@@ -11,7 +12,7 @@ import org.stanwood.media.model.Film;
  * This interface should be implemented by classes that are used to represent actions
  * that can be performed on media files in a media directory
  */
-public interface IAction {
+public interface IAction extends IExtension {
 
 	/**
 	 * This is called once before any of the media files are processed to allow the action

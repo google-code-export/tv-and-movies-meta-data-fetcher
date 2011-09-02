@@ -110,9 +110,9 @@ public class TestController extends XBMCAddonTestBase  {
 			StringBuilder testConfig = new StringBuilder();
 			testConfig.append("<mediaManager>"+LS);
 			testConfig.append("  <plugins>"+LS);
-			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.sources.TestSource\"/>"+LS);
-			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.stores.TestStore\"/>"+LS);
-			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.actions.TestAction\"/>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.sources.TestSourceInfo\"/>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.stores.TestStoreInfo\"/>"+LS);
+			testConfig.append("    <plugin jar=\""+tmpJar.getAbsolutePath()+"\" class=\"org.stanwood.media.test.actions.TestActionInfo\"/>"+LS);
 			testConfig.append("  </plugins>"+LS);
 			testConfig.append("  <mediaDirectory directory=\""+tmpDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
 			testConfig.append("    <sources>"+LS);
