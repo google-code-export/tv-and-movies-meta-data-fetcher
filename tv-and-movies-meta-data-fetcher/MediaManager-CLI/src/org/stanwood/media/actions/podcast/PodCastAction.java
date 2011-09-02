@@ -17,7 +17,6 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IVideo;
@@ -53,18 +52,6 @@ import org.stanwood.media.util.FileHelper;
 public class PodCastAction extends AbstractAction {
 
 	private final static Log log = LogFactory.getLog(PodCastAction.class);
-
-	private final static ParameterType PARAM_MEDIA_DIR_URL = new ParameterType("mediaDirURL",String.class,true); //$NON-NLS-1$
-	private final static ParameterType PARAM_NUMBER_ENTRIES = new ParameterType("numberEntries",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_FILE_LOCATION = new ParameterType("fileLocation",String.class,true); //$NON-NLS-1$
-	private final static ParameterType PARAM_RESTRICT_PATTERN = new ParameterType("restrictPattern",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_EXTENSIONS_KEY = new ParameterType("extensions",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_FEED_TITLE_KEY = new ParameterType("feedTitle",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_FEED_DESCRIPTION_KEY = new ParameterType("feedDescription",String.class,false); //$NON-NLS-1$
-
-	private final static ParameterType PARAM_TYPES[] = {PARAM_MEDIA_DIR_URL,PARAM_NUMBER_ENTRIES,PARAM_FILE_LOCATION,
-		                                                PARAM_RESTRICT_PATTERN,PARAM_EXTENSIONS_KEY,PARAM_FEED_TITLE_KEY,
-		                                                PARAM_FEED_DESCRIPTION_KEY};
 
 	private SortedSet<IFeedFile>feedFiles = null;
 	private Integer numEntries = null;
@@ -177,10 +164,10 @@ public class PodCastAction extends AbstractAction {
 	private void validateParameters() throws ActionException {
 		List<String>missingParams = new ArrayList<String>();
 		if (fileLocation==null) {
-			missingParams.add(PARAM_FILE_LOCATION.getName());
+			missingParams.add(PodCastActionInfo.PARAM_FILE_LOCATION.getName());
 		}
 		if (mediaDirUrl==null) {
-			missingParams.add(PARAM_MEDIA_DIR_URL.getName());
+			missingParams.add(PodCastActionInfo.PARAM_MEDIA_DIR_URL.getName());
 		}
 		if (missingParams.size()>0) {
 			StringBuilder buffer = new StringBuilder(Messages.getString("PodCastAction.MISSING_REQUIRED_PARAM")); //$NON-NLS-1$
@@ -285,7 +272,7 @@ public class PodCastAction extends AbstractAction {
 	 */
 	@Override
 	public void setParameter(String key, String value) throws ActionException {
-		if (key.equalsIgnoreCase(PARAM_NUMBER_ENTRIES.getName())) {
+		if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_NUMBER_ENTRIES.getName())) {
 			try {
 				numEntries = Integer.parseInt(value);
 			}
@@ -293,37 +280,31 @@ public class PodCastAction extends AbstractAction {
 				throw new ActionException(MessageFormat.format(Messages.getString("PodCastAction.INVALIID_NUMBER_FOR_PARAM"),value,key)); //$NON-NLS-1$
 			}
 		}
-		else if (key.equalsIgnoreCase(PARAM_MEDIA_DIR_URL.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_MEDIA_DIR_URL.getName())) {
 			mediaDirUrl = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_FILE_LOCATION.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_FILE_LOCATION.getName())) {
 			fileLocation = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_RESTRICT_PATTERN.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_RESTRICT_PATTERN.getName())) {
 			restricted = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_EXTENSIONS_KEY.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_EXTENSIONS_KEY.getName())) {
 			StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
 			this.extensions = new ArrayList<String>();
 			while (tok.hasMoreTokens()) {
 				extensions.add(tok.nextToken());
 			}
 		}
-		else if (key.equalsIgnoreCase(PARAM_FEED_TITLE_KEY.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_FEED_TITLE_KEY.getName())) {
 			feedTitle = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_FEED_DESCRIPTION_KEY.getName())) {
+		else if (key.equalsIgnoreCase(PodCastActionInfo.PARAM_FEED_DESCRIPTION_KEY.getName())) {
 			feedDescription = value;
 		}
 		else {
 			throw new ActionException(MessageFormat.format(Messages.getString("PodCastAction.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return PARAM_TYPES;
 	}
 
 }

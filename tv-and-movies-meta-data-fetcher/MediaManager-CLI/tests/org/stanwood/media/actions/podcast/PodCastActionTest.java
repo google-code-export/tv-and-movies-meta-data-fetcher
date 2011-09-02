@@ -23,7 +23,6 @@ import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.cli.manager.TestCLIMediaManager;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -407,11 +406,5 @@ public class PodCastActionTest {
 			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part);
 		}
 
-		/** {@inheritDoc} */
-		@Override
-		public ParameterType[] getParameters() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	};
 }

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -374,9 +373,4 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return buffer.toString().replaceAll(replaceWith + replaceWith, replaceWith);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return new ParameterType[0];
-	}
 }

@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 
@@ -80,9 +79,4 @@ public interface IAction extends IExtension {
 	 */
 	public void finished(MediaDirectory dir) throws ActionException;
 
-	/**
-	 * Used to get a list of parameters
-	 * @return The list of parameters
-	 */
-	public ParameterType[] getParameters();
 }

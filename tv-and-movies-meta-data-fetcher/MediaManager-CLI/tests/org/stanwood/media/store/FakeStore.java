@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -210,10 +209,5 @@ public class FakeStore implements IStore {
 
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return null;
-	}
 
 }
