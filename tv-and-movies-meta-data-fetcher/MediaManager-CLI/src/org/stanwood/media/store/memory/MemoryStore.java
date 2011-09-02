@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.ParameterType;
+import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;

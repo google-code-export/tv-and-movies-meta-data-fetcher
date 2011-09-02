@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media;
+package org.stanwood.media.extensions;
 
 /**
  * Used to store information about parameter types
@@ -29,7 +29,7 @@ public class ParameterType {
 	 * The constructor
 	 * @param name The name of the parameter
 	 * @param type The type of the parameter
-	 * @param required Is this a required parameter
+	 * @param required Used to indercate if the parameter is required
 	 */
 	public ParameterType(String name, Class<?> type,boolean required) {
 		super();
@@ -71,16 +71,16 @@ public class ParameterType {
 	}
 
 	/**
-	 * Returns true if this is a required parameter
-	 * @return true if this is a required parameter
+	 * Return true if the parameter is required
+	 * @return true if the parameter is required
 	 */
 	public boolean isRequired() {
 		return required;
 	}
 
 	/**
-	 * Used to set if this is a required parameter
-	 * @param required true if this is a required parameter
+	 * Used to set if a parameter is required
+	 * @param required true if the parameter is required
 	 */
 	public void setRequired(boolean required) {
 		this.required = required;

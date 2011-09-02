@@ -33,6 +33,7 @@ import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.command.ExecuteSystemCommandAction;
 import org.stanwood.media.actions.podcast.PodCastAction;
 import org.stanwood.media.actions.rename.RenameAction;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
@@ -56,6 +57,9 @@ import org.stanwood.media.store.xmlstore.XMLStore2;
  * getInstance() can be called to a access the methods used to control stores
  * and sources.
  */
+
+//TODO make all the extensions be added as though they were plugins
+//TODO don't pass out the Classes, instead use the info classes of extensions
 public class Controller {
 
 	private final static Log log = LogFactory.getLog(Controller.class);
@@ -64,9 +68,9 @@ public class Controller {
 
 	private Map<File, MediaDirectory> mediaDirs = new HashMap<File, MediaDirectory>();
 
-	private Map<String, Class<? extends ISource>> pluginSources = new HashMap<String,Class<? extends ISource>>();
-	private Map<String, Class<? extends IStore>> pluginStores = new HashMap<String,Class<? extends IStore>>();
-	private Map<String, Class<? extends IAction>> pluginActions = new HashMap<String,Class<? extends IAction>>();
+	private List<ExtensionInfo<ISource>> pluginSources = new ArrayList<ExtensionInfo<ISource>>();
+	private List<ExtensionInfo<IStore>> pluginStores = new ArrayList<ExtensionInfo<IStore>>();
+	private List<ExtensionInfo<IAction>> pluginActions = new ArrayList<ExtensionInfo<IAction>>();
 
 	private boolean testMode;
 
@@ -123,20 +127,26 @@ public class Controller {
 				URL url = new URL("jar:file:"+plugin.getJar()+"!/");  //$NON-NLS-1$//$NON-NLS-2$
 				URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
 				Class<?> clazz = clazzLoader.loadClass(plugin.getPluginClass());
-				if (ISource.class.isAssignableFrom(clazz)) {
-					pluginSources.put(plugin.getPluginClass(),(Class<? extends ISource>)clazz);
+				Class<? extends ExtensionInfo<?>> targetClass = (Class<? extends ExtensionInfo<?>>) clazz.asSubclass(ExtensionInfo.class);
+				ExtensionInfo<?> info = targetClass.newInstance();
+				if (ISource.class.isAssignableFrom(info.getExtension())) {
+					pluginSources.add((ExtensionInfo<ISource>) info);
 				}
-				if (IStore.class.isAssignableFrom(clazz) ) {
-					pluginStores.put(plugin.getPluginClass(),(Class<? extends IStore>)clazz);
+				if (IStore.class.isAssignableFrom(info.getExtension()) ) {
+					pluginStores.add((ExtensionInfo<IStore>) info);
 				}
-				if (IAction.class.isAssignableFrom(clazz) ) {
-					pluginActions.put(plugin.getPluginClass(),(Class<? extends IAction>)clazz);
+				if (IAction.class.isAssignableFrom(info.getExtension()) ) {
+					pluginActions.add((ExtensionInfo<IAction>) info);
 				}
 
 			}
 			catch (MalformedURLException e) {
 				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
 			} catch (ClassNotFoundException e) {
+				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
+			} catch (InstantiationException e) {
+				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
+			} catch (IllegalAccessException e) {
 				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
 			}
 		}
@@ -191,8 +201,10 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
-		if (pluginSources.get(className)!=null) {
-			return pluginSources.get(className);
+		for (ExtensionInfo<ISource> info : pluginSources) {
+			if (info.getExtension().getName().equals(className)) {
+				return info.getExtension();
+			}
 		}
 		try {
 			Class<? extends ISource> c = Class.forName(className).asSubclass(ISource.class);
@@ -213,7 +225,9 @@ public class Controller {
 		result.add(TagChimpSource.class);
 		result.add(HybridFilmSource.class);
 		result.add(XBMCSource.class);
-		result.addAll(pluginSources.values());
+		for (ExtensionInfo<ISource> info : pluginSources) {
+			result.add(info.getExtension());
+		}
 
 		return result;
 	}
@@ -229,7 +243,9 @@ public class Controller {
 		result.add(MemoryStore.class);
 		result.add(MP4ITunesStore.class);
 		result.add(XMLStore2.class);
-		result.addAll(pluginStores.values());
+		for (ExtensionInfo<IStore> info : pluginStores) {
+			result.add(info.getExtension());
+		}
 
 		return result;
 	}
@@ -244,7 +260,9 @@ public class Controller {
 		result.add(ExecuteSystemCommandAction.class);
 		result.add(PodCastAction.class);
 		result.add(RenameAction.class);
-		result.addAll(pluginActions.values());
+		for (ExtensionInfo<IAction> info : pluginActions) {
+			result.add(info.getExtension());
+		}
 
 		return result;
 	}
@@ -257,8 +275,10 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends IStore> getStoreClass(String className) throws  ConfigException {
-		if (pluginStores.get(className)!=null) {
-			return pluginStores.get(className);
+		for (ExtensionInfo<IStore> info : pluginStores) {
+			if (info.getExtension().getName().equals(className)) {
+				return info.getExtension();
+			}
 		}
 		try {
 			return Class.forName(className).asSubclass(IStore.class);
@@ -275,8 +295,10 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends IAction> getActionClass(String className) throws  ConfigException {
-		if (pluginActions.get(className)!=null) {
-			return pluginActions.get(className);
+		for (ExtensionInfo<IAction> info : pluginActions) {
+			if (info.getExtension().getName().equals(className)) {
+				return info.getExtension();
+			}
 		}
 		try {
 			return Class.forName(className).asSubclass(IAction.class);
