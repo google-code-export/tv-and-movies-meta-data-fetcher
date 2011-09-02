@@ -9,15 +9,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -32,8 +29,6 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.xbmc.expression.Value;
-import org.stanwood.media.source.xbmc.expression.ValueType;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -614,24 +609,6 @@ public class XBMCSource extends XMLParser implements ISource {
 	@Override
 	public String toString() {
 		return "XBMCSource: "+id; //$NON-NLS-1$
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		Map<String, Value> settings = addon.getSettings();
-		List<ParameterType>types = new ArrayList<ParameterType>();
-		for (Entry<String,Value> e : settings.entrySet()) {
-			if (e.getValue().getType().equals(ValueType.INTEGER)) {
-				types.add(new ParameterType(e.getKey(),Integer.class,false));
-			}
-			else if (e.getValue().getType().equals(ValueType.BOOLEAN)) {
-				types.add(new ParameterType(e.getKey(),Boolean.class,false));
-			} else {
-				types.add(new ParameterType(e.getKey(),String.class,false));
-			}
-		}
-		return types.toArray(new ParameterType[types.size()]);
 	}
 
 

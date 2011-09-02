@@ -30,25 +30,24 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
-import org.stanwood.media.actions.command.ExecuteSystemCommandAction;
-import org.stanwood.media.actions.podcast.PodCastAction;
-import org.stanwood.media.actions.rename.RenameAction;
+import org.stanwood.media.actions.command.ExecuteSystemCommandActionInfo;
+import org.stanwood.media.actions.podcast.PodCastActionInfo;
+import org.stanwood.media.actions.rename.RenameActionInfo;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
-import org.stanwood.media.source.HybridFilmSource;
+import org.stanwood.media.source.HybridFilmSourceInfo;
 import org.stanwood.media.source.ISource;
-import org.stanwood.media.source.TagChimpSource;
+import org.stanwood.media.source.TagChimpSourceInfo;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
-import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
-import org.stanwood.media.store.SapphireStore;
-import org.stanwood.media.store.memory.MemoryStore;
-import org.stanwood.media.store.mp4.MP4ITunesStore;
-import org.stanwood.media.store.xmlstore.XMLStore2;
+import org.stanwood.media.store.SapphireStoreInfo;
+import org.stanwood.media.store.memory.MemoryStoreInfo;
+import org.stanwood.media.store.mp4.MP4ITunesStoreInfo;
+import org.stanwood.media.store.xmlstore.XMLStore2Info;
 
 /**
  * The controller is used to control access to the stores and and sources. This
@@ -68,9 +67,9 @@ public class Controller {
 
 	private Map<File, MediaDirectory> mediaDirs = new HashMap<File, MediaDirectory>();
 
-	private List<ExtensionInfo<ISource>> pluginSources = new ArrayList<ExtensionInfo<ISource>>();
-	private List<ExtensionInfo<IStore>> pluginStores = new ArrayList<ExtensionInfo<IStore>>();
-	private List<ExtensionInfo<IAction>> pluginActions = new ArrayList<ExtensionInfo<IAction>>();
+	private List<ExtensionInfo<? extends ISource>> pluginSources = new ArrayList<ExtensionInfo<? extends ISource>>();
+	private List<ExtensionInfo<? extends IStore>> pluginStores = new ArrayList<ExtensionInfo<? extends IStore>>();
+	private List<ExtensionInfo<? extends IAction>> pluginActions = new ArrayList<ExtensionInfo<? extends IAction>>();
 
 	private boolean testMode;
 
@@ -117,7 +116,24 @@ public class Controller {
 			System.exit(2);
 		}
 		this.testMode = testMode;
+		registerInbuild();
 		registerPlugins();
+	}
+
+	private void registerInbuild() {
+		pluginSources.add(new TagChimpSourceInfo());
+		pluginSources.add(new HybridFilmSourceInfo());
+		//TODO add XBMC Sources
+//		pluginSources.add(XBMCSource.class);
+
+		pluginStores.add(new SapphireStoreInfo());
+		pluginStores.add(new MemoryStoreInfo());
+		pluginStores.add(new MP4ITunesStoreInfo());
+		pluginStores.add(new XMLStore2Info());
+
+		pluginActions.add(new ExecuteSystemCommandActionInfo());
+		pluginActions.add(new PodCastActionInfo());
+		pluginActions.add(new RenameActionInfo());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -201,7 +217,7 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
-		for (ExtensionInfo<ISource> info : pluginSources) {
+		for (ExtensionInfo<? extends ISource> info : pluginSources) {
 			if (info.getExtension().getName().equals(className)) {
 				return info.getExtension();
 			}
@@ -220,13 +236,11 @@ public class Controller {
 	 * includes any that have been registered via plugins.
 	 * @return The list of sources.
 	 */
-	public List<Class<? extends ISource>> getAvalibaleSources() {
-		List<Class<? extends ISource>> result = new ArrayList<Class<? extends ISource>>();
-		result.add(TagChimpSource.class);
-		result.add(HybridFilmSource.class);
-		result.add(XBMCSource.class);
-		for (ExtensionInfo<ISource> info : pluginSources) {
-			result.add(info.getExtension());
+	public List<ExtensionInfo<? extends ISource>> getAvalibaleSources() {
+		List<ExtensionInfo<? extends ISource>> result = new ArrayList<ExtensionInfo<? extends ISource>>();
+
+		for (ExtensionInfo<? extends ISource> info : pluginSources) {
+			result.add(info);
 		}
 
 		return result;
@@ -237,14 +251,11 @@ public class Controller {
 	 * includes any that have been registered via plugins.
 	 * @return The list of sources.
 	 */
-	public List<Class<? extends IStore>> getAvalibaleStores() {
-		List<Class<? extends IStore>> result = new ArrayList<Class<? extends IStore>>();
-		result.add(SapphireStore.class);
-		result.add(MemoryStore.class);
-		result.add(MP4ITunesStore.class);
-		result.add(XMLStore2.class);
-		for (ExtensionInfo<IStore> info : pluginStores) {
-			result.add(info.getExtension());
+	public List<ExtensionInfo<? extends IStore>> getAvalibaleStores() {
+		List<ExtensionInfo<? extends IStore>> result = new ArrayList<ExtensionInfo<? extends IStore>>();
+
+		for (ExtensionInfo<? extends IStore> info : pluginStores) {
+			result.add(info);
 		}
 
 		return result;
@@ -255,13 +266,11 @@ public class Controller {
 	 * includes any that have been registered via plugins.
 	 * @return The list of sources.
 	 */
-	public List<Class<? extends IAction>> getAvalibaleActions() {
-		List<Class<? extends IAction>> result = new ArrayList<Class<? extends IAction>>();
-		result.add(ExecuteSystemCommandAction.class);
-		result.add(PodCastAction.class);
-		result.add(RenameAction.class);
-		for (ExtensionInfo<IAction> info : pluginActions) {
-			result.add(info.getExtension());
+	public List<ExtensionInfo<? extends IAction>> getAvalibaleActions() {
+		List<ExtensionInfo<? extends IAction>> result = new ArrayList<ExtensionInfo<? extends IAction>>();
+
+		for (ExtensionInfo<? extends IAction> info : pluginActions) {
+			result.add(info);
 		}
 
 		return result;
@@ -275,7 +284,7 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends IStore> getStoreClass(String className) throws  ConfigException {
-		for (ExtensionInfo<IStore> info : pluginStores) {
+		for (ExtensionInfo<? extends IStore> info : pluginStores) {
 			if (info.getExtension().getName().equals(className)) {
 				return info.getExtension();
 			}
@@ -295,7 +304,7 @@ public class Controller {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public Class<? extends IAction> getActionClass(String className) throws  ConfigException {
-		for (ExtensionInfo<IAction> info : pluginActions) {
+		for (ExtensionInfo<? extends IAction> info : pluginActions) {
 			if (info.getExtension().getName().equals(className)) {
 				return info.getExtension();
 			}

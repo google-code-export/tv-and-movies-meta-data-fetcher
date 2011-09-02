@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -332,9 +331,4 @@ public class MemoryStore implements IStore {
 	public void init(File nativeDir) throws StoreException {
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return new ParameterType[0];
-	}
 }

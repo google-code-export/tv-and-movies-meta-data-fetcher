@@ -35,7 +35,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -78,13 +77,6 @@ import org.stanwood.media.util.FileHelper;
  */
 public class MP4ITunesStore implements IStore {
 
-	private static final ParameterType PARAM_MP4FILE_KEY = new ParameterType("mp4file",String.class,false); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4TAGS_KEY = new ParameterType("mp4tags",String.class,false); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4INFO_KEY = new ParameterType("mp4info",String.class,false); //$NON-NLS-1$
-	private static final ParameterType PARAM_MP4ART_KEY = new ParameterType("mp4art",String.class,false); //$NON-NLS-1$
-	private static final ParameterType PARAM_MANAGER_KEY = new ParameterType("manager",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_MP4FILE_KEY,PARAM_MP4TAGS_KEY,PARAM_MP4INFO_KEY,PARAM_MP4ART_KEY,PARAM_MANAGER_KEY};
-
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 
 	private IMP4Manager mp4Manager;
@@ -98,16 +90,16 @@ public class MP4ITunesStore implements IStore {
 	@Override
 	public void init(File nativeDir) throws StoreException {
 		if (mp4infoPath == null) {
-			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,PARAM_MP4INFO_KEY.getName());
+			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName());
 		}
 		if (mp4artPath == null) {
-			mp4artPath = NativeHelper.getNativeApplication(nativeDir,PARAM_MP4ART_KEY.getName());
+			mp4artPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName());
 		}
 		if (mp4tagsPath == null) {
-			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,PARAM_MP4TAGS_KEY.getName());
+			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName());
 		}
 		if (mp4filePath == null) {
-			mp4filePath = NativeHelper.getNativeApplication(nativeDir,PARAM_MP4FILE_KEY.getName());
+			mp4filePath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName());
 		}
 		try {
 			getMP4Manager().init(nativeDir);
@@ -278,10 +270,10 @@ public class MP4ITunesStore implements IStore {
 				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CREATE_MANAGER"),manager.getClass()),e); //$NON-NLS-1$
 			}
 
-			mp4Manager.setParameter(PARAM_MP4ART_KEY.getName(),mp4artPath);
-			mp4Manager.setParameter(PARAM_MP4TAGS_KEY.getName(),mp4tagsPath);
-			mp4Manager.setParameter(PARAM_MP4INFO_KEY.getName(),mp4infoPath);
-			mp4Manager.setParameter(PARAM_MP4FILE_KEY.getName(),mp4filePath);
+			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName(),mp4artPath);
+			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName(),mp4tagsPath);
+			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName(),mp4infoPath);
+			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName(),mp4filePath);
 		}
 		return mp4Manager;
 	}
@@ -290,23 +282,23 @@ public class MP4ITunesStore implements IStore {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setParameter(String key, String value) throws StoreException {
-		if (key.equalsIgnoreCase(PARAM_MANAGER_KEY.getName())) {
+		if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MANAGER_KEY.getName())) {
 			try {
 				manager = (Class<? extends IMP4Manager>) Class.forName(value);
 			} catch (ClassNotFoundException e) {
 				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_FIND_MANAGER") ,value),e); //$NON-NLS-1$
 			}
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4ART_KEY.getName())){
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName())){
 			mp4artPath = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4INFO_KEY.getName())) {
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName())) {
 			mp4infoPath = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4TAGS_KEY.getName())) {
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName())) {
 			mp4tagsPath = value;
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4FILE_KEY.getName())) {
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName())) {
 			mp4filePath = value;
 		}
 		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
@@ -315,16 +307,16 @@ public class MP4ITunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) throws StoreException {
-		if (key.equalsIgnoreCase(PARAM_MANAGER_KEY.getName())) {
+		if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MANAGER_KEY.getName())) {
 			return manager.getName();
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4ART_KEY.getName())){
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName())){
 			return mp4artPath;
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4INFO_KEY.getName())) {
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName())) {
 			return mp4infoPath;
 		}
-		else if (key.equalsIgnoreCase(PARAM_MP4TAGS_KEY.getName())) {
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName())) {
 			return mp4tagsPath;
 		}
 		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
@@ -570,9 +562,4 @@ public class MP4ITunesStore implements IStore {
 	    }
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return PARAM_TYPES.clone();
-	}
 }

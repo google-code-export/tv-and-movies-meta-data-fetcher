@@ -1198,10 +1198,4 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	public void init(File nativeDir) throws StoreException {
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return new ParameterType[0];
-	}
-
 }

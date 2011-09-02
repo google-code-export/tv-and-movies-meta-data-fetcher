@@ -23,7 +23,6 @@ import java.net.URL;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -119,11 +118,6 @@ public interface ISource extends IExtension {
 	 */
 	public String getParameter(String key) throws SourceException;
 
-	/**
-	 * Used to get a list of parameters
-	 * @return The list of parameters
-	 */
-	public ParameterType[] getParameters();
 
 	/**
 	 * Called to tell the source which media directory is been processed

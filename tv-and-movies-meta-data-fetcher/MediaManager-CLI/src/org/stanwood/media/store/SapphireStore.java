@@ -30,7 +30,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -412,9 +411,4 @@ public class SapphireStore implements IStore {
 	public void init(File nativeDir) throws StoreException {
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ParameterType[] getParameters() {
-		return new ParameterType[0];
-	}
 }
