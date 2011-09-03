@@ -66,6 +66,8 @@ public class XBMCSource extends XMLParser implements ISource {
 		addon = mgr.getAddon(addonId);
 	}
 
+
+
 	/**
 	 * Called to retrieve the information on a episode
 	 * @param season The season the episode belongs too
