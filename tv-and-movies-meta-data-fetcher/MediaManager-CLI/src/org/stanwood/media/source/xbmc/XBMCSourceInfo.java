@@ -38,7 +38,8 @@ public class XBMCSourceInfo extends ExtensionInfo<XBMCSource>{
 		setId(XBMCSource.class.getName()+"#"+addon.getId()); //$NON-NLS-1$
 	}
 
-	public ParameterType[] getParameters() {
+	@Override
+	public ParameterType[] getParameterInfos() {
 		Map<String, Value> settings = addon.getSettings();
 		List<ParameterType>types = new ArrayList<ParameterType>();
 		for (Entry<String,Value> e : settings.entrySet()) {
