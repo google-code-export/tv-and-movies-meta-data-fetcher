@@ -113,7 +113,9 @@ public class SeenDatabase extends XMLParser {
 			for (Entry<File,SortedSet<SeenEntry>> e : entriesSet) {
 				ps.println("  <mediaDir dir=\""+e.getKey()+"\">"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (SeenEntry entry : e.getValue()) {
-					ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					if (new File(entry.getFileName()).exists()) {
+						ps.println("    <file path=\""+StringEscapeUtils.escapeXml(entry.getFileName())+"\" lastModified=\""+entry.getLastModified()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}
 				}
 				ps.println("  </mediaDir>"); //$NON-NLS-1$
 				progress.worked(1);
