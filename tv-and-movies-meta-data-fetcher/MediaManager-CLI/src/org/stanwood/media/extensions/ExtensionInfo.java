@@ -40,6 +40,9 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 */
 	public ExtensionInfo(String id,ExtensionType type,ParameterType[] parameterInfos) {
 		super();
+		if (parameterInfos==null) {
+			throw new NullPointerException("Parameter types cannot be null"); //$NON-NLS-1$
+		}
 		this.parameterInfos = parameterInfos;
 		this.id = id;
 		this.type = type;
