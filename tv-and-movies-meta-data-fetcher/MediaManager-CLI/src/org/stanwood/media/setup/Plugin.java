@@ -39,7 +39,12 @@ public class Plugin {
 	 */
 	@Override
 	public String toString() {
-		return jar+":"+pluginClass; //$NON-NLS-1$
+		if (jar==null) {
+			return "<classpath>:"+pluginClass; //$NON-NLS-1$
+		}
+		else {
+			return jar+":"+pluginClass; //$NON-NLS-1$
+		}
 	}
 
 
