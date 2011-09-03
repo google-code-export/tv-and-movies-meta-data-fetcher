@@ -16,42 +16,48 @@
  */
 package org.stanwood.media.extensions;
 
+
 /**
  * Used to describe extensions to the media manager
  * @param <T> The type of the extension
  */
-public class ExtensionInfo<T extends IExtension> {
+public abstract class ExtensionInfo<T extends IExtension> {
 
-	private Class<? extends T>extension;
 	private ParameterType parameterInfos[];
+	private String id;
+	private T extension = null;
+	private ExtensionType type;
+
+	public ExtensionInfo(ExtensionType type)
+	{
+		this.type = type;
+	}
 
 	/**
 	 * The constructor
-	 * @param extension The extension class type
+	 * @param id The id of the extension
 	 * @param parameterInfos The parameter info
 	 */
-	public ExtensionInfo(Class<? extends T> extension,
-			ParameterType[] parameterInfos) {
+	public ExtensionInfo(String id,ExtensionType type,ParameterType[] parameterInfos) {
 		super();
-		this.extension = extension;
 		this.parameterInfos = parameterInfos;
+		this.id = id;
+		this.type = type;
 	}
 
 	/**
 	 * Used to get the extension class type
 	 * @return The extension class type
+	 * @throws ExtensionException  Thrown if their is a problem creating the extension
 	 */
-	public Class<? extends T> getExtension() {
+	public T getExtension() throws ExtensionException {
+		if (extension==null) {
+			extension = createExtension();
+		}
 		return extension;
 	}
 
-	/**
-	 * Used to set the extension class type
-	 * @param extension The extension class type
-	 */
-	public void setExtension(Class<? extends T> extension) {
-		this.extension = extension;
-	}
+	protected abstract T createExtension() throws ExtensionException;
 
 	/**
 	 * Used to get information on the parameters
@@ -65,7 +71,21 @@ public class ExtensionInfo<T extends IExtension> {
 	 * Used to set the parameter information
 	 * @param parameterInfos The parameter information
 	 */
-	public void setParameterInfos(ParameterType[] parameterInfos) {
+	protected void setParameterInfos(ParameterType[] parameterInfos) {
 		this.parameterInfos = parameterInfos;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	protected void setId(String id) {
+		this.id = id;
+	}
+
+	public ExtensionType getType() {
+		return type;
+	}
+
+
 }

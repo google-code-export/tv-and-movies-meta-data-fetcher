@@ -16,30 +16,48 @@
  */
 package org.stanwood.media.source.xbmc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
+import org.stanwood.media.source.xbmc.expression.Value;
+import org.stanwood.media.source.xbmc.expression.ValueType;
 
 public class XBMCSourceInfo extends ExtensionInfo<XBMCSource>{
 
-	public XBMCSourceInfo(Class<? extends XBMCSource> extension,
-			ParameterType[] parameterInfos) {
-		super(extension, parameterInfos);
+	private XBMCAddon addon;
+
+	public XBMCSourceInfo(XBMCAddonManager mgr,XBMCAddon addon) throws XBMCException {
+		super(ExtensionType.SOURCE);
+		this.addon = addon;
+		setId(XBMCSource.class.getName()+"#"+addon.getId()); //$NON-NLS-1$
 	}
 
-//	public ParameterType[] getParameters() {
-//		Map<String, Value> settings = addon.getSettings();
-//		List<ParameterType>types = new ArrayList<ParameterType>();
-//		for (Entry<String,Value> e : settings.entrySet()) {
-//			if (e.getValue().getType().equals(ValueType.INTEGER)) {
-//				types.add(new ParameterType(e.getKey(),Integer.class,false));
-//			}
-//			else if (e.getValue().getType().equals(ValueType.BOOLEAN)) {
-//				types.add(new ParameterType(e.getKey(),Boolean.class,false));
-//			} else {
-//				types.add(new ParameterType(e.getKey(),String.class,false));
-//			}
-//		}
-//		return types.toArray(new ParameterType[types.size()]);
-//	}
+	public ParameterType[] getParameters() {
+		Map<String, Value> settings = addon.getSettings();
+		List<ParameterType>types = new ArrayList<ParameterType>();
+		for (Entry<String,Value> e : settings.entrySet()) {
+			if (e.getValue().getType().equals(ValueType.INTEGER)) {
+				types.add(new ParameterType(e.getKey(),Integer.class,false));
+			}
+			else if (e.getValue().getType().equals(ValueType.BOOLEAN)) {
+				types.add(new ParameterType(e.getKey(),Boolean.class,false));
+			} else {
+				types.add(new ParameterType(e.getKey(),String.class,false));
+			}
+		}
+		return types.toArray(new ParameterType[types.size()]);
+	}
+
+	@Override
+	protected XBMCSource createExtension() throws ExtensionException {
+		return new XBMCSource(addon.getManager(), addon.getId());
+	}
+
 
 }

@@ -26,7 +26,6 @@ import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
@@ -438,55 +437,11 @@ public class MediaDirectory {
 	}
 
 	/**
-	 * Used to get the default source to use for a given mode
-	 * @param mode The mode to check
-	 * @return The source, or null if one can't be found
-	 * @throws XBMCException Thrown if thier is a problem finding the source
-	 */
-	public ISource getDefaultSource(Mode mode) throws XBMCException {
-		String id = controller.getXBMCAddonManager().getDefaultSourceID(mode);
-		for (ISource source : controller.getXBMCAddonManager().getSources()) {
-			if (source.getSourceId().equals(id)) {
-				return source;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Used to get a source by it's ID
-	 * @param sourceId The id of the source
-	 * @return The source, or null if it can't be found
-	 */
-	public ISource getSource(String sourceId) {
-		if (sourceId == null) {
-			return null;
-		}
-
-		for (ISource source : sources) {
-			if (source.getSourceId().equals(sourceId)) {
-				return source;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Get the configuration of the media directory
 	 * @return the configuration of the media directory
 	 */
 	public MediaDirConfig getMediaDirConfig() {
 		return dirConfig;
-	}
-
-	/**
-	 * Used to get the default source ID
-	 * @param mode The mode that were looking for a source id in
-	 * @return The default source ID for a given mode
-	 * @throws XBMCException Thrown if their is a problem getting the default source ID
-	 */
-	public String getDefaultSourceID(Mode mode) throws XBMCException {
-		return controller.getXBMCAddonManager().getDefaultSourceID(mode);
 	}
 
 	/**

@@ -34,14 +34,19 @@ import org.stanwood.media.actions.command.ExecuteSystemCommandActionInfo;
 import org.stanwood.media.actions.podcast.PodCastActionInfo;
 import org.stanwood.media.actions.rename.RenameActionInfo;
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
 import org.stanwood.media.source.HybridFilmSourceInfo;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.TagChimpSourceInfo;
+import org.stanwood.media.source.xbmc.XBMCAddon;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 import org.stanwood.media.source.xbmc.XBMCException;
+import org.stanwood.media.source.xbmc.XBMCSource;
+import org.stanwood.media.source.xbmc.XBMCSourceInfo;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.SapphireStoreInfo;
@@ -120,11 +125,22 @@ public class Controller {
 		registerPlugins();
 	}
 
-	private void registerInbuild() {
+	private void registerInbuild() throws ConfigException {
 		pluginSources.add(new TagChimpSourceInfo());
 		pluginSources.add(new HybridFilmSourceInfo());
-		//TODO add XBMC Sources
-//		pluginSources.add(XBMCSource.class);
+
+		try {
+			XBMCAddonManager mgr = getXBMCAddonManager();
+			for (String addonId : getXBMCAddonManager().listAddons()) {
+				XBMCAddon addon = mgr.getAddon(addonId);
+				if (addon.hasScrapers()) {
+					pluginSources.add(new XBMCSourceInfo(mgr,addon));
+				}
+			}
+		}
+		catch (XBMCException e) {
+			throw new ConfigException("Unable to register addons",e);
+		}
 
 		pluginStores.add(new SapphireStoreInfo());
 		pluginStores.add(new MemoryStoreInfo());
@@ -145,16 +161,7 @@ public class Controller {
 				Class<?> clazz = clazzLoader.loadClass(plugin.getPluginClass());
 				Class<? extends ExtensionInfo<?>> targetClass = (Class<? extends ExtensionInfo<?>>) clazz.asSubclass(ExtensionInfo.class);
 				ExtensionInfo<?> info = targetClass.newInstance();
-				if (ISource.class.isAssignableFrom(info.getExtension())) {
-					pluginSources.add((ExtensionInfo<ISource>) info);
-				}
-				if (IStore.class.isAssignableFrom(info.getExtension()) ) {
-					pluginStores.add((ExtensionInfo<IStore>) info);
-				}
-				if (IAction.class.isAssignableFrom(info.getExtension()) ) {
-					pluginActions.add((ExtensionInfo<IAction>) info);
-				}
-
+				registerExtension(info);
 			}
 			catch (MalformedURLException e) {
 				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
@@ -165,6 +172,18 @@ public class Controller {
 			} catch (IllegalAccessException e) {
 				throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_REGISTER_PLUGIN"),plugin.toString()),e); //$NON-NLS-1$
 			}
+		}
+	}
+
+	public void registerExtension(ExtensionInfo<?> info) {
+		if (info.getType()== ExtensionType.SOURCE) {
+			pluginSources.add((ExtensionInfo<ISource>) info);
+		}
+		if (info.getType()== ExtensionType.STORE ) {
+			pluginStores.add((ExtensionInfo<IStore>) info);
+		}
+		if (info.getType()== ExtensionType.ACTION ) {
+			pluginActions.add((ExtensionInfo<IAction>) info);
 		}
 	}
 
@@ -209,26 +228,35 @@ public class Controller {
 		return configReader.getMediaDirectiores();
 	}
 
-	/**
-	 * Used to get the class of a source. This can handle getting the class if
-	 * the source is in a plugin
-	 * @param className The name of the class
-	 * @return The class object
-	 * @throws ConfigException Thrown if their are any problems
-	 */
-	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
-		for (ExtensionInfo<? extends ISource> info : pluginSources) {
-			if (info.getExtension().getName().equals(className)) {
-				return info.getExtension();
+//	/**
+//	 * Used to get the class of a source. This can handle getting the class if
+//	 * the source is in a plugin
+//	 * @param className The name of the class
+//	 * @return The class object
+//	 * @throws ConfigException Thrown if their are any problems
+//	 */
+//	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
+//		for (ExtensionInfo<? extends ISource> info : pluginSources) {
+//			if (info.getExtension().getName().equals(className)) {
+//				return info.getExtension();
+//			}
+//		}
+//		try {
+//			Class<? extends ISource> c = Class.forName(className).asSubclass(ISource.class);
+//			return c;
+//		} catch (ClassNotFoundException e) {
+//			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_SOURCE_NOT_FOUND"),className), e); //$NON-NLS-1$
+//		}
+//
+//	}
+
+	public ExtensionInfo<? extends ISource> getSourceInfo(String id) {
+		for (ExtensionInfo<? extends ISource> sourceInfo : pluginSources) {
+			if (sourceInfo.getId().equals(id)) {
+				return sourceInfo;
 			}
 		}
-		try {
-			Class<? extends ISource> c = Class.forName(className).asSubclass(ISource.class);
-			return c;
-		} catch (ClassNotFoundException e) {
-			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_SOURCE_NOT_FOUND"),className), e); //$NON-NLS-1$
-		}
-
+		return null;
 	}
 
 	/**
@@ -276,44 +304,22 @@ public class Controller {
 		return result;
 	}
 
-	/**
-	 * Used to get the class of a store. This can handle getting the class if
-	 * the store is in a plugin
-	 * @param className The name of the class
-	 * @return The class object
-	 * @throws ConfigException Thrown if their are any problems
-	 */
-	public Class<? extends IStore> getStoreClass(String className) throws  ConfigException {
-		for (ExtensionInfo<? extends IStore> info : pluginStores) {
-			if (info.getExtension().getName().equals(className)) {
-				return info.getExtension();
+	public ExtensionInfo<? extends IStore> getStoreInfo(String id) {
+		for (ExtensionInfo<? extends IStore> storeInfo : pluginStores) {
+			if (storeInfo.getId().equals(id)) {
+				return storeInfo;
 			}
 		}
-		try {
-			return Class.forName(className).asSubclass(IStore.class);
-		} catch (ClassNotFoundException e) {
-			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_STORE_NOT_FOUND"),className), e); //$NON-NLS-1$
-		}
+		return null;
 	}
 
-	/**
-	 * Used to get the class of a action. This can handle getting the class if
-	 * the action is in a plugin
-	 * @param className The name of the class
-	 * @return The class object
-	 * @throws ConfigException Thrown if their are any problems
-	 */
-	public Class<? extends IAction> getActionClass(String className) throws  ConfigException {
-		for (ExtensionInfo<? extends IAction> info : pluginActions) {
-			if (info.getExtension().getName().equals(className)) {
-				return info.getExtension();
+	public ExtensionInfo<? extends IAction> getActionInfo(String id) {
+		for (ExtensionInfo<? extends IAction> actionInfo : pluginActions) {
+			if (actionInfo.getId().equals(id)) {
+				return actionInfo;
 			}
 		}
-		try {
-			return Class.forName(className).asSubclass(IAction.class);
-		} catch (ClassNotFoundException e) {
-			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_ACTION_NOT_FOUND"),className), e); //$NON-NLS-1$
-		}
+		return null;
 	}
 
 	/**
@@ -340,5 +346,23 @@ public class Controller {
 	 */
 	public File getConfigDir() throws ConfigException {
 		return configReader.getConfigDir();
+	}
+
+	/**
+	 * Used to get the default source information
+	 * @param mode The mode to look for the source in
+	 * @return The default source
+	 * @throws ConfigException Thrown if unable to find a default source
+	 */
+	public ExtensionInfo<? extends ISource> getDefaultSource(Mode mode) throws ConfigException {
+		try {
+			ExtensionInfo<? extends ISource> info = getSourceInfo(XBMCSource.class.getName()+"#"+xbmcMgr.getDefaultAddonID(mode));
+			if (info==null){
+				throw new ConfigException("Unable to find a default source");
+			}
+			return info;
+		} catch (XBMCException e) {
+			throw new ConfigException("Unable to find a default source",e);
+		}
 	}
 }

@@ -176,6 +176,10 @@ public class TestMP4Manager {
 			}
 		});
 
+		for (IAtom atom : atoms) {
+			System.out.println(atom);
+		}
+
 		Assert.assertEquals(11,atoms.size());
 		int index=0;
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());

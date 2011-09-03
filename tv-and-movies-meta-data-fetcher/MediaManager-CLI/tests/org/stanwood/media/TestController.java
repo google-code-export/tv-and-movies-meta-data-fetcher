@@ -31,6 +31,7 @@ import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.store.FakeStore;
+import org.stanwood.media.store.FakeStoreInfo;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.util.FileHelper;
 
@@ -77,6 +78,8 @@ public class TestController extends XBMCAddonTestBase  {
 				Controller controller = new Controller(configReader);
 
 				controller.init(false);
+				controller.registerExtension(new FakeSourceInfo(getAddonManager(),"metadata.themoviedb.org"));
+				controller.registerExtension(new FakeStoreInfo());
 				controller.getMediaDirectory(tmpDir);
 				Assert.assertNotNull(controller);
 				Assert.assertEquals("/testPath/blah",FakeStore.getFakeParam());

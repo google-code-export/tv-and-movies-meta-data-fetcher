@@ -100,6 +100,7 @@ public interface ISource extends IExtension {
 	 * Get the id of the source
 	 * @return The id of the source
 	 */
+	@Deprecated // To be removed
 	public String getSourceId();
 
 	/**

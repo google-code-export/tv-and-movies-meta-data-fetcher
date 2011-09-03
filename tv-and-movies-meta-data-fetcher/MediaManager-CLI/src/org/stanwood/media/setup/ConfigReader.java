@@ -23,11 +23,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -36,12 +34,13 @@ import org.stanwood.media.Controller;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.rename.PatternMatcher;
+import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.SubMonitor;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
-import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
@@ -274,84 +273,26 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
-		List<String>addons = new ArrayList<String>();
-		List<ISource> xbmcSources = null;
-		if (controller.getXBMCAddonManager()!=null) {
-			xbmcSources = controller.getXBMCAddonManager().getSources();
-		}
 		for (SourceConfig sourceConfig : dirConfig.getSources()) {
-			String sourceClass = sourceConfig.getID();
+			String id = sourceConfig.getID();
 			try {
-				Class<? extends ISource> c = controller.getSourceClass(sourceClass);
-				if (XBMCSource.class.isAssignableFrom(c)) {
-					if (sourceConfig.getParams() != null) {
-						String scraper = null;
-						for (String key : sourceConfig.getParams().keySet()) {
-							String value = sourceConfig.getParams().get(key);
-							if (key.equals("scrapers")) { //$NON-NLS-1$
-								StringTokenizer tok = new StringTokenizer(value,","); //$NON-NLS-1$
-								while (tok.hasMoreTokens()) {
-									scraper = "xbmc-"+tok.nextToken(); //$NON-NLS-1$
-									addons.add(scraper);
-								}
-							}
-						}
+				ExtensionInfo<? extends ISource> sourceInfo = controller.getSourceInfo(id);
+				if (sourceInfo==null) {
+					throw new ConfigException(MessageFormat.format("Unable to find source ''{0}''",id));
+				}
+				ISource source = sourceInfo.getExtension();
+				if (sourceConfig.getParams() != null) {
+					for (String key : sourceConfig.getParams().keySet()) {
+						String value = sourceConfig.getParams().get(key);
+						setParamOnSource( source, key, value);
 
-						if (scraper == null) {
-							for (ISource source : xbmcSources) {
-								addons.add(source.getSourceId());
-							}
-						}
-
-						for (String key : sourceConfig.getParams().keySet()) {
-							if (!key.equals("scrapers")) { //$NON-NLS-1$
-								String value = sourceConfig.getParams().get(key);
-								if (xbmcSources!=null) {
-									for (ISource source : xbmcSources ) {
-										if (scraper == null || scraper.equals(source.getSourceId())) {
-											setParamOnSource( source, key, value);
-										}
-									}
-								}
-							}
-						}
 					}
 				}
-				else {
-					ISource source = c.newInstance();
-					if (sourceConfig.getParams() != null) {
-						for (String key : sourceConfig.getParams().keySet()) {
-							String value = sourceConfig.getParams().get(key);
-							setParamOnSource( source, key, value);
-
-						}
-					}
-					sources.add(source);
-				}
-
-
-			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
-			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
-			} catch (SourceException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),sourceClass),e); //$NON-NLS-1$
+				sources.add(source);
+			} catch (ExtensionException e) {
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_SOURCE"),id),e); //$NON-NLS-1$
 			}
-
-
 		}
-
-		if (xbmcSources!=null) {
-			Iterator<ISource>it = xbmcSources.iterator();
-			while (it.hasNext()) {
-				ISource source = it.next();
-				if (!addons.contains(source.getSourceId())) {
-					it.remove();
-				}
-			}
-			sources.addAll(xbmcSources);
-		}
-
 		return sources;
 	}
 
@@ -365,11 +306,14 @@ public class ConfigReader extends BaseConfigReader {
 	public List<IStore> loadStoresFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<IStore>stores = new ArrayList<IStore>();
 		for (StoreConfig storeConfig : dirConfig.getStores()) {
-			String storeClass = storeConfig.getID();
+			String id = storeConfig.getID();
 			try {
 
-				Class<? extends IStore> c = controller.getStoreClass(storeClass);
-				IStore store = c.newInstance();
+				ExtensionInfo<? extends IStore> storeInfo = controller.getStoreInfo(id);
+				if (storeInfo==null) {
+					throw new ConfigException(MessageFormat.format("Unable to find store ''{0}''",id));
+				}
+				IStore store = storeInfo.getExtension();
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
 						String value = storeConfig.getParams().get(key);
@@ -377,14 +321,10 @@ public class ConfigReader extends BaseConfigReader {
 					}
 				}
 				stores.add(store);
-			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
-			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
-			} catch (StoreException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),storeClass),e); //$NON-NLS-1$
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),id),e); //$NON-NLS-1$
+			} catch (ExtensionException e) {
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_STORE"),id),e); //$NON-NLS-1$
 			}
 		}
 		return stores;
@@ -400,11 +340,13 @@ public class ConfigReader extends BaseConfigReader {
 	public List<IAction> loadActionsFromConfigFile(Controller controller, MediaDirConfig dirConfig) throws ConfigException {
 		List<IAction>actions = new ArrayList<IAction>();
 		for (ActionConfig actionConfig : dirConfig.getActions()) {
-			String actionClass = actionConfig.getID();
+			String id = actionConfig.getID();
 			try {
-
-				Class<? extends IAction> c = controller.getActionClass(actionClass);
-				IAction action = c.newInstance();
+				ExtensionInfo<? extends IAction> actionInfo = controller.getActionInfo(id);
+				if (actionInfo==null) {
+					throw new ConfigException(MessageFormat.format("Unable to find action ''{0}''",id));
+				}
+				IAction action = actionInfo.getExtension();
 				if (actionConfig.getParams() != null) {
 					for (String key : actionConfig.getParams().keySet()) {
 						String value = actionConfig.getParams().get(key);
@@ -412,14 +354,10 @@ public class ConfigReader extends BaseConfigReader {
 					}
 				}
 				actions.add(action);
-			} catch (InstantiationException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
-			} catch (IllegalAccessException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
 			} catch (IllegalArgumentException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
-			} catch (ActionException e) {
-				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),actionClass),e); //$NON-NLS-1$
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),id),e); //$NON-NLS-1$
+			} catch (ExtensionException e) {
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_ADD_ACTION"),id),e); //$NON-NLS-1$
 			}
 		}
 		return actions;

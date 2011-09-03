@@ -1,11 +1,11 @@
 package org.stanwood.media.actions;
 
-import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.extensions.ExtensionException;
 
 /**
  * Thrown if their is a problem related to actions
  */
-public class ActionException extends StanwoodException {
+public class ActionException extends ExtensionException {
 
 	private static final long serialVersionUID = 4898516978127889297L;
 

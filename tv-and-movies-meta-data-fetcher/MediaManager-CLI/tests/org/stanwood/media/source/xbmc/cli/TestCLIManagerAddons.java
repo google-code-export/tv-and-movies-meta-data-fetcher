@@ -23,7 +23,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	@Test
 	public void testGlobalHelp() throws Exception {
 
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--help"};
@@ -67,7 +67,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	 */
 	@Test
 	public void testUnkownOption() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.tvdb.com",new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--blah"};
@@ -94,7 +94,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 	 */
 	@Test
 	public void testUnkownSubCommand() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,null);
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,null);
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"blah"};

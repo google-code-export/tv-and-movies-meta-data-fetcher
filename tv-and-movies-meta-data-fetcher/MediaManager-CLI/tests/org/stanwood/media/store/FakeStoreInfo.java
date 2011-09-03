@@ -14,20 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.memory;
+package org.stanwood.media.store;
 
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
-public class MemoryStoreInfo extends ExtensionInfo<MemoryStore> {
+public class FakeStoreInfo extends ExtensionInfo<FakeStore> {
 
-	public MemoryStoreInfo() {
-		super(MemoryStore.class.getName(),ExtensionType.STORE, new ParameterType[0]);
+	public FakeStoreInfo() {
+		super(FakeStore.class.getName(), ExtensionType.STORE,new ParameterType[0]);
 	}
 
 	@Override
-	protected MemoryStore createExtension() {
-		return new MemoryStore();
+	protected FakeStore createExtension() throws ExtensionException {
+		return new FakeStore();
 	}
+
 }

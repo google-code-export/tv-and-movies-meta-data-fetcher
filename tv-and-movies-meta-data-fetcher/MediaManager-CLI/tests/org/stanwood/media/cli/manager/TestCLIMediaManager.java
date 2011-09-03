@@ -16,17 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stanwood.media.FakeSource;
 import org.stanwood.media.Helper;
-import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.source.xbmc.XBMCSource;
-import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.util.FileHelper;
 
@@ -81,7 +78,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters", "false");
-		setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
+		setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",params,XMLStore2.class.getName(),"",RenameAction.class.getName());
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -118,7 +115,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class.getName(),"",RenameAction.class.getName());
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -152,7 +149,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
 
-		setupTestController(false,dir,pattern,Mode.TV_SHOW,FakeSource.class,new HashMap<String,String>(),XMLStore2.class,"",RenameAction.class);
+		setupTestController(false,dir,pattern,Mode.TV_SHOW,FakeSource.class.getName(),new HashMap<String,String>(),XMLStore2.class.getName(),"",RenameAction.class.getName());
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -190,7 +187,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			params.put("rootMediaDir", dir.getAbsolutePath());
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
-			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class.getName(),"",RenameAction.class.getName());
 
 			// Do the renaming
 			CLIMediaManager.main(args);
@@ -249,7 +246,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("posters", "false");
-			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",params,null,"",RenameAction.class.getName());
 
 			// Do the renaming
 			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
@@ -265,7 +262,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
-			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+			setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.tvdb.com",params,null,"",RenameAction.class.getName());
 			// Do the renaming
 			CLIMediaManager.main(args);
 
@@ -317,7 +314,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Do the renaming
 			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
 
-			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",new HashMap<String,String>(),null,"",RenameAction.class.getName());
 			CLIMediaManager.main(args);
 
 			// Check that things were renamed correctly
@@ -330,7 +327,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			// Do the renaming
-			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+			setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",new HashMap<String,String>(),null,"",RenameAction.class.getName());
 			CLIMediaManager.main(args);
 
 			// Check things are still correct
@@ -360,7 +357,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters", "false");
-		ConfigReader config = setupTestController(true,dir,pattern,Mode.TV_SHOW,XBMCSource.class,params,XMLStore2.class,"",RenameAction.class);
+		ConfigReader config = setupTestController(true,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",params,XMLStore2.class.getName(),"",RenameAction.class.getName());
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -435,15 +432,15 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * @param mediaDir The media directory been tested
 	 * @param pattern The pattern to use with rename operations
 	 * @param mode The mode of the test
-	 * @param source The source to use, or null if none are used
+	 * @param sourceId The ID of the source to use or null if none are used
 	 * @param sourceParams The params of the source
-	 * @param store The store to use, or null if none are used
+	 * @param storeId The ID of the store to use store to use, or null if none are used
 	 * @param dummy Does nothing
 	 * @param actions The actions to perform
 	 * @return The configuration reader
 	 * @throws Exception Thrown if their is a problem
 	 */
-	public static ConfigReader setupTestController(boolean ignoreSeen,File mediaDir,String pattern,Mode mode,Class<? extends ISource> source,Map<String,String> sourceParams,Class<? extends IStore> store,String dummy,Class<? extends IAction> ... actions) throws Exception{
+	public static ConfigReader setupTestController(boolean ignoreSeen,File mediaDir,String pattern,Mode mode,String sourceId,Map<String,String> sourceParams,String storeId,String dummy,String ... actions) throws Exception{
 		File configDir = FileHelper.createTmpDir("configDir");
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+LS);
@@ -451,9 +448,9 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+LS);
 		testConfig.append("  </global>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\" ignoreSeen=\""+ignoreSeen+"\" >"+LS);
-		if (source!=null) {
+		if (sourceId!=null) {
 			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\""+source.getName()+"\">"+LS);
+			testConfig.append("      <source id=\""+sourceId+"\">"+LS);
 			if (sourceParams!=null) {
 				for (Entry<String,String> e : sourceParams.entrySet()) {
 					testConfig.append("      <param name=\""+e.getKey()+"\" value=\""+e.getValue()+"\"/>"+LS);
@@ -463,15 +460,15 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			testConfig.append("      </source>"+LS);
 			testConfig.append("    </sources>"+LS);
 		}
-		if (store!=null) {
+		if (storeId!=null) {
 			testConfig.append("    <stores>"+LS);
-			testConfig.append("      <store id=\""+store.getName()+"\"/>"+LS);
+			testConfig.append("      <store id=\""+storeId+"\"/>"+LS);
 			testConfig.append("    </stores>"+LS);
 		}
 		if (actions!=null) {
-			for (Class<? extends IAction> action : actions) {
+			for (String action : actions) {
 				testConfig.append("    <actions>"+LS);
-				testConfig.append("      <action id=\""+action.getName()+"\"/>"+LS);
+				testConfig.append("      <action id=\""+action+"\"/>"+LS);
 				testConfig.append("    </actions>"+LS);
 			}
 		}

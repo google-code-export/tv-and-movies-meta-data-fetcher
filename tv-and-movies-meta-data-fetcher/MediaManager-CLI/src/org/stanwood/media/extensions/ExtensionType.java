@@ -14,20 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.memory;
+package org.stanwood.media.extensions;
 
-import org.stanwood.media.extensions.ExtensionInfo;
-import org.stanwood.media.extensions.ExtensionType;
-import org.stanwood.media.extensions.ParameterType;
+public enum ExtensionType {
 
-public class MemoryStoreInfo extends ExtensionInfo<MemoryStore> {
-
-	public MemoryStoreInfo() {
-		super(MemoryStore.class.getName(),ExtensionType.STORE, new ParameterType[0]);
-	}
-
-	@Override
-	protected MemoryStore createExtension() {
-		return new MemoryStore();
-	}
+	ACTION,STORE,SOURCE
 }

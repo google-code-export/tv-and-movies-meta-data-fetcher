@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -16,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
-import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
@@ -31,7 +28,6 @@ public class XBMCAddonManager implements IContentFetcher {
 	private final static Log log = LogFactory.getLog(XBMCAddonManager.class);
 
 	private Map<String,XBMCAddon> addons = null;
-	private List<ISource>sources = new ArrayList<ISource>();
 	private IXBMCUpdater updater;
 	private ConfigReader config;
 
@@ -100,9 +96,6 @@ public class XBMCAddonManager implements IContentFetcher {
 						log.debug("Registered addon " + addon.getId()); //$NON-NLS-1$
 					}
 					addons.put(addon.getId(),addon);
-					if (addon.hasScrapers()) {
-						sources.add(new XBMCSource(this, addon.getId()));
-					}
 				}
 			}
 		} catch (ConfigException e) {
@@ -134,23 +127,15 @@ public class XBMCAddonManager implements IContentFetcher {
 	}
 
 	/**
-	 * Gets a list of sources
-	 * @return a list of sources
-	 */
-	public List<ISource> getSources() {
-		return sources;
-	}
-
-	/**
 	 * Used to get the default source ID
 	 * @param mode The mode that were looking for a source id in
 	 * @return The default source ID for a given mode
 	 * @throws XBMCException Thrown if their is a problem getting the default source ID
 	 */
-	public String getDefaultSourceID(Mode mode) throws XBMCException {
+	public String getDefaultAddonID(Mode mode) throws XBMCException {
 		for (Entry<String,XBMCAddon> e : addons.entrySet()) {
 			if (e.getValue().supportsMode(mode)) {
-				return "xbmc-" + e.getKey(); //$NON-NLS-1$
+				return e.getKey();
 			}
 		}
 		return null;

@@ -398,8 +398,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	private boolean checkTagsCommand() {
 		try {
-			boolean capture = !log.isDebugEnabled();
-			String output = getCommandOutput(capture,capture,false,mp4tagsPath);
+			String output = getCommandOutput(true,true,false,mp4tagsPath);
 			if (output.contains("-category") && output.contains("-longdesc") && output.contains("-rating")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				extended = true;
 			}

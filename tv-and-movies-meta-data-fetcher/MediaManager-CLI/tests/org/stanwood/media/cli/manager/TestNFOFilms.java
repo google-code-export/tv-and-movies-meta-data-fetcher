@@ -73,7 +73,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 			createFiles(mediaDir);
 
 			String pattern = "%t{ (%y)}{ Part %p}.%x";
-			mmXBMCCmd(mediaDir, pattern,"--log_config","INFO","install","metadata.imdb.com");
+			mmXBMCCmd(mediaDir, pattern,"--log_config","DEBUG","install","metadata.imdb.com");
 			mmXBMCCmd(mediaDir, pattern,"--log_config","NOINIT","update","metadata.imdb.com","metadata.common.themoviedb.org");
 			mmManagerCmd(mediaDir, pattern);
 
@@ -97,20 +97,18 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void mmManagerCmd(File mediaDir, String pattern) throws Exception {
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters","false");
 		params.put("trailer","false");
 //		params.put("scrapers", "metadata.imdb.com");
-		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class,params,null,"",RenameAction.class);
+		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",params,null,"",RenameAction.class.getName());
 		String args[] = new String[] {"-d",mediaDir.getAbsolutePath(),"--log_config","NOINIT","--noupdate"};
 		CLIMediaManager.main(args);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"",RenameAction.class);
+		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class.getName()+"#metadata.imdb.com",new HashMap<String,String>(),null,"",RenameAction.class.getName());
 		CLIManageAddons.main(cmd);
 	}
 
