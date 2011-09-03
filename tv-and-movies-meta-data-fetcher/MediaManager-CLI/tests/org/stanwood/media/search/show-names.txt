@@ -12,3 +12,4 @@
 %n/Season/S%se%e - %t.%x,Show/Season/S01e01 - episode title.avi
 %n/%s/%e - %t.%x,A Show season 3/Show.s03e09.HDTV.XviD-LOL.[BLAH].m4v
 %n/%s/%e - %t.%x,A Show season 3/Show.s03e10.HDTV.XviD-LOL.[BLAH].m4v
+%n/Season %s/%s %e - %t.%x,A.TV.Show..S04E25.Old Tree.DVDRip.xvid-djw.m4v
