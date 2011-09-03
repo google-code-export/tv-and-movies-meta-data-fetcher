@@ -1,0 +1,124 @@
+<xs:schema version="2.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="mediaManager">  
+  		<xs:complexType>
+  			<xs:sequence>
+  				<xs:element name="plugins" minOccurs="0" maxOccurs="1">
+		  			<xs:complexType>
+		  				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		  					<xs:element name="plugin" type="plugin"/>
+		  				</xs:sequence>
+		  			</xs:complexType>
+		  		</xs:element>		  		
+  				<xs:element name="XBMCAddons" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>
+	  					<xs:attribute name="directory" type="xs:string"/>
+	  					<xs:attribute name="locale" type="xs:string"/>
+	  					<xs:attribute name="addonSite" type="xs:string"/>
+  					</xs:complexType>
+  				</xs:element>
+  				<xs:element name="global" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>  							  				
+  						<xs:sequence>
+  							<xs:element name="configDirectory" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						    <xs:element name="native" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					
+  						</xs:sequence>  						
+  					</xs:complexType>
+  				</xs:element>
+	  			<xs:element name="mediaDirectory" minOccurs="0" maxOccurs="unbounded">  
+	  				<xs:complexType>
+			  			<xs:sequence>
+			  			    <xs:element name="ignore" minOccurs="0" maxOccurs="unbounded">
+			  			    	<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+										</xs:extension>
+									</xs:simpleContent>													
+								</xs:complexType>
+			  			    </xs:element>
+				  			<xs:element name="extensions" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="extension">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+													</xs:extension>
+												</xs:simpleContent>													
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>			  				
+			  				<xs:element name="sources" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="source" type="source"/>
+				  					</xs:sequence>
+			  					</xs:complexType>
+			  				</xs:element>
+			  				<xs:element name="stores" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="store" type="store"/>
+				  					</xs:sequence>  
+			  					</xs:complexType>					
+			  				</xs:element>  				
+			  				<xs:element name="actions" minOccurs="0" maxOccurs="1">
+			  					<xs:complexType>
+				  					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				  						<xs:element name="action" type="action"/>
+				  					</xs:sequence>  
+			  					</xs:complexType>					
+			  				</xs:element>
+			  			</xs:sequence>
+			  			<xs:attribute name="directory" type="xs:string" use="required"/>		  			
+			  			<xs:attribute name="pattern" type="xs:string"/>
+			  			<xs:attribute name="mode" type="xs:string" use="required"/>
+			  			<xs:attribute name="ignoreSeen" type="xs:string"/>
+			  		</xs:complexType>
+		  		</xs:element>		  		
+		  	</xs:sequence>
+  		</xs:complexType>    	
+  	</xs:element>
+  	
+  	<xs:complexType name="plugin">  		
+  		<xs:attribute name="jar" type="xs:string"/>
+  		<xs:attribute name="class" type="xs:string" use="required"/>
+  	</xs:complexType>
+  	
+  	
+
+	<xs:complexType name="store">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="source">  		
+  		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>  		
+  	</xs:complexType>
+  	
+  	<xs:complexType name="action">  		
+  		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="param" type="param"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>  		
+  	</xs:complexType>
+
+	<xs:complexType name="param">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>	
+		
+	<xs:complexType name="pathElement">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+			</xs:extension>
+		</xs:simpleContent>													
+	</xs:complexType>	
+</xs:schema>

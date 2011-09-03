@@ -58,7 +58,7 @@ import org.w3c.dom.Node;
  */
 public class ConfigReader extends BaseConfigReader {
 
-	private static final String SCHEMA_NAME = "MediaManager-Config-2.0.xsd"; //$NON-NLS-1$
+	private static final String SCHEMA_NAME = "MediaManager-Config-2.1.xsd"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
