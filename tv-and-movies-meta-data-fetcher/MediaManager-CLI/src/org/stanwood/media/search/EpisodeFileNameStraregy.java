@@ -12,11 +12,9 @@ import org.stanwood.media.MediaDirectory;
 public class EpisodeFileNameStraregy implements ISearchStrategy {
 
 	private final static Pattern PATTERN_EP1 = Pattern.compile("(.*?)S\\d+E\\d+.*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?) \\d+x\\d+.*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private final static Pattern PATTERN_EP2 = Pattern.compile("(.*?) \\d+[^0-9]\\d+.*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private final static Pattern PATTERN_EP3 = Pattern.compile("(.*?)S\\d+ E\\d+ .*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private final static Pattern PATTERN_EP4 = Pattern.compile("(.*?) \\d\\d\\d .*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-	private final static Pattern PATTERN_EP5 = Pattern.compile("(.*?) \\d\\-\\d\\d .*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -41,10 +39,7 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		if (m.matches()) {
 			return createSearchDetails(m.group(1));
 		}
-		m = PATTERN_EP5.matcher(term);
-		if (m.matches()) {
-			return createSearchDetails(m.group(1));
-		}
+
 		return null;
 	}
 
