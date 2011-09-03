@@ -57,7 +57,7 @@ public class TestFilmSearcher {
 					return o1.getOriginalFile().getName().compareTo(o2.getOriginalFile().getName());
 				}
 			});
-			Assert.assertEquals(49,names.size());
+			Assert.assertEquals(50,names.size());
 			int index = 0;
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("\"Movie\"",null,null,names.get(index++));
@@ -95,6 +95,7 @@ public class TestFilmSearcher {
 			assertSearchDetails("Movie III",null,null,names.get(index++));
 			assertSearchDetails("Movie's blah",null,null,names.get(index++));
 			assertSearchDetails("Movie","2007",null,names.get(index++));
+			assertSearchDetails("Movie","2011",null,names.get(index++));
 			assertSearchDetails("Movie",null,null,names.get(index++));
 			assertSearchDetails("Movie Vol 2",null,null,names.get(index++));
 			assertSearchDetails("Movie",null,null,names.get(index++));
