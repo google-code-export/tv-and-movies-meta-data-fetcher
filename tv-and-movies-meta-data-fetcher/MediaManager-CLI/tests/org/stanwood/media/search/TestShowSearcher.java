@@ -63,6 +63,7 @@ public class TestShowSearcher {
 			assertSearchDetails("Show",null,names.get(index++));
 			assertSearchDetails("Show",null,names.get(index++));
 			assertSearchDetails("Show",null,names.get(index++));
+			assertSearchDetails("A Show",null,names.get(index++));
 			assertSearchDetails("A TV Show .",null,names.get(index++));
 			assertSearchDetails("A TV Show",null,names.get(index++));
 			assertSearchDetails("Show",null,names.get(index++));
