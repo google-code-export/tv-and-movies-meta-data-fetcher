@@ -78,7 +78,10 @@ public class TestController extends XBMCAddonTestBase  {
 				Controller controller = new Controller(configReader);
 
 				controller.init(false);
-				controller.registerExtension(new FakeSourceInfo(getAddonManager(),"metadata.themoviedb.org"));
+				FakeSourceInfo source = new FakeSourceInfo();
+				source.setAddonId("metadata.themoviedb.org");
+				source.setMgr(getAddonManager());
+				controller.registerExtension(source);
 				controller.registerExtension(new FakeStoreInfo());
 				controller.getMediaDirectory(tmpDir);
 				Assert.assertNotNull(controller);

@@ -441,7 +441,12 @@ public class ConfigReader extends BaseConfigReader {
 		if (plugins.size()>0) {
 			document.append("  <plugins>"+FileHelper.LS); //$NON-NLS-1$
 			for (Plugin plugin : plugins) {
-				document.append("    <plugin jar=\""+plugin.getJar()+"\" class=\""+plugin.getPluginClass()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				if (plugin.getJar()!=null) {
+					document.append("    <plugin jar=\""+plugin.getJar()+"\" class=\""+plugin.getPluginClass()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+				else {
+					document.append("    <plugin class=\""+plugin.getPluginClass()+"\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 			}
 
 			document.append("  </plugins>"+FileHelper.LS); //$NON-NLS-1$
@@ -451,7 +456,11 @@ public class ConfigReader extends BaseConfigReader {
 	private void parsePlguins(Node doc) throws XMLParserException {
 		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) { //$NON-NLS-1$
 			Element pluginEl = (Element)n;
-			String jar = parseString(pluginEl.getAttribute("jar")); //$NON-NLS-1$
+			String strJar = pluginEl.getAttribute("jar");
+			String jar = null;
+			if (strJar.length()>0) {
+				jar = parseString(strJar);
+			}
 			String clazz = parseString(pluginEl.getAttribute("class")); //$NON-NLS-1$
 			plugins.add(new Plugin(jar,clazz));
 		}

@@ -156,9 +156,15 @@ public class Controller {
 	private void registerPlugins() throws ConfigException {
 		for (Plugin plugin : configReader.getPlugins()) {
 			try {
-				URL url = new URL("jar:file:"+plugin.getJar()+"!/");  //$NON-NLS-1$//$NON-NLS-2$
-				URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
-				Class<?> clazz = clazzLoader.loadClass(plugin.getPluginClass());
+				Class<?> clazz;
+				if (plugin.getJar()!=null) {
+					URL url = new URL("jar:file:"+plugin.getJar()+"!/");  //$NON-NLS-1$//$NON-NLS-2$
+					URLClassLoader clazzLoader = new URLClassLoader(new URL[]{url});
+					clazz=clazzLoader.loadClass(plugin.getPluginClass());
+				}
+				else {
+					clazz = Class.forName(plugin.getPluginClass());
+				}
 				Class<? extends ExtensionInfo<?>> targetClass = (Class<? extends ExtensionInfo<?>>) clazz.asSubclass(ExtensionInfo.class);
 				ExtensionInfo<?> info = targetClass.newInstance();
 				registerExtension(info);

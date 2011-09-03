@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.stanwood.media.FakeSource;
 import org.stanwood.media.Helper;
 import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
@@ -137,10 +136,10 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	}
 
 	/**
-	 * This test makes sure that the store is used and not the source
+	 * This test makes sure that the store is used and not the source.
+	 * This the shows are renamed using a source, then they are renamed with no source
 	 * @throws Exception If their are problems
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveStoreRename() throws Exception {
 //		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
@@ -149,7 +148,8 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
 		File dir = FileHelper.createTmpDir("show");
 
-		setupTestController(false,dir,pattern,Mode.TV_SHOW,FakeSource.class.getName(),new HashMap<String,String>(),XMLStore2.class.getName(),"",RenameAction.class.getName());
+		setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",null,XMLStore2.class.getName(),"",RenameAction.class.getName());
+
 		try {
 			File eurekaDir = new File(dir, "Heroes");
 			if (!eurekaDir.mkdir()) {
@@ -168,6 +168,8 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			if (!f.createNewFile()) {
 				throw new IOException("Unable to create file : " + f.getAbsolutePath());
 			}
+//			f = new File(dir,".mediaManager-xmlStore.xml");
+//			FileHelper.copy(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), f);
 
 			// Do the renaming
 			String args[] = new String[] {"-d",dir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
@@ -176,7 +178,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(4,files.size());
-			// .show.xml
+
 			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"02 - Don't Look Back.mkv").getAbsolutePath(),files.get(2));

@@ -83,7 +83,7 @@
   	</xs:element>
   	
   	<xs:complexType name="plugin">  		
-  		<xs:attribute name="jar" type="xs:string" use="required"/>
+  		<xs:attribute name="jar" type="xs:string"/>
   		<xs:attribute name="class" type="xs:string" use="required"/>
   	</xs:complexType>
   	

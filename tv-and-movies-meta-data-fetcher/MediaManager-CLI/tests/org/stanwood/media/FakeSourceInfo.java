@@ -27,9 +27,16 @@ public class FakeSourceInfo extends ExtensionInfo<FakeSource> {
 	private String addonId;
 	private XBMCAddonManager mgr;
 
-	public FakeSourceInfo(XBMCAddonManager mgr, String addonId) {
+	public FakeSourceInfo() {
 		super(FakeSource.class.getName(),ExtensionType.SOURCE,new ParameterType[0]);
+
+	}
+
+	public void setAddonId(String addonId) {
 		this.addonId = addonId;
+	}
+
+	public void setMgr(XBMCAddonManager mgr) {
 		this.mgr = mgr;
 	}
 
