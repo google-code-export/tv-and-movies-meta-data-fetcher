@@ -38,7 +38,7 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			return null;
 		}
 		String fileName = mediaFile.getAbsolutePath();
-		if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath())) {
+		if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath()) && !hasIgnoreTokens(mediaFile)) {
 			fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
 
 			ReverseFilePatternMatcher rfpm = new ReverseFilePatternMatcher();
@@ -59,6 +59,12 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			}
 		}
 		return null;
+	}
+
+	private boolean hasIgnoreTokens(File file) {
+		StringBuilder term = new StringBuilder(file.getName());
+		SearchHelper.replaceWithSpaces(term);
+		return SearchHelper.hasIgnoredTokens(term);
 	}
 
 	private int patternComplextity(String renamePattern) {
