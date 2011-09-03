@@ -23,6 +23,10 @@ import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.cli.manager.TestCLIMediaManager;
+import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
+import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
@@ -322,10 +326,10 @@ public class PodCastActionTest {
 		return f;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static MediaDirectory getMediaDir(File mediaDir,String pattern,Mode mode) throws Exception {
-		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir, pattern, mode, DummySource.class,null,null,null);
+		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir, pattern, mode, DummySource.class.getName(),null,null,null);
 		Controller controller = new Controller(config);
+		controller.registerExtension(new DummySourceInfo());
 		return new MediaDirectory(controller, config, mediaDir);
 	}
 
@@ -407,4 +411,18 @@ public class PodCastActionTest {
 		}
 
 	};
+
+	public static class DummySourceInfo extends ExtensionInfo<DummySource> {
+
+		public DummySourceInfo() {
+			super(DummySource.class.getName(), ExtensionType.SOURCE, new ParameterType[0]);
+		}
+
+		@Override
+		protected DummySource createExtension() throws ExtensionException {
+
+			return new DummySource();
+		}
+
+	}
 }

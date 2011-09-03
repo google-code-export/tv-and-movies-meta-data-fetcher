@@ -520,6 +520,9 @@ public class XBMCSource extends XMLParser implements ISource {
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
 			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, year));
+			if (mgr.getStreamToURL(url)==null || mgr.getStreamToURL(url).getInputStream()==null) {
+				throw new SourceException(MessageFormat.format("Unable to get stream for URL ''{0}''", url.toExternalForm()));
+			}
 			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 				@Override
 				public void processContents(String contents) throws SourceException {

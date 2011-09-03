@@ -17,6 +17,7 @@
 package org.stanwood.media.actions.podcast;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class PodCastActionInfo extends ExtensionInfo<PodCastAction>{
@@ -34,7 +35,11 @@ public class PodCastActionInfo extends ExtensionInfo<PodCastAction>{
 		                                                PARAM_FEED_DESCRIPTION_KEY};
 
 	public PodCastActionInfo() {
-		super(PodCastAction.class, PARAM_TYPES);
+		super(PodCastAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
 	}
 
+	@Override
+	protected PodCastAction createExtension() {
+		return new PodCastAction();
+	}
 }

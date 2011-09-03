@@ -16,12 +16,12 @@
  */
 package org.stanwood.media.store;
 
-import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.extensions.ExtensionException;
 
 /**
  * Thrown is their is a problem with a store
  */
-public class StoreException extends StanwoodException {
+public class StoreException extends ExtensionException {
 
 	private static final long serialVersionUID = 2339844228367668776L;
 

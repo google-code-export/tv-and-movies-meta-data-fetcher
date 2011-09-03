@@ -23,7 +23,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 	 */
 	@Test
 	public void testListCommandHelp() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"--log_config","INFO","list","--help"};
@@ -50,7 +50,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 	@Override
 	public void reset() throws Exception {
 		super.reset();
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 	 */
 	@Test
 	public void testList() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		// Check inital list of plugins
@@ -153,7 +153,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 	 */
 	@Test
 	public void testUnkownOption() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","--blah"};
@@ -183,7 +183,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 	 */
 	@Test
 	public void testUnexpectedArgument() throws Exception {
-		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class,new HashMap<String,String>(),null,"");
+		TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
 		LogSetupHelper.initLogging(stdout,stderr);
 
 		String args[] = new String[] {"list","blah"};

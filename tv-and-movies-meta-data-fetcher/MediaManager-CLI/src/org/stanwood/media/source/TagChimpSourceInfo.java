@@ -17,6 +17,7 @@
 package org.stanwood.media.source;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class TagChimpSourceInfo extends ExtensionInfo<TagChimpSource> {
@@ -25,6 +26,11 @@ public class TagChimpSourceInfo extends ExtensionInfo<TagChimpSource> {
 	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_XBMC_SOURCE_ID};
 
 	public TagChimpSourceInfo() {
-		super(TagChimpSource.class, PARAM_TYPES);
+		super(TagChimpSource.class.getName(),ExtensionType.SOURCE, PARAM_TYPES);
+	}
+
+	@Override
+	protected TagChimpSource createExtension() {
+		return new TagChimpSource();
 	}
 }

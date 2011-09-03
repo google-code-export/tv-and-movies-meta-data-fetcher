@@ -17,9 +17,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.source.ISource;
-import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 
 /**
@@ -52,10 +53,10 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 			String imdbId = getIMDBIDFromFile(nfoFile);
 			if (imdbId!=null) {
 				// Look the film information up on the IMDB website
-				ISource source = mediaDir.getSource("xbmc-metadata.imdb.com"); //$NON-NLS-1$
-				if (source instanceof XBMCSource) {
-					XBMCSource xbmcSource = (XBMCSource)source;
+				ExtensionInfo<? extends ISource> info = mediaDir.getController().getSourceInfo(XBMCSource.class.getName()+"#metadata.imdb.com"); //$NON-NLS-1$
+				if (info != null) {
 					try {
+						XBMCSource xbmcSource = (XBMCSource)info.getExtension();
 						Film film = xbmcSource.getFilm(imdbId, new URL("http://www.imdb.com/title/"+imdbId+"/"), mediaFile); //$NON-NLS-1$ //$NON-NLS-2$
 						if (film!=null) {
 							String year = null;
@@ -69,11 +70,11 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 							SearchDetails details = new SearchDetails(film.getTitle(),year,part);
 							return details;
 						}
-					} catch (SourceException e) {
-						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					} catch (MalformedURLException e) {
 						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					} catch (IOException e) {
+						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
+					} catch (ExtensionException e) {
 						log.error(Messages.getString("FilmNFOSearchStrategy.UNABLE_TO_LOOKUP_NFO_DETIALS"),e); //$NON-NLS-1$
 					}
 				}

@@ -17,6 +17,7 @@
 package org.stanwood.media.actions.command;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class ExecuteSystemCommandActionInfo extends ExtensionInfo<ExecuteSystemCommandAction> {
@@ -30,7 +31,12 @@ public class ExecuteSystemCommandActionInfo extends ExtensionInfo<ExecuteSystemC
 	private final static ParameterType PARAM_TYPES[] = {PARAM_CMD_ON_FILE_KEY,PARAM_CMD_ON_DIR_KEY,PARAM_EXTENSIONS_KEY,PARAM_NEW_FILE_KEY,PARAM_DELETED_FILE_KEY,PARAM_ABORT_IF_FILE_EXISTS};
 
 	public ExecuteSystemCommandActionInfo() {
-		super(ExecuteSystemCommandAction.class, PARAM_TYPES);
+		super(ExecuteSystemCommandAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
+	}
+
+	@Override
+	protected ExecuteSystemCommandAction createExtension() {
+		return new ExecuteSystemCommandAction();
 	}
 
 }

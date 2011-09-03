@@ -17,17 +17,22 @@
 package org.stanwood.media.actions.rename;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
-public class RenameActionInfo extends ExtensionInfo {
+public class RenameActionInfo extends ExtensionInfo<RenameAction> {
 
 	/** The key of the pruneEmptyFolders parameter for this action. */
 	public static final ParameterType PARAM_KEY_PRUNE_EMPTY_FOLDERS = new ParameterType("pruneEmptyFolders",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = {PARAM_KEY_PRUNE_EMPTY_FOLDERS};
 
 	public RenameActionInfo() {
-		super(RenameActionInfo.class, PARAM_TYPES);
+		super(RenameAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
 
 	}
 
+	@Override
+	protected RenameAction createExtension() {
+		return new RenameAction();
+	}
 }

@@ -16,16 +16,23 @@
  */
 package org.stanwood.media.source;
 
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class HybridFilmSourceInfo extends ExtensionInfo<HybridFilmSource> {
 
-	final static ParameterType PARAM_KEY_XBMC_SOURCE_ID = new ParameterType("xbmcSourceId",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_XBMC_SOURCE_ID};
+	final static ParameterType PARAM_KEY_SOURCE_ID = new ParameterType("sourceId",String.class,false); //$NON-NLS-1$
+	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_SOURCE_ID};
 
 	public HybridFilmSourceInfo() {
-		super(HybridFilmSource.class, PARAM_TYPES);
+		super(HybridFilmSource.class.getName(),ExtensionType.SOURCE, PARAM_TYPES);
+	}
+
+	@Override
+	protected HybridFilmSource createExtension() throws ExtensionException {
+		return new HybridFilmSource();
 	}
 
 }

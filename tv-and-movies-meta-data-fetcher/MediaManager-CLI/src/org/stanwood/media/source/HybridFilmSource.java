@@ -27,15 +27,15 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.source.xbmc.XBMCAddonManager;
-import org.stanwood.media.source.xbmc.XBMCException;
-import org.stanwood.media.source.xbmc.XBMCSource;
+import org.stanwood.media.setup.ConfigException;
 
 /**
  * This class is a source used to retrieve the best film information it can. It
@@ -55,7 +55,7 @@ public class HybridFilmSource implements ISource {
 	/** The ID of the the source */
 	public static final String SOURCE_ID = "hybridFilm"; //$NON-NLS-1$
 
-	private String xbmcSourceId = null;
+	private String sourceId = null;
 
 	/**
 	 * Used to create a instance of the source
@@ -69,16 +69,20 @@ public class HybridFilmSource implements ISource {
 	@Override
 	public void setMediaDirConfig(MediaDirectory dir) throws SourceException {
 		try {
-			String sourceId = dir.getDefaultSourceID(Mode.FILM);
-			if (xbmcSourceId != null) {
-				sourceId = xbmcSourceId;
+			ExtensionInfo<? extends ISource> info;
+			if (sourceId!=null) {
+				info = dir.getController().getSourceInfo(sourceId);
 			}
-			XBMCAddonManager addonMgr = dir.getController().getXBMCAddonManager();
-			imdbSource = new XBMCSource(addonMgr, sourceId.substring(5));
+			else {
+				info = dir.getController().getDefaultSource(Mode.FILM);
+			}
+			imdbSource = info.getExtension();
 			if (imdbSource==null) {
-				throw new XBMCException(MessageFormat.format(Messages.getString("HybridFilmSource.UNABLE_FIND_SOURCE"),sourceId)); //$NON-NLS-1$
+				throw new SourceException(Messages.getString("HybridFilmSource.UNABLE_CREATE_SOURCE1")); //$NON-NLS-1$
 			}
-		} catch (XBMCException e) {
+		} catch (ExtensionException e) {
+			throw new SourceException(Messages.getString("HybridFilmSource.UNABLE_CREATE_SOURCE1"),e); //$NON-NLS-1$
+		} catch (ConfigException e) {
 			throw new SourceException(Messages.getString("HybridFilmSource.UNABLE_CREATE_SOURCE1"),e); //$NON-NLS-1$
 		}
 	}
@@ -268,8 +272,8 @@ public class HybridFilmSource implements ISource {
 	 */
 	@Override
 	public void setParameter(String key, String value) throws SourceException {
-		if (key.equals(HybridFilmSourceInfo.PARAM_KEY_XBMC_SOURCE_ID.getName())) {
-			xbmcSourceId = value;
+		if (key.equals(HybridFilmSourceInfo.PARAM_KEY_SOURCE_ID.getName())) {
+			sourceId = value;
 		}
 		else {
 			throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.UNSUPPORTED_PARAM"),key,getClass().getName())); //$NON-NLS-1$
@@ -291,8 +295,8 @@ public class HybridFilmSource implements ISource {
 	 */
 	@Override
 	public String getParameter(String key) throws SourceException {
-		if (key.equals(HybridFilmSourceInfo.PARAM_KEY_XBMC_SOURCE_ID.getName())) {
-			return xbmcSourceId;
+		if (key.equals(HybridFilmSourceInfo.PARAM_KEY_SOURCE_ID.getName())) {
+			return sourceId;
 		}
 		else {
 			throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.UNSUPPORTED_PARAM"),key,getClass().getName())); //$NON-NLS-1$

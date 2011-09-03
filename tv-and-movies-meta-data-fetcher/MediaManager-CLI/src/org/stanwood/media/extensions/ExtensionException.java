@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008  John-Paul.Stanford <dev@stanwood.org.uk>
+ *  Copyright (C) 2008-2011  John-Paul.Stanford <dev@stanwood.org.uk>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,23 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.source;
+package org.stanwood.media.extensions;
 
-import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.logging.StanwoodException;
 
-/**
- * This is thrown if their is a problem related to sources.
- */
-public class SourceException extends ExtensionException {
-
-	private static final long serialVersionUID = 3798863549350822214L;
+public class ExtensionException extends StanwoodException {
 
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialised, and may subsequently be initialised by a
      * call to {@link #initCause}.
      */
-	public SourceException() {
+	public ExtensionException() {
 
 	}
 
@@ -42,7 +37,7 @@ public class SourceException extends ExtensionException {
      * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
-	public SourceException(String message) {
+	public ExtensionException(String message) {
 		super(message);
 
 	}
@@ -60,7 +55,7 @@ public class SourceException extends ExtensionException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-	public SourceException(Throwable cause) {
+	public ExtensionException(Throwable cause) {
 		super(cause);
 
 	}
@@ -78,7 +73,7 @@ public class SourceException extends ExtensionException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-	public SourceException(String message, Throwable cause) {
+	public ExtensionException(String message, Throwable cause) {
 		super(message, cause);
 
 	}

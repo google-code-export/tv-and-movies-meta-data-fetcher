@@ -43,7 +43,7 @@ public class NativeHelper {
 		String method = System.getenv("MM_EXE_LOCATE_METHOD"); //$NON-NLS-1$
 		if (log.isDebugEnabled()) {
 			log.debug("Getting native application, method forced to: " + method); //$NON-NLS-1$
-			log.debug("Using native directory: " + nativeDir.getAbsolutePath()); //$NON-NLS-1$
+			log.debug("Using native directory: " + nativeDir); //$NON-NLS-1$
 		}
 		appName = getAppName(appName);
 		String nativePath = getAppArchPath(appName);

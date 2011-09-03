@@ -17,12 +17,17 @@
 package org.stanwood.media.store.xmlstore;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class XMLStore2Info extends ExtensionInfo<XMLStore2> {
 
 	public XMLStore2Info() {
-		super(XMLStore2.class, new ParameterType[0]);
+		super(XMLStore2.class.getName(),ExtensionType.STORE, new ParameterType[0]);
 	}
 
+	@Override
+	protected XMLStore2 createExtension() {
+		return new XMLStore2();
+	}
 }

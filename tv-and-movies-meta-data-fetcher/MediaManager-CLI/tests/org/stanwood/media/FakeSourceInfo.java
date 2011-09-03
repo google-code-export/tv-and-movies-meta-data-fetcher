@@ -14,20 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.memory;
+package org.stanwood.media;
 
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
+import org.stanwood.media.source.xbmc.XBMCAddonManager;
 
-public class MemoryStoreInfo extends ExtensionInfo<MemoryStore> {
+public class FakeSourceInfo extends ExtensionInfo<FakeSource> {
 
-	public MemoryStoreInfo() {
-		super(MemoryStore.class.getName(),ExtensionType.STORE, new ParameterType[0]);
+	private String addonId;
+	private XBMCAddonManager mgr;
+
+	public FakeSourceInfo(XBMCAddonManager mgr, String addonId) {
+		super(FakeSource.class.getName(),ExtensionType.SOURCE,new ParameterType[0]);
+		this.addonId = addonId;
+		this.mgr = mgr;
 	}
 
 	@Override
-	protected MemoryStore createExtension() {
-		return new MemoryStore();
+	protected FakeSource createExtension() throws ExtensionException {
+		return new FakeSource(mgr,addonId);
 	}
+
 }

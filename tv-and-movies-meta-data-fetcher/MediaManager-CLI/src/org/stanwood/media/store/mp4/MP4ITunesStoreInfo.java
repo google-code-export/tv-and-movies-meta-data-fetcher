@@ -17,6 +17,7 @@
 package org.stanwood.media.store.mp4;
 
 import org.stanwood.media.extensions.ExtensionInfo;
+import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
 public class MP4ITunesStoreInfo extends ExtensionInfo<MP4ITunesStore> {
@@ -29,7 +30,11 @@ public class MP4ITunesStoreInfo extends ExtensionInfo<MP4ITunesStore> {
 	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_MP4FILE_KEY,PARAM_MP4TAGS_KEY,PARAM_MP4INFO_KEY,PARAM_MP4ART_KEY,PARAM_MANAGER_KEY};
 
 	public MP4ITunesStoreInfo() {
-		super(MP4ITunesStore.class, PARAM_TYPES);
+		super(MP4ITunesStore.class.getName(),ExtensionType.SOURCE, PARAM_TYPES);
 	}
 
+	@Override
+	protected MP4ITunesStore createExtension() {
+		return new MP4ITunesStore();
+	}
 }

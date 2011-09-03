@@ -59,7 +59,7 @@ public abstract class StreamProcessor {
 	 *                          web site reports.
 	 */
 	public StreamProcessor(Stream stream,String forcedContentType) {
-		if (stream==null) {
+		if (stream==null || stream.getInputStream()==null) {
 			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
 		}
 		this.stream = stream;
@@ -120,6 +120,7 @@ public abstract class StreamProcessor {
 				try {
 					r = new InputStreamReader(stream.getInputStream(),stream.getCharset());
 					sw = new StringWriter();
+
 					char[] buffer = new char[1024];
 					for (int n; (n = r.read(buffer)) != -1; ) {
 						sw.write(buffer, 0, n);
@@ -156,7 +157,9 @@ public abstract class StreamProcessor {
 		finally {
 			if (stream!=null) {
 				try {
-					stream.getInputStream().close();
+					if (stream.getInputStream()!=null) {
+						stream.getInputStream().close();
+					}
 				} catch (IOException e) {
 					throw new SourceException(Messages.getString("StreamProcessor.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
 				}
