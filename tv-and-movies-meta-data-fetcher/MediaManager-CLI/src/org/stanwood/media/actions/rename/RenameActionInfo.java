@@ -20,12 +20,18 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the action {@link RenameAction}
+ */
 public class RenameActionInfo extends ExtensionInfo<RenameAction> {
 
 	/** The key of the pruneEmptyFolders parameter for this action. */
 	public static final ParameterType PARAM_KEY_PRUNE_EMPTY_FOLDERS = new ParameterType("pruneEmptyFolders",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = {PARAM_KEY_PRUNE_EMPTY_FOLDERS};
 
+	/**
+	 * The constructor
+	 */
 	public RenameActionInfo() {
 		super(RenameAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
 

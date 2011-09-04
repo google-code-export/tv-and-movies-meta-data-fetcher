@@ -16,7 +16,15 @@
  */
 package org.stanwood.media.extensions;
 
+/**
+ * Used to repesent extension types
+ */
 public enum ExtensionType {
 
-	ACTION,STORE,SOURCE
+	/** Action type extension */
+	ACTION,
+	/** Store type extension */
+	STORE,
+	/** Source type extension */
+	SOURCE
 }

@@ -20,6 +20,9 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the action {@link ExecuteSystemCommandAction}
+ */
 public class ExecuteSystemCommandActionInfo extends ExtensionInfo<ExecuteSystemCommandAction> {
 
 	public final static ParameterType PARAM_CMD_ON_FILE_KEY = new ParameterType("commandOnFile",String.class,false); //$NON-NLS-1$
@@ -30,6 +33,9 @@ public class ExecuteSystemCommandActionInfo extends ExtensionInfo<ExecuteSystemC
 	public final static ParameterType PARAM_ABORT_IF_FILE_EXISTS = new ParameterType("abortIfFileExists",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = {PARAM_CMD_ON_FILE_KEY,PARAM_CMD_ON_DIR_KEY,PARAM_EXTENSIONS_KEY,PARAM_NEW_FILE_KEY,PARAM_DELETED_FILE_KEY,PARAM_ABORT_IF_FILE_EXISTS};
 
+	/**
+	 * The constructor
+	 */
 	public ExecuteSystemCommandActionInfo() {
 		super(ExecuteSystemCommandAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
 	}

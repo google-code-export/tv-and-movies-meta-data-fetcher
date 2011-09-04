@@ -20,8 +20,14 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the store {@link XMLStore2}
+ */
 public class XMLStore2Info extends ExtensionInfo<XMLStore2> {
 
+	/**
+	 * The constructor
+	 */
 	public XMLStore2Info() {
 		super(XMLStore2.class.getName(),ExtensionType.STORE, new ParameterType[0]);
 	}

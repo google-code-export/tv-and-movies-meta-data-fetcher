@@ -20,6 +20,9 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the action {@link PodCastAction}
+ */
 public class PodCastActionInfo extends ExtensionInfo<PodCastAction>{
 
 	public final static ParameterType PARAM_MEDIA_DIR_URL = new ParameterType("mediaDirURL",String.class,true); //$NON-NLS-1$
@@ -34,6 +37,9 @@ public class PodCastActionInfo extends ExtensionInfo<PodCastAction>{
 		                                                PARAM_RESTRICT_PATTERN,PARAM_EXTENSIONS_KEY,PARAM_FEED_TITLE_KEY,
 		                                                PARAM_FEED_DESCRIPTION_KEY};
 
+	/**
+	 * The constructor
+	 */
 	public PodCastActionInfo() {
 		super(PodCastAction.class.getName(),ExtensionType.ACTION, PARAM_TYPES);
 	}

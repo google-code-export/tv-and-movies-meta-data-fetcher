@@ -523,7 +523,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		try {
 			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, year));
 			if (mgr.getStreamToURL(url)==null || mgr.getStreamToURL(url).getInputStream()==null) {
-				throw new SourceException(MessageFormat.format("Unable to get stream for URL ''{0}''", url.toExternalForm()));
+				throw new SourceException(MessageFormat.format(Messages.getString("XBMCSource.UNABLE_GET_STREAM_URL"), url.toExternalForm())); //$NON-NLS-1$
 			}
 			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
 				@Override

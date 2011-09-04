@@ -28,16 +28,28 @@ import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.source.xbmc.expression.Value;
 import org.stanwood.media.source.xbmc.expression.ValueType;
 
+/**
+ * Extension information about the source {@link XBMCSource}
+ */
 public class XBMCSourceInfo extends ExtensionInfo<XBMCSource>{
 
 	private XBMCAddon addon;
 
+	/**
+	 * The constructor
+	 * @param mgr The XBMC addon manager
+	 * @param addon The addon
+	 * @throws XBMCException Thrown if their are any problems
+	 */
 	public XBMCSourceInfo(XBMCAddonManager mgr,XBMCAddon addon) throws XBMCException {
 		super(ExtensionType.SOURCE);
 		this.addon = addon;
 		setId(XBMCSource.class.getName()+"#"+addon.getId()); //$NON-NLS-1$
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ParameterType[] getParameterInfos() {
 		Map<String, Value> settings = addon.getSettings();

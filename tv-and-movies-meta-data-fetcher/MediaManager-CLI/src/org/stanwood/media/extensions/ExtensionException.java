@@ -18,6 +18,9 @@ package org.stanwood.media.extensions;
 
 import org.stanwood.media.logging.StanwoodException;
 
+/**
+ * The base class for all extension based exceptions
+ */
 public class ExtensionException extends StanwoodException {
 
 	/**

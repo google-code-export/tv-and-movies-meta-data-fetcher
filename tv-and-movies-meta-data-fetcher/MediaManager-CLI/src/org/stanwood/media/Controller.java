@@ -139,7 +139,7 @@ public class Controller {
 			}
 		}
 		catch (XBMCException e) {
-			throw new ConfigException("Unable to register addons",e);
+			throw new ConfigException(Messages.getString("Controller.UNABLE_REGISTER_ADDONS"),e); //$NON-NLS-1$
 		}
 
 		pluginStores.add(new SapphireStoreInfo());
@@ -181,6 +181,11 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Used to register a extension. Extensions can be sources, stores or actions.
+	 * @param info The extension information
+	 */
+	@SuppressWarnings("unchecked")
 	public void registerExtension(ExtensionInfo<?> info) {
 		if (info.getType()== ExtensionType.SOURCE) {
 			pluginSources.add((ExtensionInfo<ISource>) info);
@@ -234,28 +239,11 @@ public class Controller {
 		return configReader.getMediaDirectiores();
 	}
 
-//	/**
-//	 * Used to get the class of a source. This can handle getting the class if
-//	 * the source is in a plugin
-//	 * @param className The name of the class
-//	 * @return The class object
-//	 * @throws ConfigException Thrown if their are any problems
-//	 */
-//	public Class<? extends ISource> getSourceClass(String className) throws ConfigException {
-//		for (ExtensionInfo<? extends ISource> info : pluginSources) {
-//			if (info.getExtension().getName().equals(className)) {
-//				return info.getExtension();
-//			}
-//		}
-//		try {
-//			Class<? extends ISource> c = Class.forName(className).asSubclass(ISource.class);
-//			return c;
-//		} catch (ClassNotFoundException e) {
-//			throw new ConfigException(MessageFormat.format(Messages.getString("Controller.UNABLE_TO_ADD_SOURCE_NOT_FOUND"),className), e); //$NON-NLS-1$
-//		}
-//
-//	}
-
+	/**
+	 * Used to get information about a source
+	 * @param id The source id
+	 * @return The extension information
+	 */
 	public ExtensionInfo<? extends ISource> getSourceInfo(String id) {
 		for (ExtensionInfo<? extends ISource> sourceInfo : pluginSources) {
 			if (sourceInfo.getId().equals(id)) {
@@ -310,6 +298,11 @@ public class Controller {
 		return result;
 	}
 
+	/**
+	 * Used to get information about a store
+	 * @param id The store id
+	 * @return The extension information
+	 */
 	public ExtensionInfo<? extends IStore> getStoreInfo(String id) {
 		for (ExtensionInfo<? extends IStore> storeInfo : pluginStores) {
 			if (storeInfo.getId().equals(id)) {
@@ -319,6 +312,11 @@ public class Controller {
 		return null;
 	}
 
+	/**
+	 * Used to get information about a action
+	 * @param id The action id
+	 * @return The extension information
+	 */
 	public ExtensionInfo<? extends IAction> getActionInfo(String id) {
 		for (ExtensionInfo<? extends IAction> actionInfo : pluginActions) {
 			if (actionInfo.getId().equals(id)) {
@@ -362,13 +360,13 @@ public class Controller {
 	 */
 	public ExtensionInfo<? extends ISource> getDefaultSource(Mode mode) throws ConfigException {
 		try {
-			ExtensionInfo<? extends ISource> info = getSourceInfo(XBMCSource.class.getName()+"#"+xbmcMgr.getDefaultAddonID(mode));
+			ExtensionInfo<? extends ISource> info = getSourceInfo(XBMCSource.class.getName()+"#"+xbmcMgr.getDefaultAddonID(mode)); //$NON-NLS-1$
 			if (info==null){
-				throw new ConfigException("Unable to find a default source");
+				throw new ConfigException(Messages.getString("Controller.UNABLE_FIND_DEFAULT_SOURCE")); //$NON-NLS-1$
 			}
 			return info;
 		} catch (XBMCException e) {
-			throw new ConfigException("Unable to find a default source",e);
+			throw new ConfigException(Messages.getString("Controller.UNABLE_FIND_DEFAULT_SOURCE"),e); //$NON-NLS-1$
 		}
 	}
 }
