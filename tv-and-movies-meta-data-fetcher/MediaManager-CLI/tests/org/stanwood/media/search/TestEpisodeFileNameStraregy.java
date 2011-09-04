@@ -20,10 +20,11 @@ import java.io.File;
 
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+
 /**
  * Used to test the searching strategy {@link TestEpisodeFileNameStraregy}
  */
+@SuppressWarnings("nls")
 public class TestEpisodeFileNameStraregy {
 
 
