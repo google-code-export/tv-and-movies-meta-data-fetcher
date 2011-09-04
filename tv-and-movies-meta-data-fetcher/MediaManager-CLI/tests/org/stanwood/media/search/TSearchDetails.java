@@ -14,7 +14,7 @@ public class TSearchDetails {
 
 	/**
 	 * The constructor
-	 * @param originalFile The orinal file
+	 * @param originalFile The original file
 	 * @param term The search term
 	 * @param year the year or null if not found
 	 * @param part The part or null if not found
