@@ -278,7 +278,7 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				ExtensionInfo<? extends ISource> sourceInfo = controller.getSourceInfo(id);
 				if (sourceInfo==null) {
-					throw new ConfigException(MessageFormat.format("Unable to find source ''{0}''",id));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id)); //$NON-NLS-1$
 				}
 				ISource source = sourceInfo.getExtension();
 				if (sourceConfig.getParams() != null) {
@@ -311,7 +311,7 @@ public class ConfigReader extends BaseConfigReader {
 
 				ExtensionInfo<? extends IStore> storeInfo = controller.getStoreInfo(id);
 				if (storeInfo==null) {
-					throw new ConfigException(MessageFormat.format("Unable to find store ''{0}''",id));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id)); //$NON-NLS-1$
 				}
 				IStore store = storeInfo.getExtension();
 				if (storeConfig.getParams() != null) {
@@ -344,7 +344,7 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				ExtensionInfo<? extends IAction> actionInfo = controller.getActionInfo(id);
 				if (actionInfo==null) {
-					throw new ConfigException(MessageFormat.format("Unable to find action ''{0}''",id));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id)); //$NON-NLS-1$
 				}
 				IAction action = actionInfo.getExtension();
 				if (actionConfig.getParams() != null) {
@@ -456,7 +456,7 @@ public class ConfigReader extends BaseConfigReader {
 	private void parsePlguins(Node doc) throws XMLParserException {
 		for(Node n : selectNodeList(doc, "/mediaManager/plugins/plugin")) { //$NON-NLS-1$
 			Element pluginEl = (Element)n;
-			String strJar = pluginEl.getAttribute("jar");
+			String strJar = pluginEl.getAttribute("jar"); //$NON-NLS-1$
 			String jar = null;
 			if (strJar.length()>0) {
 				jar = parseString(strJar);

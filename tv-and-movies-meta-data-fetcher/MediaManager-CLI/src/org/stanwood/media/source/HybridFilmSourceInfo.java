@@ -21,11 +21,17 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the source {@link HybridFilmSource}
+ */
 public class HybridFilmSourceInfo extends ExtensionInfo<HybridFilmSource> {
 
 	final static ParameterType PARAM_KEY_SOURCE_ID = new ParameterType("sourceId",String.class,false); //$NON-NLS-1$
 	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_KEY_SOURCE_ID};
 
+	/**
+	 * The constructor
+	 */
 	public HybridFilmSourceInfo() {
 		super(HybridFilmSource.class.getName(),ExtensionType.SOURCE, PARAM_TYPES);
 	}

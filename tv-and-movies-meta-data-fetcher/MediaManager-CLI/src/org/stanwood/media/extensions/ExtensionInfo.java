@@ -28,6 +28,10 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	private T extension = null;
 	private ExtensionType type;
 
+	/**
+	 * The constructor
+	 * @param type The type of the extension
+	 */
 	public ExtensionInfo(ExtensionType type)
 	{
 		this.type = type;
@@ -37,6 +41,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * The constructor
 	 * @param id The id of the extension
 	 * @param parameterInfos The parameter info
+	 * @param type The type of the extension
 	 */
 	public ExtensionInfo(String id,ExtensionType type,ParameterType[] parameterInfos) {
 		super();
@@ -60,6 +65,11 @@ public abstract class ExtensionInfo<T extends IExtension> {
 		return extension;
 	}
 
+	/**
+	 * Used to create the extension
+	 * @return The extension
+	 * @throws ExtensionException Thrown if their is a problem
+	 */
 	protected abstract T createExtension() throws ExtensionException;
 
 	/**
@@ -78,14 +88,26 @@ public abstract class ExtensionInfo<T extends IExtension> {
 		this.parameterInfos = parameterInfos;
 	}
 
+	/**
+	 * Used to get the id of the extension
+	 * @return The id of the extension
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * Used to set the id of the extension
+	 * @param id The id of the extension
+	 */
 	protected void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * Used to get the type of the extension
+	 * @return The type of the extension
+	 */
 	public ExtensionType getType() {
 		return type;
 	}

@@ -20,8 +20,14 @@ import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 
+/**
+ * Extension information about the store {@link MemoryStore}
+ */
 public class MemoryStoreInfo extends ExtensionInfo<MemoryStore> {
 
+	/**
+	 * The constructor
+	 */
 	public MemoryStoreInfo() {
 		super(MemoryStore.class.getName(),ExtensionType.STORE, new ParameterType[0]);
 	}
