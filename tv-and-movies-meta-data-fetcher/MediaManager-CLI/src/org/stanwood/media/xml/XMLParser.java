@@ -546,7 +546,9 @@ public class XMLParser {
 			serializer.serialize(doc);
 		}
 		finally {
-			os.close();
+			if (os!=null) {
+				os.close();
+			}
 		}
 
 	}
