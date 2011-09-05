@@ -25,12 +25,19 @@ import org.stanwood.media.extensions.ParameterType;
  */
 public class PodCastActionInfo extends ExtensionInfo<PodCastAction>{
 
+	/** Parameter type information for the parameter that specifies the the URL used to find the root media directory */
 	public final static ParameterType PARAM_MEDIA_DIR_URL = new ParameterType("mediaDirURL",String.class,true); //$NON-NLS-1$
+	/** Parameter type information for the parameter that specifies the maximum number of entries in the feed*/
 	public final static ParameterType PARAM_NUMBER_ENTRIES = new ParameterType("numberEntries",String.class,false); //$NON-NLS-1$
+	/** Parameter type information for the parameter that specifies the location of the RSS feed relative to the root of the media directory. It can contain standard rename patterns with the value*/
 	public final static ParameterType PARAM_FILE_LOCATION = new ParameterType("fileLocation",String.class,true); //$NON-NLS-1$
+	/** Parameter type information for the parameter that can be used to restrict the media files */
 	public final static ParameterType PARAM_RESTRICT_PATTERN = new ParameterType("restrictPattern",String.class,false); //$NON-NLS-1$
+	/** Parameter type information for the parameter that specifies a comma separated list of media file extensions to accept */
 	public final static ParameterType PARAM_EXTENSIONS_KEY = new ParameterType("extensions",String.class,false); //$NON-NLS-1$
+	/** Parameter type information for the parameter that specifies a title to the RSS feed */
 	public final static ParameterType PARAM_FEED_TITLE_KEY = new ParameterType("feedTitle",String.class,false); //$NON-NLS-1$
+	/** Parameter type information for the parameter that specifies a description to the RSS feed */
 	public final static ParameterType PARAM_FEED_DESCRIPTION_KEY = new ParameterType("feedDescription",String.class,false); //$NON-NLS-1$
 
 	private final static ParameterType PARAM_TYPES[] = {PARAM_MEDIA_DIR_URL,PARAM_NUMBER_ENTRIES,PARAM_FILE_LOCATION,
