@@ -68,7 +68,6 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * Used to test recursive renaming of media using a source, but no stores.
 	 * @throws Exception Thrown if their are any errors
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
@@ -215,7 +214,6 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * This will test that films are renamed correctly
 	 * @throws Exception Thrown if their are any problems
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveFilmRename() throws Exception {
 //		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -287,7 +285,6 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * Used to test recursive renaming of media using a source, but no stores.
 	 * @throws Exception Thrown if their are any errors
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testRecursiveSourceRename() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -350,7 +347,6 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 * the other files are put into the database.
 	 * @throws Exception Thrown if their is a problem
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testSeenDatabase() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");

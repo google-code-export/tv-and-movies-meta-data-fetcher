@@ -13,7 +13,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * Used to test the XBMC manager cli command
  */
-@SuppressWarnings({ "unchecked", "nls" })
+@SuppressWarnings({ "nls" })
 public class TestCLIManagerAddons extends  BaseCLITest {
 
 	/**

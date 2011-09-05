@@ -22,20 +22,34 @@ import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
 
+/**
+ * Source information for the fake source
+ */
 public class FakeSourceInfo extends ExtensionInfo<FakeSource> {
 
 	private String addonId;
 	private XBMCAddonManager mgr;
 
+	/**
+	 * The constructor
+	 */
 	public FakeSourceInfo() {
 		super(FakeSource.class.getName(),ExtensionType.SOURCE,new ParameterType[0]);
 
 	}
 
+	/**
+	 * Used to set the addon id
+	 * @param addonId The addon id
+	 */
 	public void setAddonId(String addonId) {
 		this.addonId = addonId;
 	}
 
+	/**
+	 * Used to set the XBMC addon manager
+	 * @param mgr the XBMC addon manager
+	 */
 	public void setMgr(XBMCAddonManager mgr) {
 		this.mgr = mgr;
 	}

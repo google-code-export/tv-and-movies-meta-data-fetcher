@@ -412,8 +412,12 @@ public class PodCastActionTest {
 
 	};
 
+	/**
+	 * Information for the dummy source class
+	 */
 	public static class DummySourceInfo extends ExtensionInfo<DummySource> {
 
+		/** The constructor */
 		public DummySourceInfo() {
 			super(DummySource.class.getName(), ExtensionType.SOURCE, new ParameterType[0]);
 		}
