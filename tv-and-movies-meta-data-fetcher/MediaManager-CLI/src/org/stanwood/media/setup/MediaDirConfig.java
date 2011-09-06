@@ -20,6 +20,7 @@ public class MediaDirConfig {
 	private List<String> extensions;
 	private List<Pattern> ignorePatterns;
 	private boolean ignoreSeen;
+	private String name;
 
 	/**
 	 * Used to get the media directory location
@@ -167,5 +168,20 @@ public class MediaDirConfig {
 		this.ignoreSeen = ignoreSeen;
 	}
 
+	/**
+	 * Used to set the name of the media directory
+	 * @param name The name of the media directory
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Used to get the name of the media directory
+	 * @return The name of the media directory, or null if it does not have one
+	 */
+	public String getName() {
+		return name;
+	}
 
 }
