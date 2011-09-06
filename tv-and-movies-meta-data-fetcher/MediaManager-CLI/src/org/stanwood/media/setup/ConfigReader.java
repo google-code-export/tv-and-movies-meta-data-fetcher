@@ -209,6 +209,12 @@ public class ConfigReader extends BaseConfigReader {
 				ignoreSeen = Boolean.parseBoolean(ignoreSeenValue);
 			}
 
+			String name = dirNode.getAttribute("name").trim(); //$NON-NLS-1$
+			if (name.equals("")) {
+				name = null;
+			}
+
+			dirConfig.setName(name);
 			dirConfig.setPattern(pattern);
 			dirConfig.setMode(mode);
 			dirConfig.setIgnoreSeen(ignoreSeen);
