@@ -19,6 +19,7 @@ package org.stanwood.media.store;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
@@ -233,4 +234,22 @@ public interface IStore extends IExtension  {
 	 */
 	public void init(File nativeDir) throws StoreException;
 
+	/**
+	 * This is used to list all the episodes within the store if the store supports the operation.
+	 * It this store can't list episodes, then it will return null
+	 * @param dirConfig The media directory configuration
+	 * @return Null or a list of episodes in the store
+	 *
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) throws StoreException;
+
+	/**
+	 * This is used to list all the films within the store if the store supports the operation.
+	 * It this store can't list films, then it will return null
+	 * @param dirConfig The media directory configuration
+	 * @return Null or a list of films in the store
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public Collection<Film> listFilms(MediaDirConfig dirConfig) throws StoreException ;
 }

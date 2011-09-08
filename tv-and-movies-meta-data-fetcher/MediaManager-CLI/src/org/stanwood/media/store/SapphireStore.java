@@ -411,4 +411,16 @@ public class SapphireStore implements IStore {
 	public void init(File nativeDir) throws StoreException {
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public List<Episode> listEpisodes(MediaDirConfig dirConfig) {
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Film> listFilms(MediaDirConfig dirConfig) {
+		return null;
+	}
+
 }

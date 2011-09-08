@@ -19,6 +19,7 @@ package org.stanwood.media.store;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
@@ -209,5 +210,16 @@ public class FakeStore implements IStore {
 
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public List<Episode> listEpisodes(MediaDirConfig dirConfig) {
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Film> listFilms(MediaDirConfig dirConfig) {
+		return null;
+	}
 
 }
