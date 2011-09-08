@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -323,12 +324,35 @@ public class MemoryStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+
 		return films.get(file);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void init(File nativeDir) throws StoreException {
+	}
+
+	//TODO only return the episodes in the dirConfig
+	/** {@inheritDoc} */
+	@Override
+	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) {
+		ArrayList<Episode>episodes = new ArrayList<Episode>();
+		for (CacheShow show : shows) {
+			for (CacheSeason season : show.getSeasons()) {
+				for (Episode episode : season.getEpisodes()) {
+					episodes.add(episode);
+				}
+			}
+		}
+		return episodes;
+	}
+
+	//TODO only return the films in the dirConfig
+	/** {@inheritDoc} */
+	@Override
+	public Collection<Film> listFilms(MediaDirConfig dirConfig) {
+		return films.values();
 	}
 
 }
