@@ -38,6 +38,7 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
@@ -205,7 +206,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
 		// TODO make use of the part number
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
@@ -214,7 +215,7 @@ public class MP4ITunesStore implements IStore {
 		}
 	}
 
-	private void writeFilm(File filmFile, Film film, Integer part) throws StoreException {
+	private void writeFilm(File filmFile, IFilm film, Integer part) throws StoreException {
 		try {
 			updateFilm(getMP4Manager(),filmFile,film,part);
 		} catch (MP4Exception e) {
@@ -431,7 +432,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param part The part number of the film, or null if it does not have parts
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
-	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, Film film,Integer part) throws MP4Exception {
+	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		atoms.add(mp4Manager.createAtom("stik",StikValue.MOVIE.getId())); //$NON-NLS-1$
@@ -570,7 +571,7 @@ public class MP4ITunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Film> listFilms(MediaDirConfig dirConfig) {
+	public List<IFilm> listFilms(MediaDirConfig dirConfig) {
 		return null;
 	}
 

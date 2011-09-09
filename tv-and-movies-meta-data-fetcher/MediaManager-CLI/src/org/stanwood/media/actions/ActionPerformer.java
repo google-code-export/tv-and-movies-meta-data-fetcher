@@ -39,7 +39,7 @@ import org.stanwood.media.actions.rename.FileNameParser;
 import org.stanwood.media.actions.rename.ParsedFileName;
 import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -253,17 +253,17 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	private Film getFilm(File file) throws ActionException {
+	private IFilm getFilm(File file) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
-				Film film = store.getFilm(dir,file);
+				IFilm film = store.getFilm(dir,file);
 				if (film!=null) {
 					return film;
 				}
 			}
 			SearchResult result = findFilm(dir, file);
 			if (result!=null) {
-				Film film = getFilm(result,dir,file);
+				IFilm film = getFilm(result,dir,file);
 				if (film!=null) {
 					return film;
 				}
@@ -278,7 +278,7 @@ public class ActionPerformer implements IActionEventHandler {
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
 			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-				Film film = getFilm(file);
+				IFilm film = getFilm(file);
 				if (film!=null) {
 					for (IAction action : actions) {
 						Integer part = getFilmPart(file, film);
@@ -304,7 +304,7 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	protected Integer getFilmPart(File file, Film film) {
+	protected Integer getFilmPart(File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
 			for (VideoFile vf : film.getFiles()) {
@@ -455,13 +455,13 @@ public class ActionPerformer implements IActionEventHandler {
 		return null;
 	}
 
-	private Film getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
+	private IFilm getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
 		if (!file.exists()) {
 			return null;
 		}
 		boolean refresh = false;
 		try {
-			Film film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
+			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
 			if (film==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;

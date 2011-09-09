@@ -17,7 +17,7 @@ import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
@@ -141,7 +141,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 			MediaDirConfig dirConfig = rootMediaDir.getMediaDirConfig();
 			for (File mediaFile : files) {
 				if (dirConfig.getMode()==Mode.FILM) {
-					Film f = fromStore.getFilm(rootMediaDir, mediaFile);
+					IFilm f = fromStore.getFilm(rootMediaDir, mediaFile);
 					if (f==null) {
 						fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UNABLE_FIND_FILM"),mediaFile)); //$NON-NLS-1$
 						return false;
@@ -164,7 +164,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 		return false;
 	}
 
-	protected Integer getFilmPart(File file, Film film) {
+	protected Integer getFilmPart(File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
 			for (VideoFile vf : film.getFiles()) {

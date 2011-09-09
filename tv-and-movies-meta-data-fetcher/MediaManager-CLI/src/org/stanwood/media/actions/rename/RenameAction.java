@@ -13,7 +13,7 @@ import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
@@ -43,7 +43,7 @@ public class RenameAction extends AbstractAction {
 	 * @param actionEventHandler Used to notify the action performer about changes
 	 * @throws ActionException Thrown if their is a problem with the action
 	 */	@Override
-	public void perform(MediaDirectory dir,Film film,File mediaFile,Integer part,IActionEventHandler actionEventHandler) throws ActionException {
+	public void perform(MediaDirectory dir,IFilm film,File mediaFile,Integer part,IActionEventHandler actionEventHandler) throws ActionException {
 		try {
 			renameFilm(dir,film,mediaFile,part,actionEventHandler);
 		}
@@ -76,7 +76,7 @@ public class RenameAction extends AbstractAction {
 		}
 	}
 
-	private File renameFilm(MediaDirectory dir,Film film,File file,Integer part,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
+	private File renameFilm(MediaDirectory dir,IFilm film,File file,Integer part,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
 		if (film!=null) {
 			String oldFileName = file.getName();
 			String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);

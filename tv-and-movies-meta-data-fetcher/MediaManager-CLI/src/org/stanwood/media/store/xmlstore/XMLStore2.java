@@ -30,6 +30,7 @@ import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoExtra;
@@ -203,7 +204,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, Film film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,Integer part) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache film " + filmFile.getAbsolutePath()); //$NON-NLS-1$
 		}
@@ -220,7 +221,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void appendFilm(Document doc, Node filmsNode, Film film,File rootMediaDir)
+	private void appendFilm(Document doc, Node filmsNode, IFilm film,File rootMediaDir)
 	throws XMLParserException, StoreException {
 		Element filmNode = (Element) selectSingleNode(filmsNode, "film[@id='"+film.getId()+"']"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (filmNode!=null) {
@@ -261,7 +262,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	}
 
-	private void writeChapters( Film film, Element filmNode) {
+	private void writeChapters( IFilm film, Element filmNode) {
 		Document doc = filmNode.getOwnerDocument();
 		Element chaptersNode = doc.createElement("chapters"); //$NON-NLS-1$
 		for (Chapter chapter : film.getChapters()) {
@@ -341,7 +342,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		video.setCertifications(certifications);
 	}
 
-	private void writeCertifications(Film film, Element node) {
+	private void writeCertifications(IFilm film, Element node) {
 		Document doc = node.getOwnerDocument();
 		Element certificationsNode = doc.createElement("certifications"); //$NON-NLS-1$
 		if (film.getCertifications()!=null) {
@@ -585,7 +586,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */
 	@Override
-	public Film getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException {
+	public IFilm getFilm(File rootMediaDir, File filmFile, String filmId) throws StoreException, MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
@@ -600,7 +601,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				}
 				return null;
 			}
-			Film film = parseFilmNode(rootMediaDir, filmNode);
+			IFilm film = parseFilmNode(rootMediaDir, filmNode);
 			return film;
 		}
 		catch (XMLParserException e) {
@@ -616,7 +617,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	}
 
-	private Film parseFilmNode(File rootMediaDir, Element filmNode)
+	private IFilm parseFilmNode(File rootMediaDir, Element filmNode)
 			throws XMLParserException, NotInStoreException, ParseException,
 			MalformedURLException {
 		Film film = new Film(getAttribute(filmNode,"id")); //$NON-NLS-1$
@@ -1200,14 +1201,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+	public IFilm getFilm(MediaDirectory dir, File file) throws StoreException {
 		try {
 			File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 			Element filmNode = getNodeWithFile(dir,file);
 			if (filmNode==null || !filmNode.getNodeName().equals("film")) { //$NON-NLS-1$
 				return null;
 			}
-			Film film = getFilm(rootMediaDir,file,filmNode.getAttribute("id")); //$NON-NLS-1$
+			IFilm film = getFilm(rootMediaDir,file,filmNode.getAttribute("id")); //$NON-NLS-1$
 			return film;
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
@@ -1250,15 +1251,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<Film> listFilms(MediaDirConfig dirConfig) throws StoreException {
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
-			List<Film>films = new ArrayList<Film>();
+			List<IFilm>films = new ArrayList<IFilm>();
 			Document doc = getCache(dirConfig.getMediaDir());
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
 				for (Node node : selectNodeList(store,"film") ) { //$NON-NLS-1$
-					Film film = parseFilmNode(rootMediaDir, (Element)node);
+					IFilm film = parseFilmNode(rootMediaDir, (Element)node);
 					films.add(film);
 				}
 			}

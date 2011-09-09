@@ -31,6 +31,7 @@ import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -156,9 +157,9 @@ public class HybridFilmSource implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Film getFilm(String filmId,URL url,File file) throws SourceException, MalformedURLException, IOException {
-		Film tagChimpFilm = null;
-		Film imdbFilm = null;
+	public IFilm getFilm(String filmId,URL url,File file) throws SourceException, MalformedURLException, IOException {
+		IFilm tagChimpFilm = null;
+		IFilm imdbFilm = null;
 		StringTokenizer tok = new StringTokenizer(filmId,"|"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
@@ -172,7 +173,7 @@ public class HybridFilmSource implements ISource {
 		}
 
 		if (tagChimpFilm!=null && imdbFilm!=null) {
-			Film film = new Film(filmId);
+			IFilm film = new Film(filmId);
 			film.setTitle(imdbFilm.getTitle());
 			film.setCertifications(imdbFilm.getCertifications());
 			film.setChapters(tagChimpFilm.getChapters());

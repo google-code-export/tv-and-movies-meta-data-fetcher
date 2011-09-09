@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -46,7 +46,7 @@ import org.stanwood.media.store.StoreException;
 public class MemoryStore implements IStore {
 
 	private List<CacheShow> shows = new ArrayList<CacheShow>();
-	private Map<File,Film> films = new HashMap<File,Film>();
+	private Map<File,IFilm> films = new HashMap<File,IFilm>();
 
 	/**
 	 * This does nothing as it's all done by the cacheSeason and cacheShow methods
@@ -199,7 +199,7 @@ public class MemoryStore implements IStore {
 			}
 		}
 		else if (mode==Mode.FILM) {
-			Film f = films.get(mediaFile);
+			IFilm f = films.get(mediaFile);
 			if (f!=null) {
 				for (VideoFile vf : f.getFiles()) {
 					if (vf.getLocation().equals(mediaFile)) {
@@ -219,7 +219,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
 		films.put(filmFile,film);
 	}
 
@@ -230,7 +230,7 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public void renamedFile(File rootMediaDir,File oldFile, File newFile) {
-		Film film = films.get(oldFile);
+		IFilm film = films.get(oldFile);
 		if (film!=null) {
 			films.remove(oldFile);
 			films.put(newFile,film);
@@ -243,7 +243,7 @@ public class MemoryStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public IFilm getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return films.get(filmFile);
 	}
 
@@ -323,7 +323,7 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+	public IFilm getFilm(MediaDirectory dir, File file) throws StoreException {
 
 		return films.get(file);
 	}
@@ -351,7 +351,7 @@ public class MemoryStore implements IStore {
 	//TODO only return the films in the dirConfig
 	/** {@inheritDoc} */
 	@Override
-	public Collection<Film> listFilms(MediaDirConfig dirConfig) {
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) {
 		return films.values();
 	}
 

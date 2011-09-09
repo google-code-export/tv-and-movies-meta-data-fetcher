@@ -5,7 +5,7 @@ import java.io.File;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 
 /**
  * This interface should be implemented by classes that are used to represent actions
@@ -40,7 +40,7 @@ public interface IAction extends IExtension {
 	 * @param actionEventHandler Used to notify the action performer about changes
 	 * @throws ActionException Thrown if their is a problem with the action
 	 */
-	public void perform(MediaDirectory dir,Film film, File mediaFile,Integer part,IActionEventHandler actionEventHandler) throws ActionException;
+	public void perform(MediaDirectory dir,IFilm film, File mediaFile,Integer part,IActionEventHandler actionEventHandler) throws ActionException;
 
 	/**
 	 * Used to set the value of actions parameter
