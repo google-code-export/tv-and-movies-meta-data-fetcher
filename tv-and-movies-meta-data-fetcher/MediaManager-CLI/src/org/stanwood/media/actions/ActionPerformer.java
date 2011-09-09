@@ -449,6 +449,7 @@ public class ActionPerformer implements IActionEventHandler {
 			return null;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_GET_TV_EPISODE_DETAILS"),file.getAbsolutePath()),e); //$NON-NLS-1$
 		}
 		return null;
