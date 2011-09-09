@@ -34,6 +34,7 @@ import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -161,7 +162,7 @@ public class SapphireStore implements IStore {
 		}
 	}
 
-	private void writeFilm(File filmFile, Film film) throws IOException {
+	private void writeFilm(File filmFile, IFilm film) throws IOException {
 		File xmlFile = getCacheFile(filmFile);
 		if (xmlFile != null) {
 			if (xmlFile.exists() && !xmlFile.delete()) {
@@ -314,7 +315,7 @@ public class SapphireStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
 		try {
 			writeFilm(filmFile, film);
 		} catch (IOException e) {
@@ -419,7 +420,7 @@ public class SapphireStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Film> listFilms(MediaDirConfig dirConfig) {
+	public List<IFilm> listFilms(MediaDirConfig dirConfig) {
 		return null;
 	}
 

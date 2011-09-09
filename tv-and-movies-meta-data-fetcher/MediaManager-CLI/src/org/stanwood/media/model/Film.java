@@ -28,7 +28,7 @@ import java.util.SortedSet;
 /**
  * This class is used to hold film related information
  */
-public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
+public class Film implements IFilm {
 
 	private String id;
 	private String sourceId;
@@ -48,6 +48,14 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	private String country;
 	private List<Actor> actors;
 	private SortedSet<VideoFile> videoFiles = new VideoFileSet();
+
+	/**
+	 * Used to create a instance of the film class.
+	 * @param id The id of the film used by the source that it was read from.
+	 */
+	public Film(String id) {
+		setId(id);
+	}
 
 	/**
 	 * This is useful if the film belongs to more than one genres. It will returned the
@@ -72,17 +80,10 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	}
 
 	/**
-	 * Used to create a instance of the film class.
-	 * @param id The id of the film used by the source that it was read from.
-	 */
-	public Film(String id) {
-		setId(id);
-	}
-
-	/**
 	 * Used to get the id of the film used by the source that it was read from.
 	 * @return The id of the film
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -91,6 +92,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the id of the film used by the source that it was read from.
 	 * @param id The id of the film
 	 */
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -100,6 +102,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the source id of the source that was used to retrieve the film information.
 	 * @return The source id
 	 */
+	@Override
 	public String getSourceId() {
 		return sourceId;
 	}
@@ -108,6 +111,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the source id of the source that was used to retrieve the film information.
 	 * @param sourceId The source id
 	 */
+	@Override
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
@@ -206,6 +210,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the URL used to get a summary of the film
 	 * @param url The summary URL
 	 */
+	@Override
 	public void setFilmUrl(URL url) {
 		filmUrl = url;
 	}
@@ -214,6 +219,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the URL used to get a summary of the film
 	 * @return The summary URL
 	 */
+	@Override
 	public URL getFilmUrl() {
 		return filmUrl;
 	}
@@ -251,6 +257,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get a list of the films certifications
 	 * @return The films certification list
 	 */
+	@Override
 	public List<Certification> getCertifications() {
 		return certifications;
 	}
@@ -259,6 +266,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the films certifications
 	 * @param certifications The films certifications
 	 */
+	@Override
 	public void setCertifications(List<Certification> certifications) {
 		this.certifications = certifications;
 	}
@@ -285,6 +293,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the release date of the film
 	 * @return The release date of the film
 	 */
+	@Override
 	public Date getDate() {
 		if (date==null) {
 			return null;
@@ -298,6 +307,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the release date of the film
 	 * @param date The release date of the film
 	 */
+	@Override
 	public void setDate(Date date) {
 		if (date!=null) {
 			this.date = new Date(date.getTime());
@@ -311,6 +321,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the URL of the film poster
 	 * @param imageURL The URL of the film poster.
 	 */
+	@Override
 	public void setImageURL(URL imageURL) {
 		this.imageURL = imageURL;
 	}
@@ -320,6 +331,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * a poster could not be found.
 	 * @return The film poster, or null if it does not have one
 	 */
+	@Override
 	public URL getImageURL() {
 		return this.imageURL;
 	}
@@ -328,6 +340,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to add a chapter to the film
 	 * @param chapter The chapter to add
 	 */
+	@Override
 	public void addChapter(Chapter chapter) {
 		Iterator<Chapter> it = chapters.iterator();
 		while (it.hasNext()) {
@@ -351,6 +364,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the chapters of the film
 	 * @return The chapters of the film
 	 */
+	@Override
 	public List<Chapter> getChapters() {
 		return chapters;
 	}
@@ -359,6 +373,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the chapter information for the film
 	 * @param chapters The chapters of the film
 	 */
+	@Override
 	public void setChapters(List<Chapter> chapters) {
 		this.chapters = chapters;
 	}
@@ -367,6 +382,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the films long description
 	 * @param description The films long description
 	 */
+	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -375,6 +391,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to get the films long description
 	 * @return the films long description
 	 */
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
@@ -384,6 +401,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * null if it's not known.
 	 * @return the country the film was made in.
 	 */
+	@Override
 	public String getCountry() {
 		return country;
 	}
@@ -392,6 +410,7 @@ public class Film implements IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 * Used to set the country the film was made in.
 	 * @param country the country to set
 	 */
+	@Override
 	public void setCountry(String country) {
 		this.country = country;
 	}

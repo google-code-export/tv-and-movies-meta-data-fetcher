@@ -24,7 +24,7 @@ import java.net.URL;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -81,7 +81,7 @@ public interface ISource extends IExtension {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(String filmId,URL url,File filmFile) throws SourceException, MalformedURLException, IOException;
+	public IFilm getFilm(String filmId,URL url,File filmFile) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This gets a special episode from the source. If it can't be found, then it will

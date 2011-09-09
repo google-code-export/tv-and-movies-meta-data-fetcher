@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
@@ -36,7 +36,7 @@ public class PatternMatcher {
 	 * @return The filename
 	 * @throws PatternException thrown if their is a problem
 	 */
-	public String getNewFilmName(MediaDirConfig dirConfig,String pattern,final Film film,final String ext,final Integer part) throws PatternException {
+	public String getNewFilmName(MediaDirConfig dirConfig,String pattern,final IFilm film,final String ext,final Integer part) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
@@ -48,7 +48,7 @@ public class PatternMatcher {
 		return processor.doit(dirConfig,pattern);
 	}
 
-	private String processFilmName(String newName, Film film, String ext,Integer part) {
+	private String processFilmName(String newName, IFilm film, String ext,Integer part) {
 		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(film.getId()));
 		newName = newName.replaceAll(Token.PERCENT.getFull(), "%"); //$NON-NLS-1$
 		newName = newName.replaceAll(Token.TITLE.getFull(), normalizeText(film.getTitle()));

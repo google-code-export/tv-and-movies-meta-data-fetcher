@@ -24,6 +24,7 @@ import java.util.List;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -150,7 +151,7 @@ public class FakeStore implements IStore {
 	 * @param film The film details
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, Film film,Integer part) {
+	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) {
 
 	}
 
@@ -218,7 +219,7 @@ public class FakeStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Film> listFilms(MediaDirConfig dirConfig) {
+	public List<IFilm> listFilms(MediaDirConfig dirConfig) {
 		return null;
 	}
 

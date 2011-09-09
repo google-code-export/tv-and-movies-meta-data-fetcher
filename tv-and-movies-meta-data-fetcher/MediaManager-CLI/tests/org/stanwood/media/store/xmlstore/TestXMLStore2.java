@@ -15,6 +15,7 @@ import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.testdata.Data;
@@ -203,7 +204,7 @@ public class TestXMLStore2 {
 	        Assert.assertTrue(episode.isSpecial());
 
 	        File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
-	        Film film = xmlSource.getFilm(dir, filmFile1, "114814");
+	        IFilm film = xmlSource.getFilm(dir, filmFile1, "114814");
 	        Assert.assertNotNull(film);
 	        Assert.assertEquals(15,film.getActors().size());
 			Assert.assertEquals("Stephen Baldwin",film.getActors().get(0).getName());

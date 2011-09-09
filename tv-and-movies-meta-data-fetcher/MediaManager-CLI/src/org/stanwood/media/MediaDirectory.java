@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -177,9 +177,9 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Film getFilm(File rootMediaDir,File filmFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
+	public IFilm getFilm(File rootMediaDir,File filmFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
-		Film film = null;
+		IFilm film = null;
 		if (!refresh) {
 			for (IStore store : stores) {
 				film = store.getFilm(rootMediaDir,filmFile, searchResult.getId());

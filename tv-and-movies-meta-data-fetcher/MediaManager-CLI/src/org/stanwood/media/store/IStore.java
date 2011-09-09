@@ -24,7 +24,7 @@ import java.util.Collection;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -79,7 +79,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheFilm(File rootMediaDir,File filmFile,Film film,Integer part) throws StoreException;
+	public void cacheFilm(File rootMediaDir,File filmFile,IFilm film,Integer part) throws StoreException;
 
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will
@@ -172,7 +172,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
+	public IFilm getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException;
 
 	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
@@ -224,7 +224,7 @@ public interface IStore extends IExtension  {
 	 * @return The film or null if it can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Film getFilm(MediaDirectory dir, File file) throws StoreException;
+	public IFilm getFilm(MediaDirectory dir, File file) throws StoreException;
 
 	/**
 	 * Called to initialise the stores and check all their resources can be found. This
@@ -251,5 +251,5 @@ public interface IStore extends IExtension  {
 	 * @return Null or a list of films in the store
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Collection<Film> listFilms(MediaDirConfig dirConfig) throws StoreException ;
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) throws StoreException ;
 }

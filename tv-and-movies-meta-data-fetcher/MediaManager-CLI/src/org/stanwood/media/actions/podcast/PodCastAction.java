@@ -18,7 +18,7 @@ import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
 
@@ -203,7 +203,7 @@ public class PodCastAction extends AbstractAction {
 
 	/** {@inheritDoc} */
 	@Override
-	public void perform(MediaDirectory dir, Film film, File mediaFile, Integer part,IActionEventHandler actionEventHandler) throws ActionException {
+	public void perform(MediaDirectory dir, IFilm film, File mediaFile, Integer part,IActionEventHandler actionEventHandler) throws ActionException {
 
 		String ext = FileHelper.getExtension(mediaFile);
 		if (extensions!=null) {
