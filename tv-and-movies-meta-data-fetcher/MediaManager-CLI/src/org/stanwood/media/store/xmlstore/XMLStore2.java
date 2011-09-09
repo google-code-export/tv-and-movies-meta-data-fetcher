@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -632,7 +633,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		film.setFilmUrl(new URL(getAttribute(filmNode,"url"))); //$NON-NLS-1$
 		film.setDescription(getStringFromXML(filmNode,"description/long/text()")); //$NON-NLS-1$
 		film.setSummary(getStringFromXML(filmNode,"description/short/text()")); //$NON-NLS-1$
-		film.setImageURL(new URL(getAttribute(filmNode, "imageUrl"))); //$NON-NLS-1$
+		try {
+			film.setImageURL(new URL(getAttribute(filmNode, "imageUrl"))); //$NON-NLS-1$
+		}
+		catch (MalformedURLException e) {
+			film.setImageURL(null);
+		}
 		film.setTitle(getAttribute(filmNode, "title")); //$NON-NLS-1$
 		parseRating(film,filmNode);
 		readActors(filmNode,film);
@@ -1228,19 +1234,27 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
-			List<Episode>episodes = new ArrayList<Episode>();
+
 			Document doc = getCache(dirConfig.getMediaDir());
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
-				for (Node episodeNode : selectNodeList(store, "//episode")) { //$NON-NLS-1$
+
+				IterableNodeList list = selectNodeList(store,"//episode"); //$NON-NLS-1$
+				int size = list.getLength();
+
+				List<Episode>episodes = new ArrayList<Episode>(size);
+				for (int i=0;i<size;i++) {
+					Element episodeNode = (Element) list.item(i);
 					Node locationNode = selectSingleNode(episodeNode, "file/@location"); //$NON-NLS-1$
 					File file = new File(locationNode.getNodeValue());
-					Episode episode = parseEpisodeNode(file, rootMediaDir, (Element)episodeNode);
+					Episode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
 					episodes.add(episode);
 				}
 
+				return episodes;
+
 			}
-			return episodes;
+			return Collections.emptyList();
 		}
 		catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
@@ -1254,16 +1268,21 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
-			List<IFilm>films = new ArrayList<IFilm>();
+
 			Document doc = getCache(dirConfig.getMediaDir());
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
-				for (Node node : selectNodeList(store,"film") ) { //$NON-NLS-1$
-					IFilm film = parseFilmNode(rootMediaDir, (Element)node);
+				IterableNodeList list = selectNodeList(store,"film"); //$NON-NLS-1$
+				int size = list.getLength();
+
+				List<IFilm>films = new ArrayList<IFilm>(size);
+				for (int i=0;i<size;i++) {
+					IFilm film = parseFilmNode(rootMediaDir, (Element)list.item(i));
 					films.add(film);
 				}
+				return films;
 			}
-			return films;
+			return Collections.emptyList();
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
