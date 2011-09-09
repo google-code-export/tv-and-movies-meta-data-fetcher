@@ -13,5 +13,4 @@ public class DefaultExitHandler implements IExitHandler {
 	public void exit(int exitCode) {
 		System.exit(exitCode);
 	}
-
 }

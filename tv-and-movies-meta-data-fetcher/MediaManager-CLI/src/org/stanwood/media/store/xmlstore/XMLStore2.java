@@ -319,7 +319,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private void writeDirectors(Element node, IVideo video) {
 		Document doc = node.getOwnerDocument();
-		Element directorsNode = doc.createElement(Messages.getString("XMLStore2.48")); //$NON-NLS-1$
+		Element directorsNode = doc.createElement("directors"); //$NON-NLS-1$
 		if (video.getDirectors()!=null) {
 			for (String value : video.getDirectors()) {
 				Element director = doc.createElement("director"); //$NON-NLS-1$
@@ -619,7 +619,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private Film parseFilmNode(File rootMediaDir, Element filmNode)
 			throws XMLParserException, NotInStoreException, ParseException,
 			MalformedURLException {
-		Film film = new Film(filmNode.getAttribute("@id")); //$NON-NLS-1$
+		Film film = new Film(filmNode.getAttribute("id")); //$NON-NLS-1$
 		readGenres(film, filmNode);
 		film.setCountry(getStringFromXMLOrNull(filmNode, "country/text()")); //$NON-NLS-1$
 		try {
@@ -1076,7 +1076,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 							changed = true;
 						}
 					}
-					for (Node episodeNode : selectNodeList(seasonNode, Messages.getString("XMLStore2.201"))) { //$NON-NLS-1$
+					for (Node episodeNode : selectNodeList(seasonNode, "specials")) { //$NON-NLS-1$
 						if (!hasFileNodes(episodeNode)) {
 							seasonNode.removeChild(episodeNode);
 							changed = true;
