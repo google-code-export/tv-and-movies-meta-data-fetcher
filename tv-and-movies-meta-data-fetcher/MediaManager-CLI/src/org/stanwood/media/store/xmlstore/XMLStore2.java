@@ -619,7 +619,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private Film parseFilmNode(File rootMediaDir, Element filmNode)
 			throws XMLParserException, NotInStoreException, ParseException,
 			MalformedURLException {
-		Film film = new Film(filmNode.getAttribute("id")); //$NON-NLS-1$
+		Film film = new Film(getAttribute(filmNode,"id")); //$NON-NLS-1$
 		readGenres(film, filmNode);
 		film.setCountry(getStringFromXMLOrNull(filmNode, "country/text()")); //$NON-NLS-1$
 		try {
@@ -628,20 +628,30 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		catch (XMLParserNotFoundException e) {
 			// Ignore does not have a date
 		}
-		film.setFilmUrl(new URL(getStringFromXML(filmNode,"@url"))); //$NON-NLS-1$
+		film.setFilmUrl(new URL(getAttribute(filmNode,"url"))); //$NON-NLS-1$
 		film.setDescription(getStringFromXML(filmNode,"description/long/text()")); //$NON-NLS-1$
 		film.setSummary(getStringFromXML(filmNode,"description/short/text()")); //$NON-NLS-1$
-		film.setImageURL(getURLFromXMLOrNull(filmNode, "@imageUrl")); //$NON-NLS-1$
-		film.setTitle(getStringFromXML(filmNode, "@title")); //$NON-NLS-1$
+		film.setImageURL(new URL(getAttribute(filmNode, "imageUrl"))); //$NON-NLS-1$
+		film.setTitle(getAttribute(filmNode, "title")); //$NON-NLS-1$
 		parseRating(film,filmNode);
 		readActors(filmNode,film);
 		readWriters(film, filmNode);
 		readDirectors(film, filmNode);
-		film.setSourceId(getStringFromXML(filmNode, "@sourceId")); //$NON-NLS-1$
+		film.setSourceId(getAttribute(filmNode, "sourceId")); //$NON-NLS-1$
 		readChapters(film, filmNode);
 		readCertifications(film, filmNode);
 		readFiles(film,filmNode,rootMediaDir);
 		return film;
+	}
+
+	public String getAttribute(Element node,String attributeName) throws XMLParserNotFoundException {
+		if (node.hasAttribute(attributeName)) {
+			return node.getAttribute(attributeName);
+		}
+		else {
+			throw new XMLParserNotFoundException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),attributeName)); //$NON-NLS-1$
+		}
+
 	}
 
 	private void readFiles(IVideo video, Element videoNode,File rootMediaDir) throws XMLParserException {
