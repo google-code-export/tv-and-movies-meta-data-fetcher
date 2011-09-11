@@ -1277,7 +1277,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 				List<IFilm>films = new ArrayList<IFilm>(size);
 				for (int i=0;i<size;i++) {
-					IFilm film = parseFilmNode(rootMediaDir, (Element)list.item(i));
+//					IFilm film = parseFilmNode(rootMediaDir, (Element)list.item(i));
+					IFilm film = new XMLFilm((Element)list.item(i),rootMediaDir);
 					films.add(film);
 				}
 				return films;
@@ -1285,12 +1286,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			return Collections.emptyList();
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
-		} catch (MalformedURLException e) {
-			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_URL"),e); //$NON-NLS-1$
-		} catch (NotInStoreException e) {
-			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
-		} catch (ParseException e) {
-			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
+//		} catch (MalformedURLException e) {
+//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_URL"),e); //$NON-NLS-1$
+//		} catch (NotInStoreException e) {
+//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
+//		} catch (ParseException e) {
+//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
 		}
 	}
 
