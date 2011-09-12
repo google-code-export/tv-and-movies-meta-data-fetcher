@@ -24,7 +24,7 @@ import java.util.SortedSet;
 /**
  * This is used to store episode information
  */
-public class Episode implements IVideo,IVideoActors,IVideoRating {
+public class Episode implements IEpisode {
 
 	private Season season;
 
