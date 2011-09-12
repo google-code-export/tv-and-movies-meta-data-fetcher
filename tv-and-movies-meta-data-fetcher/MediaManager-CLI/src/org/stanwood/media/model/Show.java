@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * This is used to store and retrive information about shows
  */
-public class Show implements IVideoGenre,IVideoExtra {
+public class Show implements IShow {
 	private final String showId;
 
 	private String longSummary;
@@ -53,6 +53,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 *
 	 * @param longSummary The long summary of the show
 	 */
+	@Override
 	public void setLongSummary(String longSummary) {
 		this.longSummary = longSummary;
 	}
@@ -62,6 +63,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 *
 	 * @param shortSummary The short summary iof the show
 	 */
+	@Override
 	public void setShortSummary(String shortSummary) {
 		this.shortSummary = shortSummary;
 	}
@@ -81,6 +83,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 *
 	 * @param name The name of the show
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -89,6 +92,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used too set the URL which points to a summary of the show
 	 * @param showURL The URL which points to a summary of the show
 	 */
+	@Override
 	public void setShowURL(URL showURL) {
 		this.showURL = showURL;
 	}
@@ -97,6 +101,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get a long summary of the show
 	 * @return The long summary of the show
 	 */
+	@Override
 	public String getLongSummary() {
 		return longSummary;
 	}
@@ -105,6 +110,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get a short summary of the show
 	 * @return The short summary of the show
 	 */
+	@Override
 	public String getShortSummary() {
 		return shortSummary;
 	}
@@ -122,6 +128,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get the name/title of the show
 	 * @return The name/title of the show
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -131,6 +138,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * the source it was fetched from.
 	 * @return The show id
 	 */
+	@Override
 	public String getShowId() {
 		return showId;
 	}
@@ -139,6 +147,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get a URL which points too a image of the show
 	 * @return A URL which points too a image of the show
 	 */
+	@Override
 	public URL getImageURL() {
 		return imageURL;
 	}
@@ -147,6 +156,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to set a URL which points too a image of the show
 	 * @param imageURL A URL which points too a image of the show
 	 */
+	@Override
 	public void setImageURL(URL imageURL) {
 		this.imageURL = imageURL;
 	}
@@ -155,6 +165,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get a URL which points to a summary of the show
 	 * @return The URL which points to a summary of the show
 	 */
+	@Override
 	public URL getShowURL() {
 		return showURL;
 	}
@@ -163,6 +174,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to get the source id of the source that was used to retrieve the shows information.
 	 * @return The source id
 	 */
+	@Override
 	public String getSourceId() {
 		return sourceId;
 	}
@@ -171,6 +183,7 @@ public class Show implements IVideoGenre,IVideoExtra {
 	 * Used to set the source id of the source that was used to retrieve the shows information.
 	 * @param sourceId The source id
 	 */
+	@Override
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
