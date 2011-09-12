@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Episode;
@@ -29,6 +30,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.Stream;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -89,7 +91,12 @@ public class XBMCSource extends XMLParser implements ISource {
 		List<XBMCEpisode> episodes = getEpisodeList(season.getShow(), season);
 		for (final XBMCEpisode episode : episodes) {
 			if (episode.getEpisodeNumber() == episodeNum) {
-				StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getUrl())) {
+				StreamProcessor processor = new StreamProcessor() {
+					@Override
+					protected Stream getStream() throws ExtensionException, IOException {
+						return mgr.getStreamToURL(episode.getUrl());
+					}
+
 					@Override
 					public void processContents(String contents) throws SourceException {
 						Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents,String.valueOf(episode.getEpisodeId()));
@@ -136,7 +143,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	private List<XBMCEpisode>getEpisodeList(final Show show,final Season season) throws SourceException, IOException {
 		final List<XBMCEpisode>episodes = new ArrayList<XBMCEpisode>();
 
-		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(season.getURL())) {
+		StreamProcessor processor = new StreamProcessor() {
+			@Override
+			protected Stream getStream() throws ExtensionException, IOException {
+				return mgr.getStreamToURL(season.getURL());
+			}
+
 			@Override
 			public void processContents(String contents) throws SourceException {
 				Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeList(contents,show.getShowURL());
@@ -199,14 +211,21 @@ public class XBMCSource extends XMLParser implements ISource {
 		return parseShow(showId, url,file);
 	}
 
-	private Show parseShow(final String showId, URL url,final File file) throws IOException,
+	private Show parseShow(final String showId, final URL url,final File file) throws IOException,
 			SourceException {
 		final Show show = new Show(showId);
 		show.setShowURL(url);
 		show.setSourceId(getSourceId());
-		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
+		StreamProcessor processor = new StreamProcessor() {
+			@Override
+			protected Stream getStream() throws ExtensionException, IOException {
+				return mgr.getStreamToURL(url);
+			}
+
 			@Override
 			public void processContents(String contents) throws SourceException {
+
+
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
 	    			try {
@@ -290,7 +309,12 @@ public class XBMCSource extends XMLParser implements ISource {
 		film.setFilmUrl(url);
 		film.setSourceId(getSourceId());
 
-		StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
+		StreamProcessor processor = new StreamProcessor() {
+			@Override
+			protected Stream getStream() throws ExtensionException, IOException {
+				return mgr.getStreamToURL(url);
+			}
+
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
@@ -437,7 +461,12 @@ public class XBMCSource extends XMLParser implements ISource {
 		Season specialSeason = getSeason(show, 0);
 		List<XBMCEpisode> episodes = getEpisodeList(show, specialSeason);
 		for (final XBMCEpisode episode : episodes) {
-			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(episode.getUrl())) {
+			StreamProcessor processor = new StreamProcessor() {
+				@Override
+				protected Stream getStream() throws ExtensionException, IOException {
+					return mgr.getStreamToURL(episode.getUrl());
+				}
+
 				@Override
 				public void processContents(String contents) throws SourceException {
 					Document doc = addon.getScraper(Mode.TV_SHOW).getGetEpisodeDetails(contents,String.valueOf(episode.getEpisodeId()));
@@ -521,11 +550,16 @@ public class XBMCSource extends XMLParser implements ISource {
 
 		final List<SearchResult>results = new ArrayList<SearchResult>();
 		try {
-			URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, year));
+			final URL url = new URL(getURLFromScraper(addon.getScraper(mode),name, year));
 			if (mgr.getStreamToURL(url)==null || mgr.getStreamToURL(url).getInputStream()==null) {
 				throw new SourceException(MessageFormat.format(Messages.getString("XBMCSource.UNABLE_GET_STREAM_URL"), url.toExternalForm())); //$NON-NLS-1$
 			}
-			StreamProcessor processor = new StreamProcessor(mgr.getStreamToURL(url)) {
+			StreamProcessor processor = new StreamProcessor() {
+				@Override
+				protected Stream getStream() throws ExtensionException, IOException {
+					return mgr.getStreamToURL(url);
+				}
+
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {

@@ -12,8 +12,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.Stream;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.DOMException;
@@ -219,11 +221,14 @@ public class XBMCScraper extends XBMCExtension {
 	private void resolveUrlNodes(final Document doc,final Element node) throws DOMException, XMLParserException, IOException, SourceException {
 		final String functionName = node.getAttribute("function"); //$NON-NLS-1$
 		try {
-			URL url = new URL(node.getTextContent());
+			final URL url = new URL(node.getTextContent());
 
 			if (!functionName.equals("")) { //$NON-NLS-1$
-				StreamProcessor processor = new StreamProcessor(addonMgr.getStreamToURL(url)) {
-
+				StreamProcessor processor = new StreamProcessor() {
+					@Override
+					protected Stream getStream() throws ExtensionException, IOException {
+						return addonMgr.getStreamToURL(url);
+					}
 
 					@Override
 					public void processContents(String contents) throws SourceException {
