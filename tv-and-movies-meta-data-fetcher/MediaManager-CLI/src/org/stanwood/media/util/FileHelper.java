@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -573,21 +574,39 @@ public class FileHelper {
 	}
 
 	/**
-	 * Used to get a stream to a URL
+	 * Used to get a stream to a URL. If their is a socket timeout exception, then
+	 * this method will wait 5 seconds and try again. It does this 3 times before throwing the
+	 * exception out if the method
 	 * @param url The URL of the stream
 	 * @return The stream
 	 * @throws IOException Thrown if their are any problems
 	 */
 	public static Stream getInputStream(URL url) throws IOException {
-		WebFileInputStream is = new WebFileInputStream(url);
-		String MIME = is.getMIMEType();
-		if (MIME.equals("application/zip")) { //$NON-NLS-1$
-			return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm(),url);
+		SocketTimeoutException e = null;
+		for (int tryCount=0;tryCount<3;tryCount++) {
+			try {
+				WebFileInputStream is = new WebFileInputStream(url);
+				String MIME = is.getMIMEType();
+				if (MIME.equals("application/zip")) { //$NON-NLS-1$
+					return new Stream(new ZipInputStream(is),MIME,is.getCharset(),url.toExternalForm(),url);
+				}
+				else {
+					return new Stream(is,MIME,is.getCharset(),url.toExternalForm(),url);
+				}
+			}
+			catch (SocketTimeoutException e1) {
+				log.warn(MessageFormat.format("Timed out fetching URL ''{0}'', going to retry..",url.toExternalForm()));
+				if (e==null) {
+					e = e1;
+				}
+				try {
+					Thread.sleep(5000); // Sleep for 3 seconds
+				} catch (InterruptedException e2) {
+					// Ignore
+				}
+			}
 		}
-		else {
-			return new Stream(is,MIME,is.getCharset(),url.toExternalForm(),url);
-		}
-
+		throw e;
 	}
 
 	/**

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -68,7 +69,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 		film.setFilmUrl(url);
 		film.setSourceId(getSourceId());
 
-		StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") { //$NON-NLS-1$
+		StreamProcessor processor = new StreamProcessor("text/xml") { //$NON-NLS-1$
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
@@ -100,6 +101,11 @@ public class TagChimpSource extends XMLParser implements ISource {
 				} catch (ParseException e) {
 					throw new SourceException(Messages.getString("TagChimpSource.UNABLE_PARSE_FILM_DETAILS"),e); //$NON-NLS-1$
 				}
+			}
+
+			@Override
+			protected Stream getStream() throws ExtensionException, IOException {
+				return getStreamToURL(url);
 			}
 
 		};
@@ -176,8 +182,13 @@ public class TagChimpSource extends XMLParser implements ISource {
 		final List<SearchResult>lockedResults = new ArrayList<SearchResult>();
 		final List<SearchResult>unlockedResults = new ArrayList<SearchResult>();
 		try {
-			URL url = getSearchUrl(name);
-			StreamProcessor processor = new StreamProcessor(getStreamToURL(url),"text/xml") { //$NON-NLS-1$
+			final URL url = getSearchUrl(name);
+			StreamProcessor processor = new StreamProcessor("text/xml") { //$NON-NLS-1$
+				@Override
+				protected Stream getStream() throws ExtensionException, IOException {
+					return getStreamToURL(url);
+				}
+
 				@Override
 				public void processContents(String contents) throws SourceException {
 					try {

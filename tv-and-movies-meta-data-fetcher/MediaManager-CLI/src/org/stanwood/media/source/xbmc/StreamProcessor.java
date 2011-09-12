@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.net.SocketTimeoutException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.Stream;
 
@@ -20,6 +24,8 @@ import org.stanwood.media.util.Stream;
  * called with the contents of each file within the zip stream.
  */
 public abstract class StreamProcessor {
+
+	private final static Log log = LogFactory.getLog(StreamProcessor.class);
 
 	private Stream stream = null;
 	private String forcedContentType = null;
@@ -52,27 +58,46 @@ public abstract class StreamProcessor {
 	    HTML_ENTITIES.put("&euro;","\u20a0"); //$NON-NLS-1$ //$NON-NLS-2$
 	  }
 
-	/**
-	 * Used to create a instance of the class.
-	 * @param stream The stream to be processed.
-	 * @param forcedContentType Used to force the stream content type and ignore what the
-	 *                          web site reports.
-	 */
-	public StreamProcessor(Stream stream,String forcedContentType) {
-		if (stream==null || stream.getInputStream()==null) {
-			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
-		}
-		this.stream = stream;
+//	/**
+//	 * Used to create a instance of the class.
+//	 * @param stream The stream to be processed.
+//	 * @param forcedContentType Used to force the stream content type and ignore what the
+//	 *                          web site reports.
+//	 */
+//	public StreamProcessor(Stream stream,String forcedContentType) {
+//		if (stream==null || stream.getInputStream()==null) {
+//			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
+//		}
+//		this.stream = stream;
+//		this.forcedContentType = forcedContentType;
+//	}
+//
+//	/**
+//	 * Used to create a instance of the class.
+//	 * @param stream The stream to be processed.
+//	 */
+//	public StreamProcessor(Stream stream) {
+//		this(stream,null);
+//	}
+
+	public StreamProcessor(String forcedContentType) {
 		this.forcedContentType = forcedContentType;
 	}
 
-	/**
-	 * Used to create a instance of the class.
-	 * @param stream The stream to be processed.
-	 */
-	public StreamProcessor(Stream stream) {
-		this(stream,null);
+	public StreamProcessor() {
+		this(null);
 	}
+
+	abstract protected Stream getStream() throws ExtensionException, IOException;
+
+	private Stream openStream() throws ExtensionException, IOException {
+		Stream stream = getStream();
+		if (stream==null) {
+			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
+		}
+		return stream;
+	}
+
 
 	/**
 	 * Called to process the stream. This causes the method {@link #processContents(String)} to be
@@ -80,7 +105,33 @@ public abstract class StreamProcessor {
 	 * @throws SourceException Thrown in their are any problems
 	 */
 	public void handleStream() throws SourceException {
+		SocketTimeoutException e = null;
+		for (int tryCount=0;tryCount<3;tryCount++) {
+			try {
+				processStream();
+				return;
+			}
+			catch (SocketTimeoutException e1) {
+				log.warn("Timed out fetching stream, going to retry...");
+				if (e==null) {
+					e = e1;
+				}
+				try {
+					Thread.sleep(5000); // Sleep for 3 seconds
+				} catch (InterruptedException e2) {
+					// Ignore
+				}
+			}
+		}
+		if (e!=null) {
+			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+		}
+	}
+
+	private void processStream() throws SourceException, SocketTimeoutException {
 		try {
+			this.stream = openStream();
+
 			String contentType = stream.getMineType();
 			if (this.forcedContentType!=null) {
 				contentType = this.forcedContentType;
@@ -148,10 +199,13 @@ public abstract class StreamProcessor {
 				}
 			}
 		}
+		catch (SocketTimeoutException e) {
+			throw e;
+		}
 		catch (IOException e) {
 			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
 		}
-		catch (SourceException e) {
+		catch (ExtensionException e) {
 			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
 		}
 		finally {
