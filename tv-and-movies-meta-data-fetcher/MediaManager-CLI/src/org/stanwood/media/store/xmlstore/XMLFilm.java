@@ -20,222 +20,41 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.SortedSet;
 
-import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.IFilm;
-import org.stanwood.media.model.Rating;
-import org.stanwood.media.model.VideoFile;
-import org.stanwood.media.model.VideoFileSet;
-import org.stanwood.media.store.StoreException;
-import org.stanwood.media.xml.Messages;
-import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.stanwood.media.xml.XMLParserNotFoundException;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * This is a Film object that talks directory to the DOM of the XML store
  */
-public class XMLFilm extends XMLParser implements IFilm {
+public class XMLFilm extends XMLVideo implements IFilm {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private Element filmNode;
 	private Document doc;
-	private File rootMediaDir;
 
+	/**
+	 * The constructor
+	 * @param node The node with video data
+	 * @param rootMediaDir The root media dir
+	 */
 	public XMLFilm(Element node,File rootMediaDir) {
+		super(node,rootMediaDir);
 		this.filmNode = node;
 		this.doc = filmNode.getOwnerDocument();
-		this.rootMediaDir = rootMediaDir;
-	}
-	/** {@inheritDoc} */
-	@Override
-	public String getTitle() {
-		try {
-			return getAttribute(filmNode, "title"); //$NON-NLS-1$
-		} catch (XMLParserNotFoundException e) {
-
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setTitle(String title) {
-		filmNode.setAttribute("title", title); //$NON-NLS-1$
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getDirectors() {
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setDirectors(List<String> directors) {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getWriters() {
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setWriters(List<String> writers) {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getSummary() {
-		try {
-
-			return getStringFromXML(filmNode, "description/short/text()"); //$NON-NLS-1$
-		} catch (XMLParserException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setSummary(String summary) {
-		Element el = getElement(filmNode, "description"); //$NON-NLS-1$
-		el = getElement(filmNode, "short"); //$NON-NLS-1$
-		el.setTextContent(summary);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SortedSet<VideoFile> getFiles() {
-		try {
-			SortedSet<VideoFile> files = new VideoFileSet();
-
-			for (Node node : selectNodeList(filmNode, "file")) { //$NON-NLS-1$
-				String location = ((Element)node).getAttribute("location"); //$NON-NLS-1$
-				String originalLocation = ((Element)node).getAttribute("orginalLocation"); //$NON-NLS-1$
-				File orgLocFile = null;
-				if (!originalLocation.equals("")) { //$NON-NLS-1$
-					orgLocFile = new File(rootMediaDir,originalLocation);
-				}
-				String strPart = ((Element)node).getAttribute("part"); //$NON-NLS-1$
-				Integer part = null;
-				if (!strPart.equals("")) { //$NON-NLS-1$
-					part = Integer.parseInt(strPart);
-				}
-				files.add(new VideoFile(new File(rootMediaDir,location),orgLocFile,part));
-			}
-			return files;
-		}
-		catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-	}
-	/** {@inheritDoc} */
-	@Override
-	public void setFiles(SortedSet<VideoFile> videoFiles) {
-		try {
-			for (VideoFile filename : videoFiles) {
-				appendFile(doc, filmNode, filename,rootMediaDir);
-			}
-			for (Node n : selectNodeList(filmNode, "file")) { //$NON-NLS-1$
-				if (new File(rootMediaDir,getAttribute((Element)n, "location")).exists()) { //$NON-NLS-1$
-					n.getParentNode().removeChild(n);
-				}
-			}
-		}
-		catch (StoreException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		} catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		} catch (DOMException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-	}
-
-	private String makePathRelativeToMediaDir(File episodeFile, File rootMediaDir) {
-		String path = rootMediaDir.getAbsolutePath();
-		int len = path.length();
-		if (episodeFile.getAbsolutePath().startsWith(path)) {
-			return episodeFile.getAbsolutePath().substring(len+1);
-		}
-		else {
-			return episodeFile.getAbsolutePath();
-		}
-	}
-
-	private void appendFile(Document doc, Node parent, VideoFile file,File rootMediaDir) throws StoreException {
-		if (file!=null) {
-			try {
-				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir))+"]"); //$NON-NLS-1$ //$NON-NLS-2$
-				if (fileNode==null) {
-					fileNode = doc.createElement("file"); //$NON-NLS-1$
-					parent.appendChild(fileNode);
-				}
-
-				fileNode.setAttribute("location", makePathRelativeToMediaDir(file.getLocation(),rootMediaDir)); //$NON-NLS-1$
-				if (file.getPart()!=null) {
-					fileNode.setAttribute("part", String.valueOf(file.getPart())); //$NON-NLS-1$
-				}
-			} catch (XMLParserException e) {
-				throw new StoreException(Messages.getString("XMLStore2.UNABLE_READ_XML"),e); //$NON-NLS-1$
-			}
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Actor> getActors() {
-		try {
-			List<Actor> actors = new ArrayList<Actor>();
-			for (Node n : selectNodeList(filmNode, "actors/actor")) { //$NON-NLS-1$
-				Element e  = (Element) n;
-				actors.add(new Actor(e.getAttribute("name"),e.getAttribute("role"))); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			return actors;
-		}
-		catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-	}
-	/** {@inheritDoc} */
-	@Override
-	public void setActors(List<Actor> actors) {
-		try {
-			Element actorsEl = getElement(filmNode,"actors"); //$NON-NLS-1$
-			for (Node n : selectNodeList(actorsEl, "actor")) { //$NON-NLS-1$
-				n.getParentNode().removeChild(n);
-			}
-			if (actors!=null) {
-				for (Actor actor : actors) {
-					Element actorNode = doc.createElement("actor"); //$NON-NLS-1$
-					actorNode.setAttribute("name", actor.getName()); //$NON-NLS-1$
-					actorNode.setAttribute("role", actor.getRole()); //$NON-NLS-1$
-					actorsEl.appendChild(actorNode);
-				}
-			}
-		}
-		catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -319,35 +138,6 @@ public class XMLFilm extends XMLParser implements IFilm {
 
 	/** {@inheritDoc} */
 	@Override
-	public Rating getRating() {
-		try {
-			int numberOfVotes = getIntegerFromXML(filmNode, "rating/@numberOfVotes"); //$NON-NLS-1$
-			float rating = getFloatFromXML(filmNode, "rating/@value"); //$NON-NLS-1$
-
-			return new Rating(rating,numberOfVotes);
-		}
-		catch (XMLParserNotFoundException e) {
-			// Ignore, not found
-		} catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setRating(Rating rating) {
-		deleteNode(filmNode, "rating"); //$NON-NLS-1$
-		if (rating!=null) {
-			Element ratingElement = getElement(filmNode,"rating"); //$NON-NLS-1$
-			ratingElement.setAttribute("value", String.valueOf(rating.getRating())); //$NON-NLS-1$
-			ratingElement.setAttribute("numberOfVotes", String.valueOf(rating.getNumberOfVotes())); //$NON-NLS-1$
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String getId() {
 		try {
 
@@ -381,23 +171,19 @@ public class XMLFilm extends XMLParser implements IFilm {
 	/** {@inheritDoc} */
 	@Override
 	public void setSourceId(String sourceId) {
-
 		filmNode.setAttribute("sourceId", sourceId); //$NON-NLS-1$
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void setFilmUrl(URL url) {
 		filmNode.setAttribute("url", url.toExternalForm()); //$NON-NLS-1$
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public URL getFilmUrl() {
 		try {
-
 			return new URL(getAttribute(filmNode, "url")); //$NON-NLS-1$
 		} catch (XMLParserNotFoundException e) {
 			throw new RuntimeException(e.getMessage(),e);
@@ -571,38 +357,5 @@ public class XMLFilm extends XMLParser implements IFilm {
 			deleteNode(filmNode, "country"); //$NON-NLS-1$
 		}
 	}
-
-	private String getAttribute(Element node, String attributeName) throws XMLParserNotFoundException {
-		if (node.hasAttribute(attributeName)) {
-			return node.getAttribute(attributeName);
-		} else {
-			throw new XMLParserNotFoundException(MessageFormat.format(
-					Messages.getString("XMLParser.UNABLE_FIND_PATH"), attributeName)); //$NON-NLS-1$
-		}
-	}
-
-	private void deleteNode(Element parent, String name) {
-		NodeList children = parent.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			if (children.item(i).getNodeName().equals(name)) {
-				children.item(i).getParentNode().removeChild(children.item(i));
-				return;
-			}
-		}
-	}
-
-	private Element getElement(Element parent, String name) {
-		NodeList children = parent.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			if (children.item(i).getNodeName().equals(name)) {
-				return (Element) children.item(i);
-			}
-		}
-
-		Element child = doc.createElement(name);
-		parent.appendChild(child);
-		return child;
-	}
-
 
 }

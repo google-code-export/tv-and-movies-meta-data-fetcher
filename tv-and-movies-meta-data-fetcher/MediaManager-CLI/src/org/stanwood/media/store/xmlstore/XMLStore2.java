@@ -651,16 +651,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return film;
 	}
 
-	public String getAttribute(Element node,String attributeName) throws XMLParserNotFoundException {
-		if (node.hasAttribute(attributeName)) {
-			return node.getAttribute(attributeName);
-		}
-		else {
-			throw new XMLParserNotFoundException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),attributeName)); //$NON-NLS-1$
-		}
-
-	}
-
 	private void readFiles(IVideo video, Element videoNode,File rootMediaDir) throws XMLParserException {
 		SortedSet<VideoFile> files = new VideoFileSet();
 

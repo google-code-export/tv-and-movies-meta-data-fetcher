@@ -566,4 +566,38 @@ public class XMLParser {
 			return "'"+s+"'"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
+
+	protected String getAttribute(Element node, String attributeName) throws XMLParserNotFoundException {
+		if (node.hasAttribute(attributeName)) {
+			return node.getAttribute(attributeName);
+		} else {
+			throw new XMLParserNotFoundException(MessageFormat.format(
+					Messages.getString("XMLParser.UNABLE_FIND_PATH"), attributeName)); //$NON-NLS-1$
+		}
+	}
+
+	protected void deleteNode(Element parent, String name) {
+		NodeList children = parent.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			if (children.item(i).getNodeName().equals(name)) {
+				children.item(i).getParentNode().removeChild(children.item(i));
+				return;
+			}
+		}
+	}
+
+	protected Element getElement(Element parent, String name) {
+		NodeList children = parent.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			if (children.item(i).getNodeName().equals(name)) {
+				return (Element) children.item(i);
+			}
+		}
+
+		Element child = parent.getOwnerDocument().createElement(name);
+		parent.appendChild(child);
+		return child;
+	}
+
+
 }
