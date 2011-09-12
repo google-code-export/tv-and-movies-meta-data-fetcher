@@ -49,12 +49,6 @@ public interface IEpisode extends IVideo, IVideoActors, IVideoRating {
 	public void setDate(Date airDate);
 
 	/**
-	 * If this is a special, then true should be passed to this method to flag it as such.
-	 * @param special True if the episode is a special, otherwise false.
-	 */
-	public void setSpecial(boolean special);
-
-	/**
 	 * Used to find out if this is a special
 	 * @return True if special, otherwise false
 	 */
