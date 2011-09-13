@@ -1246,11 +1246,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				for (int i=0;i<specialSize;i++) {
 					Element episodeNode = (Element) specialList.item(i);
 
-					Element seasonNode = (Element)episodeNode.getParentNode();
-					Element showNode = (Element)seasonNode.getParentNode();
-					IShow show = new XMLShow(showNode);
-					ISeason season = new XMLSeason(show,seasonNode);
-					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
+//					Element seasonNode = (Element)episodeNode.getParentNode();
+//					Element showNode = (Element)seasonNode.getParentNode();
+//					IShow show = new XMLShow(showNode);
+//					ISeason season = new XMLSeason(show,seasonNode);
+//					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
 				}
 
 				return episodes;
