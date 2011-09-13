@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
-import org.stanwood.media.model.Season;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCAddonManager;
@@ -32,14 +33,14 @@ public class FakeSource extends XBMCSource {
 
 	/** {@inheritDoc} */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum,File file)
+	public IEpisode getEpisode(ISeason season, int episodeNum,File file)
 			throws SourceException, MalformedURLException, IOException {
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
+	public ISeason getSeason(IShow show, int seasonNum) throws SourceException,
 			IOException {
 		return null;
 	}
@@ -60,7 +61,7 @@ public class FakeSource extends XBMCSource {
 
 	/** {@inheritDoc} */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber,File file)
+	public IEpisode getSpecial(ISeason season, int specialNumber,File file)
 			throws SourceException, MalformedURLException, IOException {
 		return null;
 	}

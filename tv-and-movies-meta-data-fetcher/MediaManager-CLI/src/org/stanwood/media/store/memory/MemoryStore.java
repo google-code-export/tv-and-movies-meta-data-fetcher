@@ -27,11 +27,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
@@ -54,7 +55,7 @@ public class MemoryStore implements IStore {
 	 * @param episode The episode to write to the store
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) {
 
 	}
 
@@ -65,8 +66,8 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
-		Show show = season.getShow();
+	public void cacheSeason(File rootMediaDir,File episodeFile,ISeason season) throws StoreException {
+		IShow show = season.getShow();
 		for (CacheShow cs : shows) {
 			if (cs.equals(show)) {
 				if (cs.getSeason(season.getSeasonNumber())!=null) {
@@ -84,7 +85,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
+	public void cacheShow(File rootMediaDir,File episodeFile,IShow show) throws StoreException {
 		Iterator<CacheShow> it = shows.iterator();
 		while (it.hasNext()) {
 			CacheShow foundShow = it.next();
@@ -107,7 +108,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum)
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum)
 			throws StoreException, MalformedURLException, IOException {
 		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
@@ -131,7 +132,7 @@ public class MemoryStore implements IStore {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber)
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {
 		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
@@ -151,7 +152,7 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the source
 	 */
 	@Override
-	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException,
+	public ISeason getSeason(File rootMediaDir,File episodeFile,IShow show, int seasonNum) throws StoreException,
 			IOException {
 		if (show instanceof CacheShow) {
 			((CacheShow)show).getSeason(seasonNum);
@@ -270,7 +271,7 @@ public class MemoryStore implements IStore {
 
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
-				for (Episode episode : season.getEpisodes()) {
+				for (IEpisode episode : season.getEpisodes()) {
 					Iterator<VideoFile> it  = episode.getFiles().iterator();
 					while (it.hasNext()) {
 						VideoFile f = it.next();
@@ -279,7 +280,7 @@ public class MemoryStore implements IStore {
 						}
 					}
 				}
-				for (Episode special : season.getSpecials()) {
+				for (IEpisode special : season.getSpecials()) {
 					Iterator<VideoFile> it  = special.getFiles().iterator();
 					while (it.hasNext()) {
 						VideoFile f = it.next();
@@ -294,11 +295,11 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Episode getEpisode(MediaDirectory dir, File file)
+	public IEpisode getEpisode(MediaDirectory dir, File file)
 			throws StoreException {
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
-				for (Episode episode : season.getEpisodes()) {
+				for (IEpisode episode : season.getEpisodes()) {
 					Iterator<VideoFile> it  = episode.getFiles().iterator();
 					while (it.hasNext()) {
 						VideoFile f = it.next();
@@ -307,7 +308,7 @@ public class MemoryStore implements IStore {
 						}
 					}
 				}
-				for (Episode special : season.getSpecials()) {
+				for (IEpisode special : season.getSpecials()) {
 					Iterator<VideoFile> it  = special.getFiles().iterator();
 					while (it.hasNext()) {
 						VideoFile f = it.next();
@@ -333,14 +334,13 @@ public class MemoryStore implements IStore {
 	public void init(File nativeDir) throws StoreException {
 	}
 
-	//TODO only return the episodes in the dirConfig
 	/** {@inheritDoc} */
 	@Override
-	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) {
-		ArrayList<Episode>episodes = new ArrayList<Episode>();
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) {
+		ArrayList<IEpisode>episodes = new ArrayList<IEpisode>();
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
-				for (Episode episode : season.getEpisodes()) {
+				for (IEpisode episode : season.getEpisodes()) {
 					episodes.add(episode);
 				}
 			}
@@ -348,7 +348,6 @@ public class MemoryStore implements IStore {
 		return episodes;
 	}
 
-	//TODO only return the films in the dirConfig
 	/** {@inheritDoc} */
 	@Override
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) {

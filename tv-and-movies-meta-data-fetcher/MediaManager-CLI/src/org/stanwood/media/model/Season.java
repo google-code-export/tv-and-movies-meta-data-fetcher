@@ -26,14 +26,14 @@ public class Season implements ISeason {
 	private int seasonNumber;
 
 	private URL url;
-	private Show show;
+	private IShow show;
 
 	/**
 	 * The constructor used to create a instance of the season.
 	 * @param show The show the season belongs too
 	 * @param seasonNumber The season number
 	 */
-	public Season(Show show,int seasonNumber) {
+	public Season(IShow show,int seasonNumber) {
 		this.seasonNumber = seasonNumber;
 		this.show = show;
 	}
@@ -70,7 +70,7 @@ public class Season implements ISeason {
 	 * @return The show the season belongs too
 	 */
 	@Override
-	public Show getShow() {
+	public IShow getShow() {
 		return show;
 	}
 

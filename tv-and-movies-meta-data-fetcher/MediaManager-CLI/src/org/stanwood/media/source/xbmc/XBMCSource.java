@@ -18,8 +18,10 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
-import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoGenre;
@@ -81,13 +83,13 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * @throws IOException Throw if their is a IO related problem
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum,File file)
+	public IEpisode getEpisode(ISeason season, int episodeNum,File file)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
 		return parseEpisode(season,episodeNum);
 	}
 
-	private Episode parseEpisode(Season season, int episodeNum) throws SourceException, IOException {
+	private IEpisode parseEpisode(ISeason season, int episodeNum) throws SourceException, IOException {
 		List<XBMCEpisode> episodes = getEpisodeList(season.getShow(), season);
 		for (final XBMCEpisode episode : episodes) {
 			if (episode.getEpisodeNumber() == episodeNum) {
@@ -120,14 +122,14 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) throws SourceException,
+	public ISeason getSeason(IShow show, int seasonNum) throws SourceException,
 			IOException {
 		checkMode(Mode.TV_SHOW);
 		return parseSeason(show,seasonNum);
 	}
 
-	private Season parseSeason(final Show show, final int seasonNum) throws SourceException, IOException {
-		Season season = new Season(show,seasonNum);
+	private ISeason parseSeason(final IShow show, final int seasonNum) throws SourceException, IOException {
+		ISeason season = new Season(show,seasonNum);
 		try {
 			URL url = new URL(show.getExtraInfo().get("episodeGuideURL")); //$NON-NLS-1$
 			season.setURL(url);
@@ -140,7 +142,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
-	private List<XBMCEpisode>getEpisodeList(final Show show,final Season season) throws SourceException, IOException {
+	private List<XBMCEpisode>getEpisodeList(final IShow show,final ISeason season) throws SourceException, IOException {
 		final List<XBMCEpisode>episodes = new ArrayList<XBMCEpisode>();
 
 		StreamProcessor processor = new StreamProcessor() {
@@ -158,7 +160,7 @@ public class XBMCSource extends XMLParser implements ISource {
     					for (Node episodeNode : episodesList) {
     						try {
 	    						if (getIntegerFromXML(episodeNode, "season/text()")==season.getSeasonNumber()) { //$NON-NLS-1$
-	    							XBMCEpisode ep = new XBMCEpisode(getIntegerFromXML(episodeNode, "epnum/text()"), season); //$NON-NLS-1$
+	    							XBMCEpisode ep = new XBMCEpisode(getIntegerFromXML(episodeNode, "epnum/text()"), season,false); //$NON-NLS-1$
 		    						ep.setTitle(getStringFromXML(episodeNode, "title/text()")); //$NON-NLS-1$
 		    						ep.setUrl(new URL(getStringFromXML(episodeNode, "url/text()"))); //$NON-NLS-1$
 		    						ep.setEpisodeId(getStringFromXML(episodeNode, "id/text()")); //$NON-NLS-1$
@@ -451,14 +453,14 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber,File file)
+	public IEpisode getSpecial(ISeason season, int specialNumber,File file)
 			throws SourceException, MalformedURLException, IOException {
 		checkMode(Mode.TV_SHOW);
 		return parseSpecial(season,specialNumber);
 	}
 
-	private List<XBMCEpisode> getSpecialList(Show show) throws SourceException, IOException {
-		Season specialSeason = getSeason(show, 0);
+	private List<XBMCEpisode> getSpecialList(IShow show) throws SourceException, IOException {
+		ISeason specialSeason = getSeason(show, 0);
 		List<XBMCEpisode> episodes = getEpisodeList(show, specialSeason);
 		for (final XBMCEpisode episode : episodes) {
 			StreamProcessor processor = new StreamProcessor() {
@@ -479,7 +481,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		return episodes;
 	}
 
-	private Episode parseSpecial(Season season, int specialNumber) throws SourceException, IOException {
+	private IEpisode parseSpecial(ISeason season, int specialNumber) throws SourceException, IOException {
 		List<XBMCEpisode> episodes = getSpecialList(season.getShow());
 		for (final XBMCEpisode episode : episodes) {
 			if (episode.getDisplayEpisode() == specialNumber && episode.getDisplaySeason() == season.getSeasonNumber()) {
@@ -490,8 +492,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		return null;
 	}
 
-	private void parseEpisode(final XBMCEpisode episode,
-			Document doc) throws SourceException {
+	private void parseEpisode(final XBMCEpisode episode,Document doc) throws SourceException {
 		try {
 			episode.setSummary(getStringFromXML(doc, "details/plot/text()")); //$NON-NLS-1$
 			parseWriters(episode, doc);

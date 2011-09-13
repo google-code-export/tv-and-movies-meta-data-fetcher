@@ -4,10 +4,10 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.setup.MediaDirConfig;
 
 /**
@@ -68,7 +68,7 @@ public class PatternMatcher {
 		return newName;
 	}
 
-	private String processTVShowName(String newName,Show show,Season season,Episode episode,String ext) {
+	private String processTVShowName(String newName,IShow show,ISeason season,IEpisode episode,String ext) {
 		newName = newName.replaceAll(Token.ID.getFull(), normalizeText(show.getShowId()));
 		newName = newName.replaceAll(Token.SEASON.getFull(), String.valueOf(season.getSeasonNumber()));
 		String episodeNum = String.valueOf(episode.getEpisodeNumber());
@@ -102,12 +102,12 @@ public class PatternMatcher {
 	 * @return The filename
 	 * @throws PatternException thrown if their is a problem
 	 */
-	public String getNewTVShowName(MediaDirConfig dirConfig,String pattern,final Episode episode,final String ext) throws PatternException {
+	public String getNewTVShowName(MediaDirConfig dirConfig,String pattern,final IEpisode episode,final String ext) throws PatternException {
 		PatternProcessor processor = new PatternProcessor() {
 			@Override
 			protected String processName(String name) {
-				Season season = episode.getSeason();
-				Show show = season.getShow();
+				ISeason season = episode.getSeason();
+				IShow show = season.getShow();
 				String value = processTVShowName(name,show,season,episode,ext);
 				return value;
 			}

@@ -38,12 +38,12 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.FileNameParser;
 import org.stanwood.media.actions.rename.ParsedFileName;
 import org.stanwood.media.actions.rename.Token;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
@@ -290,7 +290,7 @@ public class ActionPerformer implements IActionEventHandler {
 				}
 			}
 			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
-				Episode episode = getTVEpisode(dir, file);
+				IEpisode episode = getTVEpisode(dir, file);
 				if (episode!=null) {
 					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);
@@ -390,11 +390,11 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	private Episode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
+	private IEpisode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
 		boolean refresh = false;
 		try {
 			for (IStore store : dir.getStores()) {
-				Episode ep = store.getEpisode(dir,file);
+				IEpisode ep = store.getEpisode(dir,file);
 				if (ep!=null) {
 					return ep;
 				}
@@ -405,7 +405,7 @@ public class ActionPerformer implements IActionEventHandler {
 				return null;
 			}
 
-			Show show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
+			IShow show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
 			if (show == null) {
 				log.fatal(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_FIND_SHOW_DETAILS_FOR_FILE"),file)); //$NON-NLS-1$
 				return null;
@@ -416,11 +416,11 @@ public class ActionPerformer implements IActionEventHandler {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_WORKOUT_SEASON_AND_EPISODE_NUMBER_FOR_FILE"),file.getName())); //$NON-NLS-1$
 			}
 			else {
-				Season season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
+				ISeason season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
 				if (season == null) {
 					log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABVLE_TO_FIMD_SEASON"),file)); //$NON-NLS-1$
 				} else {
-					Episode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
+					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
 					if (episode==null) {
 						log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_EPISODE_NUMBER"),file)); //$NON-NLS-1$
 						return null;

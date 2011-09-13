@@ -1,7 +1,7 @@
 package org.stanwood.media.source.xbmc;
 
 import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Season;
+import org.stanwood.media.model.ISeason;
 
 /**
  * The episode type been returned by XBMC addons
@@ -11,15 +11,16 @@ public class XBMCEpisode extends Episode {
 	private Integer displaySeason;
 	private Integer displayEpisode;
 	private boolean special = false;
-	private Season season;
+	private ISeason season;
 
 	/**
 	 * The constructor
 	 * @param episodeNumber The episode number
 	 * @param season The season the episode belongs to
+	 * @param special Is this a special episode
 	 */
-	public XBMCEpisode(int episodeNumber, Season season) {
-		super(episodeNumber, season);
+	public XBMCEpisode(int episodeNumber, ISeason season,boolean special) {
+		super(episodeNumber, season,special);
 		setSeason(season);
 	}
 
@@ -61,24 +62,26 @@ public class XBMCEpisode extends Episode {
 		return special;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setSpecial(boolean special) {
-		this.special = special;
-	}
-
 	/**
 	 * Used to set the season of the episode
 	 * @param season the season of the episode
 	 */
-	public void setSeason(Season season) {
+	public void setSeason(ISeason season) {
 		this.season = season;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Season getSeason() {
+	public ISeason getSeason() {
 		return season;
+	}
+
+	/**
+	 * Used to mark this episode as a special
+	 * @param special if true, then mark this episode as special
+	 */
+	public void setSpecial(boolean special) {
+		this.special = special;
 	}
 
 

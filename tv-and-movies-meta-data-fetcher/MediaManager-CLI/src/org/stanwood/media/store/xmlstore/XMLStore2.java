@@ -31,7 +31,10 @@ import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoExtra;
@@ -84,9 +87,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile, Episode episode) throws StoreException {
-		Season season = episode.getSeason();
-		Show show = season.getShow();
+	public void cacheEpisode(File rootMediaDir, File episodeFile, IEpisode episode) throws StoreException {
+		ISeason season = episode.getSeason();
+		IShow show = season.getShow();
 
 		Document doc = getCache(rootMediaDir);
 		Element seasonNode = getSeasonNode(rootMediaDir,season,doc);
@@ -97,8 +100,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void cacheEpisode(String nodeName,File rootMediaDir,File episodeFile,Document doc, Show show, Element seasonNode,
-			Episode episode) throws StoreException {
+	private void cacheEpisode(String nodeName,File rootMediaDir,File episodeFile,Document doc, IShow show, Element seasonNode,
+			IEpisode episode) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache episode"); //$NON-NLS-1$
 		}
@@ -121,7 +124,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void writeEpisodeCommonData(Document doc, Episode episode, Node node,File episodeFile,File rootMediaDir)
+	private void writeEpisodeCommonData(Document doc, IEpisode episode, Node node,File episodeFile,File rootMediaDir)
 	throws StoreException {
 		try {
 			((Element) node).setAttribute("title", episode.getTitle()); //$NON-NLS-1$
@@ -429,7 +432,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private Element getSeasonNode(File rootMediaDir, Season season,Document doc) throws StoreException {
+	private Element getSeasonNode(File rootMediaDir, ISeason season,Document doc) throws StoreException {
 
 		Element showNode = getShowNode(doc, season.getShow());
 		Node node = getSeasonNode(season, showNode, doc);
@@ -448,7 +451,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheSeason(File rootMediaDir, File episodeFile, Season season) throws StoreException {
+	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache season " + season.getSeasonNumber()); //$NON-NLS-1$
 		}
@@ -461,7 +464,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 
-	private Element createSeasonNode(Season season, Element showNode, Document doc) {
+	private Element createSeasonNode(ISeason season, Element showNode, Document doc) {
 		Element seasonEl = doc.createElement("season"); //$NON-NLS-1$
 		seasonEl.setAttribute("number", String.valueOf(season.getSeasonNumber())); //$NON-NLS-1$
 		showNode.appendChild(seasonEl);
@@ -469,7 +472,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return seasonEl;
 	}
 
-	private Node getSeasonNode(Season season, Element showNode, Document doc) throws StoreException  {
+	private Node getSeasonNode(ISeason season, Element showNode, Document doc) throws StoreException  {
 
 		Node node;
 		try {
@@ -489,7 +492,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheShow(File rootMediaDir, File episodeFile, Show show) throws StoreException {
+	public void cacheShow(File rootMediaDir, File episodeFile, IShow show) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache show " + show.getShowId() + ":" + show.getSourceId()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -508,7 +511,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		return node;
 	}
 
-	private Element getShowNode(Document doc, Show show) throws StoreException {
+	private Element getShowNode(Document doc, IShow show) throws StoreException {
 		try {
 			Node storeNode = getStoreNode(doc);
 			Node node = selectSingleNode(storeNode,"show[@id='"+show.getShowId()+"']"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -561,13 +564,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Episode getEpisode(File rootMediaDir, File episodeFile, Season season, int episodeNum)
+	public IEpisode getEpisode(File rootMediaDir, File episodeFile, ISeason season, int episodeNum)
 			throws StoreException, MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
 		}
-		Episode episode = null;
+		IEpisode episode = null;
 		try {
 			episode = getEpisodeFromCache(episodeNum, season, doc,rootMediaDir);
 			return episode;
@@ -696,13 +699,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Season getSeason(File rootMediaDir, File episodeFile, Show show, int seasonNum) throws StoreException,
+	public ISeason getSeason(File rootMediaDir, File episodeFile, IShow show, int seasonNum) throws StoreException,
 	MalformedURLException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
 		}
-		Season season = null;
+		ISeason season = null;
 		try {
 			season = getSeasonFromCache(seasonNum, show, doc);
 			return season;
@@ -711,19 +714,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private Episode getEpisodeFromCache(int episodeNum, Season season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
+	private IEpisode getEpisodeFromCache(int episodeNum, ISeason season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
-			Show show = season.getShow();
+			IShow show = season.getShow();
 			Node episodeNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					"season[@number="+ season.getSeasonNumber() + "]/episode[@number="+ episodeNum + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (episodeNode == null) {
 				throw new NotInStoreException();
 			}
 
-			Episode episode = new Episode(episodeNum, season);
+			IEpisode episode = new Episode(episodeNum, season,false);
 			readCommonEpisodeInfo(episodeNode, episode,rootMediaDir);
-			episode.setSpecial(false);
 
 			return episode;
 
@@ -734,21 +736,20 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private Episode getSpecialFromCache(int specialNum, Season season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
+	private IEpisode getSpecialFromCache(int specialNum, ISeason season,Document doc,File rootMediaDir) throws NotInStoreException, StoreException,
 			MalformedURLException {
 		try {
-			Show show = season.getShow();
+			IShow show = season.getShow();
 			Node episodeNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					"season[@number="+ season.getSeasonNumber() + "]/special[@number="+ specialNum + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (episodeNode == null) {
 				throw new NotInStoreException();
 			}
 
-			Episode episode = new Episode(specialNum, season);
+			IEpisode episode = new Episode(specialNum, season,true);
 
 			readCommonEpisodeInfo(episodeNode, episode,rootMediaDir);
 
-			episode.setSpecial(true);
 			return episode;
 
 		} catch (ParseException e) {
@@ -760,7 +761,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void readCommonEpisodeInfo(Node episodeNode, Episode episode,File rootMediaDir)
+	private void readCommonEpisodeInfo(Node episodeNode, IEpisode episode,File rootMediaDir)
 	throws XMLParserException, NotInStoreException,MalformedURLException, ParseException {
 		try {
 			String summary = getStringFromXML(episodeNode, "summary/text()"); //$NON-NLS-1$
@@ -792,14 +793,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	}
 
-	private Season getSeasonFromCache(int seasonNum, Show show, Document doc)
+	private ISeason getSeasonFromCache(int seasonNum, IShow show, Document doc)
 	throws StoreException, NotInStoreException, MalformedURLException {
 		try {
 			Node seasonNode = selectSingleNode(doc, "store/show[@id='"+ show.getShowId() + "' and @sourceId='"+show.getSourceId()+"']/season[@number=" + seasonNum + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			if (seasonNode == null) {
 				throw new NotInStoreException();
 			}
-			Season season = new Season(show, seasonNum);
+			ISeason season = new Season(show, seasonNum);
 			season.setURL(new URL(getStringFromXML(seasonNode,"@url"))); //$NON-NLS-1$
 			return season;
 		}
@@ -859,7 +860,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 */
 	@Override
-	public Show getShow(File rootMediaDir, File episodeFile, String showId) throws StoreException,
+	public IShow getShow(File rootMediaDir, File episodeFile, String showId) throws StoreException,
 			MalformedURLException {
 
 		Document doc = getCache(rootMediaDir);
@@ -877,13 +878,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Episode getSpecial(File rootMediaDir, File episodeFile, Season season, int specialNumber)
+	public IEpisode getSpecial(File rootMediaDir, File episodeFile, ISeason season, int specialNumber)
 			throws MalformedURLException, IOException, StoreException {
 		Document doc = getCache(rootMediaDir);
 		if (doc==null) {
 			return null;
 		}
-		Episode episode = null;
+		IEpisode episode = null;
 		try {
 			episode = getSpecialFromCache(specialNumber, season, doc,rootMediaDir);
 			return episode;
@@ -1156,14 +1157,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Episode getEpisode(MediaDirectory dir, File file) throws StoreException {
+	public IEpisode getEpisode(MediaDirectory dir, File file) throws StoreException {
 		try {
 			File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 			Element episodeNode = getNodeWithFile(dir,file);
 			if (episodeNode==null || !episodeNode.getNodeName().equals("episode")) { //$NON-NLS-1$
 				return null;
 			}
-			Episode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
+			IEpisode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
 			return episode;
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
@@ -1172,7 +1173,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	protected Episode parseEpisodeNode(File file, File rootMediaDir,
+	protected IEpisode parseEpisodeNode(File file, File rootMediaDir,
 			Element episodeNode) throws StoreException, MalformedURLException {
 		Element seasonNode = (Element) episodeNode.getParentNode();
 		if (seasonNode==null || !seasonNode.getNodeName().equals("season")) { //$NON-NLS-1$
@@ -1183,15 +1184,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			return null;
 		}
 
-		Show show = getShow(rootMediaDir,file,showNode.getAttribute("id")); //$NON-NLS-1$
+		IShow show = getShow(rootMediaDir,file,showNode.getAttribute("id")); //$NON-NLS-1$
 		if (show==null) {
 			return null;
 		}
-		Season season = getSeason(rootMediaDir,file,show,Integer.parseInt(seasonNode.getAttribute("number"))); //$NON-NLS-1$
+		ISeason season = getSeason(rootMediaDir,file,show,Integer.parseInt(seasonNode.getAttribute("number"))); //$NON-NLS-1$
 		if (season==null) {
 			return null;
 		}
-		Episode episode = getEpisode(rootMediaDir, file, season, Integer.parseInt(episodeNode.getAttribute("number"))); //$NON-NLS-1$
+		IEpisode episode = getEpisode(rootMediaDir, file, season, Integer.parseInt(episodeNode.getAttribute("number"))); //$NON-NLS-1$
 		return episode;
 	}
 
@@ -1221,7 +1222,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) throws StoreException {
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
 
@@ -1232,12 +1233,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				IterableNodeList list = selectNodeList(store,"//episode"); //$NON-NLS-1$
 				int size = list.getLength();
 
-				List<Episode>episodes = new ArrayList<Episode>(size);
+				List<IEpisode>episodes = new ArrayList<IEpisode>(size);
 				for (int i=0;i<size;i++) {
 					Element episodeNode = (Element) list.item(i);
 					Node locationNode = selectSingleNode(episodeNode, "file/@location"); //$NON-NLS-1$
 					File file = new File(locationNode.getNodeValue());
-					Episode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
+					IEpisode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
 					episodes.add(episode);
 				}
 

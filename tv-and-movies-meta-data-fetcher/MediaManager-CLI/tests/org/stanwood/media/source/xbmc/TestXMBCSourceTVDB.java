@@ -9,7 +9,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
@@ -85,14 +87,14 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		XBMCSource source = getXBMCSource("metadata.tvdb.com");
 
-		Show show = new Show("79501");
+		IShow show = new Show("79501");
 		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
 		show.setSourceId(source.getSourceId());
 		Map<String, String> params = new HashMap<String,String>();
 		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
 		show.setExtraInfo(params);
 
-		Season season = source.getSeason(show, 1);
+		ISeason season = source.getSeason(show, 1);
 		Assert.assertNotNull(season);
 		Assert.assertEquals(1,season.getSeasonNumber());
 		Assert.assertEquals(show,season.getShow());
@@ -139,7 +141,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Season season = new Season(show,1);
 		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
 
-		Episode episode = source.getEpisode(season, 1,null);
+		IEpisode episode = source.getEpisode(season, 1,null);
 		Assert.assertNotNull(episode);
 
 		Assert.assertEquals(10,episode.getActors().size());
@@ -183,7 +185,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Season season = new Season(show,3);
 		season.setURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
-		Episode special = source.getSpecial(season,1,null);
+		IEpisode special = source.getSpecial(season,1,null);
 		Assert.assertNotNull(special);
 
 		Assert.assertEquals(0,special.getActors().size());

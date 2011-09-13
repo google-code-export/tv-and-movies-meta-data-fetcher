@@ -13,11 +13,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.Helper;
 import org.stanwood.media.logging.LogSetupHelper;
-import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
 import org.stanwood.media.util.FileHelper;
@@ -57,9 +57,9 @@ public class TestXMLStore2 {
 
 			for (EpisodeData ed : epsiodes) {
 				File episodeFile = ed.getFile();
-				Episode episode = ed.getEpisode();
-				Season season =  episode.getSeason();
-				Show show=  season.getShow();
+				IEpisode episode = ed.getEpisode();
+				ISeason season =  episode.getSeason();
+				IShow show=  season.getShow();
 
 				xmlSource.cacheShow(dir, episodeFile, show);
 				xmlSource.cacheSeason(dir, episodeFile, season);
@@ -122,7 +122,7 @@ public class TestXMLStore2 {
 //			episodeFile = new File(eurekaDir,"2x13 - blah");
 //			episodeFile = new File(eurekaDir,"000 - blah");
 
-			Show show = xmlSource.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
+			IShow show = xmlSource.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
 			Assert.assertNotNull(show);
 			Assert.assertEquals("Eureka", show.getName());
 			StringBuilder summary = new StringBuilder();
@@ -138,12 +138,12 @@ public class TestXMLStore2 {
 			Assert.assertEquals("58448", show.getShowId());
 			Assert.assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
 
-			Season season = xmlSource.getSeason(dir,episodeFile,show, 1);
+			ISeason season = xmlSource.getSeason(dir,episodeFile,show, 1);
 			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getURL().toExternalForm());
 			Assert.assertEquals(1,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        Episode episode = xmlSource.getEpisode(dir,episodeFile,season, 1);
+	        IEpisode episode = xmlSource.getEpisode(dir,episodeFile,season, 1);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
 	        Assert.assertEquals("784857",episode.getEpisodeId());

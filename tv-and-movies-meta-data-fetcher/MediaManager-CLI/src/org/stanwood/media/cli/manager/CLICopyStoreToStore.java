@@ -16,7 +16,7 @@ import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.VideoFile;
@@ -150,7 +150,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					toStore.cacheFilm(dirConfig.getMediaDir(), mediaFile, f, part);
 				}
 				else {
-					Episode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
+					IEpisode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
 					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
 				}
 				log.info(MessageFormat.format(Messages.getString("CLICopyStoreToStore.STORE_UPDATED"),toStore.getClass().getName(),mediaFile)); //$NON-NLS-1$
