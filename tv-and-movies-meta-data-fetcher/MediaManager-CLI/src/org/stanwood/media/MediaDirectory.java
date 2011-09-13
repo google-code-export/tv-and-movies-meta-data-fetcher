@@ -11,12 +11,12 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.search.AbstractMediaSearcher;
 import org.stanwood.media.search.FilmSearcher;
 import org.stanwood.media.search.SearchHelper;
@@ -121,10 +121,10 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Show getShow(File rootMediaDir,File episodeFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
+	public IShow getShow(File rootMediaDir,File episodeFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 
-		Show show = null;
+		IShow show = null;
 		if (!refresh) {
 			for (IStore store : stores) {
 				show = store.getShow(rootMediaDir,episodeFile, searchResult.getId());
@@ -234,10 +234,10 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Season getSeason(File rootMediaDir,File episodeFile, Show show, int seasonNum, boolean refresh) throws SourceException,
+	public ISeason getSeason(File rootMediaDir,File episodeFile, IShow show, int seasonNum, boolean refresh) throws SourceException,
 			IOException, StoreException {
 		String sourceId = show.getSourceId();
-		Season season = null;
+		ISeason season = null;
 		if (!refresh) {
 			for (IStore store : stores) {
 				season = store.getSeason(rootMediaDir,episodeFile, show, seasonNum);
@@ -289,9 +289,9 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getEpisode(File rootMediaDir,File episodeFile, Season season, int episodeNum, boolean refresh) throws SourceException,
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, int episodeNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
-		Episode episode = null;
+		IEpisode episode = null;
 		if (!refresh) {
 			for (IStore store : stores) {
 				episode = store.getEpisode(rootMediaDir,episodeFile, season, episodeNum);
@@ -344,9 +344,9 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public Episode getSpecial(File rootMediaDir,File specialFile, Season season, int specialNum, boolean refresh) throws SourceException,
+	public IEpisode getSpecial(File rootMediaDir,File specialFile, ISeason season, int specialNum, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
-		Episode episode = null;
+		IEpisode episode = null;
 
 		if (!refresh) {
 			for (IStore store : stores) {

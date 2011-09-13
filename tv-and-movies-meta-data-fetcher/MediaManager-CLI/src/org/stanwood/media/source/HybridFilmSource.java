@@ -29,12 +29,13 @@ import java.util.StringTokenizer;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
-import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.ConfigException;
 
@@ -96,7 +97,7 @@ public class HybridFilmSource implements ISource {
 	 * @param file The film file if looking up a files details, or NULL
 	 */
 	@Override
-	public Episode getEpisode(Season season, int episodeNum,File file) {
+	public IEpisode getEpisode(ISeason season, int episodeNum,File file) {
 		return null;
 	}
 
@@ -107,7 +108,7 @@ public class HybridFilmSource implements ISource {
 	 * @param seasonNum The number of the season to read
 	 */
 	@Override
-	public Season getSeason(Show show, int seasonNum) {
+	public ISeason getSeason(IShow show, int seasonNum) {
 		return null;
 	}
 
@@ -131,7 +132,7 @@ public class HybridFilmSource implements ISource {
 	 * @param file The film file if looking up a files details, or NULL
 	 */
 	@Override
-	public Episode getSpecial(Season season, int specialNumber,File file) {
+	public IEpisode getSpecial(ISeason season, int specialNumber,File file) {
 		return null;
 	}
 

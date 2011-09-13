@@ -12,7 +12,7 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.VideoFile;
@@ -64,7 +64,7 @@ public class RenameAction extends AbstractAction {
 	 * @throws ActionException Thrown if their is a problem with the action
 	 */
 	@Override
-	public void perform(MediaDirectory dir,Episode episode,File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
+	public void perform(MediaDirectory dir,IEpisode episode,File mediaFile,IActionEventHandler actionEventHandler) throws ActionException {
 		try {
 			renameTVShow(dir,episode,mediaFile,actionEventHandler);
 		}
@@ -89,7 +89,7 @@ public class RenameAction extends AbstractAction {
 		return null;
 	}
 
-	private File renameTVShow(MediaDirectory dir,Episode episode,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
+	private File renameTVShow(MediaDirectory dir,IEpisode episode,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
 		if (episode==null) {
 			log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_FIND_EPISODE"),file.getAbsolutePath())); //$NON-NLS-1$
 		}

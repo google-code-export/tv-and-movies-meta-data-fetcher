@@ -26,7 +26,7 @@ import java.util.SortedSet;
  */
 public class Episode implements IEpisode {
 
-	private Season season;
+	private ISeason season;
 
 	/** The number of the episode within the season */
 	private int episodeNumber;
@@ -55,17 +55,20 @@ public class Episode implements IEpisode {
 	 * The constructor used to create a episode instance
 	 * @param episodeNumber The number of the episode within the season
 	 * @param season The season it belongs too
+	 * @param special Is this episode a special
 	 */
-	public Episode(int episodeNumber, Season season) {
+	public Episode(int episodeNumber, ISeason season,boolean special) {
 		setEpisodeNumber(episodeNumber);
 		this.season = season;
+		this.special = special;
 	}
 
 	/**
 	 * Get the season the episode belongs too
 	 * @return The season the episode belongs too
 	 */
-	public Season getSeason() {
+	@Override
+	public ISeason getSeason() {
 		return season;
 	}
 
@@ -73,6 +76,7 @@ public class Episode implements IEpisode {
 	 * Gets the number of the episode.
 	 * @return The number of the episode
 	 */
+	@Override
 	public int getEpisodeNumber() {
 		return episodeNumber;
 	}
@@ -81,6 +85,7 @@ public class Episode implements IEpisode {
 	 * Sets the number of the episode.
 	 * @param episodeNumner
 	 */
+	@Override
 	public void setEpisodeNumber(int episodeNumner) {
 		this.episodeNumber = episodeNumner;
 	}
@@ -116,6 +121,7 @@ public class Episode implements IEpisode {
 	 * Sets the air date of the show
 	 * @param airDate The air date of the show
 	 */
+	@Override
 	public void setDate(Date airDate) {
 		this.airDate = new Date(airDate.getTime());
 	}
@@ -129,18 +135,12 @@ public class Episode implements IEpisode {
 		return title;
 	}
 
-	/**
-	 * If this is a special, then true should be passed to this method to flag it as such.
-	 * @param special True if the episode is a special, otherwise false.
-	 */
-	public void setSpecial(boolean special) {
-		this.special = special;
-	}
 
 	/**
 	 * Used to find out if this is a special
 	 * @return True if special, otherwise false
 	 */
+	@Override
 	public boolean isSpecial() {
 		return special;
 	}
@@ -149,6 +149,7 @@ public class Episode implements IEpisode {
 	 * Gets the first air date of the episode
 	 * @return The first air date of the episode
 	 */
+	@Override
 	public Date getDate() {
 		if (airDate==null) {
 			return null;
@@ -161,6 +162,7 @@ public class Episode implements IEpisode {
 	 * Used to set the URL used to get a summary of the show
 	 * @param url The summary URL
 	 */
+	@Override
 	public void setUrl(URL url) {
 		this.url = url;
 	}
@@ -169,6 +171,7 @@ public class Episode implements IEpisode {
 	 * Used to get the URL used to get a summary of the show
 	 * @return The summary URL
 	 */
+	@Override
 	public URL getUrl() {
 		return url;
 	}
@@ -177,6 +180,7 @@ public class Episode implements IEpisode {
 	 * Used to get the numeric unique episode id used by the source
 	 * @return the numeric unique episode id used by the source
 	 */
+	@Override
 	public String getEpisodeId() {
 		return episodeId;
 	}
@@ -185,6 +189,7 @@ public class Episode implements IEpisode {
 	 * Used to set the numeric unique episode id used by the source
 	 * @param episodeId The numeric unique episode id used by the source
 	 */
+	@Override
 	public void setEpisodeId(String episodeId) {
 		this.episodeId = episodeId;
 	}
@@ -265,6 +270,7 @@ public class Episode implements IEpisode {
 	 * Used to get a URL which points to a image of the episode
 	 * @return A URL which points too a image of the episode
 	 */
+	@Override
 	public URL getImageURL() {
 		return imageURL;
 	}
@@ -273,6 +279,7 @@ public class Episode implements IEpisode {
 	 * Used to set a URL which points too a image of the episode
 	 * @param imageURL A URL which points too a image of the episode
 	 */
+	@Override
 	public void setImageURL(URL imageURL) {
 		this.imageURL = imageURL;
 	}

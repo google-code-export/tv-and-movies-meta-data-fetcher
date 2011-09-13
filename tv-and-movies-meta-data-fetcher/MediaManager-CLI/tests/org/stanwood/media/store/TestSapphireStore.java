@@ -165,9 +165,8 @@ public class TestSapphireStore  {
 			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=1"));
 
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
-			Episode episode1 = new Episode(1,season);
+			Episode episode1 = new Episode(1,season,false);
 			episode1.setDate(df.parse("2006-10-10"));
-			episode1.setSpecial(false);
 			episode1.setSummary("A car accident leads U.S. Marshal Jack Carter into the unique Pacific Northwest town of Eureka.");
 			episode1.setUrl(new URL("http://www.tv.com/eureka/pilot/episode/784857/summary.html"));
 			episode1.setTitle("Pilot");
@@ -179,9 +178,8 @@ public class TestSapphireStore  {
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 
 			episodeFile = new File(eurekaDir,"1x02 - blah.avi");
-			Episode episode2 = new Episode(2,season);
+			Episode episode2 = new Episode(2,season,false);
 			episode2.setDate(df.parse("2006-10-11"));
-			episode2.setSpecial(false);
 			episode2.setSummary("Carter and the other citizens of Eureka attend the funeral of Susan and Walter Perkins. Much to their surprise, Susan makes a return to Eureka as a woman who is very much alive!");
 			episode2.setUrl(new URL("http://www.tv.com/eureka/many-happy-returns/episode/800578/summary.html"));
 			episode2.setTitle("Many Happy Returns");
@@ -195,9 +193,8 @@ public class TestSapphireStore  {
 			xmlSource.cacheSeason(eurekaDir,episodeFile,season);
 
 			episodeFile = new File(eurekaDir,"2x13 - blah.avi");
-			episode1 = new Episode(13,season);
+			episode1 = new Episode(13,season,false);
 			episode1.setDate(df.parse("2007-7-10"));
-			episode1.setSpecial(false);
 			episode1.setSummary("Reaccustoming to the timeline restored in \"Once in a Lifetime\", Sheriff Carter investigates a series of sudden deaths.");
 			episode1.setUrl(new URL("http://www.tv.com/eureka/phoenix-rising/episode/1038982/summary.html"));
 			episode1.setTitle("Phoenix Rising");
@@ -206,9 +203,8 @@ public class TestSapphireStore  {
 			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
 
 			episodeFile = new File(eurekaDir,"000 - blah.avi");
-			Episode special1 = new Episode(0,season);
+			Episode special1 = new Episode(0,season,true);
 			special1.setDate(df.parse("2007-7-09"));
-			special1.setSpecial(true);
 			special1.setSummary("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.");
 			special1.setUrl(new URL("http://www.tv.com/heroes/heroes-countdown-to-the-premiere/episode/1228258/summary.html"));
 			special1.setTitle("Countdown to the Premiere");

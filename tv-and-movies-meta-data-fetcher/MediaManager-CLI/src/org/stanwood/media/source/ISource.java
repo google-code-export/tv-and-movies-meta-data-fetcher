@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.source;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,12 +24,12 @@ import java.net.URL;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 
 /**
  * This interfaces should be implemented by classes used to retrive information from a source.
@@ -45,7 +46,7 @@ public interface ISource extends IExtension {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Throw if their is a IO related problem
 	 */
-	public Episode getEpisode(Season season, int episodeNum,File file) throws SourceException, MalformedURLException, IOException;
+	public IEpisode getEpisode(ISeason season, int episodeNum,File file) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a season from the source. If the season can't be found,
@@ -56,7 +57,7 @@ public interface ISource extends IExtension {
 	 * @throws SourceException Thrown if their is a problem retrieving the data
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Season getSeason(Show show, int seasonNum) throws SourceException, IOException;
+	public ISeason getSeason(IShow show, int seasonNum) throws SourceException, IOException;
 
 	/**
 	 * This will get a show from the source. If the show can't be found, then it
@@ -69,7 +70,7 @@ public interface ISource extends IExtension {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(String showId,URL url,File file) throws SourceException, MalformedURLException, IOException;
+	public IShow getShow(String showId,URL url,File file) throws SourceException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -94,7 +95,7 @@ public interface ISource extends IExtension {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getSpecial(Season season, int specialNumber,File file) throws SourceException,MalformedURLException, IOException;
+	public IEpisode getSpecial(ISeason season, int specialNumber,File file) throws SourceException,MalformedURLException, IOException;
 
 	/**
 	 * Get the id of the source

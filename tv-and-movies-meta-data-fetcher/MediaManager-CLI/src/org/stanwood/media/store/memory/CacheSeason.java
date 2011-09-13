@@ -8,17 +8,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 
 /**
  * A cached version of the season object for storing the details in memory
  */
 public class CacheSeason extends Season {
 
-	private Map<Integer,Episode>episodes = new HashMap<Integer,Episode>();
-	private List<Episode> specials = new ArrayList<Episode>();
-	private Season season;
+	private Map<Integer,IEpisode>episodes = new HashMap<Integer,IEpisode>();
+	private List<IEpisode> specials = new ArrayList<IEpisode>();
+	private ISeason season;
 
 
 	/**
@@ -26,7 +28,7 @@ public class CacheSeason extends Season {
 	 * @param show The cached version of the show
 	 * @param season The season to cache
 	 */
-	public CacheSeason(CacheShow show,Season season) {
+	public CacheSeason(CacheShow show,ISeason season) {
 		super(show,season.getSeasonNumber());
 		this.season = season;
 	}
@@ -36,8 +38,8 @@ public class CacheSeason extends Season {
 	 * @param episodeNum The episode number of the episode to fetch
 	 * @return The episode
 	 */
-	public Episode getEpisode(int episodeNum) {
-		Episode episode =episodes.get(episodeNum);
+	public IEpisode getEpisode(int episodeNum) {
+		IEpisode episode =episodes.get(episodeNum);
 		return episode;
 	}
 
@@ -46,7 +48,7 @@ public class CacheSeason extends Season {
 	 * @param specialNumber The special episode number of the episode to fetch
 	 * @return The special episode
 	 */
-	public Episode getSpecial(int specialNumber) {
+	public IEpisode getSpecial(int specialNumber) {
 		return specials.get(specialNumber-1);
 	}
 
@@ -54,7 +56,7 @@ public class CacheSeason extends Season {
 	 * Get all the episodes in the season
 	 * @return The episodes in the season
 	 */
-	public Collection<Episode> getEpisodes() {
+	public Collection<IEpisode> getEpisodes() {
 		return episodes.values();
 	}
 
@@ -70,7 +72,7 @@ public class CacheSeason extends Season {
 	 * Get all the special episodes in the season
 	 * @return The special episodes in the season
 	 */
-	public List<Episode> getSpecials() {
+	public List<IEpisode> getSpecials() {
 		return specials;
 	}
 
@@ -79,7 +81,7 @@ public class CacheSeason extends Season {
 	 * Adds a episode to the season
 	 * @param episode The episode to add to the season
 	 */
-	public void addEpisode(Episode episode) {
+	public void addEpisode(IEpisode episode) {
 		episodes.put(episode.getEpisodeNumber(),episode);
 	}
 
@@ -111,7 +113,7 @@ public class CacheSeason extends Season {
 
 	/** {@inheritDoc} */
 	@Override
-	public Show getShow() {
+	public IShow getShow() {
 		return season.getShow();
 	}
 

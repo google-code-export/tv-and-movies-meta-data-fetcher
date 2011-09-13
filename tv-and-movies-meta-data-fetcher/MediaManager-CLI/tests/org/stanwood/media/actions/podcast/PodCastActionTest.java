@@ -27,12 +27,13 @@ import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
-import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
@@ -340,28 +341,28 @@ public class PodCastActionTest {
 
 		/** {@inheritDoc} */
 		@Override
-		public Episode getEpisode(Season season, int episodeNum, File file)
+		public IEpisode getEpisode(ISeason season, int episodeNum, File file)
 				throws SourceException, MalformedURLException, IOException {
 			return null;
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public Season getSeason(Show show, int seasonNum)
+		public ISeason getSeason(IShow show, int seasonNum)
 				throws SourceException, IOException {
 			return null;
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public Show getShow(String showId, URL url, File file)
+		public IShow getShow(String showId, URL url, File file)
 				throws SourceException, MalformedURLException, IOException {
 			return null;
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public Film getFilm(String filmId, URL url, File filmFile)
+		public IFilm getFilm(String filmId, URL url, File filmFile)
 				throws SourceException, MalformedURLException, IOException {
 			try {
 				return  Data.createFilm();
@@ -373,7 +374,7 @@ public class PodCastActionTest {
 
 		/** {@inheritDoc} */
 		@Override
-		public Episode getSpecial(Season season, int specialNumber,
+		public IEpisode getSpecial(ISeason season, int specialNumber,
 				File file) throws SourceException, MalformedURLException,
 				IOException {
 			return null;

@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.store;
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,12 +25,12 @@ import java.util.Collection;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.SourceException;
 
@@ -48,7 +50,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) throws StoreException;
+	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) throws StoreException;
 
 	/**
 	 * This is used to write a season too the store.
@@ -58,7 +60,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException;
+	public void cacheSeason(File rootMediaDir,File episodeFile,ISeason season) throws StoreException;
 
 	/**
 	 * This is used to write a show too the store.
@@ -68,7 +70,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException;
+	public void cacheShow(File rootMediaDir,File episodeFile,IShow show) throws StoreException;
 
 	/**
 	 * This is used to write a film to the store.
@@ -94,7 +96,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum) throws StoreException, MalformedURLException, IOException;
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum) throws StoreException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a season from the store. If the season can't be found,
@@ -108,7 +110,7 @@ public interface IStore extends IExtension  {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException, IOException;
+	public ISeason getSeason(File rootMediaDir,File episodeFile,IShow show, int seasonNum) throws StoreException, IOException;
 
 	/**
 	 * This will get a show from the store. If the season can't be found, then it
@@ -122,7 +124,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException;
+	public IShow getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException, MalformedURLException, IOException;
 
 	/**
 	 * This gets a special episode from the store. If it can't be found, then it will
@@ -137,7 +139,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public Episode getSpecial(File rootMediaDir,File episodeFile,Season season, int specialNumber) throws MalformedURLException, IOException, StoreException;
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, int specialNumber) throws MalformedURLException, IOException, StoreException;
 
 	/**
 	 * Used to search for store for media
@@ -214,7 +216,7 @@ public interface IStore extends IExtension  {
 	 * @return The episode or null if it can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Episode getEpisode(MediaDirectory dir, File file) throws StoreException;
+	public IEpisode getEpisode(MediaDirectory dir, File file) throws StoreException;
 
 	/**
 	 * This is used to get a film from a store via it's file name. If it can't be found,
@@ -242,7 +244,7 @@ public interface IStore extends IExtension  {
 	 *
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Collection<Episode> listEpisodes(MediaDirConfig dirConfig) throws StoreException;
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) throws StoreException;
 
 	/**
 	 * This is used to list all the films within the store if the store supports the operation.

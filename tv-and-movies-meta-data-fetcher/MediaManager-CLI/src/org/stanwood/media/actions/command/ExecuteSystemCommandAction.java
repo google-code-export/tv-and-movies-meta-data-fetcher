@@ -19,7 +19,7 @@ import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.logging.LoggerOutputStream;
-import org.stanwood.media.model.Episode;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.util.FileHelper;
@@ -196,7 +196,7 @@ public class ExecuteSystemCommandAction extends AbstractAction {
 	 * @throws ActionException Thrown if their is a problem with the action
 	 */
 	@Override
-	public void perform(MediaDirectory dir, Episode episode, File mediaFile,
+	public void perform(MediaDirectory dir, IEpisode episode, File mediaFile,
 			IActionEventHandler actionEventHandler) throws ActionException {
 		perform(dir,mediaFile,actionEventHandler,episode);
 	}

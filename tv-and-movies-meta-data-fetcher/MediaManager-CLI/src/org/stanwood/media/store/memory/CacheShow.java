@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 
@@ -15,13 +17,13 @@ import org.stanwood.media.model.Show;
 public class CacheShow extends Show {
 
 	private List<CacheSeason> seasons = new ArrayList<CacheSeason>();
-	private Show show;
+	private IShow show;
 
 	/**
 	 * Used to create a instance of the cache show
 	 * @param show The show that is been cached
 	 */
-	public CacheShow(Show show) {
+	public CacheShow(IShow show) {
 		super(show.getShowId());
 		this.show = show;
 	}
@@ -32,7 +34,7 @@ public class CacheShow extends Show {
 	 * @param seasonNum The number of the season too fetch.
 	 * @return The season, or null if it can't be found
 	 */
-	public Season getSeason(int seasonNum) {
+	public ISeason getSeason(int seasonNum) {
 		for (Season season : seasons) {
 			if (season.getSeasonNumber() == seasonNum) {
 				return season;

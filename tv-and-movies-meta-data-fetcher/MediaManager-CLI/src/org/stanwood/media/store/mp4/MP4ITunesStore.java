@@ -36,14 +36,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.jna.NativeHelper;
-import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
+import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
+import org.stanwood.media.model.ISeason;
+import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
@@ -117,7 +116,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir,File episodeFile,Episode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) throws StoreException {
 		String name = episodeFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();
@@ -125,7 +124,7 @@ public class MP4ITunesStore implements IStore {
 		}
 	}
 
-	private void writeEpisode(File file, Episode episode) throws StoreException {
+	private void writeEpisode(File file, IEpisode episode) throws StoreException {
 		try {
 			updateEpsiode(getMP4Manager(),file,episode);
 		} catch (MP4Exception e) {
@@ -140,7 +139,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public void cacheSeason(File rootMediaDir,File episodeFile,Season season) throws StoreException {
+	public void cacheSeason(File rootMediaDir,File episodeFile,ISeason season) throws StoreException {
 		validate();
 	}
 
@@ -151,7 +150,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public void cacheShow(File rootMediaDir,File episodeFile,Show show) throws StoreException {
+	public void cacheShow(File rootMediaDir,File episodeFile,IShow show) throws StoreException {
 		validate();
 	}
 
@@ -164,7 +163,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Episode getEpisode(File rootMediaDir,File episodeFile,Season season, int episodeNum) throws StoreException {
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum) throws StoreException {
 		validate();
 		return null;
 	}
@@ -178,7 +177,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Season getSeason(File rootMediaDir,File episodeFile,Show show, int seasonNum) throws StoreException {
+	public ISeason getSeason(File rootMediaDir,File episodeFile,IShow show, int seasonNum) throws StoreException {
 		validate();
 		return null;
 	}
@@ -191,7 +190,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Show getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException {
+	public IShow getShow(File rootMediaDir,File episodeFile, String showId) throws StoreException {
 		validate();
 		return null;
 	}
@@ -232,7 +231,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public Episode getSpecial(File rootMediaDir,File episodeFile, Season season, int specialNumber) throws MalformedURLException,
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile, ISeason season, int specialNumber) throws MalformedURLException,
 			IOException, StoreException {
 		return null;
 	}
@@ -253,7 +252,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param filmId The id of the film
 	 */
 	@Override
-	public Film getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
+	public IFilm getFilm(File rootMediaDir,File filmFile, String filmId) throws StoreException, MalformedURLException, IOException {
 		return null;
 	}
 
@@ -335,14 +334,14 @@ public class MP4ITunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Episode getEpisode(MediaDirectory dir, File file)
+	public IEpisode getEpisode(MediaDirectory dir, File file)
 			throws StoreException {
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Film getFilm(MediaDirectory dir, File file) throws StoreException {
+	public IFilm getFilm(MediaDirectory dir, File file) throws StoreException {
 		return null;
 	}
 
@@ -353,7 +352,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param episode The episode details
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
-	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, Episode episode) throws MP4Exception {
+	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, IEpisode episode) throws MP4Exception {
 
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
@@ -388,8 +387,8 @@ public class MP4ITunesStore implements IStore {
 		File artwork = null;
 		try {
 			URL imageUrl = null;
-			if (video instanceof Episode) {
-				Episode episode = (Episode)video;
+			if (video instanceof IEpisode) {
+				IEpisode episode = (IEpisode)video;
 				if (episode.getImageURL()!=null) {
 					imageUrl = episode.getImageURL();
 				}
@@ -397,8 +396,8 @@ public class MP4ITunesStore implements IStore {
 					imageUrl = episode.getSeason().getShow().getImageURL();
 				}
 			}
-			else if (video instanceof Film) {
-				imageUrl = ((Film) video).getImageURL();
+			else if (video instanceof IFilm) {
+				imageUrl = ((IFilm) video).getImageURL();
 			}
 			if (imageUrl != null) {
 				try {
@@ -565,7 +564,7 @@ public class MP4ITunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Episode> listEpisodes(MediaDirConfig dirConfig) {
+	public List<IEpisode> listEpisodes(MediaDirConfig dirConfig) {
 		return null;
 	}
 
