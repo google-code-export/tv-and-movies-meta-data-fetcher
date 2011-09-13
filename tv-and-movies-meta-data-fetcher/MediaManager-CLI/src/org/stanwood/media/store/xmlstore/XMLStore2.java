@@ -543,8 +543,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	}
 
-
-
 	private void appendDescription(Document doc, String shortSummary,String longSummary, Element parent) {
 		Element description = doc.createElement("description"); //$NON-NLS-1$
 		if (shortSummary!=null) {
@@ -1230,16 +1228,29 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
 
-				IterableNodeList list = selectNodeList(store,"//episode"); //$NON-NLS-1$
-				int size = list.getLength();
+				IterableNodeList normalList = selectNodeList(store,"//episode"); //$NON-NLS-1$
+				int normalSize = normalList.getLength();
+				IterableNodeList specialList = selectNodeList(store,"//special"); //$NON-NLS-1$
+				int specialSize = normalList.getLength();
 
-				List<IEpisode>episodes = new ArrayList<IEpisode>(size);
-				for (int i=0;i<size;i++) {
-					Element episodeNode = (Element) list.item(i);
-					Node locationNode = selectSingleNode(episodeNode, "file/@location"); //$NON-NLS-1$
-					File file = new File(locationNode.getNodeValue());
-					IEpisode episode = parseEpisodeNode(file, rootMediaDir, episodeNode);
-					episodes.add(episode);
+				List<IEpisode>episodes = new ArrayList<IEpisode>(normalSize+specialSize);
+				for (int i=0;i<normalSize;i++) {
+					Element episodeNode = (Element) normalList.item(i);
+
+					Element seasonNode = (Element)episodeNode.getParentNode();
+					Element showNode = (Element)seasonNode.getParentNode();
+					IShow show = new XMLShow(showNode);
+					ISeason season = new XMLSeason(show,seasonNode);
+					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
+				}
+				for (int i=0;i<specialSize;i++) {
+					Element episodeNode = (Element) specialList.item(i);
+
+					Element seasonNode = (Element)episodeNode.getParentNode();
+					Element showNode = (Element)seasonNode.getParentNode();
+					IShow show = new XMLShow(showNode);
+					ISeason season = new XMLSeason(show,seasonNode);
+					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
 				}
 
 				return episodes;
@@ -1249,8 +1260,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
-		} catch (MalformedURLException e) {
-			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_URL"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -1268,7 +1277,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 				List<IFilm>films = new ArrayList<IFilm>(size);
 				for (int i=0;i<size;i++) {
-//					IFilm film = parseFilmNode(rootMediaDir, (Element)list.item(i));
 					IFilm film = new XMLFilm((Element)list.item(i),rootMediaDir);
 					films.add(film);
 				}
@@ -1277,12 +1285,6 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			return Collections.emptyList();
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
-//		} catch (MalformedURLException e) {
-//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_URL"),e); //$NON-NLS-1$
-//		} catch (NotInStoreException e) {
-//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
-//		} catch (ParseException e) {
-//			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
 		}
 	}
 
