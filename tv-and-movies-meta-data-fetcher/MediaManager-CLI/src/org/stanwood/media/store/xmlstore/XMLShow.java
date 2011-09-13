@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store.xmlstore;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,15 +27,23 @@ import java.util.Map.Entry;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
+import org.stanwood.media.xml.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * Used to store and get information about a show from a DOM show node
+ */
 public class XMLShow extends XMLParser implements IShow {
 
 	private Element showNode;
 	private Document doc;
 
+	/**
+	 * The constructor
+	 * @param showNode The show node
+	 */
 	public XMLShow(Element showNode) {
 		this.showNode = showNode;
 		this.doc = showNode.getOwnerDocument();
@@ -189,6 +198,16 @@ public class XMLShow extends XMLParser implements IShow {
 
 	/** {@inheritDoc} */
 	@Override
+	public String getName() {
+		try {
+			return getAttribute(showNode,"name"); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void setShowURL(URL showURL) {
 		if (showURL!=null) {
 			showNode.setAttribute("url", showURL.toExternalForm()); //$NON-NLS-1$
@@ -200,23 +219,37 @@ public class XMLShow extends XMLParser implements IShow {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public URL getShowURL() {
+		try {
+			return new URL(getAttribute(showNode,"url")); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
+
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getShowId() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return getAttribute(showNode,"id"); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public URL getImageURL() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return new URL(getAttribute(showNode,"imageUrl")); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -230,25 +263,26 @@ public class XMLShow extends XMLParser implements IShow {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public URL getShowURL() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getSourceId() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return getAttribute(showNode,"sourceId"); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void setSourceId(String sourceId) {
-		// TODO Auto-generated method stub
-
+		if (sourceId!=null) {
+			showNode.setAttribute("sourceId", sourceId); //$NON-NLS-1$
+		}
+		else {
+			throw new RuntimeException("Source node cannot be null");
+		}
 	}
 
 	/** {@inheritDoc} */
