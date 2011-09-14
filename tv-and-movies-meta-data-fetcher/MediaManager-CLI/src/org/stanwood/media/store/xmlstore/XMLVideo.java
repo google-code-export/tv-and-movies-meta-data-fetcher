@@ -27,10 +27,8 @@ import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Rating;
-import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.model.VideoFileSet;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.xml.Messages;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.stanwood.media.xml.XMLParserNotFoundException;
@@ -193,18 +191,7 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 			SortedSet<IVideoFile> files = new VideoFileSet();
 
 			for (Node node : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
-				String location = ((Element)node).getAttribute("location"); //$NON-NLS-1$
-				String originalLocation = ((Element)node).getAttribute("orginalLocation"); //$NON-NLS-1$
-				File orgLocFile = null;
-				if (!originalLocation.equals("")) { //$NON-NLS-1$
-					orgLocFile = new File(rootMediaDir,originalLocation);
-				}
-				String strPart = ((Element)node).getAttribute("part"); //$NON-NLS-1$
-				Integer part = null;
-				if (!strPart.equals("")) { //$NON-NLS-1$
-					part = Integer.parseInt(strPart);
-				}
-				files.add(new VideoFile(new File(rootMediaDir,location),orgLocFile,part));
+				files.add(new XMLVideoFile(rootMediaDir,(Element)node));
 			}
 			return files;
 		}
@@ -264,34 +251,25 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 		}
 	}
 
-
-	private String makePathRelativeToMediaDir(File episodeFile, File rootMediaDir) {
-		String path = rootMediaDir.getAbsolutePath();
-		int len = path.length();
-		if (episodeFile.getAbsolutePath().startsWith(path)) {
-			return episodeFile.getAbsolutePath().substring(len+1);
+	private IVideoFile findFile(IVideoFile file) {
+		for (IVideoFile f : getFiles()) {
+			if (f.getLocation().equals(file.getLocation())) {
+				return f;
+			}
 		}
-		else {
-			return episodeFile.getAbsolutePath();
-		}
+		return null;
 	}
 
 	private void appendFile(Document doc, Node parent, IVideoFile file,File rootMediaDir) throws StoreException {
 		if (file!=null) {
-			try {
-				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir))+"]"); //$NON-NLS-1$ //$NON-NLS-2$
-				if (fileNode==null) {
-					fileNode = doc.createElement("file"); //$NON-NLS-1$
-					parent.appendChild(fileNode);
-				}
-
-				fileNode.setAttribute("location", makePathRelativeToMediaDir(file.getLocation(),rootMediaDir)); //$NON-NLS-1$
-				if (file.getPart()!=null) {
-					fileNode.setAttribute("part", String.valueOf(file.getPart())); //$NON-NLS-1$
-				}
-			} catch (XMLParserException e) {
-				throw new StoreException(Messages.getString("XMLStore2.UNABLE_READ_XML"),e); //$NON-NLS-1$
+			IVideoFile vidFile = findFile(file);
+			if (vidFile==null) {
+				Element fileNode = doc.createElement("file"); //$NON-NLS-1$
+				parent.appendChild(fileNode);
+				vidFile = new XMLVideoFile(rootMediaDir, fileNode);
 			}
+			vidFile.setLocation(file.getLocation());
+			vidFile.setPart(file.getPart());
 		}
 	}
 
