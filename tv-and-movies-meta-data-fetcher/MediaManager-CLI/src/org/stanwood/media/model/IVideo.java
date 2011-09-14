@@ -76,12 +76,12 @@ public interface IVideo {
 	 * Used to get a list of files that belong to the video entry
 	 * @return The list of files
 	 */
-	public SortedSet<VideoFile> getFiles();
+	public SortedSet<IVideoFile> getFiles();
 
 	/**
 	 * Used to set the list of files that belong to the video entry
 	 * @param videoFiles The list of files
 	 */
-	public void setFiles(SortedSet<VideoFile> videoFiles);
+	public void setFiles(SortedSet<IVideoFile> videoFiles);
 
 }

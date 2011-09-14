@@ -228,8 +228,11 @@ public class XMLFilm extends XMLVideo implements IFilm {
 	public Date getDate() {
 		 try {
 			return df.parse(getStringFromXML(filmNode, "@releaseDate")); //$NON-NLS-1$
+		 }
+		catch (XMLParserNotFoundException e) {
+			 return null;
 		} catch (XMLParserException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e.getMessage(),e);
 		} catch (ParseException e) {
 			throw new RuntimeException();
 		}

@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * This is used to store information about files in a media directory
  */
-public class VideoFile {
+public class VideoFile implements IVideoFile {
 
 	private File location;
 	private File orginalLocation;
@@ -27,6 +27,7 @@ public class VideoFile {
 	 * Used to get the current location of the video file
 	 * @return The current location of the video file
 	 */
+	@Override
 	public File getLocation() {
 		return location;
 	}
@@ -36,6 +37,7 @@ public class VideoFile {
 	 * it was first seen in.
 	 * @return The original location of the file
 	 */
+	@Override
 	public File getOrginalLocation() {
 		return orginalLocation;
 	}
@@ -45,6 +47,7 @@ public class VideoFile {
 	 * it was first seen in.
 	 * @param orginalLocation The original location of the file
 	 */
+	@Override
 	public void setOrginalLocation(File orginalLocation) {
 		this.orginalLocation = orginalLocation;
 	}
@@ -53,6 +56,7 @@ public class VideoFile {
 	 * Used to set the current location of the video file
 	 * @param location The current location of the video file
 	 */
+	@Override
 	public void setLocation(File location) {
 		this.location = location;
 	}
@@ -61,6 +65,7 @@ public class VideoFile {
 	 * Used to get the part number of the file
 	 * @return The part number or null if not known/supported
 	 */
+	@Override
 	public Integer getPart() {
 		return part;
 	}
@@ -69,6 +74,7 @@ public class VideoFile {
 	 * Used to set the part number of the file
 	 * @param part The part number or null if not known/supported
 	 */
+	@Override
 	public void setPart(Integer part) {
 		this.part = part;
 	}
