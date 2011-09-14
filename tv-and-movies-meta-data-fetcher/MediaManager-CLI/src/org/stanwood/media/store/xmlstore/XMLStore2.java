@@ -47,6 +47,7 @@ import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.model.VideoFileSet;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.store.IStore;
@@ -1220,7 +1221,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) throws StoreException {
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
 
@@ -1265,7 +1266,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) throws StoreException {
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException {
 		try {
 			File rootMediaDir = dirConfig.getMediaDir();
 

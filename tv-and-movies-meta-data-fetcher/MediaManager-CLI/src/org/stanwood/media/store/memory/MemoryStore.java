@@ -35,6 +35,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -336,7 +337,7 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) {
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		ArrayList<IEpisode>episodes = new ArrayList<IEpisode>();
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
@@ -350,7 +351,7 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) {
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return films.values();
 	}
 

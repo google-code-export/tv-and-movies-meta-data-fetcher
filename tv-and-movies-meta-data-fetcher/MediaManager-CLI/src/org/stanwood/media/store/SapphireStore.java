@@ -40,6 +40,7 @@ import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.util.FileHelper;
 
@@ -415,13 +416,13 @@ public class SapphireStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<IEpisode> listEpisodes(MediaDirConfig dirConfig) {
+	public List<IEpisode> listEpisodes(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<IFilm> listFilms(MediaDirConfig dirConfig) {
+	public List<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return null;
 	}
 
