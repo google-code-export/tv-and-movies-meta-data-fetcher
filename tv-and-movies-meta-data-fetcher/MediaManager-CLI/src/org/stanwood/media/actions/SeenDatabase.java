@@ -14,7 +14,6 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.stanwood.media.progress.IProgressMonitor;
-import org.stanwood.media.progress.SubMonitor;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -103,13 +102,12 @@ public class SeenDatabase extends XMLParser {
 	 * @throws FileNotFoundException Thrown if their is a problem
 	 */
 	public void write(IProgressMonitor parentMonitor) throws FileNotFoundException {
-		SubMonitor progress = SubMonitor.convert(parentMonitor, 100);
 		PrintStream ps = null;
 		try {
 			ps = new PrintStream(seenFile);
 			ps.println("<seen>"); //$NON-NLS-1$
 			Set<Entry<File, SortedSet<SeenEntry>>> entriesSet = entries.entrySet();
-			progress.beginTask(Messages.getString("SeenDatabase.WRITING_SEEN_DB"), entriesSet.size()); //$NON-NLS-1$
+			parentMonitor.beginTask(Messages.getString("SeenDatabase.WRITING_SEEN_DB"), entriesSet.size()); //$NON-NLS-1$
 			for (Entry<File,SortedSet<SeenEntry>> e : entriesSet) {
 				ps.println("  <mediaDir dir=\""+e.getKey()+"\">"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (SeenEntry entry : e.getValue()) {
@@ -118,10 +116,10 @@ public class SeenDatabase extends XMLParser {
 					}
 				}
 				ps.println("  </mediaDir>"); //$NON-NLS-1$
-				progress.worked(1);
+				parentMonitor.worked(1);
 			}
 			ps.println("</seen>"); //$NON-NLS-1$
-			progress.done();
+			parentMonitor.done();
 		}
 		finally {
 			if (ps!=null) {
@@ -137,9 +135,7 @@ public class SeenDatabase extends XMLParser {
 	 * @throws XMLParserException Thrown if possible to parse file
 	 *
 	 */
-	public void read(IProgressMonitor parentMonitor) throws FileNotFoundException, XMLParserException {
-		SubMonitor progress = SubMonitor.convert(parentMonitor, 100);
-
+	public void read(IProgressMonitor progress) throws FileNotFoundException, XMLParserException {
 		entries = new HashMap<File,SortedSet<SeenEntry>>();
 		if (seenFile.exists()) {
 			Document doc = XMLParser.parse(seenFile, null);

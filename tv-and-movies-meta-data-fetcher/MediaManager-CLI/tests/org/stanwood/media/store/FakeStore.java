@@ -31,6 +31,7 @@ import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 
 /**
@@ -215,13 +216,13 @@ public class FakeStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<IEpisode> listEpisodes(MediaDirConfig dirConfig) {
+	public List<IEpisode> listEpisodes(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<IFilm> listFilms(MediaDirConfig dirConfig) {
+	public List<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return null;
 	}
 

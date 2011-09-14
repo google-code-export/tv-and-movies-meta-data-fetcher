@@ -31,6 +31,7 @@ import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.SourceException;
 
@@ -240,18 +241,20 @@ public interface IStore extends IExtension  {
 	 * This is used to list all the episodes within the store if the store supports the operation.
 	 * It this store can't list episodes, then it will return null
 	 * @param dirConfig The media directory configuration
+	 * @param monitor The progress monitor
 	 * @return Null or a list of episodes in the store
 	 *
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig) throws StoreException;
+	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException;
 
 	/**
 	 * This is used to list all the films within the store if the store supports the operation.
 	 * It this store can't list films, then it will return null
 	 * @param dirConfig The media directory configuration
+	 * @param monitor The progress monitor
 	 * @return Null or a list of films in the store
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public Collection<IFilm> listFilms(MediaDirConfig dirConfig) throws StoreException ;
+	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException ;
 }

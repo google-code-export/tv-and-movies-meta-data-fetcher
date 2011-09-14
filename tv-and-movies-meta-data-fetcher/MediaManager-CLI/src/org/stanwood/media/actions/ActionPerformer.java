@@ -46,6 +46,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.progress.IProgressMonitor;
+import org.stanwood.media.progress.SubProgressMonitor;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
 import org.stanwood.media.search.SearchDetails;
 import org.stanwood.media.search.SearchHelper;
@@ -95,29 +96,35 @@ public class ActionPerformer implements IActionEventHandler {
 	 * @throws ActionException Thrown if their are any errors with the actions
 	 */
 	public void performActions(IProgressMonitor monitor) throws ActionException {
-		if (dir.getMediaDirConfig().getIgnoreSeen()) {
-			try {
-				seenDb= new SeenDatabase(configDir);
-				seenDb.read(monitor);
+		try {
+			monitor.beginTask(Messages.getString("ActionPerformer.Performing_actions"), 4); //$NON-NLS-1$
+			if (dir.getMediaDirConfig().getIgnoreSeen()) {
+				try {
+					seenDb= new SeenDatabase(configDir);
+					seenDb.read(new SubProgressMonitor(monitor,1));
+				}
+				catch (IOException e) {
+					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
+				}
+				catch (XMLParserException e) {
+					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
+				}
 			}
-			catch (IOException e) {
-				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
-			}
-			catch (XMLParserException e) {
-				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
+
+			List<File> sortedFiles = findMediaFiles(new SubProgressMonitor(monitor,1));
+			Set<File> dirs = findDirs(new SubProgressMonitor(monitor,1));
+
+			performActions(sortedFiles,dirs,monitor);
+			if (seenDb!=null) {
+				try {
+					seenDb.write(new SubProgressMonitor(monitor,1));
+				} catch (FileNotFoundException e) {
+					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_WRITE_SEEN_DATABASE"),e); //$NON-NLS-1$
+				}
 			}
 		}
-
-		List<File> sortedFiles = findMediaFiles(monitor);
-		Set<File> dirs = findDirs(monitor);
-
-		performActions(sortedFiles,dirs,monitor);
-		if (seenDb!=null) {
-			try {
-				seenDb.write(monitor);
-			} catch (FileNotFoundException e) {
-				throw new ActionException(Messages.getString("ActionPerformer.UNABLE_WRITE_SEEN_DATABASE"),e); //$NON-NLS-1$
-			}
+		finally {
+			monitor.done();
 		}
 	}
 
