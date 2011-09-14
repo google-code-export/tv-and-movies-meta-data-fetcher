@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.VideoFile;
@@ -187,9 +188,9 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public SortedSet<VideoFile> getFiles() {
+	public SortedSet<IVideoFile> getFiles() {
 		try {
-			SortedSet<VideoFile> files = new VideoFileSet();
+			SortedSet<IVideoFile> files = new VideoFileSet();
 
 			for (Node node : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
 				String location = ((Element)node).getAttribute("location"); //$NON-NLS-1$
@@ -214,9 +215,9 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(SortedSet<VideoFile> videoFiles) {
+	public void setFiles(SortedSet<IVideoFile> videoFiles) {
 		try {
-			for (VideoFile filename : videoFiles) {
+			for (IVideoFile filename : videoFiles) {
 				appendFile(doc, videoNode, filename,rootMediaDir);
 			}
 			for (Node n : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
@@ -275,7 +276,7 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 		}
 	}
 
-	private void appendFile(Document doc, Node parent, VideoFile file,File rootMediaDir) throws StoreException {
+	private void appendFile(Document doc, Node parent, IVideoFile file,File rootMediaDir) throws StoreException {
 		if (file!=null) {
 			try {
 				Element fileNode = (Element)selectSingleNode(parent, "file[@location="+quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir))+"]"); //$NON-NLS-1$ //$NON-NLS-2$

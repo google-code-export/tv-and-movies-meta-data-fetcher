@@ -47,7 +47,7 @@ public class Film implements IFilm {
 	private String preferredGenre;
 	private String country;
 	private List<Actor> actors;
-	private SortedSet<VideoFile> videoFiles = new VideoFileSet();
+	private SortedSet<IVideoFile> videoFiles = new VideoFileSet();
 
 	/**
 	 * Used to create a instance of the film class.
@@ -417,13 +417,13 @@ public class Film implements IFilm {
 
 	/** {@inheritDoc} */
 	@Override
-	public SortedSet<VideoFile> getFiles() {
+	public SortedSet<IVideoFile> getFiles() {
 		return videoFiles;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(SortedSet<VideoFile> videoFiles) {
+	public void setFiles(SortedSet<IVideoFile> videoFiles) {
 		this.videoFiles = videoFiles;
 	}
 

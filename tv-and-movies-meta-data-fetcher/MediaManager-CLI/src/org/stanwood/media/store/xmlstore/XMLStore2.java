@@ -38,6 +38,7 @@ import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoExtra;
+import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Mode;
@@ -180,7 +181,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		episode.setActors(actors);
 	}
 
-	private void appendFile(Document doc, Node parent, VideoFile file,File rootMediaDir) throws StoreException {
+	private void appendFile(Document doc, Node parent, IVideoFile file,File rootMediaDir) throws StoreException {
 		if (file!=null) {
 			try {
 
@@ -428,7 +429,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a tore releated problem
 	 */
 	protected void writeFilenames(Document doc, Node parent, IVideo video,File rootMediaDir) throws StoreException {
-		for (VideoFile filename : video.getFiles()) {
+		for (IVideoFile filename : video.getFiles()) {
 			appendFile(doc, parent, filename,rootMediaDir);
 		}
 	}
@@ -654,7 +655,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void readFiles(IVideo video, Element videoNode,File rootMediaDir) throws XMLParserException {
-		SortedSet<VideoFile> files = new VideoFileSet();
+		SortedSet<IVideoFile> files = new VideoFileSet();
 
 		for (Node node : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
 			String location = ((Element)node).getAttribute("location"); //$NON-NLS-1$
@@ -1233,9 +1234,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				int normalSize = normalList.getLength();
 				IterableNodeList specialList = selectNodeList(store,"//special"); //$NON-NLS-1$
 				int specialSize = normalList.getLength();
-
+				monitor.beginTask(MessageFormat.format("Reading episodes in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), normalSize+specialSize);
 				List<IEpisode>episodes = new ArrayList<IEpisode>(normalSize+specialSize);
 				for (int i=0;i<normalSize;i++) {
+
 					Element episodeNode = (Element) normalList.item(i);
 
 					Element seasonNode = (Element)episodeNode.getParentNode();
@@ -1243,15 +1245,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					IShow show = new XMLShow(showNode);
 					ISeason season = new XMLSeason(show,seasonNode);
 					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
+					monitor.worked(1);
 				}
 				for (int i=0;i<specialSize;i++) {
 					Element episodeNode = (Element) specialList.item(i);
+
 
 //					Element seasonNode = (Element)episodeNode.getParentNode();
 //					Element showNode = (Element)seasonNode.getParentNode();
 //					IShow show = new XMLShow(showNode);
 //					ISeason season = new XMLSeason(show,seasonNode);
 //					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
+					monitor.worked(1);
 				}
 
 				return episodes;
@@ -1261,6 +1266,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
+		}
+		finally {
+			monitor.done();
 		}
 	}
 
@@ -1275,17 +1283,21 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				Node store = getStoreNode(doc);
 				IterableNodeList list = selectNodeList(store,"film"); //$NON-NLS-1$
 				int size = list.getLength();
-
+				monitor.beginTask(MessageFormat.format("Reading films in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), size);
 				List<IFilm>films = new ArrayList<IFilm>(size);
 				for (int i=0;i<size;i++) {
 					IFilm film = new XMLFilm((Element)list.item(i),rootMediaDir);
 					films.add(film);
+					monitor.worked(1);
 				}
 				return films;
 			}
 			return Collections.emptyList();
 		} catch (XMLParserException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_STORE_XML1"),e); //$NON-NLS-1$
+		}
+		finally {
+			monitor.done();
 		}
 	}
 

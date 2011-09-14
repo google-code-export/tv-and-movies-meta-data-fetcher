@@ -42,9 +42,9 @@ import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
+import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.SubProgressMonitor;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
@@ -314,7 +314,7 @@ public class ActionPerformer implements IActionEventHandler {
 	protected Integer getFilmPart(File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
-			for (VideoFile vf : film.getFiles()) {
+			for (IVideoFile vf : film.getFiles()) {
 				if (vf.getLocation().equals(file)) {
 					part = vf.getPart();
 				}
@@ -435,7 +435,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 					boolean found = false;
 					if (episode.getFiles()!=null) {
-						for (VideoFile vf : episode.getFiles()) {
+						for (IVideoFile vf : episode.getFiles()) {
 							if (vf.getLocation().equals(file)) {
 								found = true;
 							}
@@ -476,7 +476,7 @@ public class ActionPerformer implements IActionEventHandler {
 			if (!testMode) {
 				boolean found = false;
 				Integer maxPart = 0;
-				for (VideoFile vf : film.getFiles()) {
+				for (IVideoFile vf : film.getFiles()) {
 					if (vf.getLocation().equals(file)) {
 						found = true;
 					}
@@ -494,7 +494,7 @@ public class ActionPerformer implements IActionEventHandler {
 
 				// Update existing stores with new part
 				if (result.getPart()!=null && result.getPart()>maxPart) {
-					for (VideoFile vf : film.getFiles()) {
+					for (IVideoFile vf : film.getFiles()) {
 						if (!vf.getLocation().equals(file)) {
 							for (IStore store : dir.getStores()) {
 								if (vf.getLocation().exists()) {

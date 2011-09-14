@@ -6,7 +6,7 @@ import java.util.TreeSet;
 /**
  * Used to store video files in a sorted set
  */
-public class VideoFileSet extends TreeSet<VideoFile> {
+public class VideoFileSet extends TreeSet<IVideoFile> {
 
 	private static final long serialVersionUID = -2055733997633542890L;
 
@@ -14,9 +14,9 @@ public class VideoFileSet extends TreeSet<VideoFile> {
 	 * The constructor
 	 */
 	public VideoFileSet() {
-		super(new Comparator<VideoFile>() {
+		super(new Comparator<IVideoFile>() {
 			@Override
-			public int compare(VideoFile o1, VideoFile o2) {
+			public int compare(IVideoFile o1, IVideoFile o2) {
 				return o1.getLocation().compareTo(o2.getLocation());
 			}
 		});

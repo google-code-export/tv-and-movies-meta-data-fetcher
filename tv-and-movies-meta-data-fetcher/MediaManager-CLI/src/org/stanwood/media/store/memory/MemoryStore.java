@@ -31,10 +31,10 @@ import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
+import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Show;
-import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
@@ -203,7 +203,7 @@ public class MemoryStore implements IStore {
 		else if (mode==Mode.FILM) {
 			IFilm f = films.get(mediaFile);
 			if (f!=null) {
-				for (VideoFile vf : f.getFiles()) {
+				for (IVideoFile vf : f.getFiles()) {
 					if (vf.getLocation().equals(mediaFile)) {
 						return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), vf.getPart());
 					}
@@ -273,18 +273,18 @@ public class MemoryStore implements IStore {
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
 				for (IEpisode episode : season.getEpisodes()) {
-					Iterator<VideoFile> it  = episode.getFiles().iterator();
+					Iterator<IVideoFile> it  = episode.getFiles().iterator();
 					while (it.hasNext()) {
-						VideoFile f = it.next();
+						IVideoFile f = it.next();
 						if (f.getLocation().equals(file)) {
 							it.remove();
 						}
 					}
 				}
 				for (IEpisode special : season.getSpecials()) {
-					Iterator<VideoFile> it  = special.getFiles().iterator();
+					Iterator<IVideoFile> it  = special.getFiles().iterator();
 					while (it.hasNext()) {
-						VideoFile f = it.next();
+						IVideoFile f = it.next();
 						if (f.getLocation().equals(file)) {
 							it.remove();
 						}
@@ -301,18 +301,18 @@ public class MemoryStore implements IStore {
 		for (CacheShow show : shows) {
 			for (CacheSeason season : show.getSeasons()) {
 				for (IEpisode episode : season.getEpisodes()) {
-					Iterator<VideoFile> it  = episode.getFiles().iterator();
+					Iterator<IVideoFile> it  = episode.getFiles().iterator();
 					while (it.hasNext()) {
-						VideoFile f = it.next();
+						IVideoFile f = it.next();
 						if (f.getLocation().equals(file)) {
 							return episode;
 						}
 					}
 				}
 				for (IEpisode special : season.getSpecials()) {
-					Iterator<VideoFile> it  = special.getFiles().iterator();
+					Iterator<IVideoFile> it  = special.getFiles().iterator();
 					while (it.hasNext()) {
-						VideoFile f = it.next();
+						IVideoFile f = it.next();
 						if (f.getLocation().equals(file)) {
 							return special;
 						}
