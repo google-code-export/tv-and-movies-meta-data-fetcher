@@ -28,6 +28,8 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -307,6 +309,17 @@ public class XMLParser {
 			}
 		}
 		return null;
+	}
+
+	protected List<Element> selectChildNodes(Node parent,String childName) {
+		List<Element>result = new ArrayList<Element>();
+		NodeList children = parent.getChildNodes();
+		for (int i=0;i<children.getLength();i++) {
+			if (children.item(i).getNodeName().equals(childName)) {
+				result.add((Element)children.item(i));
+			}
+		}
+		return result;
 	}
 
 	protected IterableNodeList selectNodeList(Node contextNode,String path) throws XMLParserException {
