@@ -18,8 +18,8 @@ package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
 
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.IVideo;
@@ -27,7 +27,6 @@ import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Rating;
-import org.stanwood.media.model.VideoFileSet;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -186,29 +185,24 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public SortedSet<IVideoFile> getFiles() {
-		try {
-			SortedSet<IVideoFile> files = new VideoFileSet();
+	public Collection<IVideoFile> getFiles() {
+		List<IVideoFile> files = new ArrayList<IVideoFile>();
 
-			for (Node node : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
-				files.add(new XMLVideoFile(rootMediaDir,(Element)node));
-			}
-			return files;
+		for (Element node : selectChildNodes(videoNode, "file")) { //$NON-NLS-1$
+			files.add(new XMLVideoFile(rootMediaDir,node));
 		}
-		catch (XMLParserException e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
+		return files;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(SortedSet<IVideoFile> videoFiles) {
+	public void setFiles(Collection<IVideoFile> videoFiles) {
 		try {
 			for (IVideoFile filename : videoFiles) {
 				appendFile(doc, videoNode, filename,rootMediaDir);
 			}
-			for (Node n : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
-				if (new File(rootMediaDir,getAttribute((Element)n, "location")).exists()) { //$NON-NLS-1$
+			for (Element n : selectChildNodes(videoNode, "file")) { //$NON-NLS-1$
+				if (new File(rootMediaDir,getAttribute(n, "location")).exists()) { //$NON-NLS-1$
 					n.getParentNode().removeChild(n);
 				}
 			}

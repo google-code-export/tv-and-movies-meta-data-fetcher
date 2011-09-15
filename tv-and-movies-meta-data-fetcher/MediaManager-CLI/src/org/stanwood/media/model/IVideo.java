@@ -16,8 +16,8 @@
  */
 package org.stanwood.media.model;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * This interface is used to define the methods that are common for any type of video
@@ -76,12 +76,12 @@ public interface IVideo {
 	 * Used to get a list of files that belong to the video entry
 	 * @return The list of files
 	 */
-	public SortedSet<IVideoFile> getFiles();
+	public Collection<IVideoFile> getFiles();
 
 	/**
 	 * Used to set the list of files that belong to the video entry
 	 * @param videoFiles The list of files
 	 */
-	public void setFiles(SortedSet<IVideoFile> videoFiles);
+	public void setFiles(Collection<IVideoFile> videoFiles);
 
 }

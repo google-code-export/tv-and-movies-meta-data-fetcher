@@ -18,6 +18,7 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -423,8 +424,9 @@ public class Film implements IFilm {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(SortedSet<IVideoFile> videoFiles) {
-		this.videoFiles = videoFiles;
+	public void setFiles(Collection<IVideoFile> videoFiles) {
+		this.videoFiles.clear();
+		this.videoFiles.addAll(videoFiles);
 	}
 
 }
