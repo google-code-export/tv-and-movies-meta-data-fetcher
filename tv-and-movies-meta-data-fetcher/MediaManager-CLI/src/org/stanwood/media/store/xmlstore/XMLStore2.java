@@ -1230,6 +1230,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
 
+				//TODO use dom todo this?
 				IterableNodeList normalList = selectNodeList(store,"//episode"); //$NON-NLS-1$
 				int normalSize = normalList.getLength();
 				IterableNodeList specialList = selectNodeList(store,"//special"); //$NON-NLS-1$
@@ -1237,6 +1238,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				monitor.beginTask(MessageFormat.format("Reading episodes in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), normalSize+specialSize);
 				List<IEpisode>episodes = new ArrayList<IEpisode>(normalSize+specialSize);
 				for (int i=0;i<normalSize;i++) {
+					if (monitor.isCanceled()) {
+						break;
+					}
 
 					Element episodeNode = (Element) normalList.item(i);
 
@@ -1248,14 +1252,17 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					monitor.worked(1);
 				}
 				for (int i=0;i<specialSize;i++) {
+					if (monitor.isCanceled()) {
+						break;
+					}
+
 					Element episodeNode = (Element) specialList.item(i);
 
-
-//					Element seasonNode = (Element)episodeNode.getParentNode();
-//					Element showNode = (Element)seasonNode.getParentNode();
-//					IShow show = new XMLShow(showNode);
-//					ISeason season = new XMLSeason(show,seasonNode);
-//					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
+					Element seasonNode = (Element)episodeNode.getParentNode();
+					Element showNode = (Element)seasonNode.getParentNode();
+					IShow show = new XMLShow(showNode);
+					ISeason season = new XMLSeason(show,seasonNode);
+					episodes.add(new XMLEpisode(season, episodeNode, rootMediaDir));
 					monitor.worked(1);
 				}
 
@@ -1281,12 +1288,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			Document doc = getCache(dirConfig.getMediaDir());
 			if (doc!=null) {
 				Node store = getStoreNode(doc);
-				IterableNodeList list = selectNodeList(store,"film"); //$NON-NLS-1$
-				int size = list.getLength();
+				List<Element> list = selectChildNodes(store,"film"); //$NON-NLS-1$
+				int size = list.size();
 				monitor.beginTask(MessageFormat.format("Reading films in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), size);
 				List<IFilm>films = new ArrayList<IFilm>(size);
 				for (int i=0;i<size;i++) {
-					IFilm film = new XMLFilm((Element)list.item(i),rootMediaDir);
+					if (monitor.isCanceled()) {
+						break;
+					}
+					IFilm film = new XMLFilm(list.get(i),rootMediaDir);
 					films.add(film);
 					monitor.worked(1);
 				}
