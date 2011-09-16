@@ -1235,7 +1235,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				int normalSize = normalList.getLength();
 				IterableNodeList specialList = selectNodeList(store,"//special"); //$NON-NLS-1$
 				int specialSize = specialList.getLength();
-				monitor.beginTask(MessageFormat.format("Reading episodes in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), normalSize+specialSize);
+				monitor.beginTask(MessageFormat.format(Messages.getString("XMLStore2.READING_EPISODES"),dirConfig.getMediaDir().getAbsolutePath()), normalSize+specialSize); //$NON-NLS-1$
 				List<IEpisode>episodes = new ArrayList<IEpisode>(normalSize+specialSize);
 				for (int i=0;i<normalSize;i++) {
 					if (monitor.isCanceled()) {
@@ -1290,7 +1290,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				Node store = getStoreNode(doc);
 				List<Element> list = selectChildNodes(store,"film"); //$NON-NLS-1$
 				int size = list.size();
-				monitor.beginTask(MessageFormat.format("Reading films in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), size);
+				monitor.beginTask(MessageFormat.format(Messages.getString("XMLStore2.READING_FILMS"),dirConfig.getMediaDir().getAbsolutePath()), size); //$NON-NLS-1$
 				List<IFilm>films = new ArrayList<IFilm>(size);
 				for (int i=0;i<size;i++) {
 					if (monitor.isCanceled()) {
