@@ -170,6 +170,9 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 	public String getSummary() {
 		try {
 			return getStringFromXML(videoNode, "description/short/text()"); //$NON-NLS-1$
+		}
+		catch (XMLParserNotFoundException e) {
+			return null;
 		} catch (XMLParserException e) {
 			throw new RuntimeException(e.getMessage(),e);
 		}
@@ -179,8 +182,13 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 	@Override
 	public void setSummary(String summary) {
 		Element el = getElement(videoNode, "description"); //$NON-NLS-1$
-		el = getElement(videoNode, "short"); //$NON-NLS-1$
-		el.setTextContent(summary);
+		if (summary!=null) {
+			el = getElement(el, "short"); //$NON-NLS-1$
+			el.setTextContent(summary);
+		}
+		else {
+			deleteNode(el, "short"); //$NON-NLS-1$
+		}
 	}
 
 	/** {@inheritDoc} */
