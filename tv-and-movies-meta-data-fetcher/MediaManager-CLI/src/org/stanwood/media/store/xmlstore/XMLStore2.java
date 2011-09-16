@@ -1234,7 +1234,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				IterableNodeList normalList = selectNodeList(store,"//episode"); //$NON-NLS-1$
 				int normalSize = normalList.getLength();
 				IterableNodeList specialList = selectNodeList(store,"//special"); //$NON-NLS-1$
-				int specialSize = normalList.getLength();
+				int specialSize = specialList.getLength();
 				monitor.beginTask(MessageFormat.format("Reading episodes in media directory {0}",dirConfig.getMediaDir().getAbsolutePath()), normalSize+specialSize);
 				List<IEpisode>episodes = new ArrayList<IEpisode>(normalSize+specialSize);
 				for (int i=0;i<normalSize;i++) {
