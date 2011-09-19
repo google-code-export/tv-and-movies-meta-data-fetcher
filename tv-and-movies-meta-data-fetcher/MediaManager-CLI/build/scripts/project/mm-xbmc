@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Set jvm heap initial and maximum sizes (in megabytes).
 JAVA_HEAP_INIT_SIZE=64

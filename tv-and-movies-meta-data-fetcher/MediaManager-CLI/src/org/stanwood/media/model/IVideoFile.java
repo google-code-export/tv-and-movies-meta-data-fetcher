@@ -60,4 +60,10 @@ public interface IVideoFile {
 	 * @param part The part number or null if not known/supported
 	 */
 	public void setPart(Integer part);
+
+	/**
+	 * Returns the media directory the file is in
+	 * @return the media directory the file is in
+	 */
+	public File getMediaDirectory();
 }

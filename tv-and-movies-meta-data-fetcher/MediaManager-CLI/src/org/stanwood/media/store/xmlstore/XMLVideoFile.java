@@ -107,4 +107,10 @@ public class XMLVideoFile implements IVideoFile {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public File getMediaDirectory() {
+		return rootMediaDir;
+	}
+
 }
