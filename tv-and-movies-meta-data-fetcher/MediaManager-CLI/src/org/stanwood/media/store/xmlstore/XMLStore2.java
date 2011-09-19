@@ -108,7 +108,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			log.debug("cache episode"); //$NON-NLS-1$
 		}
 		try {
-			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null));
+			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null,rootMediaDir));
 			Node node = selectSingleNode(seasonNode, nodeName+"[number="+ episode.getEpisodeNumber() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (node == null) {
 				node = doc.createElement(nodeName);
@@ -150,7 +150,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			writeWriters((Element)node,episode);
 			writeActors(node,episode);
 
-			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null));
+			episode.getFiles().add(new VideoFile(episodeFile,episodeFile,null,rootMediaDir));
 			writeFilenames(doc, node, episode,rootMediaDir);
 		}
 		catch (XMLParserException e) {
@@ -217,7 +217,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
-			film.getFiles().add(new VideoFile(filmFile,filmFile,part));
+			film.getFiles().add(new VideoFile(filmFile,filmFile,part,rootMediaDir));
 			appendFilm(doc, storeNode, film,rootMediaDir);
 
 			File cacheFile = getCacheFile(rootMediaDir, FILENAME);
@@ -669,7 +669,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (!strPart.equals("")) { //$NON-NLS-1$
 				part = Integer.parseInt(strPart);
 			}
-			files.add(new VideoFile(new File(rootMediaDir,location),orgLocFile,part));
+			files.add(new VideoFile(new File(rootMediaDir,location),orgLocFile,part,rootMediaDir));
 		}
 		video.setFiles(files);
 	}

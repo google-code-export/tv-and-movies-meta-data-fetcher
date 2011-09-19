@@ -10,17 +10,20 @@ public class VideoFile implements IVideoFile {
 	private File location;
 	private File orginalLocation;
 	private Integer part;
+	private File rootMediaDir;
 
 	/**
 	 * The constructor
 	 * @param filename The current location of the video file
 	 * @param originalLocation The original location of the file
 	 * @param part The part number or null if not known/supported
+	 * @param rootMediaDir The media dir the file is in
 	 */
-	public VideoFile(File filename,File originalLocation,Integer part) {
+	public VideoFile(File filename,File originalLocation,Integer part,File rootMediaDir) {
 		this.location = filename;
 		this.orginalLocation = originalLocation;
 		this.part = part;
+		this.rootMediaDir = rootMediaDir;
 	}
 
 	/**
@@ -79,4 +82,9 @@ public class VideoFile implements IVideoFile {
 		this.part = part;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public File getMediaDirectory() {
+		return rootMediaDir;
+	}
 }
