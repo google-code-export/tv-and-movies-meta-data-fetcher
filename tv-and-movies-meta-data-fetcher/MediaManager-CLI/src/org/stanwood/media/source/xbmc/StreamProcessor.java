@@ -203,10 +203,20 @@ public abstract class StreamProcessor {
 			throw e;
 		}
 		catch (IOException e) {
-			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			if (stream==null) {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$
+			}
+			else {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			}
 		}
 		catch (ExtensionException e) {
-			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			if (stream==null) {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$
+			}
+			else {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			}
 		}
 		finally {
 			if (stream!=null) {
