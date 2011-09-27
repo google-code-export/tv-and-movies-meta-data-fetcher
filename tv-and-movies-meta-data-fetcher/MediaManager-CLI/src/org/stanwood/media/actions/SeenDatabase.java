@@ -163,17 +163,20 @@ public class SeenDatabase extends XMLParser {
 	 * @param newFile The new filename
 	 */
 	public void renamedFile(File mediaDirectory, File oldFile, File newFile) {
-		Set<SeenEntry>entryList = entries.get(mediaDirectory);
+		removeFile(mediaDirectory, oldFile);
+		markAsSeen(mediaDirectory, newFile);
+	}
 
+	public void removeFile(File mediaDirectory, File file) {
+		Set<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList!=null) {
 			Iterator<SeenEntry>it = entryList.iterator();
 			while (it.hasNext()) {
 				SeenEntry entry = it.next();
-				if (entry.getFileName().equals(oldFile.getAbsolutePath())) {
+				if (entry.getFileName().equals(file.getAbsolutePath())) {
 					it.remove();
 				}
 			}
 		}
-		markAsSeen(mediaDirectory, newFile);
 	}
 }
