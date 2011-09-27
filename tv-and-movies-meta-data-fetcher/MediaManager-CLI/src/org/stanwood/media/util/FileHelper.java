@@ -617,7 +617,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem creating the file
 	 */
 	public static File createTempFile(String name,String ext) throws IOException {
-		final File file = createTempFile(name, ext);
+		final File file = File.createTempFile(name, ext);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			@Override
