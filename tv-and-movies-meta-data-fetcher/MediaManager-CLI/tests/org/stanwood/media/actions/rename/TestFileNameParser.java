@@ -38,6 +38,10 @@ public class TestFileNameParser {
 			assertEpisode(1,13,dirConfig, new File(dir,"Show 12/Season 1/Warehouse.13.S01E13.TheBlah.DVDRip.XviD-BLAH.avi"));
 			assertEpisode(5,15,dirConfig, new File(dir,"Show's The Show/Season 5/5 15 - Blah title.avi"));
 			assertEpisode(3,1,dirConfig, new File(dir,"The show 3-01 A episode title title.m4v"));
+			assertEpisode(3,1,dirConfig, new File(dir,"The show 3x01 132.m4v"));
+			assertEpisode(10,1,dirConfig, new File(dir,"The show 10x01 - A title.m4v"));
+			assertEpisode(9,11,dirConfig, new File(dir,"The show season 9 episode 11 - A title.m4v"));
+			assertEpisode(20,11,dirConfig, new File(dir,"The show season 20 episode 11 - A title.m4v"));
 		}
 		finally {
 			FileHelper.delete(dir);

@@ -34,6 +34,7 @@ public class TestEpisodeFileNameStraregy {
 	@Test
 	public void testCanGetEpisodeAndSeason() {
 		TestFilmSearcher.assertSearchDetails("A Show", null, null, doSearch("A Show 3-01 The show title.m4v", "%s %e - %t.%x"));
+		TestFilmSearcher.assertSearchDetails("A Show", null, null, doSearch("A Show 3x01 123.m4v", "%s %e - %t.%x"));
 	}
 
 	private TSearchDetails doSearch(String filename, String pattern) {
