@@ -51,9 +51,8 @@ public class FileNameParser {
 	private static Pattern PATTERNS[] = new Pattern[] {
 			Pattern.compile(".*[s]([\\d]+)[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*[s]([\\d]+)\\.[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*([\\d]{2,2})[^\\d]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*([\\d]{1,1})[^\\d]([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*season\\s([\\d]+)\\sepisode\\s([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*?([\\d]{1,2})\\D([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*season ([\\d]{1,2}) episode ([\\d]{1,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
