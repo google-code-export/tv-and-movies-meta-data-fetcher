@@ -68,7 +68,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problme creating the directory
 	 */
 	public static File createTmpDir(String name) throws IOException {
-		File dir = File.createTempFile(name, ""); //$NON-NLS-1$
+		File dir = createTempFile(name, ""); //$NON-NLS-1$
 		if (!dir.delete()) {
 			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE"),dir.getAbsolutePath())); //$NON-NLS-1$
 		}
@@ -567,7 +567,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their are any problems
 	 */
 	public static File createTmpFileWithContents(StringBuilder testConfig)  throws IOException {
-		File configFile = File.createTempFile("config", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		File configFile = createTempFile("config", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		configFile.deleteOnExit();
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
@@ -617,7 +617,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem creating the file
 	 */
 	public static File createTempFile(String name,String ext) throws IOException {
-		final File file = File.createTempFile(name, ext);
+		final File file = createTempFile(name, ext);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			@Override
