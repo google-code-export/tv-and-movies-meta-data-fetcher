@@ -124,7 +124,12 @@ public abstract class StreamProcessor {
 			}
 		}
 		if (e!=null) {
-			throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			if (stream==null) {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			else {
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+			}
 		}
 	}
 
