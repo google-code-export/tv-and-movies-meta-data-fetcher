@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Stream;
 
 /**
@@ -106,7 +107,7 @@ public abstract class StreamProcessor {
 	 */
 	public void handleStream() throws SourceException {
 		SocketTimeoutException e = null;
-		for (int tryCount=0;tryCount<3;tryCount++) {
+		for (int tryCount=0;tryCount<FileHelper.MAX_RETRIES;tryCount++) {
 			try {
 				processStream();
 				return;
@@ -117,7 +118,7 @@ public abstract class StreamProcessor {
 					e = e1;
 				}
 				try {
-					Thread.sleep(5000); // Sleep for 3 seconds
+					Thread.sleep(FileHelper.RETRY_SLEEP_TIME);
 				} catch (InterruptedException e2) {
 					// Ignore
 				}

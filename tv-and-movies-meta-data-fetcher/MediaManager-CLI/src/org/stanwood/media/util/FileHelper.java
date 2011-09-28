@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -59,6 +60,11 @@ public class FileHelper {
 	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
 
 	private final static char HEX_DIGITS[] = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+	/** Time to sleep between retries */
+	public static final long RETRY_SLEEP_TIME = 5000; // 5 seconds
+
+	/** Number of retries to retry fetching of URL's  */
+	public static final int MAX_RETRIES = 3;
 
 	/**
 	 * This will create a temporary directory using the given name.
@@ -206,58 +212,68 @@ public class FileHelper {
 		if (log.isDebugEnabled()) {
 			log.debug("Fetching: " + url); //$NON-NLS-1$
 		}
-		try {
-			OutputStream out = null;
-			InputStream is = null;
+		IOException error = null;
+		for (int retries = 0; retries < MAX_RETRIES; retries++) {
 			try {
-				out = new FileOutputStream(dest);
-				is = new WebFileInputStream(url);
-				MessageDigest md = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
+				OutputStream out = null;
+				InputStream is = null;
+				try {
+					out = new FileOutputStream(dest);
+					is = new WebFileInputStream(url);
+					MessageDigest md = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 
-				// Transfer bytes from in to out
-				byte[] buf = new byte[1024];
-				int len;
-				while ((len = is.read(buf)) > 0) {
-					out.write(buf, 0, len);
-					md.update(buf, 0 , len);
-				}
+					// Transfer bytes from in to out
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = is.read(buf)) > 0) {
+						out.write(buf, 0, len);
+						md.update(buf, 0, len);
+					}
 
-				out.flush();
-				return bytesToHexString(md.digest());
-			}
-			catch (IOException e ) {
-				if (dest.exists()) {
-					try {
-						FileHelper.delete(dest);
+					out.flush();
+					return bytesToHexString(md.digest());
+				} catch (ConnectException e) {
+					if (error==null ) {
+						error = e;
 					}
-					catch (IOException e1) {
-						log.error(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE") ,dest),e1); //$NON-NLS-1$
+					if (retries < MAX_RETRIES - 1) {
+						log.error(MessageFormat.format("Unable to fetch URL {0}, connection timed out. Will retry...",url.toExternalForm()));
+						try {
+							Thread.sleep(FileHelper.RETRY_SLEEP_TIME);
+						} catch (InterruptedException e2) {
+							// Ignore
+						}
+					}
+				} catch (IOException e) {
+					if (dest.exists()) {
+						try {
+							FileHelper.delete(dest);
+						} catch (IOException e1) {
+							log.error(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DELETE_FILE"), dest), e1); //$NON-NLS-1$
+						}
+					}
+					throw e;
+				} finally {
+					if (is != null) {
+						try {
+							is.close();
+						} catch (IOException e) {
+							log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"), e); //$NON-NLS-1$
+						}
+					}
+					if (out != null) {
+						try {
+							out.close();
+						} catch (IOException e) {
+							log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"), e); //$NON-NLS-1$
+						}
 					}
 				}
-				throw e;
-			}
-			finally {
-				if (is!=null) {
-					try {
-						is.close();
-					}
-					catch (IOException e) {
-						log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
-					}
-				}
-				if (out != null) {
-					try {
-						out.close();
-					}
-					catch (IOException e) {
-						log.error(Messages.getString("FileHelper.UNABLE_CLOSE_STREAM"),e); //$NON-NLS-1$
-					}
-				}
+			} catch (NoSuchAlgorithmException e) {
+				throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DOWNLOAD_URL"), url), e); //$NON-NLS-1$
 			}
 		}
-		catch (NoSuchAlgorithmException e) {
-			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UNABLE_DOWNLOAD_URL"),url),e); //$NON-NLS-1$
-		}
+		throw error;
 	}
 
 	/**
