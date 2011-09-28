@@ -16,16 +16,12 @@
  */
 package org.stanwood.media.store.mp4;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -487,34 +483,8 @@ public class MP4ITunesStore implements IStore {
 		if (!file.delete()) {
 			throw new IOException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DELETE_TEMP_FILE1"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
-		OutputStream out = null;
-		URLConnection conn = null;
-		InputStream in = null;
-		try {
-			out = new BufferedOutputStream(new FileOutputStream(file));
-			conn = url.openConnection();
-			in = conn.getInputStream();
-			byte[] buffer = new byte[1024];
-			int numRead;
-
-			while ((numRead = in.read(buffer)) != -1) {
-				out.write(buffer, 0, numRead);
-
-			}
-			file.deleteOnExit();
-			return file;
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException ioe) {
-				log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CLOSE_FILE"),file)); //$NON-NLS-1$
-			}
-		}
+		FileHelper.copy(url, file);
+		return file;
 	}
 
 	// Returns the contents of the file in a byte array.

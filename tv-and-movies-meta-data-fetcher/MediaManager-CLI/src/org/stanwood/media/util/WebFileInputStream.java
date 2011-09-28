@@ -94,11 +94,17 @@ public class WebFileInputStream extends InputStream {
 		}
 
 		Object c = conn.getContent();
+//		conn.getInputStream()
 		if (c instanceof InputStream) {
 			content = (InputStream) c;
 		}
+//		else if (c instanceof sun.awt.image.URLImageSource) {
+//			sun.awt.image.URLImageSource image = (sun.awt.image.URLImageSource)c;
+//
+//		}
 		else {
-			throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.DID_NOT_RETURN_INPUTSTREAM"),c.getClass())); //$NON-NLS-1$
+			content = conn.getInputStream();
+//			throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.DID_NOT_RETURN_INPUTSTREAM"),c.getClass())); //$NON-NLS-1$
 		}
 	}
 
