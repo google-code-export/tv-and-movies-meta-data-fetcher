@@ -33,6 +33,14 @@ public class MP4v2CLIAtomInteger extends AbstractCLIMP4v2Atom implements IAtom {
 		return MessageFormat.format(Messages.getString("MP4v2CLIAtomInteger.TOSTRING"),getDisplayName(),getName(),value); //$NON-NLS-1$
 	}
 
+	/**
+	 * Used to get the value of the atom
+	 * @return The value of the atom
+	 */
+	public int getValue() {
+		return value;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object> args) {

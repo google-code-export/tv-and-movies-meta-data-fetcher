@@ -22,6 +22,8 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4Exception;
+import org.stanwood.media.store.mp4.StikValue;
+import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIAtomInteger;
 import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParserException;
@@ -32,6 +34,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 	private final static Log log = LogFactory.getLog(CLIFixSeenDB.class);
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
+	private final static String TEST_OPTION = "d"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 	private MediaDirectory rootMediaDir = null;
@@ -47,6 +50,10 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,Messages.getString("CLIMediaManager.CLI_MEDIA_DIR_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(true);
 		o.setArgName("directory"); //$NON-NLS-1$
+		OPTIONS.add(o);
+
+		o = new Option(TEST_OPTION,"test",false,Messages.getString("CLIMediaManager.CLI_TEST_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setRequired(false);
 		OPTIONS.add(o);
 	}
 
@@ -98,28 +105,21 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			IMP4Manager mp4Manager = new MP4v2CLIManager();
 			mp4Manager.init(getController().getNativeFolder());
 
+			//TODO make each store able to validate a media file
 			File root = rootMediaDir.getMediaDirConfig().getMediaDir();
 			List<File> files = FileHelper.listFiles(root);
 			for (File f : files) {
-				if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
-
-					List<IAtom> atoms = mp4Manager.listAtoms(f);
-					boolean found = false;
-					for (IAtom atom : atoms) {
-						if (atom.getName().equals("stik")) { //$NON-NLS-1$
-							found = true;
-							break;
-						}
-					}
-					if (!found) {
-						if (seenDb.isSeen(root, f)) {
-							log.info(MessageFormat.format("Remove {0} from seen database as it as incomplete metadata.",f));
-							seenDb.removeFile(root,f);
-						}
+				boolean valid = validateFile(mp4Manager,f);
+				if (!valid) {
+					if (seenDb.isSeen(root, f)) {
+						log.info(MessageFormat.format("Remove {0} from seen database as it has missing or broken metadata.",f));
+						seenDb.removeFile(root,f);
 					}
 				}
 			}
-			seenDb.write(new NullProgressMonitor());
+			if (!getController().isTestRun()) {
+				seenDb.write(new NullProgressMonitor());
+			}
 
 			return true;
 		} catch (MP4Exception e) {
@@ -132,6 +132,55 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		}
 		return false;
+	}
+
+
+	private boolean validateFile(IMP4Manager mp4Manager,File f) throws MP4Exception {
+		if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
+			List<IAtom> atoms = mp4Manager.listAtoms(f);
+			IAtom atom = hasAtom(atoms,"stik"); //$NON-NLS-1$
+			if (atom==null) {
+				return false;
+			}
+			else {
+				if (atom instanceof MP4v2CLIAtomInteger) {
+					StikValue stik = StikValue.fromId(((MP4v2CLIAtomInteger)atom).getValue());
+					if (stik==null) {
+						return false;
+					}
+					if (stik == StikValue.MOVIE) {
+						if (hasAtom(atoms,"©nam") == null) { //$NON-NLS-1$
+							return false;
+						}
+					}
+					else if (stik == StikValue.TV_SHOW) {
+						if (hasAtom(atoms,"©nam") == null) { //$NON-NLS-1$
+							return false;
+						}
+						if (hasAtom(atoms,"tvsn") == null) { //$NON-NLS-1$
+							return false;
+						}
+						if (hasAtom(atoms,"tves") == null) { //$NON-NLS-1$
+							return false;
+						}
+						if (hasAtom(atoms,"tvsh") == null) { //$NON-NLS-1$
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+
+	protected IAtom hasAtom(List<IAtom> atoms,String atomName) {
+		for (IAtom atom : atoms) {
+			if (atom.getName().equals(atomName)) {
+				return atom;
+			}
+		}
+		return null;
 	}
 
 
@@ -148,7 +197,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
 			if (dir.isDirectory()) {
 				try {
-					getController().init(false);
+					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
 				} catch (ConfigException e) {
 					fatal(e);
