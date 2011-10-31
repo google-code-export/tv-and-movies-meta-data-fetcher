@@ -88,22 +88,9 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 	}
 
 	/**
-	 * The entry point.
-	 * <p>
-	 * It has the following usage:
-	 * <code>
-	 *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u] <media files...>
+	 * The entry point to the application. For details see the class documentation.
 	 *
-	 *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
-	 *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
-	 *  --test, -t                    If this option is present, then no changes are performed.
-	 *  --config_file, -c <info|debug|file>
-	 *                                The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
-	 *  --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
-	 *  --help, -h                    Show the help
-	 * </code>
-	 * </p>
-	 * @param args The arguments
+	 * @param args The arguments.
 	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
