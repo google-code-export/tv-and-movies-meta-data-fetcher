@@ -16,6 +16,12 @@ public class ValueFactory {
 			return new IntegerValue(type,Integer.parseInt(value));
 		}
 		else if (type==ValueType.BOOLEAN) {
+			if (value.equals("yes")) { //$NON-NLS-1$
+				value = "true"; //$NON-NLS-1$
+			}
+			else if (value.equals("no")) { //$NON-NLS-1$
+				value = "false"; //$NON-NLS-1$
+			}
 			return new BooleanValue(type,Boolean.parseBoolean(value));
 		}
 		else if (type==ValueType.STRING) {

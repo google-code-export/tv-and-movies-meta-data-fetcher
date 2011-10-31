@@ -51,5 +51,8 @@ public class ExpressionEval {
 		catch (RecognitionException e) {
 			throw new ExpressionParserException(MessageFormat.format(Messages.getString("ExpressionEval.UNABLE_PARSE_EXPRESSION"),expression),e); //$NON-NLS-1$
 		}
+		catch (ExpressionParserException e) {
+			throw new ExpressionParserException(MessageFormat.format(Messages.getString("ExpressionEval.UNABLE_PARSE_EXPRESSION"),expression),e); //$NON-NLS-1$
+		}
    }
 }

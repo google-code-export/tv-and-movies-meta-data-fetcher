@@ -38,7 +38,7 @@ fragment DIGIT : ('0'..'9') ;
 fragment LETTER : ('a'..'z'|'A'..'Z') ;
 
 BOOLEAN
-    : ('true' | 'false')
+    : ('true' | 'false' | 'yes' | 'no')
     ;  
 
 IDENTIFIER         
