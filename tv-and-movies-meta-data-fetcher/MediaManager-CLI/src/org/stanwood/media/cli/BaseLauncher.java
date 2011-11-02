@@ -261,16 +261,10 @@ public abstract class BaseLauncher implements ICLICommand {
 	}
 
 	protected void printUsage(Options options,PrintStream stdout,PrintStream stderr) {
-//		PrintWriter pw = null;
-//		try {
-			PrintWriter pw = new PrintWriter(stdout);
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printUsage(pw, 80, getName(),options);
-			pw.flush();
-//		}
-//		finally {
-//			pw.close();
-//		}
+		PrintWriter pw = new PrintWriter(stdout);
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printUsage(pw, 80, getName(),options);
+		pw.flush();
 		stdout.println(""); //$NON-NLS-1$
 	}
 

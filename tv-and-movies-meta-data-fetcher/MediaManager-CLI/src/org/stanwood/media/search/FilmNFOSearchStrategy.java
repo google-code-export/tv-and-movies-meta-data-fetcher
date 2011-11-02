@@ -103,7 +103,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 	}
 
 	private File findNFOfile(File rootMediaDir,File parentDir) {
-		while (!parentDir.equals(rootMediaDir)) {
+		while (parentDir!=null && !parentDir.equals(rootMediaDir) ) {
 
 			// Now check that their is one nfo file in the directory
 			File files[] = parentDir.listFiles(new FilenameFilter() {

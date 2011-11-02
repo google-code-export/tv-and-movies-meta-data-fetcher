@@ -200,6 +200,8 @@ public class CLIMediaManager extends AbstractLauncher {
 		return true;
 	}
 
+
+
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}
