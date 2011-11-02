@@ -21,6 +21,7 @@ public class MediaDirConfig {
 	private List<Pattern> ignorePatterns;
 	private boolean ignoreSeen;
 	private String name;
+	private boolean defaultForMode;
 
 	/**
 	 * Used to get the media directory location
@@ -183,5 +184,23 @@ public class MediaDirConfig {
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * Used to find out if this is a default media directory for the mode been used
+	 * @return True if default
+	 */
+	public boolean isDefaultForMode() {
+		return defaultForMode;
+	}
+
+	/**
+	 * Used to set if this is a default media directory for the mode been used
+	 * @param defaultForMode True if default
+	 */
+	public void setDefaultForMode(boolean defaultForMode) {
+		this.defaultForMode = defaultForMode;
+	}
+
+
 
 }

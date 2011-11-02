@@ -112,8 +112,12 @@ public class ConfigReader extends BaseConfigReader {
 			document.append("  <mediaDirectory"); //$NON-NLS-1$
 			document.append(" directory=\""+dir.getMediaDir().getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 			document.append(" mode=\""+dir.getMode()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			if (dir.isDefaultForMode()) {
+				document.append(" default=\"true\""); //$NON-NLS-1$
+			}
 			document.append(" pattern=\""+dir.getPattern()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 			document.append(" ignoreSeen=\""+dir.getIgnoreSeen()+"\">"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+
 			for (Pattern p : dir.getIgnorePatterns()) {
 				document.append("    <ignore>"+p.pattern()+"</ignore>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -179,6 +183,11 @@ public class ConfigReader extends BaseConfigReader {
 				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ROOT_MEDIA_DIR"),dir.getAbsolutePath())); //$NON-NLS-1$
 			}
 			dirConfig.setMediaDir(dir);
+			boolean defaultForMode = false;
+			if (dirNode.getAttribute("default").equals("true")) {  //$NON-NLS-1$//$NON-NLS-2$
+				defaultForMode = true;
+			}
+			dirConfig.setDefaultForMode(defaultForMode);
 
 			String strMode = dirNode.getAttribute("mode").toUpperCase(); //$NON-NLS-1$
 			Mode mode ;
@@ -210,7 +219,7 @@ public class ConfigReader extends BaseConfigReader {
 			}
 
 			String name = dirNode.getAttribute("name").trim(); //$NON-NLS-1$
-			if (name.equals("")) {
+			if (name.equals("")) { //$NON-NLS-1$
 				name = null;
 			}
 

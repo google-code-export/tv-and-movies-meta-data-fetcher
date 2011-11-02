@@ -379,7 +379,6 @@ public class MediaDirectory {
 	/**
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
-	 * @param dirConfig The root media directory configuration
 	 * @param mediaFile The file the media is stored in
 	 * @return The results of searching for the show, or null if it can't be found.
 	 * @throws SourceException Thrown if their is a problem reading from a source
@@ -387,7 +386,7 @@ public class MediaDirectory {
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(final MediaDirConfig dirConfig, File mediaFile) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(File mediaFile) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		AbstractMediaSearcher s = null;
 		if (dirConfig.getMode() == Mode.TV_SHOW) {

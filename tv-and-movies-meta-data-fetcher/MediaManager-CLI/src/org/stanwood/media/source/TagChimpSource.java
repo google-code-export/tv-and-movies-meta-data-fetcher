@@ -198,7 +198,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 						for (Node n : entities) {
 							String id = getStringFromXML(n, "tagChimpID/text()"); //$NON-NLS-1$
 							String locked = getStringFromXML(n, "locked/text()"); //$NON-NLS-1$
-							SearchResult result = new SearchResult(id, getSourceId(), getFilmUrl(id).toExternalForm(), null);
+							SearchResult result = new SearchResult(id, getSourceId(), getFilmUrl(id).toExternalForm(), null,mode);
 							result.setTitle(getStringFromXML(n,"movieTags/info/movieTitle/text()")); //$NON-NLS-1$
 							if (locked.equals("yes")) { //$NON-NLS-1$
 								lockedResults.add(result);

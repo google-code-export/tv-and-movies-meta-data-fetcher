@@ -573,7 +573,7 @@ public class XBMCSource extends XMLParser implements ISource {
 							String id = getStringFromXMLOrNull(node, "id/text()"); //$NON-NLS-1$
 							String url =  getStringFromXMLOrNull(node, "url/text()"); //$NON-NLS-1$
 							if (id!=null && url!=null) {
-								SearchResult result = new SearchResult(id, getSourceId(),url,part);
+								SearchResult result = new SearchResult(id, getSourceId(),url,part,mode);
 								results.add(result);
 							}
 						}

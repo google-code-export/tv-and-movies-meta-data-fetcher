@@ -254,7 +254,7 @@ public class HybridFilmSource implements ISource {
 
 		}
 		if (id!=null && id.length()>0) {
-			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,part);
+			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,part,Mode.FILM);
 			return result;
 		}
 

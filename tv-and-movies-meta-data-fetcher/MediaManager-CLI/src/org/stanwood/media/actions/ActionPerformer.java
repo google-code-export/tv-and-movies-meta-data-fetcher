@@ -533,7 +533,7 @@ public class ActionPerformer implements IActionEventHandler {
 	private SearchResult searchForId(MediaDirectory dir,File file) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
-		result = dir.searchForVideoId(dir.getMediaDirConfig(),file);
+		result = dir.searchForVideoId(file);
 		return result;
 
 	}
