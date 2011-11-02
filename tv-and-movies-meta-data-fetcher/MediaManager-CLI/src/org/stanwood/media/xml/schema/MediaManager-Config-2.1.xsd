@@ -77,6 +77,7 @@
 			  			<xs:attribute name="mode" type="xs:string" use="required"/>
 			  			<xs:attribute name="ignoreSeen" type="xs:string"/>
 			  			<xs:attribute name="name" type="xs:string"/>
+			  			<xs:attribute name="default" type="xs:boolean"/>
 			  		</xs:complexType>
 		  		</xs:element>		  		
 		  	</xs:sequence>

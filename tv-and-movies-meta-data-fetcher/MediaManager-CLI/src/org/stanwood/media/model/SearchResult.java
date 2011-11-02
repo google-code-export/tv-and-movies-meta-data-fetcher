@@ -29,6 +29,7 @@ public class SearchResult {
 	private String url;
 	private String title;
 	private Integer part;
+	private Mode mode;
 
 	/**
 	 * Constructor of the class
@@ -36,8 +37,9 @@ public class SearchResult {
 	 * @param sourceId The id of the source that it was found in
 	 * @param url The URL of the show
 	 * @param part The part number of the media, or null if not known/supported
+	 * @param mode The media type
 	 */
-	public SearchResult(String id, String sourceId,String url,Integer part) {
+	public SearchResult(String id, String sourceId,String url,Integer part,Mode mode) {
 		super();
 		if (id == null || id.length()==0) {
 			throw new InvalidParameterException(MessageFormat.format(Messages.getString("SearchResult.INVALID_ID"),id)); //$NON-NLS-1$
@@ -53,6 +55,7 @@ public class SearchResult {
 		this.sourceId = sourceId;
 		this.url = url;
 		this.part = part;
+		this.mode = mode;
 	}
 
 	/**
@@ -115,6 +118,12 @@ public class SearchResult {
 		return part;
 	}
 
-
+	/**
+	 * Used to get the media results type
+	 * @return The media type
+	 */
+	public Mode getMode() {
+		return mode;
+	}
 
 }

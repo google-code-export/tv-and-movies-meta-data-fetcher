@@ -952,7 +952,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (!((Element)node).getAttribute("part").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
 				part = Integer.parseInt(((Element)node).getAttribute("part")); //$NON-NLS-1$
 			}
-			result = new SearchResult(filmEl.getAttribute("id"), filmEl.getAttribute("url"), filmEl.getAttribute("sourceId"),part); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			result = new SearchResult(filmEl.getAttribute("id"), filmEl.getAttribute("url"), filmEl.getAttribute("sourceId"),part,dirConfig.getMode()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		return result;
@@ -981,7 +981,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (!((Element)showNodes.item(0)).getAttribute("part").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
 				part = Integer.parseInt(((Element)showNodes.item(0)).getAttribute("part")); //$NON-NLS-1$
 			}
-			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		return result;

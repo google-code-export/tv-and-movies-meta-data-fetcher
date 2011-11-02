@@ -408,7 +408,7 @@ public class PodCastActionTest {
 		@Override
 		public SearchResult searchMedia(String name,String year, Mode mode, Integer part)
 				throws SourceException {
-			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part);
+			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part,Mode.FILM);
 		}
 
 	};

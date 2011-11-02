@@ -196,7 +196,7 @@ public class MemoryStore implements IStore {
 			for (CacheShow show : shows) {
 				if (show.getName().equals(name)) {
 					//TODO look for the media file and work out the part
-					return new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null);
+					return new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null,mode);
 				}
 			}
 		}
@@ -205,10 +205,10 @@ public class MemoryStore implements IStore {
 			if (f!=null) {
 				for (IVideoFile vf : f.getFiles()) {
 					if (vf.getLocation().equals(mediaFile)) {
-						return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), vf.getPart());
+						return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), vf.getPart(),mode);
 					}
 				}
-				return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), null);
+				return new SearchResult(f.getTitle(), f.getSourceId(), f.getFilmUrl().toExternalForm(), null,mode);
 			}
 		}
 		return null;

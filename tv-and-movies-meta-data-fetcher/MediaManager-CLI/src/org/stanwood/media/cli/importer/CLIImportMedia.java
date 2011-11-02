@@ -1,29 +1,40 @@
-package org.stanwood.media.cli.manager;
+package org.stanwood.media.cli.importer;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.cli.manager.Messages;
 import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
+import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 
 public class CLIImportMedia extends AbstractLauncher {
@@ -72,7 +83,7 @@ public class CLIImportMedia extends AbstractLauncher {
 
 
 	private CLIImportMedia(IExitHandler exitHandler) {
-		super("mm-import-media",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
+		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -83,35 +94,35 @@ public class CLIImportMedia extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try  {
+			Map<File,List<File>>newFiles = new HashMap<File,List<File>>();
 			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
 				for (IAction action : getController().getMediaDirectory(mediaDirLoc).getActions()) {
 					action.setTestMode(getController().isTestRun());
 				}
+				newFiles.put(mediaDirLoc, new ArrayList<File>());
 			}
 
 			doUpdateCheck();
 
-//			List<File>newFiles = new ArrayList<File>();
+			MediaSearcher searcher = new MediaSearcher();
 			for (File file : files) {
-				for (File mediaDirLoc :  getController().getMediaDirectiores()) {
-					MediaDirectory dir = getController().getMediaDirectory(mediaDirLoc);
-					SearchResult result = dir.searchForVideoId(dir.getMediaDirConfig(), file);
-					if (result==null) {
-						log.error(MessageFormat.format("Unable to find media details for file {0}",file));
-					}
-					else {
-						File toFile =new File(dir.getMediaDirConfig().getMediaDir(),file.getName());
-						if (getController().isTestRun()) {
-							log.info(MessageFormat.format("Test run so aborting move of ''{0}'' to media directory ''{1}'' and performing actions...",file,toFile.getParent()));
-						}
-						else {
-							log.info(MessageFormat.format("Moving ''{0}'' to media directory ''{1}'' and performing actions...",file,toFile.getParent()));
-							FileHelper.move(file, toFile);
-							performActions(toFile,dir);
-							break;
-						}
-					}
+				SearchResult result = searcher.lookupMedia(file, getController());
+				if (result==null) {
+					log.error(MessageFormat.format("Unable to find media details for file {0}",file));
+					return false;
 				}
+
+				MediaDirectory dir = findMediaDir(file,result);
+				if (dir==null) {
+					log.error(MessageFormat.format("Unable to find media directory for file {0}",file));
+					return false;
+				}
+
+				moveFileToMediaDir(file, newFiles, dir.getMediaDirConfig().getMediaDir());
+			}
+
+			for (Entry<File,List<File>> e : newFiles.entrySet()) {
+				performActions(e.getValue(),getController().getMediaDirectory(e.getKey()));
 			}
 
 			return true;
@@ -123,21 +134,65 @@ public class CLIImportMedia extends AbstractLauncher {
 		return false;
 	}
 
-	private void performActions(File toFile, MediaDirectory dir) {
-//		List<IAction> actions = new ArrayList<IAction>(dir.getActions());
-//		boolean found = false;
-//		for (IAction action : actions) {
-//			if (action instanceof RenameAction) {
-//				found = true;
-//			}
-//		}
-//
-//		if (!found) {
-//			actions.add(0,new RenameAction());
-//		}
-//
-//		ActionPerformer renamer = new ActionPerformer(getController().getConfigDir(),getController().getNativeFolder(),actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
-//		renamer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
+	private MediaDirectory findMediaDir(File file, SearchResult result) throws ConfigException, StoreException, MalformedURLException, IOException {
+		if (result.getMode()==Mode.FILM) {
+			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
+				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
+				if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
+					return mediaDir;
+				}
+			}
+		}
+		else {
+			// Check to see if their is already a media directory that contains the show
+			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
+				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
+				for (IStore store : mediaDir.getStores()) {
+					if (store.getShow(mediaDir.getMediaDirConfig().getMediaDir(), file, result.getId())!=null) {
+						return mediaDir;
+					}
+				}
+			}
+
+			// Used a default media directory
+			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
+				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
+				if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
+					return mediaDir;
+				}
+			}
+		}
+		return null;
+	}
+
+
+	private void moveFileToMediaDir(File file,Map<File,List<File>>newFiles,File mediaDirLoc) throws IOException {
+		File toFile =new File(mediaDirLoc,file.getName());
+		if (getController().isTestRun()) {
+			log.info(MessageFormat.format("Test run so aborting move of ''{0}'' to media directory ''{1}'' and performing actions...",file,toFile.getParent()));
+		}
+		else {
+			log.info(MessageFormat.format("Moving ''{0}'' to media directory ''{1}'' and performing actions...",file,toFile.getParent()));
+			FileHelper.move(file, toFile);
+			newFiles.get(mediaDirLoc).add(toFile);
+		}
+	}
+
+	private void performActions(List<File> newFiles, MediaDirectory dir) throws ActionException, ConfigException {
+		List<IAction> actions = new ArrayList<IAction>(dir.getActions());
+		boolean found = false;
+		for (IAction action : actions) {
+			if (action instanceof RenameAction) {
+				found = true;
+			}
+		}
+
+		if (!found) {
+			actions.add(0,new RenameAction());
+		}
+
+		ActionPerformer renamer = new ActionPerformer(getController().getConfigDir(),getController().getNativeFolder(),actions,dir,dir.getMediaDirConfig().getExtensions(),getController().isTestRun());
+		renamer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
 	}
 
 
@@ -232,12 +287,10 @@ public class CLIImportMedia extends AbstractLauncher {
 		return false;
 	}
 
-	@Override
-	protected void printUsage(Options options, PrintStream stdout, PrintStream stderr) {
-		stdout.println("usage: mm-import-media [-c <file>] [-h] [-l <info|debug|file>] [-t] [-u] [-v] <args...>"); //$NON-NLS-1$
-		stdout.println(""); //$NON-NLS-1$
-	}
 
+	protected String getPrintArguments() {
+		return Messages.getString("CLICopyToMediaDir.MEDIA_FILES"); //$NON-NLS-1$
+	}
 
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;

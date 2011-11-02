@@ -9,6 +9,10 @@ Add a getting started guide and link to a button in the installer
 Add more linux distribution packages.
 Make native MacOSX installer
 Make native Windows installer
+Make The CLIMediaImporter search for the media details and check which media dir it should be placed in
+  * Check perffered media dir and for existing episodes/parts
+Make the media imported have the option to delete non media files
+Add tests of media importing
 
 Version 2.1
 -----------
