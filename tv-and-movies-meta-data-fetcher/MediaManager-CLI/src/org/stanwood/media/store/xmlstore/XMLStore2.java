@@ -927,7 +927,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				store = getStoreNode(doc);
 				if (store!=null) {
 					if (dirConfig.getMode()==Mode.TV_SHOW) {
-						return searchForTVShow(store,mediaFile,dirConfig.getPattern(),dirConfig.getMediaDir());
+						return searchForTVShow(store,mediaFile,dirConfig.getPattern(),dirConfig.getMediaDir(),name);
 					}
 					else {
 						return searchForFilm(store,mediaFile,dirConfig);
@@ -969,8 +969,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern,File rootMediaDir) throws XMLParserException {
-		SearchResult result = null;
+	private SearchResult searchForTVShow(Node store, File episodeFile, String renamePattern,File rootMediaDir,String title) throws XMLParserException {
 
 		String query = quoteXPathQuery(makePathRelativeToMediaDir(episodeFile,rootMediaDir));
 		// search for show by file name
@@ -981,10 +980,21 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (!((Element)showNodes.item(0)).getAttribute("part").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
 				part = Integer.parseInt(((Element)showNodes.item(0)).getAttribute("part")); //$NON-NLS-1$
 			}
-			result = new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
-		return result;
+		query = quoteXPathQuery(title);
+		showNodes = selectNodeList(store,"show[@name="+query+"]");  //$NON-NLS-1$//$NON-NLS-2$
+		if (showNodes!=null && showNodes.getLength()>0) {
+			Element showEl = (Element)showNodes.item(0);
+			Integer part = null;
+			if (!((Element)showNodes.item(0)).getAttribute("part").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+				part = Integer.parseInt(((Element)showNodes.item(0)).getAttribute("part")); //$NON-NLS-1$
+			}
+			return new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+
+		return null;
 	}
 
 	private Document getCache(File rootMediaDirectory) throws StoreException {

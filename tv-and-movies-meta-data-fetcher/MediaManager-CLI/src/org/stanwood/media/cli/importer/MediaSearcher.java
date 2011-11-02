@@ -19,9 +19,12 @@ package org.stanwood.media.cli.importer;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.SourceException;
@@ -29,13 +32,25 @@ import org.stanwood.media.store.StoreException;
 
 public class MediaSearcher {
 
-	public MediaSearcher() {
+	private Controller controller;
+	private List<MediaDirectory> mediaDirs;
 
-	}
-
-	public SearchResult lookupMedia(File mediaFile,Controller controller) throws ConfigException, SourceException, StoreException, MalformedURLException, IOException {
+	public MediaSearcher(Controller controller) throws ConfigException {
+		this.controller = controller;
+		mediaDirs = new ArrayList<MediaDirectory>();
 		for (File mediaDirLoc :  controller.getMediaDirectiores()) {
 			MediaDirectory mediaDir = controller.getMediaDirectory(mediaDirLoc);
+			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
+				mediaDirs.add(0,mediaDir);
+			}
+			else {
+				mediaDirs.add(mediaDir);
+			}
+		}
+	}
+
+	public SearchResult lookupMedia(File mediaFile) throws ConfigException, SourceException, StoreException, MalformedURLException, IOException {
+		for (MediaDirectory mediaDir : mediaDirs) {
 			SearchResult result = mediaDir.searchForVideoId(mediaFile);
 			if (result!=null) {
 				return result;

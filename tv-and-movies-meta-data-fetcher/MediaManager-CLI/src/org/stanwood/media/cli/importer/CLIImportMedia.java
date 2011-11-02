@@ -104,9 +104,9 @@ public class CLIImportMedia extends AbstractLauncher {
 
 			doUpdateCheck();
 
-			MediaSearcher searcher = new MediaSearcher();
+			MediaSearcher searcher = new MediaSearcher(getController());
 			for (File file : files) {
-				SearchResult result = searcher.lookupMedia(file, getController());
+				SearchResult result = searcher.lookupMedia(file);
 				if (result==null) {
 					log.error(MessageFormat.format("Unable to find media details for file {0}",file));
 					return false;
@@ -257,7 +257,7 @@ public class CLIImportMedia extends AbstractLauncher {
 				if (f.isDirectory()) {
 					for (File f2 : FileHelper.listFiles(f)) {
 						if (isAllowedMediaFileType(f2)) {
-							files.add(f);
+							files.add(f2);
 						}
 					}
 				}

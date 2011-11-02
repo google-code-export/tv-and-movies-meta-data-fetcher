@@ -44,7 +44,7 @@ public class SearchHelper {
 		int currentPos = 0;
 		while ((pos = term.indexOf(".",currentPos))!=-1) { //$NON-NLS-1$
 			boolean doit=true;
-			if (pos>=0 && term.charAt(pos-1)==' ') {
+			if (pos>0 && term.charAt(pos-1)==' ') {
 				doit = false;
 			}
 			if (pos+1<term.length() && term.charAt(pos+1)==' ') {
