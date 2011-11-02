@@ -219,4 +219,5 @@ public class CLIFixSeenDB extends AbstractLauncher {
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
 	}
+
 }

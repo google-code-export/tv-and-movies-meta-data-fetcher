@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
@@ -71,7 +72,7 @@ public class CLIImportMedia extends AbstractLauncher {
 
 
 	private CLIImportMedia(IExitHandler exitHandler) {
-		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
+		super("mm-import-media",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -231,10 +232,12 @@ public class CLIImportMedia extends AbstractLauncher {
 		return false;
 	}
 
-
-	protected String getPrintArguments() {
-		return Messages.getString("CLICopyToMediaDir.MEDIA_FILES"); //$NON-NLS-1$
+	@Override
+	protected void printUsage(Options options, PrintStream stdout, PrintStream stderr) {
+		stdout.println("usage: mm-import-media [-c <file>] [-h] [-l <info|debug|file>] [-t] [-u] [-v] <args...>"); //$NON-NLS-1$
+		stdout.println(""); //$NON-NLS-1$
 	}
+
 
 	static synchronized void setExitHandler(IExitHandler handler) {
 		exitHandler = handler;
