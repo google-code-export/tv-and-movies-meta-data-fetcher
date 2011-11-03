@@ -42,6 +42,8 @@ public class TestFileNameParser {
 			assertEpisode(10,1,dirConfig, new File(dir,"The show 10x01 - A title.m4v"));
 			assertEpisode(9,11,dirConfig, new File(dir,"The show season 9 episode 11 - A title.m4v"));
 			assertEpisode(20,11,dirConfig, new File(dir,"The show season 20 episode 11 - A title.m4v"));
+
+			Assert.assertNull(FileNameParser.parse(dirConfig, new File(dir,"A Film (2011).m4v")));
 		}
 		finally {
 			FileHelper.delete(dir);
