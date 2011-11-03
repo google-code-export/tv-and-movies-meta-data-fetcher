@@ -144,6 +144,9 @@ public class CLIImportMedia extends AbstractLauncher {
 	private MediaDirectory findMediaDir(File file, SearchResult result) throws ConfigException, StoreException, MalformedURLException, IOException {
 		if (result.getMode()==Mode.FILM) {
 			List<MediaDirectory> mediaDirs = getController().getMediaDirectories(result.getMode());
+			if (mediaDirs.size()==1) {
+				return mediaDirs.get(0);
+			}
 			if (useDefaults) {
 				for (MediaDirectory mediaDir :  mediaDirs) {
 					if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
