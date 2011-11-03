@@ -71,6 +71,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
+	private List<WatchDirConfig> watchDirs;
 
 	private File xbmcAddonDir;
 
@@ -101,9 +102,18 @@ public class ConfigReader extends BaseConfigReader {
 			parseGlobal(doc);
 			parseXBMCSettings(doc);
 			parseMediaDirs(doc);
+			parseWatchDirs(doc);
 			parsePlguins(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG"),e); //$NON-NLS-1$
+		}
+	}
+
+	private void writeWatchDirs(StringBuilder document, IProgressMonitor progress) throws XMLParserException {
+		for (WatchDirConfig dir : watchDirs) {
+			document.append("  <watchDirectory"); //$NON-NLS-1$
+			document.append(" directory=\""+dir.getWatchDir().getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			document.append(" />");
 		}
 	}
 
@@ -178,7 +188,7 @@ public class ConfigReader extends BaseConfigReader {
 		for (Node node : selectNodeList(doc,"/mediaManager/mediaDirectory")) { //$NON-NLS-1$
 			Element dirNode = (Element) node;
 			MediaDirConfig dirConfig = new MediaDirConfig();
-			File dir = new File(dirNode.getAttribute("directory")); //$NON-NLS-1$
+			File dir = new File(parseString(dirNode.getAttribute("directory"))); //$NON-NLS-1$
 			if (!dir.exists()) {
 				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ROOT_MEDIA_DIR"),dir.getAbsolutePath())); //$NON-NLS-1$
 			}
@@ -251,7 +261,20 @@ public class ConfigReader extends BaseConfigReader {
 		this.mediaDir = dirConfigs;
 	}
 
-
+	private void parseWatchDirs(Document doc) throws XMLParserException, ConfigException {
+		List<WatchDirConfig>watchDirs = new ArrayList<WatchDirConfig>();
+		for (Node node : selectNodeList(doc,"/mediaManager/watchDirectory")) { //$NON-NLS-1$
+			Element dirNode = (Element) node;
+			WatchDirConfig dirConfig = new WatchDirConfig();
+			File dir = new File(parseString(dirNode.getAttribute("directory"))); //$NON-NLS-1$
+			if (!dir.exists()) {
+				throw new ConfigException(MessageFormat.format("Unable to find watch directory ''{0}''",dir.getAbsolutePath())); //$NON-NLS-1$
+			}
+			dirConfig.setWatchDir(dir);
+			watchDirs.add(dirConfig);
+		}
+		this.watchDirs = watchDirs;
+	}
 
 
 	private void parseIgnorePatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException, ConfigException {
@@ -646,6 +669,14 @@ public class ConfigReader extends BaseConfigReader {
 		return mediaDirs;
 	}
 
+	public Collection<WatchDirConfig> getWatchDirectories() {
+		List<WatchDirConfig> mediaDirs = new ArrayList<WatchDirConfig>();
+		for (WatchDirConfig c : watchDirs) {
+			mediaDirs.add(c);
+		}
+		return mediaDirs;
+	}
+
 	/**
 	 * Used to find the native folder. Null is returend if it could not be found
 	 * @return The native folder, or null if not found
@@ -675,7 +706,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is a problem
 	 */
 	public void writeConfig(IProgressMonitor monitor,File file) throws  ConfigException {
-		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+4);
+		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+5);
 
 		try {
 			StringBuilder document = new StringBuilder();
@@ -687,6 +718,8 @@ public class ConfigReader extends BaseConfigReader {
 			writeGlobalSettings(document);
 			progress.worked(1);
 			writeMediaDirs(document,progress);
+			progress.worked(1);
+			writeWatchDirs(document,progress);
 			document.append("</mediaManager>"+FileHelper.LS); //$NON-NLS-1$
 			Document doc = XMLParser.strToDom(document.toString(),SCHEMA_NAME);
 			XMLParser.writeXML(file, doc);

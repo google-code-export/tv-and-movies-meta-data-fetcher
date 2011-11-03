@@ -46,7 +46,7 @@ public class TestConfigReader {
 //			testConfig.append("              version=\"2.0\""+LS);
 //			testConfig.append("<mediaManager"+LS);
 			testConfig.append(">"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" ignoreSeen=\"true\" name=\"TV Shows\">"+LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" default=\"true\" ignoreSeen=\"true\" name=\"TV Shows\">"+LS);
 			testConfig.append("    <sources>"+LS);
 			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
@@ -79,6 +79,7 @@ public class TestConfigReader {
 			MediaDirConfig dirConfig = configReader.getMediaDirectory(mediaDir);
 			Assert.assertNotNull(dirConfig);
 			Assert.assertEquals("%e.%x",dirConfig.getPattern());
+			Assert.assertTrue(dirConfig.isDefaultForMode());
 			Assert.assertEquals(Mode.TV_SHOW,dirConfig.getMode());
 			Assert.assertTrue(dirConfig.getIgnoreSeen());
 			Assert.assertEquals("TV Shows",dirConfig.getName());
@@ -142,6 +143,7 @@ public class TestConfigReader {
 
 			MediaDirConfig dirConfig = configReader.getMediaDirectory(mediaDir);
 			Assert.assertFalse(dirConfig.getIgnoreSeen());
+			Assert.assertFalse(dirConfig.isDefaultForMode());
 			Assert.assertNull(dirConfig.getName());
 			Assert.assertNotNull(dirConfig.getIgnorePatterns());
 			Assert.assertEquals(3,dirConfig.getIgnorePatterns().size());
@@ -503,6 +505,33 @@ public class TestConfigReader {
 		finally {
 			FileHelper.delete(mediaDir);
 		}
+	}
+
+	/**
+	 * Used to test that the watch folders can be configured
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testWatchFolders() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File mediaDir = FileHelper.createTmpDir("New");
+		try {
+
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+LS);
+			testConfig.append("  <watchDirectory directory=\""+mediaDir.getAbsolutePath()+"\"/>"+LS);
+			testConfig.append("</mediaManager>"+LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			Assert.assertEquals(1,configReader.getWatchDirectories().size());
+			Assert.assertEquals(mediaDir.getAbsolutePath(),configReader.getWatchDirectories().iterator().next().getWatchDir().getAbsolutePath());
+
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+
 	}
 
 //	/**

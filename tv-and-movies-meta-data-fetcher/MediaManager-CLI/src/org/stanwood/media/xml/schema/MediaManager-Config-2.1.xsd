@@ -2,12 +2,12 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="mediaManager">  
   		<xs:complexType>
-  			<xs:sequence>
+  			<xs:choice minOccurs="0" maxOccurs="unbounded">
   				<xs:element name="plugins" minOccurs="0" maxOccurs="1">
 		  			<xs:complexType>
-		  				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+		  				<xs:choice minOccurs="0" maxOccurs="unbounded">
 		  					<xs:element name="plugin" type="plugin"/>
-		  				</xs:sequence>
+		  				</xs:choice>
 		  			</xs:complexType>
 		  		</xs:element>		  		
   				<xs:element name="XBMCAddons" minOccurs="0" maxOccurs="1">
@@ -19,11 +19,16 @@
   				</xs:element>
   				<xs:element name="global" minOccurs="0" maxOccurs="1">
   					<xs:complexType>  							  				
-  						<xs:sequence>
+  						<xs:choice minOccurs="0" maxOccurs="unbounded">
   							<xs:element name="configDirectory" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
   						    <xs:element name="native" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					
-  						</xs:sequence>  						
+  						</xs:choice>  						
   					</xs:complexType>
+  				</xs:element>
+  				<xs:element name="watchDirectory" minOccurs="0" maxOccurs="unbounded">
+  					<xs:complexType>
+  						<xs:attribute name="directory" type="xs:string" use="required"/>
+  					</xs:complexType>  					
   				</xs:element>
 	  			<xs:element name="mediaDirectory" minOccurs="0" maxOccurs="unbounded">  
 	  				<xs:complexType>
@@ -80,7 +85,7 @@
 			  			<xs:attribute name="default" type="xs:boolean"/>
 			  		</xs:complexType>
 		  		</xs:element>		  		
-		  	</xs:sequence>
+		  	</xs:choice>
   		</xs:complexType>    	
   	</xs:element>
   	
