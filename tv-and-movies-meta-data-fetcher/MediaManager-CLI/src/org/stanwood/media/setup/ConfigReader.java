@@ -638,7 +638,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * Used to get a list of media directory locations
 	 * @return Media directory locations
 	 */
-	public Collection<File> getMediaDirectiores() {
+	public Collection<File> getMediaDirectories() {
 		List<File> mediaDirs = new ArrayList<File>();
 		for (MediaDirConfig c : mediaDir) {
 			mediaDirs.add(c.getMediaDir());

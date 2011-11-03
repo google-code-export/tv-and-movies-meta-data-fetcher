@@ -42,14 +42,17 @@ public class CLIImportMedia extends AbstractLauncher {
 	private final static Log log = LogFactory.getLog(CLIImportMedia.class);
 
 	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
+	private final static String USE_DEFAULT_OPTION = "d"; //$NON-NLS-1$
 	private static final List<Option> OPTIONS;
 	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
 
 	private boolean xbmcUpdate = true;
 	private List<File> files;
 	private HashSet<String> extensions;
+
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
+	private boolean useDefaults = true;
 
 
 	private static IExitHandler exitHandler = null;
@@ -62,6 +65,10 @@ public class CLIImportMedia extends AbstractLauncher {
 		OPTIONS.add(o);
 
 		o = new Option(NOUPDATE_OPTION,"noupdate",false,Messages.getString("CLICopyToMediaDir.CLI_MEDIA_NOUPDATE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setRequired(false);
+		OPTIONS.add(o);
+
+		o = new Option(USE_DEFAULT_OPTION,"dontUseDefaults",false,"Don't use default media directiores"); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -95,7 +102,7 @@ public class CLIImportMedia extends AbstractLauncher {
 	protected boolean run() {
 		try  {
 			Map<File,List<File>>newFiles = new HashMap<File,List<File>>();
-			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
+			for (File mediaDirLoc :  getController().getMediaDirectories()) {
 				for (IAction action : getController().getMediaDirectory(mediaDirLoc).getActions()) {
 					action.setTestMode(getController().isTestRun());
 				}
@@ -109,13 +116,13 @@ public class CLIImportMedia extends AbstractLauncher {
 				SearchResult result = searcher.lookupMedia(file);
 				if (result==null) {
 					log.error(MessageFormat.format("Unable to find media details for file {0}",file));
-					return false;
+					continue;
 				}
 
 				MediaDirectory dir = findMediaDir(file,result);
 				if (dir==null) {
 					log.error(MessageFormat.format("Unable to find media directory for file {0}",file));
-					return false;
+					continue;
 				}
 
 				moveFileToMediaDir(file, newFiles, dir.getMediaDirConfig().getMediaDir());
@@ -136,17 +143,20 @@ public class CLIImportMedia extends AbstractLauncher {
 
 	private MediaDirectory findMediaDir(File file, SearchResult result) throws ConfigException, StoreException, MalformedURLException, IOException {
 		if (result.getMode()==Mode.FILM) {
-			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
-				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
-				if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
-					return mediaDir;
+			List<MediaDirectory> mediaDirs = getController().getMediaDirectories(result.getMode());
+			if (useDefaults) {
+				for (MediaDirectory mediaDir :  mediaDirs) {
+					if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
+						return mediaDir;
+					}
 				}
 			}
 		}
 		else {
+			List<MediaDirectory> mediaDirs = getController().getMediaDirectories(result.getMode());
+
 			// Check to see if their is already a media directory that contains the show
-			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
-				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
+			for (MediaDirectory mediaDir :  mediaDirs) {
 				for (IStore store : mediaDir.getStores()) {
 					if (store.getShow(mediaDir.getMediaDirConfig().getMediaDir(), file, result.getId())!=null) {
 						return mediaDir;
@@ -154,11 +164,12 @@ public class CLIImportMedia extends AbstractLauncher {
 				}
 			}
 
-			// Used a default media directory
-			for (File mediaDirLoc :  getController().getMediaDirectiores()) {
-				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
-				if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
-					return mediaDir;
+			if (useDefaults) {
+				// Used a default media directory
+				for (MediaDirectory mediaDir :  mediaDirs) {
+					if (mediaDir.getMediaDirConfig().getMode()==result.getMode() && mediaDir.getMediaDirConfig().isDefaultForMode()) {
+						return mediaDir;
+					}
 				}
 			}
 		}
@@ -243,7 +254,7 @@ public class CLIImportMedia extends AbstractLauncher {
 		else {
 			extensions = new HashSet<String>();
 			try {
-				for (File mediaDirLoc :  getController().getMediaDirectiores()) {
+				for (File mediaDirLoc :  getController().getMediaDirectories()) {
 					MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
 					extensions.addAll(mediaDir.getMediaDirConfig().getExtensions());
 				}
@@ -276,6 +287,9 @@ public class CLIImportMedia extends AbstractLauncher {
 
 		if (cmd.hasOption(NOUPDATE_OPTION)) {
 			xbmcUpdate = false;
+		}
+		if (cmd.hasOption(USE_DEFAULT_OPTION)) {
+			useDefaults = false;
 		}
 		return true;
 	}

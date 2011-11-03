@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.FileNameParser;
+import org.stanwood.media.actions.rename.ParsedFileName;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.setup.ConfigException;
@@ -38,7 +40,7 @@ public class MediaSearcher {
 	public MediaSearcher(Controller controller) throws ConfigException {
 		this.controller = controller;
 		mediaDirs = new ArrayList<MediaDirectory>();
-		for (File mediaDirLoc :  controller.getMediaDirectiores()) {
+		for (File mediaDirLoc :  controller.getMediaDirectories()) {
 			MediaDirectory mediaDir = controller.getMediaDirectory(mediaDirLoc);
 			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
 				mediaDirs.add(0,mediaDir);
@@ -50,10 +52,17 @@ public class MediaSearcher {
 	}
 
 	public SearchResult lookupMedia(File mediaFile) throws ConfigException, SourceException, StoreException, MalformedURLException, IOException {
+		Mode mode = Mode.TV_SHOW;
+		ParsedFileName parsed = FileNameParser.parse(mediaFile);
+		if (parsed==null) {
+			mode = Mode.FILM;
+		}
 		for (MediaDirectory mediaDir : mediaDirs) {
-			SearchResult result = mediaDir.searchForVideoId(mediaFile);
-			if (result!=null) {
-				return result;
+			if (mediaDir.getMediaDirConfig().getMode()==mode) {
+				SearchResult result = mediaDir.searchForVideoId(mediaFile);
+				if (result!=null) {
+					return result;
+				}
 			}
 		}
 		return null;
