@@ -38,8 +38,13 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			return null;
 		}
 		String fileName = mediaFile.getAbsolutePath();
-		if (renamePattern != null && fileName.startsWith(rootMediaDir.getAbsolutePath()) && !hasIgnoreTokens(mediaFile)) {
-			fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
+		if (renamePattern != null && !hasIgnoreTokens(mediaFile)) {
+			if (fileName.startsWith(rootMediaDir.getAbsolutePath())) {
+				fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
+			}
+			else {
+				fileName = mediaFile.getName();
+			}
 
 			ReverseFilePatternMatcher rfpm = new ReverseFilePatternMatcher();
 			rfpm.parse(fileName, renamePattern);

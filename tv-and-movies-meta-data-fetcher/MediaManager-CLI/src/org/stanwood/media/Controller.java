@@ -235,8 +235,8 @@ public class Controller {
 	 * Used to get a list of media directory locations
 	 * @return Media directory locations
 	 */
-	public Collection<File> getMediaDirectiores() {
-		return configReader.getMediaDirectiores();
+	public Collection<File> getMediaDirectories() {
+		return configReader.getMediaDirectories();
 	}
 
 	/**
@@ -368,5 +368,22 @@ public class Controller {
 		} catch (XBMCException e) {
 			throw new ConfigException(Messages.getString("Controller.UNABLE_FIND_DEFAULT_SOURCE"),e); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * Used to get a list of media directories of a given type
+	 * @param type The type
+	 * @return The list of media Directories
+	 * @throws ConfigException Thrown if their is a problem reading the config
+	 */
+	public List<MediaDirectory>getMediaDirectories(Mode type) throws ConfigException {
+		List<MediaDirectory>mediaDirs = new ArrayList<MediaDirectory>();
+		for (File mediaDirLoc :  getMediaDirectories()) {
+			MediaDirectory mediaDir = getMediaDirectory(mediaDirLoc);
+			if (mediaDir.getMediaDirConfig().getMode()==type) {
+				mediaDirs.add(mediaDir);
+			}
+		}
+		return mediaDirs;
 	}
 }
