@@ -54,18 +54,17 @@ public class FileNameParser {
 			Pattern.compile(".*?([\\d]{1,2})\\D([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*season ([\\d]{1,2}) episode ([\\d]{1,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
 			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*([\\d]{2,2})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*([\\d]{1,1})([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
+			Pattern.compile(".*[\\. ^]([\\d]{2,2})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+			Pattern.compile(".*[\\. ^]([\\d]{1,1})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
 	};
 
-
 	/**
-	 * Parse the filename and work out the episode and season number
-	 * @param dirConfig The root media directory
+	 * Parse the filename and work out the episode and season number. This does not use the media directory
+	 * to do reverse pattern lookups.
 	 * @param file The file been renamed
 	 * @return The parsed information
 	 */
-	public static ParsedFileName parse(MediaDirConfig dirConfig,File file) {
+	public static ParsedFileName parse(File file) {
 		for (Pattern pattern : PATTERNS) {
 			Matcher m = pattern.matcher(file.getName());
 			if (m.matches()) {
@@ -77,13 +76,27 @@ public class FileNameParser {
 				return result;
 			}
  		}
+		return null;
+	}
+
+	/**
+	 * Parse the filename and work out the episode and season number
+	 * @param dirConfig The root media directory
+	 * @param file The file been renamed
+	 * @return The parsed information
+	 */
+	public static ParsedFileName parse(MediaDirConfig dirConfig,File file) {
+		ParsedFileName result = parse(file);
+		if (result!=null) {
+			return result;
+		}
 
 		Map<Token,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
 			String episodeNumber = tokens.get(Token.EPISODE);
 			String seasonNumber = tokens.get(Token.SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
-				ParsedFileName result = new ParsedFileName();
+				result = new ParsedFileName();
 				try {
 					result.setSeason(Integer.parseInt(seasonNumber));
 					result.setEpisode(Integer.parseInt(episodeNumber));
