@@ -30,6 +30,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.WatchDirConfig;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
@@ -266,8 +267,8 @@ public class CLIImportMedia extends AbstractLauncher {
 				return false;
 			}
 			files = new ArrayList<File>();
-			for (String s : cmd.getArgs()) {
-				File f = new File(s);
+			for (WatchDirConfig c : getController().getWatchDirectories()) {
+				File f = c.getWatchDir();
 				if (f.isDirectory()) {
 					for (File f2 : FileHelper.listFiles(f)) {
 						if (isAllowedMediaFileType(f2)) {

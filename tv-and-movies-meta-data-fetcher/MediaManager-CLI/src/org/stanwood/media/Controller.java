@@ -39,6 +39,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
+import org.stanwood.media.setup.WatchDirConfig;
 import org.stanwood.media.source.HybridFilmSourceInfo;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.TagChimpSourceInfo;
@@ -237,6 +238,14 @@ public class Controller {
 	 */
 	public Collection<File> getMediaDirectories() {
 		return configReader.getMediaDirectories();
+	}
+
+	/**
+	 * Used to get a list of watch directory information
+	 * @return list of watch directory information
+	 */
+	public Collection<WatchDirConfig> getWatchDirectories() {
+		return configReader.getWatchDirectories();
 	}
 
 	/**

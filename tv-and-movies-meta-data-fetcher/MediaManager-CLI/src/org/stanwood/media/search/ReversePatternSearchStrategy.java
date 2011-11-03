@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.Token;
+import org.stanwood.media.setup.WatchDirConfig;
 
 /**
  * This is a search strategy that tries to match the media directory pattern against
@@ -39,11 +40,19 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 		}
 		String fileName = mediaFile.getAbsolutePath();
 		if (renamePattern != null && !hasIgnoreTokens(mediaFile)) {
-			if (fileName.startsWith(rootMediaDir.getAbsolutePath())) {
-				fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
+			boolean stripped = false;
+			for (WatchDirConfig c : mediaDir.getController().getWatchDirectories()) {
+				if (fileName.startsWith(c.getWatchDir().getAbsolutePath())) {
+					fileName = fileName.substring(c.getWatchDir().getAbsolutePath().length()+1);
+					stripped = true;
+					break;
+				}
 			}
-			else {
-				fileName = mediaFile.getName();
+			if (!stripped) {
+				if (fileName.startsWith(rootMediaDir.getAbsolutePath())) {
+					fileName = fileName.substring(rootMediaDir.getAbsolutePath().length()+1);
+					stripped = true;
+				}
 			}
 
 			ReverseFilePatternMatcher rfpm = new ReverseFilePatternMatcher();
