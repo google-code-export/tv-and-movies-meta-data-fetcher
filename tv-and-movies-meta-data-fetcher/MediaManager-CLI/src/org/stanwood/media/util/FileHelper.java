@@ -219,7 +219,13 @@ public class FileHelper {
 				InputStream is = null;
 				try {
 					out = new FileOutputStream(dest);
-					is = new WebFileInputStream(url);
+					if (url.getProtocol().equals("http")) { //$NON-NLS-1$
+						is = new WebFileInputStream(url);
+
+					}
+					else {
+						is = url.openStream();
+					}
 					MessageDigest md = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 
 					// Transfer bytes from in to out
