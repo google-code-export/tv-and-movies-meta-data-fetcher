@@ -41,11 +41,13 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 		String fileName = mediaFile.getAbsolutePath();
 		if (renamePattern != null && !hasIgnoreTokens(mediaFile)) {
 			boolean stripped = false;
-			for (WatchDirConfig c : mediaDir.getController().getWatchDirectories()) {
-				if (fileName.startsWith(c.getWatchDir().getAbsolutePath())) {
-					fileName = fileName.substring(c.getWatchDir().getAbsolutePath().length()+1);
-					stripped = true;
-					break;
+			if (mediaDir!=null) {
+				for (WatchDirConfig c : mediaDir.getController().getWatchDirectories()) {
+					if (fileName.startsWith(c.getWatchDir().getAbsolutePath())) {
+						fileName = fileName.substring(c.getWatchDir().getAbsolutePath().length()+1);
+						stripped = true;
+						break;
+					}
 				}
 			}
 			if (!stripped) {
