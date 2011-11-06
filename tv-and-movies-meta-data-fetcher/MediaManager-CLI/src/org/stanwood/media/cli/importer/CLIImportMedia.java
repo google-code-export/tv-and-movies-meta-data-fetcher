@@ -91,7 +91,7 @@ public class CLIImportMedia extends AbstractLauncher {
 
 
 	private CLIImportMedia(IExitHandler exitHandler) {
-		super("mm-move-into-media-directory",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
+		super("mm-import-media",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 
@@ -188,8 +188,13 @@ public class CLIImportMedia extends AbstractLauncher {
 		}
 		else {
 			log.info(MessageFormat.format("Moving ''{0}'' to media directory ''{1}'' and performing actions...",file,toFile.getParent()));
-			FileHelper.move(file, toFile);
-			newFiles.get(mediaDirLoc).add(toFile);
+			try {
+				FileHelper.move(file, toFile);
+				newFiles.get(mediaDirLoc).add(toFile);
+			}
+			catch (IOException e) {
+				log.error(MessageFormat.format("Unable to move into media directory: {0}",toFile),e);
+			}
 		}
 	}
 
@@ -251,43 +256,39 @@ public class CLIImportMedia extends AbstractLauncher {
 			return false;
 		}
 
-		if (cmd.getArgs().length==0) {
-			fatal(Messages.getString("CLICopyToMediaDir.MISSING_ARG")); //$NON-NLS-1$
+
+		extensions = new HashSet<String>();
+		try {
+			for (File mediaDirLoc :  getController().getMediaDirectories()) {
+				MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
+				extensions.addAll(mediaDir.getMediaDirConfig().getExtensions());
+			}
+		} catch (ConfigException e) {
+			log.error("Unable to read configuration",e);
 			return false;
 		}
-		else {
-			extensions = new HashSet<String>();
-			try {
-				for (File mediaDirLoc :  getController().getMediaDirectories()) {
-					MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
-					extensions.addAll(mediaDir.getMediaDirConfig().getExtensions());
-				}
-			} catch (ConfigException e) {
-				log.error("Unable to read configuration",e);
-				return false;
-			}
-			files = new ArrayList<File>();
-			for (WatchDirConfig c : getController().getWatchDirectories()) {
-				File f = c.getWatchDir();
-				if (f.isDirectory()) {
-					for (File f2 : FileHelper.listFiles(f)) {
-						if (isAllowedMediaFileType(f2)) {
-							files.add(f2);
-						}
+		files = new ArrayList<File>();
+		for (WatchDirConfig c : getController().getWatchDirectories()) {
+			File f = c.getWatchDir();
+			if (f.isDirectory()) {
+				for (File f2 : FileHelper.listFiles(f)) {
+					if (isAllowedMediaFileType(f2)) {
+						files.add(f2);
 					}
 				}
-				else {
-					files.add(f);
-				}
-			}
-			if (files.size()>0) {
-				log.info (MessageFormat.format("Found {0} media files...",files.size()));
 			}
 			else {
-				log.info("Unable to find any media files");
-				return false;
+				files.add(f);
 			}
 		}
+		if (files.size()>0) {
+			log.info (MessageFormat.format("Found {0} media files...",files.size()));
+		}
+		else {
+			log.info("Unable to find any media files");
+			return false;
+		}
+
 
 		if (cmd.hasOption(NOUPDATE_OPTION)) {
 			xbmcUpdate = false;

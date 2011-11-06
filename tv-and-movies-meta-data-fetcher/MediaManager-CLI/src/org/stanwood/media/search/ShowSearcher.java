@@ -18,7 +18,7 @@ public abstract class ShowSearcher extends AbstractMediaSearcher {
 	private final static ISearchStrategy episodeFileStrategy;
 
 	static {
-		strategies.add(new ReversePatternSearchStrategy(Token.SHOW_NAME,true));
+		strategies.add(new ReversePatternSearchStrategy(Token.SHOW_NAME,true,false));
 
 		strategies.add(new ISearchStrategy() {
 			@Override
