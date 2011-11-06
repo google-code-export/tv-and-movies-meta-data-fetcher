@@ -25,6 +25,10 @@ public class TestFileNameParser {
 			dirConfig.setPattern("%n/Season %s/%s %e - %t.%x");
 			dirConfig.setMode(Mode.TV_SHOW);
 
+			assertEpisode(20,1,dirConfig, new File(dir,"2001 - A title.m4v"));
+			assertEpisode(20,1,dirConfig, new File(dir,"The show 2001 - A title.m4v"));
+			assertEpisode(3,1,dirConfig, new File(dir,"301 - A title.m4v"));
+			assertEpisode(3,1,dirConfig, new File(dir,"The show 301 - A title.m4v"));
 			assertEpisode(10,6,dirConfig, new File(dir,"The Show-2/10 06 - 300.avi"));
 			assertEpisode(4,23,dirConfig, new File(dir,"The Show/Season 4/The.Show.S04E23.The Episode (1).HDTV.XviD-BiA.avi"));
 			assertEpisode(4,24,dirConfig, new File(dir,"The Show/Season 4/The.Show.S04E24.The' & 'Episode (2).HDTV.XviD-BiA.avi"));
@@ -42,6 +46,7 @@ public class TestFileNameParser {
 			assertEpisode(10,1,dirConfig, new File(dir,"The show 10x01 - A title.m4v"));
 			assertEpisode(9,11,dirConfig, new File(dir,"The show season 9 episode 11 - A title.m4v"));
 			assertEpisode(20,11,dirConfig, new File(dir,"The show season 20 episode 11 - A title.m4v"));
+
 
 			Assert.assertNull(FileNameParser.parse(dirConfig, new File(dir,"A Film (2011).m4v")));
 		}
