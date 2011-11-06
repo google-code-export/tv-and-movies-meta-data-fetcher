@@ -31,7 +31,7 @@ public class TestReversePatternSearchStrategy {
 	}
 
 	private TSearchDetails doSearch(String filename, String pattern) {
-		ReversePatternSearchStrategy strategy = new ReversePatternSearchStrategy(Token.TITLE,false);
+		ReversePatternSearchStrategy strategy = new ReversePatternSearchStrategy(Token.TITLE,false,true);
 		File rootMediaDir = new File(File.separator+"media");
 		File originalFile = new File(rootMediaDir,filename);
 		SearchDetails searchDetails = strategy.getSearch(originalFile, rootMediaDir, pattern, null);

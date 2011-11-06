@@ -324,7 +324,7 @@ public class ActionPerformer implements IActionEventHandler {
 			part = SearchHelper.extractPart(new StringBuilder(file.getName()));
 		}
 		if (part == null) {
-			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false);
+			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false,true);
 			SearchDetails result = rp.getSearch(file, dir.getMediaDirConfig().getMediaDir(), dir.getMediaDirConfig().getPattern(), dir);
 			if (result!=null) {
 				part = result.getPart();

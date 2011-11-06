@@ -21,7 +21,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 	private final static Pattern PATTERN_HYPHON = Pattern.compile("^.*?\\-(.+)$"); //$NON-NLS-1$
 
 	static {
-		strategies.add(new ReversePatternSearchStrategy(Token.TITLE,true));
+		strategies.add(new ReversePatternSearchStrategy(Token.TITLE,true,true));
 
 		// Search using a NFO file next to the film if it exists
 		strategies.add(new FilmNFOSearchStrategy());

@@ -177,7 +177,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 			part = SearchHelper.extractPart(new StringBuilder(file.getName()));
 		}
 		if (part == null) {
-			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false);
+			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false,true);
 			SearchDetails result = rp.getSearch(file, rootMediaDir.getMediaDirConfig().getMediaDir(), rootMediaDir.getMediaDirConfig().getPattern(),rootMediaDir);
 			if (result!=null) {
 				part = result.getPart();

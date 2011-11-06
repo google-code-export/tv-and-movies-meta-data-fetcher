@@ -14,15 +14,18 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 
 	private Token termToken;
 	private boolean doComplexityCheck;
+	private boolean disallowIgnoreTokens;
 
 	/**
 	 * The constructor
 	 * @param termToken The token type that would be used when searching for this file
 	 * @param doComplexityCheck True to reject patterns that don't have a certian complexity
+	 * @param disallowIgnoreTokens If true, them don't make if the file name contains ingored tokens
 	 */
-	public ReversePatternSearchStrategy(Token termToken,boolean doComplexityCheck) {
+	public ReversePatternSearchStrategy(Token termToken,boolean doComplexityCheck,boolean disallowIgnoreTokens) {
 		this.termToken = termToken;
 		this.doComplexityCheck = doComplexityCheck;
+		this.disallowIgnoreTokens = disallowIgnoreTokens;
 	}
 
 	/**
@@ -78,6 +81,9 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 	}
 
 	private boolean hasIgnoreTokens(File file) {
+		if (disallowIgnoreTokens) {
+			return false;
+		}
 		StringBuilder term = new StringBuilder(file.getName());
 		SearchHelper.replaceWithSpaces(term);
 		return SearchHelper.hasIgnoredTokens(term);
