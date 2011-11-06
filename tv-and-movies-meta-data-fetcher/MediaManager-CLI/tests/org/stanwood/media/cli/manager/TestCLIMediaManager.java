@@ -70,7 +70,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testRecursiveSourceAndStoreRename() throws Exception {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		// Create test files
 		File dir = FileHelper.createTmpDir("show");
 		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
