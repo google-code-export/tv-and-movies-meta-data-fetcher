@@ -46,7 +46,7 @@ public class WebFileInputStream extends InputStream {
 		// Open a URL connection.
 		final java.net.URLConnection uconn = url.openConnection();
 		if (!(uconn instanceof java.net.HttpURLConnection)) {
-			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP."); //$NON-NLS-1$
+			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP: "+url.toExternalForm()); //$NON-NLS-1$
 		}
 		final java.net.HttpURLConnection conn = (java.net.HttpURLConnection) uconn;
 
