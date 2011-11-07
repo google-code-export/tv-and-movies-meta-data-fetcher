@@ -318,7 +318,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (sourceInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id)); //$NON-NLS-1$
 				}
-				ISource source = sourceInfo.getExtension();
+				ISource source = sourceInfo.getExtension(dirConfig);
 				if (sourceConfig.getParams() != null) {
 					for (String key : sourceConfig.getParams().keySet()) {
 						String value = sourceConfig.getParams().get(key);
@@ -351,7 +351,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (storeInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id)); //$NON-NLS-1$
 				}
-				IStore store = storeInfo.getExtension();
+				IStore store = storeInfo.getExtension(dirConfig);
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
 						String value = storeConfig.getParams().get(key);
@@ -384,7 +384,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (actionInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id)); //$NON-NLS-1$
 				}
-				IAction action = actionInfo.getExtension();
+				IAction action = actionInfo.getExtension(dirConfig);
 				if (actionConfig.getParams() != null) {
 					for (String key : actionConfig.getParams().keySet()) {
 						String value = actionConfig.getParams().get(key);
@@ -403,16 +403,16 @@ public class ConfigReader extends BaseConfigReader {
 
 
 
-	private static void setParamOnSource(ISource source, String key, String value)
+	private void setParamOnSource(ISource source, String key, String value)
 	throws  SourceException {
 		source.setParameter(key, value);
 	}
 
-	private static void setParamOnStore(IStore store, String key, String value) throws StoreException {
+	private void setParamOnStore(IStore store, String key, String value) throws StoreException {
 		store.setParameter(key, value);
 	}
 
-	private static void setParamOnAction(IAction action, String key, String value)
+	private void setParamOnAction(IAction action, String key, String value)
 	throws ActionException {
 		action.setParameter(key, value);
 	}

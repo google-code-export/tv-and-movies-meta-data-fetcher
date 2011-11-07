@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,23 +33,15 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.actions.rename.FileNameParser;
-import org.stanwood.media.actions.rename.ParsedFileName;
-import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
-import org.stanwood.media.model.ISeason;
-import org.stanwood.media.model.IShow;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
-import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.SubProgressMonitor;
-import org.stanwood.media.search.ReversePatternSearchStrategy;
-import org.stanwood.media.search.SearchDetails;
-import org.stanwood.media.search.SearchHelper;
-import org.stanwood.media.source.SourceException;
+import org.stanwood.media.search.MediaSearcher;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.xml.XMLParserException;
@@ -66,28 +57,29 @@ public class ActionPerformer implements IActionEventHandler {
 	private List<String> exts;
 	private MediaDirectory dir;
 	private List<IAction> actions;
-	private boolean testMode;
 	private File nativeFolder;
 	private File configDir;
-
 	private SeenDatabase seenDb;
+	private MediaSearcher searcher;
 
 	/**
 	 * Constructor used to create a instance of the class
-	 * @param configDir The configuration directory
-	 * @param nativeFolder
+	 * @param controller The controller
 	 * @param actions List of actions to perform
 	 * @param dir The media directory
 	 * @param exts The extensions to search for
-	 * @param testMode True if test mode is enabled
+	 * @throws ConfigException Thrown if their is a problem reading the config
 	 */
-	public ActionPerformer(File configDir,File nativeFolder, List<IAction> actions,MediaDirectory dir,List<String> exts,boolean testMode) {
+	public ActionPerformer(Controller controller,List<IAction> actions,MediaDirectory dir,List<String> exts) throws ConfigException {
 		this.dir = dir;
 		this.exts = exts;
 		this.actions = actions;
-		this.testMode =testMode;
-		this.nativeFolder = nativeFolder;
-		this.configDir = configDir;
+		if (controller!=null) {
+			this.nativeFolder = controller.getNativeFolder();
+			this.configDir = controller.getConfigDir();
+
+		}
+		this.searcher = new MediaSearcher(controller);
 	}
 
 	/**
@@ -260,35 +252,15 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	private IFilm getFilm(File file) throws ActionException {
-		try {
-			for (IStore store : dir.getStores()) {
-				IFilm film = store.getFilm(dir,file);
-				if (film!=null) {
-					return film;
-				}
-			}
-			SearchResult result = findFilm(dir, file);
-			if (result!=null) {
-				IFilm film = getFilm(result,dir,file);
-				if (film!=null) {
-					return film;
-				}
-			}
-			return null;
-		}
-		catch (StoreException e) {
-			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_TO_READ_FILE_DETAILS"),e); //$NON-NLS-1$
-		}
-	}
+
 
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
 			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-				IFilm film = getFilm(file);
+				IFilm film = searcher.getFilm(dir,file);
 				if (film!=null) {
+					Integer part = searcher.getFilmPart(dir,file, film);
 					for (IAction action : actions) {
-						Integer part = getFilmPart(file, film);
 						action.perform(dir,film,file,part,this);
 					}
 					if (seenDb!=null && file.exists()) {
@@ -297,7 +269,7 @@ public class ActionPerformer implements IActionEventHandler {
 				}
 			}
 			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
-				IEpisode episode = getTVEpisode(dir, file);
+				IEpisode episode = searcher.getTVEpisode(dir, file);
 				if (episode!=null) {
 					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);
@@ -311,27 +283,6 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	protected Integer getFilmPart(File file, IFilm film) {
-		Integer part = null;
-		if (film.getFiles()!=null) {
-			for (IVideoFile vf : film.getFiles()) {
-				if (vf.getLocation().equals(file)) {
-					part = vf.getPart();
-				}
-			}
-		}
-		if (part == null) {
-			part = SearchHelper.extractPart(new StringBuilder(file.getName()));
-		}
-		if (part == null) {
-			ReversePatternSearchStrategy rp = new ReversePatternSearchStrategy(Token.TITLE, false,true);
-			SearchDetails result = rp.getSearch(file, dir.getMediaDirConfig().getMediaDir(), dir.getMediaDirConfig().getPattern(), dir);
-			if (result!=null) {
-				part = result.getPart();
-			}
-		}
-		return part;
-	}
 
 	private void findDirs(Set<File>dirs,File parent) {
 		for (File file : parent.listFiles()) {
@@ -397,144 +348,9 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
-	private IEpisode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
-		boolean refresh = false;
-		try {
-			for (IStore store : dir.getStores()) {
-				IEpisode ep = store.getEpisode(dir,file);
-				if (ep!=null) {
-					return ep;
-				}
-			}
-			SearchResult result = searchForId(dir,file);
-			if (result==null) {
-				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_SHOW_ID_FOR_FILE"),file)); //$NON-NLS-1$
-				return null;
-			}
 
-			IShow show =  dir.getShow(dir.getMediaDirConfig().getMediaDir(),file,result,refresh);
-			if (show == null) {
-				log.fatal(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_FIND_SHOW_DETAILS_FOR_FILE"),file)); //$NON-NLS-1$
-				return null;
-			}
 
-			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
-			if (data==null) {
-				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_WORKOUT_SEASON_AND_EPISODE_NUMBER_FOR_FILE"),file.getName())); //$NON-NLS-1$
-			}
-			else {
-				ISeason season = dir.getSeason(dir.getMediaDirConfig().getMediaDir(),file, show, data.getSeason(), refresh);
-				if (season == null) {
-					log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABVLE_TO_FIMD_SEASON"),file)); //$NON-NLS-1$
-				} else {
-					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisode(), refresh);
-					if (episode==null) {
-						log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_EPISODE_NUMBER"),file)); //$NON-NLS-1$
-						return null;
-					}
 
-					boolean found = false;
-					if (episode.getFiles()!=null) {
-						for (IVideoFile vf : episode.getFiles()) {
-							if (vf.getLocation().equals(file)) {
-								found = true;
-							}
-						}
-					}
-					if (!found) {
-						for (IStore store : dir.getStores()) {
-							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
-						}
-					}
 
-					return episode;
-				}
-			}
-		}
-		catch (SourceException e) {
-			log.error(Messages.getString("ActionPerformer.UNABLE_FIND_MEDIA_DETAILS"),e); //$NON-NLS-1$
-			return null;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_GET_TV_EPISODE_DETAILS"),file.getAbsolutePath()),e); //$NON-NLS-1$
-		}
-		return null;
-	}
 
-	private IFilm getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
-		if (!file.exists()) {
-			return null;
-		}
-		boolean refresh = false;
-		try {
-			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
-			if (film==null) {
-				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
-				return null;
-			}
-			if (!testMode) {
-				boolean found = false;
-				Integer maxPart = 0;
-				for (IVideoFile vf : film.getFiles()) {
-					if (vf.getLocation().equals(file)) {
-						found = true;
-					}
-					if (result.getPart()!=null) {
-						if (vf.getPart()!=null && vf.getPart()>maxPart) {
-							maxPart = vf.getPart();
-						}
-					}
-				}
-				if (!found) {
-					for (IStore store : dir.getStores()) {
-						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
-					}
-				}
-
-				// Update existing stores with new part
-				if (result.getPart()!=null && result.getPart()>maxPart) {
-					for (IVideoFile vf : film.getFiles()) {
-						if (!vf.getLocation().equals(file)) {
-							for (IStore store : dir.getStores()) {
-								if (vf.getLocation().exists()) {
-									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(), film, vf.getPart());
-								}
-							}
-						}
-					}
-				}
-			}
-			return film;
-		}
-		catch (Exception e) {
-			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath()),e); //$NON-NLS-1$
-		}
-	}
-
-	protected SearchResult findFilm(MediaDirectory dir, File file) throws ActionException {
-		try {
-			SearchResult result = searchForId(dir,file);
-			if (result==null) {
-				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath())); //$NON-NLS-1$
-				return null;
-			}
-			return result;
-		}
-		catch (SourceException e) {
-			log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNALBE_SEARCH_FOR_FILM"),file.getAbsolutePath()),e); //$NON-NLS-1$
-			return null;
-		}
-		catch (Exception e) {
-			throw new ActionException(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath()),e); //$NON-NLS-1$
-		}
-	}
-
-	private SearchResult searchForId(MediaDirectory dir,File file) throws MalformedURLException, SourceException, StoreException, IOException
-	{
-		SearchResult result;
-		result = dir.searchForVideoId(file);
-		return result;
-
-	}
 }

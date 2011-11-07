@@ -78,7 +78,7 @@ public class HybridFilmSource implements ISource {
 			else {
 				info = dir.getController().getDefaultSource(Mode.FILM);
 			}
-			imdbSource = info.getExtension();
+			imdbSource = info.getExtension(dir.getMediaDirConfig());
 			if (imdbSource==null) {
 				throw new SourceException(Messages.getString("HybridFilmSource.UNABLE_CREATE_SOURCE1")); //$NON-NLS-1$
 			}
