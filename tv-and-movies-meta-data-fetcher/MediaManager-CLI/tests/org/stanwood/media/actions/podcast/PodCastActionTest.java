@@ -35,6 +35,7 @@ import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
@@ -292,7 +293,7 @@ public class PodCastActionTest {
 		}
 	}
 
-	private void runAction(Map<String,String>params) throws ActionException {
+	private void runAction(Map<String,String>params) throws ActionException, ConfigException {
 		List<IAction>actions = new ArrayList<IAction>();
 		PodCastAction action = createAction(params);
 
@@ -303,7 +304,7 @@ public class PodCastActionTest {
 			exts.add(ext);
 		}
 
-		ActionPerformer ap = new ActionPerformer(null,null,actions,mediaDir,exts,false);
+		ActionPerformer ap = new ActionPerformer(null,actions,mediaDir,exts);
 		ap.performActions(new NullProgressMonitor());
 	}
 

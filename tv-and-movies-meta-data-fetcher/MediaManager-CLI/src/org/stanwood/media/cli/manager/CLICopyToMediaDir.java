@@ -153,7 +153,7 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 			}
 
 
-			ActionPerformer renamer = new ActionPerformer(getController().getConfigDir(),getController().getNativeFolder(),actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions(),getController().isTestRun());
+			ActionPerformer renamer = new ActionPerformer(getController(),actions,rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 			renamer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
 
 			return true;

@@ -16,6 +16,11 @@
  */
 package org.stanwood.media.extensions;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.stanwood.media.setup.MediaDirConfig;
+
 
 /**
  * Used to describe extensions to the media manager
@@ -25,7 +30,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 
 	private ParameterType parameterInfos[];
 	private String id;
-	private T extension = null;
+	private Map<MediaDirConfig,T> extension = new HashMap<MediaDirConfig,T>();
 	private ExtensionType type;
 
 	/**
@@ -58,11 +63,11 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The extension class type
 	 * @throws ExtensionException  Thrown if their is a problem creating the extension
 	 */
-	public T getExtension() throws ExtensionException {
-		if (extension==null) {
-			extension = createExtension();
+	public T getExtension(MediaDirConfig config) throws ExtensionException {
+		if (extension.get(config)==null) {
+			extension.put(config,createExtension());
 		}
-		return extension;
+		return extension.get(config);
 	}
 
 	/**

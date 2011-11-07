@@ -75,6 +75,9 @@ public class PodCastAction extends AbstractAction {
 	 */
 	@Override
 	public void init(MediaDirectory dir) throws ActionException {
+		currentFeedFile = null;
+		currentPart = null;
+		currentVideo = null;
 		createNewFeedFiles();
 		validateParameters();
 		if (log.isDebugEnabled()) {
