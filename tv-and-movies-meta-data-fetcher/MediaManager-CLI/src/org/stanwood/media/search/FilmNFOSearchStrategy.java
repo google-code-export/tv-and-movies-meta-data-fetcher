@@ -3,7 +3,6 @@ package org.stanwood.media.search;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
@@ -46,7 +44,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 
 	@Override
 	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
-		File nfoFile = findNFOfile(rootMediaDir,mediaFile.getParentFile());
+		File nfoFile = NFOSearchHelper.findNFOfile(mediaDir,mediaFile);
 		if (nfoFile!=null) {
 
 			// Read the IMDB from the NFO file
@@ -100,24 +98,6 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 		}
 		Integer part = SearchHelper.extractPart(new StringBuilder(mediaFile.getName()));
 		return part;
-	}
-
-	private File findNFOfile(File rootMediaDir,File parentDir) {
-		while (parentDir!=null && !parentDir.equals(rootMediaDir) ) {
-
-			// Now check that their is one nfo file in the directory
-			File files[] = parentDir.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File arg0, String arg1) {
-					return StringUtils.endsWithIgnoreCase(arg1, ".nfo"); //$NON-NLS-1$
-				}
-			});
-			if (files.length==1) {
-				 return files[0];
-			}
-			parentDir = parentDir.getParentFile();
-		}
-		return null;
 	}
 
 	private String getIMDBIDFromFile(File nfoFile) {

@@ -113,19 +113,7 @@ public class CLIImportMedia extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try  {
-			Map<File,List<File>>newFiles = new HashMap<File,List<File>>();
-			for (File mediaDirLoc :  getController().getMediaDirectories()) {
-				for (IAction action : getController().getMediaDirectory(mediaDirLoc).getActions()) {
-					action.setTestMode(getController().isTestRun());
-				}
-				newFiles.put(mediaDirLoc, new ArrayList<File>());
-			}
-
-			for (File mediaDirLoc :  getController().getMediaDirectories()) {
-				for (IStore store : getController().getMediaDirectory(mediaDirLoc).getStores()) {
-					store.init(getController().getNativeFolder());
-				}
-			}
+			Map<File, List<File>> newFiles = setupStoresAndActions();
 
 			doUpdateCheck();
 
@@ -155,6 +143,25 @@ public class CLIImportMedia extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		}
 		return false;
+	}
+
+
+	protected Map<File, List<File>> setupStoresAndActions()
+			throws ConfigException, StoreException {
+		Map<File,List<File>>newFiles = new HashMap<File,List<File>>();
+		for (File mediaDirLoc :  getController().getMediaDirectories()) {
+			for (IAction action : getController().getMediaDirectory(mediaDirLoc).getActions()) {
+				action.setTestMode(getController().isTestRun());
+			}
+			newFiles.put(mediaDirLoc, new ArrayList<File>());
+		}
+
+		for (File mediaDirLoc :  getController().getMediaDirectories()) {
+			for (IStore store : getController().getMediaDirectory(mediaDirLoc).getStores()) {
+				store.init(getController().getNativeFolder());
+			}
+		}
+		return newFiles;
 	}
 
 	private void cleanUpNonMediaFiles() {
