@@ -988,13 +988,24 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (showNodes!=null && showNodes.getLength()>0) {
 			Element showEl = (Element)showNodes.item(0);
 			Integer part = null;
-			if (!((Element)showNodes.item(0)).getAttribute("part").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
-				part = Integer.parseInt(((Element)showNodes.item(0)).getAttribute("part")); //$NON-NLS-1$
-			}
 			return new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
+
+		for (Node showNode :  selectNodeList(store,"show")) { //$NON-NLS-1$
+			Element showEl = (Element)showNode;
+			if (stripPuncuation(showEl.getAttribute("name")).equalsIgnoreCase(title)) { //$NON-NLS-1$
+				Integer part = null;
+				return new SearchResult(showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"),part,Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		}
+
+
 		return null;
+	}
+
+	private String stripPuncuation(String value) {
+		return value.replaceAll("'", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private Document getCache(File rootMediaDirectory) throws StoreException {
