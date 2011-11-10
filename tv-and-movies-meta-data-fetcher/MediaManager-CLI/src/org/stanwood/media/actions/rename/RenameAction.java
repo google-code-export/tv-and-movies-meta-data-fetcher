@@ -125,20 +125,22 @@ public class RenameAction extends AbstractAction {
 					log.info(MessageFormat.format(Messages.getString("RenameAction.RENAMING"),file.getAbsolutePath(),newFile.getAbsolutePath())); //$NON-NLS-1$
 
 					File oldFile = new File(file.getAbsolutePath());
-					if (file.renameTo(newFile)) {
-						for (IVideoFile vf : video.getFiles()) {
-							if (vf.getLocation().equals(file)) {
-								vf.setLocation(newFile);
-								if (vf.getOrginalLocation()==null) {
-									vf.setOrginalLocation(file);
-								}
+					try {
+						FileHelper.rename(file,newFile);
+					}
+					catch (IOException e) {
+						log.error(MessageFormat.format(Messages.getString("RenameAction.FAILED_RENAME"),file.getAbsolutePath(),newFile.getName()),e); //$NON-NLS-1$
+						return;
+					}
+					for (IVideoFile vf : video.getFiles()) {
+						if (vf.getLocation().equals(file)) {
+							vf.setLocation(newFile);
+							if (vf.getOrginalLocation()==null) {
+								vf.setOrginalLocation(file);
 							}
 						}
-						eventHandler.sendEventRenamedFile(oldFile, newFile);
 					}
-					else {
-						log.error(MessageFormat.format(Messages.getString("RenameAction.FAILED_RENAME"),file.getAbsolutePath(),newFile.getName())); //$NON-NLS-1$
-					}
+					eventHandler.sendEventRenamedFile(oldFile, newFile);
 				}
 				else {
 					log.info(MessageFormat.format(Messages.getString("RenameAction.NOT_RENAMING_TEST_RUN"),file.getAbsolutePath(),newFile.getAbsolutePath())); //$NON-NLS-1$

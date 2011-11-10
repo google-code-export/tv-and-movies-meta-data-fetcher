@@ -719,4 +719,19 @@ public class FileHelper {
 		}
 		return result;
 	}
+
+	public static void rename(File oldFile, File newFile) throws IOException {
+		if (!oldFile.renameTo(newFile) && !newFile.exists()) {
+			FileHelper.copy(oldFile, newFile);
+			if (newFile.exists() && oldFile.length()==newFile.length())  {
+				FileHelper.delete(oldFile);
+			}
+			else {
+				throw new IOException(MessageFormat.format("Unable to copy file {0} to {1}",oldFile,newFile));
+			}
+		}
+		else {
+			throw new IOException(MessageFormat.format("Unable to copy file {0} to {1}",oldFile,newFile));
+		}
+	}
 }
