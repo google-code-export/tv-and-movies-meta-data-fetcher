@@ -720,6 +720,13 @@ public class FileHelper {
 		return result;
 	}
 
+	/**
+	 * Used to rename a file. This handles the case where java's {@link File#renameTo(File)} fails. It that
+	 * occurs it copies the file and deletes the original
+	 * @param oldFile The old file name
+	 * @param newFile The new file name
+	 * @throws IOException Thrown if their are any problems
+	 */
 	public static void rename(File oldFile, File newFile) throws IOException {
 		if (!oldFile.renameTo(newFile) && !newFile.exists()) {
 			FileHelper.copy(oldFile, newFile);
@@ -729,9 +736,6 @@ public class FileHelper {
 			else {
 				throw new IOException(MessageFormat.format("Unable to copy file {0} to {1}",oldFile,newFile));
 			}
-		}
-		else {
-			throw new IOException(MessageFormat.format("Unable to copy file {0} to {1}",oldFile,newFile));
 		}
 	}
 }
