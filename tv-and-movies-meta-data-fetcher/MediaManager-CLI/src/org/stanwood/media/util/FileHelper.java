@@ -445,7 +445,29 @@ public class FileHelper {
 	}
 
 	/**
-	 * Used to list all the files in a directory and it's sub directiories.
+	 * Used to list all the directories in a directory and it's sub directories.
+	 * @param dir The directory to list the files of
+	 * @return The files in the directory
+	 */
+	public static List<File> listDirectories(File dir) {
+		List<File>files = new ArrayList<File>();
+		listDirectories(dir,files);
+		Collections.sort(files);
+		return files;
+	}
+
+	private static void listDirectories(File dir, List<File> dirs) {
+		if (dir.isDirectory()) {
+			for (File d : dir.listFiles()) {
+				listDirectories(d,dirs);
+
+			}
+			dirs.add(dir);
+		}
+	}
+
+	/**
+	 * Used to list all the files in a directory and it's sub directories.
 	 * @param dir The directory to list the files of
 	 * @return The files in the directory
 	 */
@@ -473,14 +495,14 @@ public class FileHelper {
 		return files;
 	}
 
-	private static void listFiles(File dir, List<File> files) {
-		if (dir.isDirectory()) {
-			for (File d : dir.listFiles()) {
+	private static void listFiles(File file, List<File> files) {
+		if (file.isDirectory()) {
+			for (File d : file.listFiles()) {
 				listFiles(d,files);
 			}
 		}
 		else {
-			files.add(dir);
+			files.add(file);
 		}
 	}
 
