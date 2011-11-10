@@ -165,8 +165,43 @@ public class CLIImportMedia extends AbstractLauncher {
 	}
 
 	private void cleanUpNonMediaFiles() {
-		// TODO Auto-generated method stub
+		for (WatchDirConfig wd : getController().getWatchDirectories()) {
+			List<File> dirs = FileHelper.listDirectories(wd.getWatchDir());
+			for (File d : dirs) {
+				if (d !=null && !d.equals(wd.getWatchDir()) && !dirContainsMedia(d)) {
+					if (getController().isTestRun()) {
+						log.info(MessageFormat.format("Unable to deleting folder containing no media {0}, because this is a test run", d));
+					}
+					else {
+						log.info(MessageFormat.format("Deleting folder containing no media {0}", d));
+						try {
+							FileHelper.delete(d);
+						} catch (IOException e) {
+							log.error(MessageFormat.format("Unable to delete folder cotnain no media {0}",d),e);
+						}
+					}
+
+				}
+			}
+		}
 	}
+
+	private boolean dirContainsMedia(File d) {
+		for (File f : d.listFiles()) {
+			if (f.isDirectory()) {
+				if (dirContainsMedia(f)) {
+					return true;
+				}
+			}
+			else {
+				if (extensions.contains(FileHelper.getExtension(f))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 	private MediaDirectory findMediaDir(File file, IVideo video) throws ConfigException, StoreException, MalformedURLException, IOException {
 		if (video instanceof IFilm) {
@@ -347,6 +382,10 @@ public class CLIImportMedia extends AbstractLauncher {
 		}
 		if (cmd.hasOption(USE_DEFAULT_OPTION)) {
 			useDefaults = false;
+		}
+
+		if (cmd.hasOption(DELETE_NON_MEDIA_OPTION)) {
+			deleteNonMediaFiles = true;
 		}
 		return true;
 	}
