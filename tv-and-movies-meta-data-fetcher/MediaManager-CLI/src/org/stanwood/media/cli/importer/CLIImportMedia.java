@@ -187,6 +187,9 @@ public class CLIImportMedia extends AbstractLauncher {
 	}
 
 	private boolean dirContainsMedia(File d) {
+		if (d==null) {
+			return false;
+		}
 		for (File f : d.listFiles()) {
 			if (f.isDirectory()) {
 				if (dirContainsMedia(f)) {
