@@ -119,7 +119,7 @@ public class CLIImportMedia extends AbstractLauncher {
 
 			MediaSearcher searcher = new MediaSearcher(getController());
 			for (File file : files) {
-				MediaSearchResult result = searcher.lookupMedia(file);
+				MediaSearchResult result = searcher.lookupMedia(file,useDefaults);
 				if (result==null) {
 					log.error(MessageFormat.format("Unable to find media details for file {0}",file));
 					continue;
