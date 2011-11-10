@@ -32,17 +32,19 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 	 * @param term The term to search for (Usually a film name or tv show name).
 	 * @param year The year of the media or null if not to be used in the search
 	 * @param mediaFile The media file we are searching for
+	 * @param useSources True to search sources, otherwise will only use stores
 	 * @return The search result or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a URL construction problem
 	 * @throws IOException Thrown if their is a IO problem
 	 * @throws SourceException Thrown if their is a problem searching via a source
 	 */
-	protected abstract SearchResult doSearch(File mediaFile,String term,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException;
+	protected abstract SearchResult doSearch(File mediaFile,String term,String year,Integer part,boolean useSources) throws MalformedURLException, IOException, SourceException, StoreException;
 
 	/**
 	 * Used to search for a media id
 	 * @param mediaFile The episode file been processed
 	 * @param mediaDir The root media directory
+	 * @param useSources True to search sources, otherwise will only use stores
 	 * @return The results of the search, or null if nothing could be found
 	 * @throws MalformedURLException Thrown if their is a problem construction URL's
 	 * @throws IOException Thrown if their is a IO problem
@@ -50,13 +52,13 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 	 * @throws StoreException Thrown if their is a problem related to stores
 	 */
 	@Override
-	public final SearchResult search(File mediaFile, MediaDirectory mediaDir) throws MalformedURLException, IOException, SourceException, StoreException {
+	public final SearchResult search(File mediaFile, MediaDirectory mediaDir,boolean useSources) throws MalformedURLException, IOException, SourceException, StoreException {
 		File rootMediaDir = mediaDir.getMediaDirConfig().getMediaDir();
 		String renamePattern = mediaDir.getMediaDirConfig().getPattern();
 		for (ISearchStrategy strategy :strategies) {
 			SearchDetails searchDetails = strategy.getSearch(mediaFile,rootMediaDir,renamePattern,mediaDir);
 			if (searchDetails!=null) {
-				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear(),searchDetails.getPart());
+				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear(),searchDetails.getPart(),useSources);
 				if (result!=null) {
 					return result;
 				}

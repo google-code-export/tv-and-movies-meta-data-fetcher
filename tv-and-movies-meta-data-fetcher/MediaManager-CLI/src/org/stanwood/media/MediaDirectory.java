@@ -75,7 +75,7 @@ public class MediaDirectory {
 	protected void createSearchers() {
 		this.filmSearcher = new FilmSearcher() {
 			@Override
-			public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+			public SearchResult doSearch(File mediaFile,String name,String year,Integer part,boolean useSources) throws MalformedURLException, IOException, SourceException, StoreException {
 				StringBuilder term = new StringBuilder(name);
 				SearchHelper.removeUnwantedCharacters(term);
 				if (name==null) {
@@ -84,13 +84,13 @@ public class MediaDirectory {
 				if (year==null) {
 					year =""; //$NON-NLS-1$
 				}
-				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile);
+				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile,useSources);
 			}
 		};
 
 		this.showSearcher = new ShowSearcher() {
 			@Override
-			public SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException, IOException, SourceException, StoreException {
+			public SearchResult doSearch(File mediaFile,String name,String year,Integer part,boolean useSources) throws MalformedURLException, IOException, SourceException, StoreException {
 				if (name==null) {
 					return null;
 				}
@@ -99,7 +99,7 @@ public class MediaDirectory {
 				}
 				StringBuilder term = new StringBuilder(name);
 				SearchHelper.removeUnwantedCharacters(term);
-				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile);
+				return searchMedia(term.toString(),year,dirConfig.getMode(),part,dirConfig,mediaFile,useSources);
 			}
 		};
 	}
@@ -380,13 +380,14 @@ public class MediaDirectory {
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
 	 * @param mediaFile The file the media is stored in
+	 * @param useSources True to search sources, otherwise will only use stores
 	 * @return The results of searching for the show, or null if it can't be found.
 	 * @throws SourceException Thrown if their is a problem reading from a source
 	 * @throws StoreException Thrown if their is a problem reading for a store
 	 * @throws IOException Throw if their is a IO problem
 	 * @throws MalformedURLException Throw if their is a problem creating a URL
 	 */
-	public SearchResult searchForVideoId(File mediaFile) throws SourceException, StoreException,
+	public SearchResult searchForVideoId(File mediaFile,boolean useSources) throws SourceException, StoreException,
 			MalformedURLException, IOException {
 		AbstractMediaSearcher s = null;
 		if (dirConfig.getMode() == Mode.TV_SHOW) {
@@ -399,10 +400,10 @@ public class MediaDirectory {
 			return null;
 		}
 
-		return s.search(mediaFile,this);
+		return s.search(mediaFile,this,useSources);
 	}
 
-	private SearchResult searchMedia(String name,String year, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile) throws StoreException, SourceException {
+	private SearchResult searchMedia(String name,String year, Mode mode, Integer part,MediaDirConfig dirConfig, File mediaFile,boolean useSources) throws StoreException, SourceException {
 		SearchResult result = null;
 		for (IStore store : stores) {
 			result = store.searchMedia(name,mode,part,dirConfig,mediaFile);
@@ -411,10 +412,12 @@ public class MediaDirectory {
 			}
 		}
 
-		for (ISource source : sources) {
-			result = source.searchMedia(name,year,mode,part);
-			if (result != null) {
-				return result;
+		if (useSources) {
+			for (ISource source : sources) {
+				result = source.searchMedia(name,year,mode,part);
+				if (result != null) {
+					return result;
+				}
 			}
 		}
 

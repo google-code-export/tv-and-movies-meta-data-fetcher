@@ -40,7 +40,7 @@ public class TestShowSearcher {
 			final List<TSearchDetails>names = new ArrayList<TSearchDetails>();
 			ShowSearcher searcher = new ShowSearcher() {
 				@Override
-				protected SearchResult doSearch(File mediaFile,String name,String year,Integer part) throws MalformedURLException,
+				protected SearchResult doSearch(File mediaFile,String name,String year,Integer part,boolean useSources) throws MalformedURLException,
 						IOException, SourceException {
 					names.add(new TSearchDetails(mediaFile,name,year,part));
 					return null;
@@ -49,7 +49,7 @@ public class TestShowSearcher {
 			for (File mediaFile : FileHelper.listFiles(filmsDir)) {
 				String pattern = patterns.get(mediaFile);
 				Assert.assertNotNull(pattern);
-				searcher.search(mediaFile, TestFilmSearcher.getMediaDir(filmsDir,pattern,Mode.TV_SHOW));
+				searcher.search(mediaFile, TestFilmSearcher.getMediaDir(filmsDir,pattern,Mode.TV_SHOW),true);
 			}
 
 			Collections.sort(names,new Comparator<TSearchDetails>() {

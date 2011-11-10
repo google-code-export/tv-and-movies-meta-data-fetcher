@@ -71,7 +71,7 @@ public class MediaSearcher {
 		}
 	}
 
-	public MediaSearchResult lookupMedia(File mediaFile) throws ActionException {
+	public MediaSearchResult lookupMedia(File mediaFile,boolean useSources) throws ActionException {
 		Mode mode = Mode.TV_SHOW;
 		ParsedFileName parsed = FileNameParser.parse(mediaFile);
 		if (parsed==null) {
@@ -79,7 +79,7 @@ public class MediaSearcher {
 		}
 		for (MediaDirectory mediaDir : mediaDirs) {
 			if (mediaDir.getMediaDirConfig().getMode()==mode) {
-				IVideo result = getMediaDetails(mediaDir,mediaFile);
+				IVideo result = getMediaDetails(mediaDir,mediaFile,useSources);
 				if (result!=null) {
 					return new MediaSearchResult(mediaDir,result);
 				}
@@ -88,17 +88,17 @@ public class MediaSearcher {
 		return null;
 	}
 
-	private IVideo getMediaDetails(MediaDirectory dir,File file) throws ActionException {
+	private IVideo getMediaDetails(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		if (dir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
-			return getTVEpisode(dir, file);
+			return getTVEpisode(dir, file,useSources);
 		}
 		else {
-			return getFilm(dir, file);
+			return getFilm(dir, file,useSources);
 		}
 	}
 
 
-	public IFilm getFilm(MediaDirectory dir,File file) throws ActionException {
+	public IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
 				IFilm film = store.getFilm(dir,file);
@@ -106,7 +106,7 @@ public class MediaSearcher {
 					return film;
 				}
 			}
-			SearchResult result = findFilm(dir, file);
+			SearchResult result = findFilm(dir, file,useSources);
 			if (result!=null) {
 				IFilm film = getFilm(result,dir,file);
 				if (film!=null) {
@@ -120,9 +120,9 @@ public class MediaSearcher {
 		}
 	}
 
-	protected SearchResult findFilm(MediaDirectory dir, File file) throws ActionException {
+	protected SearchResult findFilm(MediaDirectory dir, File file,boolean useSources) throws ActionException {
 		try {
-			SearchResult result = searchForId(dir,file);
+			SearchResult result = searchForId(dir,file,useSources);
 			if (result==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM_WITH_FILE"),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
@@ -138,10 +138,10 @@ public class MediaSearcher {
 		}
 	}
 
-	private SearchResult searchForId(MediaDirectory dir,File file) throws MalformedURLException, SourceException, StoreException, IOException
+	private SearchResult searchForId(MediaDirectory dir,File file,boolean useSources) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
-		result = dir.searchForVideoId(file);
+		result = dir.searchForVideoId(file,useSources);
 		return result;
 
 	}
@@ -196,7 +196,7 @@ public class MediaSearcher {
 		}
 	}
 
-	public IEpisode getTVEpisode(MediaDirectory dir,File file) throws ActionException {
+	public IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		boolean refresh = false;
 		try {
 			for (IStore store : dir.getStores()) {
@@ -205,7 +205,7 @@ public class MediaSearcher {
 					return ep;
 				}
 			}
-			SearchResult result = searchForId(dir,file);
+			SearchResult result = searchForId(dir,file,useSources);
 			if (result==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_SHOW_ID_FOR_FILE"),file)); //$NON-NLS-1$
 				return null;
