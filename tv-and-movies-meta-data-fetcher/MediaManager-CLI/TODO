@@ -13,6 +13,7 @@ Add tests of media importing
 Media Importer
 	- Make the media imported have the option to delete non media files
 	- Find out why some media does not get imported
+	- Add option not to perform actions
 
 Version 2.1
 -----------
