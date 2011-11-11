@@ -50,6 +50,7 @@ public class CLIImportMedia extends AbstractLauncher {
 	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
 	private final static String USE_DEFAULT_OPTION = "d"; //$NON-NLS-1$
 	private final static String DELETE_NON_MEDIA_OPTION = "e"; //$NON-NLS-1$
+	private final static String ACTIONS_OPTION = "a"; //$NON-NLS-1$
 	private static final List<Option> OPTIONS;
 	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
 
@@ -61,6 +62,7 @@ public class CLIImportMedia extends AbstractLauncher {
 	private static PrintStream stderr = System.err;
 	private boolean useDefaults = true;
 	private boolean deleteNonMediaFiles = false;
+	private boolean doActions = false;
 
 
 	private static IExitHandler exitHandler = null;
@@ -81,6 +83,10 @@ public class CLIImportMedia extends AbstractLauncher {
 		OPTIONS.add(o);
 
 		o = new Option(DELETE_NON_MEDIA_OPTION,"deleteNonMedia",false,"Delete files are that are not media files (use with care)"); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setRequired(false);
+		OPTIONS.add(o);
+
+		o = new Option(ACTIONS_OPTION,"actions",false,"Execute actions on new media files");
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -128,8 +134,10 @@ public class CLIImportMedia extends AbstractLauncher {
 				moveFileToMediaDir(file, newFiles, result,searcher);
 			}
 
-			for (Entry<File,List<File>> e : newFiles.entrySet()) {
-				performActions(e.getValue(),getController().getMediaDirectory(e.getKey()));
+			if (doActions) {
+				for (Entry<File,List<File>> e : newFiles.entrySet()) {
+					performActions(e.getValue(),getController().getMediaDirectory(e.getKey()));
+				}
 			}
 
 			if (deleteNonMediaFiles) {
@@ -187,18 +195,18 @@ public class CLIImportMedia extends AbstractLauncher {
 	}
 
 	private boolean dirContainsMedia(File d) {
-		if (d==null) {
-			return false;
-		}
-		for (File f : d.listFiles()) {
-			if (f.isDirectory()) {
-				if (dirContainsMedia(f)) {
-					return true;
+		File files[] = d.listFiles();
+		if (files!=null) {
+			for (File f : files) {
+				if (f.isDirectory()) {
+					if (dirContainsMedia(f)) {
+						return true;
+					}
 				}
-			}
-			else {
-				if (extensions.contains(FileHelper.getExtension(f))) {
-					return true;
+				else {
+					if (extensions.contains(FileHelper.getExtension(f))) {
+						return true;
+					}
 				}
 			}
 		}
@@ -389,6 +397,10 @@ public class CLIImportMedia extends AbstractLauncher {
 
 		if (cmd.hasOption(DELETE_NON_MEDIA_OPTION)) {
 			deleteNonMediaFiles = true;
+		}
+
+		if (cmd.hasOption(ACTIONS_OPTION)) {
+			doActions = true;
 		}
 		return true;
 	}
