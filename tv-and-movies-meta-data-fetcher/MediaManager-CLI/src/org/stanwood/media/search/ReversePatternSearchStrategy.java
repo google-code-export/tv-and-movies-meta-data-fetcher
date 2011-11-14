@@ -81,7 +81,7 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 	}
 
 	private boolean hasIgnoreTokens(File file) {
-		if (disallowIgnoreTokens) {
+		if (!disallowIgnoreTokens) {
 			return false;
 		}
 		StringBuilder term = new StringBuilder(file.getName());
