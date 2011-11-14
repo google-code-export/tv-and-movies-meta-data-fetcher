@@ -33,6 +33,7 @@ public class TestEpisodeFileNameStraregy {
 	 */
 	@Test
 	public void testCanGetEpisodeAndSeason() {
+		TestFilmSearcher.assertSearchDetails("A Show 2008", null, null, doSearch("A.Show.2008.4x05.The.Show.Title.m4v", "%s %e - %t.%x"));
 		TestFilmSearcher.assertSearchDetails("A Show 2008", null, null, doSearch("A.Show.2008.S03E01.The.Show.Title.m4v", "%s %e - %t.%x"));
 		TestFilmSearcher.assertSearchDetails("A Show", null, null, doSearch("A Show 3-01 The show title.m4v", "%s %e - %t.%x"));
 		TestFilmSearcher.assertSearchDetails("A Show", null, null, doSearch("A Show 3x01 123.m4v", "%s %e - %t.%x"));
