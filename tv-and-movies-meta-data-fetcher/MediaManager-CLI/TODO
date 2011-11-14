@@ -9,11 +9,8 @@ Add a getting started guide and link to a button in the installer
 Add more linux distribution packages.
 Make native MacOSX installer
 Make native Windows installer
-Add tests of media importing
 Media Importer
-	- Make the media imported have the option to delete non media files
-	- Find out why some media does not get imported
-	- Add option not to perform actions
+	- Add tests of media importing
 
 Version 2.1
 -----------
