@@ -12,11 +12,11 @@ import org.stanwood.media.MediaDirectory;
 public class EpisodeFileNameStraregy implements ISearchStrategy {
 
 	private final static Pattern PATTERNS[] = new Pattern[] {
-		Pattern.compile("(.+?)S\\d+E\\d+.*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) \\d+x\\d+.*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?)S\\d+ E\\d+ .*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) \\d+[^0-9]\\d+.*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) \\d\\d\\d .*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
+		Pattern.compile("(.+?)S(\\d+)E(\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+		Pattern.compile("(.+?) (\\d+)x(\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+		Pattern.compile("(.+?)S(\\d+) E(\\d+) .*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+		Pattern.compile("(.+?) (\\d+)[^0-9](\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+		Pattern.compile("(.+?) (\\d)(\\d\\d) .*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
 	};
 
 	private final static Pattern PATTERN_WEB_ADDRESS = Pattern.compile("^(\\[ *www\\..*\\.com *] *\\- *).*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -34,7 +34,7 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		for (Pattern p : PATTERNS) {
 			Matcher m = p.matcher(term);
 			if (m.matches()) {
-				return createSearchDetails(m.group(1));
+				return createSearchDetails(m.group(1),Integer.parseInt(m.group(2)),Integer.parseInt(m.group(3)));
 			}
 		}
 
@@ -48,11 +48,14 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		}
 	}
 
-	protected SearchDetails createSearchDetails(String rawTerm) {
+	protected SearchDetails createSearchDetails(String rawTerm,int season,int episode) {
 		StringBuilder term = new StringBuilder(rawTerm);
 		SearchHelper.removeIgnoredTokens(term);
 		SearchHelper.trimRubishFromEnds(term);
-		return new SearchDetails(term.toString(), null, null);
+		SearchDetails details = new SearchDetails(term.toString(), null, null);
+		details.setSeason(season);
+		details.setEpisode(episode);
+		return details;
 	}
 
 }

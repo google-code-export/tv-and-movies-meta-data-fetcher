@@ -217,7 +217,7 @@ public class MediaSearcher {
 				return null;
 			}
 
-			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file);
+			ParsedFileName data =  FileNameParser.parse(dir.getMediaDirConfig(),file,result);
 			if (data==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_TO_WORKOUT_SEASON_AND_EPISODE_NUMBER_FOR_FILE"),file.getName())); //$NON-NLS-1$
 			}

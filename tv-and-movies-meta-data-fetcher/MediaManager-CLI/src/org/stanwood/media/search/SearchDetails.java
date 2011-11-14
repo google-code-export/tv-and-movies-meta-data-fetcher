@@ -8,6 +8,8 @@ public class SearchDetails {
 	private String term;
 	private String year;
 	private Integer part;
+	private Integer season;
+	private Integer episode;
 
 	/**
 	 * The constructor
@@ -45,4 +47,22 @@ public class SearchDetails {
 	public Integer getPart() {
 		return part;
 	}
+
+	public Integer getSeason() {
+		return season;
+	}
+
+	public void setSeason(Integer season) {
+		this.season = season;
+	}
+
+	public Integer getEpisode() {
+		return episode;
+	}
+
+	public void setEpisode(Integer episode) {
+		this.episode = episode;
+	}
+
+
 }

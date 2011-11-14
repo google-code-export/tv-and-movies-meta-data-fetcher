@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.xbmc.expression.ValueType;
 
@@ -85,9 +86,17 @@ public class FileNameParser {
 	 * Parse the filename and work out the episode and season number
 	 * @param dirConfig The root media directory
 	 * @param file The file been renamed
+	 * @param lookupResults The results of a show/film search
 	 * @return The parsed information
 	 */
-	public static ParsedFileName parse(MediaDirConfig dirConfig,File file) {
+	public static ParsedFileName parse(MediaDirConfig dirConfig,File file,SearchResult lookupResults) {
+		if (lookupResults!=null && lookupResults.getSeason()!=null && lookupResults.getEpisode()!=null) {
+			ParsedFileName parsed = new ParsedFileName();
+			parsed.setEpisode(lookupResults.getEpisode());
+			parsed.setSeason(lookupResults.getSeason());
+			return parsed;
+		}
+
 		ParsedFileName result = parse(file);
 		if (result!=null) {
 			return result;
