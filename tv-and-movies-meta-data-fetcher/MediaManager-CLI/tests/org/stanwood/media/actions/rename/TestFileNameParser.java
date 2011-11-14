@@ -25,6 +25,7 @@ public class TestFileNameParser {
 			dirConfig.setPattern("%n/Season %s/%s %e - %t.%x");
 			dirConfig.setMode(Mode.TV_SHOW);
 
+			assertEpisode(3,1,dirConfig, new File(dir,"A.Show.2008.S03E01.The.Show.Title.m4v"));
 			assertEpisode(20,1,dirConfig, new File(dir,"2001 - A title.m4v"));
 			assertEpisode(20,1,dirConfig, new File(dir,"The show 2001 - A title.m4v"));
 			assertEpisode(3,1,dirConfig, new File(dir,"301 - A title.m4v"));

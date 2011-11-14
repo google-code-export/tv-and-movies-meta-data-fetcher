@@ -1,3 +1,4 @@
+%n/Season %s/%s %e - %t.%x,A.Show.2008.S03E01.The.Show.Title.m4v
 %n/%s/%e - %t.%x,Show.4x09.-.Title.avi
 %n/%s/%e - %t.%x,Show.14x09.-.Title.mkv
 %n/%s/%e - %t.%x,Show.S04E09.HDTV.XviD-LOL.[BLAH].m4v
