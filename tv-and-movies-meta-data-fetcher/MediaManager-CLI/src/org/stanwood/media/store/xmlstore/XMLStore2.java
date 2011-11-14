@@ -77,6 +77,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
 
 	private final static String FILENAME = ".mediaManager-xmlStore.xml"; //$NON-NLS-1$
+	private static final String STIP_PUNCUATION = "'()[],";
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 
 
@@ -1005,7 +1006,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private String stripPuncuation(String value) {
-		return value.replaceAll("'", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		StringBuilder result = new StringBuilder();
+		for (int i=0;i<value.length();i++) {
+			char c = value.charAt(i);
+			if (STIP_PUNCUATION.indexOf(c)==-1) {
+				result.append(c);
+			}
+		}
+		return result.toString();
 	}
 
 	private Document getCache(File rootMediaDirectory) throws StoreException {

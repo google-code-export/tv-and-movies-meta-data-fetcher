@@ -78,15 +78,15 @@ public class CLIImportMedia extends AbstractLauncher {
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(USE_DEFAULT_OPTION,"dontUseDefaults",false,"Don't use default media directiores"); //$NON-NLS-1$ //$NON-NLS-2$
+		o = new Option(USE_DEFAULT_OPTION,"dontUseDefaults",false,"Don't use default media directiores"); //$NON-NLS-1$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(DELETE_NON_MEDIA_OPTION,"deleteNonMedia",false,"Delete files are that are not media files (use with care)"); //$NON-NLS-1$ //$NON-NLS-2$
+		o = new Option(DELETE_NON_MEDIA_OPTION,"deleteNonMedia",false,"Delete files are that are not media files (use with care)"); //$NON-NLS-1$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(ACTIONS_OPTION,"actions",false,"Execute actions on new media files");
+		o = new Option(ACTIONS_OPTION,"actions",false,"Execute actions on new media files"); //$NON-NLS-1$
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
