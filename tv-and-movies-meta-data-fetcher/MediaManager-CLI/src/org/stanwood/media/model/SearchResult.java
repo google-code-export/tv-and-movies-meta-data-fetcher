@@ -30,6 +30,8 @@ public class SearchResult {
 	private String title;
 	private Integer part;
 	private Mode mode;
+	private Integer season;
+	private Integer episode;
 
 	/**
 	 * Constructor of the class
@@ -125,5 +127,22 @@ public class SearchResult {
 	public Mode getMode() {
 		return mode;
 	}
+
+	public Integer getSeason() {
+		return season;
+	}
+
+	public void setSeason(Integer season) {
+		this.season = season;
+	}
+
+	public Integer getEpisode() {
+		return episode;
+	}
+
+	public void setEpisode(Integer episode) {
+		this.episode = episode;
+	}
+
 
 }
