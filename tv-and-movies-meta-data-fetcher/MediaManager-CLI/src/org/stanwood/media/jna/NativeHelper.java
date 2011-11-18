@@ -101,6 +101,11 @@ public class NativeHelper {
 	 * @throws UnsatisfiedLinkError An error is thrown in the library can't be found.
 	 */
 	public static Object loadLibrary(File nativeDir,String libName,Class<?>interfaceClass) throws UnsatisfiedLinkError {
+		if (nativeDir==null) {
+			if (System.getProperty("NATIVE_DIR")!=null) { //$NON-NLS-1$
+				nativeDir = new File(System.getProperty("NATIVE_DIR")); //$NON-NLS-1$
+			}
+		}
 		String method = System.getenv("MM_LIB_LOAD_METHOD"); //$NON-NLS-1$
 		Error error = null;
 		String nativePath = getLibArchPath(libName);
