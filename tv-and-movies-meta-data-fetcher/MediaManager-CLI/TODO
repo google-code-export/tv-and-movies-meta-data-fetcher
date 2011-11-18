@@ -16,19 +16,14 @@ Media Importer
 Find out why their is now command "mp4file" on ubuntu
 Encode more metadata into mp4files
     - TVShows
-        - Name: <no change>
-        - Artist: Show name
         - Albumn Artist: Show name
-        - Albumn: Show name, Series 1
         - Sort name: Epsiode title
         - Sort Artist: Show name
         - Sort Ablumn Artist: Show name
         - Sort Albumn: Show name, Series 1
-        - Track Number: Episode Number
-        - Year: Year of Show
+        - Year: 
         - Rating
     - Film:
-        - Artist: Director
         - Sort Artist: Director
         - Sort Name: Film Title
         - Rating
