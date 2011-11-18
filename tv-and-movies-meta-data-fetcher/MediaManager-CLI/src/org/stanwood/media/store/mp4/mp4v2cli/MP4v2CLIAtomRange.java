@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * Used to store mp4 range atom data
@@ -29,10 +30,16 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object>args) {
-		if (getName().equals("disk")) { //$NON-NLS-1$
+		if (getName().equals(MP4AtomKey.DISK_NUMBER.getId())) {
 			args.add("-disk"); //$NON-NLS-1$
 			args.add(String.valueOf(number));
 			args.add("-disks"); //$NON-NLS-1$
+			args.add(String.valueOf(total));
+		}
+		else if (getName().equals(MP4AtomKey.TRACK_NUMBER.getId())) {
+			args.add("-track"); //$NON-NLS-1$
+			args.add(String.valueOf(number));
+			args.add("-tracks"); //$NON-NLS-1$
 			args.add(String.valueOf(total));
 		}
 		else {

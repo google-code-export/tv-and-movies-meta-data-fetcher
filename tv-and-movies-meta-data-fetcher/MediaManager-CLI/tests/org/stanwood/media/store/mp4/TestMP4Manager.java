@@ -67,15 +67,22 @@ public class TestMP4Manager {
 
 		Assert.assertEquals(10,atoms.size());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(0).toString());
-		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(1).toString());
-		Assert.assertEquals("Media type: [stik=10]",atoms.get(2).toString());
-		Assert.assertEquals("Episode ID: [tven=103]",atoms.get(3).toString());
-		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(4).toString());
-		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(5).toString());
-		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(6).toString());
-		Assert.assertEquals("Release year: [©day=Thu Nov 10 00:00:00 GMT 2005]",atoms.get(7).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(8).toString());
-		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(9).toString());
+		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(1).toString());
+		Assert.assertEquals("Media Type: [stik=10]",atoms.get(2).toString());
+		Assert.assertEquals("TV Episode ID: [tven=103]",atoms.get(3).toString());
+		Assert.assertEquals("TV Episode Number: [tves=3]",atoms.get(4).toString());
+		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(5).toString());
+		Assert.assertEquals("TV Season Number: [tvsn=1]",atoms.get(6).toString());
+		Assert.assertEquals("Release Date: [©day=Thu Nov 10 00:00:00 GMT 2005]",atoms.get(7).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(8).toString());
+		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(9).toString());
+		try {
+			atoms.get(10);
+			Assert.fail("Did not detect exception");
+		}
+		catch (IndexOutOfBoundsException e) {
+			// Ignore
+		}
 	}
 
 	/**
@@ -127,19 +134,29 @@ public class TestMP4Manager {
 		for (IAtom a : atoms) {
 			System.out.println(a.toString());
 		}
-		Assert.assertEquals(11,atoms.size());
+		Assert.assertEquals(14,atoms.size());
 		int index = 0;
-		Assert.assertEquals("Title: [©nam=Test Episode]",atoms.get(index++).toString());
-		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
-		Assert.assertEquals("Release year: [©day=2005]",atoms.get(index++).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Media type: [stik=10]",atoms.get(index++).toString());
-		Assert.assertEquals("TV show name: [tvsh=Test Show Name]",atoms.get(index++).toString());
-		Assert.assertEquals("Episode ID: [tven=34567]",atoms.get(index++).toString());
-		Assert.assertEquals("Summary: [desc=This is a test show summary]",atoms.get(index++).toString());
-		Assert.assertEquals("TV episode number: [tves=3]",atoms.get(index++).toString());
-		Assert.assertEquals("TV season number: [tvsn=1]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
+		Assert.assertEquals("Artist: [©ART=Test Show Name]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Album: [©alb=Test Show Name, Series 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Track Number: [trkn=3 of 0]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode ID: [tven=34567]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode Number: [tves=3]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Season Number: [tvsn=1]",atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		try {
+			atoms.get(index++);
+			Assert.fail("Did not detect exception");
+		}
+		catch (IndexOutOfBoundsException e) {
+			// Ignore
+		}
 	}
 
 	protected IMP4Manager createMP4Manager() throws MP4Exception {
@@ -183,16 +200,23 @@ public class TestMP4Manager {
 		Assert.assertEquals(11,atoms.size());
 		int index=0;
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Cover artwork: [covr=Artwork of type JPEG of size 9,487]",atoms.get(index++).toString());
-		Assert.assertEquals("Summary: [desc=A test summary]",atoms.get(index++).toString());
-		Assert.assertEquals("Disk number: [disk=1 of 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr=Artwork of type JPEG of size 9,487]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
 		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());
-		Assert.assertEquals("Media type: [stik=6]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=6]",atoms.get(index++).toString());
 		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
-		Assert.assertEquals("Release year: [©day=2005]",atoms.get(index++).toString());
-		Assert.assertEquals("Genre: [©gen=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Title: [©nam=Test film name]",atoms.get(index++).toString());
-		Assert.assertEquals("Encoder: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+		try {
+			atoms.get(index++);
+			Assert.fail("Did not detect exception");
+		}
+		catch (IndexOutOfBoundsException e) {
+			// Ignore
+		}
 	}
 
 	private Film createTestFilm() throws Exception {

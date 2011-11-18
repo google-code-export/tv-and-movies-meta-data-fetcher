@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4.mp4v2cli;
 
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,6 +25,8 @@ import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
+import org.stanwood.media.store.mp4.MP4AtomKey;
+import org.stanwood.media.store.mp4.MP4AtomKeyType;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 
@@ -39,12 +42,6 @@ public class MP4v2CLIManager implements IMP4Manager {
 	private final static Pattern RANGE_PATTERN = Pattern.compile("(\\d+) of (\\d+)",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private static final Pattern FILE_LIST_PATTERN = Pattern.compile("^(.*?) +(.*?) +(.*?) +(.*)$",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-
-	private String ATOM_BOOLEAN_KEYS[] = new String[] {"hdvd"}; //$NON-NLS-1$
-//	private String ATOM_STRING_KEYS[] = new String[] {"©nam","©day","tvsh","desc","ldes","©ART","©too","©gen","catg","tven"};
-	private String ATOM_NUMBER_KEYS[] = new String[] {"stik","rtng","tvsn","tves"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	private String ATOM_RANGE_KEYS[] = new String[] {"disk"}; //$NON-NLS-1$
-	private String ATOM_ARTWORK_KEYS[] = new String[] {"covr"}; //$NON-NLS-1$
 
 	private String mp4artPath = null;
 	private String mp4infoPath = null;
@@ -72,7 +69,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 				if (m.matches()) {
 					String name = m.group(1);
 					String value = m.group(2);
-					String key = nameToAtomKey(name);
+					MP4AtomKey key = nameToAtomKey(name);
 					if (key!=null) {
 						if (isArtwork(key)) {
 							parseArtwork(atoms,mp4File);
@@ -150,17 +147,17 @@ public class MP4v2CLIManager implements IMP4Manager {
 		return  MP4ArtworkType.MP4_ART_UNDEFINED;
 	}
 
-	private IAtom parseAtom(String key, String value) throws MP4Exception {
+	private IAtom parseAtom(MP4AtomKey key, String value) throws MP4Exception {
 		IAtom atom = null;
 		if (isBoolean(key)) {
 			int ivalue = 0;
 			if (value.equalsIgnoreCase("yes")) { //$NON-NLS-1$
 				ivalue = 1;
 			}
-			atom = createAtom(key, ivalue);
+			atom = createAtom(key.getId(), ivalue);
 		}
-		else if (isNumber(key)) {
-			if (key.equals("stik")) { //$NON-NLS-1$
+		else if (key.getType()==MP4AtomKeyType.Enum) {
+			if (key == MP4AtomKey.MEDIA_TYPE) {
 				int ivalue = -1;
 				if (value.equalsIgnoreCase("Old Movie")) { //$NON-NLS-1$
 					ivalue = 0;
@@ -186,9 +183,9 @@ public class MP4v2CLIManager implements IMP4Manager {
 				else if (value.equalsIgnoreCase("Ringtone")) { //$NON-NLS-1$
 					ivalue = 14;
 				}
-				atom = createAtom(key, ivalue);
+				atom = createAtom(key.getId(), ivalue);
 			}
-			else if (key.equals("rtng")) { //$NON-NLS-1$
+			else if (key == MP4AtomKey.RATING) {
 				int ivalue = -1;
 				if (value.equalsIgnoreCase("None")) { //$NON-NLS-1$
 					ivalue = 0;
@@ -199,16 +196,16 @@ public class MP4v2CLIManager implements IMP4Manager {
 				else if (value.equalsIgnoreCase("Explicit")) { //$NON-NLS-1$
 					ivalue = 4;
 				}
-				atom = createAtom(key, ivalue);
+				atom = createAtom(key.getId(), ivalue);
 			}
 			else {
-				atom = createAtom(key, value);
+				atom = createAtom(key.getId(), value);
 			}
 		}
 		else if (isRange(key)) {
 			Matcher m = RANGE_PATTERN.matcher(value);
 			if (m.matches()) {
-				atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
+				atom = createAtom(key.getId(), Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
 			}
 			else {
 				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_PARSE_RANGE"),value)); //$NON-NLS-1$
@@ -218,98 +215,86 @@ public class MP4v2CLIManager implements IMP4Manager {
 			// Handle else where
 		}
 		else {
-			atom = createAtom(key, value);
+			atom = createAtom(key.getId(), value);
 		}
 		return atom;
 	}
 
-	private boolean isArtwork(String key) {
-		for (String k : ATOM_ARTWORK_KEYS) {
-			if (k.equals(key)) {
-				return true;
-			}
-		}
-		return false;
+	private boolean isArtwork(MP4AtomKey key) {
+		return key.getType()==MP4AtomKeyType.Artwork;
 	}
 
-	private boolean isRange(String key) {
-		for (String k : ATOM_RANGE_KEYS) {
-			if (k.equals(key)) {
-				return true;
-			}
-		}
-		return false;
+	private boolean isRange(MP4AtomKey key) {
+		return key.getType()==MP4AtomKeyType.Range;
 	}
 
-	private boolean isNumber(String key) {
-		for (String k : ATOM_NUMBER_KEYS) {
-			if (k.equals(key)) {
-				return true;
-			}
-		}
-		return false;
+	private boolean isBoolean(MP4AtomKey key) {
+		return key.getType()==MP4AtomKeyType.Boolean;
 	}
 
-	private boolean isBoolean(String key) {
-		for (String k : ATOM_BOOLEAN_KEYS) {
-			if (k.equals(key)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private String nameToAtomKey(String name) {
+	private MP4AtomKey nameToAtomKey(String name) {
 		if (name.equals("Name")) { //$NON-NLS-1$
-			return "©nam"; //$NON-NLS-1$
+			return MP4AtomKey.NAME;
 		}
 		if (name.equals("Release Date")) { //$NON-NLS-1$
-			return "©day"; //$NON-NLS-1$
+			return MP4AtomKey.RELEASE_DATE;
 		}
 		if (name.equals("Disk")) { //$NON-NLS-1$
-			return "disk"; //$NON-NLS-1$
+			return MP4AtomKey.DISK_NUMBER;
 		}
 		if (name.equals("TV Show")) { //$NON-NLS-1$
-			return "tvsh"; //$NON-NLS-1$
+			return MP4AtomKey.TV_SHOW_NAME;
 		}
 		if (name.equals("TV Episode Number")) { //$NON-NLS-1$
-			return "tven"; //$NON-NLS-1$
+			return MP4AtomKey.TV_EPISODE_ID;
 		}
 		if (name.equals("TV Season")) { //$NON-NLS-1$
-			return "tvsn"; //$NON-NLS-1$
+			return MP4AtomKey.TV_SEASON;
 		}
 		if (name.equals("TV Episode")) { //$NON-NLS-1$
-			return "tves"; //$NON-NLS-1$
+			return MP4AtomKey.TV_EPISODE;
 		}
 		if (name.equals("Short Description")) { //$NON-NLS-1$
-			return "desc"; //$NON-NLS-1$
+			return MP4AtomKey.DESCRIPTION_SHORT;
 		}
 		if (name.equals("Long Description")) { //$NON-NLS-1$
-			return "ldes"; //$NON-NLS-1$
+			return MP4AtomKey.DESCRIPTION_LONG;
 		}
 		if (name.equals("Artist")) { //$NON-NLS-1$
-			return "©ART"; //$NON-NLS-1$
+			return MP4AtomKey.ARTIST;
 		}
 		if(name.equals("Cover Art pieces")) { //$NON-NLS-1$
-			return "covr"; //$NON-NLS-1$
+			return MP4AtomKey.ARTWORK;
 		}
 		if (name.equals("Encoded with")) { //$NON-NLS-1$
-			return "©too"; //$NON-NLS-1$
+			return MP4AtomKey.ENCODING_TOOL;
 		}
 		if(name.equals("Media Type")) { //$NON-NLS-1$
-			return "stik"; //$NON-NLS-1$
+			return MP4AtomKey.MEDIA_TYPE;
 		}
 		if(name.equals("Content Rating")) { //$NON-NLS-1$
-			return "rtng"; //$NON-NLS-1$
+			return MP4AtomKey.RATING;
 		}
 		if (name.equals("Genre")) { //$NON-NLS-1$
-			return "©gen"; //$NON-NLS-1$
+			return MP4AtomKey.GENRE_USER_DEFINED;
 		}
 		if (name.equals("Category")) { //$NON-NLS-1$
-			return "catg"; //$NON-NLS-1$
+			return MP4AtomKey.CATEGORY;
 		}
 		if (name.equals("HD Video")) { //$NON-NLS-1$
-			return "hdvd"; //$NON-NLS-1$
+			return MP4AtomKey.HD;
+		}
+		if (name.equals("Album")) { //$NON-NLS-1$
+			return MP4AtomKey.ALBUM;
+		}
+		if (name.equals("Album Artist")) {
+			return MP4AtomKey.ALBUM_ARTIST;
+		}
+		if (name.equals("Sort Album")) {
+			return MP4AtomKey.SORT_ALBUM;
+		}
+		if (name.equals("Track")) {
+			return MP4AtomKey.TRACK_NUMBER;
 		}
 		return null;
 	}

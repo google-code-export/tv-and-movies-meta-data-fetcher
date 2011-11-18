@@ -21,6 +21,7 @@ import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.StikValue;
 import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIAtomInteger;
@@ -149,21 +150,21 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						return false;
 					}
 					if (stik == StikValue.MOVIE) {
-						if (hasAtom(atoms,"©nam") == null) { //$NON-NLS-1$
+						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
 							return false;
 						}
 					}
 					else if (stik == StikValue.TV_SHOW) {
-						if (hasAtom(atoms,"©nam") == null) { //$NON-NLS-1$
+						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
 							return false;
 						}
-						if (hasAtom(atoms,"tvsn") == null) { //$NON-NLS-1$
+						if (hasAtom(atoms,MP4AtomKey.TV_SEASON.getId()) == null) {
 							return false;
 						}
-						if (hasAtom(atoms,"tves") == null) { //$NON-NLS-1$
+						if (hasAtom(atoms,MP4AtomKey.TV_EPISODE.getId()) == null) {
 							return false;
 						}
-						if (hasAtom(atoms,"tvsh") == null) { //$NON-NLS-1$
+						if (hasAtom(atoms,MP4AtomKey.TV_SHOW_NAME.getId()) == null) {
 							return false;
 						}
 					}
