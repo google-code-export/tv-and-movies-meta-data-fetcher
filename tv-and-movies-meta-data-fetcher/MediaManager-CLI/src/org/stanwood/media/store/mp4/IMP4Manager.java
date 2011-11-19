@@ -32,7 +32,7 @@ public interface IMP4Manager {
 	 * @param value The value of the atom
 	 * @return the atom
 	 */
-	public IAtom createAtom(String name, String value);
+	public IAtom createAtom(MP4AtomKey name, String value);
 
 	/**
 	 * Used to create a range atom
@@ -41,7 +41,7 @@ public interface IMP4Manager {
 	 * @param total The total number possible
 	 * @return The atom
 	 */
-	public IAtom createAtom(String name,short number, short total);
+	public IAtom createAtom(MP4AtomKey name,short number, short total);
 
 	/**
 	 * Used to create a number atom
@@ -49,7 +49,7 @@ public interface IMP4Manager {
 	 * @param value The value of the atom
 	 * @return The atom
 	 */
-	public IAtom createAtom(String name, int value);
+	public IAtom createAtom(MP4AtomKey name, int value);
 
 	/**
 	 * Used to create a artwork atom
@@ -59,7 +59,7 @@ public interface IMP4Manager {
 	 * @param data The data in the artwork
 	 * @return The atom
 	 */
-	public IAtom createAtom(String name, MP4ArtworkType type, int size, byte[] data);
+	public IAtom createAtom(MP4AtomKey name, MP4ArtworkType type, int size, byte[] data);
 
 
 	/**

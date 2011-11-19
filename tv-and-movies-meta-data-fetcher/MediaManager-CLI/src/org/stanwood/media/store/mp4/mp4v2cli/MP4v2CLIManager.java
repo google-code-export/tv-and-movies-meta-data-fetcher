@@ -114,7 +114,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 					int size = Integer.parseInt(m.group(2));
 					String type = m.group(4);
 					MP4ArtworkType artType = convertArtRawType(type);
-					atoms.add(new MP4v2CLIAtomArtworkSummary("covr",index,size,artType)); //$NON-NLS-1$
+					atoms.add(new MP4v2CLIAtomArtworkSummary(MP4AtomKey.ARTWORK,index,size,artType));
 				}
 			}
 		} catch (IOException e) {
@@ -154,7 +154,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 			if (value.equalsIgnoreCase("yes")) { //$NON-NLS-1$
 				ivalue = 1;
 			}
-			atom = createAtom(key.getId(), ivalue);
+			atom = createAtom(key, ivalue);
 		}
 		else if (key.getType()==MP4AtomKeyType.Enum) {
 			if (key == MP4AtomKey.MEDIA_TYPE) {
@@ -183,7 +183,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 				else if (value.equalsIgnoreCase("Ringtone")) { //$NON-NLS-1$
 					ivalue = 14;
 				}
-				atom = createAtom(key.getId(), ivalue);
+				atom = createAtom(key, ivalue);
 			}
 			else if (key == MP4AtomKey.RATING) {
 				int ivalue = -1;
@@ -196,16 +196,16 @@ public class MP4v2CLIManager implements IMP4Manager {
 				else if (value.equalsIgnoreCase("Explicit")) { //$NON-NLS-1$
 					ivalue = 4;
 				}
-				atom = createAtom(key.getId(), ivalue);
+				atom = createAtom(key, ivalue);
 			}
 			else {
-				atom = createAtom(key.getId(), value);
+				atom = createAtom(key, value);
 			}
 		}
 		else if (isRange(key)) {
 			Matcher m = RANGE_PATTERN.matcher(value);
 			if (m.matches()) {
-				atom = createAtom(key.getId(), Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
+				atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
 			}
 			else {
 				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4v2CLIManager.UNABLE_PARSE_RANGE"),value)); //$NON-NLS-1$
@@ -215,7 +215,7 @@ public class MP4v2CLIManager implements IMP4Manager {
 			// Handle else where
 		}
 		else {
-			atom = createAtom(key.getId(), value);
+			atom = createAtom(key, value);
 		}
 		return atom;
 	}
@@ -302,25 +302,25 @@ public class MP4v2CLIManager implements IMP4Manager {
 
 	/** {@inheritDoc} */
 	@Override
-	public IAtom createAtom(String name, String value) {
+	public IAtom createAtom(MP4AtomKey name, String value) {
 		return new MP4v2CLIAtomString(name, value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IAtom createAtom(String name, int value) {
+	public IAtom createAtom(MP4AtomKey name, int value) {
 		return new MP4v2CLIAtomInteger(name, value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IAtom createAtom(String name,short number, short total) {
+	public IAtom createAtom(MP4AtomKey name,short number, short total) {
 		return new MP4v2CLIAtomRange(name,number,total );
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IAtom createAtom(String name,MP4ArtworkType type, int size, byte data[]) {
+	public IAtom createAtom(MP4AtomKey name,MP4ArtworkType type, int size, byte data[]) {
 		return new MP4v2CLIAtomArtwork(this,name,type,size,data);
 	}
 

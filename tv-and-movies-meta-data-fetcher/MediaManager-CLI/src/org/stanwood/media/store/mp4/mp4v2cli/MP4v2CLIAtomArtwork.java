@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.util.FileHelper;
 
@@ -29,7 +30,7 @@ public class MP4v2CLIAtomArtwork extends AbstractCLIMP4v2Atom implements IAtom {
 	 * @param size the size of the artwork
 	 * @param data the artwork data
 	 */
-	public MP4v2CLIAtomArtwork(MP4v2CLIManager manager,String name, MP4ArtworkType type, int size, byte[] data) {
+	public MP4v2CLIAtomArtwork(MP4v2CLIManager manager,MP4AtomKey name, MP4ArtworkType type, int size, byte[] data) {
 		super(name);
 		this.type = type;
 		this.size = size;

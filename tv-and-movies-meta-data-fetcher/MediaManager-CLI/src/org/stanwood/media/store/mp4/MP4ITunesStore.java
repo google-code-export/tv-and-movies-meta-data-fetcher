@@ -355,28 +355,28 @@ public class MP4ITunesStore implements IStore {
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		IShow show = episode.getSeason().getShow();
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE.getId(),StikValue.TV_SHOW.getId()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE_ID.getId(), episode.getEpisodeId()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SHOW_NAME.getId(), show.getName()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SEASON.getId(), episode.getSeason().getSeasonNumber()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE.getId(), episode.getEpisodeNumber()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST.getId(), show.getName()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.ALBUM.getId(), MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
-//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM.getId(), MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
-//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST.getId(), show.getName()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.TRACK_NUMBER.getId(),(short)episode.getEpisodeNumber(),(short)0));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.TV_SHOW.getId()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE_ID, episode.getEpisodeId()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SHOW_NAME, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SEASON, episode.getSeason().getSeasonNumber()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE, episode.getEpisodeNumber()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.ALBUM, MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM, MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.TRACK_NUMBER,(short)episode.getEpisodeNumber(),(short)0));
 		if (episode.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE.getId(), YEAR_DF.format(episode.getDate())));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(episode.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME.getId(), episode.getTitle()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, episode.getTitle()));
 		if (episode.getSummary()!=null && episode.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT.getId(), episode.getSummary()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, episode.getSummary()));
 		}
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED.getId(), episode.getSeason().getShow().getGenres().get(0)));
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY.getId(), episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, episode.getSeason().getShow().getGenres().get(0)));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, episode.getSeason().getShow().getGenres().get(0)));
 		}
 		IAtom artworkAtom = getArtworkAtom(mp4Manager, mp4File, episode);
 		if (artworkAtom!=null) {
@@ -406,7 +406,7 @@ public class MP4ITunesStore implements IStore {
 				try {
 					artwork = downloadToTempFile(imageUrl);
 					byte data[] = getBytesFromFile(artwork);
-					return mp4Manager.createAtom(MP4AtomKey.ARTWORK.getId(), MP4ArtworkType.MP4_ART_JPEG,data.length,data );
+					return mp4Manager.createAtom(MP4AtomKey.ARTWORK, MP4ArtworkType.MP4_ART_JPEG,data.length,data );
 
 				} catch (IOException e) {
 					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DOWNLOAD_ARTWORK"),imageUrl, mp4File.getName()),e); //$NON-NLS-1$
@@ -437,21 +437,21 @@ public class MP4ITunesStore implements IStore {
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE.getId(),StikValue.MOVIE.getId()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.MOVIE.getId()));
 		if (film.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE.getId(), YEAR_DF.format(film.getDate())));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(film.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME.getId(), film.getTitle()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, film.getTitle()));
 		if (film.getSummary()!=null && film.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT.getId(), film.getSummary()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, film.getSummary()));
 		}
 		if (film.getDescription()!=null && film.getDescription().length()>0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_LONG.getId(), film.getDescription()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_LONG, film.getDescription()));
 		}
 		if (film.getDirectors()!=null) {
 			for (String director : film.getDirectors()) {
-				atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST.getId(), director));
-//				atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST.getId(), director));
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST, director));
+//				atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, director));
 			}
 		}
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
@@ -466,16 +466,16 @@ public class MP4ITunesStore implements IStore {
 			if (part>total) {
 				total = (byte)(int)part;
 			}
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DISK_NUMBER.getId(),(byte)(int)part,total));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DISK_NUMBER,(byte)(int)part,total));
 		}
 
 		if (film.getPreferredGenre() != null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED.getId(), film.getPreferredGenre()));
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY.getId(), film.getPreferredGenre()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, film.getPreferredGenre()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, film.getPreferredGenre()));
 		} else {
 			if (film.getGenres().size() > 0) {
-				atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED.getId(), film.getGenres().get(0)));
-				atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY.getId(), film.getGenres().get(0)));
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, film.getGenres().get(0)));
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, film.getGenres().get(0)));
 			}
 		}
 		IAtom artworkAtom = getArtworkAtom(mp4Manager,mp4File,film);

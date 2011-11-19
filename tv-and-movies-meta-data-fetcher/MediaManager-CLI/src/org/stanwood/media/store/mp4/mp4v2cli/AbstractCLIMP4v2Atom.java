@@ -3,8 +3,8 @@ package org.stanwood.media.store.mp4.mp4v2cli;
 import java.io.File;
 import java.util.List;
 
-import org.stanwood.media.store.mp4.AtomNameLookup;
 import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 
 /**
@@ -12,43 +12,33 @@ import org.stanwood.media.store.mp4.MP4Exception;
  */
 public abstract class AbstractCLIMP4v2Atom implements IAtom {
 
-	private final static AtomNameLookup nameLookup = new AtomNameLookup();
-
-	private String displayName;
-	private String name;
+	private MP4AtomKey key;
 
 
 	/**
 	 * The constructor
-	 * @param name The name of the atom
+	 * @param name The key of the atom
 	 */
-	public AbstractCLIMP4v2Atom(String name) {
-		setDisplayName(nameLookup.getDisplayName(name));
-		setName(name);
+	public AbstractCLIMP4v2Atom(MP4AtomKey key) {
+		this.key = key;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getDisplayName() {
-		return displayName;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+		return key.getDisplayName();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getName() {
-		return name;
+		return key.getId();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setName(String name) {
-		this.name = name;
+	public MP4AtomKey getKey() {
+		return key;
 	}
 
 	/**

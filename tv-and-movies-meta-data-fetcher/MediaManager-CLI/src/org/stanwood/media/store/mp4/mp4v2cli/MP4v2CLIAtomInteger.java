@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * Used to store mp4 number atom data
@@ -19,7 +20,7 @@ public class MP4v2CLIAtomInteger extends AbstractCLIMP4v2Atom implements IAtom {
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 */
-	public MP4v2CLIAtomInteger(String name,int value) {
+	public MP4v2CLIAtomInteger(MP4AtomKey name,int value) {
 		super(name);
 		this.value = value;
 	}
