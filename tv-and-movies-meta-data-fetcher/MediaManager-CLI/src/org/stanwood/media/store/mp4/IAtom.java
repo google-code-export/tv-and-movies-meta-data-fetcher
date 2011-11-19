@@ -11,11 +11,6 @@ public interface IAtom {
 	 */
 	public String getName();
 
-	/**
-	 * Used to set the name of the atom
-	 * @param name The name of the atom
-	 */
-	public void setName(String name);
 
 //	/**
 //	 * Used to get the value of the atom
@@ -36,9 +31,9 @@ public interface IAtom {
 	public String getDisplayName();
 
 	/**
-	 * Used to set the display name
-	 * @param displayName The display name
+	 * Used to get the atom key
+	 * @return The atom key
 	 */
-	public void setDisplayName(String displayName);
+	public MP4AtomKey getKey();
 
 }

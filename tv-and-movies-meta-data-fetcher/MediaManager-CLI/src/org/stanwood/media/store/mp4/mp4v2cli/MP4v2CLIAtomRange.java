@@ -21,7 +21,7 @@ public class MP4v2CLIAtomRange extends AbstractCLIMP4v2Atom implements IAtom {
 	 * @param number the number of items in the rage
 	 * @param total the maximum number in the range
 	 */
-	public MP4v2CLIAtomRange(String name,short number,short total) {
+	public MP4v2CLIAtomRange(MP4AtomKey name,short number,short total) {
 		super(name);
 		this.number = number;
 		this.total = total;

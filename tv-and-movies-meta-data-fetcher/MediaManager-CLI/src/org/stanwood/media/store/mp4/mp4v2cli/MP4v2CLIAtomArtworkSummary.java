@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * The artwork summary atom. This cannot be written back to the file as it just
@@ -23,7 +24,7 @@ public class MP4v2CLIAtomArtworkSummary extends AbstractCLIMP4v2Atom implements 
 	 * @param size The size of the artwork
 	 * @param artType The type of the artwork
 	 */
-	public MP4v2CLIAtomArtworkSummary(String name,int index, long size, MP4ArtworkType artType) {
+	public MP4v2CLIAtomArtworkSummary(MP4AtomKey name,int index, long size, MP4ArtworkType artType) {
 		super(name);
 		this.size = size;
 		this.artType = artType;

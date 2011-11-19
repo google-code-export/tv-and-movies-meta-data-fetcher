@@ -19,7 +19,7 @@ public class MP4v2CLIAtomString extends AbstractCLIMP4v2Atom implements IAtom {
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 */
-	public MP4v2CLIAtomString(String name,String value) {
+	public MP4v2CLIAtomString(MP4AtomKey name,String value) {
 		super(name);
 		this.value = value;
 	}
