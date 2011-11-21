@@ -40,6 +40,12 @@ public class NativeHelper {
 	 * @return The app name to execute
 	 */
 	public static String getNativeApplication(File nativeDir,String appName) {
+		if (nativeDir==null) {
+			if (System.getProperty("NATIVE_DIR")!=null) { //$NON-NLS-1$
+				nativeDir = new File(System.getProperty("NATIVE_DIR")); //$NON-NLS-1$
+			}
+		}
+
 		String method = System.getenv("MM_EXE_LOCATE_METHOD"); //$NON-NLS-1$
 		if (log.isDebugEnabled()) {
 			log.debug("Getting native application, method forced to: " + method); //$NON-NLS-1$
