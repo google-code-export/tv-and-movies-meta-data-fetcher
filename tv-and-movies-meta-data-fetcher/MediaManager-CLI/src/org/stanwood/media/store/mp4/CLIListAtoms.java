@@ -11,7 +11,7 @@ import org.apache.commons.cli.Options;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
+import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 
 /**
  * <p>This is a CLI application used to print the atoms in a MP4 file</p>
@@ -61,7 +61,7 @@ public class CLIListAtoms extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try {
-			IMP4Manager mp4Manager = new MP4v2CLIManager();
+			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
 			mp4Manager.init(getController().getNativeFolder());
 
 			info(Messages.getString("CLIListAtoms.READING_ATOMS")); //$NON-NLS-1$

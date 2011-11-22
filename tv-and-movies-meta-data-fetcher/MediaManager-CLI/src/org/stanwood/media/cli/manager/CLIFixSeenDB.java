@@ -24,8 +24,8 @@ import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.StikValue;
-import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIAtomInteger;
-import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
+import org.stanwood.media.store.mp4.atomicparsley.APAtomInteger;
+import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParserException;
 
@@ -103,7 +103,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			}
 			SeenDatabase seenDb = new SeenDatabase(getController().getConfigDir());
 			seenDb.read(new NullProgressMonitor());
-			IMP4Manager mp4Manager = new MP4v2CLIManager();
+			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
 			mp4Manager.init(getController().getNativeFolder());
 
 			//TODO make each store able to validate a media file
@@ -144,8 +144,8 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				return false;
 			}
 			else {
-				if (atom instanceof MP4v2CLIAtomInteger) {
-					StikValue stik = StikValue.fromId(((MP4v2CLIAtomInteger)atom).getValue());
+				if (atom instanceof APAtomInteger) {
+					StikValue stik = StikValue.fromId(((APAtomInteger)atom).getValue());
 					if (stik==null) {
 						return false;
 					}

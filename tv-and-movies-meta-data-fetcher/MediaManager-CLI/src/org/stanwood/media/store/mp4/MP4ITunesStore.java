@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.jna.NativeHelper;
+import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
@@ -44,7 +45,7 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.mp4.mp4v2cli.MP4v2CLIManager;
+import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -77,26 +78,15 @@ public class MP4ITunesStore implements IStore {
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 
 	private IMP4Manager mp4Manager;
-	private Class<? extends IMP4Manager> manager = MP4v2CLIManager.class;
-	private String mp4infoPath;
-	private String mp4artPath;
-	private String mp4tagsPath;
-	private String mp4filePath;
+	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
+	private String atomicParsleyCmd;
+
 
 	/** {@inheritDoc} */
 	@Override
 	public void init(File nativeDir) throws StoreException {
-		if (mp4infoPath == null) {
-			mp4infoPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName());
-		}
-		if (mp4artPath == null) {
-			mp4artPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName());
-		}
-		if (mp4tagsPath == null) {
-			mp4tagsPath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName());
-		}
-		if (mp4filePath == null) {
-			mp4filePath = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName());
+		if (atomicParsleyCmd == null) {
+			atomicParsleyCmd = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName());
 		}
 		try {
 			getMP4Manager().init(nativeDir);
@@ -267,10 +257,7 @@ public class MP4ITunesStore implements IStore {
 				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_CREATE_MANAGER"),manager.getClass()),e); //$NON-NLS-1$
 			}
 
-			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName(),mp4artPath);
-			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName(),mp4tagsPath);
-			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName(),mp4infoPath);
-			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName(),mp4filePath);
+			mp4Manager.setParameter(MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName(),atomicParsleyCmd);
 		}
 		return mp4Manager;
 	}
@@ -286,17 +273,8 @@ public class MP4ITunesStore implements IStore {
 				throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_FIND_MANAGER") ,value),e); //$NON-NLS-1$
 			}
 		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName())){
-			mp4artPath = value;
-		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName())) {
-			mp4infoPath = value;
-		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName())) {
-			mp4tagsPath = value;
-		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4FILE_KEY.getName())) {
-			mp4filePath = value;
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName())){
+			atomicParsleyCmd = value;
 		}
 		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 	}
@@ -307,14 +285,8 @@ public class MP4ITunesStore implements IStore {
 		if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MANAGER_KEY.getName())) {
 			return manager.getName();
 		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4ART_KEY.getName())){
-			return mp4artPath;
-		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4INFO_KEY.getName())) {
-			return mp4infoPath;
-		}
-		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_MP4TAGS_KEY.getName())) {
-			return mp4tagsPath;
+		else if (key.equalsIgnoreCase(MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName())){
+			return atomicParsleyCmd;
 		}
 		throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 	}
@@ -362,16 +334,20 @@ public class MP4ITunesStore implements IStore {
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE, episode.getEpisodeNumber()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST, show.getName()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.ALBUM, MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
-//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM, MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
-//		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM, MessageFormat.format("{0}, Series {1}",show.getName(),episode.getSeason().getSeasonNumber()))); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.ALBUM_ARTIST, show.getName()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM_ARTIST, show.getName()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TRACK_NUMBER,(short)episode.getEpisodeNumber(),(short)0));
 		if (episode.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(episode.getDate())));
 		}
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, episode.getTitle()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  episode.getTitle()));
 		if (episode.getSummary()!=null && episode.getSummary().length()>0) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, episode.getSummary()));
 		}
+
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
@@ -442,6 +418,7 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(film.getDate())));
 		}
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, film.getTitle()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  film.getTitle()));
 		if (film.getSummary()!=null && film.getSummary().length()>0) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, film.getSummary()));
 		}
@@ -451,9 +428,17 @@ public class MP4ITunesStore implements IStore {
 		if (film.getDirectors()!=null) {
 			for (String director : film.getDirectors()) {
 				atoms.add(mp4Manager.createAtom(MP4AtomKey.ARTIST, director));
-//				atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, director));
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ARTIST, director));
 			}
 		}
+
+		for (Certification cert : film.getCertifications()) {
+			String value = certToItunesCert(cert);
+			if (value!=null) {
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.CERTIFICATION, value));
+			}
+		}
+
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
 		if (part!=null) {
 			byte total =0;
@@ -483,6 +468,28 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(artworkAtom);
 		}
 		mp4Manager.update(mp4File, atoms);
+	}
+
+	@SuppressWarnings("nls")
+	private static String certToItunesCert(Certification cert) {
+		if (cert.getType().equalsIgnoreCase("mpaa")) {
+			if (cert.getCertification().equalsIgnoreCase("G")) {
+				return "mpaa|PG|100|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("PG")) {
+				return "mpaa|PG|200|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("PG-13")) {
+				return "mpaa|PG-13|300|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("R")) {
+				return "mpaa|R|400|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("NC-17")) {
+				return "mpaa|R|500|";
+			}
+		}
+		return null;
 	}
 
 	private static File downloadToTempFile(URL url) throws IOException {
