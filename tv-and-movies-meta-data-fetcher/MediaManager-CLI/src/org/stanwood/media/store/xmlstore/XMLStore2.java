@@ -37,6 +37,7 @@ import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoCertification;
 import org.stanwood.media.model.IVideoExtra;
 import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoGenre;
@@ -338,7 +339,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		node.appendChild(directorsNode);
 	}
 
-	protected void readCertifications(Film video,Node videoNode)
+	protected void readCertifications(IVideoCertification video,Node videoNode)
 	throws XMLParserException, NotInStoreException {
 
 		List<Certification>certifications = new ArrayList<Certification>();
@@ -349,11 +350,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		video.setCertifications(certifications);
 	}
 
-	private void writeCertifications(IFilm film, Element node) {
+	private void writeCertifications(IVideoCertification video, Element node) {
 		Document doc = node.getOwnerDocument();
 		Element certificationsNode = doc.createElement("certifications"); //$NON-NLS-1$
-		if (film.getCertifications()!=null) {
-			for (Certification cert : film.getCertifications()) {
+		if (video.getCertifications()!=null) {
+			for (Certification cert : video.getCertifications()) {
 				Element certificationNode = node.getOwnerDocument().createElement("certification"); //$NON-NLS-1$
 				certificationNode.setAttribute("type", cert.getType()); //$NON-NLS-1$
 				certificationNode.setAttribute("certification", cert.getCertification()); //$NON-NLS-1$
@@ -525,14 +526,19 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				showElement.setAttribute("name", show.getName()); //$NON-NLS-1$
 				showElement.setAttribute("imageUrl", urlToText(show.getImageURL())); //$NON-NLS-1$
 				showElement.setAttribute("sourceId", show.getSourceId()); //$NON-NLS-1$
+				if (show.getStudio()!=null) {
+					showElement.setAttribute("studio", show.getStudio()); //$NON-NLS-1$
+				}
 
 				Node descriptionNode = selectSingleNode(showElement, "description"); //$NON-NLS-1$
 				if (descriptionNode != null) {
 					showElement.removeChild(descriptionNode);
 				}
 
+
 				appendDescription(doc, show.getShortSummary(),show.getLongSummary(), showElement);
 
+				writeCertifications(show, showElement);
 				writeGenres(show, showElement);
 				writeExtraParams(show,showElement);
 
@@ -824,10 +830,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			String sourceId = showNode.getAttribute("sourceId"); //$NON-NLS-1$
 			String longSummary = getStringFromXML(showNode,"description/long/text()"); //$NON-NLS-1$
 			String shortSummary = getStringFromXML(showNode,"description/short/text()"); //$NON-NLS-1$
-
+			String studio = showNode.getAttribute("studio"); //$NON-NLS-1$
 			Show show = new Show(showId);
+			if (studio!=null && studio.length()>0) {
+				show.setStudio(studio);
+			}
 			readGenres(show, showNode);
 			readExtraParams(show,showNode);
+			readCertifications(show, showNode);
 			show.setName(name);
 			try {
 				show.setImageURL(new URL(imageURL));

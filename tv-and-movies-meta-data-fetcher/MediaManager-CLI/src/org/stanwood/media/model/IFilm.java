@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Interface for all the film classes
  */
-public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating {
+public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVideoCertification {
 
 	/**
 	 * Used to get the id of the film used by the source that it was read from.
@@ -61,17 +61,6 @@ public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating {
 	 */
 	public URL getFilmUrl();
 
-	/**
-	 * Used to get a list of the films certifications
-	 * @return The films certification list
-	 */
-	public List<Certification> getCertifications();
-
-	/**
-	 * Used to set the films certifications
-	 * @param certifications The films certifications
-	 */
-	public void setCertifications(List<Certification> certifications);
 
 	/**
 	 * Used to get the release date of the film

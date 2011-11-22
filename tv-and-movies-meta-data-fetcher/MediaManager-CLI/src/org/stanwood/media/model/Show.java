@@ -37,7 +37,9 @@ public class Show implements IShow {
 	private URL showURL;
 	private String sourceId;
 	private String preferredGenre;
+	private String studio;
 	private Map<String,String>extraInfo = new HashMap<String,String>();
+	private List<Certification> certifications = new ArrayList<Certification>();
 
 	/**
 	 * The constructor used to create a instance of the class
@@ -237,5 +239,30 @@ public class Show implements IShow {
 	public void setExtraInfo(Map<String, String> params) {
 		this.extraInfo = params;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStudio() {
+		return studio;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setStudio(String studio) {
+		this.studio = studio;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Certification> getCertifications() {
+		return certifications;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setCertifications(List<Certification> certifications) {
+		this.certifications = certifications;
+	}
+
 
 }
