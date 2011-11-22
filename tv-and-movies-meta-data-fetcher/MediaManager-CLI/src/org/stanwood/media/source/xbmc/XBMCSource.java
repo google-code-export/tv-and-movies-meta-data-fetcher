@@ -24,6 +24,7 @@ import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
+import org.stanwood.media.model.IVideoCertification;
 import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.Rating;
@@ -242,11 +243,7 @@ public class XBMCSource extends XMLParser implements ISource {
 						// Ignore
 					}
 
-	    			try {
-	    				String certification = getStringFromXML(doc, "details/mpaa/text()");
-	    			} catch (XMLParserNotFoundException e) {
-						// Ignore
-					}
+	    			parseCertification(show,doc);
 
 	    			try {
 	    				String studio = getStringFromXML(doc, "details/studio/text()");
@@ -437,7 +434,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		video.setActors(actors);
 	}
 
-	protected void parseCertification(Film film, Document doc) throws XMLParserException {
+	protected void parseCertification(IVideoCertification video, Document doc) throws XMLParserException {
 		try {
 			String type = "mpaa"; //$NON-NLS-1$
 			String cert = getStringFromXML(doc, "details/mpaa/text()"); //$NON-NLS-1$
@@ -446,7 +443,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			}
 			List<Certification>certs = new ArrayList<Certification>();
 			certs.add(new Certification(cert, type));
-			film.setCertifications(certs);
+			video.setCertifications(certs);
 		}
 		catch (XMLParserNotFoundException e) {
 			// Ignore, was no rating

@@ -142,7 +142,7 @@ public class TestMP4AtomicParsleyManager {
 		for (IAtom a : atoms) {
 			System.out.println(a.toString());
 		}
-		Assert.assertEquals(19,atoms.size());
+		Assert.assertEquals(20,atoms.size());
 		int index = 0;
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
@@ -161,6 +161,7 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Name: [sonm=Test Episode]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=us-tv|TV-PG|400|]",atoms.get(index++).toString());
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
 		try {
@@ -270,6 +271,10 @@ public class TestMP4AtomicParsleyManager {
 
 	private Episode createTestEpisode() throws Exception {
 		Show show = new Show("123");
+		show.setStudio("Blah");
+		List<Certification> certifications= new ArrayList<Certification>();
+		certifications.add(new Certification("TV-PG","mpaa"));
+		show.setCertifications(certifications);
 		show.setName("Test Show Name");
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");
