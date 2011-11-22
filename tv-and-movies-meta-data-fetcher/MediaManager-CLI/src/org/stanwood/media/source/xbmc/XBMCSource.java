@@ -494,6 +494,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private void parseEpisode(final XBMCEpisode episode,Document doc) throws SourceException {
 		try {
+			System.out.println(XMLParser.domToStr(doc));
 			episode.setSummary(getStringFromXML(doc, "details/plot/text()")); //$NON-NLS-1$
 			parseWriters(episode, doc);
 			parseDirectors(episode, doc);
