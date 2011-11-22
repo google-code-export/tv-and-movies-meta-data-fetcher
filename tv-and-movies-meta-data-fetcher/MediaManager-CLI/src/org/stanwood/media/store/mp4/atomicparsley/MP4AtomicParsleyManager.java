@@ -81,7 +81,6 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			reader =new BufferedReader(new StringReader(output));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
 				Matcher m = TAG_LIST_PATTERN.matcher(line);
 				if (m.matches()) {
 					String name = m.group(1);

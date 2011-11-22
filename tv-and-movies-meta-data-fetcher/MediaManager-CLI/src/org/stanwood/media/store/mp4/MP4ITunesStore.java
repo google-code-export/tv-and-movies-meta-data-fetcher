@@ -348,6 +348,12 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, episode.getSummary()));
 		}
 
+		for (Certification cert : show.getCertifications()) {
+			String value = certToItunesCert(cert);
+			if (value!=null) {
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.CERTIFICATION, value));
+			}
+		}
 //		atoms.add(new Atom("rtng", )); // None = 0, clean = 2, explicit  = 4
 
 		if (episode.getSeason().getShow().getGenres().size() > 0) {
@@ -487,6 +493,24 @@ public class MP4ITunesStore implements IStore {
 			}
 			else if (cert.getCertification().equalsIgnoreCase("NC-17")) {
 				return "mpaa|R|500|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-Y")) {
+				return "us-tv|TV-V|100|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-Y7")) {
+				return "us-tv|TV-V7|200|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-G")) {
+				return "us-tv|TV-G|300|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-PG")) {
+				return "us-tv|TV-PG|400|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-14")) {
+				return "us-tv|TV-14|500|";
+			}
+			else if (cert.getCertification().equalsIgnoreCase("TV-MA")) {
+				return "us-tv|TV-MA|600|";
 			}
 		}
 		return null;
