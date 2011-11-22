@@ -226,10 +226,9 @@ public class XBMCSource extends XMLParser implements ISource {
 
 			@Override
 			public void processContents(String contents) throws SourceException {
-
-
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
+	    			System.out.println(XMLParser.domToStr(doc));
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()"); //$NON-NLS-1$
 						show.setLongSummary(longSummary);
@@ -240,6 +239,19 @@ public class XBMCSource extends XMLParser implements ISource {
 							show.setShortSummary(longSummary);
 						}
 					} catch (XMLParserNotFoundException e) {
+						// Ignore
+					}
+
+	    			try {
+	    				String certification = getStringFromXML(doc, "details/mpaa/text()");
+	    			} catch (XMLParserNotFoundException e) {
+						// Ignore
+					}
+
+	    			try {
+	    				String studio = getStringFromXML(doc, "details/studio/text()");
+	    				show.setStudio(studio);
+	    			} catch (XMLParserNotFoundException e) {
 						// Ignore
 					}
 

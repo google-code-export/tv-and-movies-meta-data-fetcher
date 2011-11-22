@@ -17,6 +17,11 @@ Encode more metadata into mp4files
     - TVShows
         - Year: 
         - Certifications
+Add abilty to upgrade media dirs
+	- Upgrade stores
+		- XMLStore2 - Add Show certs and Stduio
+		- MP4ItunesStore - New metadata
+	- Fix Seen DB
 
 Version 2.1
 -----------

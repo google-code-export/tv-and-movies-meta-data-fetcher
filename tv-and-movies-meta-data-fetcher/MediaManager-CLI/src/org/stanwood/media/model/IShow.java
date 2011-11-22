@@ -19,7 +19,7 @@ package org.stanwood.media.model;
 import java.net.URL;
 
 /** Base interface for all show classes */
-public interface IShow extends IVideoGenre, IVideoExtra {
+public interface IShow extends IVideoGenre, IVideoExtra, IVideoCertification {
 
 	/**
 	 * Used to set the long summary of the show
@@ -102,5 +102,10 @@ public interface IShow extends IVideoGenre, IVideoExtra {
 	 * @param sourceId The source id
 	 */
 	public void setSourceId(String sourceId);
+
+	public String getStudio();
+
+	public void setStudio(String studio);
+
 
 }

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -263,6 +264,27 @@ public class XMLShow extends XMLParser implements IShow {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String getStudio() {
+		try {
+			return getAttribute(showNode,"studio"); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setStudio(String studio) {
+		if (studio!=null) {
+			showNode.setAttribute("studio", studio); //$NON-NLS-1$
+		}
+		else {
+			showNode.removeAttribute("studio"); //$NON-NLS-1$
+		}
+	}
+
 
 	/** {@inheritDoc} */
 	@Override
@@ -305,4 +327,35 @@ public class XMLShow extends XMLParser implements IShow {
 		}
 	}
 
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Certification> getCertifications() {
+		try {
+			List<Certification>certifications = new ArrayList<Certification>();
+			for (Node node : selectNodeList(showNode, "certifications/certification")) { //$NON-NLS-1$
+				Element certificationEl = (Element)node;
+				certifications.add(new Certification(certificationEl.getAttribute("certification"), certificationEl.getAttribute("type"))); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			return certifications;
+		} catch (XMLParserException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setCertifications(List<Certification> certifications) {
+		Element certificationsNode = getElement(showNode,"certifications"); //$NON-NLS-1$
+		deleteNode(certificationsNode, "certification"); //$NON-NLS-1$
+		if (certifications!=null) {
+			for (Certification cert : certifications) {
+				Element certificationNode = doc.createElement("certification"); //$NON-NLS-1$
+				certificationNode.setAttribute("type", cert.getType()); //$NON-NLS-1$
+				certificationNode.setAttribute("certification", cert.getCertification()); //$NON-NLS-1$
+				certificationsNode.appendChild(certificationNode);
+			}
+		}
+		certificationsNode.appendChild(certificationsNode);
+	}
 }

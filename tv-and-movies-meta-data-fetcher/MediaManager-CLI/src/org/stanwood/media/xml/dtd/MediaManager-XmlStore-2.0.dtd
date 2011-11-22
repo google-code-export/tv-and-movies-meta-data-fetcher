@@ -5,7 +5,7 @@
 -->
 <!ELEMENT store (show|film)*>
 
-<!ELEMENT show (description?,genres?,extra,season*)>
+<!ELEMENT show (description?,certifications?,genres?,extra,season*)>
 
 <!ELEMENT genres (genre*)>
 
@@ -15,6 +15,7 @@
   name     CDATA     #IMPLIED
   sourceId CDATA     #REQUIRED
   url      CDATA     #IMPLIED
+  studio   CDATA     #IMPLIED
 >
 
 <!ELEMENT description (short?,long?)>
