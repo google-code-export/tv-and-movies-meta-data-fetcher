@@ -63,10 +63,13 @@ public enum MP4AtomKey {
 	PURCHASE_ACCOUNT("Purchase Account","apID",MP4AtomKeyType.String),
 	ACCOUNT_TYPE("Account Type","akID",MP4AtomKeyType.Byte),
 	CATALOG_ID("Catalog ID","cnID"	,MP4AtomKeyType.Integer),
-	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer);
+	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer),
+	CERTIFICATION("Certification","----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes");
 
 	private String id;
 	private String displayName;
+	private String dnsName;
+	private String dnsDomain;
 	private MP4AtomKeyType type;
 
 	private MP4AtomKey(String displayName,String id,MP4AtomKeyType type) {
@@ -75,14 +78,41 @@ public enum MP4AtomKey {
 		this.type = type;
 	}
 
+	private MP4AtomKey(String displayName,String id,MP4AtomKeyType type,String dnsName,String dnsDomain) {
+		this.id = id;
+		this.displayName = displayName;
+		this.type = type;
+		this.dnsName = dnsName;
+		this.dnsDomain = dnsDomain;
+	}
+
 	public String getId() {
 		return id;
+	}
+
+	public String getDnsName() {
+		return dnsName;
+	}
+
+	public String getDnsDomain() {
+		return dnsDomain;
 	}
 
 	public static MP4AtomKey fromKey(String key) {
 		for (MP4AtomKey atom : values()) {
 			if (atom.getId().equals(key)) {
 				return atom;
+			}
+		}
+		return null;
+	}
+
+	public static MP4AtomKey fromRDNS(String name,String domain) {
+		for (MP4AtomKey atom : values()) {
+			if (atom.getId().equals("----")) {
+				if (atom.getDnsName().equals(name) && atom.getDnsDomain().equals(domain)) {
+					return atom;
+				}
 			}
 		}
 		return null;
@@ -95,4 +125,16 @@ public enum MP4AtomKey {
 	public String getDisplayName() {
 		return displayName;
 	}
+
+	@Override
+	public String toString() {
+		if (getId().equals("----")) {
+			return "----;"+getDnsDomain()+";"+getDnsName();
+		}
+		else {
+			return getId();
+		}
+	}
+
+
 }

@@ -25,17 +25,12 @@ import org.stanwood.media.extensions.ParameterType;
  */
 public class MP4ITunesStoreInfo extends ExtensionInfo<MP4ITunesStore> {
 
-	/** The parameter type information for the parameter specifying the location of the mp4file command */
-	public static final ParameterType PARAM_MP4FILE_KEY = new ParameterType("mp4file",String.class,false); //$NON-NLS-1$
-	/** The parameter type information for the parameter specifying the location of the mp4tags command */
-	public static final ParameterType PARAM_MP4TAGS_KEY = new ParameterType("mp4tags",String.class,false); //$NON-NLS-1$
-	/** The parameter type information for the parameter specifying the location of the mp4info command */
-	public static final ParameterType PARAM_MP4INFO_KEY = new ParameterType("mp4info",String.class,false); //$NON-NLS-1$
-	/** The parameter type information for the parameter specifying the location of the mp4art command */
-	public static final ParameterType PARAM_MP4ART_KEY = new ParameterType("mp4art",String.class,false); //$NON-NLS-1$
+	/** The parameter type information for the parameter specifying the location of the AtomicParsley command */
+	public static final ParameterType PARAM_ATOMIC_PARSLEY_KEY = new ParameterType("atomicparsley",String.class,false); //$NON-NLS-1$
 	/** The parameter type information for the parameter used to change the manager class */
 	public static final ParameterType PARAM_MANAGER_KEY = new ParameterType("manager",String.class,false); //$NON-NLS-1$
-	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_MP4FILE_KEY,PARAM_MP4TAGS_KEY,PARAM_MP4INFO_KEY,PARAM_MP4ART_KEY,PARAM_MANAGER_KEY};
+
+	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_ATOMIC_PARSLEY_KEY,PARAM_MANAGER_KEY};
 
 	/**
 	 * The constructor
