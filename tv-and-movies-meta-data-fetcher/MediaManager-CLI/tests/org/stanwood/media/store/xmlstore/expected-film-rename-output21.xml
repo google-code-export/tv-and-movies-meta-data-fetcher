@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.1//EN"
+                       "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
+<store revision="1" version="2.1">
+  <film id="tt0371746"
+    imageUrl="http://cf2.imgobject.com/t/p/original/ryXl1ahNVqSTXqfuUlmXq6XD72o.jpg"
+    releaseDate="2008-01-01" sourceId="xbmc-metadata.imdb.com"
+    studio="Paramount Pictures" title="Iron Man" url="http://akas.imdb.com/title/tt0371746/">
+    <description>
+      <short><![CDATA[When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening ...]]></short>
+      <long><![CDATA[When wealthy industrialist Tony Stark is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.]]></long>
+    </description>
+    <rating numberOfVotes="229454" value="7.9"/>
+    <country>USA</country>
+    <genres>
+      <genre name="Action" preferred="true"/>
+      <genre name="Adventure"/>
+      <genre name="Sci-Fi"/>
+    </genres>
+    <certifications>
+      <certification
+        certification="PG-13 for some intense sequences of sci-fi action and violence, and brief suggestive content" type="mpaa"/>
+    </certifications>
+    <directors>
+      <director>Jon Favreau</director>
+    </directors>
+    <writers>
+      <writer>Mark Fergus</writer>
+      <writer>Hawk Ostby</writer>
+    </writers>
+    <actors>
+      <actor name="Robert Downey Jr." role="Tony Stark"/>
+      <actor name="Terrence Howard" role="Rhodey"/>
+      <actor name="Jeff Bridges" role="Obadiah Stane"/>
+      <actor name="Gwyneth Paltrow" role="Pepper Potts"/>
+      <actor name="Leslie Bibb" role="Christine Everhart"/>
+      <actor name="Shaun Toub" role="Yinsen"/>
+      <actor name="Faran Tahir" role="Raza"/>
+      <actor name="Clark Gregg" role="Agent Coulson"/>
+      <actor name="Bill Smitrovich" role="General Gabriel"/>
+      <actor name="Sayed Badreya" role="Abu Bakaar"/>
+      <actor name="Paul Bettany" role="Jarvis"/>
+      <actor name="Jon Favreau" role="Hogan"/>
+      <actor name="Peter Billingsley" role="William Ginter Riva"/>
+      <actor name="Tim Guinee" role="Major Allen"/>
+      <actor name="Will Lyman" role="Award Ceremony Narrator&#xa;                "/>
+    </actors>
+    <chapters/>
+    <file location="Iron Man Part 2.avi" part="2"/>
+    <file location="Iron Man Part 1.avi"
+      orginalLocation="Iron.man.cd1.avi" part="1"/>
+  </film>
+</store>

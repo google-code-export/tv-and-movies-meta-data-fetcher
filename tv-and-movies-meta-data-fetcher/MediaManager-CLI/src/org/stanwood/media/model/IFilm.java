@@ -130,4 +130,16 @@ public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVi
 	 */
 	public void setCountry(String country);
 
+	/**
+	 * Used to get the films studio
+	 * @return the films studio
+	 */
+	public String getStudio();
+
+	/**
+	 * Used to set the films studio
+	 * @param studio the films studio
+	 */
+	public void setStudio(String studio);
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.0//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.0.dtd">
-<store>
+<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.1//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
+<store revision="1" version="2.1">
   <show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
     name="Eureka" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/show/58448/summary.html">
     <description>
@@ -112,7 +112,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     </season>
   </show>
   <film id="114814" imageUrl="http://test/image.jpg"
-    releaseDate="1995-08-25" sourceId="xbmc-metadata.themoviedb.org" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">    
+    releaseDate="1995-08-25" sourceId="xbmc-metadata.themoviedb.org" studio="The studio" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">    
     <description>
       <short><![CDATA[A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.]]></short>
       <long><![CDATA[Test description of the film]]></long>

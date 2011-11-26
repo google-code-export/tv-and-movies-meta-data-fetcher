@@ -257,4 +257,6 @@ public interface IStore extends IExtension  {
 	 * @throws StoreException Thrown if their are any problems
 	 */
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException ;
+
+	public void upgrade(MediaDirectory mediaDirectory) throws StoreException;
 }

@@ -70,6 +70,16 @@ public class MediaDirectory {
 		} catch (SourceException e) {
 			throw new ConfigException(Messages.getString("MediaDirectory.UNABLE_TO_SETUP_SOURCES"),e); //$NON-NLS-1$
 		}
+
+
+		for (IStore store : stores) {
+			try {
+				store.init(getController().getNativeFolder());
+				store.upgrade(this);
+			} catch (StoreException e) {
+				log.error(MessageFormat.format("Unable to upgrade stores ''{0}''",store.getClass()),e);
+			}
+		}
 	}
 
 	protected void createSearchers() {

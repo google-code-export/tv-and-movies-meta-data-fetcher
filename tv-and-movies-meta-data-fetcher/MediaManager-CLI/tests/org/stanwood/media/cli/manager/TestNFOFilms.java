@@ -107,7 +107,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		CLIMediaManager.main(args);
 	}
 
-	private void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
+	public static void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
 		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class.getName()+"#metadata.imdb.com",new HashMap<String,String>(),null,"",RenameAction.class.getName());
 		CLIManageAddons.main(cmd);
 	}

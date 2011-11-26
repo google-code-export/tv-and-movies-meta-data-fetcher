@@ -68,6 +68,32 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		}
 	}
 
+	private static class AtomResult {
+		MP4AtomKey key;
+		String value;
+	}
+
+	private AtomResult readerAtom(String line) {
+		Matcher m = TAG_LIST_PATTERN.matcher(line);
+		if (m.matches()) {
+			AtomResult result = new AtomResult();
+			result.key =   MP4AtomKey.fromKey(m.group(1));
+			result.value = m.group(2);
+			return result;
+		}
+		else {
+			Matcher m1 = DNS_PATTERN.matcher(line);
+			if (m1.matches()) {
+				AtomResult result = new AtomResult();
+				result.key =   MP4AtomKey.fromRDNS(m1.group(2), m1.group(1));
+				result.value = m1.group(3);
+				return result;
+			}
+		}
+
+		return null;
+	}
+
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		if (!mp4File.exists()) {
@@ -76,36 +102,42 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		String output = getCommandOutput(true,false,true,apCmdPath,mp4File,"-t","+"); //$NON-NLS-1$ //$NON-NLS-2$
 
+		AtomResult currentAtom = null;
+
 		BufferedReader reader = null;
 		try {
 			reader =new BufferedReader(new StringReader(output));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				Matcher m = TAG_LIST_PATTERN.matcher(line);
-				if (m.matches()) {
-					String name = m.group(1);
-					String value = m.group(2);
-					MP4AtomKey key = MP4AtomKey.fromKey(name);
-					if (key!=null) {
- 						IAtom atom = parseAtom(key,value);
+				if (line.equals("---------------------------")) {
+					if (currentAtom!=null) {
+						// write atom
+						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
 						if (atom!=null) {
 							atoms.add(atom);
 						}
 					}
+					break;
 				}
-				else {
-					Matcher m1 = DNS_PATTERN.matcher(line);
-					if (m1.matches()) {
-						String value = m1.group(3);
-						MP4AtomKey key = MP4AtomKey.fromRDNS(m1.group(2), m1.group(1));
-						if (key!=null) {
-	 						IAtom atom = parseAtom(key,value);
-							if (atom!=null) {
-								atoms.add(atom);
-							}
+
+				AtomResult ar = readerAtom(line);
+				if (ar!=null) {
+					if (currentAtom!=null) {
+						// write atom
+						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
+						if (atom!=null) {
+							atoms.add(atom);
 						}
 					}
+					currentAtom = ar;
 				}
+				else {
+					if (currentAtom!=null) {
+						currentAtom.value = currentAtom.value+FileHelper.LS+line;
+					}
+				}
+
+
 			}
 
 		} catch (IOException e) {

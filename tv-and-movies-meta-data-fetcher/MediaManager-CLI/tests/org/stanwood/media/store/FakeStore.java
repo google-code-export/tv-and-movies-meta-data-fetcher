@@ -226,4 +226,9 @@ public class FakeStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void upgrade(MediaDirectory mediaDirectory) {
+
+	}
 }
