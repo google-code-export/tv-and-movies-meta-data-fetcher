@@ -293,7 +293,7 @@ public class XMLParser {
 		NodeList children =  parent.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
 			Node node = children.item(i);
-			if (node instanceof Element && node.getNodeValue().equals(name)) {
+			if (node !=null && node instanceof Element && node.getNodeName().equals(name)) {
 				return (Element) node;
 			}
 		}
@@ -367,6 +367,13 @@ public class XMLParser {
 		    	else if (publicId!=null) {
 			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) { //$NON-NLS-1$
 			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.0.dtd"); //$NON-NLS-1$
+			    		if (stream==null) {
+			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
+			    		}
+			    		return new InputSource(stream);
+			        }
+			    	else if (publicId.equals("-//STANWOOD//DTD XMLStore 2.1//EN")) { //$NON-NLS-1$
+			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.1.dtd"); //$NON-NLS-1$
 			    		if (stream==null) {
 			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
 			    		}

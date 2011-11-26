@@ -23,6 +23,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.source.xbmc.XBMCSource;
+import org.stanwood.media.source.xbmc.cli.CLIManageAddons;
 import org.stanwood.media.store.xmlstore.XMLStore2;
 import org.stanwood.media.util.FileHelper;
 
@@ -46,6 +47,12 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			@Override
 			public void exit(int exitCode) {
 				setExitCode(exitCode);
+			}
+		});
+		CLIManageAddons.setExitHandler(new IExitHandler() {
+			@Override
+			public void exit(int exitCode) {
+
 			}
 		});
 
@@ -276,6 +283,66 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
+		} finally {
+			FileHelper.delete(dir);
+		}
+	}
+
+	/**
+	 * This will test that films are renamed correctly
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testRecursiveFilmRenameWithStore() throws Exception {
+
+		String sourceId = "metadata.imdb.com";
+//		String sourceId = "metadata.themoviedb.org";
+		String pattern = "%t{ Part %p}.%x";
+//		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		// Create test files
+		File dir = FileHelper.createTmpDir("movies");
+		File filmsDir = new File(dir, "Films");
+		try {
+
+			if (!filmsDir.mkdir() && !filmsDir.exists()) {
+				throw new IOException("Unable to create dir: " + filmsDir);
+			}
+			File f = new File(filmsDir,"Iron.man.cd1.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			File subDir = new File(filmsDir, "blah");
+			if (!subDir.mkdir() && !subDir.exists()) {
+				throw new IOException("Unable to create dir: " + filmsDir);
+			}
+			f = new File(filmsDir,"Iron man.cd2.avi");
+			if (!f.createNewFile()) {
+				throw new IOException("Unable to create file : " + f.getAbsolutePath());
+			}
+
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("posters", "false");
+			ConfigReader config = setupTestController(false,filmsDir,"%t{ Part %p}.%x",Mode.FILM,XBMCSource.class.getName()+"#"+sourceId,params,XMLStore2.class.getName(),"",RenameAction.class.getName());
+
+			TestNFOFilms.mmXBMCCmd(filmsDir, pattern,"--log_config","DEBUG","install",sourceId);
+
+			// Do the renaming
+			String args[] = new String[] {"-d",filmsDir.getAbsolutePath(),"--log_config","INFO","--noupdate"};
+			AbstractLauncher.setConfig(config);
+			CLIMediaManager.main(args);
+
+			// Check that things were renamed correctly
+			List<String>files = FileHelper.listFilesAsStrings(dir);
+			Collections.sort(files);
+			Assert.assertEquals(3,files.size());
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 1.avi").getAbsolutePath(),files.get(1));
+			Assert.assertEquals(new File(dir,File.separator+"Films"+File.separator+"Iron Man Part 2.avi").getAbsolutePath(),files.get(2));
+
+			Assert.assertEquals("Check exit code",0,exitCode);
+
+			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-film-rename-output.xml"), new FileInputStream(files.get(0)),params);
 		} finally {
 			FileHelper.delete(dir);
 		}

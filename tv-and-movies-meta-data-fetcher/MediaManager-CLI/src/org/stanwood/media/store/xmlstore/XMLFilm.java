@@ -361,4 +361,25 @@ public class XMLFilm extends XMLVideo implements IFilm {
 		}
 	}
 
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStudio() {
+		try {
+			return getAttribute(filmNode,"studio"); //$NON-NLS-1$
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setStudio(String studio) {
+		if (studio!=null) {
+			filmNode.setAttribute("studio", studio); //$NON-NLS-1$
+		}
+		else {
+			filmNode.removeAttribute("studio"); //$NON-NLS-1$
+		}
+	}
 }

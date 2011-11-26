@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.jna.NativeHelper;
+import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -360,6 +361,41 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, episode.getSeason().getShow().getGenres().get(0)));
 		}
+		StringBuilder iTuneMOVIValue = new StringBuilder();
+		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
+		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
+		if (episode.getActors()!=null && episode.getActors().size()>0) {
+			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
+			for (Actor actor : episode.getActors()) {
+				iTuneMOVIValue.append("        <dict>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <key>name</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <string>"+actor.getName()+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				iTuneMOVIValue.append("        </dict>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			iTuneMOVIValue.append("    </array>"+FileHelper.LS); //$NON-NLS-1$
+		}
+		if (episode.getDirectors()!=null && episode.getDirectors().size()>0) {
+			iTuneMOVIValue.append("    <key>directors</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
+			for (String director : episode.getDirectors()) {
+				iTuneMOVIValue.append("        <dict>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <key>name</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <string>"+director+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				iTuneMOVIValue.append("        </dict>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			iTuneMOVIValue.append("    </array>"+FileHelper.LS); //$NON-NLS-1$
+		}
+		if (show.getStudio()!=null) {
+			iTuneMOVIValue.append("    <key>studio</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <string>"+show.getStudio()+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		iTuneMOVIValue.append("</dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("</plist>"+FileHelper.LS); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.INFO,iTuneMOVIValue.toString() ));
+
 		IAtom artworkAtom = getArtworkAtom(mp4Manager, mp4File, episode);
 		if (artworkAtom!=null) {
 			atoms.add(artworkAtom);
@@ -469,6 +505,42 @@ public class MP4ITunesStore implements IStore {
 				atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, film.getGenres().get(0)));
 			}
 		}
+
+		StringBuilder iTuneMOVIValue = new StringBuilder();
+		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
+		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
+		if (film.getActors()!=null && film.getActors().size()>0) {
+			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
+			for (Actor actor : film.getActors()) {
+				iTuneMOVIValue.append("        <dict>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <key>name</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <string>"+actor.getName()+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				iTuneMOVIValue.append("        </dict>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			iTuneMOVIValue.append("    </array>"+FileHelper.LS); //$NON-NLS-1$
+		}
+		if (film.getDirectors()!=null && film.getDirectors().size()>0) {
+			iTuneMOVIValue.append("    <key>directors</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
+			for (String director : film.getDirectors()) {
+				iTuneMOVIValue.append("        <dict>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <key>name</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("            <string>"+director+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				iTuneMOVIValue.append("        </dict>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			iTuneMOVIValue.append("    </array>"+FileHelper.LS); //$NON-NLS-1$
+		}
+		if (film.getStudio()!=null) {
+			iTuneMOVIValue.append("    <key>studio</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("    <string>"+film.getStudio()+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		iTuneMOVIValue.append("</dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("</plist>"+FileHelper.LS); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.INFO,iTuneMOVIValue.toString() ));
+
 		IAtom artworkAtom = getArtworkAtom(mp4Manager,mp4File,film);
 		if (artworkAtom!=null) {
 			atoms.add(artworkAtom);
@@ -479,37 +551,39 @@ public class MP4ITunesStore implements IStore {
 	@SuppressWarnings("nls")
 	private static String certToItunesCert(Certification cert) {
 		if (cert.getType().equalsIgnoreCase("mpaa")) {
-			if (cert.getCertification().equalsIgnoreCase("G")) {
+			String certValue = cert.getCertification();
+			certValue = certValue.replaceAll("Rated ","");
+			if (certValue.equalsIgnoreCase("G")) {
 				return "mpaa|PG|100|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("PG")) {
+			else if (certValue.equalsIgnoreCase("PG")) {
 				return "mpaa|PG|200|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("PG-13")) {
+			else if (certValue.equalsIgnoreCase("PG-13")) {
 				return "mpaa|PG-13|300|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("R")) {
+			else if (certValue.equalsIgnoreCase("R")) {
 				return "mpaa|R|400|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("NC-17")) {
+			else if (certValue.equalsIgnoreCase("NC-17")) {
 				return "mpaa|R|500|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-Y")) {
+			else if (certValue.equalsIgnoreCase("TV-Y")) {
 				return "us-tv|TV-V|100|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-Y7")) {
+			else if (certValue.equalsIgnoreCase("TV-Y7")) {
 				return "us-tv|TV-V7|200|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-G")) {
+			else if (certValue.equalsIgnoreCase("TV-G")) {
 				return "us-tv|TV-G|300|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-PG")) {
+			else if (certValue.equalsIgnoreCase("TV-PG")) {
 				return "us-tv|TV-PG|400|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-14")) {
+			else if (certValue.equalsIgnoreCase("TV-14")) {
 				return "us-tv|TV-14|500|";
 			}
-			else if (cert.getCertification().equalsIgnoreCase("TV-MA")) {
+			else if (certValue.equalsIgnoreCase("TV-MA")) {
 				return "us-tv|TV-MA|600|";
 			}
 		}
@@ -581,6 +655,12 @@ public class MP4ITunesStore implements IStore {
 	@Override
 	public List<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) {
 		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void upgrade(MediaDirectory mediaDirectory) {
+
 	}
 
 }

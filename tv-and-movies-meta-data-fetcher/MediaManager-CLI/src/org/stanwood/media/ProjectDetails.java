@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
@@ -14,15 +16,25 @@ import org.stanwood.media.util.Version;
 public class ProjectDetails {
 
 	private static final String APP_URL = "http://code.google.com/p/tv-and-movies-meta-data-fetcher/"; //$NON-NLS-1$
+	private static final Pattern VERSION_PATTERN = Pattern.compile("(.+?) (.+?) (\\d+)"); //$NON-NLS-1$
+	private String title;
+	private Version version;
+	private int buildRev;
 
-	private String versionFileContents;
+
 
 	/**
 	 * The constructor
-	 * @throws IOException Thrown if thier is a problem reading the version informatiom
+	 * @throws IOException Thrown if their is a problem reading the version informatiom
 	 */
 	public ProjectDetails() throws IOException {
-		versionFileContents = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim(); //$NON-NLS-1$
+		String versionFileContents = FileHelper.readFileContents(Controller.class.getResourceAsStream("VERSION")).trim(); //$NON-NLS-1$
+		Matcher m = VERSION_PATTERN.matcher(versionFileContents);
+		if (m.matches()) {
+			title = m.group(1);
+			version = new Version(m.group(2));
+			buildRev = Integer.parseInt(m.group(3));
+		}
 	}
 
 	/**
@@ -30,7 +42,15 @@ public class ProjectDetails {
 	 * @return The version of the project
 	 */
 	public Version getVersion() {
-		return new Version(versionFileContents.substring(versionFileContents.lastIndexOf(' ')+1));
+		return version;
+	}
+
+	/**
+	 * Returns the build revision of the project
+	 * @return the build revision of the project
+	 */
+	public int getBuildRevision() {
+		return buildRev;
 	}
 
 	/**
@@ -38,7 +58,7 @@ public class ProjectDetails {
 	 * @return the title of the project
 	 */
 	public String getTitle()  {
-		return versionFileContents.substring(0,versionFileContents.lastIndexOf(' '));
+		return title;
 	}
 
 	/**

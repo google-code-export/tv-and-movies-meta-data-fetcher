@@ -29,6 +29,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 	private static final Pattern IDBM_COMBINED = Pattern.compile(".*imdb.com/title/(tt\\d+)/combined");
 	private static final Pattern IDBM_POSTERS = Pattern.compile(".*imdb.com/title/(tt\\d+)/posters");
+	private static final Pattern IMDB_SEARCH = Pattern.compile(".*imdb.com/find\\?s=tt\\;q=(.+)");
 	private static final Pattern UPDATE_SIZE = Pattern.compile(".*mirrors.xbmc.org/addons/dharma/(.*)");
 
 	private File updateSite;
@@ -88,6 +89,14 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		m = TVDB_SERIES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
 			return new Stream(new ZipInputStream(Data.class.getResourceAsStream("tvdb-series-"+m.group(1)+".zip")),"application/zip","UTF-8",url.toExternalForm(),url);
+		}
+		m = IMDB_SEARCH.matcher(strUrl);
+		if (m.matches()) {
+			String term = getSearchName(m.group(1));
+			term=term.replaceAll("\\+","-");
+			term=term.replaceAll("\\%..","");
+			term=term.replaceAll("[\\(\\)]","");
+			return new Stream(Data.class.getResourceAsStream("imdb-search-"+term+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}

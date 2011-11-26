@@ -229,7 +229,6 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
-	    			System.out.println(XMLParser.domToStr(doc));
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()"); //$NON-NLS-1$
 						show.setLongSummary(longSummary);
@@ -330,6 +329,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			public void processContents(String contents) throws SourceException {
 				try {
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
+	    			String blah = XMLParser.domToStr(doc);
 	    			try {
 	    				film.setDate(FILM_YEAR_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()"))); //$NON-NLS-1$
 	    			}
@@ -337,7 +337,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	    				// Ignore if not found
 	    			}
 	    			String plot = getStringFromXML(doc, "details/plot/text()"); //$NON-NLS-1$
-	    			film.setDescription(plot);
+	    			film.setDescription(plot.trim());
 	    			film.setId(filmId);
 	    			try {
 	    				film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()"))); //$NON-NLS-1$
@@ -356,14 +356,26 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			film.setTitle(title);
 	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()"); //$NON-NLS-1$
 	    			if (overview==null) {
-	    				overview = ""; //$NON-NLS-1$
+	    				if (plot.length()>100) {
+	    					overview = plot.substring(0,99)+"..."; //$NON-NLS-1$
+						}
+						else {
+							overview = plot;
+						}
 	    			}
-	    			film.setSummary(overview);
+	    			film.setSummary(overview.trim());
+
 	    			String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	    			Integer vote = Integer.parseInt(rawVote);
 	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote)); //$NON-NLS-1$
 	    			try {
 	    				film.setCountry(getStringFromXML(doc, "details/country/text()")); //$NON-NLS-1$
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+	    				// Ignore, their was no country
+	    			}
+	    			try {
+	    				film.setStudio(getStringFromXML(doc, "details/studio/text()")); //$NON-NLS-1$
 	    			}
 	    			catch (XMLParserNotFoundException e) {
 	    				// Ignore, their was no country
@@ -503,7 +515,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private void parseEpisode(final XBMCEpisode episode,Document doc) throws SourceException {
 		try {
-			System.out.println(XMLParser.domToStr(doc));
+
 			episode.setSummary(getStringFromXML(doc, "details/plot/text()")); //$NON-NLS-1$
 			parseWriters(episode, doc);
 			parseDirectors(episode, doc);
@@ -575,7 +587,6 @@ public class XBMCSource extends XMLParser implements ISource {
 				public void processContents(String contents) throws SourceException {
 					try {
 		    			Document doc = addon.getScraper(mode).getGetSearchResults(contents, name);
-//		    			System.out.println(XMLParser.domToStr(doc));
 						NodeList entities = XPathAPI.selectNodeList(doc, "*/entity"); //$NON-NLS-1$
 
 						for (int i=0;i<entities.getLength();i++) {

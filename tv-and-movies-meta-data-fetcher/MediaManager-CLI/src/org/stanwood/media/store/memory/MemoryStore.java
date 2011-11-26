@@ -355,4 +355,10 @@ public class MemoryStore implements IStore {
 		return films.values();
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void upgrade(MediaDirectory mediaDirectory) {
+
+	}
+
 }

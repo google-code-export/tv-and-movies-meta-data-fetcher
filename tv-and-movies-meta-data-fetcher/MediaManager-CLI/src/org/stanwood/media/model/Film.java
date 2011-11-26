@@ -49,6 +49,7 @@ public class Film implements IFilm {
 	private String country;
 	private List<Actor> actors;
 	private SortedSet<IVideoFile> videoFiles = new VideoFileSet();
+	private String studio;
 
 	/**
 	 * Used to create a instance of the film class.
@@ -427,6 +428,16 @@ public class Film implements IFilm {
 	public void setFiles(Collection<IVideoFile> videoFiles) {
 		this.videoFiles.clear();
 		this.videoFiles.addAll(videoFiles);
+	}
+
+	@Override
+	public void setStudio(String studio) {
+		this.studio = studio;
+	}
+
+	@Override
+	public String getStudio() {
+		return studio;
 	}
 
 }

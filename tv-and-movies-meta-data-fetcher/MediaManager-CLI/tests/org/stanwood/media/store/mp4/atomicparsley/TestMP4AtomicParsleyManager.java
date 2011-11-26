@@ -142,7 +142,7 @@ public class TestMP4AtomicParsleyManager {
 		for (IAtom a : atoms) {
 			System.out.println(a.toString());
 		}
-		Assert.assertEquals(20,atoms.size());
+		Assert.assertEquals(21,atoms.size());
 		int index = 0;
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
@@ -164,6 +164,34 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=us-tv|TV-PG|400|]",atoms.get(index++).toString());
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		StringBuilder expected = new StringBuilder();
+		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
+		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
+		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>cast</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Stephen Baldwin</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Gabriel Byrne</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Benicio Del Toro</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Kevin Pollak</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>studio</key>"+FileHelper.LS);
+		expected.append("    <string>Blah</string>"+FileHelper.LS);
+		expected.append("</dict>"+FileHelper.LS);
+		expected.append("</plist>]");
+		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		try {
 			atoms.get(index++);
 			Assert.fail("Did not detect exception");
@@ -212,9 +240,44 @@ public class TestMP4AtomicParsleyManager {
 			System.out.println(atom);
 		}
 
-		Assert.assertEquals(14,atoms.size());
+		Assert.assertEquals(15,atoms.size());
 		int index=0;
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
+		StringBuilder expected = new StringBuilder();
+		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
+		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
+		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>cast</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Stephen Baldwin</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Gabriel Byrne</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Benicio Del Toro</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Kevin Pollak</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>directors</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Bryan Singer</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>studio</key>"+FileHelper.LS);
+		expected.append("    <string>Blah</string>"+FileHelper.LS);
+		expected.append("</dict>"+FileHelper.LS);
+		expected.append("</plist>]");
+		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Cover Artwork: [covr=1 piece of artwork]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
@@ -228,6 +291,7 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+
 		try {
 			atoms.get(index++);
 			Assert.fail("Did not detect exception");
@@ -262,6 +326,7 @@ public class TestMP4AtomicParsleyManager {
 		film.setSummary("A test summary");
 		film.setDescription("A test description");
 		film.setTitle("Test film name");
+		film.setStudio("Blah");
 		List<String>writers = new ArrayList<String>();
 		writers.add("Christopher McQuarrie");
 		film.setWriters(writers);
@@ -287,6 +352,12 @@ public class TestMP4AtomicParsleyManager {
 		episode.setRating(new Rating(5.4F,345));
 		episode.setSummary("This is a test show summary");
 		episode.setTitle("Test Episode");
+		List<Actor> guestStars = new ArrayList<Actor>();
+		guestStars.add(new Actor("Stephen Baldwin",""));
+		guestStars.add(new Actor("Gabriel Byrne",""));
+		guestStars.add(new Actor("Benicio Del Toro",""));
+		guestStars.add(new Actor("Kevin Pollak",""));
+		episode.setActors(guestStars);
 
 		return episode;
 	}

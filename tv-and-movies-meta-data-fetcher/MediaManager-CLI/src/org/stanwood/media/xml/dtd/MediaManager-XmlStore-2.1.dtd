@@ -5,7 +5,12 @@
 -->
 <!ELEMENT store (show|film)*>
 
-<!ELEMENT show (description?,genres?,extra,season*)>
+<!ATTLIST store
+    version  CDATA     #REQUIRED
+	revision NMTOKENS  #REQUIRED
+>
+
+<!ELEMENT show (description?,certifications?,genres?,extra,season*)>
 
 <!ELEMENT genres (genre*)>
 
@@ -15,6 +20,7 @@
   name     CDATA     #IMPLIED
   sourceId CDATA     #REQUIRED
   url      CDATA     #IMPLIED
+  studio   CDATA     #IMPLIED
 >
 
 <!ELEMENT description (short?,long?)>
@@ -65,6 +71,7 @@
 	sourceId      CDATA     #IMPLIED
 	title         CDATA     #IMPLIED
 	url           CDATA     #IMPLIED
+	studio        CDATA     #IMPLIED
 >
 
 <!ELEMENT country (#PCDATA)>

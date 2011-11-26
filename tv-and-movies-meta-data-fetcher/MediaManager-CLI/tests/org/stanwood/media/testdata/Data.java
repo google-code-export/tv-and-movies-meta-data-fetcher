@@ -67,6 +67,7 @@ public class Data {
 		genres.add("Mystery");
 		genres.add("Thriller");
 		film.setGenres(genres);
+		film.setStudio("The studio");
 
 		film.setPreferredGenre("Drama");
 		film.setCountry("USA");

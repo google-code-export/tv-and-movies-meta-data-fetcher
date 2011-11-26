@@ -1,16 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.1//EN"
                        "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
 <store revision="1" version="2.1">
   <show id="79501" imageUrl="" name="Heroes"
     sourceId="xbmc-metadata.tvdb.com" studio="NBC" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
-    <description>
-      <short><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers...]]></short>
-      <long><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Not only are they discovering what having superpowers means to them but also the larger picture of where those powers come from and what they might mean to the rest of the world.]]></long>
-    </description>
-    <certifications>
-      <certification certification="TV-14" type="mpaa"/>
-    </certifications>
     <genres>
       <genre name="Action and Adventure" preferred="true"/>
       <genre name="Drama"/>
@@ -98,5 +90,33 @@
         <file location="Heroes/Season 2/02 - Lizards.mpg" orginalLocation="Heroes/s02e02 - Hello this is a test.mpg"/>
       </episode>
     </season>
+    <certifications>
+      <certification certification="TV-14" type="mpaa"/>
+    </certifications>
+    <genres>
+      <genre name="Action and Adventure" preferred="true"/>
+      <genre name="Drama"/>
+      <genre name="Fantasy"/>
+      <genre name="Science-Fiction"/>
+    </genres>
+    <extra>
+      <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"/>
+    </extra>
+    <description>
+      <short><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers...]]></short>
+      <long><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Not only are they discovering what having superpowers means to them but also the larger picture of where those powers come from and what they might mean to the rest of the world.]]></long>
+    </description>
+    <certifications>
+      <certification certification="TV-14" type="mpaa"/>
+    </certifications>
+    <genres>
+      <genre name="Action and Adventure" preferred="true"/>
+      <genre name="Drama"/>
+      <genre name="Fantasy"/>
+      <genre name="Science-Fiction"/>
+    </genres>
+    <extra>
+      <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"/>
+    </extra>
   </show>
 </store>
