@@ -10,7 +10,7 @@
 	revision NMTOKENS  #REQUIRED
 >
 
-<!ELEMENT show (description?,certifications?,genres?,extra,season*)>
+<!ELEMENT show (description|certifications|genres|extra|season)*>
 
 <!ELEMENT genres (genre*)>
 
