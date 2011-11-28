@@ -33,17 +33,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 	private final static Pattern PATTERN_PART_FOLDER = Pattern.compile("^CD(\\d+)$"); //$NON-NLS-1$
 
 
-	/**
-	 * Look up the film file details using the NFO file if it can be found
-	 * @param mediaFile The media file that is been processed
-	 * @param rootMediaDir The root media directory
-	 * @param renamePattern The pattern that is been used to rename media files
-	 * @param mediaDir The media directory
-	 * @return The search details
-	 */
-
-	@Override
-	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
+	public SearchDetails getSearch(File mediaFile, MediaDirectory mediaDir) {
 		File nfoFile = NFOSearchHelper.findNFOfile(mediaDir,mediaFile);
 		if (nfoFile!=null) {
 
@@ -55,6 +45,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 				if (info != null) {
 					try {
 						XBMCSource xbmcSource = (XBMCSource)info.getExtension(mediaDir.getMediaDirConfig());
+						log.info("Found film information in NFO file, looking up IMDB information for film");
 						Film film = xbmcSource.getFilm(imdbId, new URL("http://www.imdb.com/title/"+imdbId+"/"), mediaFile); //$NON-NLS-1$ //$NON-NLS-2$
 						if (film!=null) {
 							String year = null;
@@ -79,6 +70,19 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Look up the film file details using the NFO file if it can be found
+	 * @param mediaFile The media file that is been processed
+	 * @param rootMediaDir The root media directory
+	 * @param renamePattern The pattern that is been used to rename media files
+	 * @param mediaDir The media directory
+	 * @return The search details
+	 */
+	@Override
+	public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
+		return getSearch(mediaFile,mediaDir);
 	}
 
 	private Integer getPart(File nfoFile,File mediaFile) {
@@ -131,4 +135,6 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 		}
 		return null;
 	}
+
+
 }
