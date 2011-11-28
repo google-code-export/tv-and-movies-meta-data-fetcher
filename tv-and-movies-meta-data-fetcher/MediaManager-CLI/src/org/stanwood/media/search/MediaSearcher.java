@@ -72,11 +72,29 @@ public class MediaSearcher {
 	}
 
 	public MediaSearchResult lookupMedia(File mediaFile,boolean useSources) throws ActionException {
-		Mode mode = Mode.TV_SHOW;
-		ParsedFileName parsed = FileNameParser.parse(mediaFile);
-		if (parsed==null) {
-			mode = Mode.FILM;
+		Mode mode = null;
+		FilmNFOSearchStrategy nfoSearcher = new FilmNFOSearchStrategy();
+		for (MediaDirectory mediaDir : mediaDirs) {
+			if (mediaDir.getMediaDirConfig().getMode()==Mode.FILM) {
+				SearchDetails details = nfoSearcher.getSearch(mediaFile, mediaDir);
+				if (details!=null) {
+					mode = Mode.FILM;
+				}
+				break;
+			}
 		}
+
+		if (mode==null) {
+			ParsedFileName parsed = FileNameParser.parse(mediaFile);
+			if (parsed==null) {
+				mode = Mode.FILM;
+			}
+		}
+
+		if (mode==null) {
+			mode = Mode.TV_SHOW;
+		}
+
 		for (MediaDirectory mediaDir : mediaDirs) {
 			if (mediaDir.getMediaDirConfig().getMode()==mode) {
 				IVideo result = getMediaDetails(mediaDir,mediaFile,useSources);
@@ -261,6 +279,13 @@ public class MediaSearcher {
 		return null;
 	}
 
+	/**
+	 * Used to get the part number of a film
+	 * @param dir The media directory of the film
+	 * @param file The media file
+	 * @param film The film information
+	 * @return The part number or null if it does not have one
+	 */
 	public Integer getFilmPart(MediaDirectory dir,File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
