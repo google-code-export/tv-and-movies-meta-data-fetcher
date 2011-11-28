@@ -25,7 +25,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.ProjectDetails;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -77,6 +76,7 @@ import org.xml.sax.SAXException;
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private final static String STORE_VERSION = "2.1"; //$NON-NLS-1$
+	private final static int STORE_REVISION = 1;
 	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
 	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -85,14 +85,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private final static String FILENAME = ".mediaManager-xmlStore.xml"; //$NON-NLS-1$
 	private static final String STIP_PUNCUATION = "'()[],"; //$NON-NLS-1$
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-	private ProjectDetails projectDetails;
 
 	public XMLStore2() {
-		try {
-			projectDetails = new ProjectDetails();
-		} catch (IOException e) {
-			log.error("Unable to read projet details", e);
-		}
 	}
 
 	/**
@@ -1093,8 +1087,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					"store", DTD_LOCATION, DTD_WEB_LOCATION); //$NON-NLS-1$
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType); //$NON-NLS-1$
 			Element storeElement = getFirstChildElement(doc, "store"); //$NON-NLS-1$
-			storeElement.setAttribute("version", projectDetails.getVersion().toString()); //$NON-NLS-1$
-			storeElement.setAttribute("revision", String.valueOf(projectDetails.getBuildRevision())); //$NON-NLS-1$
+			storeElement.setAttribute("version", STORE_VERSION); //$NON-NLS-1$
+			storeElement.setAttribute("revision", String.valueOf(STORE_REVISION)); //$NON-NLS-1$
 		} catch (ParserConfigurationException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_CACHE"), e); //$NON-NLS-1$
 		}

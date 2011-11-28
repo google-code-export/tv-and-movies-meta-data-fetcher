@@ -48,6 +48,7 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Version;
 
 /**
  * <p>
@@ -81,6 +82,8 @@ public class MP4ITunesStore implements IStore {
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
 	private String atomicParsleyCmd;
+	private final static int STORE_REVISION = 1;
+	private final static Version STORE_VERSION = new Version("2.1");
 
 
 	/** {@inheritDoc} */
@@ -328,6 +331,7 @@ public class MP4ITunesStore implements IStore {
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		IShow show = episode.getSeason().getShow();
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()+" "+STORE_REVISION)); //$NON-NLS-1$
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.TV_SHOW.getId()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE_ID, episode.getEpisodeId()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SHOW_NAME, show.getName()));
@@ -455,6 +459,7 @@ public class MP4ITunesStore implements IStore {
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		List<IAtom> atoms = new ArrayList<IAtom>();
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()+" "+STORE_REVISION)); //$NON-NLS-1$
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.MOVIE.getId()));
 		if (film.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(film.getDate())));
