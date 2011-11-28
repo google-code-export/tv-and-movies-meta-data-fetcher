@@ -49,6 +49,7 @@ public class TestMP4AtomicParsleyManager {
 	 */
 	@Test
 	public void testNoAtomsFound() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		URL url = Data.class.getResource("a_video.mp4");
 		File mp4File = new File(url.toURI());
 		Assert.assertTrue(mp4File.exists());

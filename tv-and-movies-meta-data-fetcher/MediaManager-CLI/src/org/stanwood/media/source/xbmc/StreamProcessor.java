@@ -81,12 +81,12 @@ public abstract class StreamProcessor {
 //		this(stream,null);
 //	}
 
-	public StreamProcessor(String forcedContentType) {
+	public StreamProcessor(String cacheKey,String forcedContentType) {
 		this.forcedContentType = forcedContentType;
 	}
 
-	public StreamProcessor() {
-		this(null);
+	public StreamProcessor(String cacheKey) {
+		this(cacheKey,null);
 	}
 
 	abstract protected Stream getStream() throws ExtensionException, IOException;

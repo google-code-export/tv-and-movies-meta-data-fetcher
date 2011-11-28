@@ -224,7 +224,7 @@ public class XBMCScraper extends XBMCExtension {
 			final URL url = new URL(node.getTextContent());
 
 			if (!functionName.equals("")) { //$NON-NLS-1$
-				StreamProcessor processor = new StreamProcessor() {
+				StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 					@Override
 					protected Stream getStream() throws ExtensionException, IOException {
 						return addonMgr.getStreamToURL(url);
