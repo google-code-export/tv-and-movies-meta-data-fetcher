@@ -94,7 +94,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		List<XBMCEpisode> episodes = getEpisodeList(season.getShow(), season);
 		for (final XBMCEpisode episode : episodes) {
 			if (episode.getEpisodeNumber() == episodeNum) {
-				StreamProcessor processor = new StreamProcessor() {
+				StreamProcessor processor = new StreamProcessor(episode.getUrl().toExternalForm()) {
 					@Override
 					protected Stream getStream() throws ExtensionException, IOException {
 						return mgr.getStreamToURL(episode.getUrl());
@@ -146,7 +146,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private List<XBMCEpisode>getEpisodeList(final IShow show,final ISeason season) throws SourceException, IOException {
 		final List<XBMCEpisode>episodes = new ArrayList<XBMCEpisode>();
 
-		StreamProcessor processor = new StreamProcessor() {
+		StreamProcessor processor = new StreamProcessor(season.getURL().toExternalForm()) {
 			@Override
 			protected Stream getStream() throws ExtensionException, IOException {
 				return mgr.getStreamToURL(season.getURL());
@@ -219,7 +219,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		final Show show = new Show(showId);
 		show.setShowURL(url);
 		show.setSourceId(getSourceId());
-		StreamProcessor processor = new StreamProcessor() {
+		StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 			@Override
 			protected Stream getStream() throws ExtensionException, IOException {
 				return mgr.getStreamToURL(url);
@@ -319,7 +319,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		film.setFilmUrl(url);
 		film.setSourceId(getSourceId());
 
-		StreamProcessor processor = new StreamProcessor() {
+		StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 			@Override
 			protected Stream getStream() throws ExtensionException, IOException {
 				return mgr.getStreamToURL(url);
@@ -484,7 +484,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		ISeason specialSeason = getSeason(show, 0);
 		List<XBMCEpisode> episodes = getEpisodeList(show, specialSeason);
 		for (final XBMCEpisode episode : episodes) {
-			StreamProcessor processor = new StreamProcessor() {
+			StreamProcessor processor = new StreamProcessor(episode.getUrl().toExternalForm()) {
 				@Override
 				protected Stream getStream() throws ExtensionException, IOException {
 					return mgr.getStreamToURL(episode.getUrl());
@@ -577,7 +577,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			if (mgr.getStreamToURL(url)==null || mgr.getStreamToURL(url).getInputStream()==null) {
 				throw new SourceException(MessageFormat.format(Messages.getString("XBMCSource.UNABLE_GET_STREAM_URL"), url.toExternalForm())); //$NON-NLS-1$
 			}
-			StreamProcessor processor = new StreamProcessor() {
+			StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 				@Override
 				protected Stream getStream() throws ExtensionException, IOException {
 					return mgr.getStreamToURL(url);
