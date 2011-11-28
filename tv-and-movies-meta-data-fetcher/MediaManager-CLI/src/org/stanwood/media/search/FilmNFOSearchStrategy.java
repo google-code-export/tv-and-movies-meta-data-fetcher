@@ -45,7 +45,7 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 				if (info != null) {
 					try {
 						XBMCSource xbmcSource = (XBMCSource)info.getExtension(mediaDir.getMediaDirConfig());
-						log.info("Found film information in NFO file, looking up IMDB information for film");
+						log.info(MessageFormat.format("Found film information in NFO file, looking up IMDB information for file ''{0}''",mediaFile));
 						Film film = xbmcSource.getFilm(imdbId, new URL("http://www.imdb.com/title/"+imdbId+"/"), mediaFile); //$NON-NLS-1$ //$NON-NLS-2$
 						if (film!=null) {
 							String year = null;
