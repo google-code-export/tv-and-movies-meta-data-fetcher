@@ -13,7 +13,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/run-time/commons-exec-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/rome-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/jdom.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/run-time/jna-3.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/run-time/jna-3.2.7.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/run-time/antlr-runtime-3.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>

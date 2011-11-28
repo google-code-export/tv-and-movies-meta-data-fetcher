@@ -65,7 +65,8 @@ public enum MP4AtomKey {
 	CATALOG_ID("Catalog ID","cnID"	,MP4AtomKeyType.Integer),
 	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer),
 	CERTIFICATION("Certification","----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes"),
-	INFO("Movie/Show Information","----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes");
+	INFO("Movie/Show Information","----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes"),
+	MM_VERSION("MediaManager Version","----",MP4AtomKeyType.String,"mmVer","com.google.code");
 
 	private String id;
 	private String displayName;
