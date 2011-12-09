@@ -31,7 +31,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IEpisode;
@@ -48,6 +47,7 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.util.Version;
 
 /**
@@ -83,7 +83,7 @@ public class MP4ITunesStore implements IStore {
 	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
 	private String atomicParsleyCmd;
 	private final static int STORE_REVISION = 1;
-	private final static Version STORE_VERSION = new Version("2.1");
+	private final static Version STORE_VERSION = new Version("2.1"); //$NON-NLS-1$
 
 
 	/** {@inheritDoc} */
@@ -411,24 +411,17 @@ public class MP4ITunesStore implements IStore {
 			IVideo video) {
 		File artwork = null;
 		try {
-			URL imageUrl = null;
-			if (video instanceof IEpisode) {
-				IEpisode episode = (IEpisode)video;
-				if (episode.getImageURL()!=null) {
-					imageUrl = episode.getImageURL();
-				}
-				else if (episode.getSeason().getShow().getImageURL()!=null) {
-					imageUrl = episode.getSeason().getShow().getImageURL();
-				}
-			}
-			else if (video instanceof IFilm) {
-				imageUrl = ((IFilm) video).getImageURL();
-			}
+			URL imageUrl = getVideoURL(video);
 			if (imageUrl != null) {
 				try {
-					artwork = downloadToTempFile(imageUrl);
+					artwork = mp4Manager.getArtworkFile(imageUrl);
 					byte data[] = getBytesFromFile(artwork);
-					return mp4Manager.createAtom(MP4AtomKey.ARTWORK, MP4ArtworkType.MP4_ART_JPEG,data.length,data );
+					String ext = FileHelper.getExtension(artwork);
+					MP4ArtworkType type = MP4ArtworkType.MP4_ART_PNG;
+					if (ext.equals("jpg") || ext.equals("jpeg")) {  //$NON-NLS-1$//$NON-NLS-2$
+						type = MP4ArtworkType.MP4_ART_JPEG;
+					}
+					return mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
 
 				} catch (IOException e) {
 					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DOWNLOAD_ARTWORK"),imageUrl, mp4File.getName()),e); //$NON-NLS-1$
@@ -446,6 +439,27 @@ public class MP4ITunesStore implements IStore {
 		}
 		return null;
 	}
+
+
+
+	public static URL getVideoURL(IVideo video) {
+		URL imageUrl = null;
+		if (video instanceof IEpisode) {
+			IEpisode episode = (IEpisode)video;
+			if (episode.getImageURL()!=null) {
+				imageUrl = episode.getImageURL();
+			}
+			else if (episode.getSeason().getShow().getImageURL()!=null) {
+				imageUrl = episode.getSeason().getShow().getImageURL();
+			}
+		}
+		else if (video instanceof IFilm) {
+			imageUrl = ((IFilm) video).getImageURL();
+		}
+		return imageUrl;
+	}
+
+
 
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
@@ -595,14 +609,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	private static File downloadToTempFile(URL url) throws IOException {
-		File file = FileHelper.createTempFile("artwork", ".jpg"); //$NON-NLS-1$ //$NON-NLS-2$
-		if (!file.delete()) {
-			throw new IOException(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DELETE_TEMP_FILE1"),file.getAbsolutePath())); //$NON-NLS-1$
-		}
-		FileHelper.copy(url, file);
-		return file;
-	}
+
 
 	// Returns the contents of the file in a byte array.
 	private static byte[] getBytesFromFile(File file) throws IOException {

@@ -1,16 +1,22 @@
 package org.stanwood.media.store.mp4.atomicparsley;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -19,7 +25,6 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.stanwood.media.jna.NativeHelper;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
@@ -29,6 +34,7 @@ import org.stanwood.media.store.mp4.MP4AtomKeyType;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.NativeHelper;
 
 public class MP4AtomicParsleyManager implements IMP4Manager {
 
@@ -109,7 +115,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			reader =new BufferedReader(new StringReader(output));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (line.equals("---------------------------")) {
+				if (line.equals("---------------------------")) { //$NON-NLS-1$
 					if (currentAtom!=null) {
 						// write atom
 						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
@@ -367,7 +373,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			exec.setStreamHandler(new PumpStreamHandler(out,err));
 			int exitCode = exec.execute(cmdLine);
 			if (failOnExitCode && exitCode!=0) {
-
+                log.error(capture.toString());
 				throw new MP4Exception(MessageFormat.format("System command returned a non zero exit code ''{0}'': {1}",exitCode,cmdLine.toString()));
 			}
 			return capture.toString();
@@ -403,4 +409,60 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		return true;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public  File getArtworkFile(URL imageUrl) throws IOException {
+		File tmp = downloadToTempFile(imageUrl,".tmp"); //$NON-NLS-1$
+		if (isAtomicParsleyJpeg(tmp)) {
+			return tmp;
+		}
+		else {
+			File jpegFile = convertImageToJpeg(tmp);
+			if (!isAtomicParsleyJpeg(jpegFile)) {
+				throw new IOException(MessageFormat.format("Unable to convert image {0} to a valid AtomicParsley image",imageUrl.toExternalForm()));
+			}
+			FileHelper.delete(tmp);
+			return jpegFile;
+		}
+	}
+
+	private boolean isAtomicParsleyJpeg(File imageFile) throws IOException {
+		byte[] data = new byte[4];
+		InputStream inStream = null;
+		try {
+			inStream = new FileInputStream(imageFile);
+			inStream.read(data);
+			if (data[0]==(byte)0xFF && data[1]==(byte)0xD8 && data[2]==(byte)0xFF ) {
+				if (data[3]==(byte)0xE0 || data[3]==(byte)0xE1) {
+					return true;
+				}
+			}
+		}
+		finally {
+			if (inStream!=null) {
+				inStream.close();
+			}
+		}
+
+		return false;
+	}
+
+	private static File convertImageToJpeg(File artworkFile) throws IOException {
+		File jpgArtwork = FileHelper.createTempFile("artwork", ".jpg"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (log.isDebugEnabled()) {
+			log.debug(MessageFormat.format("Convert downloaded image {0} into jpg {1}",artworkFile,jpgArtwork));
+		}
+		BufferedImage bufferedImage = ImageIO.read(artworkFile);
+		ImageIO.write(bufferedImage, "jpg", jpgArtwork); //$NON-NLS-1$
+		return jpgArtwork;
+	}
+
+	private static File downloadToTempFile(URL url,String extension) throws IOException {
+		File file = FileHelper.createTempFile("artwork", extension); //$NON-NLS-1$
+		if (!file.delete()) {
+			throw new IOException(MessageFormat.format("Unable to delete temp file {0}",file.getAbsolutePath())); //$NON-NLS-1$
+		}
+		FileHelper.copy(url, file);
+		return file;
+	}
 }

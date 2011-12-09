@@ -364,4 +364,16 @@ public class TestMP4AtomicParsleyManager {
 
 		return episode;
 	}
+
+	/**
+	 * AtomicParsley can't handle jpeg images that have a comment at the start. So this checks that a image
+	 * that contains a comment can be downloaded correctly and have the comment removed.
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testImageConversion() throws Exception {
+		IMP4Manager ap = createMP4Manager();
+		File f = ap.getArtworkFile(TestMP4AtomicParsleyManager.class.getResource("testArtwork.jpeg"));
+		Assert.assertNotNull(f);
+	}
 }

@@ -1,6 +1,8 @@
 package org.stanwood.media.store.mp4;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -76,5 +78,12 @@ public interface IMP4Manager {
 	 */
 	public void setParameter(String key, String value);
 
+	/**
+	 * Used to download the artwork from a URL to a file
+	 * @param imageUrl The file URL
+	 * @return The file
+	 * @throws IOException Thrown if their are any problems downloading the file
+	 */
+	public File getArtworkFile(URL imageUrl) throws IOException;
 
 }
