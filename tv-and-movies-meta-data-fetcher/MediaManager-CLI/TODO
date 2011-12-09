@@ -16,10 +16,9 @@ Media Importer
 Encode more metadata into mp4files
     - TVShows
         - Year: 
-        - Studio
 Add ability to upgrade media dirs
 	- Upgrade stores
-		- XMLStore2 - Add Show certs and Stduio
+		- XMLStore2 - Add Show certs and Stduio. Check images are jpeg
 		- MP4ItunesStore - New metadata
 	- Fix Seen DB
 
