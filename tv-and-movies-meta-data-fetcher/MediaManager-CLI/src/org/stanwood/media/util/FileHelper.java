@@ -250,6 +250,18 @@ public class FileHelper {
 							// Ignore
 						}
 					}
+				} catch (SocketTimeoutException e) {
+					if (error==null ) {
+						error = e;
+					}
+					if (retries < MAX_RETRIES - 1) {
+						log.error(MessageFormat.format("Unable to fetch URL {0}, timed out. Will retry...",url.toExternalForm()));
+						try {
+							Thread.sleep(FileHelper.RETRY_SLEEP_TIME);
+						} catch (InterruptedException e2) {
+							// Ignore
+						}
+					}
 				} catch (IOException e) {
 					if (dest.exists()) {
 						try {
