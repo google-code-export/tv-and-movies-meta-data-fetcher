@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -407,26 +408,31 @@ public class MP4ITunesStore implements IStore {
 		mp4Manager.update(mp4File, atoms);
 	}
 
-	protected static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File,
-			IVideo video) {
+	protected static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File,IVideo video) throws MP4Exception {
+		URL imageUrl = getVideoURL(video);
+		if (imageUrl != null) {
+			return getArtworkAtom(mp4Manager, mp4File, imageUrl);
+		}
+		return null;
+	}
+
+	public static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File, URL imageUrl) throws MP4Exception {
 		File artwork = null;
 		try {
-			URL imageUrl = getVideoURL(video);
-			if (imageUrl != null) {
 				try {
 					artwork = mp4Manager.getArtworkFile(imageUrl);
 					byte data[] = getBytesFromFile(artwork);
 					String ext = FileHelper.getExtension(artwork);
-					MP4ArtworkType type = MP4ArtworkType.MP4_ART_PNG;
-					if (ext.equals("jpg") || ext.equals("jpeg")) {  //$NON-NLS-1$//$NON-NLS-2$
-						type = MP4ArtworkType.MP4_ART_JPEG;
+					MP4ArtworkType type = MP4ArtworkType.MP4_ART_JPEG;
+					if (ext.equals("png")) {  //$NON-NLS-1$
+						type = MP4ArtworkType.MP4_ART_PNG;
 					}
 					return mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
-
+				} catch (SocketTimeoutException e) {
+					throw new MP4Exception(MessageFormat.format("Unable to fetch image ''{0}'', timed out",imageUrl.toExternalForm()),e);
 				} catch (IOException e) {
 					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DOWNLOAD_ARTWORK"),imageUrl, mp4File.getName()),e); //$NON-NLS-1$
 				}
-			}
 		}
 		finally {
 			if (artwork!=null) {
@@ -446,11 +452,11 @@ public class MP4ITunesStore implements IStore {
 		URL imageUrl = null;
 		if (video instanceof IEpisode) {
 			IEpisode episode = (IEpisode)video;
-			if (episode.getImageURL()!=null) {
-				imageUrl = episode.getImageURL();
-			}
-			else if (episode.getSeason().getShow().getImageURL()!=null) {
+			if (episode.getSeason().getShow().getImageURL()!=null) {
 				imageUrl = episode.getSeason().getShow().getImageURL();
+			}
+			else if (episode.getImageURL()!=null) {
+				imageUrl = episode.getImageURL();
 			}
 		}
 		else if (video instanceof IFilm) {
