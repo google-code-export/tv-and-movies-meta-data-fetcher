@@ -56,6 +56,7 @@ import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.util.Version;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.SimpleErrorHandler;
@@ -75,10 +76,9 @@ import org.xml.sax.SAXException;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private final static String STORE_VERSION = "2.1"; //$NON-NLS-1$
-	private final static int STORE_REVISION = 1;
-	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
-	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),1); //$NON-NLS-1$
+	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION.getVersion()+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
+	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION.getVersion()+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
 
 
 	private final static Log log = LogFactory.getLog(XMLStore2.class);
@@ -1087,8 +1087,8 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					"store", DTD_LOCATION, DTD_WEB_LOCATION); //$NON-NLS-1$
 			doc = builder.getDOMImplementation().createDocument(null, "store", docType); //$NON-NLS-1$
 			Element storeElement = getFirstChildElement(doc, "store"); //$NON-NLS-1$
-			storeElement.setAttribute("version", STORE_VERSION); //$NON-NLS-1$
-			storeElement.setAttribute("revision", String.valueOf(STORE_REVISION)); //$NON-NLS-1$
+			storeElement.setAttribute("version", STORE_VERSION.getVersion().toString()); //$NON-NLS-1$
+			storeElement.setAttribute("revision", String.valueOf(STORE_VERSION.getRevision())); //$NON-NLS-1$
 		} catch (ParserConfigurationException e) {
 			throw new StoreException(Messages.getString("XMLStore2.UNABLE_CREATE_CACHE"), e); //$NON-NLS-1$
 		}
@@ -1377,18 +1377,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document cache = getCache(rootMediaDirectory);
 		try {
 			Element storeNode = getStoreNode(cache);
-//			projectDetails
 
-			Version currentVersion = new Version("2.0"); //$NON-NLS-1$
-			if (!storeNode.getAttribute("version").equals(""))  { //$NON-NLS-1$ //$NON-NLS-2$
-				currentVersion = new Version(storeNode.getAttribute("version")); //$NON-NLS-1$
-			}
-			int currentRev = 1;
-			if (!storeNode.getAttribute("revision").equals("")) {  //$NON-NLS-1$//$NON-NLS-2$
-				currentRev = Integer.parseInt(storeNode.getAttribute("revision")); //$NON-NLS-1$
-			}
-
-			if (currentVersion.compareTo(new Version(STORE_VERSION))<0) {
+			StoreVersion currentVersion = getCurrentVersion(storeNode);
+			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
 				try {
 					upgrade20to21(mediaDirectory,cache,storeNode);
 				} catch (StoreException e) {
@@ -1401,6 +1392,17 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to upgrade the store",e);
 		}
+	}
+
+	protected StoreVersion getCurrentVersion(Element storeNode) {
+		StoreVersion currentVersion = new StoreVersion(new Version("2.0"),1);
+		if (!storeNode.getAttribute("version").equals(""))  { //$NON-NLS-1$ //$NON-NLS-2$
+			currentVersion.setVersion(new Version(storeNode.getAttribute("version"))); //$NON-NLS-1$
+		}
+		if (!storeNode.getAttribute("revision").equals("")) {  //$NON-NLS-1$//$NON-NLS-2$
+			currentVersion.setRevision(Integer.parseInt(storeNode.getAttribute("revision"))); //$NON-NLS-1$
+		}
+		return currentVersion;
 	}
 
 	private void writeUpgradedStore(File rootMediaDirectory, Element storeNode) throws StoreException {

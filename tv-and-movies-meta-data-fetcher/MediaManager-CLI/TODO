@@ -1,7 +1,7 @@
 TODO
 ====
 
-Version 2.0.1
+Version 2.1
 -------------
 
 Bug fixes
@@ -18,18 +18,15 @@ Encode more metadata into mp4files
         - Year: 
 Add ability to upgrade media dirs
 	- Upgrade stores
-		- XMLStore2 - Add Show certs and Stduio. Check images are jpeg
-		- MP4ItunesStore - New metadata
+		- MP4ItunesStore - New metadata. Check images are jpeg
 	- Fix Seen DB
 
-Version 2.1
+Version 2.2
 -----------
 
-Find a way of adding a apple container metadata box if it's not found
 Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins.
-Encode rating into MP4's
 Implement a pure java MP4 Manager
 Option to delete anything that did not get renamed in the NFO folder
 Allow the checking for updates period to be configured (Default once a day)
