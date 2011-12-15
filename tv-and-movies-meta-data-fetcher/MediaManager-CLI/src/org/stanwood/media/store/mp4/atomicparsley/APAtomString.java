@@ -4,13 +4,12 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * Used to store mp4 string atom data
  */
-public class APAtomString extends AbstractAPAtom implements IAtom {
+public class APAtomString extends AbstractAPAtom implements IAtomString {
 
 	private String value;
 
@@ -135,5 +134,10 @@ public class APAtomString extends AbstractAPAtom implements IAtom {
 		else {
 			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",value));
 		}
+	}
+
+	@Override
+	public String getValue() {
+		return value;
 	}
 }

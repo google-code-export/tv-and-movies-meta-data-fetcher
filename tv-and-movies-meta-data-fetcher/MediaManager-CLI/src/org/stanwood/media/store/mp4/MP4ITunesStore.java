@@ -46,6 +46,8 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.StoreVersion;
+import org.stanwood.media.store.mp4.atomicparsley.IAtomString;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
@@ -83,8 +85,8 @@ public class MP4ITunesStore implements IStore {
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
 	private String atomicParsleyCmd;
-	private final static int STORE_REVISION = 1;
-	private final static Version STORE_VERSION = new Version("2.1"); //$NON-NLS-1$
+
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),2); //$NON-NLS-1$
 
 
 	/** {@inheritDoc} */
@@ -332,7 +334,7 @@ public class MP4ITunesStore implements IStore {
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		IShow show = episode.getSeason().getShow();
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()+" "+STORE_REVISION)); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.TV_SHOW.getId()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_EPISODE_ID, episode.getEpisodeId()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TV_SHOW_NAME, show.getName()));
@@ -479,7 +481,7 @@ public class MP4ITunesStore implements IStore {
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
 		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 		List<IAtom> atoms = new ArrayList<IAtom>();
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()+" "+STORE_REVISION)); //$NON-NLS-1$
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.MOVIE.getId()));
 		if (film.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(film.getDate())));
@@ -675,10 +677,59 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
+	private void upgradeMediaFiles(MediaDirectory mediaDir,File file) throws MP4Exception {
+		if (file.isDirectory()) {
+			for (File d : file.listFiles()) {
+				upgradeMediaFiles(mediaDir,d);
+			}
+		}
+		else {
+			String ext = FileHelper.getExtension(file);
+			if (ext.equals("m4v") || ext.equals("mp4")) {  //$NON-NLS-1$//$NON-NLS-2$
+				doUpgrade(mediaDir,file);
+			}
+		}
+	}
+
+	private StoreVersion getVersion(File file) throws MP4Exception {
+		StoreVersion version = new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
+		List<IAtom> atoms = mp4Manager.listAtoms(file);
+		for (IAtom atom : atoms) {
+			if (atom.getKey() == MP4AtomKey.MM_VERSION && atom instanceof IAtomString) {
+				String value = ((IAtomString)atom).getValue();
+				int pos = value.indexOf(" "); //$NON-NLS-1$
+				version.setVersion(new Version(value.substring(pos,0)));
+				version.setRevision(Integer.parseInt(value.substring(pos+1)));
+			}
+		}
+		return version;
+	}
+
+	private void doUpgrade(MediaDirectory mediaDir,File file) throws MP4Exception {
+		StoreVersion currentVersion = getVersion(file);
+		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
+			upgradeAtoms(mediaDir,file);
+		}
+		else {
+			if (currentVersion.getRevision()<STORE_VERSION.getRevision()) {
+				upgradeAtoms(mediaDir,file);
+			}
+		}
+	}
+
+	private void upgradeAtoms(MediaDirectory mediaDir,File file) {
+
+	}
+
 	/** {@inheritDoc} */
 	@Override
-	public void upgrade(MediaDirectory mediaDirectory) {
-
+	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
+//		try {
+//			upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
+//		}
+//		catch (MP4Exception e) {
+//			throw new StoreException("Unable to upgrade store",e);
+//		}
 	}
 
 }
