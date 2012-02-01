@@ -146,7 +146,7 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals(22,atoms.size());
 		int index = 0;
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 1]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 2]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Episode ID: [tven=34567]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
@@ -244,7 +244,7 @@ public class TestMP4AtomicParsleyManager {
 
 		Assert.assertEquals(16,atoms.size());
 		int index=0;
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 1]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 2]",atoms.get(index++).toString());
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
 		StringBuilder expected = new StringBuilder();
 		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
