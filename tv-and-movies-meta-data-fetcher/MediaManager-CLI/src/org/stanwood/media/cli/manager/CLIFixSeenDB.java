@@ -35,7 +35,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 	private final static Log log = LogFactory.getLog(CLIFixSeenDB.class);
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
-	private final static String TEST_OPTION = "d"; //$NON-NLS-1$
+	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 	private MediaDirectory rootMediaDir = null;
@@ -200,6 +200,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				try {
 					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
+					log.info(MessageFormat.format("Fixing seen database for media directory : {0}",rootMediaDir));
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
