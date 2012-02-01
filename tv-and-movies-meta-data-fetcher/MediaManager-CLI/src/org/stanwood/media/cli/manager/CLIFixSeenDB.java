@@ -200,7 +200,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				try {
 					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
-					log.info(MessageFormat.format("Fixing seen database for media directory : {0}",rootMediaDir));
+					log.info(MessageFormat.format("Fixing seen database for media directory : {0}",rootMediaDir.getMediaDirConfig().getMediaDir()));
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
