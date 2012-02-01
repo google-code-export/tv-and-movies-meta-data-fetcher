@@ -116,7 +116,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.equals("---------------------------")) { //$NON-NLS-1$
-					if (currentAtom!=null) {
+					if (currentAtom!=null && currentAtom.key!=null) {
 						// write atom
 						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
 						if (atom!=null) {
@@ -128,7 +128,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 
 				AtomResult ar = readerAtom(line);
 				if (ar!=null) {
-					if (currentAtom!=null) {
+					if (currentAtom!=null && currentAtom.key!=null) {
 						// write atom
 						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
 						if (atom!=null) {
@@ -138,7 +138,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 					currentAtom = ar;
 				}
 				else {
-					if (currentAtom!=null) {
+					if (currentAtom!=null && currentAtom.key!=null) {
 						currentAtom.value = currentAtom.value+FileHelper.LS+line;
 					}
 				}
