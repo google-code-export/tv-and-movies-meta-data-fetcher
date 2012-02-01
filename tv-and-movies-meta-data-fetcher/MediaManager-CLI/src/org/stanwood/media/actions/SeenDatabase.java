@@ -167,6 +167,11 @@ public class SeenDatabase extends XMLParser {
 		markAsSeen(mediaDirectory, newFile);
 	}
 
+	/**
+	 * Used to remove files from the Seen database
+	 * @param mediaDirectory The media directory of the file to remove
+	 * @param file The file to remove
+	 */
 	public void removeFile(File mediaDirectory, File file) {
 		Set<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList!=null) {
