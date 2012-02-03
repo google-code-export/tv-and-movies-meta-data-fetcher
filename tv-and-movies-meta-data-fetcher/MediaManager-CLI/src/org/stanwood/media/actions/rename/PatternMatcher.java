@@ -23,6 +23,7 @@ public class PatternMatcher {
 		}
 		text = text.replaceAll(":|/","-"); //$NON-NLS-1$ //$NON-NLS-2$
 		text = text.replaceAll("!",".");  //$NON-NLS-1$//$NON-NLS-2$
+		text = text.replaceAll("’", "'"); //$NON-NLS-1$//$NON-NLS-2$
 		return text;
 	}
 
