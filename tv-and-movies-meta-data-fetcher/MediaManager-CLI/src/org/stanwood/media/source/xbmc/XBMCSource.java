@@ -328,9 +328,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-					System.out.println(contents);
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
-	    			String blah = XMLParser.domToStr(doc);
 	    			try {
 	    				film.setDate(FILM_YEAR_DATE_FORMAT.parse(getStringFromXML(doc, "details/year/text()"))); //$NON-NLS-1$
 	    			}
