@@ -17,8 +17,10 @@ import org.stanwood.media.actions.SeenDatabase;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4AtomKey;
@@ -107,10 +109,11 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			mp4Manager.init(getController().getNativeFolder());
 
 			//TODO make each store able to validate a media file
-			File root = rootMediaDir.getMediaDirConfig().getMediaDir();
+			MediaDirConfig mediaDirConfig = rootMediaDir.getMediaDirConfig();
+			File root = mediaDirConfig.getMediaDir();
 			List<File> files = FileHelper.listFiles(root);
 			for (File f : files) {
-				boolean valid = validateFile(mp4Manager,f);
+				boolean valid = validateFile(mediaDirConfig,mp4Manager,f);
 				if (!valid) {
 					if (seenDb.isSeen(root, f)) {
 						log.info(MessageFormat.format("Remove {0} from seen database as it has missing or broken metadata.",f));
@@ -135,8 +138,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		return false;
 	}
 
-
-	private boolean validateFile(IMP4Manager mp4Manager,File f) throws MP4Exception {
+	private boolean validateFile(MediaDirConfig mediaDirConfig,IMP4Manager mp4Manager,File f) throws MP4Exception {
 		if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
 			List<IAtom> atoms = mp4Manager.listAtoms(f);
 			IAtom atom = hasAtom(atoms,"stik"); //$NON-NLS-1$
@@ -150,11 +152,17 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						return false;
 					}
 					if (stik == StikValue.MOVIE) {
+						if (mediaDirConfig.getMode()!=Mode.FILM) {
+							return false;
+						}
 						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
 							return false;
 						}
 					}
 					else if (stik == StikValue.TV_SHOW) {
+						if (mediaDirConfig.getMode()!=Mode.TV_SHOW) {
+							return false;
+						}
 						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
 							return false;
 						}
