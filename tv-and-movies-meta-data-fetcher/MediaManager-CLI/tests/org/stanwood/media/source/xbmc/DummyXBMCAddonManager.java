@@ -96,7 +96,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 			term=term.replaceAll("\\+","-");
 			term=term.replaceAll("\\%..","");
 			term=term.replaceAll("[\\(\\)]","");
-			return new Stream(Data.class.getResourceAsStream("imdb-search-"+term+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
+			return new Stream(Data.class.getResourceAsStream("imdb-search-"+term+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}
