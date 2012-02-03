@@ -11,20 +11,12 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Stream;
-import org.stanwood.media.xml.XMLParser;
-import org.stanwood.media.xml.XMLParserException;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * This class is used to process streams that could be zipped. If the stream is not zipped, then
@@ -180,28 +172,32 @@ public abstract class StreamProcessor {
 			}
 			else {
 				String data = null;
-				if (contentType.equals("text/xml")) {
-					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-					dbf.setValidating(false);
-					DocumentBuilder db = null;
-					try {
-						db = dbf.newDocumentBuilder();
-						Document dom = db.parse(stream.getInputStream());
-						data = XMLParser.domToStr(dom);
-					}
-					catch (ParserConfigurationException e){
-						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-					} catch (SAXException e) {
-						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-					} catch (XMLParserException e) {
-						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-					}
+				String encoding = stream.getCharset();
+				if (contentType.equals("text/xml")) { //$NON-NLS-1$
+					//TODO check the encoding
+					encoding = "UTF-8"; //$NON-NLS-1$
 				}
-				else {
+//					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//					dbf.setValidating(false);
+//					DocumentBuilder db = null;
+//					try {
+//						db = dbf.newDocumentBuilder();
+//						Document dom = db.parse(stream.getInputStream());
+//						data = XMLParser.domToStr(dom);
+//					}
+//					catch (ParserConfigurationException e){
+//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+//					} catch (SAXException e) {
+//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+//					} catch (XMLParserException e) {
+//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
+//					}
+//				}
+//				else {
 					Reader r = null;
 					StringWriter sw = null;
 					try {
-						r = new InputStreamReader(stream.getInputStream(),stream.getCharset());
+						r = new InputStreamReader(stream.getInputStream(),encoding);
 						sw = new StringWriter();
 
 						char[] buffer = new char[1024];
@@ -215,7 +211,6 @@ public abstract class StreamProcessor {
 							if (contentType.equals("text/html")) { //$NON-NLS-1$
 								data = unescapeHTML(data);
 							}
-
 						}
 					}
 					finally {
@@ -226,7 +221,7 @@ public abstract class StreamProcessor {
 							r.close();
 						}
 					}
-				}
+//				}
 				if (data!=null) {
 					processContents(data);
 				}

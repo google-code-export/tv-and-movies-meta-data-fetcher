@@ -328,6 +328,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
+					System.out.println(contents);
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
 	    			String blah = XMLParser.domToStr(doc);
 	    			try {
@@ -391,11 +392,14 @@ public class XBMCSource extends XMLParser implements ISource {
 //	    			film.setChapters(chapters);
 				}
 				catch (XMLParserException e) {
+					e.printStackTrace();
 					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 				catch (MalformedURLException e) {
+					e.printStackTrace();
 					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				} catch (ParseException e) {
+					e.printStackTrace();
 					throw new SourceException(org.stanwood.media.source.xbmc.Messages.getString("XBMCSource.UNABLE_PARSE_SHOW"),e); //$NON-NLS-1$
 				}
 			}
