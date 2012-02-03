@@ -84,7 +84,7 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 		}
 		m = IDBM_PATTERN.matcher(strUrl);
 		if (m.matches()) {
-			return new Stream(Data.class.getResourceAsStream("imdb-"+m.group(1)+".html"),"text/xml","UTF-8",url.toExternalForm(),url);
+			return new Stream(Data.class.getResourceAsStream("imdb-"+m.group(1)+".html"),"text/html","UTF-8",url.toExternalForm(),url);
 		}
 		m = TVDB_SERIES_PATTERN.matcher(strUrl);
 		if (m.matches()) {
