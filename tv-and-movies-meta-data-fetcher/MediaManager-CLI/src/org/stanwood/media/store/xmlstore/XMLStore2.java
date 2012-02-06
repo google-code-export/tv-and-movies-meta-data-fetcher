@@ -1110,6 +1110,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
+		if (log.isInfoEnabled()) {
+			log.info("Cleaning up store after actions were performed");
+		}
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 		Document cache = getCache(rootMediaDir);
 		try {
