@@ -160,7 +160,11 @@ public abstract class StreamProcessor {
 							else {
 								dest = data;
 							}
+							//TODO check the encoding
 							String encoding = "iso-8859-1"; //$NON-NLS-1$
+							if (entry.getName().endsWith(".xml")) { //$NON-NLS-1$
+								encoding = "UTF-8"; //$NON-NLS-1$
+							}
 							contents.append(new String(dest,encoding));
 			            }
 	                }
