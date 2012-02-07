@@ -41,6 +41,6 @@ public class TestNormalizeFilename {
 
 	@Test
 	public void testInvalidPunucation() {
-		Assert.assertEquals("????'Blah'",PatternMatcher.normalizeText("՚՛՜՝‘Blah’"));
+		Assert.assertEquals("????\"'Blah'\"",PatternMatcher.normalizeText("՚՛՜՝“‘Blah’”"));
 	}
 }
