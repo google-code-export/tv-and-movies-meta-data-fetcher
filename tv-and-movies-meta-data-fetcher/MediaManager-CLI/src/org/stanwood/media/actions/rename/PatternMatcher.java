@@ -31,6 +31,7 @@ public class PatternMatcher {
 		text = text.replaceAll(":|/","-"); //$NON-NLS-1$ //$NON-NLS-2$
 		text = text.replaceAll("!",".");  //$NON-NLS-1$//$NON-NLS-2$
 		text = text.replaceAll("’|‘", "'"); //$NON-NLS-1$//$NON-NLS-2$
+		text = text.replaceAll("“|”", "\""); //$NON-NLS-1$//$NON-NLS-2$
 
 		String s1 = Normalizer.normalize(text, Normalizer.Form.NFKD);
 	    String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+"; //$NON-NLS-1$
