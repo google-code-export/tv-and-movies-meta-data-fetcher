@@ -1,7 +1,9 @@
 package org.stanwood.media.actions.rename;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 
 import org.stanwood.media.model.IEpisode;
@@ -17,14 +19,30 @@ public class PatternMatcher {
 
 	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 
-	private String normalizeText(String text) {
+	/**
+	 * Used to strip unwanted characters from a filename
+	 * @param text The input text
+	 * @return The converted text
+	 */
+	public static String normalizeText(String text) {
 		if (text==null) {
 			return null;
 		}
 		text = text.replaceAll(":|/","-"); //$NON-NLS-1$ //$NON-NLS-2$
 		text = text.replaceAll("!",".");  //$NON-NLS-1$//$NON-NLS-2$
-		text = text.replaceAll("’", "'"); //$NON-NLS-1$//$NON-NLS-2$
-		return text;
+		text = text.replaceAll("’|‘", "'"); //$NON-NLS-1$//$NON-NLS-2$
+
+		String s1 = Normalizer.normalize(text, Normalizer.Form.NFKD);
+	    String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+"; //$NON-NLS-1$
+
+	    String s2;
+		try {
+			s2 = new String(s1.replaceAll(regex, "").getBytes("ascii"), "ascii");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		} catch (UnsupportedEncodingException e) {
+			return text;
+		}
+
+		return s2;
 	}
 
 	/**
