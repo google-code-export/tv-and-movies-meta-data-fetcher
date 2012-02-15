@@ -73,7 +73,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("Science-Fiction",show.getGenres().get(3));
 		Assert.assertEquals("79501",show.getShowId());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",show.getShowURL().toExternalForm());
-		Assert.assertEquals("xbmc-metadata.tvdb.com",show.getSourceId());
+		Assert.assertEquals(XBMCSource.class.getName()+"#metadata.tvdb.com",show.getSourceId());
 		Assert.assertEquals(show.getExtraInfo().get("episodeGuideURL"), "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
 		Assert.assertEquals("http://thetvdb.com/banners/posters/79501-2.jpg",show.getImageURL().toExternalForm());
 	}
@@ -89,7 +89,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		IShow show = new Show("79501");
 		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
-		show.setSourceId(source.getSourceId());
+		show.setSourceId(source.getInfo().getId());
 		Map<String, String> params = new HashMap<String,String>();
 		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
 		show.setExtraInfo(params);
@@ -133,7 +133,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Show show = new Show("79501");
 		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
-		show.setSourceId(source.getSourceId());
+		show.setSourceId(source.getInfo().getId());
 		Map<String, String> params = new HashMap<String,String>();
 		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
 		show.setExtraInfo(params);
@@ -178,7 +178,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 
 		Show show = new Show("79501");
 		show.setShowURL(new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"));
-		show.setSourceId(source.getSourceId());
+		show.setSourceId(source.getInfo().getId());
 		Map<String, String> params = new HashMap<String,String>();
 		params.put("episodeGuideURL", "http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip");
 		show.setExtraInfo(params);
@@ -218,7 +218,8 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
-		XBMCSource source = new XBMCSource(getAddonManager(),id);
+		XBMCAddon addon = getAddonManager().getAddon(id);
+		XBMCSource source = new XBMCSource(new XBMCSourceInfo(getAddonManager(),addon),getAddonManager(),id);
 		return source;
 	}
 }

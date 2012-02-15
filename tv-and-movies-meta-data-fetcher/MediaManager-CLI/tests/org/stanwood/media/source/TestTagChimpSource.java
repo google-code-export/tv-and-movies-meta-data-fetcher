@@ -65,7 +65,7 @@ public class TestTagChimpSource {
 			config.setMode(Mode.FILM);
 			SearchResult result = source.searchMedia("Iron Man","", Mode.FILM, null);
 			Assert.assertEquals("39752",result.getId());
-			Assert.assertEquals("tagChimp",result.getSourceId());
+			Assert.assertEquals("org.stanwood.media.source.TagChimpSource",result.getSourceId());
 			Assert.assertEquals("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752",result.getUrl());
 		}
 		finally {
@@ -153,7 +153,7 @@ public class TestTagChimpSource {
 	}
 
 	private TagChimpSource getSource() {
-		TagChimpSource source = new TagChimpSource() {
+		TagChimpSource source = new TagChimpSource(new TagChimpSourceInfo()) {
 			@Override
 			Stream getSource(URL url) throws IOException {
 				String strUrl = url.toExternalForm();

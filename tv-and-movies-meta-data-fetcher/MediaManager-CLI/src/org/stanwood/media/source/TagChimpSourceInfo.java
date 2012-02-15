@@ -31,6 +31,6 @@ public class TagChimpSourceInfo extends ExtensionInfo<TagChimpSource> {
 
 	@Override
 	protected TagChimpSource createExtension() {
-		return new TagChimpSource();
+		return new TagChimpSource(this);
 	}
 }

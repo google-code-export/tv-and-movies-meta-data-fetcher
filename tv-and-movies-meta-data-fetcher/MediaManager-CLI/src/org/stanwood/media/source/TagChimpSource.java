@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Chapter;
@@ -45,9 +46,15 @@ public class TagChimpSource extends XMLParser implements ISource {
 	private static final SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 
 	/** The ID of the the source */
-	public static final String SOURCE_ID = "tagChimp"; //$NON-NLS-1$
+	public static final String OLD_SOURCE_ID = "tagChimp"; //$NON-NLS-1$
 
 	private static final String TAG_CHIMP_TOKEN = "11151451274D8F94339E891"; //$NON-NLS-1$
+
+	private TagChimpSourceInfo sourceInfo;
+
+	public TagChimpSource(TagChimpSourceInfo sourceInfo) {
+		this.sourceInfo = sourceInfo;
+	}
 
 	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
@@ -68,7 +75,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
 		final Film film = new Film(filmId);
 		film.setFilmUrl(url);
-		film.setSourceId(getSourceId());
+		film.setSourceId(sourceInfo.getId());
 
 		StreamProcessor processor = new StreamProcessor("text/xml") { //$NON-NLS-1$
 			@Override
@@ -163,16 +170,6 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return null;
 	}
 
-	/**
-	 * Get the id of the source.
-	 *
-	 * @return The id of the source
-	 */
-	@Override
-	public String getSourceId() {
-		return SOURCE_ID;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(final String name,final String year, final Mode mode, final Integer part) throws SourceException {
@@ -198,7 +195,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 						for (Node n : entities) {
 							String id = getStringFromXML(n, "tagChimpID/text()"); //$NON-NLS-1$
 							String locked = getStringFromXML(n, "locked/text()"); //$NON-NLS-1$
-							SearchResult result = new SearchResult(id, getSourceId(), getFilmUrl(id).toExternalForm(), null,mode);
+							SearchResult result = new SearchResult(id, sourceInfo.getId(), getFilmUrl(id).toExternalForm(), null,mode);
 							result.setTitle(getStringFromXML(n,"movieTags/info/movieTitle/text()")); //$NON-NLS-1$
 							if (locked.equals("yes")) { //$NON-NLS-1$
 								lockedResults.add(result);
@@ -385,4 +382,9 @@ public class TagChimpSource extends XMLParser implements ISource {
 		return buffer.toString().replaceAll(replaceWith + replaceWith, replaceWith);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public ExtensionInfo<? extends ISource> getInfo() {
+		return sourceInfo;
+	}
 }

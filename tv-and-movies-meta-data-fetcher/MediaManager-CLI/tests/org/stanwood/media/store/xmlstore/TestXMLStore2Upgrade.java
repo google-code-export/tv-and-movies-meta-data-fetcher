@@ -86,7 +86,37 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21-2.xml"),new FileInputStream(cacheFile),params);
+
+			IShow upgradedShow = mediaDir.getSources().get(0).getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), null);
+			Assert.assertEquals("NBC",upgradedShow.getStudio());
+
+		} finally {
+			FileHelper.delete(dir);
+		}
+	}
+
+	/**
+	 * Used to test that a XMLStore2 version 2.1 can be upgraded to the latest revision when it contains TV Shows
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testUpgrade2_1_1_to_2_1_2TVShow() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File dir = FileHelper.createTmpDir("show");
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("posters", "false");
+		ConfigReader configReader = TestCLIMediaManager.setupTestController(false,dir,pattern,Mode.TV_SHOW,XBMCSource.class.getName()+"#metadata.tvdb.com",params,XMLStore2.class.getName(),"",RenameAction.class.getName());
+		try {
+			File cacheFile = new File(dir,".mediaManager-xmlStore.xml");
+			params = new HashMap<String,String>();
+			params.put("rootMedia", dir.getAbsolutePath());
+			FileHelper.copy(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21.xml"),cacheFile,params);
+			Controller controller = new Controller(configReader);
+			controller.init(false);
+			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21-2.xml"),new FileInputStream(cacheFile),params);
 
 			IShow upgradedShow = mediaDir.getSources().get(0).getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), null);
 			Assert.assertEquals("NBC",upgradedShow.getStudio());
@@ -118,7 +148,39 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21-2.xml"),new FileInputStream(cacheFile),params);
+
+			IFilm upgradedShow = mediaDir.getSources().get(0).getFilm("tt0371746", new URL("http://akas.imdb.com/title/tt0371746/"), null);
+			Assert.assertEquals("Paramount Pictures",upgradedShow.getStudio());
+
+		} finally {
+			FileHelper.delete(dir);
+		}
+	}
+
+	/**
+	 * Used to test that a XMLStore2 version 2.1.1 can be upgraded to the latest revision when it contains Films
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testUpgrade21_1_to_21_2Film() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File dir = FileHelper.createTmpDir("films");
+		String pattern = "%n"+File.separator+"Season %s"+File.separator+"%e - %t.%x";
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("posters", "false");
+		ConfigReader configReader = TestCLIMediaManager.setupTestController(false,dir,pattern,Mode.FILM,XBMCSource.class.getName()+"#metadata.imdb.com",params,XMLStore2.class.getName(),"",RenameAction.class.getName());
+		TestNFOFilms.mmXBMCCmd(dir, pattern,"--log_config","NOINIT","install","metadata.imdb.com");
+
+		try {
+			File cacheFile = new File(dir,".mediaManager-xmlStore.xml");
+			params = new HashMap<String,String>();
+			params.put("rootMedia", dir.getAbsolutePath());
+			FileHelper.copy(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21.xml"),cacheFile,params);
+			Controller controller = new Controller(configReader);
+			controller.init(false);
+			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21-2.xml"),new FileInputStream(cacheFile),params);
 
 			IFilm upgradedShow = mediaDir.getSources().get(0).getFilm("tt0371746", new URL("http://akas.imdb.com/title/tt0371746/"), null);
 			Assert.assertEquals("Paramount Pictures",upgradedShow.getStudio());

@@ -33,6 +33,7 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.source.xbmc.XBMCSource;
 
 /**
  * This class in used to make it easier to find all the test resources. They can be found
@@ -42,9 +43,9 @@ import org.stanwood.media.model.Show;
 public class Data {
 
 	/** Film Source id to use in test data */
-	public final static String TEST_FILM_SOURCE_ID = "xbmc-metadata.themoviedb.org";
+	public final static String TEST_FILM_SOURCE_ID = XBMCSource.class.getName()+"#metadata.themoviedb.org";
 	/** TV Source id to use in test data */
-	public final static String TEST_TV_SOURCE_ID = "xbmc-metadata.tvdb.com";
+	public final static String TEST_TV_SOURCE_ID = XBMCSource.class.getName()+"#metadata.tvdb.com";
 
 	/** A test show id */
 	public final static String SHOW_ID_EUREKA = "58448";

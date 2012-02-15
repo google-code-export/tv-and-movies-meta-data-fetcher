@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -98,13 +99,6 @@ public interface ISource extends IExtension {
 	public IEpisode getSpecial(ISeason season, int specialNumber,File file) throws SourceException,MalformedURLException, IOException;
 
 	/**
-	 * Get the id of the source
-	 * @return The id of the source
-	 */
-	@Deprecated // To be removed
-	public String getSourceId();
-
-	/**
 	 * <p>Used to set source parameters. If the key is not supported by this source, then a {@link SourceException} is thrown.</p>
 	 * @param key The key of the parameter
 	 * @param value The value of the parameter
@@ -139,4 +133,5 @@ public interface ISource extends IExtension {
 	 */
 	public SearchResult searchMedia(String name,String year, Mode mode, Integer part) throws SourceException;
 
+	public ExtensionInfo<? extends ISource> getInfo();
 }

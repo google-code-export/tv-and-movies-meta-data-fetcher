@@ -91,7 +91,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("Action",film.getPreferredGenre());
 		Assert.assertEquals(8.4F,film.getRating().getRating());
 		Assert.assertEquals(82,film.getRating().getNumberOfVotes());
-		Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
+		Assert.assertEquals(XBMCSource.class.getName()+"#metadata.themoviedb.org",film.getSourceId());
 		Assert.assertEquals("Tony Stark (Robert Downey Jr.) is a wealthy playboy and talented weapons manufacturer. When he discovers a deadly conspiracy that could destabilize the entire globe, he develops a powerful robotic suit to fight the villians and save the world.",film.getSummary());
 		Assert.assertEquals("Iron Man",film.getTitle());
 		Assert.assertEquals(2,film.getWriters().size());
@@ -155,7 +155,8 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 	}
 
 	private XBMCSource getXBMCSource(String id) throws SourceException{
-		XBMCSource source = new XBMCSource(getAddonManager(),id);
+		XBMCAddon addon = getAddonManager().getAddon(id);
+		XBMCSource source = new XBMCSource(new XBMCSourceInfo(getAddonManager(),addon),getAddonManager(),id);
 		return source;
 	}
 

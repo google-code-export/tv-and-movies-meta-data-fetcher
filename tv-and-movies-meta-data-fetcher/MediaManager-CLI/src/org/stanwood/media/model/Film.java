@@ -430,14 +430,21 @@ public class Film implements IFilm {
 		this.videoFiles.addAll(videoFiles);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setStudio(String studio) {
 		this.studio = studio;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getStudio() {
 		return studio;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return "Film ID: " + getId()+" - Source: " + getSourceId()+" - Title: "+getTitle(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
 }
