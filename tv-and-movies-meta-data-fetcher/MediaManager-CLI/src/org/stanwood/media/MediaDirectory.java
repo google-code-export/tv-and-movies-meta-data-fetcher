@@ -150,7 +150,7 @@ public class MediaDirectory {
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				try {
-					if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) { //$NON-NLS-1$
+					if (sourceId==null || sourceId.equals("") || source.getInfo().getId().equals(sourceId)) { //$NON-NLS-1$
 						show = source.getShow(searchResult.getId(),showUrl,episodeFile);
 						if (show != null) {
 							for (IStore store : stores) {
@@ -205,7 +205,7 @@ public class MediaDirectory {
 			String sourceId = searchResult.getSourceId();
 			for (ISource source : sources) {
 				try {
-					if (source.getSourceId().equals(sourceId)) {
+					if (source.getInfo().getId().equals(sourceId)) {
 						film = source.getFilm(searchResult.getId(),url,filmFile);
 						if (film != null) {
 							for (IStore store : stores) {
@@ -261,7 +261,7 @@ public class MediaDirectory {
 			log.info(Messages.getString("MediaDirectory.READING_SEASON_FROM_SOURCE")); //$NON-NLS-1$
 			for (ISource source : sources) {
 				try {
-					if (source.getSourceId().equals(sourceId)) {
+					if (source.getInfo().getId().equals(sourceId)) {
 						season = source.getSeason(show, seasonNum);
 						if (season != null) {
 							for (IStore store : stores) {
@@ -316,7 +316,7 @@ public class MediaDirectory {
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				try {
-					if (source.getSourceId().equals(sourceId)) {
+					if (source.getInfo().getId().equals(sourceId)) {
 						episode = source.getEpisode(season, episodeNum,episodeFile);
 						if (episode != null) {
 							for (IStore store : stores) {
@@ -371,7 +371,7 @@ public class MediaDirectory {
 			log.info(Messages.getString("MediaDirectory.READING_SPECIAL_FROM_SOURCES")); //$NON-NLS-1$
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
-				if (source.getSourceId().equals(sourceId)) {
+				if (source.getInfo().getId().equals(sourceId)) {
 					episode = source.getSpecial(season, specialNum,specialFile);
 					if (episode != null) {
 						for (IStore store : stores) {

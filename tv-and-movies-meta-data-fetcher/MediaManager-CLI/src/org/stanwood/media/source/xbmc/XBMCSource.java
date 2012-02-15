@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.ExtensionException;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.Film;
@@ -58,6 +59,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private XBMCAddon addon;
 	private String id;
 	private XBMCAddonManager mgr;
+	private ExtensionInfo<? extends ISource> sourceInfo;
 
 	/**
 	 * Used to create a instance of this class
@@ -65,13 +67,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	 * @param addonId The ID of the sources XBMC addon
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public XBMCSource(XBMCAddonManager mgr,String addonId) throws XBMCException {
+	public XBMCSource(ExtensionInfo<? extends ISource> sourceInfo,XBMCAddonManager mgr,String addonId) throws XBMCException {
 		this.id = addonId;
 		this.mgr = mgr;
 		addon = mgr.getAddon(addonId);
+		this.sourceInfo = sourceInfo;
 	}
-
-
 
 	/**
 	 * Called to retrieve the information on a episode
@@ -218,7 +219,7 @@ public class XBMCSource extends XMLParser implements ISource {
 			SourceException {
 		final Show show = new Show(showId);
 		show.setShowURL(url);
-		show.setSourceId(getSourceId());
+		show.setSourceId(sourceInfo.getId());
 		StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 			@Override
 			protected Stream getStream() throws ExtensionException, IOException {
@@ -317,7 +318,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
 		final Film film = new Film(filmId);
 		film.setFilmUrl(url);
-		film.setSourceId(getSourceId());
+		film.setSourceId(sourceInfo.getId());
 
 		StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
 			@Override
@@ -555,17 +556,6 @@ public class XBMCSource extends XMLParser implements ISource {
 		}
 	}
 
-
-
-	/**
-	 * Get the id of the source
-	 * @return The id of the source
-	 */
-	@Override
-	public String getSourceId() {
-		return "xbmc-"+id; //$NON-NLS-1$
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(final String name,final String year,final Mode mode,final Integer part) throws SourceException {
@@ -596,7 +586,7 @@ public class XBMCSource extends XMLParser implements ISource {
 							String id = getStringFromXMLOrNull(node, "id/text()"); //$NON-NLS-1$
 							String url =  getStringFromXMLOrNull(node, "url/text()"); //$NON-NLS-1$
 							if (id!=null && url!=null) {
-								SearchResult result = new SearchResult(id, getSourceId(),url,part,mode);
+								SearchResult result = new SearchResult(id, sourceInfo.getId(),url,part,mode);
 								results.add(result);
 							}
 						}
@@ -672,6 +662,12 @@ public class XBMCSource extends XMLParser implements ISource {
 	@Override
 	public String toString() {
 		return "XBMCSource: "+id; //$NON-NLS-1$
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ExtensionInfo<? extends ISource> getInfo() {
+		return sourceInfo;
 	}
 
 

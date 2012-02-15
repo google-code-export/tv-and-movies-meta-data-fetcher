@@ -264,5 +264,9 @@ public class Show implements IShow {
 		this.certifications = certifications;
 	}
 
-
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return "Show ID: " + getShowId()+" - Source: " + getSourceId()+" - Name: "+getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
 }

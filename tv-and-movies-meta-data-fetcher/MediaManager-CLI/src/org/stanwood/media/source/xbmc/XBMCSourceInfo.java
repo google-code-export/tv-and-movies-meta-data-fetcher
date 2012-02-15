@@ -69,7 +69,7 @@ public class XBMCSourceInfo extends ExtensionInfo<XBMCSource>{
 
 	@Override
 	protected XBMCSource createExtension() throws ExtensionException {
-		return new XBMCSource(addon.getManager(), addon.getId());
+		return new XBMCSource(this,addon.getManager(), addon.getId());
 	}
 
 

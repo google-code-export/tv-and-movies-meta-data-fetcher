@@ -340,6 +340,12 @@ public class PodCastActionTest {
 	 */
 	public static class DummySource implements ISource {
 
+		private ExtensionInfo<? extends ISource> sourceInfo;
+
+		public DummySource(DummySourceInfo sourceInfo) {
+			this.sourceInfo = sourceInfo;
+		}
+
 		/** {@inheritDoc} */
 		@Override
 		public IEpisode getEpisode(ISeason season, int episodeNum, File file)
@@ -366,7 +372,9 @@ public class PodCastActionTest {
 		public IFilm getFilm(String filmId, URL url, File filmFile)
 				throws SourceException, MalformedURLException, IOException {
 			try {
-				return  Data.createFilm();
+				Film f = Data.createFilm();
+				f.setSourceId(getInfo().getId());
+				return f;
 			} catch (Exception e) {
 				throw new SourceException("Unable to get film",e);
 			}
@@ -379,12 +387,6 @@ public class PodCastActionTest {
 				File file) throws SourceException, MalformedURLException,
 				IOException {
 			return null;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public String getSourceId() {
-			return "DummySource";
 		}
 
 		/** {@inheritDoc} */
@@ -409,7 +411,12 @@ public class PodCastActionTest {
 		@Override
 		public SearchResult searchMedia(String name,String year, Mode mode, Integer part)
 				throws SourceException {
-			return new SearchResult("The Usual Suspects","DummySource","http://blah/1234",part,Mode.FILM);
+			return new SearchResult("The Usual Suspects",DummySource.class.getName(),"http://blah/1234",part,Mode.FILM);
+		}
+
+		@Override
+		public ExtensionInfo<? extends ISource> getInfo() {
+			return sourceInfo;
 		}
 
 	};
@@ -427,7 +434,7 @@ public class PodCastActionTest {
 		@Override
 		protected DummySource createExtension() throws ExtensionException {
 
-			return new DummySource();
+			return new DummySource(this);
 		}
 
 	}

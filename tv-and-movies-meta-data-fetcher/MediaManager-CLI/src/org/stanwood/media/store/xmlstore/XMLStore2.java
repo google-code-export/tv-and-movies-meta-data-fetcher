@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Actor;
@@ -51,9 +52,12 @@ import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.model.VideoFileSet;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.source.HybridFilmSource;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.NotInStoreException;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.source.TagChimpSource;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
@@ -76,7 +80,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),1); //$NON-NLS-1$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),2); //$NON-NLS-1$
 	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION.getVersion()+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
 	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION.getVersion()+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -1392,10 +1396,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				}
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
+			else if (currentVersion.getRevision() < STORE_VERSION.getRevision()) {
+				upgradeRevision21(mediaDirectory,cache,storeNode);
+				writeUpgradedStore(rootMediaDirectory, storeNode);
+			}
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to upgrade the store",e);
 		}
 	}
+
 
 	protected StoreVersion getCurrentVersion(Element storeNode) {
 		StoreVersion currentVersion = new StoreVersion(new Version("2.0"),1);
@@ -1425,16 +1434,19 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgrade20to21(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to 2.1",rootMediaDir));
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to 2.1.2",rootMediaDir));
 		if (dirConfig.getMode()==Mode.TV_SHOW) {
 			NodeList children = storeNode.getChildNodes();
 
 			for (int i=0;i<children.getLength();i++) {
 				if (children.item(i).getNodeName().equals("show")) { //$NON-NLS-1$
 					XMLShow orgShow = new XMLShow((Element) children.item(i));
-					SearchResult searchResult = new SearchResult(orgShow.getShowId(),orgShow.getSourceId(), orgShow.getShowURL().toExternalForm(), null,Mode.TV_SHOW);
+					String sourceId = orgShow.getSourceId();
+					if (getUpgradedSourceId(mediaDirectory.getController(), sourceId)!=null) {
+						sourceId = getUpgradedSourceId(mediaDirectory.getController(), sourceId);
+					}
+					SearchResult searchResult = new SearchResult(orgShow.getShowId(),sourceId, orgShow.getShowURL().toExternalForm(), null,Mode.TV_SHOW);
 					try {
-
 						IShow show = getShowFromSource(mediaDirectory, searchResult);
 						log.info(MessageFormat.format("Recache show: {0}",show.getName()));
 						getShowNode(doc, show,true);
@@ -1453,10 +1465,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
 					XMLFilm orgFilm = new XMLFilm((Element) children.item(i),rootMediaDir);
 					for (IVideoFile files : orgFilm.getFiles()) {
-						SearchResult searchResult = new SearchResult(orgFilm.getId(),orgFilm.getSourceId(), orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
+						String sourceId = orgFilm.getSourceId();
+						if (getUpgradedSourceId(mediaDirectory.getController(), sourceId)!=null) {
+							sourceId = getUpgradedSourceId(mediaDirectory.getController(), sourceId);
+						}
+						SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
 						try {
 							IFilm film= getFilmFromSource(mediaDirectory, searchResult);
 							orgFilm.setStudio(film.getStudio());
+							orgFilm.setSourceId(sourceId);
 						} catch (MalformedURLException e) {
 							throw new StoreException("Unable to update store",e);
 						} catch (IOException e) {
@@ -1468,12 +1485,54 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
+	private void upgradeRevision21(MediaDirectory mediaDirectory,
+			Document cache, Element storeNode) {
+		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
+		File rootMediaDir = dirConfig.getMediaDir();
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.1 to 2.1.2",rootMediaDir));
+		if (dirConfig.getMode()==Mode.TV_SHOW) {
+			NodeList children = storeNode.getChildNodes();
+
+			for (int i=0;i<children.getLength();i++) {
+				if (children.item(i).getNodeName().equals("show")) { //$NON-NLS-1$
+					XMLShow show = new XMLShow((Element) children.item(i));
+					show.setSourceId(getUpgradedSourceId(mediaDirectory.getController(),show.getSourceId()));
+				}
+			}
+		}
+		else {
+			NodeList children = storeNode.getChildNodes();
+
+			for (int i=0;i<children.getLength();i++) {
+				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
+					XMLFilm film = new XMLFilm((Element) children.item(i),rootMediaDir);
+					film.setSourceId(getUpgradedSourceId(mediaDirectory.getController(),film.getSourceId()));
+				}
+			}
+		}
+	}
+
+
+	private String getUpgradedSourceId(Controller controller,String oldSourceId) {
+		String id = oldSourceId;
+		if (oldSourceId.equals(TagChimpSource.OLD_SOURCE_ID)) {
+			id = TagChimpSource.class.getName();
+		}
+		else if (oldSourceId.equals(HybridFilmSource.OLD_SOURCE_ID)) {
+			id = HybridFilmSource.class.getName();
+		}
+		else if (oldSourceId.startsWith("xbmc-")) { //$NON-NLS-1$
+			id = XBMCSource.class.getName()+"#"+oldSourceId.substring(5); //$NON-NLS-1$
+		}
+		return id;
+	}
+
 	private IShow getShowFromSource(MediaDirectory mediaDirectory,SearchResult searchResult) throws IOException {
 		URL showUrl = new URL(searchResult.getUrl());
 		String sourceId = searchResult.getSourceId();
 		for (ISource source : mediaDirectory.getSources()) {
 			try {
-				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) { //$NON-NLS-1$
+				if (sourceId==null || sourceId.equals("") || source.getInfo().getId().equals(sourceId)) { //$NON-NLS-1$
 					IShow show = source.getShow(searchResult.getId(),showUrl,null);
 					if (show != null) {
 						return show;
@@ -1493,7 +1552,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		String sourceId = searchResult.getSourceId();
 		for (ISource source : mediaDirectory.getSources()) {
 			try {
-				if (sourceId==null || sourceId.equals("") || source.getSourceId().equals(sourceId)) { //$NON-NLS-1$
+				if (sourceId==null || sourceId.equals("") || source.getInfo().getId().equals(sourceId)) { //$NON-NLS-1$
 					IFilm show = source.getFilm(searchResult.getId(),filmUrl,null);
 					if (show != null) {
 						return show;

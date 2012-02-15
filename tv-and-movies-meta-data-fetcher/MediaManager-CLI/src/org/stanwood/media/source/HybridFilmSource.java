@@ -51,20 +51,22 @@ import org.stanwood.media.setup.ConfigException;
 public class HybridFilmSource implements ISource {
 
 	private ISource imdbSource;
-	private ISource tagChimpSource = new TagChimpSource();
+	private ISource tagChimpSource = new TagChimpSource(new TagChimpSourceInfo());
 	private Map<String,URL> urls = new HashMap<String,URL>();
 
 	/** The ID of the the source */
-	public static final String SOURCE_ID = "hybridFilm"; //$NON-NLS-1$
+	public static final String OLD_SOURCE_ID = "hybridFilm"; //$NON-NLS-1$
 
 	private String sourceId = null;
+	private HybridFilmSourceInfo sourceInfo;
 
 	/**
 	 * Used to create a instance of the source
+	 * @param sourceInfo The description of the the source
 	 * @throws SourceException Thrown if their are any problems
 	 */
-	public HybridFilmSource() throws SourceException {
-
+	public HybridFilmSource(HybridFilmSourceInfo sourceInfo) throws SourceException {
+		this.sourceInfo = sourceInfo;
 	}
 
 	/** {@inheritDoc} */
@@ -137,16 +139,6 @@ public class HybridFilmSource implements ISource {
 	}
 
 	/**
-	 * Get the id of the source.
-	 *
-	 * @return The id of the source
-	 */
-	@Override
-	public String getSourceId() {
-		return SOURCE_ID;
-	}
-
-	/**
 	 * This will get a film from the source. If the film can't be found, then it will return null.
 	 *
 	 * @param filmId The id of the film
@@ -165,10 +157,10 @@ public class HybridFilmSource implements ISource {
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
 			String value = tok.nextToken();
-			if (key.equals(imdbSource.getSourceId())) {
+			if (key.equals(imdbSource.getInfo().getId())) {
 				imdbFilm = imdbSource.getFilm(value,urls.get(key+"|"+value),file); //$NON-NLS-1$
 			}
-			else if (key.equals(tagChimpSource.getSourceId())) {
+			else if (key.equals(tagChimpSource.getInfo().getId())) {
 				tagChimpFilm = tagChimpSource.getFilm(value,urls.get(key+"|"+value),file); //$NON-NLS-1$
 			}
 		}
@@ -198,7 +190,7 @@ public class HybridFilmSource implements ISource {
 			}
 			film.setGenres(genres);
 			film.setRating(imdbFilm.getRating());
-			film.setSourceId(SOURCE_ID);
+			film.setSourceId(sourceInfo.getId());
 			film.setSummary(imdbFilm.getSummary());
 			film.setTitle(imdbFilm.getTitle());
 			film.setWriters(imdbFilm.getWriters());
@@ -254,7 +246,7 @@ public class HybridFilmSource implements ISource {
 
 		}
 		if (id!=null && id.length()>0) {
-			SearchResult result = new SearchResult(id.toString(),SOURCE_ID,newUrl,part,Mode.FILM);
+			SearchResult result = new SearchResult(id.toString(),sourceInfo.getId(),newUrl,part,Mode.FILM);
 			return result;
 		}
 
@@ -303,6 +295,12 @@ public class HybridFilmSource implements ISource {
 		else {
 			throw new SourceException(MessageFormat.format(Messages.getString("HybridFilmSource.UNSUPPORTED_PARAM"),key,getClass().getName())); //$NON-NLS-1$
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public ExtensionInfo<? extends ISource> getInfo() {
+		return sourceInfo;
 	}
 
 

@@ -56,7 +56,7 @@ public class FakeSourceInfo extends ExtensionInfo<FakeSource> {
 
 	@Override
 	protected FakeSource createExtension() throws ExtensionException {
-		return new FakeSource(mgr,addonId);
+		return new FakeSource(this,mgr,addonId);
 	}
 
 }

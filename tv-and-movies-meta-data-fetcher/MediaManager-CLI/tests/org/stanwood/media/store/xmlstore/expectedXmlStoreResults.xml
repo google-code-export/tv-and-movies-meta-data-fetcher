@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.1//EN" "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
-<store revision="1" version="2.1">
+<store revision="2" version="2.1">
   <show id="58448" imageUrl="http://image.com.com/tv/images/b.gif"
-    name="Eureka" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/show/58448/summary.html">
+    name="Eureka" sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com" url="http://www.tv.com/show/58448/summary.html">
     <description>
       <short><![CDATA[Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...]]></short>
       <long><![CDATA[Small town. Big secret.
@@ -78,7 +78,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
   </show>
   <show id="17552"
     imageUrl="http://image.com.com/tv/images/content_headers/program_new/17552.jpg"
-    name="Heroes" sourceId="xbmc-metadata.tvdb.com" url="http://www.tv.com/heroes/show/17552/summary.html">
+    name="Heroes" sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com" url="http://www.tv.com/heroes/show/17552/summary.html">
     <description>
       <short><![CDATA[Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspect...]]></short>
       <long><![CDATA[Heroes is a serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Some of the superheroes who will be introduced to the viewing audience include Peter Petrelli, an almost 30-something male nurse who suspects he might be able to fly, Isaac Mendez, a 28-year-old junkie who has the ability to paint images of the future when he is high, Niki Sanders, a 33-year-old Las Vegas showgirl who begins seeing strange things in mirrors, Hiro Nakamura, a 24-year-old Japanese comic-book geek who literally makes time stand still, D.L. Hawkins, a 31-year-old inmate who can walk through walls, Matt Parkman, a beat cop who can hear other people's thoughts, and Claire Bennet, a 17-year-old cheerleader who defies death at every turn. As the viewing audience is discovering the nature of each hero's powers, the heroes themselves are discovering what having superpowers means to them as well as the larger picture of where their superpowers come from. Tune in each week to see how these heroes are drawn together by their common interest of evading the series' antagonist who wants to harvest their super-DNA for himself. Their ultimate destiny is nothing less than saving the world! The series will star Greg Grunberg (Alias), Leonard Roberts (Buffy the Vampire Slayer), Milo Ventimiglia (Gilmore Girls), and Hayden Panettiere (Ally McBeal, Guiding Light). Tim Kring (Crossing Jordan, Chicago Hope) is the series' creator. The pilot is set to be directed by Dave Semel (American Dreams, Buffy, the Vampire Slayer, Beverly Hills, 90210). Heroes will be produced by NBC/Universal/Tailwind. Summary revised with help from: space-cowboy]]></long>
@@ -112,7 +112,7 @@ Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, Britis
     </season>
   </show>
   <film id="114814" imageUrl="http://test/image.jpg"
-    releaseDate="1995-08-25" sourceId="xbmc-metadata.themoviedb.org" studio="The studio" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">    
+    releaseDate="1995-08-25" sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.themoviedb.org" studio="The studio" title="The Usual Suspects" url="http://www.imdb.com/title/tt0114814/">    
     <description>
       <short><![CDATA[A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.]]></short>
       <long><![CDATA[Test description of the film]]></long>

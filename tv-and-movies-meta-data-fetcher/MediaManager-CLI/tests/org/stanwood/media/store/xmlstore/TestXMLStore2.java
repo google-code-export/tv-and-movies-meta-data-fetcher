@@ -18,6 +18,7 @@ import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
 import org.stanwood.media.util.FileHelper;
@@ -132,7 +133,7 @@ public class TestXMLStore2 {
 			summary.append("\n");
 			summary.append("Eureka is produced by NBC Universal Cable Studio and filmed in Vancouver, British Columbia, Canada.\n");
 			Assert.assertEquals(summary.toString(), show.getLongSummary());
-			Assert.assertEquals("xbmc-metadata.tvdb.com",show.getSourceId());
+			Assert.assertEquals(XBMCSource.class.getName()+"#metadata.tvdb.com",show.getSourceId());
 			Assert.assertEquals("http://image.com.com/tv/images/b.gif", show.getImageURL().toExternalForm());
 			Assert.assertEquals("Small town. Big secret. A car accident leads U.S. Marshal Jack Carter into the top-secret Pacific Northwest town of Eureka. For decades, the United States government has relocated the world's geniuses to Eureka, a town where innovation and chaos have lived hand in hand. Eureka is produced by NBC...", show.getShortSummary());
 			Assert.assertEquals("58448", show.getShowId());
@@ -242,7 +243,7 @@ public class TestXMLStore2 {
 			Assert.assertEquals("Drama",film.getPreferredGenre());
 			Assert.assertEquals(8.7F,film.getRating().getRating(),0);
 			Assert.assertEquals(35,film.getRating().getNumberOfVotes());
-			Assert.assertEquals("xbmc-metadata.themoviedb.org",film.getSourceId());
+			Assert.assertEquals(XBMCSource.class.getName()+"#metadata.themoviedb.org",film.getSourceId());
 			Assert.assertEquals("A boat has been destroyed, criminals are dead, and the key to this mystery lies with the only survivor and his twisted, convoluted story beginning with five career crooks in a seemingly random police lineup.",film.getSummary());
 			Assert.assertEquals("The Usual Suspects",film.getTitle());
 			Assert.assertEquals(1,film.getWriters().size());

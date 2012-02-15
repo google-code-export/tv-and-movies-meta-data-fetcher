@@ -38,7 +38,7 @@ public class HybridFilmSourceInfo extends ExtensionInfo<HybridFilmSource> {
 
 	@Override
 	protected HybridFilmSource createExtension() throws ExtensionException {
-		return new HybridFilmSource();
+		return new HybridFilmSource(this);
 	}
 
 }

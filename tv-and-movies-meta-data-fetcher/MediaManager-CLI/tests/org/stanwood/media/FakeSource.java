@@ -26,9 +26,9 @@ public class FakeSource extends XBMCSource {
 	 * @param addonId The ID of the sources XBMC addon
 	 * @throws XBMCException Thrown if their are any problems
 	 */
-	public FakeSource(XBMCAddonManager mgr, String addonId)
+	public FakeSource(FakeSourceInfo sourceInfo,XBMCAddonManager mgr, String addonId)
 			throws XBMCException {
-		super(mgr, addonId);
+		super(sourceInfo,mgr, addonId);
 	}
 
 	/** {@inheritDoc} */
