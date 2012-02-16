@@ -1,0 +1,5 @@
+<itunesController>
+	<users>
+		<user username="itunes" password="blah"/>
+	</users>
+</itunesController>
