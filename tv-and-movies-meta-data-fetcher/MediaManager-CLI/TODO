@@ -6,9 +6,8 @@ Version 2.1
 
 Bug fixes
 Add a getting started guide and link to a button in the installer
-Add more linux distribution packages.
-Make native MacOSX installer
-Make native Windows installer
+Get OpenSuSE rpms building again
+Add more Linux distribution packages.
 SeenDBFixer
     - Remove items that are not matching rename pattern, if their is a rename action
 Media Importer
@@ -17,11 +16,34 @@ Encode more metadata into mp4files
     - TVShows
         - Year: 
 Add ability to upgrade media dirs
-	- Upgrade stores
-		- MP4ItunesStore - New metadata. Check images are jpeg
-	- Fix Seen DB
-
+Add ability to upgrade MP4ItunesStore
+	- Store version in config file
+	- Files updated with new metadata 
+	- Check images are jpeg
+	- If using remote iTunes control server, tell itunes about the updated store
+Add tool to rename media files to have filenames without non ascii characters.
+Allow MP4 store to talk to iTunes via remote server
+Update docs
+	
 Version 2.2
+-----------
+Allow TV episodes to contain more than one episode
+	- Add rename pattern for the other episodes in the file
+Add support for finding Special Episode information and renaming the files	 
+Add support for Music Videos
+Add support for Music
+Make native MacOSX installer
+Make native Windows installer
+Replace windows .bat files with native .exe launchers
+Allow the checking for updates period to be configured (Default once a day)
+Add remove from store command line tool
+Extend patterns
+    * Allow formatting of elements like dates
+    * Allow formatting of strings to take only part of the string
+Local file Database store
+Remote Database store
+
+Version 2.3
 -----------
 
 Add a tool for specifying a Media's ID and changing all the stored data.
@@ -29,18 +51,10 @@ Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins.
 Implement a pure java MP4 Manager
 Option to delete anything that did not get renamed in the NFO folder
-Allow the checking for updates period to be configured (Default once a day)
-Add remove from store command line tool
-Extend patterns
-    * Allow formatting of elements like dates
-    * Allow formatting of strings to take only part of the string
 Create XBMC nfo files from a store instead of the source
     * Also test this with XBMC to make sure it works as expected
-Add a GUI to manage the XBMC addons
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
-Database store
 Deamon mode
 UPnP server
-Replace windows .bat files with native .exe launchers
 Add scripting support for sources, actions, stores and searching strategies
