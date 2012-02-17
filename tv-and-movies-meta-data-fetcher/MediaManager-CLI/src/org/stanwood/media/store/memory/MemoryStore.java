@@ -361,4 +361,10 @@ public class MemoryStore implements IStore {
 
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void fileUpdated(MediaDirectory mediaDirectory, File file)
+			throws StoreException {
+
+	}
 }

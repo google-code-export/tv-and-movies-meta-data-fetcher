@@ -258,5 +258,19 @@ public interface IStore extends IExtension  {
 	 */
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,IProgressMonitor monitor) throws StoreException ;
 
+	/**
+	 * This is called to check if a upgrade is needed and perform the upgrade if required
+	 * @param mediaDirectory The media directory been upgraded
+	 * @throws StoreException Thrown if thier are any problems
+	 */
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException;
+
+	/**
+	 * This is called when a file is updated within a media directory. This is typically called
+	 * during the upgrade process if the meta data in the file has changed.
+	 * @param mediaDirectory The media directory the file belongs to
+	 * @param file The media file
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public void fileUpdated(MediaDirectory mediaDirectory,File file) throws StoreException;
 }

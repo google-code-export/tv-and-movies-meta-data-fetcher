@@ -732,4 +732,10 @@ public class MP4ITunesStore implements IStore {
 //		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void fileUpdated(MediaDirectory mediaDirectory, File file)
+			throws StoreException {
+
+	}
 }

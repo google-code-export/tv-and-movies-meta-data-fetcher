@@ -186,6 +186,26 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	}
 
 	/**
+	 * Used to test that files can be removed
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test(timeout=10000)
+	public void testRefreshFiles() throws Exception {
+		client.connect(Inet4Address.getByName("localhost"), getPort());
+		client.login(USER , PASSWORD);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+
+		List<String> commandLog = getCommandLog();
+		Assert.assertEquals(5,commandLog.size());
+		Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
+		Assert.assertEquals("refreshTracks(tracks)",commandLog.get(1));
+	}
+
+	/**
 	 * Used to test that the pending files can be cleared
 	 * @throws Exception Thrown if their is a problem
 	 */

@@ -387,6 +387,18 @@ public class MediaDirectory {
 	}
 
 	/**
+	 * This is called to notify stores that a file has changed.
+	 * @param file The file that has changed
+	 * @throws StoreException Thrown if their are any problems
+	 */
+	public void fileChanged(File file) throws StoreException {
+		for (IStore store : stores) {
+			store.fileUpdated(this, file);
+		}
+	}
+
+
+	/**
 	 * This will search for a show id in the stores and sources. It will use the show directory as the name of the show
 	 * if needed.
 	 * @param mediaFile The file the media is stored in

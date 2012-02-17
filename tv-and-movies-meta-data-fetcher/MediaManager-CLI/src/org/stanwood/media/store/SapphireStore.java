@@ -432,4 +432,10 @@ public class SapphireStore implements IStore {
 
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void fileUpdated(MediaDirectory mediaDirectory, File file)
+			throws StoreException {
+
+	}
 }

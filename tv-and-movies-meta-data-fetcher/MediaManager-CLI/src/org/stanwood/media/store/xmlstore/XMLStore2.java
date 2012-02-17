@@ -1566,4 +1566,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		return null;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void fileUpdated(MediaDirectory mediaDirectory, File file)
+			throws StoreException {
+
+	}
 }

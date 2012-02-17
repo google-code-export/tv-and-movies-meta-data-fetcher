@@ -55,6 +55,8 @@ public class ITunesRemoteClient extends Thread {
 	public final static String CMD_REMOVE_DEAD_FILES = "REMOVEDEADFILES"; //$NON-NLS-1$
 	/** The LISTDEADFILES command text */
 	public final static String CMD_LIST_DEAD_FILES = "LISTDEADFILES"; //$NON-NLS-1$
+	/** The REFRESHFILES command text */
+	public final static String CMD_REFRESH_FILES = "REFRESHFILES"; //$NON-NLS-1$
 	/** The FILE command text */
 	public final static String CMD_FILE = "FILE"; //$NON-NLS-1$
 
