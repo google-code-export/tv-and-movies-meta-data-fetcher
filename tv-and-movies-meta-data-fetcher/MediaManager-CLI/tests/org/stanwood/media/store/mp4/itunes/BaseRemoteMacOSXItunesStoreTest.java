@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.itunes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +28,6 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	private static final int MIN_PORT_NUMBER = 1000;
 	private static final int MAX_PORT_NUMBER = 9000;
 
-	private File rubyHome;
 	private Integer port;
 	private Thread severThread = null;
 	private ScriptEngine jruby;
@@ -48,8 +47,6 @@ public class BaseRemoteMacOSXItunesStoreTest {
 			@Override
 			public void run() {
 				try {
-//					rubyHome = FileHelper.createTmpDir("RUBY_HOME");
-//					System.setProperty("ruby.home", rubyHome.getAbsolutePath());
 					System.setProperty("org.jruby.embed.compat.version", "RUBY1_9");
 					ScriptEngineManager scriptMgr = new ScriptEngineManager();
 					jruby = scriptMgr.getEngineByName("jruby");
@@ -168,11 +165,6 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 
 		port = null;
-
-		if (rubyHome!=null) {
-			FileHelper.delete(rubyHome);
-			rubyHome = null;
-		}
 		System.out.println("******** Server killed");
 	}
 
@@ -235,6 +227,10 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		return commandLog;
 	}
 
+	/**
+	 * Used to reset the command log before each test
+	 * @throws ScriptException Thrown if their is a problem
+	 */
 	protected void resetCommandLog() throws ScriptException {
 		if (started) {
 			getRuby().eval("ItunesController::DummyITunesController::COMMAND_LOG = []");

@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.itunes;
 
 import java.net.Inet4Address;
 import java.util.List;
@@ -33,6 +33,9 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		client = new ITunesRemoteClient();
 	}
 
+	/**
+	 * Used to destory the client
+	 */
 	@After
 	public void tearDown() {
 		client.disconnect();

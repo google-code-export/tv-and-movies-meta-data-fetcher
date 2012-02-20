@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.stanwood.media.store.mp4.IAtomString;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**

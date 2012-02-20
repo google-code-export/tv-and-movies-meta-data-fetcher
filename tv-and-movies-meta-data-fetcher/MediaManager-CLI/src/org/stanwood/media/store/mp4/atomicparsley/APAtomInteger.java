@@ -4,13 +4,13 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.stanwood.media.store.mp4.IAtom;
+import org.stanwood.media.store.mp4.IAtomInteger;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * Used to store mp4 number atom data
  */
-public class APAtomInteger extends AbstractAPAtom implements IAtom {
+public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 
 	private int value;
 
