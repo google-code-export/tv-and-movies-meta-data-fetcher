@@ -18,8 +18,11 @@ package org.stanwood.media.store.mp4;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -28,10 +31,12 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IEpisode;
@@ -43,11 +48,12 @@ import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.progress.IProgressMonitor;
+import org.stanwood.media.search.MediaSearcher;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
-import org.stanwood.media.store.mp4.atomicparsley.IAtomString;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
@@ -60,25 +66,28 @@ import org.stanwood.media.util.Version;
  * their meta data.
  * </p>
  * <p>
- * In order to function, store uses the command line tools provided by the MP4v2 project
- * {@link "http://code.google.com/p/mp4v2/"}. These must be installed on the PATH, or pointed
+ * In order to function, store uses the command line tools provided by the AtomicParsley application.
+ * Their are different forks of this application on the internet. The most feature rich version I've
+ * found is at {@link "https://bitbucket.org/wez/atomicparsley"}. Media manager uses this one to add
+ * atoms that some of the other versions can't. The applicaiton must be installed on the PATH, or pointed
  * to by the optional store parameters.
  * </p>
  * <p>
- * The mp4tags application does not support the setting of all fields that this store can handle,
- * a patched version of this file can be downloaded or installed via the installer. A warning will
- * be printed if this was not found.
+ * If using a version of AtomicParsley that does not support the setting of all fields that this store
+ * can handle, then a warning will be printed. A version with the above link that fully supports this store
+ * can downloaded from the MediaManager web site or installed via the installer.
  * </p>
  * <p>This store has following optional parameters:
  * 	<ul>
- * 		<li>mp4art - The path to the mp4art command</li>
- *      <li>mp4info - The path to the mp4info command</li>
- *      <li>mp4tags - The path to the mp4tags command</li>
- *      <li>mp4file - The path to the mp4file command</li>
+ * 		<li>atomicparsley - The path to the AtomicParsley command</li>
  *  </ul>
  * </p>
  */
 public class MP4ITunesStore implements IStore {
+
+	private static final String CONFIG_VERSION_PROP = "version"; //$NON-NLS-1$
+	private static final String CONFIG_REVISION_PROP = "revision"; //$NON-NLS-1$
+	private static final String CONFIG_FILE_NAME = ".mp4-itunes-store.properties"; //$NON-NLS-1$
 
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 
@@ -677,7 +686,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	private void upgradeMediaFiles(MediaDirectory mediaDir,File file) throws MP4Exception {
+	private void upgradeMediaFiles(MediaDirectory mediaDir,File file) throws StoreException,MP4Exception {
 		if (file.isDirectory()) {
 			for (File d : file.listFiles()) {
 				upgradeMediaFiles(mediaDir,d);
@@ -691,9 +700,8 @@ public class MP4ITunesStore implements IStore {
 		}
 	}
 
-	private StoreVersion getVersion(File file) throws MP4Exception {
+	private StoreVersion getVersion(File file,List<IAtom> atoms) throws StoreException,MP4Exception {
 		StoreVersion version = new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
-		List<IAtom> atoms = mp4Manager.listAtoms(file);
 		for (IAtom atom : atoms) {
 			if (atom.getKey() == MP4AtomKey.MM_VERSION && atom instanceof IAtomString) {
 				String value = ((IAtomString)atom).getValue();
@@ -705,31 +713,134 @@ public class MP4ITunesStore implements IStore {
 		return version;
 	}
 
-	private void doUpgrade(MediaDirectory mediaDir,File file) throws MP4Exception {
-		StoreVersion currentVersion = getVersion(file);
+	private void doUpgrade(MediaDirectory mediaDir,File file) throws StoreException, MP4Exception {
+		List<IAtom> atoms = mp4Manager.listAtoms(file);
+		StoreVersion currentVersion = getVersion(file,atoms);
 		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
-			upgradeAtoms(mediaDir,file);
+			upgradeAtoms(mediaDir,file,atoms);
 		}
 		else {
 			if (currentVersion.getRevision()<STORE_VERSION.getRevision()) {
-				upgradeAtoms(mediaDir,file);
+				upgradeAtoms(mediaDir,file,atoms);
 			}
 		}
 	}
 
-	private void upgradeAtoms(MediaDirectory mediaDir,File file) {
-
+	private void upgradeAtoms(MediaDirectory mediaDir,File file,List<IAtom> atoms) throws StoreException {
+		try {
+			MediaSearcher searcher = new MediaSearcher(mediaDir.getController());
+			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
+				IEpisode episode = searcher.getTVEpisode(mediaDir, file,true);
+				if (episode!=null) {
+					updateEpsiode(mp4Manager, file, episode);
+					mediaDir.fileChanged(file);
+				}
+			}
+			else {
+				IFilm film = searcher.getFilm(mediaDir, file,true);
+				if (film!=null) {
+					Integer part = null;
+					for (IVideoFile vfile : film.getFiles()) {
+						if (vfile.getLocation().equals(file)) {
+							part = vfile.getPart();
+							break;
+						}
+					}
+					updateFilm(mp4Manager,file, film,part);
+					mediaDir.fileChanged(file);
+				}
+			}
+		}
+		catch (StoreException e) {
+			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+		} catch (ConfigException e) {
+			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+		} catch (MP4Exception e) {
+			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+		} catch (ActionException e) {
+			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
-//		try {
-//			upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
+//		StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
+//		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
+//			try {
+//				upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
+//			}
+//			catch (MP4Exception e) {
+//				throw new StoreException("Unable to upgrade store",e);
+//			}
 //		}
-//		catch (MP4Exception e) {
-//			throw new StoreException("Unable to upgrade store",e);
-//		}
+//		saveStoreVersion(mediaDirectory);
+	}
+
+	protected void saveStoreVersion(MediaDirectory mediaDirectory)
+			throws StoreException {
+		Properties props = new Properties();
+		props.setProperty(CONFIG_VERSION_PROP, STORE_VERSION.getVersion().toString());
+		props.setProperty(CONFIG_REVISION_PROP, String.valueOf(STORE_VERSION.getRevision()));
+		OutputStream fs  = null;
+		File file;
+		try {
+			file = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
+		} catch (ConfigException e1) {
+			throw new StoreException("Unable to read configuration",e1);
+		}
+		try {
+			fs = new FileOutputStream(file);
+			props.store(fs, "");
+		}
+		catch (IOException e) {
+			throw new StoreException(MessageFormat.format("Unable to wtite configuration file ''{0}''",file),e);
+		}
+		finally  {
+			if (fs!=null) {
+				try {
+					fs.close();
+				} catch (IOException e) {
+					log.error(MessageFormat.format("Unable to close file: {0}",file),e);
+				}
+			}
+		}
+	}
+
+	private StoreVersion getCurrentVersion(MediaDirectory mediaDirectory) throws StoreException {
+		try {
+			File configFile = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
+			if (configFile.exists()) {
+				return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
+			}
+			Properties props = new Properties();
+			InputStream is = null;
+			try {
+				is = new FileInputStream(configFile);
+				props.load(is);
+				int revision =1;
+				try {
+					revision = Integer.parseInt(props.getProperty(CONFIG_REVISION_PROP,"1"));
+				}
+				catch (NumberFormatException e) {
+
+				}
+				return new StoreVersion(new Version(props.getProperty(CONFIG_VERSION_PROP, "2.0")),revision);
+			} catch (FileNotFoundException e) {
+				return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
+			}
+			finally {
+				if (is!=null) {
+					is.close();
+				}
+			}
+		}
+		catch (ConfigException e) {
+			throw new StoreException("Unable to read store configuration",e);
+		}
+		catch (IOException e) {
+			throw new StoreException("Unable to read store configuration",e);
+		}
 	}
 
 	/** {@inheritDoc} */

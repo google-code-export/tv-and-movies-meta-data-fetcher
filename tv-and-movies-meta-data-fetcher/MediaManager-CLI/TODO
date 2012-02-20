@@ -15,18 +15,19 @@ Media Importer
 Encode more metadata into mp4files
     - TVShows
         - Year: 
-Add ability to upgrade media dirs
-Add ability to upgrade MP4ItunesStore
-	- Store version in config file
-	- Files updated with new metadata 
+Add ability to upgrade media dirs (inprogress)
+Add ability to upgrade MP4ItunesStore (inprogress)
+	- Store version in config file (inprogress)
+	- Files updated with new metadata  (inprogress)
 	- Check images are jpeg
-	- If using remote iTunes control server, tell itunes about the updated store
+	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
 Add tool to rename media files to have filenames without non ascii characters.
-Allow MP4 store to talk to iTunes via remote server
+Allow MP4 store to talk to iTunes via remote server (inprogress)
 Update docs
 	
 Version 2.2
 -----------
+Update to latest branch of XBMC scrapers
 Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
 Add support for finding Special Episode information and renaming the files	 

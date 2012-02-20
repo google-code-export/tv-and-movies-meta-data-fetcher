@@ -1,4 +1,4 @@
-package org.stanwood.media.store.mp4;
+package org.stanwood.media.store.mp4.itunes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.mp4.Messages;
 
 /**
  * This is a client to the iTunes control server
@@ -59,7 +60,6 @@ public class ITunesRemoteClient extends Thread {
 	public final static String CMD_REFRESH_FILES = "REFRESHFILES"; //$NON-NLS-1$
 	/** The FILE command text */
 	public final static String CMD_FILE = "FILE"; //$NON-NLS-1$
-
 	private Socket socket = null;
 	private PrintWriter out = null;
 	private BufferedReader in = null;
@@ -88,10 +88,10 @@ public class ITunesRemoteClient extends Thread {
 			socket = new Socket(hostname, port);
 			out = new PrintWriter(socket.getOutputStream(),true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			log.info("Connecting to itunes server " + hostname+":"+port);
+			log.info(MessageFormat.format(Messages.getString("ITunesRemoteClient.CONNECTION_TO_SERVER"),hostname,port)); //$NON-NLS-1$
 			start();
 			if (log.isDebugEnabled()) {
-				log.debug("Connected, wating for response...");
+				log.debug("Connected, wating for response..."); //$NON-NLS-1$
 			}
 			waitForCode(null, 1,DEFAILT_TIMEOUT);
 			if (log.isDebugEnabled()) {
@@ -191,7 +191,7 @@ public class ITunesRemoteClient extends Thread {
 					if (lines.size()>0) {
 						line = lines.remove(0);
 						if (log.isDebugEnabled()) {
-							log.debug("POP: "+line);
+							log.debug("POP: "+line); //$NON-NLS-1$
 						}
 					}
 				}

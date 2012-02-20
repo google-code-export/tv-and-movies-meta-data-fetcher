@@ -14,11 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.mp4.atomicparsley;
+package org.stanwood.media.store.mp4;
 
-import org.stanwood.media.store.mp4.IAtom;
+public interface IAtomInteger extends IAtom {
 
-public interface IAtomString extends IAtom {
-
-	public String getValue();
+	public int getValue();
 }
