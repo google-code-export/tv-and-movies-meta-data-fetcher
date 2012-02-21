@@ -24,16 +24,15 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.store.mp4.Messages;
 
 /**
  * <p>
- * This store extends {@link MP4ITunesStore} so inherits all the parameters
- * of this store. In addition this store will talk to the remote iTunes control
- * server to tell iTunes of changes in the media directories.
+ * This store is used to inform itunes of file changes in a media directory. It does this
+ * by talking to a remote server running on the same machine as iTunes. The server details can
+ * be found at {@link "http://code.google.com/p/itunes-remote-control-server/"}.
  * </p>
- * <p>This store has following parameters in addition to the parameters of {@link MP4ITunesStore}:
+ * <p>This store has following parameters:
  * 	<ul>
  * 		<li>hostname - Required parameter giving hostname of the server</li>
  *      <li>port - Optional parameter giving port number of the server, defaults to 7000</li>
