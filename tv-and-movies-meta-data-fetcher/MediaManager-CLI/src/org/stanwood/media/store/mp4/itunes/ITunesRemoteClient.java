@@ -26,7 +26,8 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.mp4.Messages;
 
 /**
- * This is a client to the iTunes control server
+ * This is a client to the iTunes control server. It is used to send and receive messages.
+ * Details of the server can be found at {@link "http://code.google.com/p/itunes-remote-control-server/"}.
  */
 public class ITunesRemoteClient extends Thread {
 
