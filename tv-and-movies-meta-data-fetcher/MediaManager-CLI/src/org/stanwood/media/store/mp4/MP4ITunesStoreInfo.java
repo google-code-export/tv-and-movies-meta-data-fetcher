@@ -41,6 +41,6 @@ public class MP4ITunesStoreInfo extends ExtensionInfo<MP4ITunesStore> {
 
 	@Override
 	protected MP4ITunesStore createExtension() {
-		return new MP4ITunesStore();
+		return new MP4ITunesStore(this);
 	}
 }

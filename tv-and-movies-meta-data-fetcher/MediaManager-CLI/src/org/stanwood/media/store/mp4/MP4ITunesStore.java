@@ -85,18 +85,24 @@ import org.stanwood.media.util.Version;
  */
 public class MP4ITunesStore implements IStore {
 
+	private static final String CONFIG_DIRECTORY_PROP = "directory"; //$NON-NLS-1$
+	private static final String CONFIG_NUM_DIRS = "numDirs"; //$NON-NLS-1$
 	private static final String CONFIG_VERSION_PROP = "version"; //$NON-NLS-1$
 	private static final String CONFIG_REVISION_PROP = "revision"; //$NON-NLS-1$
-	private static final String CONFIG_FILE_NAME = ".mp4-itunes-store.properties"; //$NON-NLS-1$
+	private static final String CONFIG_FILE_NAME = "mp4-itunes-store.properties"; //$NON-NLS-1$
 
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 
 	private IMP4Manager mp4Manager;
 	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
 	private String atomicParsleyCmd;
+	private MP4ITunesStoreInfo storeInfo;
 
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),2); //$NON-NLS-1$
 
+	public MP4ITunesStore(MP4ITunesStoreInfo storeInfo) {
+		this.storeInfo = storeInfo;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -781,6 +787,7 @@ public class MP4ITunesStore implements IStore {
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
 //		StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
 //		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
+//			log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
 //			try {
 //				upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
 //			}
@@ -788,37 +795,86 @@ public class MP4ITunesStore implements IStore {
 //				throw new StoreException("Unable to upgrade store",e);
 //			}
 //			saveStoreVersion(mediaDirectory);
+//			log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
 //		}
 	}
 
 	protected void saveStoreVersion(MediaDirectory mediaDirectory)
 			throws StoreException {
-		Properties props = new Properties();
-		props.setProperty(CONFIG_VERSION_PROP, STORE_VERSION.getVersion().toString());
-		props.setProperty(CONFIG_REVISION_PROP, String.valueOf(STORE_VERSION.getRevision()));
-		OutputStream fs  = null;
-		File file;
+		File configFile;
 		try {
-			file = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
+			configFile = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
 		} catch (ConfigException e1) {
-			throw new StoreException("Unable to read configuration",e1);
+			throw new StoreException("Unable to read store version",e1);
 		}
+		Properties props = readStoreConfig(mediaDirectory, configFile);
+		Integer num = findMediaDirNumber(mediaDirectory,props);
+		if (num==null) {
+			num = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0"));
+			props.setProperty(CONFIG_NUM_DIRS,String.valueOf(num+1));
+		}
+
+		props.setProperty(CONFIG_DIRECTORY_PROP+"_"+num, mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath());
+		props.setProperty(CONFIG_VERSION_PROP+"_"+num, STORE_VERSION.getVersion().toString());
+		props.setProperty(CONFIG_REVISION_PROP+"_"+num, String.valueOf(STORE_VERSION.getRevision()));
+
+		OutputStream fs  = null;
 		try {
-			fs = new FileOutputStream(file);
+			fs = new FileOutputStream(configFile);
 			props.store(fs, "");
+
 		}
 		catch (IOException e) {
-			throw new StoreException(MessageFormat.format("Unable to wtite configuration file ''{0}''",file),e);
+			throw new StoreException(MessageFormat.format("Unable to wtite configuration file ''{0}''",configFile),e);
 		}
 		finally  {
 			if (fs!=null) {
 				try {
 					fs.close();
 				} catch (IOException e) {
-					log.error(MessageFormat.format("Unable to close file: {0}",file),e);
+					log.error(MessageFormat.format("Unable to close file: {0}",configFile),e);
 				}
 			}
 		}
+	}
+
+	protected Properties readStoreConfig(MediaDirectory mediaDirectory,
+			File configFile) throws StoreException {
+		Properties props = new Properties();
+		if (configFile.exists()) {
+			InputStream is = null;
+			try {
+				is = new FileInputStream(configFile);
+				props.load(is);
+			} catch (FileNotFoundException e) {
+
+			} catch (IOException e) {
+				throw new StoreException("Unable to read store configuration",e);
+			}
+			finally {
+				if (is!=null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						log.error("Unable to close stream",e);
+					}
+				}
+			}
+		}
+		return props;
+	}
+
+
+
+	private Integer findMediaDirNumber(MediaDirectory mediaDirectory,Properties props) {
+		int numberStores = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0"));
+		for (int i=0;i<numberStores;i++) {
+			String dir = props.getProperty(CONFIG_DIRECTORY_PROP+"_"+i); //$NON-NLS-1$
+			if (dir!=null && dir.equals(mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
+				return i;
+			}
+		}
+		return null;
 	}
 
 	private StoreVersion getCurrentVersion(MediaDirectory mediaDirectory) throws StoreException {
@@ -827,32 +883,26 @@ public class MP4ITunesStore implements IStore {
 			if (!configFile.exists()) {
 				return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 			}
-			Properties props = new Properties();
-			InputStream is = null;
-			try {
-				is = new FileInputStream(configFile);
-				props.load(is);
-				int revision =1;
-				try {
-					revision = Integer.parseInt(props.getProperty(CONFIG_REVISION_PROP,"1"));
-				}
-				catch (NumberFormatException e) {
+			Properties props = readStoreConfig(mediaDirectory, configFile);
 
+			Integer i= findMediaDirNumber(mediaDirectory,props);
+			if (i!=null) {
+				String dir = props.getProperty(CONFIG_DIRECTORY_PROP+"_"+i); //$NON-NLS-1$
+				if (dir.equals(mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
+					int revision =1;
+					try {
+						revision = Integer.parseInt(props.getProperty(CONFIG_REVISION_PROP+"_"+i,"1")); //$NON-NLS-1$
+					}
+					catch (NumberFormatException e) {
+
+					}
+					return new StoreVersion(new Version(props.getProperty(CONFIG_VERSION_PROP+"_"+i, "2.0")),revision);
 				}
-				return new StoreVersion(new Version(props.getProperty(CONFIG_VERSION_PROP, "2.0")),revision);
-			} catch (FileNotFoundException e) {
-				return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 			}
-			finally {
-				if (is!=null) {
-					is.close();
-				}
-			}
+
+			return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 		}
 		catch (ConfigException e) {
-			throw new StoreException("Unable to read store configuration",e);
-		}
-		catch (IOException e) {
 			throw new StoreException("Unable to read store configuration",e);
 		}
 	}
