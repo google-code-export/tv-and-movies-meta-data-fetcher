@@ -52,7 +52,6 @@ public class MediaSearcher {
 	private List<MediaDirectory> mediaDirs;
 	private boolean testMode = false;
 
-
 	public MediaSearcher(Controller controller) throws ConfigException {
 		this.controller = controller;
 		if (controller!=null) {
@@ -116,7 +115,7 @@ public class MediaSearcher {
 	}
 
 
-	public IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
+	public static IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
 				IFilm film = store.getFilm(dir,file);
@@ -138,7 +137,7 @@ public class MediaSearcher {
 		}
 	}
 
-	protected SearchResult findFilm(MediaDirectory dir, File file,boolean useSources) throws ActionException {
+	protected static SearchResult findFilm(MediaDirectory dir, File file,boolean useSources) throws ActionException {
 		try {
 			SearchResult result = searchForId(dir,file,useSources);
 			if (result==null) {
@@ -156,7 +155,7 @@ public class MediaSearcher {
 		}
 	}
 
-	private SearchResult searchForId(MediaDirectory dir,File file,boolean useSources) throws MalformedURLException, SourceException, StoreException, IOException
+	private static SearchResult searchForId(MediaDirectory dir,File file,boolean useSources) throws MalformedURLException, SourceException, StoreException, IOException
 	{
 		SearchResult result;
 		result = dir.searchForVideoId(file,useSources);
@@ -164,7 +163,7 @@ public class MediaSearcher {
 
 	}
 
-	private IFilm getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
+	private static IFilm getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
 		if (!file.exists()) {
 			return null;
 		}
@@ -175,7 +174,7 @@ public class MediaSearcher {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
 			}
-			if (!testMode) {
+			if (!dir.getController().isTestRun()) {
 				boolean found = false;
 				Integer maxPart = 0;
 				for (IVideoFile vf : film.getFiles()) {
@@ -214,7 +213,7 @@ public class MediaSearcher {
 		}
 	}
 
-	public IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources) throws ActionException {
+	public static IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		boolean refresh = false;
 		try {
 			for (IStore store : dir.getStores()) {
@@ -286,7 +285,7 @@ public class MediaSearcher {
 	 * @param film The film information
 	 * @return The part number or null if it does not have one
 	 */
-	public Integer getFilmPart(MediaDirectory dir,File file, IFilm film) {
+	public static Integer getFilmPart(MediaDirectory dir,File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
 			for (IVideoFile vf : film.getFiles()) {

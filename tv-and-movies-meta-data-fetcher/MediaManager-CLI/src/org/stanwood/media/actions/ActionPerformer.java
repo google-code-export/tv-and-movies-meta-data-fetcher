@@ -60,7 +60,6 @@ public class ActionPerformer implements IActionEventHandler {
 	private File nativeFolder;
 	private File configDir;
 	private SeenDatabase seenDb;
-	private MediaSearcher searcher;
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -79,7 +78,7 @@ public class ActionPerformer implements IActionEventHandler {
 			this.configDir = controller.getConfigDir();
 
 		}
-		this.searcher = new MediaSearcher(controller);
+
 	}
 
 	/**
@@ -257,9 +256,9 @@ public class ActionPerformer implements IActionEventHandler {
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
 			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-				IFilm film = searcher.getFilm(dir,file,true);
+				IFilm film = MediaSearcher.getFilm(dir,file,true);
 				if (film!=null) {
-					Integer part = searcher.getFilmPart(dir,file, film);
+					Integer part = MediaSearcher.getFilmPart(dir,file, film);
 					for (IAction action : actions) {
 						action.perform(dir,film,file,part,this);
 					}
@@ -269,7 +268,7 @@ public class ActionPerformer implements IActionEventHandler {
 				}
 			}
 			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
-				IEpisode episode = searcher.getTVEpisode(dir, file,true);
+				IEpisode episode = MediaSearcher.getTVEpisode(dir, file,true);
 				if (episode!=null) {
 					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);
