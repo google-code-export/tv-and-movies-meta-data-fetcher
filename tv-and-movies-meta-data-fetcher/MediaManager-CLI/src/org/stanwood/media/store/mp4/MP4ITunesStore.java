@@ -693,11 +693,27 @@ public class MP4ITunesStore implements IStore {
 			}
 		}
 		else {
-			String ext = FileHelper.getExtension(file);
-			if (ext.equals("m4v") || ext.equals("mp4")) {  //$NON-NLS-1$//$NON-NLS-2$
-				doUpgrade(mediaDir,file);
+			if (isItunesExtension(file)) {
+				List<IAtom> atoms = mp4Manager.listAtoms(file);
+				if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
+					doUpgrade(atoms,mediaDir,file);
+				}
 			}
 		}
+	}
+
+	private boolean hasAtom(List<IAtom> atoms, MP4AtomKey type) {
+		for (IAtom atom : atoms) {
+			if (atom.getKey().equals(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean isItunesExtension(File file) {
+		String ext = FileHelper.getExtension(file);
+		return (ext.equals("m4v") || ext.equals("mp4"));  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private StoreVersion getVersion(File file,List<IAtom> atoms) throws StoreException,MP4Exception {
@@ -706,15 +722,16 @@ public class MP4ITunesStore implements IStore {
 			if (atom.getKey() == MP4AtomKey.MM_VERSION && atom instanceof IAtomString) {
 				String value = ((IAtomString)atom).getValue();
 				int pos = value.indexOf(" "); //$NON-NLS-1$
-				version.setVersion(new Version(value.substring(pos,0)));
+				version.setVersion(new Version(value.substring(0,pos)));
 				version.setRevision(Integer.parseInt(value.substring(pos+1)));
+				return version;
 			}
 		}
 		return version;
 	}
 
-	private void doUpgrade(MediaDirectory mediaDir,File file) throws StoreException, MP4Exception {
-		List<IAtom> atoms = mp4Manager.listAtoms(file);
+	private void doUpgrade(List<IAtom> atoms,MediaDirectory mediaDir,File file) throws StoreException, MP4Exception {
+
 		StoreVersion currentVersion = getVersion(file,atoms);
 		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
 			upgradeAtoms(mediaDir,file,atoms);
@@ -728,16 +745,15 @@ public class MP4ITunesStore implements IStore {
 
 	private void upgradeAtoms(MediaDirectory mediaDir,File file,List<IAtom> atoms) throws StoreException {
 		try {
-			MediaSearcher searcher = new MediaSearcher(mediaDir.getController());
 			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
-				IEpisode episode = searcher.getTVEpisode(mediaDir, file,true);
+				IEpisode episode = MediaSearcher.getTVEpisode(mediaDir, file,true);
 				if (episode!=null) {
 					updateEpsiode(mp4Manager, file, episode);
 					mediaDir.fileChanged(file);
 				}
 			}
 			else {
-				IFilm film = searcher.getFilm(mediaDir, file,true);
+				IFilm film = MediaSearcher.getFilm(mediaDir, file,true);
 				if (film!=null) {
 					Integer part = null;
 					for (IVideoFile vfile : film.getFiles()) {
@@ -752,8 +768,6 @@ public class MP4ITunesStore implements IStore {
 			}
 		}
 		catch (StoreException e) {
-			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
-		} catch (ConfigException e) {
 			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
 		} catch (MP4Exception e) {
 			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
@@ -773,8 +787,8 @@ public class MP4ITunesStore implements IStore {
 //			catch (MP4Exception e) {
 //				throw new StoreException("Unable to upgrade store",e);
 //			}
+//			saveStoreVersion(mediaDirectory);
 //		}
-//		saveStoreVersion(mediaDirectory);
 	}
 
 	protected void saveStoreVersion(MediaDirectory mediaDirectory)
@@ -810,7 +824,7 @@ public class MP4ITunesStore implements IStore {
 	private StoreVersion getCurrentVersion(MediaDirectory mediaDirectory) throws StoreException {
 		try {
 			File configFile = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
-			if (configFile.exists()) {
+			if (!configFile.exists()) {
 				return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 			}
 			Properties props = new Properties();
