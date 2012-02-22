@@ -18,12 +18,14 @@ Encode more metadata into mp4files
 Add ability to upgrade media dirs (inprogress)
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Store version in config file (inprogress)
+		- Store version info for all media dirs in config file	
 	- Files updated with new metadata  (inprogress)
 	- Check images are jpeg
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
 Add tool to rename media files to have filenames without non ascii characters.
 Allow MP4 store to talk to iTunes via remote server (inprogress)
 Update docs
+Add ability to do a search and replace on filenames been sent to the remote itunes server
 	
 Version 2.2
 -----------
