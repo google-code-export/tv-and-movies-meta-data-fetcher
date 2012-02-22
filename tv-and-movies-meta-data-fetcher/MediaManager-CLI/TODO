@@ -4,7 +4,6 @@ TODO
 Version 2.1
 -------------
 
-Bug fixes
 Add a getting started guide and link to a button in the installer
 Get OpenSuSE rpms building again
 Add more Linux distribution packages.
@@ -17,8 +16,6 @@ Encode more metadata into mp4files
         - Year: 
 Add ability to upgrade media dirs (inprogress)
 Add ability to upgrade MP4ItunesStore (inprogress)
-	- Store version in config file (inprogress)
-		- Store version info for all media dirs in config file	
 	- Files updated with new metadata  (inprogress)
 	- Check images are jpeg
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
