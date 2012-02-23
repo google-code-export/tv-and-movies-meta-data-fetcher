@@ -55,7 +55,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 * Used to test connecting to the server
 	 * @throws Exception Thrown if their is a problem
 	 */
-	@Test/*(timeout=10000)*/
+	@Test(timeout=10000)
 	public void testConnect() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
@@ -91,8 +91,8 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		}
 		Assert.assertEquals(0,getCommandLog().size());
 		client.disconnect();
-		tearDownServer();
-		setupServer();
+//		tearDownServer();
+//		setupServer();
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		}
 		Assert.assertEquals(0,getCommandLog().size());
 		client.disconnect();
-		tearDownServer();
-		setupServer();
+//		tearDownServer();
+//		setupServer();
 	}
 
 
