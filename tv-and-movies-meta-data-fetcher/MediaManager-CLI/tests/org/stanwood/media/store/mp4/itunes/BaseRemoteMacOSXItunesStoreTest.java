@@ -12,9 +12,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -28,18 +28,19 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	private static final int MIN_PORT_NUMBER = 1000;
 	private static final int MAX_PORT_NUMBER = 9000;
 
-	private Integer port;
-	private Thread severThread = null;
-	private ScriptEngine jruby;
-	protected Throwable exception;
-	private boolean started;
+	private static Integer port;
+	private static Thread severThread = null;
+	private static ScriptEngine jruby;
+	private static Throwable exception;
+	private static boolean started;
+
 
 	/**
 	 * Used to start the dummy ruby itunes server before tests run
 	 * @throws Throwable Thrown if their is a problrm
 	 */
-	@Before
-	public void setupServer() throws Throwable {
+	@BeforeClass
+	public static void setupServer() throws Throwable {
 		System.out.println("******** Starting server");
 		started = false;
 		severThread = new Thread("dummyServer.rb") {
@@ -47,19 +48,21 @@ public class BaseRemoteMacOSXItunesStoreTest {
 			@Override
 			public void run() {
 				try {
-					System.setProperty("org.jruby.embed.compat.version", "RUBY1_9");
-					ScriptEngineManager scriptMgr = new ScriptEngineManager();
-					jruby = scriptMgr.getEngineByName("jruby");
+					setupRuby();
 					Assert.assertNotNull(jruby);
 					port = getPortNumber();
 					Assert.assertNotNull(port);
 
 					startServer();
+					started = false;
 				}
 				catch (Throwable e) {
+					e.printStackTrace();
 					exception = e;
 				}
 			}
+
+
 		};
 		severThread.start();
 
@@ -78,7 +81,14 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 	}
 
-	protected File createConfigFile(String username,String password) throws IOException, FileNotFoundException {
+	private static void setupRuby() {
+		System.setProperty("org.jruby.embed.compat.version", "RUBY1_9");
+
+		ScriptEngineManager scriptMgr = new ScriptEngineManager();
+		jruby = scriptMgr.getEngineByName("jruby");
+	}
+
+	protected static File createConfigFile(String username,String password) throws IOException, FileNotFoundException {
 		File configFile = FileHelper.createTempFile("config", ".xml");
 		PrintStream ps = null;
 		try {
@@ -148,8 +158,8 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 * Used to close down the dummy ruby itunes control server
 	 * @throws Throwable Thrown if their is a problem
 	 */
-	@After
-	public void tearDownServer() throws Throwable {
+	@AfterClass
+	public static void tearDownServer() throws Throwable {
 		killRubyThreads();
 		System.out.println("******** Killing server");
 		if (severThread!=null) {
@@ -178,7 +188,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		return port;
 	}
 
-	private void startServer() throws  IOException, ScriptException {
+	private static void startServer() throws  IOException, ScriptException {
 		final File configFile = createConfigFile(USER,PASSWORD);
 //		jruby.getContext().setAttribute(ScriptEngine.ARGV, new String[] {"--config",configFile.getAbsolutePath(),"--port",String.valueOf(port)}, ScriptContext.ENGINE_SCOPE);
 //		URL url = getClass().getClassLoader().getResource("/bin/dummyiTunesController.rb");
@@ -194,15 +204,16 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		script.append("\n");
 		script.append("controller = ItunesController::DummyITunesController.new\n");
 		script.append("SERVER=ItunesController::ITunesControlServer.new(config,"+port+",controller)\n");
-		script.append("SERVER.start\n");
+		script.append("SERVER.start(1)\n");
 
-		jruby.eval(script.toString());
+		executeRubyScript(script.toString());
 		script = new StringBuilder();
 		started = true;
 		script.append("SERVER.join\n");
-		jruby.eval(script.toString());
-
-//		jruby.eval("SERVER.join\n");
+		executeRubyScript(script.toString());
+		started = false;
+//		started = true;
+//		executeRubyScript("SERVER.join\n");
 
 	}
 
@@ -212,7 +223,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 * Used to get the ruby scripting engine
 	 * @return The ruby scripting engine
 	 */
-	protected ScriptEngine getRuby() {
+	protected static ScriptEngine getRuby() {
 		return jruby;
 	}
 
@@ -223,7 +234,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<String>getCommandLog() throws ScriptException {
-		List<String>commandLog = (List<String>) getRuby().eval("ItunesController::DummyITunesController::COMMAND_LOG");
+		List<String>commandLog = (List<String>) executeRubyScript("ItunesController::DummyITunesController::COMMAND_LOG");
 		return commandLog;
 	}
 
@@ -233,16 +244,27 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 */
 	protected void resetCommandLog() throws ScriptException {
 		if (started) {
-			getRuby().eval("ItunesController::DummyITunesController::COMMAND_LOG = []");
+			executeRubyScript("ItunesController::DummyITunesController::COMMAND_LOG = []");
 		}
 	}
 
-	private void killRubyThreads() throws ScriptException {
+	protected static Object executeRubyScript(String script) throws ScriptException {
+		return getRuby().eval(script);
+	}
+
+	private static void killRubyThreads() throws ScriptException {
 		if (started) {
 			StringBuilder script = new StringBuilder();
+			script.append("SERVER.shutdown\n");
 			script.append("SERVER.stop\n");
-			getRuby().eval(script.toString());
-			started = false;
+			executeRubyScript(script.toString());
+			while (started) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
