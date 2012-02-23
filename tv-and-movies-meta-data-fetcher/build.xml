@@ -35,7 +35,7 @@
 	<path id="fop.libs.classpath">
 		<fileset dir="${libs.dir}/fop" includes="*.jar" />
 	</path>
-		
+    	
 	<taskdef name="izpack" classname="com.izforge.izpack.ant.IzPackTask">
 		<classpath refid="installer.libs.classpath"/>
 	</taskdef>
@@ -137,20 +137,25 @@
 			<replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
 			<replacefilter token="@@mode@@" value="0"/>
 		</replace>
-		
-	    <xslt processor="trax"  style="${docbook.home}/fo/docbook.xsl"	         	     	
-	            basedir="${userguide.dir}/xml-updated"
-	            extension=".fo"
-	            destdir="${fo.dir}" />
-		
-		<xslt processor="trax" style="${docbook.home}/html/docbook.xsl"	         	     	
-			            basedir="${userguide.dir}/xml-updated"
-			            extension=".html"
-			            destdir="${userguide.dir}/html" />	
-
-		<fop format="application/pdf" 
-			 fofile="${fo.dir}/docbook.fo" 
-			 outfile="${userguide.dir}/userguide.pdf" />
+		 
+        <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${fo.dir}/docbook.fo"/>
+            <arg value="${docbook.home}/fo/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
+        
+        <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${userguide.dir}/html/userguide.html"/>
+            <arg value="${docbook.home}/html/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
+        
+        <fop format="application/pdf" 
+             fofile="${fo.dir}/docbook.fo" 
+             outfile="${userguide.dir}/userguide.pdf" >        
+         </fop>
 		
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
