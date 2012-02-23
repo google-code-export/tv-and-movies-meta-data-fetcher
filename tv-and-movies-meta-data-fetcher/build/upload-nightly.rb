@@ -14,7 +14,7 @@ def executeCmd(cmd)
 end
 
 def checkoutProject()
-    executeCmd("osc checkout home:sunny007/MediaInfoFetcher-nightlybuild")
+    executeCmd("osc --no-keyring checkout home:sunny007/MediaInfoFetcher-nightlybuild")
 end
 
 def copyFileToProject(src,dest)
@@ -91,9 +91,9 @@ Dir.mktmpdir("osc") { |dir|
     copyAndUpdateFile("#{projectDir}/build/specs/opensuse-nightly.spec","MediaManager.spec",params) 
     copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-src.zip","MediaManager-#{version}-#{date}-src.zip") 
 
-    executeCmd("osc addremove")
-    executeCmd("osc commit -m \"nightly upload #{version}-#{date}\"")
-    executeCmd("osc rebuild home:sunny007/MediaInfoFetcher-nightlybuild")
+    executeCmd("osc --no-keyring addremove")
+    executeCmd("osc --no-keyring commit -m \"nightly upload #{version}-#{date}\"")
+    executeCmd("osc --no-keyring rebuild home:sunny007/MediaInfoFetcher-nightlybuild")
 }
 
 exit(0)
