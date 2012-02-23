@@ -147,14 +147,14 @@
         
         <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
             <arg value="-o"/>
-            <arg value="${userguide.dir}/html/userguide.html"/>
+            <arg value="${userguide.dir}/html/docbook.html"/>
             <arg value="${docbook.home}/html/docbook.xsl"/>
             <arg value="docbook.xml"/>
         </exec>
         
         <fop format="application/pdf" 
              fofile="${fo.dir}/docbook.fo" 
-             outfile="${userguide.dir}/userguide.pdf" >        
+             outfile="${userguide.dir}/userguide.pdf" >`        
          </fop>
 		
 		<delete dir="${fo.dir}"/>
