@@ -17,7 +17,6 @@ Encode more metadata into mp4files
 Add ability to upgrade media dirs (inprogress)
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
-	- Check images are jpeg
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
 Add tool to rename media files to have filenames without non ascii characters.
 Allow MP4 store to talk to iTunes via remote server (inprogress)
@@ -27,9 +26,15 @@ Investigate which version of AtomicParsely to use:
 	- https://github.com/wez/atomicparsley
 	- https://bitbucket.org/wez/atomicparsley
 Compile AtomicParsely for all platforms
+Fix ruby based tests
 	
 Version 2.2
 -----------
+Add ability to create reports.
+	- Should be possible to generate reports in different formats (html,txt,xml)
+	- Reports of new media added to all media dir's
+	- Reports of files that media details could not be found for
+	- Most recently aired report	
 Update to latest branch of XBMC scrapers
 Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
@@ -40,7 +45,7 @@ Make native MacOSX installer
 Make native Windows installer
 Replace windows .bat files with native .exe launchers
 Allow the checking for updates period to be configured (Default once a day)
-Add remove from store command line tool
+Add "remove from store" command line tool
 Extend patterns
     * Allow formatting of elements like dates
     * Allow formatting of strings to take only part of the string
