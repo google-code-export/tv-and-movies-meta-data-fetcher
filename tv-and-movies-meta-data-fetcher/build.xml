@@ -154,8 +154,7 @@
         
         <fop format="application/pdf" 
              fofile="${fo.dir}/docbook.fo" 
-             outfile="${userguide.dir}/userguide.pdf" >`        
-         </fop>
+             outfile="${userguide.dir}/userguide.pdf" />
 		
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
