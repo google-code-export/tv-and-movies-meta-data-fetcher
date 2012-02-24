@@ -184,5 +184,5 @@
     	<delete dir="${userguide.dir}/xml-updated"/>
     </target>
 
-    <target name="all" depends="clean,compile,javadoc,docs,jars"/>
+    <target name="build" depends="compile,javadoc,docs,jars"/>
 </project>
