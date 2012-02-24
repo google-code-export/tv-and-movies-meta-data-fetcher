@@ -31,7 +31,28 @@ import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParserException;
 
-
+/**
+ * <p>
+ * This class is used as the entry point to the command line tool used
+ * to fix the seen database. It removes entries from the database that
+ * have not been correctly processed.
+ * </p>
+ * <p>
+ * It has the following usage:
+ * <code>
+ * usage: mm-fix-seen-db [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t]
+ *        [-v]
+ *
+ *   --version, -v                 Display the version
+ *   --dir, -d <directory>         The directory to look for media. If not present use the current directory.
+ *   --test, -t                    If this option is present, then no changes are performed.
+ *   --config_file, -c <file>      The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+ *   --log_config, -l <info|debug|file>
+ *                                 The log config mode [<INFO>|<DEBUG>|<log4j config file>]
+ *   --help, -h                    Show the help
+ * </code>
+ * </p>
+ */
 public class CLIFixSeenDB extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIFixSeenDB.class);
@@ -61,21 +82,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 	}
 
 	/**
-	 * The entry point
-	 * <p>
-	 * It has the following usage:
-	 * <code>
-	 *  usage: mm-manager [-c <info|debug|file>] -d <directory> [-h] [-l <file>] [-t] [-u]
-	 *
-	 *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
-	 *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
-	 *  --test, -t                    If this option is present, then no changes are performed.
-	 *  --config_file, -c <info|debug|file>
-	 *                                The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
-	 *  --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
-	 *  --help, -h                    Show the help
-	 * </code>
-	 * </p>
+	 * The entry point. See class description for information on the arguments.
 	 * @param args The arguments
 	 */
 	public static void main(String[] args) {
@@ -89,7 +96,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 
 
 	private CLIFixSeenDB(IExitHandler exitHandler) {
-		super("mm-manager",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
+		super("mm-fix-seen-db",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 

@@ -166,6 +166,7 @@ public class CLIManageAddons extends AbstractLauncher {
 	 * usage: mm-xbmc [--global-options] <command> [--command-options] [arguments]
 	 *
 	 * Global options:
+	 *   --version, -v                 Display the version
 	 *   --config_file, -c <file>
 	 *                                 The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
 	 *   --log_config, -l <info|debug|file>
