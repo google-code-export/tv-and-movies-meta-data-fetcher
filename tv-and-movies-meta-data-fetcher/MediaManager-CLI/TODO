@@ -10,12 +10,11 @@ Add more Linux distribution packages.
 Encode more metadata into mp4files
     - TVShows
         - Year: 
-Add ability to upgrade media dirs (inprogress)
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
 Add tool to rename media files to have filenames without non ascii characters.
-Allow MP4 store to talk to iTunes via remote server (inprogress)
+Allow MP4 store to talk to iTunes via remote server (needs testing)
 Update docs
 	- Add the -v option to cli tools
 	- Add new store

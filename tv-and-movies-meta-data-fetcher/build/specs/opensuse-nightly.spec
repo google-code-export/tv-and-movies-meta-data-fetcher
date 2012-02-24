@@ -38,10 +38,8 @@ BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
-%if 0%{?suse_version} >= 1140
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
-%endif
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        %%release%%
@@ -72,16 +70,9 @@ Javadoc for MediaManager application and API.
  
 %build
 # export CLASSPATH=$CLASSPATH:/usr/share/java/xalan-j2-serializer.jar
-%if 0%{?suse_version} >= 1140
-%ant -buildfile opensuse-11.4-build.xml \
-     -Dlib.dir=%{_javadir} \
-     -Dproject.version=%{version} all
-%else
 %ant -buildfile opensuse-build.xml \
      -Dlib.dir=%{_javadir} \
-     -Dproject.version=%{version} \
-     -Dfop.dir=/usr/share/fop/lib all
-%endif
+     -Dproject.version=%{version} all
  
 %install
 export NO_BRP_CHECK_BYTECODE_VERSION=true
