@@ -38,8 +38,9 @@ import org.stanwood.media.util.FileHelper;
  * <p>
  * It has the following usage:
  * <code>
- *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-u] <media files...>
+ *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-v] [-u] <media files...>
  *
+ *  --version, -v                 Display the version
  *  --fromStore, f				  A required option specifying the store ID to copy from.
  *  --toStore, o				  A required option specifying the store ID to copy to.
  *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated

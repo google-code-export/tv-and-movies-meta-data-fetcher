@@ -36,8 +36,9 @@ import org.stanwood.media.util.FileHelper;
  * <p>
  * It has the following usage:
  * <code>
- *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-u] <media files...>
+ *  usage: mm-manager [-c <file>] -d <directory> [-h] [-l <info|debug|file>] [-t] [-v] [-u] <media files...>
  *
+ *  --version, -v                 Display the version
  *  --noupdate, -u                If this option is present, then the XBMC addons won't be updated
  *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
  *  --test, -t                    If this option is present, then no changes are performed.

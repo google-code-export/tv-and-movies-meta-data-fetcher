@@ -7,10 +7,6 @@ Version 2.1
 Add a getting started guide and link to a button in the installer
 Get OpenSuSE rpms building again
 Add more Linux distribution packages.
-SeenDBFixer
-    - Remove items that are not matching rename pattern, if their is a rename action
-Media Importer
-	- Add tests of media importing
 Encode more metadata into mp4files
     - TVShows
         - Year: 
@@ -21,10 +17,9 @@ Add ability to upgrade MP4ItunesStore (inprogress)
 Add tool to rename media files to have filenames without non ascii characters.
 Allow MP4 store to talk to iTunes via remote server (inprogress)
 Update docs
-Add ability to do a search and replace on filenames been sent to the remote itunes server
-Investigate which version of AtomicParsely to use:
-	- https://github.com/wez/atomicparsley
-	- https://bitbucket.org/wez/atomicparsley
+	- Add the -v option to cli tools
+	- Add new store
+Add ability to do a search and replace on filenames been sent to the remote iTunes server
 Compile AtomicParsely for all platforms
 	
 Version 2.2
@@ -54,7 +49,8 @@ Remote Database store
 
 Version 2.3
 -----------
-
+SeenDBFixer
+    - Remove items that are not matching rename pattern, if their is a rename action
 Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
 Make the search strategies extendable via plugins.
