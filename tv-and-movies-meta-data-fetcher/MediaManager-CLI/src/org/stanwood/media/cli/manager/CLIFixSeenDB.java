@@ -215,7 +215,9 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				try {
 					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
-					log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.FIXING_SEEN_DB"),rootMediaDir.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
+					if (rootMediaDir!=null) {
+						log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.FIXING_SEEN_DB"),rootMediaDir.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
+					}
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
