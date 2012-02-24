@@ -1,10 +1,7 @@
 <project name="MediaManager" default="all" basedir="MediaManager-CLI">
 
     <!-- Path properties -->
-    <property name="src.dir" location="${basedir}/src" />
-    <property name="build.dir" location="${basedir}/bin" />
-    <property name="test.src.dir" location="${basedir}/tests" />
-    <property name="test.build.dir" location="${basedir}/tests-bin" />
+    <property name="build.dir" location="${basedir}/bin" />    
     <property name="dist.dir" location="${basedir}/dist" />
     <property name="libs.dir" location="${basedir}/libs" />
     <property name="etc.dir" location="${basedir}/etc" />
@@ -59,58 +56,7 @@
         <mkdir dir="${api.docs.dir}" />
         <mkdir dir="${reports.dir}"/>
     </target>
-	
-	<target name="antlr">				
-		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
-			<classpath>				
-				<path refid="run-time.libs.classpath"/>
-				<path refid="compile-time.libs.classpath"/>	
-			</classpath>
-			<arg value="-fo"/>
-			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
-			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionLexer.g"/>			
-		</java>
-		<java classname="org.antlr.Tool" fork="true" failonerror="true">	
-			<classpath>				
-				<path refid="run-time.libs.classpath"/>
-				<path refid="compile-time.libs.classpath"/>	
-			</classpath>
-			<arg value="-fo"/>
-			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/"/>
-			<arg value="${src.dir}/org/stanwood/media/source/xbmc/expression/ExpressionParser.g"/>			
-		</java>
-	</target>
-
-    <target name="compile" depends="init,antlr" description="compile the source ">
-        <property name="cp" refid="run-time.libs.classpath" />
-        <echo message="Classpath is ${cp}" />
-
-        <!-- Compile the java code from ${src} into ${build} -->
-        <javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}" encoding="UTF8">
-            <classpath>
-                <path refid="run-time.libs.classpath" />
-            </classpath>
-        </javac>
-
-        <copy todir="${build.dir}">
-            <fileset dir="${src.dir}" excludes="**/*.java" />
-        </copy>
-    </target>
-
-    <target name="javadoc">
-        <delete dir="${api.docs.dir}"/>
-        <javadoc packagenames="org.stanwood.*"
-            sourcepath="${src.dir}"
-            defaultexcludes="yes"
-            destdir="${api.docs.dir}"
-            author="true"
-            version="true"
-            use="true"
-            windowtitle="Media Manager">
-          <doctitle><![CDATA[<h1>Media Manager</h1>]]></doctitle>
-        </javadoc>
-    </target>
-
+	    
     <target name="clean" description="clean up">
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete includeemptydirs="true" failonerror="false">
@@ -124,6 +70,12 @@
         <delete file="cobertura.ser" failonerror="false"/>
         <delete dir="${fo.dir}" failonerror="false"/>
         <delete dir="${basedir}/docbook" failonerror="false"/>
+        
+        <ant dir="MediaManager-CLI" target="clean"/>
+    </target>
+    
+    <target name="build" description="Build all the subcomponents">
+        <ant dir="MediaManager-CLI" target="clean"/>
     </target>
 
     <target name="jars" description="generate the distribution">
@@ -184,5 +136,5 @@
     	<delete dir="${userguide.dir}/xml-updated"/>
     </target>
 
-    <target name="all" depends="clean,compile,javadoc,docs,jars"/>
+    <target name="all" depends="clean,build,docs,jars"/>
 </project>
