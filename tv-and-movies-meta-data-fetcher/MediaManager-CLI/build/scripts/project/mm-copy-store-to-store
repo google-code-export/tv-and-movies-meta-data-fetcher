@@ -20,14 +20,22 @@ else
         JAVA="$JAVA_HOME/bin/java"
 fi
 
-SCRIPT_PATH="${BASH_SOURCE[0]}";
-if ([ -h "${SCRIPT_PATH}" ]) then
-  while([ -h "${SCRIPT_PATH}" ]) do SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+if [ -z "${BASH_SOURCE}" ] ; then
+    SCRIPT_PATH=`readlink -f  "$0"`
+    CURRENT_DIR=`pwd`
+    cd `dirname ${SCRIPT_PATH}` > /dev/null
+    SCRIPT_PATH=`pwd`;
+    cd $CURRENT_DIR
+else
+    SCRIPT_PATH="${BASH_SOURCE[0]}";
+    if ([ -h "${SCRIPT_PATH}" ]) then
+        while([ -h "${SCRIPT_PATH}" ]) do SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+    fi
+    pushd . > /dev/null
+    cd `dirname ${SCRIPT_PATH}` > /dev/null
+    SCRIPT_PATH=`pwd`;
+    popd  > /dev/null
 fi
-pushd . > /dev/null
-cd `dirname ${SCRIPT_PATH}` > /dev/null
-SCRIPT_PATH=`pwd`;
-popd  > /dev/null
 
 # Main class
 MAIN=org.stanwood.media.cli.manager.CLICopyStoreToStore
