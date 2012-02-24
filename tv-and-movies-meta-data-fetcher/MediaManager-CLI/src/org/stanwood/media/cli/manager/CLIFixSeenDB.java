@@ -123,7 +123,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				boolean valid = validateFile(mediaDirConfig,mp4Manager,f);
 				if (!valid) {
 					if (seenDb.isSeen(root, f)) {
-						log.info(MessageFormat.format("Remove {0} from seen database as it has missing or broken metadata.",f));
+						log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.REMOVE_FROM_DB"),f)); //$NON-NLS-1$
 						seenDb.removeFile(root,f);
 					}
 				}
@@ -215,7 +215,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				try {
 					getController().init(cmd.hasOption(TEST_OPTION));
 					rootMediaDir = getController().getMediaDirectory(dir);
-					log.info(MessageFormat.format("Fixing seen database for media directory : {0}",rootMediaDir.getMediaDirConfig().getMediaDir()));
+					log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.FIXING_SEEN_DB"),rootMediaDir.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
 				} catch (ConfigException e) {
 					fatal(e);
 					return false;
