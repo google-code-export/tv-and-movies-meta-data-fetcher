@@ -1,6 +1,6 @@
-<project name="MediaManager" default="all" basedir=".">
+<project name="MediaManager" default="all" basedir="MediaManager-CLI">
 
-<!-- Path properties -->
+    <!-- Path properties -->
     <property name="src.dir" location="${basedir}/src" />
     <property name="build.dir" location="${basedir}/bin" />
     <property name="test.src.dir" location="${basedir}/tests" />
@@ -8,7 +8,6 @@
     <property name="dist.dir" location="${basedir}/dist" />
     <property name="libs.dir" location="${basedir}/libs" />
     <property name="etc.dir" location="${basedir}/etc" />
-    <property name="rpm.dir" location="${basedir}/rpm" />
     <property name="docs.dir" location="${basedir}/docs"/>
     <property name="api.docs.dir" location="${docs.dir}/api" />
     <property name="userguide.dir" location="${docs.dir}/userguide" />
@@ -40,7 +39,9 @@
     </path>
 
     <path id="compile-time.libs.classpath">
-        <fileset dir="${fop.dir}" includes="*.jar" excludes="commons-logging-*.jar"/>
+    	<pathelement location="${lib.dir}/excalibur/avalon-framework.jar"/>
+    	<pathelement location="${lib.dir}/xmlgraphics-fop.jar"/>        
+    	<pathelement location="${lib.dir}/bnatik-all.jar"/>
     </path>
 
     <!-- Fop setup -->
@@ -105,8 +106,8 @@
             author="true"
             version="true"
             use="true"
-            windowtitle="Media Renamer/Metadata Fetcher">
-          <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
+            windowtitle="Media Manager">
+          <doctitle><![CDATA[<h1>Media Manager</h1>]]></doctitle>
         </javadoc>
     </target>
 
@@ -118,7 +119,6 @@
         </delete>
         <delete dir="${dist.dir}" failonerror="false"/>
         <delete dir="${api.docs.dir}" failonerror="false"/>
-        <delete dir="${rpm.dir}" failonerror="false"/>
         <delete dir="${cobertura.dir}" failonerror="false"/>
         <delete dir="${reports.dir}" failonerror="false"/>
         <delete file="cobertura.ser" failonerror="false"/>
@@ -130,7 +130,7 @@
         <echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
 
         <jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
-        <copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediafetcher-conf.xml"/>
+        <copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediamanager-conf.xml"/>
     </target>
 
     <target name="docs" description="Converts docbook xml into pdf" >
@@ -149,7 +149,6 @@
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
             <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
                  location="${docbook.home}/../dtd/docbookx.dtd"/>
-                 
         </xmlcatalog>
     	
     	<mkdir dir="${userguide.dir}/xml-updated"/>		

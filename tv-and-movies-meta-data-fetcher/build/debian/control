@@ -4,11 +4,11 @@ Priority: extra
 Maintainer: John-Paul Stanford <dev@stanwood.org.uk>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.2
-Homepage: <insert the upstream URL, if relevant>
+Homepage: http://code.google.com/p/tv-and-movies-meta-data-fetcher/
 #Vcs-Git: git://git.debian.org/collab-maint/mediamanager.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/mediamanager.git;a=summary
 
-Package: mediamanager
+Package: mediamanager-cli
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
