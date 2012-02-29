@@ -38,6 +38,7 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 	 * Used to get the value of the atom
 	 * @return The value of the atom
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -45,11 +46,11 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 	/** {@inheritDoc} */
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
-		if (getName().equals("tvsn")) { //$NON-NLS-1$
+		if (getKey() == MP4AtomKey.TV_SEASON) {
 			args.add("--TVSeasonNum"); //$NON-NLS-1$
 			args.add(String.valueOf(value));
 		}
-		else if (getName().equals("tves")) { //$NON-NLS-1$
+		else if (getKey() == MP4AtomKey.TV_EPISODE) {
 			args.add("--TVEpisodeNum"); //$NON-NLS-1$
 			args.add(String.valueOf(value));
 		}

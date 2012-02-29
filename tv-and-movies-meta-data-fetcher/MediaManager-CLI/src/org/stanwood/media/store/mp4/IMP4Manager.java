@@ -37,6 +37,14 @@ public interface IMP4Manager {
 	public IAtom createAtom(MP4AtomKey name, String value);
 
 	/**
+	 * Used to create a atom
+	 * @param name The name of the atom
+	 * @param value The value of the atom
+	 * @return the atom
+	 */
+	public IAtom createAtom(MP4AtomKey name, boolean value);
+
+	/**
 	 * Used to create a range atom
 	 * @param name The name of the atom
 	 * @param number The number of items in the rage

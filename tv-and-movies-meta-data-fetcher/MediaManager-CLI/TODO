@@ -2,14 +2,11 @@ TODO
 ====
 
 Version 2.1
--------------
+-----------
 
 Add a getting started guide and link to a button in the installer
 Get OpenSuSE rpms building again
 Add more Linux distribution packages.
-Encode more metadata into mp4files
-    - TVShows
-        - Year: 
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
@@ -23,6 +20,15 @@ Compile AtomicParsely for all platforms
 	
 Version 2.2
 -----------
+Add support for different video qualities
+	* Add query code to work out the resolution of media files
+	* Add new Patterns to indicate HighDef.
+	* Store quality information in mp4 files.
+		- Set the flvr atom
+		- Set the hdvd atom
+		- Set the meta data need to have both low and high def versions of films 
+		- Add asset-info keys flavour,high-definition,screen-format
+		- High dev content should be short film
 Create man pages for commands
 Add ability to create reports.
 	- Should be possible to generate reports in different formats (html,txt,xml)

@@ -30,8 +30,10 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,7 +100,7 @@ public class MP4ITunesStore implements IStore {
 	private String atomicParsleyCmd;
 	private MP4ITunesStoreInfo storeInfo;
 
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),2); //$NON-NLS-1$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
 
 	public MP4ITunesStore(MP4ITunesStoreInfo storeInfo) {
 		this.storeInfo = storeInfo;
@@ -345,7 +347,9 @@ public class MP4ITunesStore implements IStore {
 	 */
 	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, IEpisode episode) throws MP4Exception {
 
-		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
+		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
+		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		IShow show = episode.getSeason().getShow();
@@ -362,13 +366,25 @@ public class MP4ITunesStore implements IStore {
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.ALBUM_ARTIST, show.getName()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_ALBUM_ARTIST, show.getName()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.TRACK_NUMBER,(short)episode.getEpisodeNumber(),(short)0));
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.GAPLESS_PLAYBACK, false));
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.COMPILATION, false));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.DISK_NUMBER, (short)1,(short)1));
 		if (episode.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(episode.getDate())));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(episode.getDate())));
 		}
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(new Date())));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, episode.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  episode.getTitle()));
+		if (show.getLongSummary()!=null ) {
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_STORE, show.getLongSummary()));
+		}
+		else if (show.getShortSummary()!=null) {
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_STORE, show.getShortSummary()));
+		}
 		if (episode.getSummary()!=null && episode.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, episode.getSummary()));
+
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION, getShortDescription(episode.getSummary(),100)));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_LONG, episode.getSummary()));
 		}
 
 		for (Certification cert : show.getCertifications()) {
@@ -383,10 +399,24 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, episode.getSeason().getShow().getGenres().get(0)));
 		}
+		String flavour = getFileFlavor(mp4File);
+		if (flavour!=null) {
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.FLAVOUR, flavour));
+		}
+
 		StringBuilder iTuneMOVIValue = new StringBuilder();
 		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("    <dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <key>file-size</key>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <integer>"+mp4File.length()+"</integer>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		if (flavour!=null) {
+			iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		iTuneMOVIValue.append("    </dict>"+FileHelper.LS); //$NON-NLS-1$
 		if (episode.getActors()!=null && episode.getActors().size()>0) {
 			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
 			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
@@ -425,6 +455,24 @@ public class MP4ITunesStore implements IStore {
 		mp4Manager.update(mp4File, atoms);
 	}
 
+	private static String getShortDescription(String summary, int len) {
+		if (summary.length()>=len) {
+			return summary.substring(0,len-1)+"…"; //$NON-NLS-1$
+		}
+		return summary;
+	}
+
+	private static String getFileFlavor(File mp4File) {
+		//TODO work out the correct flvr
+		// 1:128
+		// 2:256
+		// 4:640x480LC-128
+		// 6:640x480LC-256 (x x y x bit rate?) lc = format profile
+		// 7:720p
+		// 8:480p
+		return null;
+	}
+
 	protected static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File,IVideo video) throws MP4Exception {
 		URL imageUrl = getVideoURL(video);
 		if (imageUrl != null) {
@@ -433,7 +481,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	public static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File, URL imageUrl) throws MP4Exception {
+	private static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File, URL imageUrl) throws MP4Exception {
 		File artwork = null;
 		try {
 				try {
@@ -494,17 +542,24 @@ public class MP4ITunesStore implements IStore {
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
-		DateFormat YEAR_DF = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
+		// TODO change year to a date
+		// TODO add purd
+		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
+		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.MOVIE.getId()));
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.GAPLESS_PLAYBACK, false));
+//		atoms.add(mp4Manager.createAtom(MP4AtomKey.COMPILATION, false));
 		if (film.getDate()!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, YEAR_DF.format(film.getDate())));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(film.getDate())));
 		}
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(new Date())));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, film.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  film.getTitle()));
 		if (film.getSummary()!=null && film.getSummary().length()>0) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_SHORT, film.getSummary()));
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION, film.getSummary()));
 		}
 		if (film.getDescription()!=null && film.getDescription().length()>0) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.DESCRIPTION_LONG, film.getDescription()));
@@ -547,11 +602,24 @@ public class MP4ITunesStore implements IStore {
 				atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, film.getGenres().get(0)));
 			}
 		}
+		String flavour = getFileFlavor(mp4File);
+		if (flavour!=null) {
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.FLAVOUR, flavour));
+		}
 
 		StringBuilder iTuneMOVIValue = new StringBuilder();
 		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("    <dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <key>file-size</key>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <integer>"+mp4File.length()+"</integer>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		if (flavour!=null) {
+			iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		iTuneMOVIValue.append("    </dict>"+FileHelper.LS); //$NON-NLS-1$
 		if (film.getActors()!=null && film.getActors().size()>0) {
 			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
 			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$

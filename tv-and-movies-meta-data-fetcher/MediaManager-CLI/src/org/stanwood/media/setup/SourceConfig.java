@@ -18,6 +18,7 @@
 package org.stanwood.media.setup;
 
 
+
 /**
  * This is used to hold the configuration for each source found in the configuration file.
  */
