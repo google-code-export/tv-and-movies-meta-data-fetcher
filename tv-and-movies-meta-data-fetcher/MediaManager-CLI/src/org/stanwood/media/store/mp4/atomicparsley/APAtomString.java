@@ -44,6 +44,10 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 			args.add("--year"); //$NON-NLS-1$ // TODO turn into a release date
 			args.add(value);
 		}
+		else if (getKey() == MP4AtomKey.PURCHASED_DATE) {
+			args.add("--purchaseDate"); //$NON-NLS-1$ // TODO turn into a release date
+			args.add(value);
+		}
 		else if (getKey() == MP4AtomKey.TV_SHOW_NAME) {
 			args.add("--TVShowName"); //$NON-NLS-1$
 			args.add(value);
@@ -52,7 +56,11 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 			args.add("--TVEpisode"); //$NON-NLS-1$
 			args.add(value);
 		}
-		else if (getKey() == MP4AtomKey.DESCRIPTION_SHORT) {
+		else if (getKey() == MP4AtomKey.DESCRIPTION_STORE) {
+			args.add("--storedesc"); //$NON-NLS-1$
+			args.add(value);
+		}
+		else if (getKey() == MP4AtomKey.DESCRIPTION) {
 			args.add("--description"); //$NON-NLS-1$
 			args.add(value);
 		}
@@ -133,7 +141,7 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 			}
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",value));
+			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getKey().getId()));
 		}
 	}
 

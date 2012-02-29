@@ -52,5 +52,12 @@ public class BaseMediaDirSubItem {
 		return id;
 	}
 
+	/**
+	 * Used to set the parameters
+	 * @param parameters The parameters
+	 */
+	public void setParameters(Map<String, String> parameters) {
+		params = parameters;
+	}
 
 }

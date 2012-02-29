@@ -174,11 +174,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	private IAtom parseAtom(MP4AtomKey key, String value) throws MP4Exception {
 		IAtom atom = null;
 		if (key.getType() == MP4AtomKeyType.Boolean) {
-			int ivalue = 0;
-			if (value.equalsIgnoreCase("yes")) { //$NON-NLS-1$
-				ivalue = 1;
-			}
-			atom = createAtom(key, ivalue);
+			atom = createAtom(key, value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equals("1"));  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
 		else if (key.getType()==MP4AtomKeyType.Enum) {
 			if (key == MP4AtomKey.MEDIA_TYPE) {
@@ -276,6 +272,12 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			args.add("REMOVE_ALL"); //$NON-NLS-1$
 		}
 		for (IAtom atom : atoms) {
+			if (atom.getKey().getDnsName()!=null) {
+				args.add("--manualAtomRemove"); //$NON-NLS-1$
+				args.add("moov.udta.meta.ilst.----.name:["+atom.getKey().getDnsName()+"]"); //$NON-NLS-1$
+			}
+		}
+		for (IAtom atom : atoms) {
 			((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
 
 		}
@@ -308,6 +310,12 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	@Override
 	public IAtom createAtom(MP4AtomKey name, String value) {
 		return new APAtomString(name, value);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IAtom createAtom(MP4AtomKey name, boolean value) {
+		return new APAtomBoolean(name, value);
 	}
 
 	/** {@inheritDoc} */

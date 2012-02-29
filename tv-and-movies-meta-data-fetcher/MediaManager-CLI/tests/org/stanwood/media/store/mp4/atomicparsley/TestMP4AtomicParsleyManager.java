@@ -20,12 +20,15 @@ import org.stanwood.media.model.Film;
 import org.stanwood.media.model.Rating;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
+import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
+import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Version;
 
 /**
  * Used to test the {@link MP4v2CLIManager} class.
@@ -120,6 +123,76 @@ public class TestMP4AtomicParsleyManager {
 	}
 
 	/**
+	 * Used to test that existing atom data is not erased and that the version
+	 * stored in the file can be upgraded without duplicating it
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testUpdateOldVersion() throws Exception {
+		URL url = Data.class.getResource("videoWithMetaData.mp4");
+		File srcFile = new File(url.toURI());
+		Assert.assertTrue(srcFile.exists());
+
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
+		if (!mp4File.delete()) {
+			throw new IOException("Unable to delete file");
+		}
+		FileHelper.copy(srcFile, mp4File);
+
+		IMP4Manager ap = createMP4Manager();
+		List<IAtom> atoms = new ArrayList<IAtom>();
+		atoms.add(ap.createAtom(MP4AtomKey.MM_VERSION,new StoreVersion(new Version("2.1"), 1).toString()));
+		ap.update(mp4File, atoms);
+
+		atoms = ap.listAtoms(mp4File);
+		Assert.assertEquals(11,atoms.size());
+		Collections.sort(atoms, new Comparator<IAtom>() {
+			@Override
+			public int compare(IAtom o1, IAtom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		int index = 0;
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode ID: [tven=103]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode Number: [tves=3]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Season Number: [tvsn=1]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=Thu Nov 10 00:00:00 GMT 2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
+
+		atoms = new ArrayList<IAtom>();
+		atoms.add(ap.createAtom(MP4AtomKey.MM_VERSION,new StoreVersion(new Version("2.1"), 2).toString()));
+		ap.update(mp4File, atoms);
+
+		atoms = ap.listAtoms(mp4File);
+		Assert.assertEquals(11,atoms.size());
+		Collections.sort(atoms, new Comparator<IAtom>() {
+			@Override
+			public int compare(IAtom o1, IAtom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		index = 0;
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 2]",atoms.get(index++).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode ID: [tven=103]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Episode Number: [tves=3]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
+		Assert.assertEquals("TV Season Number: [tvsn=1]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=Thu Nov 10 00:00:00 GMT 2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
+	}
+
+	/**
 	 * Used to test that the episode details can be written to the MP4 file.
 	 * @throws Exception Thrown if the test produces any errors
 	 */
@@ -143,10 +216,10 @@ public class TestMP4AtomicParsleyManager {
 		for (IAtom a : atoms) {
 			System.out.println(a.toString());
 		}
-		Assert.assertEquals(22,atoms.size());
+		Assert.assertEquals(26,atoms.size());
 		int index = 0;
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 2]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 3]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Episode ID: [tven=34567]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
@@ -159,10 +232,16 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals("Album Artist: [aART=Test Show Name]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Album Artist: [soaa=Test Show Name]",atoms.get(index++).toString());
 		Assert.assertEquals("Track Number: [trkn=3 of 0]",atoms.get(index++).toString());
-		Assert.assertEquals("Release Date: [©day=2005]",atoms.get(index++).toString());
+//		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
+//		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
+		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
+		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
 		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Name: [sonm=Test Episode]",atoms.get(index++).toString());
+		Assert.assertEquals("Store Description: [sdes=Blah blah blah]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=This is a test show summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Long description: [ldes=This is a test show summary]",atoms.get(index++).toString());
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=us-tv|TV-PG|400|]",atoms.get(index++).toString());
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
@@ -170,6 +249,11 @@ public class TestMP4AtomicParsleyManager {
 		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
 		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
 		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>asset-info</key>"+FileHelper.LS);
+		expected.append("    <dict>"+FileHelper.LS);
+		expected.append("        <key>file-size</key>"+FileHelper.LS);
+		expected.append("        <integer>1284</integer>"+FileHelper.LS);
+		expected.append("    </dict>"+FileHelper.LS);
 		expected.append("    <key>cast</key>"+FileHelper.LS);
 		expected.append("    <array>"+FileHelper.LS);
 		expected.append("        <dict>"+FileHelper.LS);
@@ -242,14 +326,19 @@ public class TestMP4AtomicParsleyManager {
 			System.out.println(atom);
 		}
 
-		Assert.assertEquals(16,atoms.size());
+		Assert.assertEquals(17,atoms.size());
 		int index=0;
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 2]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 3]",atoms.get(index++).toString());
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
 		StringBuilder expected = new StringBuilder();
 		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
 		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
 		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>asset-info</key>"+FileHelper.LS);
+		expected.append("    <dict>"+FileHelper.LS);
+		expected.append("        <key>file-size</key>"+FileHelper.LS);
+		expected.append("        <integer>1284</integer>"+FileHelper.LS);
+		expected.append("    </dict>"+FileHelper.LS);
 		expected.append("    <key>cast</key>"+FileHelper.LS);
 		expected.append("    <array>"+FileHelper.LS);
 		expected.append("        <dict>"+FileHelper.LS);
@@ -283,14 +372,17 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Cover Artwork: [covr=1 piece of artwork]",atoms.get(index++).toString());
+//		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
+//		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
 		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
 		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());
+		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
 		Assert.assertEquals("Sort Artist: [soar=Bryan Singer]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Name: [sonm=Test film name]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=6]",atoms.get(index++).toString());
 		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
-		Assert.assertEquals("Release Date: [©day=2005]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
@@ -340,6 +432,7 @@ public class TestMP4AtomicParsleyManager {
 	private Episode createTestEpisode() throws Exception {
 		Show show = new Show("123");
 		show.setStudio("Blah");
+		show.setLongSummary("Blah blah blah");
 		List<Certification> certifications= new ArrayList<Certification>();
 		certifications.add(new Certification("TV-PG","mpaa"));
 		show.setCertifications(certifications);
