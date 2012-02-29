@@ -11,6 +11,7 @@ Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
 Allow MP4 store to talk to iTunes via remote server (needs testing)
+	- Check upgrading does not remove watched counts
 Update docs
 	- Add the -v option to cli tools
 	- Add new store

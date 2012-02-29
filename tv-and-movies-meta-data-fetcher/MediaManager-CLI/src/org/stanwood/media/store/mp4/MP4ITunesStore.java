@@ -372,7 +372,7 @@ public class MP4ITunesStore implements IStore {
 		if (episode.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(episode.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(new Date())));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(getPurchasedDate(mp4File))));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, episode.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  episode.getTitle()));
 		if (show.getLongSummary()!=null ) {
@@ -542,8 +542,6 @@ public class MP4ITunesStore implements IStore {
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
 	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
-		// TODO change year to a date
-		// TODO add purd
 		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
 		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 
@@ -555,7 +553,7 @@ public class MP4ITunesStore implements IStore {
 		if (film.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(film.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(new Date())));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(getPurchasedDate(mp4File))));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, film.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  film.getTitle()));
 		if (film.getSummary()!=null && film.getSummary().length()>0) {
@@ -656,6 +654,11 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(artworkAtom);
 		}
 		mp4Manager.update(mp4File, atoms);
+	}
+
+	private static Date getPurchasedDate(File mp4File) {
+		Date lastModified = new Date(mp4File.lastModified());
+		return lastModified;
 	}
 
 	@SuppressWarnings("nls")
