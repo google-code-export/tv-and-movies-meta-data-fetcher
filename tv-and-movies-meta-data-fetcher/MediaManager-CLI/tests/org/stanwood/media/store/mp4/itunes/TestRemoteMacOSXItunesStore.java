@@ -113,6 +113,71 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 	}
 
 	/**
+	 * Used to test that tv shows are correctly inserted and removed from the ruby itunes store
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testFilePaths() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File rawMediaDir = FileHelper.createTmpDir("media");
+		try {
+			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
+			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig());
+			store.setParameter("search-pattern", ".*"+rawMediaDir.getName());
+			store.setParameter("search-replace", "/media-blah");
+			store.setParameter("file-separator", ".");
+			store.init(nativeDir);
+
+			File eurekaDir = new File(rawMediaDir, "Eureka");
+			if (!eurekaDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir);
+			}
+
+			File heroesDir = new File(rawMediaDir, "Heroes");
+			if (!heroesDir.mkdir()) {
+				throw new IOException("Unable to create directory: " + eurekaDir);
+			}
+
+			List<EpisodeData> epsiodes = Data.createEurekaShow(eurekaDir);
+			epsiodes.addAll(Data.createHeroesShow(heroesDir));
+
+			for (EpisodeData ed : epsiodes) {
+				FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),ed.getFile());
+				File episodeFile = ed.getFile();
+				IEpisode episode = ed.getEpisode();
+				ISeason season =  episode.getSeason();
+				IShow show=  season.getShow();
+
+				store.cacheShow(rawMediaDir, episodeFile, show);
+				store.cacheSeason(rawMediaDir, episodeFile, season);
+				store.cacheEpisode(rawMediaDir, episodeFile, episode);
+			}
+
+			store.fileDeleted(mediaDir, new File(heroesDir,"blah.m4v"));
+			store.renamedFile(rawMediaDir, new File(eurekaDir,"1x01 - blah"), new File(eurekaDir,"1x01 - Renamed"));
+			store.performedActions(mediaDir);
+
+			List<String> commandLog = getCommandLog();
+			Assert.assertEquals(10,commandLog.size());
+			int msgIndex = 0;
+			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(msgIndex++));
+			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(msgIndex++));
+			Assert.assertEquals("removeTracksFromLibrary(.media-blah.Heroes.blah.m4v)",commandLog.get(msgIndex++));
+			Assert.assertEquals("removeTracksFromLibrary(.media-blah.Eureka.1x01 - blah)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.1x02 - blah)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.2x13 - blah)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.000 - blah)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Heroes.1x01 - hero)",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.1x01 - Renamed)",commandLog.get(msgIndex++));
+		}
+		finally {
+			FileHelper.delete(rawMediaDir);
+		}
+	}
+
+	/**
 	 * Used to test that films are correctly inserted and removed from the ruby itunes store
 	 * @throws Exception Thrown if their is a problem
 	 */

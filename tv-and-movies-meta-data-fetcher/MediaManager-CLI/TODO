@@ -10,16 +10,15 @@ Add more Linux distribution packages.
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
 	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
-Add tool to rename media files to have filenames without non ascii characters.
 Allow MP4 store to talk to iTunes via remote server (needs testing)
 Update docs
 	- Add the -v option to cli tools
 	- Add new store
-Add ability to do a search and replace on filenames been sent to the remote iTunes server
 Compile AtomicParsely for all platforms
 	
 Version 2.2
 -----------
+Add tool to rename media files to have filenames without non ascii characters.
 Add support for different video qualities
 	* Add query code to work out the resolution of media files
 	* Add new Patterns to indicate HighDef.
