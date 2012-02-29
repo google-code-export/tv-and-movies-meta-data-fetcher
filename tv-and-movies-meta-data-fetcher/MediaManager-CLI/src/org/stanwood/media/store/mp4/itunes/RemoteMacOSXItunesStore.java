@@ -10,6 +10,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,12 +35,31 @@ import org.stanwood.media.store.mp4.Messages;
  * by talking to a remote server running on the same machine as iTunes. The server details can
  * be found at {@link "http://code.google.com/p/itunes-remote-control-server/"}.
  * </p>
+ * <p>
+ * The optional parameter file-separator can be used when media manager is running
+ * on a different operating system to the remote client. So for example if media manager
+ * is on a linux OS and the remote server is on a windows OS, then the file seperator
+ * should be set to \. See the page {@link "http://en.wikipedia.org/wiki/Regular_expression"} for
+ * more information on regular expression syntax.
+ * </p>
+ * <p>
+ * The search and replace optional parameters can be used to the media directory
+ * is access at a different location on the iTunes server machine to the machine
+ * that media manager is running on.
+ * </p>
  * <p>This store has following parameters:
  * 	<ul>
  * 		<li>hostname - Required parameter giving hostname of the server</li>
  *      <li>port - Optional parameter giving port number of the server, defaults to 7000</li>
  *      <li>username - Required parameter giving name of user used to log into the server</li>
  *      <li>password - Required parameter giving password of user used to log into the server</li>
+ *      <li>search-pattern - Optional parameter that must be used with search-replace.
+ *                           This parameter is used to perform a regular expression search and
+ *                           replace on the file paths. This parameter is used to set the pattern.<li>
+ *      <li>search-replace - Optional parameter that must be used with search-replace.
+ *                           This parameter is used to perform a regular expression search and
+ *                           replace on the file paths. This parameter is used to set the replacement text.<li>
+ *		<li>file-separator - Optional parameter that is used to set the file seperator used in file names sent to the server.<li>
  *  </ul>
  * </p>
  */
@@ -53,7 +75,12 @@ public class RemoteMacOSXItunesStore implements IStore {
 	private InetAddress hostname;
 	private int port = 7000;
 	private String user;
+
 	private String password;
+	private Pattern pattern;
+	private String replace;
+
+	private String fileSeperator;
 
 	/** {@inheritDoc}
 	 * <p>
@@ -144,6 +171,13 @@ public class RemoteMacOSXItunesStore implements IStore {
 		if (password==null) {
 			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.MISSING_PARAMETER"),RemoteMacOSXItunesStoreInfo.PARAM_PASSWORD.getName())); //$NON-NLS-1$
 		}
+
+		if (pattern!=null && replace==null) {
+			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.PARAM_SET_BOTH_NEEDED"),RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_PATTERN.getName(),RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_REPLACE.getName())); //$NON-NLS-1$
+		}
+		if (replace!=null && pattern==null) {
+			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.PARAM_SET_BOTH_NEEDED"),RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_REPLACE.getName(),RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_PATTERN.getName())); //$NON-NLS-1$
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -170,6 +204,15 @@ public class RemoteMacOSXItunesStore implements IStore {
 		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_PASSWORD.getName())) {
 			password = value;
 		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_PATTERN.getName())) {
+			pattern = Pattern.compile(value);
+		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_REPLACE.getName())) {
+			replace = value;
+		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_FILE_SEPARATOR.getName())) {
+			fileSeperator = value;
+		}
 		else {
 			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
@@ -190,6 +233,12 @@ public class RemoteMacOSXItunesStore implements IStore {
 		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_PASSWORD.getName())) {
 			return password;
 		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_PATTERN.getName())) {
+			return pattern.pattern();
+		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_REPLACE.getName())) {
+			return replace;
+		}
 		else {
 			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
@@ -200,26 +249,57 @@ public class RemoteMacOSXItunesStore implements IStore {
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220, ITunesRemoteClient.DEFAILT_TIMEOUT);
 		if (filesDeleted.size()>0) {
 			for (File file : filesDeleted) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+file.getAbsolutePath(),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
 			}
 			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			filesDeleted.clear();
 		}
 		if (filesAdded.size()>0) {
 			for (File file : filesAdded) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+file.getAbsolutePath(),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
 			}
 			client.sendCommand(ITunesRemoteClient.CMD_ADD_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			filesAdded.clear();
 		}
 		if (filesUpdated.size()>0) {
 			for (File file : filesUpdated) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+file.getAbsolutePath(),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
 			}
 			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			filesUpdated.clear();
 		}
 		client.sendCommand(ITunesRemoteClient.CMD_QUIT,221,ITunesRemoteClient.DEFAILT_TIMEOUT);
+	}
+
+	private String getFilePath(String orgPath) {
+		String path = orgPath;
+		if (pattern !=null && replace!=null) {
+			StringBuffer newPath = new StringBuffer();
+			Matcher m = pattern.matcher(path);
+			while (m.find()) {
+				m.appendReplacement(newPath, replace);
+				path = m.replaceAll(replace);
+			}
+			m.appendTail(newPath);
+			path = newPath.toString();
+		}
+
+		if (fileSeperator!=null) {
+			StringBuilder newPath = new StringBuilder();
+			StringTokenizer tok = new StringTokenizer(path,File.separator,true);
+			while (tok.hasMoreTokens()) {
+				String token = tok.nextToken();
+				if (token.equals(File.separator)) {
+					newPath.append(fileSeperator);
+				}
+				else {
+					newPath.append(token);
+				}
+			}
+			path = newPath.toString();
+		}
+
+		return path;
 	}
 
 	/** {@inheritDoc} */

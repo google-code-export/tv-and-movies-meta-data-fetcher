@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
  * Message bundle class
  */
 public class Messages {
-	private static final String BUNDLE_NAME = "org.stanwood.media.store.itunes.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.stanwood.media.store.mp4.itunes.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
 			.getBundle(BUNDLE_NAME);
