@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -257,6 +258,15 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			log.debug("Upadting MP4 file '" + mp4File+"' with "+atoms.size()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
+		List<IAtom> exsitingAtoms = listAtoms(mp4File);
+		Iterator<IAtom> it = atoms.iterator();
+		while (it.hasNext()) {
+			IAtom atom = it.next();
+			if (hasAtom(exsitingAtoms,atom)) {
+				it.remove();
+			}
+		}
+
 		List<Object>args = new ArrayList<Object>();
 		args.add(mp4File);
 		args.add("--output"); //$NON-NLS-1$
@@ -304,6 +314,22 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		if (log.isDebugEnabled()) {
 			log.debug("MP4 modified '" + mp4File+"'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private boolean hasAtom(List<IAtom> atoms, IAtom atom1) {
+		for (IAtom atom2 : atoms) {
+			if (atom1.getKey() == MP4AtomKey.PURCHASED_DATE) {
+				if (atom2.getKey().equals(atom1.getKey())) {
+					return true;
+				}
+			}
+			else {
+				if (atom2.getKey().equals(atom1.getKey()) && atom2.toString().equals(atom1.toString())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/** {@inheritDoc} */
