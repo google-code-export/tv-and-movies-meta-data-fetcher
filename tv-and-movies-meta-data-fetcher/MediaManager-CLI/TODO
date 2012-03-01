@@ -9,7 +9,8 @@ Get OpenSuSE rpms building again
 Add more Linux distribution packages.
 Add ability to upgrade MP4ItunesStore (inprogress)
 	- Files updated with new metadata  (inprogress)
-	- If using remote iTunes control server, tell itunes about the updated store (inprogress)
+	- If using remote iTunes control server, tell iTunes about the updated store (inprogress)
+	- Write test of upgrading
 Allow MP4 store to talk to iTunes via remote server (needs testing)
 	- Check upgrading does not remove watched counts
 Update docs
