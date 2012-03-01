@@ -300,6 +300,18 @@ public class XMLParser {
 		return null;
 	}
 
+	protected Element getLastChildElement(Node parent,String name) {
+		Element result = null;
+		NodeList children =  parent.getChildNodes();
+		for (int i =0;i<children.getLength();i++) {
+			Node node = children.item(i);
+			if (node !=null && node instanceof Element && node.getNodeName().equals(name)) {
+				result = (Element) node;
+			}
+		}
+		return result;
+	}
+
 	protected Element firstChild(Element expressionEl) {
 		NodeList children =  expressionEl.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
