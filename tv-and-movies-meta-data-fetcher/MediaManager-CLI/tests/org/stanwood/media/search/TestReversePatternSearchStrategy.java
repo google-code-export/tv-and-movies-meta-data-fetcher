@@ -27,6 +27,9 @@ public class TestReversePatternSearchStrategy {
 		TestFilmSearcher.assertSearchDetails("The Movie", null, 2, doSearch("The Movie Part 2.m4v", "%t{ (%y)}{ Part %p}.%x"));
 		TestFilmSearcher.assertSearchDetails("The Movie", "2010", null, doSearch("The Movie (2010).m4v", "%t{ (%y)}{ Part %p}.%x"));
 		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie.m4v", "%t{ (%y)}{ Part %p}.%x"));
+		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie HD.m4v", "%t{ (%y)}{ Part %p}{ %d}.%x"));
+		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie.m4v", "%t{ (%y)}{ Part %p}{ %w}{ %d}.%x"));
+		TestFilmSearcher.assertSearchDetails("The Movie", null, null, doSearch("The Movie WS HD.m4v", "%t{ (%y)}{ Part %p}{ %w}{ %d}.%x"));
 		Assert.assertNull(doSearch(File.separator+"Blah"+File.separator+"The Movie.m4v", "%t{ (%y)}{ Part %p}.%x"));
 	}
 

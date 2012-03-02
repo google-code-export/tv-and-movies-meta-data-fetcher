@@ -86,4 +86,5 @@ public class TestMediaFileInfoFetcher {
 		Assert.assertFalse(info.isHighDef());
 		Assert.assertEquals(null, info.getResolutionFormat());
 	}
+
 }
