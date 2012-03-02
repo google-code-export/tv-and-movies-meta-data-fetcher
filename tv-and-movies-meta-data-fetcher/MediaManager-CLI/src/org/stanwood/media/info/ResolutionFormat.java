@@ -103,8 +103,8 @@ public enum ResolutionFormat {
 		for (ResolutionFormat f : values()) {
 			if (f.interlaced == interlaced && f.width == width) {
 				for (AspectRatio aspectRatio : AspectRatio.values()) {
-					int height1 = (int) (width * aspectRatio.getValue());
-					if (height == height1) {
+					int width1 = (int) (width * aspectRatio.getValue());
+					if (width == width1) {
 						return f;
 					}
 				}
