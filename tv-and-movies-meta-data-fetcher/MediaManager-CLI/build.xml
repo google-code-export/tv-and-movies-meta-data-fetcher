@@ -82,7 +82,7 @@
 			<echo message="Classpath is ${cp}" />
 
 			<!-- Compile the java code from ${src} into ${build} -->
-			<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}">
+			<javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}" encoding="UTF8">
 				<classpath>
 					<path refid="run-time.libs.classpath" />				
 				</classpath>
@@ -95,7 +95,7 @@
 
 		<target name="compile-tests" depends="compile" description="compile the tests">
 			<!-- Compile the java code from ${src} into ${build} -->
-			<javac debug="true" srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}">
+			<javac debug="true" srcdir="${test.src.dir}" destdir="${test.build.dir}" target="${javac.target}" source="${javac.source}" encoding="UTF8">
 				<classpath>
 					<pathelement location="${build.dir}" />
 					<path refid="run-time.libs.classpath" />
