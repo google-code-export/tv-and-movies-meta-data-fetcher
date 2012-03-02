@@ -35,6 +35,10 @@ import org.stanwood.media.actions.podcast.PodCastActionInfo;
 import org.stanwood.media.actions.rename.RenameActionInfo;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
+import org.stanwood.media.info.IMediaFileInfo;
+import org.stanwood.media.info.IVideoFileInfo;
+import org.stanwood.media.info.MediaFileInfoFetcher;
+import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
@@ -79,6 +83,8 @@ public class Controller {
 
 	private boolean testMode;
 
+	private static MediaFileInfoFetcher fileInfoFetcher;
+
 	private static XBMCAddonManager xbmcMgr;
 
 	/**
@@ -96,6 +102,13 @@ public class Controller {
 	 * @throws ConfigException Thrown if their is a problem reading the configuration
 	 */
 	public void init(boolean testMode) throws ConfigException {
+		if (fileInfoFetcher==null) {
+			try {
+				fileInfoFetcher = new MediaFileInfoFetcher(getNativeFolder());
+			} catch (StanwoodException e) {
+				throw new ConfigException("Unable to setup media file imformation reader",e);
+			}
+		}
 		if (xbmcMgr == null) {
 			try {
 				setXBMCAddonManager(new XBMCAddonManager(configReader));
@@ -396,4 +409,14 @@ public class Controller {
 		return mediaDirs;
 	}
 
+	/**
+	 * Used to get information on a media file
+	 * @param file The media file
+	 * @return The information object. If this is a video file then it will be
+	 *         of type {@link IVideoFileInfo}.
+	 * @throws StanwoodException Thrown if their are any problems
+	 */
+	public IMediaFileInfo getMediaFileInformation(File file) throws StanwoodException {
+		return fileInfoFetcher.getInformation(file);
+	}
 }
