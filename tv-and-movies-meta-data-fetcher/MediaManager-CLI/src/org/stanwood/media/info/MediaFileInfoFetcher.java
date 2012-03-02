@@ -126,7 +126,7 @@ public class MediaFileInfoFetcher {
 			log.debug("About to execute: " + cmdLine.toString()); //$NON-NLS-1$
 		}
 		Executor exec = new DefaultExecutor();
-		exec.setExitValues(new int[] {0,1,2,3,4,5,6,7,8,9,255});
+		exec.setExitValues(new int[] {0,1,2,3,4,5,6,7,8,9,255,-1});
 
 		try {
 			ByteArrayOutputStream capture = new ByteArrayOutputStream();
