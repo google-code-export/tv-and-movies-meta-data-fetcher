@@ -29,6 +29,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
+import org.stanwood.media.collections.LRUMapCache;
 import org.stanwood.media.logging.LoggerOutputStream;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.util.FileHelper;
@@ -46,6 +47,8 @@ public class MediaFileInfoFetcher {
 
 	private String mediaInfoCmdPath;
 
+	private LRUMapCache<File,IMediaFileInfo> infoCache;
+
 
 	/**
 	 * The constructor
@@ -62,6 +65,8 @@ public class MediaFileInfoFetcher {
 		if (errors) {
 			throw new StanwoodException("Required system command not found");
 		}
+
+		infoCache = new LRUMapCache<File,IMediaFileInfo>(100);
 	}
 
 	/**
@@ -72,20 +77,25 @@ public class MediaFileInfoFetcher {
 	 * @throws StanwoodException Thrown if their are any problems
 	 */
 	public IMediaFileInfo getInformation(File file) throws StanwoodException {
-		try {
-			File infoFile = FileHelper.createTempFile("output", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (!infoFile.delete() && infoFile.exists()) {
-				throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+		IMediaFileInfo info = infoCache.get(file);
+		if (info==null) {
+			try {
+				File infoFile = FileHelper.createTempFile("output", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (!infoFile.delete() && infoFile.exists()) {
+					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+				}
+				getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$
+				Document dom = XMLParser.parse(infoFile, null);
+				if (!infoFile.delete() && infoFile.exists()) {
+					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+				}
+				info = MediaInfoFactory.createMediaInfo(file,dom);
+				infoCache.put(file,info);
+			} catch (IOException e) {
+				throw new StanwoodException("Unable to create temp file");
 			}
-			getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$
-			Document dom = XMLParser.parse(infoFile, null);
-			if (!infoFile.delete() && infoFile.exists()) {
-				throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
-			}
-			return MediaInfoFactory.createMediaInfo(file,dom);
-		} catch (IOException e) {
-			throw new StanwoodException("Unable to create temp file");
 		}
+		return info;
 	}
 
 	private boolean checkCommand(String cmd) {
