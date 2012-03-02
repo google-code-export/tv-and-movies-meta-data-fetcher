@@ -107,6 +107,13 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		CLIMediaManager.main(args);
 	}
 
+	/**
+	 * Used to execute the mm-xbmc command
+	 * @param mediaDir The media directory location
+	 * @param pattern The pattern been used
+	 * @param cmd args to pass to the command
+	 * @throws Exception Thrown if their is a problem
+	 */
 	public static void mmXBMCCmd(File mediaDir, String pattern,String ... cmd) throws Exception {
 		TestCLIMediaManager.setupTestController(false,mediaDir,pattern,Mode.FILM,XBMCSource.class.getName()+"#metadata.imdb.com",new HashMap<String,String>(),null,"",RenameAction.class.getName());
 		CLIManageAddons.main(cmd);

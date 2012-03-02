@@ -21,8 +21,18 @@ import java.io.File;
 import org.stanwood.media.logging.StanwoodException;
 import org.w3c.dom.Document;
 
+/**
+ * Factory call used to get the correct {@link IMediaFileInfo} implemention for the file.
+ */
 public class MediaInfoFactory {
 
+	/**
+	 * Used to get the media information object
+	 * @param mediaFile The media file
+	 * @param document The XML information about the file
+	 * @return The file information
+	 * @throws StanwoodException Thrown if their are any problems
+	 */
 	public static IMediaFileInfo createMediaInfo(File mediaFile,Document document) throws StanwoodException {
 		VideoInfoParser parser = new VideoInfoParser(document);
 		return new VideoFileInfo(mediaFile,parser);
