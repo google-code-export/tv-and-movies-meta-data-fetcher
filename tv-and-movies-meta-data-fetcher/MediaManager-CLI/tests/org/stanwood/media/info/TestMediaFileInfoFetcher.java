@@ -110,4 +110,28 @@ public class TestMediaFileInfoFetcher {
 		Assert.assertFalse(info.isHighDef());
 		Assert.assertEquals(null, info.getResolutionFormat());
 	}
+
+	/**
+	 * Used to test info is correct for a high def video
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testVideoHighdef() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		URL url = Data.class.getResource("a_video_hd.mkv");
+		File file = new File(url.toURI());
+		Assert.assertTrue(file.exists());
+
+		MediaFileInfoFetcher infoFetcher = new MediaFileInfoFetcher(nativeDir);
+		IVideoFileInfo info = (IVideoFileInfo)infoFetcher.getInformation(file);
+		Assert.assertEquals(322072, info.getFileSize());
+		Assert.assertEquals(1920, info.getWidth());
+		Assert.assertEquals(1080, info.getHeight());
+		Assert.assertEquals(15.0F, info.getFrameRate(),0);
+		Assert.assertEquals(AspectRatio.Ratio_16_9, info.getAspectRatio());
+		Assert.assertEquals(ResolutionFormat.Format_1080p, info.getResolutionFormat());
+		Assert.assertFalse(info.isInterlaced());
+		Assert.assertTrue(info.isWideScreen());
+		Assert.assertTrue(info.isHighDef());
+	}
 }
