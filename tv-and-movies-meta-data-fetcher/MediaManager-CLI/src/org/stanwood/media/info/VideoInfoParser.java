@@ -36,12 +36,6 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public VideoInfoParser(Document dom)  {
 		this.dom = dom;
-		try {
-			System.out.println(XMLParser.domToStr(dom));
-		} catch (XMLParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private Node getVideoTrack() throws XMLParserException {
