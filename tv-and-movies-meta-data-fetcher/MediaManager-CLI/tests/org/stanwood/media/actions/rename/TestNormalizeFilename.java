@@ -19,19 +19,31 @@ package org.stanwood.media.actions.rename;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Used to test that file names are correctly normalised
+  */
 @SuppressWarnings("nls")
 public class TestNormalizeFilename {
 
+	/**
+	 * Test filenames that don't need to be changed
+	 */
 	@Test
 	public void testValidFileName() {
 		Assert.assertEquals("blahfdgdhffgh",PatternMatcher.normalizeText("blahfdgdhffgh"));
 	}
 
+	/**
+	 * Test filenames with characters that are not allowed in filenames
+	 */
 	@Test
 	public void testNonAllowedInFilenames() {
 		Assert.assertEquals("jkhjk--.sfdgg",PatternMatcher.normalizeText("jkhjk:/!sfdgg"));
 	}
 
+	/**
+	 * Test that accented characters get replaced
+	 */
 	@Test
 	public void testAccents() {
 		Assert.assertEquals("Finale",PatternMatcher.normalizeText("Finalé"));
@@ -39,8 +51,11 @@ public class TestNormalizeFilename {
 		Assert.assertEquals("AAA?CE?e?o???",PatternMatcher.normalizeText("ÃÄÅÆÇÈØèæöø©®"));
 	}
 
+	/**
+	 * Test that invalid punctuation is replaced
+	 */
 	@Test
-	public void testInvalidPunucation() {
+	public void testInvalidPunctuation() {
 		Assert.assertEquals("????\"'Blah'\"",PatternMatcher.normalizeText("՚՛՜՝“‘Blah’”"));
 	}
 }

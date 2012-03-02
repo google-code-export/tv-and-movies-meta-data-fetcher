@@ -36,6 +36,10 @@ import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.w3c.dom.Document;
 
+/**
+ * Used to find information about a media file that is containted within the
+ * file.
+ */
 public class MediaFileInfoFetcher {
 
 	private final static Log log = LogFactory.getLog(MediaFileInfoFetcher.class);
@@ -43,8 +47,13 @@ public class MediaFileInfoFetcher {
 	private String mediaInfoCmdPath;
 
 
+	/**
+	 * The constructor
+	 * @param nativeDir The native application directory
+	 * @throws StanwoodException Thrown if their is a problem finding the native apps
+	 */
 	public MediaFileInfoFetcher(File nativeDir) throws StanwoodException {
-		mediaInfoCmdPath = NativeHelper.getNativeApplication(nativeDir,"mediainfo");
+		mediaInfoCmdPath = NativeHelper.getNativeApplication(nativeDir,"mediainfo"); //$NON-NLS-1$
 		boolean errors = false;
 		if (!checkCommand(mediaInfoCmdPath)) {
 			log.error(MessageFormat.format("Unable to execute command {0}",mediaInfoCmdPath));
@@ -55,6 +64,13 @@ public class MediaFileInfoFetcher {
 		}
 	}
 
+	/**
+	 * Used to get information on a media file
+	 * @param file The media file
+	 * @return The information object. If this is a video file then it will be
+	 *         of type {@link IVideoFileInfo}.
+	 * @throws StanwoodException Thrown if their are any problems
+	 */
 	public IMediaFileInfo getInformation(File file) throws StanwoodException {
 		try {
 			File infoFile = FileHelper.createTempFile("output", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$

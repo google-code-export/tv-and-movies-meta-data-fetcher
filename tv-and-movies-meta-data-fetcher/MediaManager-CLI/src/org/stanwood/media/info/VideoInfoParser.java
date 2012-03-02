@@ -16,23 +16,32 @@
  */
 package org.stanwood.media.info;
 
-import java.util.regex.Pattern;
-
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * This class is used to parse the XML output of the mediainfo command
+ */
 public class VideoInfoParser extends XMLParser {
 
-	private final static Pattern PATTERN_FPS = Pattern.compile("(.*) fps");
-	private final static Pattern PATTERN_PIXELS = Pattern.compile("(.*) pixels");
-	private final static Pattern PATTERN_MS = Pattern.compile("(.*)ms");
 	private Document dom;
 	private Node videoTrack;
 
+	/**
+	 * Constructor
+	 * @param dom The DOM XML model output from the command mediainfo
+	 */
 	public VideoInfoParser(Document dom)  {
 		this.dom = dom;
+		try {
+			System.out.println(XMLParser.domToStr(dom));
+		} catch (XMLParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private Node getVideoTrack() throws XMLParserException {
@@ -49,39 +58,82 @@ public class VideoInfoParser extends XMLParser {
 	}
 
 	private String getTrackString(Node trackNode,String key) throws XMLParserException {
-		return getFirstChildElement(trackNode,key).getTextContent();
+		Element value = getFirstChildElement(trackNode,key);
+		if (value==null) {
+			return null;
+		}
+		return value.getTextContent();
 	}
 
 	private Float getTrackFrameRate(Node trackNode) throws XMLParserException {
-		return Float.parseFloat(getTrackString(trackNode,"Frame_rate"));
+		return Float.parseFloat(getTrackString(trackNode,"Frame_rate")); //$NON-NLS-1$
 	}
 
 	private Integer getTrackDuration(Node trackNode) throws XMLParserException {
-		return Integer.parseInt(getTrackString(trackNode,"Duration"));
+		return Integer.parseInt(getTrackString(trackNode,"Duration")); //$NON-NLS-1$
 	}
 
+	/**
+	 * Used to get the height in pixels or null if it can be found
+	 * @return the height or null if it can be found
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
 	public Integer getHeight() throws XMLParserException {
 		Node track = getVideoTrack();
-		return Integer.parseInt(getTrackString(track,"Height"));
+		return Integer.parseInt(getTrackString(track,"Height")); //$NON-NLS-1$
 	}
 
+	/**
+	 * Used to get the width in pixels or null if it can be found
+	 * @return the width or null if it can be found
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
 	public Integer getWidth() throws XMLParserException {
 		Node track = getVideoTrack();
-		return Integer.parseInt(getTrackString(track,"Width"));
+		return Integer.parseInt(getTrackString(track,"Width")); //$NON-NLS-1$
 	}
 
+	/**
+	 * Used to get the frames per second or null if it can't be found
+	 * @return the frames per second or null if it can't be found
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
 	public Float getFrameRate() throws XMLParserException {
 		Node track = getVideoTrack();
 		return getTrackFrameRate(track);
 	}
 
+	/**
+	 * Used to get the video duration in milliseconds or null if it can't be found
+	 * @return the video duration in milliseconds or null if it can't be found
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
 	public Integer getDuration() throws XMLParserException {
 		Node track = getVideoTrack();
 		return getTrackDuration(track);
 	}
 
+	/**
+	 * Used to get the aspect ratio or null if it can't be found
+	 * @return the aspect ratio or null if it can't be found
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
 	public String getAspectRatio() throws XMLParserException {
 		Node track = getVideoTrack();
-		return getLastChildElement(track,"Display_aspect_ratio").getTextContent();
+		return getLastChildElement(track,"Display_aspect_ratio").getTextContent(); //$NON-NLS-1$
+	}
+
+	/**
+	 * Used to find out if the scan type is interlaced
+	 * @return true if the scan type is interlaced, otherwise false
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
+	public boolean getInterlaced() throws XMLParserException {
+		Node track = getVideoTrack();
+		String value = getTrackString(track,"Scan_type"); //$NON-NLS-1$
+		if (value==null) {
+			return false;
+		}
+		return !value.equalsIgnoreCase("progressive");  //$NON-NLS-1$
 	}
 }

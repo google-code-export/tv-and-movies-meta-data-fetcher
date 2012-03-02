@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011  John-Paul.Stanford <dev@stanwood.org.uk>
+ *  Copyright (C) 2008-2012  John-Paul.Stanford <dev@stanwood.org.uk>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,8 +16,14 @@
  */
 package org.stanwood.media.info;
 
+/**
+ * This interface can be used to request generic information about media files
+ */
 public interface IMediaFileInfo {
 
-
+	/**
+	 * Used to get the size of the media file
+	 * @return the size of the media file
+	 */
 	public long getFileSize();
 }

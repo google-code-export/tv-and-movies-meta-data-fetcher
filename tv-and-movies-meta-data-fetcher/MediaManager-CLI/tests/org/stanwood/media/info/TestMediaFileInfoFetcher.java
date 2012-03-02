@@ -24,17 +24,25 @@ import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.testdata.Data;
 
+/**
+ * Used to test the media file information fetcher
+ */
 @SuppressWarnings("nls")
 public class TestMediaFileInfoFetcher {
 
 	private File nativeDir = null;
 
+	/** The constructor */
 	public TestMediaFileInfoFetcher() {
 		if (System.getProperty("NATIVE_DIR")!=null) {
 			nativeDir = new File(System.getProperty("NATIVE_DIR"));
 		}
 	}
 
+	/**
+	 * Used to test the media information for a .m4v file.
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testVideoM4VFile() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -49,8 +57,16 @@ public class TestMediaFileInfoFetcher {
 		Assert.assertEquals(100, info.getHeight());
 		Assert.assertEquals(15.0F, info.getFrameRate(),0);
 		Assert.assertEquals(AspectRatio.Ratio_4_3, info.getAspectRatio());
+		Assert.assertFalse(info.isInterlaced());
+		Assert.assertFalse(info.isWideScreen());
+		Assert.assertFalse(info.isHighDef());
+		Assert.assertEquals(null, info.getResolutionFormat());
 	}
 
+	/**
+	 * Used to test the media information for a .avi file.
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testVideoAVIFile() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -64,6 +80,10 @@ public class TestMediaFileInfoFetcher {
 		Assert.assertEquals(100, info.getWidth());
 		Assert.assertEquals(100, info.getHeight());
 		Assert.assertEquals(15.0F, info.getFrameRate(),0);
-		Assert.assertEquals(AspectRatio.Ratio_4_3, info.getAspectRatio());
+		Assert.assertEquals(AspectRatio.Ratio_1_1, info.getAspectRatio());
+		Assert.assertFalse(info.isInterlaced());
+		Assert.assertFalse(info.isWideScreen());
+		Assert.assertFalse(info.isHighDef());
+		Assert.assertEquals(null, info.getResolutionFormat());
 	}
 }
