@@ -12,6 +12,8 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.AbstractAction;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IActionEventHandler;
+import org.stanwood.media.info.IMediaFileInfo;
+import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
@@ -76,12 +78,13 @@ public class RenameAction extends AbstractAction {
 		}
 	}
 
-	private File renameFilm(MediaDirectory dir,IFilm film,File file,Integer part,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
+	private File renameFilm(MediaDirectory dir,IFilm film,File file,Integer part,IActionEventHandler eventHandler) throws MalformedURLException, IOException, PatternException,StanwoodException {
 		if (film!=null) {
 			String oldFileName = file.getName();
 			String ext = oldFileName.substring(oldFileName.lastIndexOf('.')+1);
 			PatternMatcher pm = new PatternMatcher();
-			File newName = dir.getPath(pm.getNewFilmName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),film, ext,part));
+			IMediaFileInfo info = dir.getController().getMediaFileInformation(file);
+			File newName = dir.getPath(pm.getNewFilmName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),film, ext,part,info));
 
 			doRename(dir,file, newName,film,eventHandler);
 			return newName;
@@ -89,14 +92,15 @@ public class RenameAction extends AbstractAction {
 		return null;
 	}
 
-	private File renameTVShow(MediaDirectory dir,IEpisode episode,File file,IActionEventHandler eventHandler) throws MalformedURLException, SourceException, IOException, StoreException, PatternException, ActionException {
+	private File renameTVShow(MediaDirectory dir,IEpisode episode,File file,IActionEventHandler eventHandler) throws MalformedURLException, IOException, PatternException,StanwoodException {
 		if (episode==null) {
 			log.error(MessageFormat.format(Messages.getString("RenameAction.UNABLE_FIND_EPISODE"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		else {
 			String ext = FileHelper.getExtension(file);
 			PatternMatcher pm = new PatternMatcher();
-			File newName = dir.getPath(pm.getNewTVShowName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),episode, ext));
+			IMediaFileInfo info = dir.getController().getMediaFileInformation(file);
+			File newName = dir.getPath(pm.getNewTVShowName(dir.getMediaDirConfig(),dir.getMediaDirConfig().getPattern(),episode, ext,info));
 
 			doRename(dir,file, newName,episode,eventHandler);
 			file = newName;

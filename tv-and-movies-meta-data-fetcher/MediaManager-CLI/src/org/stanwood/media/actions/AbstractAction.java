@@ -63,10 +63,10 @@ public abstract class AbstractAction implements IAction {
 			try {
 				String ext = FileHelper.getExtension(mediaFile);
 				if (dirConfig.getMode() == Mode.TV_SHOW) {
-					s = PM.getNewTVShowName(dirConfig, s, (Episode)video,  ext);
+					s = PM.getNewTVShowName(dirConfig, s, (Episode)video,  ext,null);
 				}
 				else {
-					s = PM.getNewFilmName(dirConfig, s, (Film)video,  ext,part);
+					s = PM.getNewFilmName(dirConfig, s, (Film)video,  ext,part,null);
 				}
 			} catch (PatternException e) {
 				throw new ActionException(MessageFormat.format(Messages.getString("AbstractAction.UNABLE_TO_RESOLVE_PATTERN"),input),e); //$NON-NLS-1$

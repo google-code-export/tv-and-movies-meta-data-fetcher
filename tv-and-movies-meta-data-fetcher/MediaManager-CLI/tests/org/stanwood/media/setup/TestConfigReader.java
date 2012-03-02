@@ -507,6 +507,38 @@ public class TestConfigReader {
 		}
 	}
 
+//	@Test
+//	public void testScripts() throws Exception {
+//		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+//
+//		File mediaDir = FileHelper.createTmpDir("media");
+//		try {
+//
+//			StringBuilder testConfig = new StringBuilder();
+//			testConfig.append("<mediaManager>"+LS);
+//			testConfig.append("  <scripts>"+LS);
+//			testConfig.append("    <script lang=\"jruby\"><![CDATA["+LS);
+//			testConfig.append("      def getYear(video)"+LS);
+//			testConfig.append("          if (video.getYear()!=nil)"+LS);
+//			testConfig.append("              return video.getYear()"+LS);
+//			testConfig.append("          end"+LS);
+//			testConfig.append("          return nil;"+LS);
+//			testConfig.append("      end"+LS);
+//			testConfig.append("    ]]></script>"+LS);
+//			testConfig.append("    <script lang=\"jruby\" file=\"blah.rb\"/>"+LS);
+//			testConfig.append("  </scripts>"+LS);
+//			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
+//			testConfig.append("    <pattern type=\"jruby\"><![CDATA[\"#{video.getTitle()}#{getYear(video)}#{getPart(part)}#{File.extname(filename)}\"]]></pattern>"+LS);
+//			testConfig.append("  </mediaDirectory>"+LS);
+//			testConfig.append("</mediaManager>"+LS);
+//
+//			ConfigReader configReader = createConfigReader(testConfig);
+//		}
+//		finally {
+//			FileHelper.delete(mediaDir);
+//		}
+//	}
+
 	/**
 	 * Used to test that the watch folders can be configured
 	 * @throws Exception Thrown if their are any problems

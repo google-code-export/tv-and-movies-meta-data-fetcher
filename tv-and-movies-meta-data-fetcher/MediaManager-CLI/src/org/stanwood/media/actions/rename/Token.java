@@ -30,7 +30,11 @@ public enum Token {
 	/** the token for the show or film image URL */
 	IMAGE('i',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for the show or film short summary */
-	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING); //$NON-NLS-1$ //$NON-NLS-2$
+	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	/** The token for high definition */
+	HIGH_DEFINITION('d',"(HD)",ValueType.STRING), //$NON-NLS-1$
+	/** The token for wide screen */
+	WIDESCREEN('w',"(WS)",ValueType.STRING); //$NON-NLS-1$
 
 	private char tok;
 	private String pattern;
