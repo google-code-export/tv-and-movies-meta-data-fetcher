@@ -87,4 +87,27 @@ public class TestMediaFileInfoFetcher {
 		Assert.assertEquals(null, info.getResolutionFormat());
 	}
 
+	/**
+	 * Used to test the media information for a .mkv file is correct and that it's detected as 16:9
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testVideoWideScreenMKV() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		URL url = Data.class.getResource("a_video_ws.mkv");
+		File file = new File(url.toURI());
+		Assert.assertTrue(file.exists());
+
+		MediaFileInfoFetcher infoFetcher = new MediaFileInfoFetcher(nativeDir);
+		IVideoFileInfo info = (IVideoFileInfo)infoFetcher.getInformation(file);
+		Assert.assertEquals(25964, info.getFileSize());
+		Assert.assertEquals(100, info.getWidth());
+		Assert.assertEquals(100, info.getHeight());
+		Assert.assertEquals(15.0F, info.getFrameRate(),0);
+		Assert.assertEquals(AspectRatio.Ratio_16_9, info.getAspectRatio());
+		Assert.assertFalse(info.isInterlaced());
+		Assert.assertTrue(info.isWideScreen());
+		Assert.assertFalse(info.isHighDef());
+		Assert.assertEquals(null, info.getResolutionFormat());
+	}
 }
