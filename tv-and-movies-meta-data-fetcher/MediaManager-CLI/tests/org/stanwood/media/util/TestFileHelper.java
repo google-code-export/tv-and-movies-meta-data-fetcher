@@ -16,12 +16,13 @@ public class TestFileHelper {
 	 */
 	@Test
 	public void testResolveRelativePaths() {
-		File f= new File(File.separator+"this"+File.separator+"is"+File.separator+"a"+File.separator+"test.txt");
-		String expected = File.separator+"this"+File.separator+"is"+File.separator+"a"+File.separator+"test.txt";
-		Assert.assertEquals(expected,FileHelper.resolveRelativePaths(f).getAbsolutePath());
+		File f1= new File(File.separator+"this"+File.separator+"is"+File.separator+"a"+File.separator+"test.txt");
+		File f2= new File(File.separator+"this"+File.separator+"is"+File.separator+"a"+File.separator+"test.txt");
 
-		f= new File(File.separator+"this"+File.separator+"is"+File.separator+".."+File.separator+"a"+File.separator+"test.txt");
-		expected = File.separator+"this"+File.separator+"a"+File.separator+"test.txt";
-		Assert.assertEquals(expected,FileHelper.resolveRelativePaths(f).getAbsolutePath());
+		Assert.assertEquals(f2.getAbsolutePath(),FileHelper.resolveRelativePaths(f1).getAbsolutePath());
+
+		f1= new File(File.separator+"this"+File.separator+"is"+File.separator+".."+File.separator+"a"+File.separator+"test.txt");
+		f2= new File(File.separator+"this"+File.separator+"a"+File.separator+"test.txt");
+		Assert.assertEquals(f2.getAbsolutePath(),FileHelper.resolveRelativePaths(f1).getAbsolutePath());
 	}
 }
