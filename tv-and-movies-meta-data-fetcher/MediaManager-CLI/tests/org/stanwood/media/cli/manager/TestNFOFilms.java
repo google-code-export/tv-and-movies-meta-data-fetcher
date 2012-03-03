@@ -3,6 +3,7 @@ package org.stanwood.media.cli.manager;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 			mmManagerCmd(mediaDir, pattern);
 
 			List<String>files = FileHelper.listFilesAsStrings(mediaDir);
-
+			Collections.sort(files);
 			Assert.assertEquals(6,files.size());
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron Man (2008) Part 1.avi").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron Man (2008) Part 2.avi").getAbsolutePath(),files.get(1));

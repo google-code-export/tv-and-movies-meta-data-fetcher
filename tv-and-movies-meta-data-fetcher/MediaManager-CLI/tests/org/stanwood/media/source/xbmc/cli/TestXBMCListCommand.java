@@ -39,10 +39,10 @@ public class TestXBMCListCommand extends BaseCLITest {
 		Assert.assertEquals(expected.toString(), stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
-		expected.append("\n");
-		expected.append("Command Options:\n");
-		expected.append("  --help, -h                    Show the help\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]"+FileHelper.LS);
+		expected.append(""+FileHelper.LS);
+		expected.append("Command Options:"+FileHelper.LS);
+		expected.append("  --help, -h                    Show the help"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 
@@ -81,8 +81,8 @@ public class TestXBMCListCommand extends BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.6\n");
-		expected.append("Installed plugin 'metadata.common.hdtrailers.net'\n");
+		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.6"+FileHelper.LS);
+		expected.append("Installed plugin 'metadata.common.hdtrailers.net'"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(), stdout.toString());
 		Assert.assertEquals("",stderr.toString());
 
@@ -166,14 +166,14 @@ public class TestXBMCListCommand extends BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Unrecognized subcommand option: --blah\n");
+		expected.append("Unrecognized subcommand option: --blah"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(),stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
-		expected.append("\n");
-		expected.append("Command Options:\n");
-		expected.append("  --help, -h                    Show the help\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]"+FileHelper.LS);
+		expected.append(""+FileHelper.LS);
+		expected.append("Command Options:"+FileHelper.LS);
+		expected.append("  --help, -h                    Show the help"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 
@@ -196,14 +196,14 @@ public class TestXBMCListCommand extends BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Unkown sub-command argument 'blah'\n");
+		expected.append("Unkown sub-command argument 'blah'"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(),stderr.toString());
 
 		expected = new StringBuilder();
-		expected.append("usage: mm-xbmc [--global-options] list [--command-options]\n");
-		expected.append("\n");
-		expected.append("Command Options:\n");
-		expected.append("  --help, -h                    Show the help\n");
+		expected.append("usage: mm-xbmc [--global-options] list [--command-options]"+FileHelper.LS);
+		expected.append(""+FileHelper.LS);
+		expected.append("Command Options:"+FileHelper.LS);
+		expected.append("  --help, -h                    Show the help"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(),stdout.toString());
 	}
 }

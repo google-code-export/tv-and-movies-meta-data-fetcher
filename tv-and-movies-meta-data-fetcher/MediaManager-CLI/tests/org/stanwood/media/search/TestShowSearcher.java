@@ -12,14 +12,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.actions.rename.Token;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Platform;
 
 /**
  * Used to test that the class {@link ShowSearcher} works as expected
@@ -49,6 +52,7 @@ public class TestShowSearcher {
 			for (File mediaFile : FileHelper.listFiles(filmsDir)) {
 				String pattern = patterns.get(mediaFile);
 				Assert.assertNotNull(pattern);
+				System.out.println(pattern);
 				searcher.search(mediaFile, TestFilmSearcher.getMediaDir(filmsDir,pattern,Mode.TV_SHOW),true);
 			}
 
@@ -84,6 +88,14 @@ public class TestShowSearcher {
 		}
 	}
 
+	@Test
+	public void testTokenPatterns() {
+		for (Token t : Token.values()) {
+			Pattern.compile("^"+t.getPattern()+"$");
+		}
+
+	}
+
 	private void assertSearchDetails(String expectedTerm,String expectedYear,TSearchDetails actual) {
 		Assert.assertEquals("Did not extract the correct term from: " + actual.getOriginalFile().getAbsolutePath(),expectedTerm,actual.getTerm());
 		if (expectedYear == null) {
@@ -109,6 +121,9 @@ public class TestShowSearcher {
 		    	if (!strLine.startsWith("#")) {
 			    	String fileName = strLine.substring(pos+1);
 			    	String pattern =  strLine.substring(0,pos);
+			    	if (Platform.isWindows()) {
+			    		pattern = pattern.replaceAll("/", "\\"+File.separator);
+			    	}
 
 			    	File f = new File(tmpDir,fileName);
 			    	patterns.put(f,pattern);

@@ -52,6 +52,9 @@ public class VideoInfoParser extends XMLParser {
 	}
 
 	private String getTrackString(Node trackNode,String key) throws XMLParserException {
+		if (trackNode==null) {
+			return null;
+		}
 		Element value = getFirstChildElement(trackNode,key);
 		if (value==null) {
 			return null;
@@ -74,6 +77,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public Integer getHeight() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return null;
+		}
 		return Integer.parseInt(getTrackString(track,"Height")); //$NON-NLS-1$
 	}
 
@@ -84,6 +90,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public Integer getWidth() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return null;
+		}
 		return Integer.parseInt(getTrackString(track,"Width")); //$NON-NLS-1$
 	}
 
@@ -94,6 +103,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public Float getFrameRate() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return null;
+		}
 		return getTrackFrameRate(track);
 	}
 
@@ -104,6 +116,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public Integer getDuration() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return null;
+		}
 		return getTrackDuration(track);
 	}
 
@@ -114,6 +129,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public String getAspectRatio() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return null;
+		}
 		return getLastChildElement(track,"Display_aspect_ratio").getTextContent(); //$NON-NLS-1$
 	}
 
@@ -124,6 +142,9 @@ public class VideoInfoParser extends XMLParser {
 	 */
 	public boolean getInterlaced() throws XMLParserException {
 		Node track = getVideoTrack();
+		if (track==null) {
+			return false;
+		}
 		String value = getTrackString(track,"Scan_type"); //$NON-NLS-1$
 		if (value==null) {
 			return false;

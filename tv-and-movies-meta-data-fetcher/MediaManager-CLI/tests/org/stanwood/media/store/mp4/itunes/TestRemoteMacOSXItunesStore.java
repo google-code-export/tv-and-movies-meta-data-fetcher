@@ -10,6 +10,7 @@ import javax.script.ScriptException;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
@@ -28,6 +29,7 @@ import org.stanwood.media.util.FileHelper;
  * This is used to test the {@link RemoteMacOSXItunesStore} with a dummy server
  */
 @SuppressWarnings("nls")
+@Ignore
 public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest {
 
 	private File nativeDir = null;

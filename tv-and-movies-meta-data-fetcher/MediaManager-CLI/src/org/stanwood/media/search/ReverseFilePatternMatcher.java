@@ -48,7 +48,7 @@ public class ReverseFilePatternMatcher {
 				}
 			}
 			else {
-				if (c=='.' || c=='$' || c=='?' || c=='^' || c=='|' || c=='(' || c==')') {
+				if (c=='.' || c=='$' || c=='?' || c=='^' || c=='|' || c=='(' || c==')' || c=='\\') {
 					regexp.append("\\"+c); //$NON-NLS-1$
 				}
 				else {
