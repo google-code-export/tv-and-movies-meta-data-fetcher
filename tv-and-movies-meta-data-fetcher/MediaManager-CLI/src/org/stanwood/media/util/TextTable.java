@@ -89,7 +89,7 @@ public class TextTable {
 		for (int i=0;i<getMaxRowWidth();i++) {
 			buffer.append("="); //$NON-NLS-1$
 		}
-		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(FileHelper.LS);
 	}
 
 	private void appendWithPadding(String value,int columnNumber,StringBuilder buffer) {

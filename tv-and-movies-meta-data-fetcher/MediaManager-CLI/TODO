@@ -17,6 +17,7 @@ Update docs
 	- Add the -v option to cli tools
 	- Add new store
 	- Add new patterns
+	- Add details about windows/unix paths. Patterns need correct separators
 Compile AtomicParsely for all platforms
 Add support for different video qualities
 	* Add query code to work out the resolution of media files (inprogress)

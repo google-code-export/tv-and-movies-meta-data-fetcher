@@ -26,13 +26,13 @@ public class TestTextTable {
 		table.printTable(actual);
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("row1      | Description | blah     \n");
-		expected.append("===================================\n");
-		expected.append("dfsdf     | sgfghfghgfh | gdfgdfg  \n");
-		expected.append("hgfhgfh   | fghgfhfgh   | gfhjj    \n");
-		expected.append("          | fghfghfgh   | fgdfg    \n");
-		expected.append("          |             | fghfghfgh\n");
-		expected.append("fghfghgfh | fghfghghf   | gfhfgh   \n");
+		expected.append("row1      | Description | blah     "+FileHelper.LS);
+		expected.append("==================================="+FileHelper.LS);
+		expected.append("dfsdf     | sgfghfghgfh | gdfgdfg  "+FileHelper.LS);
+		expected.append("hgfhgfh   | fghgfhfgh   | gfhjj    "+FileHelper.LS);
+		expected.append("          | fghfghfgh   | fgdfg    "+FileHelper.LS);
+		expected.append("          |             | fghfghfgh"+FileHelper.LS);
+		expected.append("fghfghgfh | fghfghghf   | gfhfgh   "+FileHelper.LS);
 		Assert.assertEquals(expected.toString(), actual.toString());
 	}
 }

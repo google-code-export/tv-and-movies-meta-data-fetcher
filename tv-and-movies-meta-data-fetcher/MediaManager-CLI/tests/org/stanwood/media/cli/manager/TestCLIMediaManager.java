@@ -467,6 +467,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			// Check that things were renamed correctly
 			List<String>files = FileHelper.listFilesAsStrings(dir);
 			Assert.assertEquals(5,files.size());
+			Collections.sort(files);
 			// .show.xml
 			Assert.assertEquals(new File(dir,".mediaManager-xmlStore.xml").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(dir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"01 - Genesis.avi").getAbsolutePath(),files.get(1));

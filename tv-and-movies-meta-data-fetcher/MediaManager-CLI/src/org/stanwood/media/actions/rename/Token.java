@@ -10,27 +10,27 @@ import org.stanwood.media.source.xbmc.expression.ValueType;
 public enum Token {
 
 	/** the token for "show name" */
-	SHOW_NAME('n',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	SHOW_NAME('n',"([^\\"+File.separator+"]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "episode number" */
 	EPISODE('e',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "season number" */
 	SEASON('s',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "extension" */
-	EXT('x',"([^\\.\\"+File.separatorChar+"]*?)$",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	EXT('x',"([^\\.\\"+File.separator+"]*?)$",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "episode or film title" */
-	TITLE('t',"([^\\"+File.separatorChar+"]*?)",ValueType.STRING),  //$NON-NLS-1$//$NON-NLS-2$
+	TITLE('t',"([^\\"+File.separator+"]*?)",ValueType.STRING),  //$NON-NLS-1$//$NON-NLS-2$
 	/** add a % char */
 	PERCENT('%',"%",ValueType.STRING), //$NON-NLS-1$
 	/** the token for "show Id" */
-	ID('h',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	ID('h',"([^\\"+File.separator+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "part number" */
 	PART('p',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for the "year" */
 	YEAR('y',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for the show or film image URL */
-	IMAGE('i',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	IMAGE('i',"([^\\"+File.separator+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for the show or film short summary */
-	SUMMARY('u',"([^\\"+File.separatorChar+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
+	SUMMARY('u',"([^\\"+File.separator+"?]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** The token for high definition */
 	HIGH_DEFINITION('d',"(HD)",ValueType.STRING), //$NON-NLS-1$
 	/** The token for wide screen */

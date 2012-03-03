@@ -8,6 +8,7 @@ import javax.script.ScriptException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.store.StoreException;
@@ -17,6 +18,7 @@ import org.stanwood.media.store.StoreException;
  * to control itunes. The server is a dummy server that just logs the commands instead
  * of talking to itunes
  */
+@Ignore
 @SuppressWarnings("nls")
 public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 

@@ -7,6 +7,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class PodCastActionTest {
 		runAction(params);
 
 		List<String>files = FileHelper.listFilesAsStrings(mediaDirLocation);
+		Collections.sort(files);
 		Assert.assertEquals(7,files.size());
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 1.avi").getAbsolutePath(),files.get(0));
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 2.avi").getAbsolutePath(),files.get(1));
@@ -134,6 +136,7 @@ public class PodCastActionTest {
 		runAction(params);
 
 		List<String>files = FileHelper.listFilesAsStrings(mediaDirLocation);
+		Collections.sort(files);
 		Assert.assertEquals(7,files.size());
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 1.avi").getAbsolutePath(),files.get(0));
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 2.avi").getAbsolutePath(),files.get(1));
@@ -172,6 +175,7 @@ public class PodCastActionTest {
 		runAction(params);
 
 		List<String>files = FileHelper.listFilesAsStrings(mediaDirLocation);
+		Collections.sort(files);
 		Assert.assertEquals(7,files.size());
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 1.avi").getAbsolutePath(),files.get(0));
 		Assert.assertEquals(new File(mediaDirLocation,File.separator+dummyFilm.getTitle()+" (2009) Part 2.avi").getAbsolutePath(),files.get(1));

@@ -94,6 +94,9 @@ public enum AspectRatio {
 	 * @return The ratio
 	 */
 	public static AspectRatio fromString(String ratio) {
+		if (ratio==null) {
+			return Unknown;
+		}
 		DecimalFormat twoDForm = new DecimalFormat("#.##"); //$NON-NLS-1$
 		for (AspectRatio aspectRatio : values()) {
 			if (aspectRatio.getDescription().equals(ratio)) {
