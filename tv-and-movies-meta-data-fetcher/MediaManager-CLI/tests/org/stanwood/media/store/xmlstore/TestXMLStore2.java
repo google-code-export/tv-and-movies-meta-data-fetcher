@@ -83,6 +83,7 @@ public class TestXMLStore2 {
 			File actualFile = new File(dir,".mediaManager-xmlStore.xml");
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("rootMedia",dir.getAbsolutePath());
+			params.put("fs",File.separator);
 			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults.xml"),new FileInputStream(actualFile),params);
 		} finally {
 			FileHelper.delete(dir);

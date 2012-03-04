@@ -13,6 +13,7 @@ import org.stanwood.media.cli.AbstractSubCLICommand;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * The main XBMC addon manager command line command
@@ -144,7 +145,7 @@ public class CLIManageAddons extends AbstractLauncher {
 			}
 			stdout.print(buffer);
 			if (buffer.length()>30) {
-				stdout.print("\n                                "); //$NON-NLS-1$
+				stdout.print(FileHelper.LS+"                                "); //$NON-NLS-1$
 			}
 			stdout.println(command.getDescription());
 		}

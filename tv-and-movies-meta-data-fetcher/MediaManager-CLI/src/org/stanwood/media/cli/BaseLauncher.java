@@ -16,6 +16,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.stanwood.media.Controller;
 import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This is the base class of all CLI command launchers
@@ -293,7 +294,7 @@ public abstract class BaseLauncher implements ICLICommand {
 			}
 			stdout.print(buffer);
 			if (buffer.length()>30) {
-				stdout.print("\n                                "); //$NON-NLS-1$
+				stdout.print(FileHelper.LS+"                                "); //$NON-NLS-1$
 			}
 			stdout.print(o.getDescription());
 			stdout.println();

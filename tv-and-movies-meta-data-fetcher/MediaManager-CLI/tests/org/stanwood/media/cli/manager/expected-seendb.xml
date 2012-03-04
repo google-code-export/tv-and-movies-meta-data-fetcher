@@ -1,7 +1,7 @@
 <seen>
   <mediaDir dir="$rootMediaDir$">
-    <file lastModified="0" path="$rootMediaDir$/Heroes/Season 1/01 - Genesis.avi"/>
-    <file lastModified="0" path="$rootMediaDir$/Heroes/Season 1/02 - Don't Look Back.mkv"/>
-    <file lastModified="0" path="$rootMediaDir$/Heroes/Season 2/02 - Lizards.mpg"/>       
+    <file lastModified="0" path="$rootMediaDir$$fs$Heroes$fs$Season 1$fs$01 - Genesis.avi"/>
+    <file lastModified="0" path="$rootMediaDir$$fs$Heroes$fs$Season 1$fs$02 - Don't Look Back.mkv"/>
+    <file lastModified="0" path="$rootMediaDir$$fs$Heroes$fs$Season 2$fs$02 - Lizards.mpg"/>       
   </mediaDir>
 </seen>
