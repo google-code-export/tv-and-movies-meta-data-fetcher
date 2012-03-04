@@ -44,7 +44,7 @@
           <actor name="Richard Roundtree" role=""/>
           <actor name="Shishir Kurup" role=""/>
         </actors>
-        <file location="Heroes/Season 1/01 - Genesis.avi" orginalLocation="Heroes/101 - Blah Blah Blah.avi"/>
+        <file location="Heroes$fs$Season 1$fs$01 - Genesis.avi" orginalLocation="Heroes$fs$101 - Blah Blah Blah.avi"/>
       </episode>
       <episode episodeId="308907" firstAired="2006-10-02"
         imageUrl="http://thetvdb.com/banners/episodes/79501/308907.jpg"
@@ -71,7 +71,7 @@
           <actor name="Richard Steinmetz" role=""/>
           <actor name="Matt Lander" role=""/>
         </actors>
-        <file location="Heroes/Season 1/02 - Don't Look Back.mkv" orginalLocation="Heroes/S01E02 - Hello this is a test.mkv"/>
+        <file location="Heroes$fs$Season 1$fs$02 - Don't Look Back.mkv" orginalLocation="Heroes$fs$S01E02 - Hello this is a test.mkv"/>
       </episode>
     </season>
     <season number="2" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
@@ -95,7 +95,7 @@
           <actor name="Holt McCallany" role=""/>
           <actor name="Dianna Agron" role=""/>
         </actors>
-        <file location="Heroes/Season 2/02 - Lizards.mpg" orginalLocation="Heroes/s02e02 - Hello this is a test.mpg"/>
+        <file location="Heroes$fs$Season 2$fs$02 - Lizards.mpg" orginalLocation="Heroes$fs$s02e02 - Hello this is a test.mpg"/>
       </episode>
     </season>
   </show>

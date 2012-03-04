@@ -107,7 +107,7 @@ public class TestCLIManagerAddons extends  BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Unkown sub-command or argument 'blah'\n");
+		expected.append("Unkown sub-command or argument 'blah'"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(), stderr.toString());
 
 		expected = new StringBuilder();

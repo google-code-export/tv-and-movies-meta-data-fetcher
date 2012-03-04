@@ -30,10 +30,9 @@ public class PatternMatcher {
 		if (text==null) {
 			return null;
 		}
-		text = text.replaceAll(":|/","-"); //$NON-NLS-1$ //$NON-NLS-2$
+		text = text.replaceAll(":|/|\\*|\\|","-"); //$NON-NLS-1$ //$NON-NLS-2$
 		text = text.replaceAll("!",".");  //$NON-NLS-1$//$NON-NLS-2$
-		text = text.replaceAll("’|‘", "'"); //$NON-NLS-1$//$NON-NLS-2$
-		text = text.replaceAll("“|”", "\""); //$NON-NLS-1$//$NON-NLS-2$
+		text = text.replaceAll("’|‘|“|”|\"", "'"); //$NON-NLS-1$//$NON-NLS-2$
 
 		String s1 = Normalizer.normalize(text, Normalizer.Form.NFKD);
 	    String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+"; //$NON-NLS-1$
@@ -44,7 +43,7 @@ public class PatternMatcher {
 		} catch (UnsupportedEncodingException e) {
 			return text;
 		}
-
+		s2 = s2.replaceAll("\\?",""); //$NON-NLS-1$ //$NON-NLS-2$
 		return s2;
 	}
 

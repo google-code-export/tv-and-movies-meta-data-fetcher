@@ -38,6 +38,7 @@ public class Helper {
 
 		for (Entry<String,String>e : params.entrySet()) {
 			expectedContents = expectedContents.replaceAll("\\$+"+e.getKey()+"\\$",Matcher.quoteReplacement(e.getValue()));
+			actualContents = actualContents.replaceAll("\\$+"+e.getKey()+"\\$",Matcher.quoteReplacement(e.getValue()));
 		}
 		Assert.assertEquals("Check the XML files are equal",formatXML(expectedContents),formatXML(actualContents));
 

@@ -118,6 +118,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 			params.put("rootMediaDir", dir.getAbsolutePath());
+			params.put("fs", File.separator);
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class.getName(),"",RenameAction.class.getName());
@@ -193,6 +194,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("rootMediaDir", dir.getAbsolutePath());
+			params.put("fs", File.separator);
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			setupTestController(false,dir,pattern,Mode.TV_SHOW,null,null,XMLStore2.class.getName(),"",RenameAction.class.getName());
@@ -478,12 +480,14 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			Assert.assertEquals("Check exit code",0,exitCode);
 
 			params.put("rootMediaDir", dir.getAbsolutePath());
+			params.put("fs",File.separator);
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-rename-output.xml"), new FileInputStream(files.get(0)),params);
 
 			File seenFile = new File(config.getConfigDir(),"seenFiles.xml");
 			Assert.assertTrue(seenFile.exists());
 
 			params.put("rootMediaDir", dir.getAbsolutePath());
+			params.put("fs", File.separator);
 			Helper.assertXMLEquals(TestCLIMediaManager.class.getResourceAsStream("expected-seendb.xml"), new FileInputStream(seenFile),params);
 			FileHelper.displayFile(seenFile, System.out);
 		} finally {
