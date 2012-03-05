@@ -669,8 +669,10 @@ public class MP4ITunesStore implements IStore {
 	private static String getFileFlavor(File mp4File, IMediaFileInfo info) {
 		// 1:128
 		// 2:256
+		// Suspect That LC stands for Lossy compression
+		// Suppect that 128 and 256 are the audio bit rate
 		// 4:640x480LC-128
-		// 6:640x480LC-256 (x x y x bit rate?) lc = format profile
+		// 6:640x480LC-256 (x x y x?) lc = format profile
 		// 7:720p
 		// 8:480p
 
