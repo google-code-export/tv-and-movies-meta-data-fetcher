@@ -38,7 +38,7 @@ else
 fi
 
 # Main class
-MAIN=org.stanwood.media.store.mp4.CLIListAtoms
+MAIN=org.stanwood.media.info.CLIMediaFileInformation
 
 # Libraries location
 LIB_DIR=$SCRIPT_PATH/../../../libs/run-time

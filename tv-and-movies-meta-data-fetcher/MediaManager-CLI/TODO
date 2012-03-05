@@ -29,8 +29,6 @@ Add support for different video qualities
 		- Set the meta data need to have both low and high def versions of films 
 		- Add asset-info keys flavour,high-definition,screen-format
 		- High dev content should be short film (9)
-Change the command mm-list-atoms to mm-media-file-info (inprogress)
-	* Make the command use the the new generic file information server to display general info as well as atoms (inprogress)
 		
 Version 2.2
 -----------

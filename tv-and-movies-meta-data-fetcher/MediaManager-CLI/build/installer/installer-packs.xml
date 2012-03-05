@@ -28,10 +28,10 @@
 			<executable targetfile="$INSTALL_PATH/bin/mm-copy-store-to-store">
 				<os family="unix"/>
 			</executable>
-			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-mp4-list-atoms" targetdir="$INSTALL_PATH/bin">
+			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-media-file-info" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
 			</file>
-			<executable targetfile="$INSTALL_PATH/bin/mm-mp4-list-atoms">
+			<executable targetfile="$INSTALL_PATH/bin/mm-media-file-info">
 				<os family="unix"/>
 			</executable>
 			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-move-into-media-directory" targetdir="$INSTALL_PATH/bin">
@@ -56,7 +56,7 @@
 			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-manager.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>		
-			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-mp4-list-atoms.bat" targetdir="$INSTALL_PATH/bin">
+			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-media-file-info.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>	
 			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-move-into-media-directory.bat" targetdir="$INSTALL_PATH/bin">

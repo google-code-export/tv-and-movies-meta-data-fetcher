@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -60,7 +61,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		o.setArgName("info|debug|file"); //$NON-NLS-1$
 		addOption(o);
 
-		o = new Option(CONFIG_FILE_OPTION,"config_file",true,Messages.getString("AbstractLauncher.CONFIG_FILE_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
+		o = new Option(CONFIG_FILE_OPTION,"config_file",true,MessageFormat.format(Messages.getString("AbstractLauncher.CONFIG_FILE_DESC"),ConfigReader.CONFIG_NAME)); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setArgName("file"); //$NON-NLS-1$
 		addOption(o);
 

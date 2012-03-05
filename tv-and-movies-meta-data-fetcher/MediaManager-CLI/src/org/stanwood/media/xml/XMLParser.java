@@ -631,5 +631,25 @@ public class XMLParser {
 		return child;
 	}
 
+	/**
+	 * Used to see if a XML document contains a node
+	 * @param document The XML
+	 * @param path The node to look for ( via a xpath path)
+	 * @return True if found, otherwise false
+	 * @throws XMLParserException Thrown if their is a parser problem
+	 */
+	public static boolean hasNode(Document document, String path) throws XMLParserException {
+		try {
+			Node node = XPathAPI.selectSingleNode(document, path);
+			if (node!=null) {
+				return true;
+			}
+		}
+		catch (TransformerException e) {
+			throw new XMLParserException(Messages.getString("XMLParser.UNABLE_PARSE_XML"),e); //$NON-NLS-1$
+		}
+		return false;
+	}
+
 
 }
