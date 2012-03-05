@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -51,7 +52,7 @@ import org.stanwood.media.util.FileHelper;
  * "http://appletv.nanopi.net/manual/overriding-metadata/"}.
  * </p>
  * <p>
- * Every time the {@link SapphireStore#cacheEpisode(File, File, Episode)} or the {@link SapphireStore#cacheFilm(File, File, Film, Integer)}
+ * Every time the {@link SapphireStore#cacheEpisode(File, File, IEpisode)} or the {@link SapphireStore#cacheFilm(File, File, IFilm, Integer)}
  * method is called, a XML file is written next to the episodes/films file with a
  * .xml extension.
  * </p>
@@ -411,7 +412,7 @@ public class SapphireStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(File nativeDir) throws StoreException {
+	public void init(Controller controller,File nativeDir) throws StoreException {
 	}
 
 	/** {@inheritDoc} */

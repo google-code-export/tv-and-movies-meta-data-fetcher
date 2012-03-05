@@ -166,7 +166,7 @@ public class CLIImportMedia extends AbstractLauncher {
 
 		for (File mediaDirLoc :  getController().getMediaDirectories()) {
 			for (IStore store : getController().getMediaDirectory(mediaDirLoc).getStores()) {
-				store.init(getController().getNativeFolder());
+				store.init(getController(),getController().getNativeFolder());
 			}
 		}
 		return newFiles;

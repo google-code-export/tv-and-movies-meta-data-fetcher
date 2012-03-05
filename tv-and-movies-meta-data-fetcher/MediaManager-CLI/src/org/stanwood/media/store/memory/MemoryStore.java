@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -332,7 +333,7 @@ public class MemoryStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(File nativeDir) throws StoreException {
+	public void init(Controller controller,File nativeDir) throws StoreException {
 	}
 
 	/** {@inheritDoc} */

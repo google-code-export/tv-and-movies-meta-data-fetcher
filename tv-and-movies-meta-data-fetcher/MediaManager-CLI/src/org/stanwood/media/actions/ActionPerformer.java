@@ -167,7 +167,7 @@ public class ActionPerformer implements IActionEventHandler {
 		boolean hasErrors = false;
 		for (IStore store : dir.getStores()) {
 			try {
-				store.init(nativeFolder);
+				store.init(dir.getController(),nativeFolder);
 			}
 			catch (StoreException e ) {
 				log.debug(e.getMessage(),e);
