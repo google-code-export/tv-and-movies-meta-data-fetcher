@@ -62,9 +62,12 @@ public class APAtomBoolean extends AbstractAPAtom implements IAtom {
 			args.add("--compilation"); //$NON-NLS-1$
 			args.add(toAPValue(value));
 		}
-
 		else if (getKey() == MP4AtomKey.GAPLESS_PLAYBACK) {
 			args.add("--gapless"); //$NON-NLS-1$
+			args.add(toAPValue(value));
+		}
+		else if (getKey() == MP4AtomKey.HD) {
+			args.add("--hdvideo"); //$NON-NLS-1$
 			args.add(toAPValue(value));
 		}
 		else {
@@ -74,10 +77,10 @@ public class APAtomBoolean extends AbstractAPAtom implements IAtom {
 
 	private String toAPValue(boolean value) {
 		if (value) {
-			return "0"; //$NON-NLS-1$
+			return "true"; //$NON-NLS-1$
 		}
 		else {
-			return "1"; //$NON-NLS-1$
+			return "false"; //$NON-NLS-1$
 		}
 	}
 }

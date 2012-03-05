@@ -586,7 +586,7 @@ public class TestConfigReader {
 //
 //	}
 
-	private ConfigReader createConfigReader(StringBuilder testConfig)
+	public static ConfigReader createConfigReader(StringBuilder testConfig)
 	throws IOException, FileNotFoundException, ConfigException {
 		File configFile = FileHelper.createTmpFileWithContents(testConfig);
 		ConfigReader configReader = null;
