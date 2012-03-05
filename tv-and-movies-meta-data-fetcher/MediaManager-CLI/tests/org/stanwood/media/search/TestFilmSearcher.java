@@ -16,7 +16,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.actions.rename.PatternMatcher;
 import org.stanwood.media.cli.manager.TestCLIMediaManager;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
@@ -58,7 +57,13 @@ public class TestFilmSearcher {
 					return o1.getOriginalFile().getName().compareTo(o2.getOriginalFile().getName());
 				}
 			});
-//			Assert.assertEquals(50,names.size());
+			Collections.sort(names,new Comparator<TSearchDetails>() {
+				@Override
+				public int compare(TSearchDetails o1, TSearchDetails o2) {
+					return o1.getOriginalFile().compareTo(o2.getOriginalFile());
+				}
+			});
+			Assert.assertEquals(50,names.size());
 			int index = 0;
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("'Movie'",null,null,names.get(index++));
@@ -70,42 +75,38 @@ public class TestFilmSearcher {
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			index++;
-//			assertSearchDetails("A Movie",null,names.get(index++));
 			assertSearchDetails("A movie 2000",null,null,names.get(index++));
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
+			assertSearchDetails("A movie",null,null,names.get(index++));
 			assertSearchDetails("A, Movie",null,null,names.get(index++));
-			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("A Movie","2007",null,names.get(index++));
 			assertSearchDetails("A Movie","2008",null,names.get(index++));
 			assertSearchDetails("A Movie","2010",null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("AMOVIE",null,null,names.get(index++));
 			assertSearchDetails("A MOVIE",null,null,names.get(index++));
+			assertSearchDetails("Blah Movie",null,null,names.get(index++));
 			assertSearchDetails("Blah",null,null,names.get(index++));
-			assertSearchDetails("Blah: Movie",null,null,names.get(index++));
 			assertSearchDetails("Blahía, b ôb bbbb",null,null,names.get(index++));
 			assertSearchDetails("Dr. Movie",null,null,names.get(index++));
 			index++;
-//			assertSearchDetails("Movie",null,names.get(index++));
 			assertSearchDetails("Movie 12",null,null,names.get(index++));
-			assertSearchDetails("Movie 2: Some movie title",null,null,names.get(index++));
+			assertSearchDetails("Movie 2 Some movie title",null,null,names.get(index++));
 			assertSearchDetails("Movie I",null,null,names.get(index++));
 			assertSearchDetails("Movie III",null,null,names.get(index++));
+			assertSearchDetails("Movie Three",null,null,names.get(index++));
 			assertSearchDetails("Movie's blah",null,null,names.get(index++));
 			assertSearchDetails("Movie","2007",null,names.get(index++));
 			assertSearchDetails("Movie","2011",null,names.get(index++));
 			assertSearchDetails("Movie",null,null,names.get(index++));
 			assertSearchDetails("Movie Vol 2",null,null,names.get(index++));
 			assertSearchDetails("Movie",null,null,names.get(index++));
-			assertSearchDetails("Movie: Three",null,null,names.get(index++));
 			index++;
-//			assertSearchDetails("A Movie (Original Render)",null,names.get(index++));
-			assertSearchDetails("The Movie: Part II",null,null,names.get(index++));
+			assertSearchDetails("The Movie Part II",null,null,names.get(index++));
 			index++;
-//			assertSearchDetails("a-movie",null,names.get(index++));
 			assertSearchDetails("a movie joined",null,null,names.get(index++));
 			assertSearchDetails("amovie",null,2,names.get(index++));
 			assertSearchDetails("amovie",null,1,names.get(index++));
@@ -160,7 +161,8 @@ public class TestFilmSearcher {
 
 			String strLine = null;
 		    while ((strLine = br.readLine()) != null)   {
-		    	File f = new File(tmpDir,PatternMatcher.normalizeText(strLine));
+		    	strLine = strLine.replaceAll("\"","'");
+		    	File f = new File(tmpDir,strLine.replaceAll("\\?|\\*|\\|/|\\||:|",""));
 		    	if (!f.getParentFile().exists()) {
 		    		if (!f.getParentFile().mkdirs() && !f.getParentFile().exists()) {
 		    			throw new IOException("Unable to create dir: " + f.getParentFile().getAbsolutePath());
