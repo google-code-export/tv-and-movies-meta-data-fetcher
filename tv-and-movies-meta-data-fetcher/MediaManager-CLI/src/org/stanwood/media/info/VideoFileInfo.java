@@ -45,7 +45,7 @@ public class VideoFileInfo implements IVideoFileInfo {
 		aspectRatio = AspectRatio.fromString(parser.getAspectRatio());
 		interlaced = parser.getInterlaced();
 		if (width!=null && height!=null) {
-			resolutionFormat = ResolutionFormat.getForamt(width, height, interlaced);
+			resolutionFormat = ResolutionFormat.getFormat(width, height, interlaced);
 		}
 	}
 
