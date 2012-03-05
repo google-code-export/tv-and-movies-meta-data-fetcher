@@ -219,7 +219,7 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertEquals(26,atoms.size());
 		int index = 0;
 		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 3]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 4]",atoms.get(index++).toString());
 		Assert.assertEquals("Media Type: [stik=10]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Episode ID: [tven=34567]",atoms.get(index++).toString());
 		Assert.assertEquals("TV Show Name: [tvsh=Test Show Name]",atoms.get(index++).toString());
@@ -322,13 +322,9 @@ public class TestMP4AtomicParsleyManager {
 			}
 		});
 
-		for (IAtom atom : atoms) {
-			System.out.println(atom);
-		}
-
 		Assert.assertEquals(17,atoms.size());
 		int index=0;
-		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 3]",atoms.get(index++).toString());
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 4]",atoms.get(index++).toString());
 		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
 		StringBuilder expected = new StringBuilder();
 		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
@@ -380,7 +376,7 @@ public class TestMP4AtomicParsleyManager {
 		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
 		Assert.assertEquals("Sort Artist: [soar=Bryan Singer]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Name: [sonm=Test film name]",atoms.get(index++).toString());
-		Assert.assertEquals("Media Type: [stik=6]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=9]",atoms.get(index++).toString());
 		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
 		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());

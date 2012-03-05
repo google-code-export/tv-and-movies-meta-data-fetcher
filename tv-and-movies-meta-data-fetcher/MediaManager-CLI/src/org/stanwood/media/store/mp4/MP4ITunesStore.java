@@ -105,7 +105,7 @@ public class MP4ITunesStore implements IStore {
 	private MP4ITunesStoreInfo storeInfo;
 	private Controller controller;
 
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),4); //$NON-NLS-1$
 
 	public MP4ITunesStore(MP4ITunesStoreInfo storeInfo) {
 		this.storeInfo = storeInfo;
@@ -543,7 +543,7 @@ public class MP4ITunesStore implements IStore {
 
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()));
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.MOVIE.getId()));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.SHORT_FILM.getId()));
 //		atoms.add(mp4Manager.createAtom(MP4AtomKey.GAPLESS_PLAYBACK, false));
 //		atoms.add(mp4Manager.createAtom(MP4AtomKey.COMPILATION, false));
 		if (film.getDate()!=null) {
