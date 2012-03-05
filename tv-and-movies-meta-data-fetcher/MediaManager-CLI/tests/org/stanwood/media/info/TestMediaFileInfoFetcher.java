@@ -118,13 +118,13 @@ public class TestMediaFileInfoFetcher {
 	@Test
 	public void testVideoHighdef() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		URL url = Data.class.getResource("a_video_hd.mkv");
+		URL url = Data.class.getResource("a_video_hd.m4v");
 		File file = new File(url.toURI());
 		Assert.assertTrue(file.exists());
 
 		MediaFileInfoFetcher infoFetcher = new MediaFileInfoFetcher(nativeDir);
 		IVideoFileInfo info = (IVideoFileInfo)infoFetcher.getInformation(file);
-		Assert.assertEquals(322072, info.getFileSize());
+		Assert.assertEquals(322282, info.getFileSize());
 		Assert.assertEquals(1920, info.getWidth());
 		Assert.assertEquals(1080, info.getHeight());
 		Assert.assertEquals(15.0F, info.getFrameRate(),0);
