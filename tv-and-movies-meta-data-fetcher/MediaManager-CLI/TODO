@@ -22,11 +22,10 @@ Update docs
 Compile AtomicParsely for all platforms
 Add support for different video qualities
 	* Add query code to work out the resolution of media files (inprogress)
-	* Add new Patterns to indicate HighDef. (inprogress)
+		- Add test of the variours movie types
+	* Add new Patterns to indicate HighDef. (needs testing)
 	* Store quality information in mp4 files. (inprogress)
-		- Set the hdvd atom (inprogress)		
-		- Add asset-info keys flavour,high-definition,screen-format (inprogress)
-		- High dev content should be short film (9) (inprogress)
+		- Add asset-info keys flavour (inprogress)
 		
 Version 2.2
 -----------

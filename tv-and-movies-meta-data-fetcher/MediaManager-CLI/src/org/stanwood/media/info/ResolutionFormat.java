@@ -109,7 +109,7 @@ public enum ResolutionFormat {
 	 * @param interlaced True if the video scan type is interlaced
 	 * @return The resolution format or null if it can't be determined
 	 */
-	public static ResolutionFormat getForamt(int width,int height,boolean interlaced) {
+	public static ResolutionFormat getFormat(int width,int height,boolean interlaced) {
 		for (ResolutionFormat f : values()) {
 			if (f.interlaced == interlaced && f.width == width) {
 				for (AspectRatio aspectRatio : AspectRatio.values()) {

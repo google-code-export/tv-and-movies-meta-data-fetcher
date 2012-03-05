@@ -42,6 +42,7 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.info.IMediaFileInfo;
 import org.stanwood.media.info.IVideoFileInfo;
+import org.stanwood.media.info.ResolutionFormat;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -666,13 +667,22 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private static String getFileFlavor(File mp4File, IMediaFileInfo info) {
-		//TODO work out the correct flvr
 		// 1:128
 		// 2:256
 		// 4:640x480LC-128
 		// 6:640x480LC-256 (x x y x bit rate?) lc = format profile
 		// 7:720p
 		// 8:480p
+
+		if (info!=null && info instanceof IVideoFileInfo) {
+			IVideoFileInfo vinfo = (IVideoFileInfo)info;
+			if (vinfo.getResolutionFormat() == ResolutionFormat.Format_720p) {
+				return "7:720p"; //$NON-NLS-1$
+			}
+			else if (vinfo.getResolutionFormat() == ResolutionFormat.Format_480p) {
+				return "4:640x480LC-128"; //$NON-NLS-1$
+			}
+		}
 		return null;
 	}
 
@@ -686,6 +696,10 @@ public class MP4ITunesStore implements IStore {
 		}
 		if (info!=null && info instanceof IVideoFileInfo) {
 			IVideoFileInfo vinfo = (IVideoFileInfo)info;
+			if (flavour!=null) {
+				iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			if (vinfo.isHighDef()) {
 				iTuneMOVIValue.append("        <key>high-definition</key>"+FileHelper.LS); //$NON-NLS-1$
 				iTuneMOVIValue.append("        <true/>"+FileHelper.LS); //$NON-NLS-1$

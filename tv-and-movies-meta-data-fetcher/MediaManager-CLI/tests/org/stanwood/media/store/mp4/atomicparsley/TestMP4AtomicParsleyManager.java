@@ -42,6 +42,7 @@ public class TestMP4AtomicParsleyManager {
 
 	private File nativeDir = null;
 
+	/** The constructor */
 	public TestMP4AtomicParsleyManager() {
 		if (System.getProperty("NATIVE_DIR")!=null) {
 			nativeDir = new File(System.getProperty("NATIVE_DIR"));
@@ -295,6 +296,10 @@ public class TestMP4AtomicParsleyManager {
 		return manager;
 	}
 
+	/**
+	 * Used to test that the correct atoms are set on a high def film
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testHighDefFilm() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
