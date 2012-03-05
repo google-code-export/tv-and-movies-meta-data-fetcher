@@ -27,14 +27,17 @@ Add support for different video qualities
 		- Set the hdvd atom
 		- Set the meta data need to have both low and high def versions of films 
 		- Add asset-info keys flavour,high-definition,screen-format
-		- High dev content should be short film
-Change the command mm-list-atoms to mm-media-file-info
-	* Make the command use the the new generic file information server to display general info as well as atoms
+		- High dev content should be short film (9)
+Change the command mm-list-atoms to mm-media-file-info (inprogress)
+	* Make the command use the the new generic file information server to display general info as well as atoms (inprogress)
 		
 Version 2.2
 -----------
 Add script support
 	New <script> element for the config file. This will contain global script functions
+	Add ability to execute scripts before and after a processing operation of each media directory.
+	Add ability to execute scripts before importing form incoming directory
+	Make it possible to have actions completely written in scripts	
 Extend patterns
 	* Allow multiple patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
