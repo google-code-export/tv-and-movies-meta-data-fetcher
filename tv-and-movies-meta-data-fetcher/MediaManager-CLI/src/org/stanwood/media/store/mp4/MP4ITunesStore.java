@@ -37,8 +37,12 @@ import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.info.IMediaFileInfo;
+import org.stanwood.media.info.IVideoFileInfo;
+import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IEpisode;
@@ -99,6 +103,7 @@ public class MP4ITunesStore implements IStore {
 	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
 	private String atomicParsleyCmd;
 	private MP4ITunesStoreInfo storeInfo;
+	private Controller controller;
 
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
 
@@ -108,7 +113,8 @@ public class MP4ITunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(File nativeDir) throws StoreException {
+	public void init(Controller controller,File nativeDir) throws StoreException {
+		this.controller = controller;
 		if (atomicParsleyCmd == null) {
 			atomicParsleyCmd = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName());
 		}
@@ -137,7 +143,7 @@ public class MP4ITunesStore implements IStore {
 
 	private void writeEpisode(File file, IEpisode episode) throws StoreException {
 		try {
-			updateEpsiode(getMP4Manager(),file,episode);
+			updateEpsiode(controller,getMP4Manager(),file,episode);
 		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
@@ -217,7 +223,6 @@ public class MP4ITunesStore implements IStore {
 	 */
 	@Override
 	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
-		// TODO make use of the part number
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();
@@ -227,7 +232,7 @@ public class MP4ITunesStore implements IStore {
 
 	private void writeFilm(File filmFile, IFilm film, Integer part) throws StoreException {
 		try {
-			updateFilm(getMP4Manager(),filmFile,film,part);
+			updateFilm(controller,getMP4Manager(),filmFile,film,part);
 		} catch (MP4Exception e) {
 			throw new StoreException(e.getMessage(),e);
 		}
@@ -340,12 +345,13 @@ public class MP4ITunesStore implements IStore {
 
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a TV Show episode
+	 * @param controller the media file controller
 	 * @param mp4Manager MP4 Manager
 	 * @param mp4File The MP4 file
 	 * @param episode The episode details
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
-	public static void updateEpsiode(IMP4Manager mp4Manager,File mp4File, IEpisode episode) throws MP4Exception {
+	public static void updateEpsiode(Controller controller,IMP4Manager mp4Manager,File mp4File, IEpisode episode) throws MP4Exception {
 
 		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
 		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
@@ -399,24 +405,24 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.GENRE_USER_DEFINED, episode.getSeason().getShow().getGenres().get(0)));
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, episode.getSeason().getShow().getGenres().get(0)));
 		}
-		String flavour = getFileFlavor(mp4File);
-		if (flavour!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.FLAVOUR, flavour));
+
+		IMediaFileInfo info = null;;
+		try {
+			if (controller!=null) {
+				info = controller.getMediaFileInformation(mp4File);
+			}
+		} catch (StanwoodException e) {
+			log.error("Unable to read media information",e);
 		}
+		String flavour = getFileFlavor(mp4File,info);
+		genericAtoms(info,mp4Manager, atoms, flavour);
 
 		StringBuilder iTuneMOVIValue = new StringBuilder();
 		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("    <dict>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("        <key>file-size</key>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("        <integer>"+mp4File.length()+"</integer>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
-		if (flavour!=null) {
-			iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
-			iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		iTuneMOVIValue.append("    </dict>"+FileHelper.LS); //$NON-NLS-1$
+		genericFileInfo(info,mp4File, flavour, iTuneMOVIValue);
 		if (episode.getActors()!=null && episode.getActors().size()>0) {
 			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
 			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
@@ -460,17 +466,6 @@ public class MP4ITunesStore implements IStore {
 			return summary.substring(0,len-1)+"…"; //$NON-NLS-1$
 		}
 		return summary;
-	}
-
-	private static String getFileFlavor(File mp4File) {
-		//TODO work out the correct flvr
-		// 1:128
-		// 2:256
-		// 4:640x480LC-128
-		// 6:640x480LC-256 (x x y x bit rate?) lc = format profile
-		// 7:720p
-		// 8:480p
-		return null;
 	}
 
 	protected static IAtom getArtworkAtom(IMP4Manager mp4Manager, File mp4File,IVideo video) throws MP4Exception {
@@ -535,13 +530,14 @@ public class MP4ITunesStore implements IStore {
 	/**
 	 * Used to add atoms to a MP4 file that makes iTunes see it as a Film. It also removes any artwork before adding the
 	 * Film atoms and artwork.
+	 * @param controller The media controller
 	 * @param mp4Manager MP4 Manager
 	 * @param mp4File The MP4 file
 	 * @param film The film details
 	 * @param part The part number of the film, or null if it does not have parts
 	 * @throws MP4Exception Thrown if their is a problem updating the atoms
 	 */
-	public static void updateFilm(IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
+	public static void updateFilm(Controller controller,IMP4Manager mp4Manager ,File mp4File, IFilm film,Integer part) throws MP4Exception {
 		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
 		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 
@@ -600,24 +596,24 @@ public class MP4ITunesStore implements IStore {
 				atoms.add(mp4Manager.createAtom(MP4AtomKey.CATEGORY, film.getGenres().get(0)));
 			}
 		}
-		String flavour = getFileFlavor(mp4File);
-		if (flavour!=null) {
-			atoms.add(mp4Manager.createAtom(MP4AtomKey.FLAVOUR, flavour));
+		IMediaFileInfo info = null;
+		try {
+			if (controller!=null) {
+				info = controller.getMediaFileInformation(mp4File);
+			}
+		} catch (StanwoodException e) {
+			log.error("Unable to read media information",e);
 		}
+		String flavour = getFileFlavor(mp4File,info);
+		genericAtoms(info,mp4Manager, atoms, flavour);
+
 
 		StringBuilder iTuneMOVIValue = new StringBuilder();
 		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("    <dict>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("        <key>file-size</key>"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("        <integer>"+mp4File.length()+"</integer>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
-		if (flavour!=null) {
-			iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
-			iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		iTuneMOVIValue.append("    </dict>"+FileHelper.LS); //$NON-NLS-1$
+		genericFileInfo(info,mp4File, flavour, iTuneMOVIValue);
 		if (film.getActors()!=null && film.getActors().size()>0) {
 			iTuneMOVIValue.append("    <key>cast</key>"+FileHelper.LS); //$NON-NLS-1$
 			iTuneMOVIValue.append("    <array>"+FileHelper.LS); //$NON-NLS-1$
@@ -654,6 +650,52 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(artworkAtom);
 		}
 		mp4Manager.update(mp4File, atoms);
+	}
+
+	protected static void genericAtoms(IMediaFileInfo info, IMP4Manager mp4Manager,
+			List<IAtom> atoms, String flavour) {
+		if (flavour!=null) {
+			atoms.add(mp4Manager.createAtom(MP4AtomKey.FLAVOUR, flavour));
+		}
+		if (info!=null && info instanceof IVideoFileInfo) {
+			IVideoFileInfo vinfo = (IVideoFileInfo)info;
+			if (vinfo.isHighDef()) {
+				atoms.add(mp4Manager.createAtom(MP4AtomKey.HD, true));
+			}
+		}
+	}
+
+	private static String getFileFlavor(File mp4File, IMediaFileInfo info) {
+		//TODO work out the correct flvr
+		// 1:128
+		// 2:256
+		// 4:640x480LC-128
+		// 6:640x480LC-256 (x x y x bit rate?) lc = format profile
+		// 7:720p
+		// 8:480p
+		return null;
+	}
+
+	private static void genericFileInfo(IMediaFileInfo info, File mp4File, String flavour,StringBuilder iTuneMOVIValue) {
+		iTuneMOVIValue.append("    <dict>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <key>file-size</key>"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("        <integer>"+mp4File.length()+"</integer>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		if (flavour!=null) {
+			iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
+			iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (info!=null && info instanceof IVideoFileInfo) {
+			IVideoFileInfo vinfo = (IVideoFileInfo)info;
+			if (vinfo.isHighDef()) {
+				iTuneMOVIValue.append("        <key>high-definition</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("        <true/>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			if (vinfo.isWideScreen()) {
+				iTuneMOVIValue.append("        <key>screen-format</key>"+FileHelper.LS); //$NON-NLS-1$
+				iTuneMOVIValue.append("        <string>widescreen</string>"+FileHelper.LS); //$NON-NLS-1$
+			}
+		}
+		iTuneMOVIValue.append("    </dict>"+FileHelper.LS); //$NON-NLS-1$
 	}
 
 	private static Date getPurchasedDate(File mp4File) {
@@ -825,7 +867,7 @@ public class MP4ITunesStore implements IStore {
 			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
 				IEpisode episode = MediaSearcher.getTVEpisode(mediaDir, file,true);
 				if (episode!=null) {
-					updateEpsiode(mp4Manager, file, episode);
+					updateEpsiode(controller,mp4Manager, file, episode);
 					mediaDir.fileChanged(file);
 				}
 			}
@@ -839,7 +881,7 @@ public class MP4ITunesStore implements IStore {
 							break;
 						}
 					}
-					updateFilm(mp4Manager,file, film,part);
+					updateFilm(controller,mp4Manager,file, film,part);
 					mediaDir.fileChanged(file);
 				}
 			}
@@ -885,14 +927,14 @@ public class MP4ITunesStore implements IStore {
 			props.setProperty(CONFIG_NUM_DIRS,String.valueOf(num+1));
 		}
 
-		props.setProperty(CONFIG_DIRECTORY_PROP+"_"+num, mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath());
-		props.setProperty(CONFIG_VERSION_PROP+"_"+num, STORE_VERSION.getVersion().toString());
-		props.setProperty(CONFIG_REVISION_PROP+"_"+num, String.valueOf(STORE_VERSION.getRevision()));
+		props.setProperty(CONFIG_DIRECTORY_PROP+"_"+num, mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath()); //$NON-NLS-1$
+		props.setProperty(CONFIG_VERSION_PROP+"_"+num, STORE_VERSION.getVersion().toString()); //$NON-NLS-1$
+		props.setProperty(CONFIG_REVISION_PROP+"_"+num, String.valueOf(STORE_VERSION.getRevision())); //$NON-NLS-1$
 
 		OutputStream fs  = null;
 		try {
 			fs = new FileOutputStream(configFile);
-			props.store(fs, "");
+			props.store(fs, ""); //$NON-NLS-1$
 
 		}
 		catch (IOException e) {
@@ -934,8 +976,6 @@ public class MP4ITunesStore implements IStore {
 		}
 		return props;
 	}
-
-
 
 	private Integer findMediaDirNumber(MediaDirectory mediaDirectory,Properties props) {
 		int numberStores = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0"));

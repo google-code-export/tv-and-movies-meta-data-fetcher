@@ -74,7 +74,7 @@ public class MediaDirectory {
 
 		for (IStore store : stores) {
 			try {
-				store.init(getController().getNativeFolder());
+				store.init(getController(),getController().getNativeFolder());
 				store.upgrade(this);
 			} catch (StoreException e) {
 				log.error(MessageFormat.format("Unable to upgrade stores ''{0}''",store.getClass()),e);

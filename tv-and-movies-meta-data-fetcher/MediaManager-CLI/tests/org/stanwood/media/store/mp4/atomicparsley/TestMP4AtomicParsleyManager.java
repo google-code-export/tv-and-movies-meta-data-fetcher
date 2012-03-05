@@ -119,7 +119,7 @@ public class TestMP4AtomicParsleyManager {
 		FileHelper.copy(srcFile, mp4File);
 		Episode episode = createTestEpisode();
 		IMP4Manager ap = createMP4Manager();
-		MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
+		MP4ITunesStore.updateEpsiode(null,ap,mp4File, episode);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class TestMP4AtomicParsleyManager {
 		FileHelper.copy(srcFile, mp4File);
 		Episode episode = createTestEpisode();
 		IMP4Manager ap = createMP4Manager();
-		MP4ITunesStore.updateEpsiode(ap,mp4File, episode);
+		MP4ITunesStore.updateEpsiode(null,ap,mp4File, episode);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		for (IAtom a : atoms) {
@@ -312,7 +312,7 @@ public class TestMP4AtomicParsleyManager {
 		Film film = createTestFilm();
 
 		IMP4Manager ap = createMP4Manager();
-		MP4ITunesStore.updateFilm(ap,mp4File, film,1);
+		MP4ITunesStore.updateFilm(null,ap,mp4File, film,1);
 
 		List<IAtom> atoms = ap.listAtoms(mp4File);
 		Collections.sort(atoms, new Comparator<IAtom>() {

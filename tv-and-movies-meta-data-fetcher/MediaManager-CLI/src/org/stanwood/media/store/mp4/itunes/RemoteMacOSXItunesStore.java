@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -88,7 +89,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	 * </p>
 	 */
 	@Override
-	public void init(File nativeDir) throws StoreException {
+	public void init(Controller controller,File nativeDir) throws StoreException {
 		filesAdded = new ArrayList<File>();
 		filesDeleted = new ArrayList<File>();
 		filesUpdated = new ArrayList<File>();

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.IEpisode;
@@ -232,10 +233,11 @@ public interface IStore extends IExtension  {
 	/**
 	 * Called to initialise the stores and check all their resources can be found. This
 	 * is called before performing any actions.
+	 * @param controller The media controller
 	 * @param nativeDir The native folder been used or configured. Null if can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public void init(File nativeDir) throws StoreException;
+	public void init(Controller controller,File nativeDir) throws StoreException;
 
 	/**
 	 * This is used to list all the episodes within the store if the store supports the operation.
