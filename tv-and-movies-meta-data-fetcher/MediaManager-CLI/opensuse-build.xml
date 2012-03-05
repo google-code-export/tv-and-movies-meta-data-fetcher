@@ -1,4 +1,4 @@
-<project name="MediaManager" default="all" basedir="MediaManager-CLI">
+<project name="MediaManager" default="build" basedir="MediaManager-CLI">
 
     <!-- Path properties -->
     <property name="src.dir" location="${basedir}/src" />

@@ -195,6 +195,9 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				else if (value.equalsIgnoreCase("Movie")) { //$NON-NLS-1$
 					ivalue = 6;
 				}
+				else if (value.equalsIgnoreCase("Short Film")) { //$NON-NLS-1$
+					ivalue = 9;
+				}
 				else if (value.equalsIgnoreCase("TV Show")) { //$NON-NLS-1$
 					ivalue = 10;
 				}
