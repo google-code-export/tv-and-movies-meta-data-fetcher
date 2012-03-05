@@ -46,7 +46,7 @@ import org.stanwood.media.xml.XMLParserException;
  *   --version, -v                 Display the version
  *   --dir, -d <directory>         The directory to look for media. If not present use the current directory.
  *   --test, -t                    If this option is present, then no changes are performed.
- *   --config_file, -c <file>      The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+ *   --config_file, -c <file>      The location of the config file. If not present, attempts to load it from /etc/mediamanager-conf.xml
  *   --log_config, -l <info|debug|file>
  *                                 The log config mode [<INFO>|<DEBUG>|<log4j config file>]
  *   --help, -h                    Show the help

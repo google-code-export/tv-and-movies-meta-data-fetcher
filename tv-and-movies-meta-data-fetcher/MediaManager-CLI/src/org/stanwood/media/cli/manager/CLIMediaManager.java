@@ -39,7 +39,7 @@ import org.stanwood.media.source.xbmc.updater.IConsole;
  *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
  *  --test, -t                    If this option is present, then no changes are performed.
  *  --config_file, -c <info|debug|file>
- *                                The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+ *                                The location of the config file. If not present, attempts to load it from /etc/mediamanager-conf.xml
  *  --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
  *  --help, -h                    Show the help
  * </code>
@@ -93,7 +93,7 @@ public class CLIMediaManager extends AbstractLauncher {
 	 *  --dir, -d <directory>         The directory to look for media. If not present use the current directory.
 	 *  --test, -t                    If this option is present, then no changes are performed.
 	 *  --config_file, -c <info|debug|file>
-	 *                                The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *                                The location of the config file. If not present, attempts to load it from /etc/mediamanager-conf.xml
 	 *  --log_config, -l <file>       The log config mode [<INFO>|<DEBUG>|<log4j config file>]
 	 *  --help, -h                    Show the help
 	 * </code>

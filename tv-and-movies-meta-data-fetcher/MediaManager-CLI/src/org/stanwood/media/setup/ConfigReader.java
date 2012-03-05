@@ -58,6 +58,7 @@ import org.w3c.dom.Node;
  */
 public class ConfigReader extends BaseConfigReader {
 
+	public static final String CONFIG_NAME = "mediamanager-conf.xml"; //$NON-NLS-1$
 	private static final String SCHEMA_NAME = "MediaManager-Config-2.1.xsd"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
@@ -642,12 +643,12 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their are any problems
 	 */
 	public static File getDefaultConfigFile() throws ConfigException {
-		File file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml"); //$NON-NLS-1$
+		File file = new File(ConfigReader.getDefaultConfigDir(),CONFIG_NAME);
 		if (!file.exists()) {
-			file = new File(File.separator+"etc"+File.separator+"mediamanager-conf.xml"); //$NON-NLS-1$ //$NON-NLS-2$
+			file = new File(File.separator+"etc"+File.separator+CONFIG_NAME); //$NON-NLS-1$
 		}
 		if (!file.exists()) {
-			file = new File(ConfigReader.getDefaultConfigDir(),"mediamanager-conf.xml"); //$NON-NLS-1$
+			file = new File(ConfigReader.getDefaultConfigDir(),CONFIG_NAME);
 			try {
 				FileHelper.copy(ConfigReader.class.getResourceAsStream("defaultConfig.xml"), file); //$NON-NLS-1$
 			} catch (IOException e) {

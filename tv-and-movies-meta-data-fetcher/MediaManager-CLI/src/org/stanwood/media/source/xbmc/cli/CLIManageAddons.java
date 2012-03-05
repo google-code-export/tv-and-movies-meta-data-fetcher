@@ -169,7 +169,7 @@ public class CLIManageAddons extends AbstractLauncher {
 	 * Global options:
 	 *   --version, -v                 Display the version
 	 *   --config_file, -c <file>
-	 *                                 The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *                                 The location of the config file. If not present, attempts to load it from /etc/mediamanager-conf.xml
 	 *   --log_config, -l <info|debug|file>
 	 *                                 The log config mode [<INFO>|<DEBUG>|<log4j config file>]
 	 *   --help, -h                    Show the help

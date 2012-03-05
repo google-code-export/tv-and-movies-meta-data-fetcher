@@ -19,6 +19,7 @@ package org.stanwood.media.info;
 import java.io.File;
 
 import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.xml.XMLParser;
 import org.w3c.dom.Document;
 
 /**
@@ -33,9 +34,17 @@ public class MediaInfoFactory {
 	 * @return The file information
 	 * @throws StanwoodException Thrown if their are any problems
 	 */
-	public static IMediaFileInfo createMediaInfo(File mediaFile,Document document) throws StanwoodException {
-		VideoInfoParser parser = new VideoInfoParser(document);
-		return new VideoFileInfo(mediaFile,parser);
+	public static IMediaFileInfo createMediaInfo(final File mediaFile,Document document) throws StanwoodException {
+		if (XMLParser.hasNode(document, "Mediainfo/File/track[@type='Video']")) { //$NON-NLS-1$
+			VideoInfoParser parser = new VideoInfoParser(document);
+			return new VideoFileInfo(mediaFile,parser);
+		}
+		return new IMediaFileInfo() {
+			@Override
+			public long getFileSize() {
+				return mediaFile.length();
+			}
+		};
 	}
 
 }
