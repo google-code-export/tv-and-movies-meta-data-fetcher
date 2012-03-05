@@ -23,15 +23,21 @@ Compile AtomicParsely for all platforms
 Add support for different video qualities
 	* Add query code to work out the resolution of media files (inprogress)
 	* Add new Patterns to indicate HighDef. (inprogress)
-	* Store quality information in mp4 files.
-		- Set the flvr atom
-		- Set the hdvd atom
-		- Set the meta data need to have both low and high def versions of films 
-		- Add asset-info keys flavour,high-definition,screen-format
-		- High dev content should be short film (9)
+	* Store quality information in mp4 files. (inprogress)
+		- Set the hdvd atom (inprogress)		
+		- Add asset-info keys flavour,high-definition,screen-format (inprogress)
+		- High dev content should be short film (9) (inprogress)
 		
 Version 2.2
 -----------
+Improve mp4 metadata
+	* Set the flvr atom 
+			*note* This will mean enhancing Atomic Parsley, or moving to something else
+	* Set the cnID atom
+			*Note* This id has to be the same on the low and high def versions.
+			       This can be obtained from parsing the app store data (their is a web api).
+			       Or maybe just setting it to the id of the item, however this would 
+			       not be compatible with stuff downloaded in iTunes. 			  
 Add script support
 	New <script> element for the config file. This will contain global script functions
 	Add ability to execute scripts before and after a processing operation of each media directory.
