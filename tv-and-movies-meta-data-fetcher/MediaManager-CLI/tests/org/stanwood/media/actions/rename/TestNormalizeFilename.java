@@ -47,8 +47,8 @@ public class TestNormalizeFilename {
 	@Test
 	public void testAccents() {
 		Assert.assertEquals("Finale",PatternMatcher.normalizeText("Finalé"));
-		Assert.assertEquals("??? hello A",PatternMatcher.normalizeText("口水雞 hello Ä"));
-		Assert.assertEquals("AAA?CE?e?o???",PatternMatcher.normalizeText("ÃÄÅÆÇÈØèæöø©®"));
+		Assert.assertEquals(" hello A",PatternMatcher.normalizeText("口水雞 hello Ä"));
+		Assert.assertEquals("AAACEeo",PatternMatcher.normalizeText("ÃÄÅÆÇÈØèæöø©®"));
 	}
 
 	/**
@@ -56,6 +56,6 @@ public class TestNormalizeFilename {
 	 */
 	@Test
 	public void testInvalidPunctuation() {
-		Assert.assertEquals("????\"'Blah'\"",PatternMatcher.normalizeText("՚՛՜՝“‘Blah’”"));
+		Assert.assertEquals("''Blah''",PatternMatcher.normalizeText("՚՛՜՝“‘Blah’”"));
 	}
 }
