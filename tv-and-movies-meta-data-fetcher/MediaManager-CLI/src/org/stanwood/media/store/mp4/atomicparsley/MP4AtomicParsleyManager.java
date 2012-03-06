@@ -292,60 +292,10 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			}
 		}
 
-
-//		if (Platform.isWindows()) {
-////			getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
-////			if (tempFile.exists() && tempFile.length()>0)  {
-////				try {
-////					FileHelper.delete(mp4File);
-////					FileHelper.move(tempFile, mp4File);
-////				}
-////				catch (IOException e) {
-////					throw new MP4Exception(MessageFormat.format("Unable to move file ''{0}'' to ''{1}''",tempFile,mp4File),e);
-////				}
-////
-////			}
-////			else {
-////				throw new MP4Exception(MessageFormat.format("Unable to update MP4 metadata of file ''{0}''",mp4File));
-////			}
-////			args = new ArrayList<Object>();
-////			args.add(mp4File);
-////			args.add("--output");
-////			args.add(tempFile);
-//			for (IAtom atom : atoms) {
-//				((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
-//				if (args.size()>10) {
-//					getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
-//					if (tempFile.exists() && tempFile.length()>0)  {
-//						try {
-//							FileHelper.delete(mp4File);
-//							FileHelper.move(tempFile, mp4File);
-//						}
-//						catch (IOException e) {
-//							throw new MP4Exception(MessageFormat.format("Unable to move file ''{0}'' to ''{1}''",tempFile,mp4File),e);
-//						}
-//
-//					}
-//					else {
-//						throw new MP4Exception(MessageFormat.format("Unable to update MP4 metadata of file ''{0}''",mp4File));
-//					}
-//					args = new ArrayList<Object>();
-//					args.add(mp4File);
-//					args.add("--output");
-//					args.add(tempFile);
-//				}
-//			}
-//			if (args.size()>0) {
-//				getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
-//			}
-//		}
-//		else {
-			for (IAtom atom : atoms) {
-				((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
-			}
-			getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
-//		}
-
+		for (IAtom atom : atoms) {
+			((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
+		}
+		getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
 
 		if (tempFile.exists() && tempFile.length()>0)  {
 			try {
