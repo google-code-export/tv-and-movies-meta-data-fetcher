@@ -141,7 +141,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				}
 				else {
 					if (currentAtom!=null && currentAtom.key!=null) {
-						currentAtom.value = currentAtom.value+FileHelper.LS+line;
+						currentAtom.value = currentAtom.value.trim()+FileHelper.LS+line;
 					}
 				}
 
