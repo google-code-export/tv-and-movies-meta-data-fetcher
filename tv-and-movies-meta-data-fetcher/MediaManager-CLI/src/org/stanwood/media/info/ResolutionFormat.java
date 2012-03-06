@@ -22,21 +22,21 @@ package org.stanwood.media.info;
 public enum ResolutionFormat {
 
 	/** Used to represent the video resolution format 480i */
-	Format_480i("480i",false,640,480,true),
+	Format_480i("480i",false,640,480,true), //$NON-NLS-1$
 	/** Used to represent the video resolution format 480p */
-	Format_480p("480p",false,640,480,false),
+	Format_480p("480p",false,640,480,false), //$NON-NLS-1$
 	/** Used to represent the video resolution format 576i */
-	Format_576i("576i",false,576,576,true),
+	Format_576i("576i",false,576,576,true), //$NON-NLS-1$
 	/** Used to represent the video resolution format 576p */
-	Format_576p("576p",false,576,576,false),
+	Format_576p("576p",false,576,576,false), //$NON-NLS-1$
 	/** Used to represent the video resolution format 720p */
-	Format_720p("720p",true,1280,720,false),
+	Format_720p("720p",true,1280,720,false), //$NON-NLS-1$
 	/** Used to represent the video resolution format 720i */
-	Format_720i("720i",true,1280,720,true),
+	Format_720i("720i",true,1280,720,true), //$NON-NLS-1$
 	/** Used to represent the video resolution format 1080i */
-	Format_1080i("1080i",true,1280,1080,true),
+	Format_1080i("1080i",true,1280,1080,true), //$NON-NLS-1$
 	/** Used to represent the video resolution format 1080p */
-	Format_1080p("1080p",true,1920,1080,false);
+	Format_1080p("1080p",true,1920,1080,false); //$NON-NLS-1$
 
 	private boolean highDef;
 	private int width;

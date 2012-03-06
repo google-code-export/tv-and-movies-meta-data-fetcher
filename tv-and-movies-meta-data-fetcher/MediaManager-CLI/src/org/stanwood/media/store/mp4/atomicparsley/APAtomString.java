@@ -132,6 +132,10 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 			args.add("--copyright"); //$NON-NLS-1$
 			args.add(value);
 		}
+		else if (getKey() == MP4AtomKey.FLAVOUR) {
+			args.add("--flavour"); //$NON-NLS-1$
+			args.add(value);
+		}
 		else if (getKey().getDnsName() != null && getKey().getDnsDomain()!=null) {
 			if (extended) {
 				args.add("--rDNSatom"); //$NON-NLS-1$

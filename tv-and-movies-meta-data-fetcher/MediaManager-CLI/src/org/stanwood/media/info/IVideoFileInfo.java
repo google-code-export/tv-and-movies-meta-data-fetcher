@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.info;
 
+
 /**
  * This interface is used to request information about video files
  */
@@ -69,4 +70,16 @@ public interface IVideoFileInfo extends IMediaFileInfo {
 	 * @return true if the scan type is interlaced
 	 */
 	public boolean isInterlaced();
+
+	/**
+	 * Used to get the audio format profile or null if one can't be found
+	 * @return The audio format profile
+	 */
+	public String getAudioFormatProfile();
+
+	/**
+	 * Used to get the audio bit rate (Kbs) or null if one can't be found
+	 * @return The audio bit rate (Kbs)
+	 */
+	public Long getAudioBitRate();
 }

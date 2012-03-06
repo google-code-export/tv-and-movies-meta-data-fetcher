@@ -667,14 +667,8 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private static String getFileFlavor(File mp4File, IMediaFileInfo info) {
-		// 1:128
-		// 2:256
-		// Suspect That LC stands for Lossy compression
-		// Suppect that 128 and 256 are the audio bit rate
-		// 4:640x480LC-128
-		// 6:640x480LC-256 (x x y x?) lc = format profile
-		// 7:720p
-		// 8:480p
+		// 1:128 // 128 bit audio
+		// 2:256 // 256 bit audio
 
 		if (info!=null && info instanceof IVideoFileInfo) {
 			IVideoFileInfo vinfo = (IVideoFileInfo)info;
@@ -682,7 +676,14 @@ public class MP4ITunesStore implements IStore {
 				return "7:720p"; //$NON-NLS-1$
 			}
 			else if (vinfo.getResolutionFormat() == ResolutionFormat.Format_480p) {
-				return "4:640x480LC-128"; //$NON-NLS-1$
+				if (vinfo.getAudioFormatProfile()!=null && vinfo.getAudioFormatProfile().equals("LC")) { //$NON-NLS-1$
+					if (vinfo.getAudioBitRate()!=null && vinfo.getAudioBitRate()<256) {
+						return "4:640x480LC-128"; //$NON-NLS-1$
+					}
+					else if (vinfo.getAudioBitRate()!=null && vinfo.getAudioBitRate()>=256) {
+						return "6:640x480LC-256"; //$NON-NLS-1$
+					}
+				}
 			}
 		}
 		return null;
@@ -698,10 +699,6 @@ public class MP4ITunesStore implements IStore {
 		}
 		if (info!=null && info instanceof IVideoFileInfo) {
 			IVideoFileInfo vinfo = (IVideoFileInfo)info;
-			if (flavour!=null) {
-				iTuneMOVIValue.append("        <key>flavor</key>"+FileHelper.LS); //$NON-NLS-1$
-				iTuneMOVIValue.append("        <string>"+flavour+"</string>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
-			}
 			if (vinfo.isHighDef()) {
 				iTuneMOVIValue.append("        <key>high-definition</key>"+FileHelper.LS); //$NON-NLS-1$
 				iTuneMOVIValue.append("        <true/>"+FileHelper.LS); //$NON-NLS-1$
