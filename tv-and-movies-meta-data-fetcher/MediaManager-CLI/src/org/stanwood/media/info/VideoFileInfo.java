@@ -30,6 +30,8 @@ public class VideoFileInfo implements IVideoFileInfo {
 	private AspectRatio aspectRatio;
 	private boolean interlaced;
 	private ResolutionFormat resolutionFormat;
+	private String audioFormatProfile;
+	private Long audioBitRate;
 
 	/**
 	 * The constructor
@@ -47,6 +49,8 @@ public class VideoFileInfo implements IVideoFileInfo {
 		if (width!=null && height!=null) {
 			resolutionFormat = ResolutionFormat.getFormat(width, height, interlaced);
 		}
+		audioFormatProfile = parser.getAudioFormatProfile();
+		audioBitRate = parser.getAudioBitRate();
 	}
 
 	/** {@inheritDoc} */
@@ -105,4 +109,17 @@ public class VideoFileInfo implements IVideoFileInfo {
 	public boolean isInterlaced() {
 		return interlaced;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getAudioFormatProfile() {
+		return audioFormatProfile;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Long getAudioBitRate() {
+		return audioBitRate;
+	}
+
 }

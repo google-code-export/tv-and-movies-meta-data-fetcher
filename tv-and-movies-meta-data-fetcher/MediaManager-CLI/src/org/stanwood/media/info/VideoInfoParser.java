@@ -29,6 +29,7 @@ public class VideoInfoParser extends XMLParser {
 
 	private Document dom;
 	private Node videoTrack;
+	private Node audioTrack;
 
 	/**
 	 * Constructor
@@ -49,6 +50,15 @@ public class VideoInfoParser extends XMLParser {
 			}
 		}
 		return videoTrack;
+	}
+
+	private Node getAudioTrack() throws XMLParserException {
+		if (audioTrack==null) {
+			for (Node node : selectNodeList(dom, "Mediainfo/File/track[@type='Audio']")) { //$NON-NLS-1$
+				audioTrack = node;
+			}
+		}
+		return audioTrack;
 	}
 
 	private String getTrackString(Node trackNode,String key) throws XMLParserException {
@@ -151,4 +161,37 @@ public class VideoInfoParser extends XMLParser {
 		}
 		return !value.equalsIgnoreCase("progressive");  //$NON-NLS-1$
 	}
+
+	/**
+	 * Used to get the audio format profile
+	 * @return The audio format profile
+	 * @throws XMLParserException Thrown if their is a parser error
+	 */
+	public String getAudioFormatProfile() throws XMLParserException {
+		Node track = getAudioTrack();
+		if (track==null) {
+			return null;
+		}
+		String value = getTrackString(track,"Format_profile"); //$NON-NLS-1$
+		return value;
+	}
+
+	/**
+	 * Used to get the audio bit rate (Kbs)
+	 * @return The audio bit rate (Kbs)
+	 * @throws XMLParserException
+	 */
+	public Long getAudioBitRate() throws XMLParserException {
+		Node track = getAudioTrack();
+		if (track==null) {
+			return null;
+		}
+		String value = getTrackString(track,"Bit_rate"); //$NON-NLS-1$
+		if (value==null) {
+			return null;
+		}
+
+		return Math.round(((double)Long.parseLong(value))/1000);
+	}
+
 }
