@@ -36,6 +36,7 @@ import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
+import org.stanwood.media.util.Platform;
 
 public class MP4AtomicParsleyManager implements IMP4Manager {
 
@@ -290,11 +291,61 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				args.add("moov.udta.meta.ilst.----.name:["+atom.getKey().getDnsName()+"]"); //$NON-NLS-1$
 			}
 		}
-		for (IAtom atom : atoms) {
-			((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
 
-		}
-		getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
+
+//		if (Platform.isWindows()) {
+////			getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
+////			if (tempFile.exists() && tempFile.length()>0)  {
+////				try {
+////					FileHelper.delete(mp4File);
+////					FileHelper.move(tempFile, mp4File);
+////				}
+////				catch (IOException e) {
+////					throw new MP4Exception(MessageFormat.format("Unable to move file ''{0}'' to ''{1}''",tempFile,mp4File),e);
+////				}
+////
+////			}
+////			else {
+////				throw new MP4Exception(MessageFormat.format("Unable to update MP4 metadata of file ''{0}''",mp4File));
+////			}
+////			args = new ArrayList<Object>();
+////			args.add(mp4File);
+////			args.add("--output");
+////			args.add(tempFile);
+//			for (IAtom atom : atoms) {
+//				((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
+//				if (args.size()>10) {
+//					getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
+//					if (tempFile.exists() && tempFile.length()>0)  {
+//						try {
+//							FileHelper.delete(mp4File);
+//							FileHelper.move(tempFile, mp4File);
+//						}
+//						catch (IOException e) {
+//							throw new MP4Exception(MessageFormat.format("Unable to move file ''{0}'' to ''{1}''",tempFile,mp4File),e);
+//						}
+//
+//					}
+//					else {
+//						throw new MP4Exception(MessageFormat.format("Unable to update MP4 metadata of file ''{0}''",mp4File));
+//					}
+//					args = new ArrayList<Object>();
+//					args.add(mp4File);
+//					args.add("--output");
+//					args.add(tempFile);
+//				}
+//			}
+//			if (args.size()>0) {
+//				getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
+//			}
+//		}
+//		else {
+			for (IAtom atom : atoms) {
+				((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
+			}
+			getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
+//		}
+
 
 		if (tempFile.exists() && tempFile.length()>0)  {
 			try {
@@ -388,12 +439,21 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				cmdLine.addArgument(((File)arg).getAbsolutePath(),false);
 			}
 			else if (arg instanceof String) {
-				cmdLine.addArgument((String)arg,false);
+				if (Platform.isWindows()) {
+					String a = ((String)arg).replaceAll("\"", Matcher.quoteReplacement("\\\"")); //$NON-NLS-1$ //$NON-NLS-2$
+					cmdLine.addArgument(a,false);
+				}
+				else {
+					String a = (String)arg;
+					cmdLine.addArgument(a,false);
+				}
 			}
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("About to execute: " + cmdLine.toString()); //$NON-NLS-1$
 		}
+
+		System.out.println("About to execute: " + cmdLine.toString()); //$NON-NLS-1$
 		Executor exec = new DefaultExecutor();
 		exec.setExitValues(new int[] {0,1,2,3,4,5,6,7,8,9});
 
