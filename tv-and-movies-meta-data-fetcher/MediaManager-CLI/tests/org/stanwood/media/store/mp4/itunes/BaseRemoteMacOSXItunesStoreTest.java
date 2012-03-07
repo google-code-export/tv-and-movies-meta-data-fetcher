@@ -16,6 +16,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.Platform;
 
 /**
  * This is a base test class for all tests that need to talk to the dummy itunes control server
@@ -69,8 +70,13 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		while (!started && exception==null) {
 			Thread.sleep(100);
 		}
-		while (available(port)) {
-			Thread.sleep(100);
+		if (!Platform.isWindows()) {
+			while (available(port)) {
+				Thread.sleep(100);
+			}
+		}
+		else {
+			Thread.sleep(2000);
 		}
 
 		if (exception!=null) {
