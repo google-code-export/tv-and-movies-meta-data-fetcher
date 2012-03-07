@@ -118,7 +118,7 @@ public class TestMediaFileInfoFetcher {
 	@Test
 	public void testVideoHighdef() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		URL url = Data.class.getResource("a_video_hd.m4v");
+		URL url = Data.class.getResource("a_video_1080p.m4v");
 		File file = new File(url.toURI());
 		Assert.assertTrue(file.exists());
 
