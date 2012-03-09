@@ -1,14 +1,12 @@
 package org.stanwood.media.store.mp4.atomicparsley;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4AtomKey;
-import org.stanwood.media.store.mp4.MP4AtomKeyType;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.util.FileHelper;
@@ -47,8 +44,6 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	private static final Pattern DNS_PATTERN = Pattern.compile("^Atom \"----\" \\[(.+?);(.+?)\\] contains\\: (.+)$"); //$NON-NLS-1$;
 
 	private String apCmdPath;
-	private boolean extended = false;
-
 
 	/**
 	 * This checks that the stores system commands can be found before the store is used.
@@ -67,9 +62,6 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		if (!checkCommandVersion()) {
 			log.error(MessageFormat.format("Unable to find or execute command ''{0}''.",apCmdPath));
 			errors = true;
-		}
-		else if (!extended) {
-			log.warn(MessageFormat.format("The found version of ''AtomicParsley'' application does not support setting some mp4 box types. This means only a limited set of meta data can be written to mp4/m4v files. The documentation for the ''{0}'' gives details on downloading a newer version and using that instead.",MP4ITunesStore.class.getName())); //$NON-NLS-1$
 		}
 		if (errors) {
 			throw new MP4Exception("Required system command not found");
@@ -107,61 +99,11 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		if (!mp4File.exists()) {
 			throw new MP4Exception(MessageFormat.format("Unable to find mp4 file {0}",mp4File));
 		}
-		List<IAtom> atoms = new ArrayList<IAtom>();
-		String output = getCommandOutput(true,false,true,apCmdPath,mp4File,"-t","+"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		AtomResult currentAtom = null;
-
-		BufferedReader reader = null;
-		try {
-			reader =new BufferedReader(new StringReader(output));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if (line.equals("---------------------------")) { //$NON-NLS-1$
-					if (currentAtom!=null && currentAtom.key!=null) {
-						// write atom
-						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
-						if (atom!=null) {
-							atoms.add(atom);
-						}
-					}
-					break;
-				}
-
-				AtomResult ar = readerAtom(line);
-				if (ar!=null) {
-					if (currentAtom!=null && currentAtom.key!=null) {
-						// write atom
-						IAtom atom = parseAtom(currentAtom.key,currentAtom.value);
-						if (atom!=null) {
-							atoms.add(atom);
-						}
-					}
-					currentAtom = ar;
-				}
-				else {
-					if (currentAtom!=null && currentAtom.key!=null) {
-						currentAtom.value = currentAtom.value.trim()+FileHelper.LS+line;
-					}
-				}
+		String output = getCommandOutput(true,false,true,apCmdPath,mp4File,"--outputXML"); //$NON-NLS-1$
+		AtomicParsleyOutputParser parser = new AtomicParsleyOutputParser(output);
+		return parser.listAtoms();
 
 
-			}
-
-		} catch (IOException e) {
-			throw new MP4Exception(MessageFormat.format("Unable to list MP4 file atoms for file ''{0}''",mp4File),e);
-		}
-		finally {
-			if (reader!=null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.error("Unable to close stream",e);
-				}
-			}
-		}
-
-		return atoms;
 	}
 
 	private boolean hasArtwrokAtom(List<IAtom> atoms) {
@@ -171,89 +113,6 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			}
 		}
 		return false;
-	}
-
-	private IAtom parseAtom(MP4AtomKey key, String value) throws MP4Exception {
-		IAtom atom = null;
-		if (key.getType() == MP4AtomKeyType.Boolean) {
-			atom = createAtom(key, value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true") || value.equals("1"));  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		}
-		else if (key.getType()==MP4AtomKeyType.Enum) {
-			if (key == MP4AtomKey.MEDIA_TYPE) {
-				int ivalue = -1;
-				if (value.equalsIgnoreCase("Old Movie")) { //$NON-NLS-1$
-					ivalue = 0;
-				}
-				else if (value.equalsIgnoreCase("Normal")) { //$NON-NLS-1$
-					ivalue = 1;
-				}
-				else if (value.equalsIgnoreCase("Audio Book")) { //$NON-NLS-1$
-					ivalue = 2;
-				}
-				else if (value.equalsIgnoreCase("Music Video")) { //$NON-NLS-1$
-					ivalue = 6;
-				}
-				else if (value.equalsIgnoreCase("Movie")) { //$NON-NLS-1$
-					ivalue = 6;
-				}
-				else if (value.equalsIgnoreCase("Short Film")) { //$NON-NLS-1$
-					ivalue = 9;
-				}
-				else if (value.equalsIgnoreCase("TV Show")) { //$NON-NLS-1$
-					ivalue = 10;
-				}
-				else if (value.equalsIgnoreCase("Booklet")) { //$NON-NLS-1$
-					ivalue = 11;
-				}
-				else if (value.equalsIgnoreCase("Ringtone")) { //$NON-NLS-1$
-					ivalue = 14;
-				}
-				atom = createAtom(key, ivalue);
-			}
-			else if (key == MP4AtomKey.RATING) {
-				int ivalue = -1;
-				if (value.equalsIgnoreCase("None")) { //$NON-NLS-1$
-					ivalue = 0;
-				}
-				else if (value.equalsIgnoreCase("Clean")) { //$NON-NLS-1$
-					ivalue = 2;
-				}
-				else if (value.equalsIgnoreCase("Explicit")) { //$NON-NLS-1$
-					ivalue = 4;
-				}
-				atom = createAtom(key, ivalue);
-			}
-			else {
-				atom = createAtom(key, value);
-			}
-		}
-		else if (key.getType() == MP4AtomKeyType.Range) {
-			Matcher m = RANGE_PATTERN.matcher(value);
-			if (m.matches()) {
-				atom = createAtom(key, Short.parseShort(m.group(1)),Short.parseShort(m.group(2)));
-			}
-			else {
-				try {
-					atom = createAtom(key, Short.parseShort(value),(short)0);
-				}
-				catch (NumberFormatException e) {
-					throw new MP4Exception(MessageFormat.format("Unable to parse range ''{0}''",value),e);
-				}
-			}
-		}
-		else if (key.getType() == MP4AtomKeyType.Artwork) {
-			Matcher m = ARTWORK_PATTERN.matcher(value);
-			if (m.matches()) {
-				atom = new APAtomArtworkSummary(key, Integer.parseInt(m.group(1)));
-			}
-			else {
-				throw new MP4Exception(MessageFormat.format("Unable to parse artwork summary from ''{0}''",value));
-			}
-		}
-		else {
-			atom = createAtom(key, value);
-		}
-		return atom;
 	}
 
 	@Override
@@ -293,7 +152,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		}
 
 		for (IAtom atom : atoms) {
-			((AbstractAPAtom)atom).writeAtom(mp4File,extended,args);
+			((AbstractAPAtom)atom).writeAtom(mp4File,true,args);
 		}
 		getCommandOutput(true,false,true,apCmdPath,args.toArray(new Object[args.size()]));
 
@@ -429,15 +288,21 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	}
 
 	private boolean checkCommandVersion() {
+		boolean extended = false;
 		try {
 			String output = getCommandOutput(true,true,false,apCmdPath);
-			if (output.contains("--longdesc")) { //$NON-NLS-1$
+			if (output.contains("--longdesc") && output.contains("--flavor")) { //$NON-NLS-1$ //$NON-NLS-2$
 				extended = true;
 			}
 		}
 		catch (MP4Exception e) {
 			return false;
 		}
+		if (!extended) {
+			log.error(MessageFormat.format("The found version of ''AtomicParsley'' application does not support setting some mp4 box types that are needed. This means only a limited set of meta data can be written to mp4/m4v files. The documentation for the ''{0}'' gives details on downloading a newer version and using that instead.",MP4ITunesStore.class.getName())); //$NON-NLS-1$
+			return false;
+		}
+
 		return true;
 	}
 

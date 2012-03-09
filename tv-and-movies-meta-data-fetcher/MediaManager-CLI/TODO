@@ -4,7 +4,6 @@ TODO
 Version 2.1
 -----------
 
-Add a getting started guide and link to a button in the installer
 Get OpenSuSE rpms building again
 Add more Linux distribution packages.
 Add ability to upgrade MP4ItunesStore (inprogress)
@@ -29,6 +28,7 @@ Add support for different video qualities
 		
 Version 2.2
 -----------
+Add a getting started guide and link to a button in the installer
 Improve mp4 metadata
 	* Set the flvr atom 
 			*note* This will mean enhancing Atomic Parsley, or moving to something else
