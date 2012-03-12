@@ -176,8 +176,9 @@
 			<!--
 			<cobertura-check branchrate="67" linerate="82"/>		
 			-->		
-			
+			<!--
 			<delete dir="${reports.dir}/xml"/>
+			-->
 			<delete dir="${cobertura.dir}"/>
 			<delete file="cobertura.ser" />
 		</target>
