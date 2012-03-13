@@ -236,7 +236,8 @@ public class TestMP4AtomicParsleyManager {
 //		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
 		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
 		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
-		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
+		String purd = atoms.get(index++).toString();
+		Assert.assertTrue(purd.contains("Purchase Date: [purd="));
 		Assert.assertEquals("Name: [©nam=Test Episode]",atoms.get(index++).toString());
 		Assert.assertEquals("Sort Name: [sonm=Test Episode]",atoms.get(index++).toString());
 		Assert.assertEquals("Store Description: [sdes=Blah blah blah]",atoms.get(index++).toString());

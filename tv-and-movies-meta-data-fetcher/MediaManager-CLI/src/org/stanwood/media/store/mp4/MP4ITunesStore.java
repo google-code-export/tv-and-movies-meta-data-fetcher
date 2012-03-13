@@ -357,6 +357,9 @@ public class MP4ITunesStore implements IStore {
 		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
 		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 
+		DateFormat DF1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
+		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+
 		// http://code.google.com/p/mp4v2/wiki/iTunesMetadata
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		IShow show = episode.getSeason().getShow();
@@ -379,7 +382,7 @@ public class MP4ITunesStore implements IStore {
 		if (episode.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(episode.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(getPurchasedDate(mp4File))));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF1.format(getPurchasedDate(mp4File))));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, episode.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  episode.getTitle()));
 		if (show.getLongSummary()!=null ) {
@@ -542,6 +545,9 @@ public class MP4ITunesStore implements IStore {
 		DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
 		DF.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 
+		DateFormat DF1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
+		DF1.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+
 		List<IAtom> atoms = new ArrayList<IAtom>();
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MM_VERSION,STORE_VERSION.toString()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.MEDIA_TYPE,StikValue.SHORT_FILM.getId()));
@@ -550,7 +556,7 @@ public class MP4ITunesStore implements IStore {
 		if (film.getDate()!=null) {
 			atoms.add(mp4Manager.createAtom(MP4AtomKey.RELEASE_DATE, DF.format(film.getDate())));
 		}
-		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF.format(getPurchasedDate(mp4File))));
+		atoms.add(mp4Manager.createAtom(MP4AtomKey.PURCHASED_DATE, DF1.format(getPurchasedDate(mp4File))));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.NAME, film.getTitle()));
 		atoms.add(mp4Manager.createAtom(MP4AtomKey.SORT_NAME,  film.getTitle()));
 		if (film.getSummary()!=null && film.getSummary().length()>0) {

@@ -19,14 +19,8 @@ Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Renamed CLI tool
 Compile AtomicParsely for all platforms
-	* Check the dates are encoded the same as iTunes	
 Add support for different video qualities
 	* Add support for new iTunes format 1080p
-	* Add query code to work out the resolution of media files (inprogress)
-		- Add test of the variours movie types
-	* Add new Patterns to indicate HighDef. (needs testing)
-	* Store quality information in mp4 files. (inprogress)
-		- Add asset-info keys flavour (inprogress)
 		
 Version 2.2
 -----------
