@@ -661,7 +661,12 @@ public class MP4ITunesStore implements IStore {
 		if (info!=null && info instanceof IVideoFileInfo) {
 			IVideoFileInfo vinfo = (IVideoFileInfo)info;
 			if (vinfo.isHighDef()) {
-				atoms.add(mp4Manager.createAtom(MP4AtomKey.HD, true));
+				if (vinfo.getResolutionFormat()!=null && vinfo.getResolutionFormat()==ResolutionFormat.Format_1080p) {
+					atoms.add(mp4Manager.createAtom(MP4AtomKey.HD, 2));
+				}
+				else {
+					atoms.add(mp4Manager.createAtom(MP4AtomKey.HD, 1));
+				}
 			}
 		}
 	}
@@ -672,7 +677,10 @@ public class MP4ITunesStore implements IStore {
 
 		if (info!=null && info instanceof IVideoFileInfo) {
 			IVideoFileInfo vinfo = (IVideoFileInfo)info;
-			if (vinfo.getResolutionFormat() == ResolutionFormat.Format_720p) {
+			if (vinfo.getResolutionFormat() == ResolutionFormat.Format_1080p) {
+				return "18:1080p"; //$NON-NLS-1$
+			}
+			else if (vinfo.getResolutionFormat() == ResolutionFormat.Format_720p) {
 				return "7:720p"; //$NON-NLS-1$
 			}
 			else if (vinfo.getResolutionFormat() == ResolutionFormat.Format_480p) {

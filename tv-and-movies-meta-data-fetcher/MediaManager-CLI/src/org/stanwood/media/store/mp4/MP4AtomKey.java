@@ -58,7 +58,7 @@ public enum MP4AtomKey {
 	PODCAST_URL("Podcast URL","purl",MP4AtomKeyType.URL),
 	KEYWORDS("Keywords","keyw",MP4AtomKeyType.String),
 	CATEGORY("Category","catg",MP4AtomKeyType.String),
-	HD("HD Video","hdvd",MP4AtomKeyType.Boolean),
+	HD("HD Video","hdvd",MP4AtomKeyType.Byte),
 	MEDIA_TYPE("Media Type","stik",MP4AtomKeyType.Enum),
 	RATING("Content Rating","rtng",MP4AtomKeyType.Byte),
 	GAPLESS_PLAYBACK("Gapless Playback","pgap",MP4AtomKeyType.Boolean),
