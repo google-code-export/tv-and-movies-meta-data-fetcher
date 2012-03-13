@@ -66,10 +66,6 @@ public class APAtomBoolean extends AbstractAPAtom implements IAtom {
 			args.add("--gapless"); //$NON-NLS-1$
 			args.add(toAPValue(value));
 		}
-		else if (getKey() == MP4AtomKey.HD) {
-			args.add("--hdvideo"); //$NON-NLS-1$
-			args.add(toAPValue(value));
-		}
 		else {
 			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
 		}

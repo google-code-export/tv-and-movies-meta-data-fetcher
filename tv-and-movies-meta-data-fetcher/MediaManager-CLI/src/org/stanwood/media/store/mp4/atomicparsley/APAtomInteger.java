@@ -70,6 +70,10 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 				args.add("none"); //$NON-NLS-1$
 			}
 		}
+		else if (getKey() == MP4AtomKey.HD) {
+			args.add("--hdvideo"); //$NON-NLS-1$
+			args.add(value);
+		}
 		else {
 			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
 		}
