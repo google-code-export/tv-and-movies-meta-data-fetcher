@@ -73,27 +73,6 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		String value;
 	}
 
-	private AtomResult readerAtom(String line) {
-		Matcher m = TAG_LIST_PATTERN.matcher(line);
-		if (m.matches()) {
-			AtomResult result = new AtomResult();
-			result.key =   MP4AtomKey.fromKey(m.group(1));
-			result.value = m.group(2);
-			return result;
-		}
-		else {
-			Matcher m1 = DNS_PATTERN.matcher(line);
-			if (m1.matches()) {
-				AtomResult result = new AtomResult();
-				result.key =   MP4AtomKey.fromRDNS(m1.group(2), m1.group(1));
-				result.value = m1.group(3);
-				return result;
-			}
-		}
-
-		return null;
-	}
-
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		if (!mp4File.exists()) {
@@ -291,7 +270,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		boolean extended = false;
 		try {
 			String output = getCommandOutput(true,true,false,apCmdPath);
-			if (output.contains("--longdesc") && output.contains("--flavor")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (output.contains("--longdesc") && output.contains("--flavour")) { //$NON-NLS-1$ //$NON-NLS-2$
 				extended = true;
 			}
 		}
