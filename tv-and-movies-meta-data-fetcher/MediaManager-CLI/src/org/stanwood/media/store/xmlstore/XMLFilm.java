@@ -318,7 +318,7 @@ public class XMLFilm extends XMLVideo implements IFilm {
 	@Override
 	public void setDescription(String description) {
 		Element el = getElement(filmNode, "description"); //$NON-NLS-1$
-		el = getElement(filmNode, "long"); //$NON-NLS-1$
+		el = getElement(el, "long"); //$NON-NLS-1$
 		if (description != null) {
 			el.setTextContent(description);
 		}
