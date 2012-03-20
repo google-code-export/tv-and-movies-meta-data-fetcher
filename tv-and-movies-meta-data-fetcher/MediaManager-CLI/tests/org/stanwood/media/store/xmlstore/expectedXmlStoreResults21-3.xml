@@ -1,6 +1,6 @@
 <!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.1//EN"
                        "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
-<store revision="2" version="2.1">
+<store revision="3" version="2.1">
   <show id="79501" imageUrl="" name="Heroes"
     sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com" studio="NBC" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
     <genres>
