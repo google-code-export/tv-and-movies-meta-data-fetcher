@@ -832,7 +832,7 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-	private void upgradeMediaFiles(MediaDirectory mediaDir,File file) throws StoreException,MP4Exception {
+	private void upgradeMediaFiles(MediaDirectory mediaDir,File file) throws StoreException {
 		if (file.isDirectory()) {
 			for (File d : file.listFiles()) {
 				upgradeMediaFiles(mediaDir,d);
@@ -840,9 +840,14 @@ public class MP4ITunesStore implements IStore {
 		}
 		else {
 			if (isItunesExtension(file)) {
-				List<IAtom> atoms = mp4Manager.listAtoms(file);
-				if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
-					doUpgrade(atoms,mediaDir,file);
+				try {
+					List<IAtom> atoms = mp4Manager.listAtoms(file);
+					if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
+						doUpgrade(atoms,mediaDir,file);
+					}
+				}
+				catch (MP4Exception e) {
+					throw new StoreException(MessageFormat.format("Unable to process mp4 atoms of file ''{0}''",file),e);
 				}
 			}
 		}
@@ -923,6 +928,7 @@ public class MP4ITunesStore implements IStore {
 					log.error(MessageFormat.format("Unable to read film details of file ''{0}''", file.getAbsoluteFile()));
 				}
 			}
+			log.info(MessageFormat.format("Updated atoms of file ''{0}''",file));
 		}
 		catch (StoreException e) {
 			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
@@ -940,12 +946,7 @@ public class MP4ITunesStore implements IStore {
 			StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
 			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
 				log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
-				try {
-					upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
-				}
-				catch (MP4Exception e) {
-					throw new StoreException("Unable to upgrade store",e);
-				}
+				upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
 				saveStoreVersion(mediaDirectory);
 				log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
 			}
