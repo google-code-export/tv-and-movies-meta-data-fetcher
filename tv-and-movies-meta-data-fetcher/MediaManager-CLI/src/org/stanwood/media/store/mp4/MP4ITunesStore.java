@@ -904,17 +904,23 @@ public class MP4ITunesStore implements IStore {
 				}
 			}
 			else {
-				IFilm film = MediaSearcher.getFilm(mediaDir, file,true);
-				if (film!=null) {
-					Integer part = null;
-					for (IVideoFile vfile : film.getFiles()) {
-						if (vfile.getLocation().equals(file)) {
-							part = vfile.getPart();
-							break;
+				IFilm film;
+				try {
+					film = MediaSearcher.getFilm(mediaDir, file,true);
+					if (film!=null) {
+						Integer part = null;
+						for (IVideoFile vfile : film.getFiles()) {
+							if (vfile.getLocation().equals(file)) {
+								part = vfile.getPart();
+								break;
+							}
 						}
+						updateFilm(controller,mp4Manager,file, film,part);
+						mediaDir.fileChanged(file);
 					}
-					updateFilm(controller,mp4Manager,file, film,part);
-					mediaDir.fileChanged(file);
+				}
+				catch (ActionException e) {
+					log.error(MessageFormat.format("Unable to read film details of file ''{0}''", file.getAbsoluteFile()));
 				}
 			}
 		}
