@@ -1444,7 +1444,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgrade20to21(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to 2.1.2",rootMediaDir));
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to "+STORE_VERSION.toString(),rootMediaDir));
 		if (dirConfig.getMode()==Mode.TV_SHOW) {
 			NodeList children = storeNode.getChildNodes();
 
@@ -1506,7 +1506,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
 					XMLFilm orgFilm = new XMLFilm((Element) children.item(i),rootMediaDir);
 					for (IVideoFile files : orgFilm.getFiles()) {
-						if (orgFilm.getImageURL().toExternalForm().contains("cf1.imgobject.com")){ //$NON-NLS-1$
+						if (orgFilm.getImageURL()== null || orgFilm.getImageURL().toExternalForm().contains("cf1.imgobject.com")){ //$NON-NLS-1$
 							String sourceId = orgFilm.getSourceId();
 							SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
 							try {
