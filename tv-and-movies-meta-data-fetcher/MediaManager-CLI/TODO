@@ -18,9 +18,9 @@ Update docs
 	- Add new patterns
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Renamed CLI tool
-Compile AtomicParsely for all platforms
-Add support for different video qualities
-	* Add support for new iTunes format 1080p
+Compile AtomicParsely for all platforms (inprogress)
+Add support for different video qualities (inprogress)
+	* Add support for new iTunes format 1080p (inprogress)
 		
 Version 2.2
 -----------

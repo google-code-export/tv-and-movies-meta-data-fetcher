@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),2); //$NON-NLS-1$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
 	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION.getVersion()+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
 	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION.getVersion()+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -1396,8 +1396,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				}
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
-			else if (currentVersion.getRevision() < STORE_VERSION.getRevision()) {
+			else if (currentVersion.getRevision() < 2) {
 				upgradeRevision21(mediaDirectory,cache,storeNode);
+				writeUpgradedStore(rootMediaDirectory, storeNode);
+			}
+			else if (currentVersion.getRevision() < STORE_VERSION.getRevision()) {
+				try {
+					upgradeRevisionTo21_3(mediaDirectory,cache,storeNode);
+				} catch (StoreException e) {
+					throw e;
+				} catch (StanwoodException e) {
+					throw new StoreException("Unable to update store",e);
+				}
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
 		} catch (XMLParserException e) {
@@ -1478,6 +1488,38 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 							throw new StoreException("Unable to update store",e);
 						} catch (IOException e) {
 							throw new StoreException("Unable to update store",e);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void upgradeRevisionTo21_3(MediaDirectory mediaDirectory,Document cache, Element storeNode) throws StanwoodException {
+		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
+		File rootMediaDir = dirConfig.getMediaDir();
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to 2.1.2",rootMediaDir));
+		if (dirConfig.getMode()==Mode.FILM) {
+			NodeList children = storeNode.getChildNodes();
+
+			for (int i=0;i<children.getLength();i++) {
+				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
+					XMLFilm orgFilm = new XMLFilm((Element) children.item(i),rootMediaDir);
+					for (IVideoFile files : orgFilm.getFiles()) {
+						if (orgFilm.getImageURL().toExternalForm().contains("cf1.imgobject.com")){ //$NON-NLS-1$
+							String sourceId = orgFilm.getSourceId();
+							SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
+							try {
+								IFilm film= getFilmFromSource(mediaDirectory, searchResult);
+								orgFilm.setImageURL(film.getImageURL());
+								orgFilm.setDescription(film.getDescription());
+								orgFilm.setSummary(film.getSummary());
+								orgFilm.setWriters(film.getWriters());
+							} catch (MalformedURLException e) {
+								throw new StoreException("Unable to update store",e);
+							} catch (IOException e) {
+								throw new StoreException("Unable to update store",e);
+							}
 						}
 					}
 				}
