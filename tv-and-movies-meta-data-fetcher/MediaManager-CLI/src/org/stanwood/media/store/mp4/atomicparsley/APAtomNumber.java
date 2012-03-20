@@ -4,15 +4,15 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.stanwood.media.store.mp4.IAtomInteger;
+import org.stanwood.media.store.mp4.IAtomNumber;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
  * Used to store mp4 number atom data
  */
-public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
+public class APAtomNumber extends AbstractAPAtom implements IAtomNumber {
 
-	private int value;
+	private long value;
 
 	/**
 	 * The constructor
@@ -20,7 +20,7 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 	 * @param name The name of the atom
 	 * @param value The value of the atom
 	 */
-	public APAtomInteger(MP4AtomKey name,int value) {
+	public APAtomNumber(MP4AtomKey name,long value) {
 		super(name);
 		this.value = value;
 	}
@@ -39,7 +39,7 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 	 * @return The value of the atom
 	 */
 	@Override
-	public int getValue() {
+	public long getValue() {
 		return value;
 	}
 
@@ -73,6 +73,9 @@ public class APAtomInteger extends AbstractAPAtom implements IAtomInteger {
 		else if (getKey() == MP4AtomKey.HD) {
 			args.add("--hdvideo"); //$NON-NLS-1$
 			args.add(String.valueOf(value));
+		}
+		else if (getKey().getDnsName() != null && getKey().getDnsDomain()!=null) {
+			// TODO handle these
 		}
 		else {
 			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));

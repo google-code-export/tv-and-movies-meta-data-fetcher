@@ -16,7 +16,7 @@
  */
 package org.stanwood.media.store.mp4;
 
-public interface IAtomInteger extends IAtom {
+public interface IAtomNumber extends IAtom {
 
-	public int getValue();
+	public long getValue();
 }

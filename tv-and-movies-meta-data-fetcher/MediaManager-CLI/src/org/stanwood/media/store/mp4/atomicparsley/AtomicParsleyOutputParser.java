@@ -84,7 +84,7 @@ public class AtomicParsleyOutputParser extends XMLParser {
 			return new APAtomRange(key, count, max);
 		}
 		else if (node.getNodeName().equals("atomNumber")) {
-			return new APAtomInteger(key,parseIntAttribute(node, name,"value"));
+			return new APAtomNumber(key,parseLongAttribute(node, name,"value"));
 		}
 		else if (node.getNodeName().equals("atomBoolean")) {
 			String value = node.getAttribute("value");
@@ -109,6 +109,20 @@ public class AtomicParsleyOutputParser extends XMLParser {
 		}
 		try {
 			return Integer.parseInt(value);
+		}
+		catch (NumberFormatException e) {
+			throw new MP4Exception(MessageFormat.format("Unable to parse number from value {0} for atom {1}",value,name));
+		}
+	}
+
+	protected long parseLongAttribute(Element node, String name,String attributeName)
+			throws MP4Exception {
+		String value = node.getAttribute(attributeName);
+		if (value.length()==0) {
+			throw new MP4Exception(MessageFormat.format("Empty value for atom {0}",name));
+		}
+		try {
+			return Long.parseLong(value);
 		}
 		catch (NumberFormatException e) {
 			throw new MP4Exception(MessageFormat.format("Unable to parse number from value {0} for atom {1}",value,name));

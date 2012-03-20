@@ -26,7 +26,7 @@ import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.StikValue;
-import org.stanwood.media.store.mp4.atomicparsley.APAtomInteger;
+import org.stanwood.media.store.mp4.atomicparsley.APAtomNumber;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParserException;
@@ -153,8 +153,8 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				return false;
 			}
 			else {
-				if (atom instanceof APAtomInteger) {
-					StikValue stik = StikValue.fromId(((APAtomInteger)atom).getValue());
+				if (atom instanceof APAtomNumber) {
+					StikValue stik = StikValue.fromId((int)((APAtomNumber)atom).getValue());
 					if (stik==null) {
 						return false;
 					}
