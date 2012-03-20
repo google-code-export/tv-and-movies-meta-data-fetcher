@@ -877,6 +877,11 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private void doUpgrade(List<IAtom> atoms,MediaDirectory mediaDir,File file) throws StoreException, MP4Exception {
+		for (IStore store : mediaDir.getStores()) {
+			if (store!=this) {
+				store.upgrade(mediaDir);
+			}
+		}
 
 		StoreVersion currentVersion = getVersion(file,atoms);
 		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
