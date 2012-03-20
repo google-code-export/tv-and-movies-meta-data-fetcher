@@ -925,18 +925,20 @@ public class MP4ITunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
-//		StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
-//		if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
-//			log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
-//			try {
-//				upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
-//			}
-//			catch (MP4Exception e) {
-//				throw new StoreException("Unable to upgrade store",e);
-//			}
-//			saveStoreVersion(mediaDirectory);
-//			log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
-//		}
+		if (mediaDirectory.getMediaDirConfig().getMode() == Mode.FILM) {
+			StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
+			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
+				log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
+				try {
+					upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
+				}
+				catch (MP4Exception e) {
+					throw new StoreException("Unable to upgrade store",e);
+				}
+				saveStoreVersion(mediaDirectory);
+				log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
+			}
+		}
 	}
 
 	protected void saveStoreVersion(MediaDirectory mediaDirectory)
