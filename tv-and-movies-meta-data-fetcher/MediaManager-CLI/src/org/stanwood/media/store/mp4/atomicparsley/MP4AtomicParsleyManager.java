@@ -189,7 +189,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	/** {@inheritDoc} */
 	@Override
 	public IAtom createAtom(MP4AtomKey name, int value) {
-		return new APAtomInteger(name, value);
+		return new APAtomNumber(name, value);
 	}
 
 	/** {@inheritDoc} */
