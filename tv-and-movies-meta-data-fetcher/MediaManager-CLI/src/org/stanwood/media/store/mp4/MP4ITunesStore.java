@@ -855,7 +855,7 @@ public class MP4ITunesStore implements IStore {
 
 	private boolean hasAtom(List<IAtom> atoms, MP4AtomKey type) {
 		for (IAtom atom : atoms) {
-			if (atom.getKey().equals(type)) {
+			if (type.equals(atom.getKey())) {
 				return true;
 			}
 		}
