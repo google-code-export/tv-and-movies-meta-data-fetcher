@@ -396,6 +396,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void fileUpdated(MediaDirectory mediaDirectory, File file) throws StoreException {
+		if (filesUpdated==null) {
+			init(null,null);
+		}
 		filesUpdated.add(file);
 		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
 			updateItunes();
