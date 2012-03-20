@@ -1444,7 +1444,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgrade20to21(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to "+STORE_VERSION.toString(),rootMediaDir));
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to {1}",rootMediaDir,STORE_VERSION.toString()));
 		if (dirConfig.getMode()==Mode.TV_SHOW) {
 			NodeList children = storeNode.getChildNodes();
 
@@ -1498,7 +1498,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgradeRevisionTo21_3(MediaDirectory mediaDirectory,Document cache, Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to 2.1.2",rootMediaDir));
+		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to {1}",rootMediaDir,STORE_VERSION.toString()));
 		if (dirConfig.getMode()==Mode.FILM) {
 			NodeList children = storeNode.getChildNodes();
 
@@ -1511,10 +1511,15 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 							SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
 							try {
 								IFilm film= getFilmFromSource(mediaDirectory, searchResult);
-								orgFilm.setImageURL(film.getImageURL());
-								orgFilm.setDescription(film.getDescription());
-								orgFilm.setSummary(film.getSummary());
-								orgFilm.setWriters(film.getWriters());
+								if (film!=null) {
+									orgFilm.setImageURL(film.getImageURL());
+									orgFilm.setDescription(film.getDescription());
+									orgFilm.setSummary(film.getSummary());
+									orgFilm.setWriters(film.getWriters());
+								}
+								else {
+									log.error(MessageFormat.format("Unable to fetch film information for id {0}",orgFilm.getId()));
+								}
 							} catch (MalformedURLException e) {
 								throw new StoreException("Unable to update store",e);
 							} catch (IOException e) {
