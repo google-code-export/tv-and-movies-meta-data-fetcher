@@ -84,7 +84,13 @@ public class MediaFileInfoFetcher {
 				if (!infoFile.delete() && infoFile.exists()) {
 					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
 				}
-				getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$
+				try {
+					getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$
+				}
+				catch (StanwoodException e) {
+					log.error(MessageFormat.format("Unable to read media information for file ''{0}''", file),e);
+					return null;
+				}
 				Document dom = XMLParser.parse(infoFile, null);
 				if (!infoFile.delete() && infoFile.exists()) {
 					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
