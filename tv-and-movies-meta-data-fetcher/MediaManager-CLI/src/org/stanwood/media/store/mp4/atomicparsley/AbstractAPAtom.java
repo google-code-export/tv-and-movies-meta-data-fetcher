@@ -20,6 +20,9 @@ public abstract class AbstractAPAtom implements IAtom {
 	 * @param name The key of the atom
 	 */
 	public AbstractAPAtom(MP4AtomKey key) {
+		if (key==null) {
+			throw new NullPointerException();
+		}
 		this.key = key;
 	}
 
