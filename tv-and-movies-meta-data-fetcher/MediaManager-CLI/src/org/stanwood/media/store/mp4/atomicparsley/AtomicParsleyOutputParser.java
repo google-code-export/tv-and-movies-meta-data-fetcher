@@ -20,6 +20,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
@@ -31,6 +33,7 @@ import org.w3c.dom.Node;
 
 public class AtomicParsleyOutputParser extends XMLParser {
 
+	private final static Log log = LogFactory.getLog(AtomicParsleyOutputParser.class);
 	private Document doc;
 
 	public AtomicParsleyOutputParser(String output) throws MP4Exception  {
@@ -46,7 +49,10 @@ public class AtomicParsleyOutputParser extends XMLParser {
 		try {
 			List<IAtom> atoms = new ArrayList<IAtom>();
 			for (Node node : selectNodeList(doc, "AtomicParsley/atoms/*")) { //$NON-NLS-1$
-				atoms.add(parseAtom((Element)node));
+				IAtom atom = parseAtom((Element)node);
+				if (atom!=null) {
+					atoms.add(atom);
+				}
 			}
 
 			return atoms;
@@ -71,6 +77,10 @@ public class AtomicParsleyOutputParser extends XMLParser {
 		}
 		else {
 			key = MP4AtomKey.fromKey(name);
+		}
+		if (key==null) {
+			log.warn(MessageFormat.format("Unable to find atom details with name ''{0}'', dns domain ''{1}'', dns name ''{2}''",name,rDnsDomain,rDnsName));
+			return null;
 		}
 		if (node.getNodeName().equals("atomString")) {
 			return new APAtomString(key, node.getTextContent());
