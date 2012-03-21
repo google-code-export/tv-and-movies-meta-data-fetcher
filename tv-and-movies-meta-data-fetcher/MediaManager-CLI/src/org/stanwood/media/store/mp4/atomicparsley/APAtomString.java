@@ -96,33 +96,27 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 		}
 		else if (getKey() == MP4AtomKey.SORT_ALBUM) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("album"); //$NON-NLS-1$
-			args.add(value);
+			args.add("album="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.SORT_ALBUM_ARTIST) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("albumartist"); //$NON-NLS-1$
-			args.add(value);
+			args.add("albumartist="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.SORT_ARTIST) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("artist"); //$NON-NLS-1$
-			args.add(value);
+			args.add("artist="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.SORT_COMPOSER) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("composer"); //$NON-NLS-1$
-			args.add(value);
+			args.add("composer="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.SORT_NAME) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("name"); //$NON-NLS-1$
-			args.add(value);
+			args.add("name="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.SORT_SHOW) {
 			args.add("--sortOrder"); //$NON-NLS-1$
-			args.add("show"); //$NON-NLS-1$
-			args.add(value);
+			args.add("show="+value); //$NON-NLS-1$
 		}
 		else if (getKey() == MP4AtomKey.COMPOSER) {
 			args.add("--composer"); //$NON-NLS-1$

@@ -1019,7 +1019,7 @@ public class MP4ITunesStore implements IStore {
 	}
 
 	private Integer findMediaDirNumber(MediaDirectory mediaDirectory,Properties props) {
-		int numberStores = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0"));
+		int numberStores = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0")); //$NON-NLS-1$
 		for (int i=0;i<numberStores;i++) {
 			String dir = props.getProperty(CONFIG_DIRECTORY_PROP+"_"+i); //$NON-NLS-1$
 			if (dir!=null && dir.equals(mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
@@ -1043,12 +1043,12 @@ public class MP4ITunesStore implements IStore {
 				if (dir.equals(mediaDirectory.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
 					int revision =1;
 					try {
-						revision = Integer.parseInt(props.getProperty(CONFIG_REVISION_PROP+"_"+i,"1")); //$NON-NLS-1$
+						revision = Integer.parseInt(props.getProperty(CONFIG_REVISION_PROP+"_"+i,"1")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					catch (NumberFormatException e) {
 
 					}
-					return new StoreVersion(new Version(props.getProperty(CONFIG_VERSION_PROP+"_"+i, "2.0")),revision);
+					return new StoreVersion(new Version(props.getProperty(CONFIG_VERSION_PROP+"_"+i, "2.0")),revision);  //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 
