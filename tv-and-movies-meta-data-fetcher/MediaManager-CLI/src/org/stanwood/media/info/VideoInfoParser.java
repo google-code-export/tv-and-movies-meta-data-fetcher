@@ -73,11 +73,19 @@ public class VideoInfoParser extends XMLParser {
 	}
 
 	private Float getTrackFrameRate(Node trackNode) throws XMLParserException {
-		return Float.parseFloat(getTrackString(trackNode,"Frame_rate")); //$NON-NLS-1$
+		String str = getTrackString(trackNode,"Frame_rate"); //$NON-NLS-1$
+		if (str==null) {
+			return null;
+		}
+		return Float.parseFloat(str);
 	}
 
 	private Integer getTrackDuration(Node trackNode) throws XMLParserException {
-		return Integer.parseInt(getTrackString(trackNode,"Duration")); //$NON-NLS-1$
+		String str = getTrackString(trackNode,"Duration"); //$NON-NLS-1$
+		if (str==null) {
+			return null;
+		}
+		return Integer.parseInt(str);
 	}
 
 	/**
@@ -90,7 +98,11 @@ public class VideoInfoParser extends XMLParser {
 		if (track==null) {
 			return null;
 		}
-		return Integer.parseInt(getTrackString(track,"Height")); //$NON-NLS-1$
+		String str =getTrackString(track,"Height"); //$NON-NLS-1$
+		if (str==null) {
+			return null;
+		}
+		return Integer.parseInt(str);
 	}
 
 	/**
@@ -103,7 +115,11 @@ public class VideoInfoParser extends XMLParser {
 		if (track==null) {
 			return null;
 		}
-		return Integer.parseInt(getTrackString(track,"Width")); //$NON-NLS-1$
+		String str = getTrackString(track,"Width"); //$NON-NLS-1$
+		if (str==null) {
+			return null;
+		}
+		return Integer.parseInt(str);
 	}
 
 	/**
