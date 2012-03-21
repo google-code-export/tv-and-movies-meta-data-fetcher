@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.logging.Log;
@@ -255,10 +256,16 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				err = capture;
 			}
 			exec.setStreamHandler(new PumpStreamHandler(out,err));
-			int exitCode = exec.execute(cmdLine);
-			if (failOnExitCode && exitCode!=0) {
-                log.error(capture.toString());
-				throw new MP4Exception(MessageFormat.format("System command returned a non zero exit code ''{0}'': {1}",exitCode,cmdLine.toString()));
+			try {
+				int exitCode = exec.execute(cmdLine);
+				if (failOnExitCode && exitCode!=0) {
+	                log.error(capture.toString());
+					throw new MP4Exception(MessageFormat.format("System command returned a non zero exit code ''{0}'': {1}",exitCode,cmdLine.toString()));
+				}
+			}
+			catch (ExecuteException e) {
+				log.error(capture.toString());
+				throw new MP4Exception(MessageFormat.format("Unable to execute system command: {0}" ,cmdLine.toString()),e);
 			}
 			return capture.toString();
 		} catch (IOException e) {
