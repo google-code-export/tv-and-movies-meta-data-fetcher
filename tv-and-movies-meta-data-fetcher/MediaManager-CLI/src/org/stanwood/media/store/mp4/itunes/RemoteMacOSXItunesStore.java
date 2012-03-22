@@ -246,6 +246,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	}
 
 	private void updateITunes(ITunesRemoteClient client) throws StoreException{
+		log.info(MessageFormat.format("Updating iTunes at host ''{0}'' with {1} removed files, added files {2} and {3} updated files",hostname.toString(),filesDeleted.size(),filesAdded.size(),filesUpdated.size()));
 		// Check were still connected
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220, ITunesRemoteClient.DEFAILT_TIMEOUT);
 		if (filesDeleted.size()>0) {
