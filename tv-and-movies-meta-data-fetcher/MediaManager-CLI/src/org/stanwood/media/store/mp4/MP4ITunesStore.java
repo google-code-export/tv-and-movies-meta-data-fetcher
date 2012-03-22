@@ -422,8 +422,7 @@ public class MP4ITunesStore implements IStore {
 		genericAtoms(info,mp4Manager, atoms, flavour);
 
 		StringBuilder iTuneMOVIValue = new StringBuilder();
-		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
+		appendHeader(iTuneMOVIValue);
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
 		genericFileInfo(info,mp4File, flavour, iTuneMOVIValue);
@@ -616,8 +615,7 @@ public class MP4ITunesStore implements IStore {
 
 
 		StringBuilder iTuneMOVIValue = new StringBuilder();
-		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
-		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
+		appendHeader(iTuneMOVIValue);
 		iTuneMOVIValue.append("<dict>"+FileHelper.LS); //$NON-NLS-1$
 		iTuneMOVIValue.append("    <key>asset-info</key>"+FileHelper.LS); //$NON-NLS-1$
 		genericFileInfo(info,mp4File, flavour, iTuneMOVIValue);
@@ -657,6 +655,11 @@ public class MP4ITunesStore implements IStore {
 			atoms.add(artworkAtom);
 		}
 		mp4Manager.update(mp4File, atoms);
+	}
+
+	private static void appendHeader(StringBuilder iTuneMOVIValue) {
+		iTuneMOVIValue.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS); //$NON-NLS-1$
+		iTuneMOVIValue.append("<plist version=\"1.0\">"+FileHelper.LS);		 //$NON-NLS-1$
 	}
 
 	protected static void genericAtoms(IMediaFileInfo info, IMP4Manager mp4Manager,
