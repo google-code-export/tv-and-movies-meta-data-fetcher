@@ -18,16 +18,15 @@ Update docs
 	- Add new patterns
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Renamed CLI tool
+	- Document where to get native tools from
 Compile AtomicParsely for all platforms (inprogress)
-Add support for different video qualities (inprogress)
-	* Add support for new iTunes format 1080p (inprogress)
+	* Package up and upload to website.
+Findout and fix why the mediainfo tool can't handle filenames with a ? in them.	
 		
 Version 2.2
 -----------
 Add a getting started guide and link to a button in the installer
 Improve mp4 metadata
-	* Set the flvr atom 
-			*note* This will mean enhancing Atomic Parsley, or moving to something else
 	* Set the cnID atom
 			*Note* This id has to be the same on the low and high def versions.
 			       This can be obtained from parsing the app store data (their is a web api).
