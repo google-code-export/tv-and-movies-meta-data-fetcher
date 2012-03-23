@@ -255,6 +255,9 @@ public class CLIImportMedia extends AbstractLauncher {
 
 	private void moveFileToMediaDir(File file,final Map<File,List<File>>newFiles,MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
 		MediaDirectory dir = findMediaDir(file, result.getVideo());
+		if (dir==null) {
+			throw new ConfigException(MessageFormat.format("Unable to find media directory for file {0}",file));
+		}
 		final File mediaDirLoc = dir.getMediaDirConfig().getMediaDir();
 		log.info(MessageFormat.format("Moving ''{0}'' to media directory ''{1}'' and renaming...",file,mediaDirLoc));
 		RenameAction ra = new RenameAction();
