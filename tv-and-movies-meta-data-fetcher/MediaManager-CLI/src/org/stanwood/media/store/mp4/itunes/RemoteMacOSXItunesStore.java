@@ -80,8 +80,8 @@ public class RemoteMacOSXItunesStore implements IStore {
 	private String password;
 	private Pattern pattern;
 	private String replace;
-
 	private String fileSeperator;
+	private boolean inited = false;
 
 	/** {@inheritDoc}
 	 * <p>
@@ -90,18 +90,27 @@ public class RemoteMacOSXItunesStore implements IStore {
 	 */
 	@Override
 	public void init(Controller controller,File nativeDir) throws StoreException {
+		init();
+	}
+
+	protected void init() throws StoreException {
 		filesAdded = new ArrayList<File>();
 		filesDeleted = new ArrayList<File>();
 		filesUpdated = new ArrayList<File>();
 		checkParameters();
+		inited = true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile,
 			IEpisode episode) throws StoreException {
+		if (!inited) {
+			init();
+		}
+
 		filesAdded.add(episodeFile);
-		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
+		if (shouldUpdateItunes()) {
 			updateItunes();
 		}
 	}
@@ -110,8 +119,12 @@ public class RemoteMacOSXItunesStore implements IStore {
 	@Override
 	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,
 			Integer part) throws StoreException {
+		if (!inited) {
+			init();
+		}
+
 		filesAdded.add(filmFile);
-		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
+		if (shouldUpdateItunes()) {
 			updateItunes();
 		}
 	}
@@ -119,10 +132,14 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
+		if (!inited) {
+			init();
+		}
+
 		filesAdded.remove(oldFile);
 		filesAdded.add(newFile);
 		filesDeleted.add(oldFile);
-		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
+		if (shouldUpdateItunes()) {
 			updateItunes();
 		}
 	}
@@ -130,8 +147,12 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
+		if (!inited) {
+			init();
+		}
+
 		filesDeleted.add(file);
-		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
+		if (shouldUpdateItunes()) {
 			updateItunes();
 		}
 	}
@@ -397,12 +418,16 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void fileUpdated(MediaDirectory mediaDirectory, File file) throws StoreException {
-		if (filesUpdated==null) {
-			init(null,null);
+		if (!inited) {
+			init();
 		}
 		filesUpdated.add(file);
-		if (filesDeleted.size()>MAX_FILE_COUNT || filesAdded.size()>MAX_FILE_COUNT) {
+		if (shouldUpdateItunes()) {
 			updateItunes();
 		}
+	}
+
+	protected boolean shouldUpdateItunes() {
+		return filesDeleted.size()+filesAdded.size()+filesUpdated.size()>MAX_FILE_COUNT;
 	}
 }
