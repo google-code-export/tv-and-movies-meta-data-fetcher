@@ -68,7 +68,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(RemoteMacOSXItunesStore.class);
 
-	private static final int MAX_FILE_COUNT = 100;
+	private static final int MAX_FILE_COUNT = 20;
 
 	private List<File>filesAdded = null;
 	private List<File> filesDeleted = null;
