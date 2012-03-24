@@ -125,12 +125,18 @@ public class CLIImportMedia extends AbstractLauncher {
 
 			MediaSearcher searcher = new MediaSearcher(getController());
 			for (File file : files) {
-				MediaSearchResult result = searcher.lookupMedia(file,useDefaults);
-				if (result==null) {
-					log.error(MessageFormat.format("Unable to find media details for file {0}",file));
+				MediaSearchResult result;
+				try {
+					result = searcher.lookupMedia(file,useDefaults);
+					if (result==null) {
+						log.error(MessageFormat.format("Unable to find media details for file {0}",file));
+						continue;
+					}
+				}
+				catch (StanwoodException e) {
+					log.error(MessageFormat.format("Unable to find media details for file {0}",file),e);
 					continue;
 				}
-
 				moveFileToMediaDir(file, newFiles, result,searcher);
 			}
 
