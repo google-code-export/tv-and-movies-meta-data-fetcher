@@ -90,6 +90,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private static final String STIP_PUNCUATION = "'()[],"; //$NON-NLS-1$
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private IterableNodeList fileNodes;
+	private Document storeDoc;
 
 	public XMLStore2() {
 	}
@@ -105,7 +106,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile, IEpisode episode) throws StoreException {
-		fileNodes = null;
+		clearCaches();
 		ISeason season = episode.getSeason();
 		IShow show = season.getShow();
 
@@ -116,6 +117,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		} else {
 			cacheEpisode("episode", rootMediaDir, episodeFile, doc, show, seasonNode, episode); //$NON-NLS-1$
 		}
+	}
+
+	private void clearCaches() {
+		fileNodes = null;
 	}
 
 	private void cacheEpisode(String nodeName, File rootMediaDir, File episodeFile, Document doc, IShow show,
@@ -232,7 +237,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (log.isDebugEnabled()) {
 			log.debug("cache film " + filmFile.getAbsolutePath()); //$NON-NLS-1$
 		}
-		fileNodes = null;
+		clearCaches();
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
@@ -477,7 +482,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (log.isDebugEnabled()) {
 			log.debug("cache season " + season.getSeasonNumber()); //$NON-NLS-1$
 		}
-		fileNodes = null;
+		clearCaches();
 		Document doc = getCache(rootMediaDir);
 		Element node = getSeasonNode(rootMediaDir, season, doc);
 		node.setAttribute("url", urlToText(season.getURL())); //$NON-NLS-1$
@@ -516,7 +521,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void cacheShow(File rootMediaDir, File episodeFile, IShow show) throws StoreException {
-		fileNodes = null;
+		clearCaches();
 		if (log.isDebugEnabled()) {
 			log.debug("cache show " + show.getShowId() + ":" + show.getSourceId()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -1055,34 +1060,37 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private Document getCache(File rootMediaDirectory) throws StoreException {
-		File cacheFile = getCacheFile(rootMediaDirectory, FILENAME);
-		if (cacheFile.exists()) {
-			Document doc = null;
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			factory.setValidating(true);
+		if (storeDoc == null) {
+			File cacheFile = getCacheFile(rootMediaDirectory, FILENAME);
+			if (cacheFile.exists()) {
+				Document doc = null;
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setValidating(true);
 
-			// Create the builder and parse the file
-			try {
-				DocumentBuilder builder = XMLParser.createDocBuilder(factory);
-				SimpleErrorHandler errorHandler = new SimpleErrorHandler(cacheFile);
-				builder.setErrorHandler(errorHandler);
-				doc = builder.parse(cacheFile);
-				if (errorHandler.hasErrors()) {
-					throw new StoreException(Messages.getString("XMLStore2.ERRORS_IN_FILE") + cacheFile); //$NON-NLS-1$
+				// Create the builder and parse the file
+				try {
+					DocumentBuilder builder = XMLParser.createDocBuilder(factory);
+					SimpleErrorHandler errorHandler = new SimpleErrorHandler(cacheFile);
+					builder.setErrorHandler(errorHandler);
+					doc = builder.parse(cacheFile);
+					if (errorHandler.hasErrors()) {
+						throw new StoreException(Messages.getString("XMLStore2.ERRORS_IN_FILE") + cacheFile); //$NON-NLS-1$
+					}
+				} catch (SAXException e) {
+					throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_CACHE_FILE"), e); //$NON-NLS-1$
+				} catch (IOException e) {
+					throw new StoreException(Messages.getString("XMLStore2.UNABLE_READ_CACHE_FILE"), e); //$NON-NLS-1$
+				} catch (ParserConfigurationException e) {
+					throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_CACHE_FILE"), e); //$NON-NLS-1$
 				}
-			} catch (SAXException e) {
-				throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_CACHE_FILE"), e); //$NON-NLS-1$
-			} catch (IOException e) {
-				throw new StoreException(Messages.getString("XMLStore2.UNABLE_READ_CACHE_FILE"), e); //$NON-NLS-1$
-			} catch (ParserConfigurationException e) {
-				throw new StoreException(Messages.getString("XMLStore2.UNABLE_PARSE_CACHE_FILE"), e); //$NON-NLS-1$
-			}
 
-			return doc;
-		} else {
-			Document doc = createCacheFile(cacheFile);
-			return doc;
+				storeDoc= doc;
+			} else {
+				Document doc = createCacheFile(cacheFile);
+				storeDoc= doc;
+			}
 		}
+		return storeDoc;
 	}
 
 	private Document createCacheFile(File cacheFile) throws StoreException {
