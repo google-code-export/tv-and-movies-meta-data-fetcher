@@ -89,6 +89,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private final static String FILENAME = ".mediaManager-xmlStore.xml"; //$NON-NLS-1$
 	private static final String STIP_PUNCUATION = "'()[],"; //$NON-NLS-1$
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
+	private IterableNodeList fileNodes;
 
 	public XMLStore2() {
 	}
@@ -104,6 +105,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile, IEpisode episode) throws StoreException {
+		fileNodes = null;
 		ISeason season = episode.getSeason();
 		IShow show = season.getShow();
 
@@ -230,6 +232,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (log.isDebugEnabled()) {
 			log.debug("cache film " + filmFile.getAbsolutePath()); //$NON-NLS-1$
 		}
+		fileNodes = null;
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
@@ -474,6 +477,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		if (log.isDebugEnabled()) {
 			log.debug("cache season " + season.getSeasonNumber()); //$NON-NLS-1$
 		}
+		fileNodes = null;
 		Document doc = getCache(rootMediaDir);
 		Element node = getSeasonNode(rootMediaDir, season, doc);
 		node.setAttribute("url", urlToText(season.getURL())); //$NON-NLS-1$
@@ -512,6 +516,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void cacheShow(File rootMediaDir, File episodeFile, IShow show) throws StoreException {
+		fileNodes = null;
 		if (log.isDebugEnabled()) {
 			log.debug("cache show " + show.getShowId() + ":" + show.getSourceId()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -1122,7 +1127,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		try {
 			// Remove file elements when the actual file can't be found
 			boolean changed = false;
-			for (Node fileNode : selectNodeList(cache, "//file")) { //$NON-NLS-1$
+			for (Node fileNode : getFileNodes(cache)) {
 				Element el = (Element) fileNode;
 				File location = new File(dir.getMediaDirConfig().getMediaDir(), el.getAttribute("location")); //$NON-NLS-1$
 				if (!location.exists()) {
@@ -1188,7 +1193,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document cache = getCache(rootMediaDir);
 		try {
 			boolean changed = false;
-			for (Node fileNode : selectNodeList(cache, "//file")) { //$NON-NLS-1$
+			for (Node fileNode : getFileNodes(cache)) {
 				Element el = (Element) fileNode;
 				File location = new File(dir.getMediaDirConfig().getMediaDir(), el.getAttribute("location")); //$NON-NLS-1$
 				if (location.equals(file)) {
@@ -1211,7 +1216,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private Element getNodeWithFile(MediaDirectory dir, File file) throws StoreException, XMLParserException {
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 		Document cache = getCache(rootMediaDir);
-		for (Node fileNode : selectNodeList(cache, "//file")) { //$NON-NLS-1$
+		for (Node fileNode : getFileNodes(cache)) {
 			Element el = (Element) fileNode;
 			File location = new File(dir.getMediaDirConfig().getMediaDir(), el.getAttribute("location")); //$NON-NLS-1$
 			if (location.equals(file)) {
@@ -1219,6 +1224,14 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 		}
 		return null;
+	}
+
+	private IterableNodeList getFileNodes(Document cache)
+			throws XMLParserException {
+		if (fileNodes==null) {
+			fileNodes = selectNodeList(cache, "//file"); //$NON-NLS-1$
+		}
+		return fileNodes;
 	}
 
 	/** {@inheritDoc} */
