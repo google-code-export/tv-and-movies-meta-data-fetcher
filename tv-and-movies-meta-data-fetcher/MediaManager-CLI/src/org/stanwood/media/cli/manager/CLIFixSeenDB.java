@@ -17,10 +17,13 @@ import org.stanwood.media.actions.SeenDatabase;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.logging.StanwoodException;
+import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4AtomKey;
@@ -125,6 +128,27 @@ public class CLIFixSeenDB extends AbstractLauncher {
 					if (seenDb.isSeen(root, f)) {
 						log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.REMOVE_FROM_DB"),f)); //$NON-NLS-1$
 						seenDb.removeFile(root,f);
+					}
+					else {
+						IVideo video = null;
+						for (IStore store : rootMediaDir.getStores()) {
+							try {
+								if (mediaDirConfig.getMode()==Mode.FILM) {
+									video = store.getFilm(rootMediaDir, f);
+									break;
+								}
+								else {
+									video = store.getEpisode(rootMediaDir, f);
+									break;
+								}
+							}
+							catch (StanwoodException e) {
+								log.error("Unable to get store for film",e);
+							}
+						}
+						if (video!=null) {
+							seenDb.markAsSeen(root, f);
+						}
 					}
 				}
 			}
