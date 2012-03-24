@@ -128,6 +128,9 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						seenDb.removeFile(root,f);
 					}
 					else {
+						if (log.isDebugEnabled()) {
+							log.debug(MessageFormat.format("File ''{0}'' not seen, so checking if it's in a store",f)); //$NON-NLS-1$
+						}
 						IVideo video = null;
 						for (IStore store : rootMediaDir.getStores()) {
 							try {
@@ -147,6 +150,11 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						if (video!=null) {
 							log.info(MessageFormat.format("Mark file as seen ''{0}'' as it's in a store",f));
 							seenDb.markAsSeen(root, f);
+						}
+						else {
+							if (log.isDebugEnabled()) {
+								log.debug(MessageFormat.format("File ''{0}'' not in a store",f)); //$NON-NLS-1$
+							}
 						}
 					}
 				}
