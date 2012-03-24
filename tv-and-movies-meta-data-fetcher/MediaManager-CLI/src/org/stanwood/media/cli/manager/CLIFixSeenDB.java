@@ -145,6 +145,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 							}
 						}
 						if (video!=null) {
+							log.info(MessageFormat.format("Mark file as seen ''{0}'' as it's in a store",f));
 							seenDb.markAsSeen(root, f);
 						}
 					}
