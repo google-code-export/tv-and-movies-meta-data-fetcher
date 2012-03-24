@@ -844,11 +844,13 @@ public class MP4ITunesStore implements IStore {
 		else {
 			if (isItunesExtension(file)) {
 				try {
-					if (mediaDir.getController().getSeenDB().isSeen(mediaDir.getMediaDirConfig().getMediaDir(), file)) {
+					if (!mediaDir.getMediaDirConfig().getIgnoreSeen() || mediaDir.getController().getSeenDB().isSeen(mediaDir.getMediaDirConfig().getMediaDir(), file)) {
 						List<IAtom> atoms = mp4Manager.listAtoms(file);
 						if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
 							doUpgrade(atoms,mediaDir,file);
-							mediaDir.getController().getSeenDB().markAsSeen(mediaDir.getMediaDirConfig().getMediaDir(), file);
+							if (mediaDir.getMediaDirConfig().getIgnoreSeen()) {
+								mediaDir.getController().getSeenDB().markAsSeen(mediaDir.getMediaDirConfig().getMediaDir(), file);
+							}
 						}
 					}
 				}
