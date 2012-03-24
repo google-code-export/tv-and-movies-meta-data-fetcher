@@ -63,6 +63,7 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.util.Version;
 import org.stanwood.media.xml.IterableNodeList;
+import org.stanwood.media.xml.Messages;
 import org.stanwood.media.xml.SimpleErrorHandler;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -73,6 +74,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
  * This store is used to store the show and film information in a XML called .mediaManager-xmlStore.xml. This is located
@@ -89,7 +92,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private final static String FILENAME = ".mediaManager-xmlStore.xml"; //$NON-NLS-1$
 	private static final String STIP_PUNCUATION = "'()[],"; //$NON-NLS-1$
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-	private IterableNodeList fileNodes;
+	private NodeList fileNodes;
 	private Document storeDoc;
 
 	public XMLStore2() {
@@ -1241,10 +1244,16 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private IterableNodeList getFileNodes(Document cache)
 			throws XMLParserException {
-//		if (fileNodes==null) {
-			fileNodes = selectNodeList(cache, "//file"); //$NON-NLS-1$
-//		}
-		return fileNodes;
+		if (fileNodes==null) {
+			String path = "//file"; //$NON-NLS-1$
+			try {
+				fileNodes = XPathAPI.selectNodeList(cache, path);
+			}
+			catch (Exception e) {
+				throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path),e); //$NON-NLS-1$
+			}
+		}
+		return new IterableNodeList(fileNodes);
 	}
 
 	/** {@inheritDoc} */
