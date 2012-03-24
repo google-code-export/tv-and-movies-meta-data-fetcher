@@ -137,11 +137,15 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						try {
 							if (mediaDirConfig.getMode()==Mode.FILM) {
 								video = store.getFilm(rootMediaDir, f);
-								break;
+								if (video!=null) {
+									break;
+								}
 							}
 							else {
 								video = store.getEpisode(rootMediaDir, f);
-								break;
+								if (video!=null) {
+									break;
+								}
 							}
 						}
 						catch (StanwoodException e) {
