@@ -1090,6 +1090,11 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				storeDoc= doc;
 			}
 		}
+		else {
+			if (log.isDebugEnabled()) {
+				log.debug("Using cacched Store doc");
+			}
+		}
 		return storeDoc;
 	}
 
@@ -1236,9 +1241,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private IterableNodeList getFileNodes(Document cache)
 			throws XMLParserException {
-		if (fileNodes==null) {
+//		if (fileNodes==null) {
 			fileNodes = selectNodeList(cache, "//file"); //$NON-NLS-1$
-		}
+//		}
 		return fileNodes;
 	}
 
