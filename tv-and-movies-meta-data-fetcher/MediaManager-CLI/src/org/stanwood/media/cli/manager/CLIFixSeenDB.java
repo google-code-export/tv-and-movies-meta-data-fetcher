@@ -32,7 +32,6 @@ import org.stanwood.media.store.mp4.StikValue;
 import org.stanwood.media.store.mp4.atomicparsley.APAtomNumber;
 import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.xml.XMLParserException;
 
 /**
  * <p>
@@ -113,8 +112,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			for (IAction action : rootMediaDir.getActions()) {
 				action.setTestMode(getController().isTestRun());
 			}
-			SeenDatabase seenDb = new SeenDatabase(getController().getConfigDir());
-			seenDb.read(new NullProgressMonitor());
+			SeenDatabase seenDb = rootMediaDir.getController().getSeenDB();
 			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
 			mp4Manager.init(getController().getNativeFolder());
 
@@ -162,8 +160,6 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		} catch (ConfigException e) {
 			log.error(e.getMessage(),e);
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(),e);
-		} catch (XMLParserException e) {
 			log.error(e.getMessage(),e);
 		}
 		return false;

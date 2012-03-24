@@ -22,9 +22,13 @@ Update docs
 Compile AtomicParsely for all platforms (inprogress)
 	* Package up and upload to website.
 Findout and fix why the mediainfo tool can't handle filenames with a ? in them.	
+Fix seen DB tool
+	* Remove entries with incorret rename patterns
 		
 Version 2.2
 -----------
+If no <stores/> element, then add default stores
+If no <sources/> element, them add defauly sources
 Add a getting started guide and link to a button in the installer
 Improve mp4 metadata
 	* Set the cnID atom
