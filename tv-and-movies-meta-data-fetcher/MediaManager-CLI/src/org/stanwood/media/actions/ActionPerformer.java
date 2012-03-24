@@ -19,7 +19,6 @@ package org.stanwood.media.actions;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +43,6 @@ import org.stanwood.media.search.MediaSearcher;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.xml.XMLParserException;
 
 
 /**
@@ -58,7 +56,6 @@ public class ActionPerformer implements IActionEventHandler {
 	private MediaDirectory dir;
 	private List<IAction> actions;
 	private File nativeFolder;
-	private File configDir;
 	private SeenDatabase seenDb;
 
 	/**
@@ -75,10 +72,8 @@ public class ActionPerformer implements IActionEventHandler {
 		this.actions = actions;
 		if (controller!=null) {
 			this.nativeFolder = controller.getNativeFolder();
-			this.configDir = controller.getConfigDir();
-
 		}
-
+		seenDb = controller.getSeenDB();
 	}
 
 	/**
@@ -89,22 +84,8 @@ public class ActionPerformer implements IActionEventHandler {
 	public void performActions(IProgressMonitor monitor) throws ActionException {
 		try {
 			monitor.beginTask(Messages.getString("ActionPerformer.Performing_actions"), 4); //$NON-NLS-1$
-			if (dir.getMediaDirConfig().getIgnoreSeen()) {
-				try {
-					seenDb= new SeenDatabase(configDir);
-					seenDb.read(new SubProgressMonitor(monitor,1));
-				}
-				catch (IOException e) {
-					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
-				}
-				catch (XMLParserException e) {
-					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_READ_SEEN_DATABASE"),e); //$NON-NLS-1$
-				}
-			}
-
 			List<File> sortedFiles = findMediaFiles(new SubProgressMonitor(monitor,1));
 			Set<File> dirs = findDirs(new SubProgressMonitor(monitor,1));
-
 			performActions(sortedFiles,dirs,monitor);
 			if (seenDb!=null) {
 				try {

@@ -17,6 +17,7 @@
 package org.stanwood.media;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -30,6 +31,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
+import org.stanwood.media.actions.SeenDatabase;
 import org.stanwood.media.actions.command.ExecuteSystemCommandActionInfo;
 import org.stanwood.media.actions.podcast.PodCastActionInfo;
 import org.stanwood.media.actions.rename.RenameActionInfo;
@@ -40,6 +42,7 @@ import org.stanwood.media.info.IVideoFileInfo;
 import org.stanwood.media.info.MediaFileInfoFetcher;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.Plugin;
@@ -59,6 +62,7 @@ import org.stanwood.media.store.memory.MemoryStoreInfo;
 import org.stanwood.media.store.mp4.MP4ITunesStoreInfo;
 import org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStoreInfo;
 import org.stanwood.media.store.xmlstore.XMLStore2Info;
+import org.stanwood.media.xml.XMLParserException;
 
 /**
  * The controller is used to control access to the stores and and sources. This
@@ -83,6 +87,8 @@ public class Controller {
 	private List<ExtensionInfo<? extends IAction>> pluginActions = new ArrayList<ExtensionInfo<? extends IAction>>();
 
 	private boolean testMode;
+
+	private SeenDatabase seenDb;
 
 	private static MediaFileInfoFetcher fileInfoFetcher;
 
@@ -420,5 +426,19 @@ public class Controller {
 	 */
 	public IMediaFileInfo getMediaFileInformation(File file) throws StanwoodException {
 		return fileInfoFetcher.getInformation(file);
+	}
+
+	public SeenDatabase getSeenDB() throws ConfigException {
+		if (seenDb==null) {
+			seenDb= new SeenDatabase(getConfigDir());
+			try {
+				seenDb.read(new NullProgressMonitor());
+			} catch (FileNotFoundException e) {
+				throw new ConfigException("Unable to read seen database",e);
+			} catch (XMLParserException e) {
+				throw new ConfigException("Unable to read seen database",e);
+			}
+		}
+		return seenDb;
 	}
 }

@@ -844,13 +844,18 @@ public class MP4ITunesStore implements IStore {
 		else {
 			if (isItunesExtension(file)) {
 				try {
-					List<IAtom> atoms = mp4Manager.listAtoms(file);
-					if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
-						doUpgrade(atoms,mediaDir,file);
+					if (mediaDir.getController().getSeenDB().isSeen(mediaDir.getMediaDirConfig().getMediaDir(), file)) {
+						List<IAtom> atoms = mp4Manager.listAtoms(file);
+						if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
+							doUpgrade(atoms,mediaDir,file);
+							mediaDir.getController().getSeenDB().markAsSeen(mediaDir.getMediaDirConfig().getMediaDir(), file);
+						}
 					}
 				}
 				catch (MP4Exception e) {
 					throw new StoreException(MessageFormat.format("Unable to process mp4 atoms of file ''{0}''",file),e);
+				} catch (ConfigException e) {
+					throw new StoreException("Unable to read seen databse",e);
 				}
 			}
 		}
