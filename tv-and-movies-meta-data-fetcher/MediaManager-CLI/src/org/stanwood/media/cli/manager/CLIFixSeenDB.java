@@ -61,6 +61,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 
 	private final static String ROOT_MEDIA_DIR_OPTION = "d"; //$NON-NLS-1$
 	private final static String TEST_OPTION = "t"; //$NON-NLS-1$
+	private final static String CHECK_ATOMS_OPTION ="a"; //$NON-NLS-1$
 
 	private static final List<Option> OPTIONS;
 	private MediaDirectory rootMediaDir = null;
@@ -69,6 +70,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 	private static PrintStream stderr = System.err;
 
 	private static IExitHandler exitHandler = null;
+	private boolean checkAtoms = true;
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -76,6 +78,11 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		Option o = new Option(ROOT_MEDIA_DIR_OPTION, "dir",true,Messages.getString("CLIMediaManager.CLI_MEDIA_DIR_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(true);
 		o.setArgName("directory"); //$NON-NLS-1$
+		OPTIONS.add(o);
+
+		o = new Option(CHECK_ATOMS_OPTION, "checkAtoms",true,"Optinal argument used to specify if media file atoms chould be checked");
+		o.setRequired(false);
+		o.setArgName("boolean"); //$NON-NLS-1$
 		OPTIONS.add(o);
 
 		o = new Option(TEST_OPTION,"test",false,Messages.getString("CLIMediaManager.CLI_TEST_DESC")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -180,40 +187,42 @@ public class CLIFixSeenDB extends AbstractLauncher {
 
 	private boolean validateFile(MediaDirConfig mediaDirConfig,IMP4Manager mp4Manager,File f) throws MP4Exception {
 		if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
-			List<IAtom> atoms = mp4Manager.listAtoms(f);
-			IAtom atom = hasAtom(atoms,"stik"); //$NON-NLS-1$
-			if (atom==null) {
-				return false;
-			}
-			else {
-				if (atom instanceof APAtomNumber) {
-					StikValue stik = StikValue.fromId((int)((APAtomNumber)atom).getValue());
-					if (stik==null) {
-						return false;
-					}
-					if (stik == StikValue.MOVIE) {
-						if (mediaDirConfig.getMode()!=Mode.FILM) {
+			if (checkAtoms) {
+				List<IAtom> atoms = mp4Manager.listAtoms(f);
+				IAtom atom = hasAtom(atoms,"stik"); //$NON-NLS-1$
+				if (atom==null) {
+					return false;
+				}
+				else {
+					if (atom instanceof APAtomNumber) {
+						StikValue stik = StikValue.fromId((int)((APAtomNumber)atom).getValue());
+						if (stik==null) {
 							return false;
 						}
-						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
-							return false;
+						if (stik == StikValue.MOVIE) {
+							if (mediaDirConfig.getMode()!=Mode.FILM) {
+								return false;
+							}
+							if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
+								return false;
+							}
 						}
-					}
-					else if (stik == StikValue.TV_SHOW) {
-						if (mediaDirConfig.getMode()!=Mode.TV_SHOW) {
-							return false;
-						}
-						if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
-							return false;
-						}
-						if (hasAtom(atoms,MP4AtomKey.TV_SEASON.getId()) == null) {
-							return false;
-						}
-						if (hasAtom(atoms,MP4AtomKey.TV_EPISODE.getId()) == null) {
-							return false;
-						}
-						if (hasAtom(atoms,MP4AtomKey.TV_SHOW_NAME.getId()) == null) {
-							return false;
+						else if (stik == StikValue.TV_SHOW) {
+							if (mediaDirConfig.getMode()!=Mode.TV_SHOW) {
+								return false;
+							}
+							if (hasAtom(atoms,MP4AtomKey.NAME.getId()) == null) {
+								return false;
+							}
+							if (hasAtom(atoms,MP4AtomKey.TV_SEASON.getId()) == null) {
+								return false;
+							}
+							if (hasAtom(atoms,MP4AtomKey.TV_EPISODE.getId()) == null) {
+								return false;
+							}
+							if (hasAtom(atoms,MP4AtomKey.TV_SHOW_NAME.getId()) == null) {
+								return false;
+							}
 						}
 					}
 				}
@@ -263,6 +272,10 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				fatal(MessageFormat.format(Messages.getString("CLIMediaManager.MEDIA_DIR_NOT_EXIST"),dir)); //$NON-NLS-1$
 				return false;
 			}
+		}
+
+		if (cmd.hasOption(CHECK_ATOMS_OPTION) && cmd.getOptionValue(CHECK_ATOMS_OPTION)!=null) {
+			checkAtoms = Boolean.parseBoolean(cmd.getOptionValue(CHECK_ATOMS_OPTION));
 		}
 
 		return true;
