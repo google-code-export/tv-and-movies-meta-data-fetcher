@@ -13,7 +13,7 @@ public class IterableNodeList implements org.w3c.dom.NodeList, Iterable<Node> {
 	private org.w3c.dom.NodeList list;
 	private int pos = 0;
 
-	IterableNodeList(org.w3c.dom.NodeList list) {
+	public IterableNodeList(org.w3c.dom.NodeList list) {
 		this.list = list;
 	}
 
