@@ -1,5 +1,6 @@
 package org.stanwood.media.store.xmlstore;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -63,7 +64,6 @@ import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.util.Version;
 import org.stanwood.media.xml.IterableNodeList;
-import org.stanwood.media.xml.Messages;
 import org.stanwood.media.xml.SimpleErrorHandler;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
