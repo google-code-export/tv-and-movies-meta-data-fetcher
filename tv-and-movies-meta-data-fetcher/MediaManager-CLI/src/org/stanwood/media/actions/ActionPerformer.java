@@ -187,7 +187,7 @@ public class ActionPerformer implements IActionEventHandler {
 			while (it.hasNext()) {
 				File f = it.next();
 				if (seenDb.isSeen(dir.getMediaDirConfig().getMediaDir(), f)) {
-					log.info(MessageFormat.format(Messages.getString("ActionPerformer.INGORED_SEEN_FILE"),f.getAbsolutePath())); //$NON-NLS-1$
+					log.debug(MessageFormat.format(Messages.getString("ActionPerformer.INGORED_SEEN_FILE"),f.getAbsolutePath())); //$NON-NLS-1$
 					it.remove();
 				}
 			}
