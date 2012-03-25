@@ -271,10 +271,10 @@ public class RemoteMacOSXItunesStore implements IStore {
 		// Check were still connected
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220, ITunesRemoteClient.DEFAILT_TIMEOUT);
 		if (filesDeleted.size()>0) {
-			for (File file : filesDeleted) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
-			}
-			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
+//			for (File file : filesDeleted) {
+//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+//			}
+//			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			filesDeleted.clear();
 		}
 		if (filesAdded.size()>0) {
@@ -285,10 +285,10 @@ public class RemoteMacOSXItunesStore implements IStore {
 			filesAdded.clear();
 		}
 		if (filesUpdated.size()>0) {
-			for (File file : filesUpdated) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
-			}
-			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
+//			for (File file : filesUpdated) {
+//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+//			}
+//			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			filesUpdated.clear();
 		}
 		client.sendCommand(ITunesRemoteClient.CMD_QUIT,221,ITunesRemoteClient.DEFAILT_TIMEOUT);
