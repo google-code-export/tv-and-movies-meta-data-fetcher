@@ -58,7 +58,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	@Test(timeout=10000)
 	public void testConnect() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		Assert.assertEquals(0,getCommandLog().size());
 	}
@@ -123,7 +123,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	@Test(timeout=10000)
 	public void testCommandsDontWorkWhenNotLoggedIn() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 500,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 500,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		Assert.assertEquals(0,getCommandLog().size());
 	}
@@ -135,7 +135,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	@Test(timeout=10000)
 	public void testQuitNotLoggedIn() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAULT_TIMEOUT);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testQuitLoggedIn() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAULT_TIMEOUT);
 	}
 
 	/**
@@ -157,11 +157,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testAddFiles() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		client.sendCommand(ITunesRemoteClient.CMD_ADD_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(4,commandLog.size());
@@ -176,11 +176,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testRemoveFiles() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(5,commandLog.size());
@@ -196,11 +196,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testRefreshFiles() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(5,commandLog.size());
@@ -216,11 +216,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testClearFiles1() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_CLEAR_FILES, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_CLEAR_FILES, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(0,commandLog.size());
@@ -234,8 +234,8 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testClearFiles2() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_CLEAR_FILES, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_CLEAR_FILES, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(0,commandLog.size());
@@ -250,7 +250,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAILT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(2,commandLog.size());

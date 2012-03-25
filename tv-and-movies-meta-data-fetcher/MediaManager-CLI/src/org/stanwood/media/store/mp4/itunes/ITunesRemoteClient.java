@@ -31,8 +31,8 @@ import org.stanwood.media.store.mp4.Messages;
  */
 public class ITunesRemoteClient extends Thread {
 
-	/** The default timeout for commands that don't take a long time */
-	public static final long DEFAILT_TIMEOUT = 40;
+	/** The default timeout for commands that don't take a long time in seconds */
+	public static final long DEFAULT_TIMEOUT = 60 * 5;
 	/** This can be used if no timeout is requried */
 	public static final long NO_TIMEOUT = -1;
 
@@ -94,7 +94,7 @@ public class ITunesRemoteClient extends Thread {
 			if (log.isDebugEnabled()) {
 				log.debug("Connected, wating for response..."); //$NON-NLS-1$
 			}
-			waitForCode(null, 1,DEFAILT_TIMEOUT);
+			waitForCode(null, 1,DEFAULT_TIMEOUT);
 			if (log.isDebugEnabled()) {
 				log.debug("Connected to server " + hostname+":" + port); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -113,8 +113,8 @@ public class ITunesRemoteClient extends Thread {
 	 */
 	public void login(String username,String password) throws StoreException {
 		try {
-			sendCommand(CMD_LOGIN+":"+username,222,DEFAILT_TIMEOUT); //$NON-NLS-1$
-			sendCommand(CMD_PASSWORD+":"+password,223,DEFAILT_TIMEOUT); //$NON-NLS-1$
+			sendCommand(CMD_LOGIN+":"+username,222,DEFAULT_TIMEOUT); //$NON-NLS-1$
+			sendCommand(CMD_PASSWORD+":"+password,223,DEFAULT_TIMEOUT); //$NON-NLS-1$
 		}
 		catch (StoreException e) {
 			throw new StoreException(Messages.getString("ITunesRemoteClient.UNABLE_LOGIN"),e); //$NON-NLS-1$
@@ -153,7 +153,7 @@ public class ITunesRemoteClient extends Thread {
 	 * Used to send a command to the server
 	 * @param cmd The command to set to the server
 	 * @param expectedCode The expected return code if their are no errors
-	 * @param timeout the timeout, or -1 for no timeout
+	 * @param timeout the timeout in seconds, or -1 for no timeout
 	 * @throws StoreException Thrown if their is a problem
 	 */
 	public void sendCommand(String cmd, int expectedCode,long timeout) throws StoreException {

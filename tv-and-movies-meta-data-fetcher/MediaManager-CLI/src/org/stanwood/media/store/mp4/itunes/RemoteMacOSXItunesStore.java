@@ -267,31 +267,35 @@ public class RemoteMacOSXItunesStore implements IStore {
 	}
 
 	private void updateITunes(ITunesRemoteClient client) throws StoreException{
-		log.info(MessageFormat.format("Updating iTunes at host ''{0}'' with {1} removed files, added files {2} and {3} updated files",hostname.toString(),filesDeleted.size(),filesAdded.size(),filesUpdated.size()));
-		// Check were still connected
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220, ITunesRemoteClient.DEFAILT_TIMEOUT);
-		if (filesDeleted.size()>0) {
-//			for (File file : filesDeleted) {
-//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
-//			}
-//			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
-			filesDeleted.clear();
-		}
-		if (filesAdded.size()>0) {
-			for (File file : filesAdded) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+		try {
+			log.info(MessageFormat.format("Updating iTunes at host ''{0}'' with {1} removed files, added files {2} and {3} updated files",hostname.toString(),filesDeleted.size(),filesAdded.size(),filesUpdated.size()));
+			// Check were still connected
+			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220, ITunesRemoteClient.DEFAULT_TIMEOUT);
+			if (filesDeleted.size()>0) {
+	//			for (File file : filesDeleted) {
+	//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+	//			}
+	//			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			}
-			client.sendCommand(ITunesRemoteClient.CMD_ADD_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
-			filesAdded.clear();
+			if (filesAdded.size()>0) {
+				for (File file : filesAdded) {
+					client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAULT_TIMEOUT); //$NON-NLS-1$
+				}
+				client.sendCommand(ITunesRemoteClient.CMD_ADD_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
+			}
+			if (filesUpdated.size()>0) {
+	//			for (File file : filesUpdated) {
+	//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
+	//			}
+	//			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
+			}
+			client.sendCommand(ITunesRemoteClient.CMD_QUIT,221,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		}
-		if (filesUpdated.size()>0) {
-//			for (File file : filesUpdated) {
-//				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAILT_TIMEOUT); //$NON-NLS-1$
-//			}
-//			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
+		finally {
+			filesDeleted.clear();
+			filesAdded.clear();
 			filesUpdated.clear();
 		}
-		client.sendCommand(ITunesRemoteClient.CMD_QUIT,221,ITunesRemoteClient.DEFAILT_TIMEOUT);
 	}
 
 	private String getFilePath(String orgPath) {
