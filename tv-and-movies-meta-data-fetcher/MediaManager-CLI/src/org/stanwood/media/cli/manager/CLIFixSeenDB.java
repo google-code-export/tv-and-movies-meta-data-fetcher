@@ -128,45 +128,35 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			File root = mediaDirConfig.getMediaDir();
 			List<File> files = FileHelper.listFiles(root);
 			for (File f : files) {
+				// Check the atoms are valid
 				boolean valid = validateFile(mediaDirConfig,mp4Manager,f);
 				if (!valid) {
+					// Atoms are not valid, so remove from the seen db if it's marked as seen
 					if (seenDb.isSeen(root, f)) {
 						log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.REMOVE_FROM_DB"),f)); //$NON-NLS-1$
 						seenDb.removeFile(root,f);
 					}
 				}
 				else {
-					if (log.isDebugEnabled()) {
-						log.debug(MessageFormat.format("File ''{0}'' not seen, so checking if it's in a store",f)); //$NON-NLS-1$
-					}
-					IVideo video = null;
-					for (IStore store : rootMediaDir.getStores()) {
-						try {
-							if (mediaDirConfig.getMode()==Mode.FILM) {
-								video = store.getFilm(rootMediaDir, f);
-								if (video!=null) {
-									break;
-								}
-							}
-							else {
-								video = store.getEpisode(rootMediaDir, f);
-								if (video!=null) {
-									break;
-								}
-							}
+					if (!seenDb.isSeen(root, f)) {
+						if (log.isDebugEnabled()) {
+							log.debug(MessageFormat.format("File ''{0}'' not seen, so checking if it's in a store",f)); //$NON-NLS-1$
 						}
-						catch (StanwoodException e) {
-							log.error("Unable to get store for film",e);
-						}
-					}
-					if (video!=null) {
-						log.info(MessageFormat.format("Mark file as seen ''{0}'' as it's in a store",f));
-						seenDb.markAsSeen(root, f);
+						IVideo video = findVideo(rootMediaDir,f);
+						if (video!=null) {
+							log.info(MessageFormat.format("Mark file as seen ''{0}'' as it's in a store",f));
+							seenDb.markAsSeen(root, f);
+						}	
 					}
 					else {
 						if (log.isDebugEnabled()) {
-							log.debug(MessageFormat.format("File ''{0}'' not in a store",f)); //$NON-NLS-1$
+							log.debug(MessageFormat.format("File ''{0}'' seen, so checking it's not in a store",f)); //$NON-NLS-1$
 						}
+						IVideo video = findVideo(rootMediaDir,f);
+						if (video==null) {
+							log.info(MessageFormat.format("Remove file ''{0}'' from seen DB as it's not in a store",f)); //$NON-NLS-1$
+							seenDb.removeFile(root,f);
+						}						
 					}
 				}
 			}
@@ -185,6 +175,32 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		return false;
 	}
 
+	private IVideo findVideo(MediaDirectory rootMediaDir,File f)
+	{
+		IVideo video = null;
+		MediaDirConfig mediaDirConfig = rootMediaDir.getMediaDirConfig();
+		for (IStore store : rootMediaDir.getStores()) {
+			try {
+				if (mediaDirConfig.getMode()==Mode.FILM) {
+					video = store.getFilm(rootMediaDir, f);
+					if (video!=null) {
+					break;
+					}
+				}
+				else {
+					video = store.getEpisode(rootMediaDir, f);
+					if (video!=null) {
+						break;
+					}
+				}
+			}
+			catch (StanwoodException e) {
+				log.error("Unable to get store for film",e);
+			}
+		}	
+		return video;
+	}
+	
 	private boolean validateFile(MediaDirConfig mediaDirConfig,IMP4Manager mp4Manager,File f) throws MP4Exception {
 		if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
 			if (checkAtoms) {
