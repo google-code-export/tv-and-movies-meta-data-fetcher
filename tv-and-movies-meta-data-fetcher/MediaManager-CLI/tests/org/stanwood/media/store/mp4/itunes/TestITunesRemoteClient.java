@@ -1,5 +1,7 @@
 package org.stanwood.media.store.mp4.itunes;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * This is used to test the java client that connects to the ruby server used
@@ -166,9 +169,29 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(3,commandLog.size());
 		Assert.assertEquals("addFilesToLibrary(/blah)",commandLog.get(0));
-		Assert.assertEquals("addFilesToLibrary(/blah1)",commandLog.get(0));
-		Assert.assertEquals("addFilesToLibrary(/blah/blah2)",commandLog.get(0));
+		Assert.assertEquals("addFilesToLibrary(/blah1)",commandLog.get(1));
+		Assert.assertEquals("addFilesToLibrary(/blah/blah2)",commandLog.get(2));
 	}
+
+	private File[] createTestFiles(File rootDir) throws IOException {
+		File file1 = new File(rootDir,"blah.m4v");
+		if (!file1.createNewFile() && !file1.exists()) {
+			throw new IOException("Unable to create file: " + file1);
+		}
+		File file2 = new File(rootDir,"blah1");
+		if (!file2.createNewFile() && !file2.exists()) {
+			throw new IOException("Unable to create file: " + file2);
+		}
+		File file3 = new File(rootDir,"blah"+File.separator+"blah2");
+		if (!file3.getParentFile().mkdir() && !file3.getParentFile().exists()) {
+			throw new IOException("Unable to create directory: " + file3.getParentFile());
+		}
+		if (!file3.createNewFile() && !file3.exists()) {
+			throw new IOException("Unable to create file: " + file3);
+		}
+		return new File[]{file1,file2,file3};
+	}
+
 
 	/**
 	 * Used to test that files can be removed
@@ -176,25 +199,31 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testRemoveFiles() throws Exception {
-		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.login(USER , PASSWORD);
-		forceAddTrack("/blah",1,"Test 1");
-		forceAddTrack("/blah1",2,"Test 2");
-		forceAddTrack("/blah/blah2",3,"Test 3");
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		File testDir = FileHelper.createTmpDir("test");
+		try {
 
-		List<String> commandLog = getCommandLog();
-		Assert.assertEquals(5,commandLog.size());
-		Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
-		Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
-	}
+			client.connect(Inet4Address.getByName("localhost"), getPort());
+			client.login(USER , PASSWORD);
+			File[] files = createTestFiles(testDir);
+			for (int i=0;i<files.length;i++) {
+				forceAddTrack(files[0].getAbsolutePath(),i,"Test "+i);
+			}
+			recacheTracks();
+			for (int i=0;i<files.length;i++) {
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[0].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+			}
+			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
+			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
-	private void forceAddTrack(String path,int id,String name) throws ScriptException {
-		executeRubyScript("ItunesController::DummyITunesController::forceAddTrack(ItunesController::Track.new(\""+path+"\","+id+",\""+name+"\"))\n");
+			List<String> commandLog = getCommandLog();
+			Assert.assertEquals(5,commandLog.size());
+			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
+			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
+		}
+		finally {
+			FileHelper.delete(testDir);
+		}
+
 	}
 
 	/**

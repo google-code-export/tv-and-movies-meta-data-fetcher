@@ -91,6 +91,14 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 	}
 
+	protected void recacheTracks() throws ScriptException {
+		executeRubyScript("TestStuff::getController().cacheTracks(true)\n");
+	}
+
+	protected void forceAddTrack(String path,int id,String name) throws ScriptException {
+		executeRubyScript("ItunesController::DummyITunesController::forceAddTrack(ItunesController::Track.new(\""+path+"\","+id+",\""+name+"\"))\n");
+	}
+
 	private static void setupRuby() {
 		System.setProperty("org.jruby.embed.compat.version", "RUBY1_9");
 
@@ -262,9 +270,9 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	private static void killRubyThreads() throws ScriptException {
 		if (started) {
 			StringBuilder script = new StringBuilder();
-			script.append("SERVER.killServer\n");
 			script.append("SERVER.shutdown\n");
 			script.append("SERVER.stop\n");
+//			script.append("SERVER.killServer\n");
 			executeRubyScript(script.toString());
 			while (started) {
 				try {

@@ -27,7 +27,6 @@ class ResultSet
             row = []
             for i in (1..@colCount)
                 value=@rs.getObject(i)
-                puts value
                 row.push(value)    
             end
             
@@ -49,10 +48,11 @@ class Statement
         args.each do | arg |
             if (arg.kind_of? Integer)
                 @stmt.setInt(count,arg)
-            elsif (arg.kind_of? String)
+            elsif (arg.kind_of? String)                
+                puts "#{arg.class} : #{arg} : #{count}"                                               
                 @stmt.setString(count,arg)
             else                
-                raise "Unsupported argument type: " + arg.class
+                raise "Unsupported argument type: #{arg.class}"
             end
             
             count+=1
@@ -80,9 +80,21 @@ class HSQLBackend < ItunesController::DatabaseBackend
     
     def execute(sql)                
         stmt=@db.createStatement()        
-        sql = translateSQL(sql)        
-        stmt.executeUpdate(sql)
+        sql = translateSQL(sql)
+        begin        
+            stmt.executeUpdate(sql)
+        rescue java.sql.SQLIntegrityConstraintViolationException => e                                
+            raise ItunesController::DatabaseConstraintException, e.message
+        end
         return nil              
+    end
+    
+    def executeStatement(stmt,*args)
+        begin
+            return stmt.execute(*args)
+        rescue java.sql.SQLIntegrityConstraintViolationException => e                                
+            raise ItunesController::DatabaseConstraintException, e.message
+        end               
     end
     
     def translateSQL(sql)
@@ -96,17 +108,38 @@ class HSQLBackend < ItunesController::DatabaseBackend
     end    
 end
 
+class TestStuff
+        
+    def self.setServer(server)
+        @@server = server
+    end
+    
+    def self.getServer()
+        return @@server
+    end
+    
+    def self.setController(controller)
+        @@controller = controller
+    end
+    
+    def self.getController()
+        return @@controller
+    end
+end
+
 def launchServer(configPath,port)
     begin    
         ItunesController::DummyITunesController::resetCommandLog()
         ItunesController::DummyITunesController::resetTracks()
         itunes=ItunesController::DummyITunesController.new()
     
-        dbBackend = HSQLBackend.new    
-        controller = ItunesController::CachedController.new(itunes,dbBackend)
+        dbBackend = HSQLBackend.new            
+        controller=ItunesController::CachedController.new(itunes,dbBackend)
+        TestStuff::setController(controller) 
         config=ItunesController::ServerConfig.readConfig(configPath)
         
-        server=ItunesController::ITunesControlServer.new(config,port,controller)        
+        server=ItunesController::ITunesControlServer.new(config,port,controller)
+        TestStuff::setServer(server)        
         return server
     rescue => exc                
         ItunesController::ItunesControllerLogging::error("Unable to execute command",exc)                        
