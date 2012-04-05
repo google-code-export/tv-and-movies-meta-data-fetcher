@@ -164,8 +164,10 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		List<String> commandLog = getCommandLog();
-		Assert.assertEquals(4,commandLog.size());
-		Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(0));
+		Assert.assertEquals(3,commandLog.size());
+		Assert.assertEquals("addFilesToLibrary(/blah)",commandLog.get(0));
+		Assert.assertEquals("addFilesToLibrary(/blah1)",commandLog.get(0));
+		Assert.assertEquals("addFilesToLibrary(/blah/blah2)",commandLog.get(0));
 	}
 
 	/**
@@ -176,6 +178,9 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void testRemoveFiles() throws Exception {
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
+		forceAddTrack("/blah",1,"Test 1");
+		forceAddTrack("/blah1",2,"Test 2");
+		forceAddTrack("/blah/blah2",3,"Test 3");
 		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
@@ -186,6 +191,10 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		Assert.assertEquals(5,commandLog.size());
 		Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
 		Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
+	}
+
+	private void forceAddTrack(String path,int id,String name) throws ScriptException {
+		executeRubyScript("ItunesController::DummyITunesController::forceAddTrack(ItunesController::Track.new(\""+path+"\","+id+",\""+name+"\"))\n");
 	}
 
 	/**

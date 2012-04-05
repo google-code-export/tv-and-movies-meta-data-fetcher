@@ -259,7 +259,12 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 		return result.toString();
 	}
 
-	private String translateSQL(String sql) {
+	/**
+	 * This will translate mysql sql into HSQLDB sql
+	 * @param sql The mysql sql
+	 * @return the HSQLDB sql
+	 */
+	public static String translateSQL(String sql) {
 		sql = translateTokens(sql);
 		StringBuilder result = new StringBuilder();
 		StringTokenizer tok = new StringTokenizer(sql," ",true); //$NON-NLS-1$
@@ -272,7 +277,7 @@ public class HSQLDatabase extends AbstractGenericDatabase implements
 		return result.toString().trim();
 	}
 
-	private String translateTokens(String token) {
+	private static String translateTokens(String token) {
 		for (IDBTokenMappings mapping : mappings) {
 			if (mapping.accept(token)) {
 				token = mapping.getNativeToken();

@@ -12,6 +12,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -23,6 +25,8 @@ import org.stanwood.media.util.Platform;
  */
 @SuppressWarnings("nls")
 public class BaseRemoteMacOSXItunesStoreTest {
+
+	private final static Log log = LogFactory.getLog(BaseRemoteMacOSXItunesStoreTest.class);
 
 	protected final static String USER="itunes";
 	protected final static String PASSWORD="blah";
@@ -199,24 +203,14 @@ public class BaseRemoteMacOSXItunesStoreTest {
 //		jruby.getContext().setAttribute(ScriptEngine.ARGV, new String[] {"--config",configFile.getAbsolutePath(),"--port",String.valueOf(port)}, ScriptContext.ENGINE_SCOPE);
 //		URL url = getClass().getClassLoader().getResource("/bin/dummyiTunesController.rb");
 //		jruby.eval(new InputStreamReader(url.openStream()));
-		StringBuilder script = new StringBuilder();
-		script.append("require 'itunesController/config'\n");
-		script.append("require 'itunesController/dummy_itunescontroller'\n");
-		script.append("require 'itunesController/controllserver'\n");
-		script.append("require 'itunesController/version'\n");
-		script.append("\n");
-
-		script.append("config=ItunesController::ServerConfig.readConfig(\""+configFile.getAbsolutePath()+"\")\n");
-		script.append("\n");
-		script.append("controller = ItunesController::DummyITunesController.new\n");
-		script.append("SERVER=ItunesController::ITunesControlServer.new(config,"+port+",controller)\n");
-		script.append("SERVER.start(1)\n");
-
-		executeRubyScript(script.toString());
-		script = new StringBuilder();
+		String script = FileHelper.readFileContents(BaseRemoteMacOSXItunesStoreTest.class.getResourceAsStream("serverStartup.rb"));
+		executeRubyScript(script);
+		if (log.isDebugEnabled()) {
+			executeRubyScript("ItunesController::ItunesControllerLogging::setLogLevelFromString(\"DEBUG\")\n");
+		}
+		executeRubyScript("SERVER = launchServer(\""+configFile.getAbsolutePath()+"\","+port+")\n");
 		started = true;
-		script.append("SERVER.join\n");
-		executeRubyScript(script.toString());
+		executeRubyScript("SERVER.join\n");
 		started = false;
 //		started = true;
 //		executeRubyScript("SERVER.join\n");
@@ -240,7 +234,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<String>getCommandLog() throws ScriptException {
-		List<String>commandLog = (List<String>) executeRubyScript("ItunesController::DummyITunesController::COMMAND_LOG");
+		List<String>commandLog = (List<String>) executeRubyScript("ItunesController::DummyITunesController::getCommandLog()");
 		return commandLog;
 	}
 
@@ -250,7 +244,14 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	 */
 	protected void resetCommandLog() throws ScriptException {
 		if (started) {
-			executeRubyScript("ItunesController::DummyITunesController::COMMAND_LOG = []");
+			executeRubyScript("ItunesController::DummyITunesController::resetCommandLog()");
+		}
+	}
+
+
+	protected void resetTracks() throws ScriptException {
+		if (started) {
+			executeRubyScript("ItunesController::DummyITunesController::resetTracks()");
 		}
 	}
 
@@ -261,6 +262,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	private static void killRubyThreads() throws ScriptException {
 		if (started) {
 			StringBuilder script = new StringBuilder();
+			script.append("SERVER.killServer\n");
 			script.append("SERVER.shutdown\n");
 			script.append("SERVER.stop\n");
 			executeRubyScript(script.toString());
