@@ -37,6 +37,8 @@ import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.w3c.dom.Document;
 
+import com.sun.org.apache.xerces.internal.xni.parser.XMLParseException;
+
 /**
  * Used to find information about a media file that is containted within the
  * file.
@@ -91,12 +93,19 @@ public class MediaFileInfoFetcher {
 					log.error(MessageFormat.format("Unable to read media information for file ''{0}''", file),e);
 					return null;
 				}
-				Document dom = XMLParser.parse(infoFile, null);
-				if (!infoFile.delete() && infoFile.exists()) {
-					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+				try
+				{
+					Document dom = XMLParser.parse(infoFile, null);
+					if (!infoFile.delete() && infoFile.exists()) {
+						throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+					}
+					info = MediaInfoFactory.createMediaInfo(file,dom);
+					infoCache.put(file,info);
 				}
-				info = MediaInfoFactory.createMediaInfo(file,dom);
-				infoCache.put(file,info);
+				catch (XMLParseException e ) {
+					log.error(MessageFormat.format("Unable to get media inforamtion for file {0} as the xml is not valid", infoFile));
+					return null;
+				}
 			} catch (IOException e) {
 				throw new StanwoodException("Unable to create temp file");
 			}
