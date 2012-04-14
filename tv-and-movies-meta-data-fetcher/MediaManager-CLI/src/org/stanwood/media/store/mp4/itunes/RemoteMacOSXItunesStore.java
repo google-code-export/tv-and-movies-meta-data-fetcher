@@ -261,6 +261,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_SEARCH_REPLACE.getName())) {
 			return replace;
 		}
+		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_FILE_SEPARATOR.getName())) {
+			return fileSeperator;
+		}
 		else {
 			throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.UNSUPPORTED_PARAM"),key)); //$NON-NLS-1$
 		}
