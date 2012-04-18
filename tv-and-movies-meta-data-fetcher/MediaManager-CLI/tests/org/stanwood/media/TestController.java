@@ -18,6 +18,7 @@ package org.stanwood.media;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -189,7 +190,12 @@ public class TestController extends XBMCAddonTestBase  {
 		}
 		finally {
 			FileHelper.delete(tmpDir);
-			FileHelper.delete(tmpJar);
+			try {
+				FileHelper.delete(tmpJar);
+			}
+			catch (IOException e) {
+				System.err.println("Unable to delete "+tmpJar);
+			}
 		}
 	}
 
