@@ -3,9 +3,11 @@ package org.stanwood.media.store.mp4.atomicparsley;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.stanwood.media.store.mp4.IAtomString;
 import org.stanwood.media.store.mp4.MP4AtomKey;
+import org.stanwood.media.util.FileHelper;
 
 /**
  * Used to store mp4 string atom data
@@ -21,7 +23,7 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 	 */
 	public APAtomString(MP4AtomKey name,String value) {
 		super(name);
-		this.value = value;
+		this.value = value.replaceAll("\\r\\n|\\r|\\n", Matcher.quoteReplacement(FileHelper.LS)); //$NON-NLS-1$
 	}
 
 	/**
@@ -133,7 +135,7 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 		else if (getKey().getDnsName() != null && getKey().getDnsDomain()!=null) {
 			if (extended) {
 				args.add("--rDNSatom"); //$NON-NLS-1$
-				args.add(value);
+				args.add(value.replaceAll("\\r\\n|\\r|\\n", Matcher.quoteReplacement("\n")));  //$NON-NLS-1$//$NON-NLS-2$
 				args.add("name="+getKey().getDnsName()); //$NON-NLS-1$
 				args.add("domain="+getKey().getDnsDomain()); //$NON-NLS-1$
 			}
@@ -143,6 +145,9 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getValue() {
 		return value;
