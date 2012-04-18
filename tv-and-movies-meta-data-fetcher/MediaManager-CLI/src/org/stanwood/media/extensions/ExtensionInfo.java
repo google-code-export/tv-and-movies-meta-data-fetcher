@@ -18,6 +18,7 @@ package org.stanwood.media.extensions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.stanwood.media.setup.MediaDirConfig;
 
@@ -30,7 +31,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 
 	private ParameterType parameterInfos[];
 	private String id;
-	private Map<MediaDirConfig,T> extension = new HashMap<MediaDirConfig,T>();
+	private Map<CacheKey,T> extension = new HashMap<CacheKey,T>();
 	private ExtensionType type;
 
 	/**
@@ -63,11 +64,12 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The extension class type
 	 * @throws ExtensionException  Thrown if their is a problem creating the extension
 	 */
-	public T getExtension(MediaDirConfig config) throws ExtensionException {
-		if (extension.get(config)==null) {
-			extension.put(config,createExtension());
+	public T getExtension(MediaDirConfig config,int number) throws ExtensionException {
+		CacheKey cacheKey = new CacheKey(config,number);
+		if (extension.get(new CacheKey(config,number))==null) {
+			extension.put(cacheKey,createExtension());
 		}
-		return extension.get(config);
+		return extension.get(cacheKey);
 	}
 
 	/**
@@ -76,6 +78,15 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @throws ExtensionException Thrown if their is a problem
 	 */
 	protected abstract T createExtension() throws ExtensionException;
+
+	public T getAnyExtension(MediaDirConfig config) throws ExtensionException {
+		for (Entry<CacheKey,T>ext : extension.entrySet()) {
+			if (ext.getKey().getConfig().equals(config)) {
+				return ext.getValue();
+			}
+		}
+		return createExtension();
+	}
 
 	/**
 	 * Used to get information on the parameters
