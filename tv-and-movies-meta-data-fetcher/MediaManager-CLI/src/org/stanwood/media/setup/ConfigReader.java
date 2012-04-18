@@ -312,6 +312,7 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public List<ISource> loadSourcesFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
 		List<ISource>sources = new ArrayList<ISource>();
+		int num = 0;
 		for (SourceConfig sourceConfig : dirConfig.getSources()) {
 			String id = sourceConfig.getID();
 			try {
@@ -319,7 +320,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (sourceInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id)); //$NON-NLS-1$
 				}
-				ISource source = sourceInfo.getExtension(dirConfig);
+				ISource source = sourceInfo.getExtension(dirConfig,num++);
 				if (sourceConfig.getParams() != null) {
 					for (String key : sourceConfig.getParams().keySet()) {
 						String value = sourceConfig.getParams().get(key);
@@ -343,16 +344,16 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is any problems
 	 */
 	public List<IStore> loadStoresFromConfigFile(Controller controller,MediaDirConfig dirConfig) throws ConfigException {
+		int num = 0;
 		List<IStore>stores = new ArrayList<IStore>();
 		for (StoreConfig storeConfig : dirConfig.getStores()) {
 			String id = storeConfig.getID();
 			try {
-
 				ExtensionInfo<? extends IStore> storeInfo = controller.getStoreInfo(id);
 				if (storeInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id)); //$NON-NLS-1$
 				}
-				IStore store = storeInfo.getExtension(dirConfig);
+				IStore store = storeInfo.getExtension(dirConfig,num++);
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
 						String value = storeConfig.getParams().get(key);
@@ -378,6 +379,7 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public List<IAction> loadActionsFromConfigFile(Controller controller, MediaDirConfig dirConfig) throws ConfigException {
 		List<IAction>actions = new ArrayList<IAction>();
+		int num = 0;
 		for (ActionConfig actionConfig : dirConfig.getActions()) {
 			String id = actionConfig.getID();
 			try {
@@ -385,7 +387,7 @@ public class ConfigReader extends BaseConfigReader {
 				if (actionInfo==null) {
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id)); //$NON-NLS-1$
 				}
-				IAction action = actionInfo.getExtension(dirConfig);
+				IAction action = actionInfo.getExtension(dirConfig,num++);
 				if (actionConfig.getParams() != null) {
 					for (String key : actionConfig.getParams().keySet()) {
 						String value = actionConfig.getParams().get(key);
@@ -575,9 +577,11 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
+		int num = 0;
 		List<SourceConfig> sources = new ArrayList<SourceConfig>();
 		for (Node sourceElement : selectNodeList(configNode, "sources/source")) { //$NON-NLS-1$
 			SourceConfig source = new SourceConfig();
+			source.setNumber(num);
 			source.setID(((Element)sourceElement).getAttribute("id")); //$NON-NLS-1$
 			for (Node paramNode : selectNodeList(sourceElement, "param")) { //$NON-NLS-1$
 				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
@@ -586,14 +590,17 @@ public class ConfigReader extends BaseConfigReader {
 			}
 
 			sources.add(source);
+			num++;
 		}
 		return sources;
 	}
 
 	private List<StoreConfig>readStores(Node configNode) throws XMLParserException {
+		int num = 0;
 		List<StoreConfig>stores = new ArrayList<StoreConfig>();
 		for (Node storeElement : selectNodeList(configNode, "stores/store")) { //$NON-NLS-1$
 			StoreConfig store = new StoreConfig();
+			store.setNumber(num);
 			store.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
 			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
@@ -603,14 +610,17 @@ public class ConfigReader extends BaseConfigReader {
 			}
 
 			stores.add(store);
+			num++;
 		}
 		return stores;
 	}
 
 	private List<ActionConfig>readActions(Node configNode) throws XMLParserException {
+		int num = 0;
 		List<ActionConfig>actions = new ArrayList<ActionConfig>();
 		for (Node storeElement : selectNodeList(configNode, "actions/action")) { //$NON-NLS-1$
 			ActionConfig action = new ActionConfig();
+			action.setNumber(num);
 			action.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
 			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
@@ -620,6 +630,7 @@ public class ConfigReader extends BaseConfigReader {
 			}
 
 			actions.add(action);
+			num++;
 		}
 		return actions;
 	}

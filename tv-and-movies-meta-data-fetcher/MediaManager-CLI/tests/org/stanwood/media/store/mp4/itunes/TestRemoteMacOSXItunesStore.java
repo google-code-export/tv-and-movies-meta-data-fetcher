@@ -61,7 +61,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig());
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
 			store.init(controller,nativeDir);
 
 			File eurekaDir = new File(rawMediaDir, "Eureka");
@@ -123,7 +123,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig());
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
 			store.setParameter("search-pattern", ".*"+rawMediaDir.getName());
 			store.setParameter("search-replace", "/media-blah");
 			store.setParameter("file-separator", ".");
@@ -188,7 +188,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig());
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
 			store.init(controller,nativeDir);
 
 			File filmFile1 = new File(rawMediaDir,"The Usual Suspects part1.avi");

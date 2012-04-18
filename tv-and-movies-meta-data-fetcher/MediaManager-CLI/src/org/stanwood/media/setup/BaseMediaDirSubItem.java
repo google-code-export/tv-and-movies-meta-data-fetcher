@@ -9,6 +9,7 @@ import java.util.Map;
 public class BaseMediaDirSubItem {
 
 	private String id;
+	private int num;
 	private Map<String,String> params = new HashMap<String,String>();
 
 	/**
@@ -58,6 +59,22 @@ public class BaseMediaDirSubItem {
 	 */
 	public void setParameters(Map<String, String> parameters) {
 		params = parameters;
+	}
+
+	/**
+	 * Used set the index number of the store within the configuration
+	 * @param num the index number of the store within the configuration
+	 */
+	public void setNumber(int num) {
+		this.num = num;
+	}
+
+	/**
+	 * Used to get the index number of the store within the configuration
+	 * @return the index number of the store within the configuration
+	 */
+	public int getNumber() {
+		return this.num;
 	}
 
 }

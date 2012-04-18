@@ -206,7 +206,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 			client.login(USER , PASSWORD);
 			File[] files = createTestFiles(testDir);
 			for (int i=0;i<files.length;i++) {
-				forceAddTrack(files[0].getAbsolutePath(),i,"Test "+i);
+				forceAddTrack(files[i].getAbsolutePath(),i,"Test "+i);
 			}
 			recacheTracks();
 			for (int i=0;i<files.length;i++) {
@@ -216,6 +216,9 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 			List<String> commandLog = getCommandLog();
+			for (String s : commandLog) {
+				System.out.println(s);
+			}
 			Assert.assertEquals(5,commandLog.size());
 			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
 			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
