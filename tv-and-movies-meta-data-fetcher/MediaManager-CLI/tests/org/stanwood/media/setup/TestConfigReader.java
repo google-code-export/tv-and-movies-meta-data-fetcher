@@ -56,6 +56,9 @@ public class TestConfigReader {
 			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
 			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+LS);
 			testConfig.append("	     </store>"+LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm4\" value=\""+new File("/testPath/blah4")+"\"/>"+LS);
+			testConfig.append("	     </store>"+LS);
 			testConfig.append("    </stores>"+LS);
 			testConfig.append("    <actions>"+LS);
 			testConfig.append("        <action id=\"a.test.action\">"+LS);
@@ -89,8 +92,11 @@ public class TestConfigReader {
 			Assert.assertEquals("org.stanwood.media.FakeSource",sources.get(0).getID());
 
 			List<StoreConfig> stores = dirConfig.getStores();
-			Assert.assertEquals(1,stores.size());
+			Assert.assertEquals(2,stores.size());
 			Assert.assertEquals("org.stanwood.media.store.FakeStore",stores.get(0).getID());
+			Assert.assertEquals(new File("/testPath/blah").getAbsolutePath(),stores.get(0).getParams().get("TeSTPaRAm1"));
+			Assert.assertEquals("org.stanwood.media.store.FakeStore",stores.get(1).getID());
+			Assert.assertEquals(new File("/testPath/blah4").getAbsolutePath(),stores.get(1).getParams().get("TeSTPaRAm4"));
 
 			List<ActionConfig> actions = dirConfig.getActions();
 			Assert.assertEquals(1,actions.size());
