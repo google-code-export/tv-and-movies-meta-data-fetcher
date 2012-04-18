@@ -72,8 +72,9 @@ public class ActionPerformer implements IActionEventHandler {
 		this.actions = actions;
 		if (controller!=null) {
 			this.nativeFolder = controller.getNativeFolder();
+			seenDb = controller.getSeenDB();
 		}
-		seenDb = controller.getSeenDB();
+
 	}
 
 	/**
