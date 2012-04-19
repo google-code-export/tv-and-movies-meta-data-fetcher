@@ -47,7 +47,14 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 	 */
 	@Before
 	public void setup() throws ScriptException {
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		resetCommandLog();
+		dropTables();
+	}
+
+	private File createMP4File(File file) throws IOException {
+		FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),file);
+		return file;
 	}
 
 	/**
@@ -78,6 +85,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 			epsiodes.addAll(Data.createHeroesShow(heroesDir));
 
 			for (EpisodeData ed : epsiodes) {
+				createMP4File(ed.getFile());
 				FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),ed.getFile());
 				File episodeFile = ed.getFile();
 				IEpisode episode = ed.getEpisode();
@@ -89,16 +97,25 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 				store.cacheEpisode(rawMediaDir, episodeFile, episode);
 			}
 
-			store.fileDeleted(mediaDir, new File(heroesDir,"blah.m4v"));
-			store.renamedFile(rawMediaDir, new File(eurekaDir,"1x01 - blah"), new File(eurekaDir,"1x01 - Renamed"));
+			File f1=new File(heroesDir,"blah.m4v");
+			File f2=new File(eurekaDir,"1x01 - blah");
+			forceAddTrack(f1.getAbsolutePath(), 123, "Blah 123");
+			forceAddTrack(f2.getAbsolutePath(), 124, "Blah 124");
+			recacheTracks();
+			store.fileDeleted(mediaDir, createMP4File(f1));
+			store.renamedFile(rawMediaDir, createMP4File(f2), createMP4File(new File(eurekaDir,"1x01 - Renamed")));
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
-
+			System.out.println("---------------------");
+			for (String s : commandLog) {
+				System.out.println(s);
+			}
+			System.out.println("---------------------");
 			Assert.assertEquals(10,commandLog.size());
 			int msgIndex = 0;
-			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(msgIndex++));
+			Assert.assertEquals("getTrackCount() = 2",commandLog.get(msgIndex++));
+			Assert.assertEquals("getTracks()",commandLog.get(msgIndex++));
 			Assert.assertEquals("removeTracksFromLibrary("+rawMediaDir.getAbsolutePath()+"/Heroes/blah.m4v)",commandLog.get(msgIndex++));
 			Assert.assertEquals("removeTracksFromLibrary("+rawMediaDir.getAbsolutePath()+"/Eureka/1x01 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(msgIndex++));
