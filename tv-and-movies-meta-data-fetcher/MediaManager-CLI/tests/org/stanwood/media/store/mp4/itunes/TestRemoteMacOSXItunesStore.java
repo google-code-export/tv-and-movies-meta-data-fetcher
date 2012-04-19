@@ -156,6 +156,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 			epsiodes.addAll(Data.createHeroesShow(heroesDir));
 
 			for (EpisodeData ed : epsiodes) {
+				createMP4File(ed.getFile());
 				FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),ed.getFile());
 				File episodeFile = ed.getFile();
 				IEpisode episode = ed.getEpisode();
@@ -167,23 +168,25 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 				store.cacheEpisode(rawMediaDir, episodeFile, episode);
 			}
 
-			store.fileDeleted(mediaDir, new File(heroesDir,"blah.m4v"));
-			store.renamedFile(rawMediaDir, new File(eurekaDir,"1x01 - blah"), new File(eurekaDir,"1x01 - Renamed"));
+			recacheTracks();
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
-			Assert.assertEquals(10,commandLog.size());
+			System.out.println("------------------");
+			for (String s : commandLog) {
+				System.out.println(s);
+			}
+			System.out.println("------------------");
+			Assert.assertEquals(7,commandLog.size());
 			int msgIndex = 0;
-			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary(.media-blah.Heroes.blah.m4v)",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary(.media-blah.Eureka.1x01 - blah)",commandLog.get(msgIndex++));
-			Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(msgIndex++));
+			Assert.assertEquals("getTrackCount() = 0",commandLog.get(msgIndex++));
+			Assert.assertEquals("getTracks()",commandLog.get(msgIndex++));
+			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.1x01 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.1x02 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.2x13 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.000 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary(.media-blah.Heroes.1x01 - hero)",commandLog.get(msgIndex++));
-			Assert.assertEquals("addFilesToLibrary(.media-blah.Eureka.1x01 - Renamed)",commandLog.get(msgIndex++));
+
 		}
 		finally {
 			FileHelper.delete(rawMediaDir);
@@ -218,17 +221,11 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
-			for (String s : commandLog) {
-				System.out.println(s);
-			}
-			Assert.assertEquals(6,commandLog.size());
+			Assert.assertEquals(3,commandLog.size());
 			int msgIndex=0;
-			Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary("+rawMediaDir.getAbsolutePath()+"/The Usual Suspects part1.avi)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary("+rawMediaDir.getAbsolutePath()+"/The Usual Suspects part2.avi)",commandLog.get(msgIndex++));
-			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(msgIndex++));
-			Assert.assertEquals("refreshTracks(tracks)",commandLog.get(msgIndex++));
-			Assert.assertEquals("refreshTracks("+rawMediaDir.getAbsolutePath()+"/The Usual Suspects part1.avi)",commandLog.get(msgIndex++));
+			Assert.assertEquals("refreshTracks(Location: '"+rawMediaDir.getAbsolutePath()+"/The Usual Suspects part1.avi' - Database ID: 0 - Name: 'Test 0' )",commandLog.get(msgIndex++));
 		}
 		finally {
 			FileHelper.delete(rawMediaDir);
