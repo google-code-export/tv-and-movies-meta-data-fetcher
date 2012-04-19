@@ -94,6 +94,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
+
 			Assert.assertEquals(10,commandLog.size());
 			int msgIndex = 0;
 			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(msgIndex++));

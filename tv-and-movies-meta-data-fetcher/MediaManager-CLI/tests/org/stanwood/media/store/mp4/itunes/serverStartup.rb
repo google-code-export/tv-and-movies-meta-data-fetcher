@@ -47,11 +47,13 @@ class Statement
         count=1
         args.each do | arg |
             if (arg.kind_of? Integer)
+                puts "setInt(#{count},#{arg})"
                 @stmt.setInt(count,arg)
-            elsif (arg.kind_of? String)                
-                puts "#{arg.class} : #{arg} : #{count}"                                               
+            elsif (arg.kind_of? String)                                                                             
+                puts "setString(#{count},#{arg})"
                 @stmt.setString(count,arg)
             else                
+                $stderr.puts "ERROR: Unhandled type: #{count},#{arg.class}"
                 raise "Unsupported argument type: #{arg.class}"
             end
             
@@ -103,6 +105,13 @@ class HSQLBackend < ItunesController::DatabaseBackend
         return sql
     end
     
+    def dropTables()
+        execute("delete from tracks")
+        execute("delete from dead_tracks")
+        execute("delete from dupe_tracks")
+        execute("delete from params")
+    end
+    
     def close()
         @db.close()
     end    
@@ -125,6 +134,14 @@ class TestStuff
     def self.getController()
         return @@controller
     end
+    
+    def self.setDB(db)
+        @@db = db
+    end
+    
+    def self.getDB()
+        return @@db
+    end
 end
 
 def launchServer(configPath,port)
@@ -132,7 +149,7 @@ def launchServer(configPath,port)
         ItunesController::DummyITunesController::resetCommandLog()
         ItunesController::DummyITunesController::resetTracks()
         itunes=ItunesController::DummyITunesController.new()
-    
+        
         dbBackend = HSQLBackend.new            
         controller=ItunesController::CachedController.new(itunes,dbBackend)
         TestStuff::setController(controller) 
@@ -140,6 +157,7 @@ def launchServer(configPath,port)
         
         server=ItunesController::ITunesControlServer.new(config,port,controller)
         TestStuff::setServer(server)        
+        TestStuff::setDB(dbBackend)
         return server
     rescue => exc                
         ItunesController::ItunesControllerLogging::error("Unable to execute command",exc)                        

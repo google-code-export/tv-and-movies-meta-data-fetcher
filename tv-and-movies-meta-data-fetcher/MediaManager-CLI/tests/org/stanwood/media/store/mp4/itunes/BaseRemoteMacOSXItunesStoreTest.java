@@ -256,6 +256,15 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 	}
 
+	/**
+	 * Used to drop the database tables
+	 * @throws ScriptException Thrown if their is a problem
+	 */
+	protected void dropTables() throws ScriptException {
+		if (started) {
+			executeRubyScript("TestStuff::getDB().dropTables()\n");
+		}
+	}
 
 	protected void resetTracks() throws ScriptException {
 		if (started) {
