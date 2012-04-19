@@ -95,30 +95,25 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 				store.cacheShow(rawMediaDir, episodeFile, show);
 				store.cacheSeason(rawMediaDir, episodeFile, season);
 				store.cacheEpisode(rawMediaDir, episodeFile, episode);
+				System.out.println("Cache episode: " + episodeFile);
 			}
 
-			File f1=new File(heroesDir,"blah.m4v");
-			File f2=new File(eurekaDir,"1x01 - blah");
+			File f1=createMP4File(new File(heroesDir,"blah.m4v"));
+			File f2=createMP4File(new File(eurekaDir,"1x01 - blah"));
 			forceAddTrack(f1.getAbsolutePath(), 123, "Blah 123");
 			forceAddTrack(f2.getAbsolutePath(), 124, "Blah 124");
 			recacheTracks();
-			store.fileDeleted(mediaDir, createMP4File(f1));
-			store.renamedFile(rawMediaDir, createMP4File(f2), createMP4File(new File(eurekaDir,"1x01 - Renamed")));
+			store.fileDeleted(mediaDir, f1);
+			store.renamedFile(rawMediaDir, f2, createMP4File(new File(eurekaDir,"1x01 - Renamed")));
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
-			System.out.println("---------------------");
-			for (String s : commandLog) {
-				System.out.println(s);
-			}
-			System.out.println("---------------------");
-			Assert.assertEquals(10,commandLog.size());
+			Assert.assertEquals(9,commandLog.size());
 			int msgIndex = 0;
 			Assert.assertEquals("getTrackCount() = 2",commandLog.get(msgIndex++));
 			Assert.assertEquals("getTracks()",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary("+rawMediaDir.getAbsolutePath()+"/Heroes/blah.m4v)",commandLog.get(msgIndex++));
-			Assert.assertEquals("removeTracksFromLibrary("+rawMediaDir.getAbsolutePath()+"/Eureka/1x01 - blah)",commandLog.get(msgIndex++));
-			Assert.assertEquals("addFilesToLibrary(files)",commandLog.get(msgIndex++));
+			Assert.assertEquals("removeTracksFromLibrary(Location: '"+rawMediaDir.getAbsolutePath()+"/Heroes/blah.m4v' - Database ID: 123 - Name: 'Blah 123' )",commandLog.get(msgIndex++));
+			Assert.assertEquals("removeTracksFromLibrary(Location: '"+rawMediaDir.getAbsolutePath()+"/Eureka/1x01 - blah' - Database ID: 124 - Name: 'Blah 124' )",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary("+rawMediaDir.getAbsolutePath()+"/Eureka/1x02 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary("+rawMediaDir.getAbsolutePath()+"/Eureka/2x13 - blah)",commandLog.get(msgIndex++));
 			Assert.assertEquals("addFilesToLibrary("+rawMediaDir.getAbsolutePath()+"/Eureka/000 - blah)",commandLog.get(msgIndex++));
