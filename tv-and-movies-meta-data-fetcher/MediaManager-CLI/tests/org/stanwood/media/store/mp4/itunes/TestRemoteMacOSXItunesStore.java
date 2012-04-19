@@ -172,11 +172,6 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 			store.performedActions(mediaDir);
 
 			List<String> commandLog = getCommandLog();
-			System.out.println("------------------");
-			for (String s : commandLog) {
-				System.out.println(s);
-			}
-			System.out.println("------------------");
 			Assert.assertEquals(7,commandLog.size());
 			int msgIndex = 0;
 			Assert.assertEquals("getTrackCount() = 0",commandLog.get(msgIndex++));
