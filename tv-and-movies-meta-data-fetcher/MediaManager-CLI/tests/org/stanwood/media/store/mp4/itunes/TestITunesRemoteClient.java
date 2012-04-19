@@ -33,6 +33,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	public void connectClient() throws ScriptException {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		resetCommandLog();
+		dropTables();
 		client = new ITunesRemoteClient();
 	}
 
@@ -60,10 +61,12 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testConnect() throws Exception {
+		System.out.println("---- testConnect() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		Assert.assertEquals(0,getCommandLog().size());
+		System.out.println("---- testConnect() - done");
 	}
 
 	/**
@@ -72,10 +75,12 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testLogin() throws Exception {
+		System.out.println("---- testLogin() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 
 		Assert.assertEquals(0,getCommandLog().size());
+		System.out.println("---- testLogin() - done");
 	}
 
 	/**
@@ -84,6 +89,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testInvalidPassword() throws Throwable {
+		System.out.println("---- testInvalidPassword() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		try {
 			client.login(USER , "blah1");
@@ -96,6 +102,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		client.disconnect();
 //		tearDownServer();
 //		setupServer();
+		System.out.println("---- testInvalidPassword() - done");
 	}
 
 	/**
@@ -104,6 +111,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testInvalidUsername() throws Throwable {
+		System.out.println("---- testInvalidUsername() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		try {
 			client.login("blah" , PASSWORD);
@@ -116,6 +124,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		client.disconnect();
 //		tearDownServer();
 //		setupServer();
+		System.out.println("---- testInvalidUsername() - done");
 	}
 
 
@@ -125,10 +134,12 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testCommandsDontWorkWhenNotLoggedIn() throws Exception {
+		System.out.println("---- testCommandsDontWorkWhenNotLoggedIn() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 500,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 		Assert.assertEquals(0,getCommandLog().size());
+		System.out.println("---- testCommandsDontWorkWhenNotLoggedIn() - done");
 	}
 
 	/**
@@ -137,8 +148,10 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testQuitNotLoggedIn() throws Exception {
+		System.out.println("---- testQuitNotLoggedIn() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		System.out.println("---- testQuitNotLoggedIn() - done");
 	}
 
 	/**
@@ -147,9 +160,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testQuitLoggedIn() throws Exception {
+		System.out.println("---- testQuitLoggedIn() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 		client.sendCommand(ITunesRemoteClient.CMD_QUIT, 221,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		System.out.println("---- testQuitLoggedIn() - done");
 	}
 
 	/**
@@ -158,6 +173,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testAddFiles() throws Exception {
+		System.out.println("---- testAddFiles() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
@@ -171,6 +187,12 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		Assert.assertEquals("addFilesToLibrary(/blah)",commandLog.get(0));
 		Assert.assertEquals("addFilesToLibrary(/blah1)",commandLog.get(1));
 		Assert.assertEquals("addFilesToLibrary(/blah/blah2)",commandLog.get(2));
+		System.out.println("---- testAddFiles() - done");
+
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
 	}
 
 	private File[] createTestFiles(File rootDir) throws IOException {
@@ -199,6 +221,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testRemoveFiles() throws Exception {
+		System.out.println("---- testRemoveFiles() - start");
 		File testDir = FileHelper.createTmpDir("test");
 		try {
 
@@ -216,9 +239,11 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 
 			List<String> commandLog = getCommandLog();
+			System.out.println("------------------------");
 			for (String s : commandLog) {
 				System.out.println(s);
 			}
+			System.out.println("------------------------");
 			Assert.assertEquals(5,commandLog.size());
 			int index=0;
 			Assert.assertEquals("getTrackCount() = 3",commandLog.get(index++));
@@ -230,6 +255,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 		finally {
 			FileHelper.delete(testDir);
 		}
+		System.out.println("---- testRemoveFiles() - done");
 
 	}
 
@@ -239,18 +265,44 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testRefreshFiles() throws Exception {
-		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah1", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah/blah2", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		System.out.println("---- testRefreshFiles() - start");
+		File testDir = FileHelper.createTmpDir("test");
+		try {
 
-		List<String> commandLog = getCommandLog();
-		Assert.assertEquals(5,commandLog.size());
-		Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
-		Assert.assertEquals("refreshTracks(tracks)",commandLog.get(1));
+			client.connect(Inet4Address.getByName("localhost"), getPort());
+			client.login(USER , PASSWORD);
+			File[] files = createTestFiles(testDir);
+			for (int i=0;i<files.length;i++) {
+				forceAddTrack(files[i].getAbsolutePath(),i,"Test "+i);
+			}
+			recacheTracks();
+			for (int i=0;i<files.length;i++) {
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[i].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+			}
+			client.sendCommand(ITunesRemoteClient.CMD_REFRESH_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
+			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+
+			List<String> commandLog = getCommandLog();
+			for (String s : commandLog) {
+				System.out.println(s);
+			}
+			Assert.assertEquals(5,commandLog.size());
+			int index=0;
+			Assert.assertEquals("getTrackCount() = 3",commandLog.get(index++));
+			Assert.assertEquals("getTracks()",commandLog.get(index++));
+			for (int i=0;i<files.length;i++) {
+				Assert.assertEquals("refreshTracks(Location: '"+files[i]+"' - Database ID: "+i+" - Name: 'Test "+i+"' )",commandLog.get(index++));
+			}
+
+			for (int i=0;i<files.length;i++) {
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[i].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+			}
+			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
+		}
+		finally {
+			FileHelper.delete(testDir);
+		}
+		System.out.println("---- testRefreshFiles() - done");
 	}
 
 	/**
@@ -259,6 +311,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testClearFiles1() throws Exception {
+		System.out.println("---- testClearFiles1() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 		client.sendCommand(ITunesRemoteClient.CMD_FILE+":/blah", 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
@@ -269,6 +322,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(0,commandLog.size());
+		System.out.println("---- testClearFiles1() - done");
 	}
 
 	/**
@@ -277,6 +331,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testClearFiles2() throws Exception {
+		System.out.println("---- testClearFiles2() - start");
 		client.connect(Inet4Address.getByName("localhost"), getPort());
 		client.login(USER , PASSWORD);
 		client.sendCommand(ITunesRemoteClient.CMD_CLEAR_FILES, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
@@ -284,6 +339,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 
 		List<String> commandLog = getCommandLog();
 		Assert.assertEquals(0,commandLog.size());
+		System.out.println("---- testClearFiles2() - done");
 	}
 
 	/**
@@ -292,14 +348,41 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	 */
 	@Test(timeout=10000)
 	public void testRemoveDeadFiles() throws Exception {
-		client.connect(Inet4Address.getByName("localhost"), getPort());
-		client.login(USER , PASSWORD);
-		client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
-		client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+		System.out.println("---- testRemoveDeadFiles() - start");
+		File testDir = FileHelper.createTmpDir("test");
+		try {
 
-		List<String> commandLog = getCommandLog();
-		Assert.assertEquals(2,commandLog.size());
-		Assert.assertEquals("findDeadTracks()",commandLog.get(0));
-		Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
+			client.connect(Inet4Address.getByName("localhost"), getPort());
+			client.login(USER , PASSWORD);
+			File[] files = createTestFiles(testDir);
+			for (int i=0;i<files.length;i++) {
+				forceAddTrack(files[i].getAbsolutePath(),i,"Test "+i);
+			}
+			if (!files[0].delete() && files[0].exists()) {
+				throw new IOException("Unable to delete file: " + files[0]);
+			}
+			recacheTracks();
+			for (int i=0;i<files.length;i++) {
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[i].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+			}
+			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_DEAD_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
+			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+
+			List<String> commandLog = getCommandLog();
+			System.out.println("------------------------");
+			for (String s : commandLog) {
+				System.out.println(s);
+			}
+			System.out.println("------------------------");
+			Assert.assertEquals(3,commandLog.size());
+			int index=0;
+			Assert.assertEquals("getTrackCount() = 3",commandLog.get(index++));
+			Assert.assertEquals("getTracks()",commandLog.get(index++));
+			Assert.assertEquals("removeTracksFromLibrary(Location: '"+files[0]+"' - Database ID: "+0+" - Name: 'Test "+0+"' )",commandLog.get(index++));
+		}
+		finally {
+			FileHelper.delete(testDir);
+		}
+		System.out.println("---- testRemoveDeadFiles() - done");
 	}
 }
