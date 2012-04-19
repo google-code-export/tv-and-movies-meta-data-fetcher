@@ -210,7 +210,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 			}
 			recacheTracks();
 			for (int i=0;i<files.length;i++) {
-				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[0].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
+				client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+files[i].getAbsolutePath(), 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
 			}
 			client.sendCommand(ITunesRemoteClient.CMD_REMOVE_FILES, 220,ITunesRemoteClient.NO_TIMEOUT);
 			client.sendCommand(ITunesRemoteClient.CMD_HELO, 220,ITunesRemoteClient.DEFAULT_TIMEOUT);
@@ -220,8 +220,12 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 				System.out.println(s);
 			}
 			Assert.assertEquals(5,commandLog.size());
-			Assert.assertEquals("findTracksWithLocations(locations)",commandLog.get(0));
-			Assert.assertEquals("removeTracksFromLibrary(tracks)",commandLog.get(1));
+			int index=0;
+			Assert.assertEquals("getTrackCount() = 3",commandLog.get(index++));
+			Assert.assertEquals("getTracks()",commandLog.get(index++));
+			for (int i=0;i<files.length;i++) {
+				Assert.assertEquals("removeTracksFromLibrary(Location: '"+files[i]+"' - Database ID: "+i+" - Name: 'Test "+i+"' )",commandLog.get(index++));
+			}
 		}
 		finally {
 			FileHelper.delete(testDir);
