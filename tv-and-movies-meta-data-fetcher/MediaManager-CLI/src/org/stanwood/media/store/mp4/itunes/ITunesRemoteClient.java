@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -87,7 +88,12 @@ public class ITunesRemoteClient extends Thread {
 	 */
 	public void connect(InetAddress hostname,int port) throws StoreException {
 		try {
-			socket = new Socket(hostname, port);
+			try {
+				socket = new Socket(hostname, port);
+			}
+			catch (ConnectException e) {
+				throw new StoreException(MessageFormat.format("Unable to connect to remote itunes controller at host {0} port {1}",hostname,port),e);
+			}
 			out = new PrintWriter(socket.getOutputStream(),true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			log.info(MessageFormat.format(Messages.getString("ITunesRemoteClient.CONNECTION_TO_SERVER"),hostname,port)); //$NON-NLS-1$
