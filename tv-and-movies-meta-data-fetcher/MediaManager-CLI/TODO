@@ -6,12 +6,6 @@ Version 2.1
 
 Get OpenSuSE rpms building again
 Add more Linux distribution packages.
-Add ability to upgrade MP4ItunesStore (inprogress)
-	- Files updated with new metadata  (inprogress)
-	- If using remote iTunes control server, tell iTunes about the updated store (inprogress)
-	- Write test of upgrading
-Allow MP4 store to talk to iTunes via remote server (needs testing)
-	- Check upgrading does not remove watched counts
 Update docs
 	- Add the -v option to cli tools
 	- Add new store
@@ -19,11 +13,7 @@ Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Renamed CLI tool
 	- Document where to get native tools from
-Compile AtomicParsely for all platforms (inprogress)
-	* Package up and upload to website.
 Findout and fix why the mediainfo tool can't handle filenames with a ? in them.	
-Fix seen DB tool
-	* Remove entries with incorret rename patterns
 		
 Version 2.2
 -----------
