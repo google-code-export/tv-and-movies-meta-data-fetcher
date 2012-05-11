@@ -57,7 +57,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 					Assert.assertNotNull(jruby);
 					port = getPortNumber();
 					Assert.assertNotNull(port);
-
+					System.out.println("Starting server on port: " + port);
 					startServer();
 					started = false;
 				}
@@ -75,9 +75,11 @@ public class BaseRemoteMacOSXItunesStoreTest {
 			Thread.sleep(100);
 		}
 		if (!Platform.isWindows()) {
+			System.out.println("Waiting for controll server to start on port: " + port);
 			while (available(port)) {
 				Thread.sleep(100);
 			}
+			System.out.println("Controll server started");
 		}
 		else {
 			Thread.sleep(2000);
@@ -246,29 +248,9 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		return commandLog;
 	}
 
-	/**
-	 * Used to reset the command log before each test
-	 * @throws ScriptException Thrown if their is a problem
-	 */
-	protected void resetCommandLog() throws ScriptException {
+	protected void resetDummyServer() throws ScriptException {
 		if (started) {
-			executeRubyScript("ItunesController::DummyITunesController::resetCommandLog()");
-		}
-	}
-
-	/**
-	 * Used to drop the database tables
-	 * @throws ScriptException Thrown if their is a problem
-	 */
-	protected void dropTables() throws ScriptException {
-		if (started) {
-			executeRubyScript("TestStuff::getDB().dropTables()\n");
-		}
-	}
-
-	protected void resetTracks() throws ScriptException {
-		if (started) {
-			executeRubyScript("ItunesController::DummyITunesController::resetTracks()");
+			executeRubyScript("resetDummyServer()");
 		}
 	}
 

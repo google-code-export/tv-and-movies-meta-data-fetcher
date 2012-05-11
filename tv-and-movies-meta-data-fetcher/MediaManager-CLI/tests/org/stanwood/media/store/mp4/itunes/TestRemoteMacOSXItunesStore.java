@@ -47,9 +47,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 	 */
 	@Before
 	public void setup() throws ScriptException {
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
-		resetCommandLog();
-		dropTables();
+		resetDummyServer();
 	}
 
 	private File createMP4File(File file) throws IOException {

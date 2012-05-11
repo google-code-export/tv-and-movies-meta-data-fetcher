@@ -32,8 +32,7 @@ public class TestITunesRemoteClient extends BaseRemoteMacOSXItunesStoreTest {
 	@Before
 	public void connectClient() throws ScriptException {
 		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
-		resetCommandLog();
-		dropTables();
+		resetDummyServer();
 		client = new ITunesRemoteClient();
 	}
 
