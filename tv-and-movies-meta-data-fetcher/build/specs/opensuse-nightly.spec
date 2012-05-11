@@ -19,8 +19,6 @@ Requires:       mysql-connector-java >= 5.1.6
 Requires:		antlr-java >= 3.1.3
 Requires:       ROME >= 1.0
 Requires:       jdom >= 1.1
-Requires:       jna
-BuildRequires:  jna
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  jakarta-commons-cli = 1.0

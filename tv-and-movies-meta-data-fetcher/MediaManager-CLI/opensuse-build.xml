@@ -1,4 +1,4 @@
-<project name="MediaManager" default="build" basedir="MediaManager-CLI">
+<project name="MediaManager" default="build" basedir=".">
 
     <!-- Path properties -->
     <property name="src.dir" location="${basedir}/src" />
@@ -10,9 +10,7 @@
     <property name="etc.dir" location="${basedir}/etc" />
     <property name="docs.dir" location="${basedir}/docs"/>
     <property name="api.docs.dir" location="${docs.dir}/api" />
-    <property name="userguide.dir" location="${docs.dir}/userguide" />
     <property name="reports.dir" location="${basedir}/reports"/>
-    <property name="docbook.home"    value="${basedir}/docbook/xsl"/>
     <property name="fo.dir"          value="${basedir}/fo"/>
     <property name="lib.dir" value="changeme"/>
     <property name="fop.dir" value="changeme"/>
@@ -123,7 +121,6 @@
         <delete dir="${reports.dir}" failonerror="false"/>
         <delete file="cobertura.ser" failonerror="false"/>
         <delete dir="${fo.dir}" failonerror="false"/>
-        <delete dir="${basedir}/docbook" failonerror="false"/>
     </target>
 
     <target name="jars" description="generate the distribution">
@@ -133,56 +130,5 @@
         <copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/mediamanager-conf.xml"/>
     </target>
 
-    <target name="docs" description="Converts docbook xml into pdf" >
-        <delete dir="${docbook.dir}/docbook"/>
-        <mkdir dir="${basedir}/docbook"/>
-        <mkdir dir="${userguide.dir}/html"/>
-
-        <unzip src="docbook.zip" dest="${basedir}/docbook"/>
-
-        <echo message="DTD: ${docbook.home}/../dtd/docbookx.dtd"/>
-
-        <xmlcatalog id="dtds">                           
-            <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-            <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-        </xmlcatalog>
-    	
-    	<mkdir dir="${userguide.dir}/xml-updated"/>		
-		<copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>		
-		
-		<replace file="${userguide.dir}/xml-updated/docbook.xml">
-			<replacefilter token="@@version@@" value="${project.version}"/>
-			<replacefilter token="@@name@@" value="${ant.project.name}"/>
-			<replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
-			<replacefilter token="@@mode@@" value="0"/>
-		</replace>
-
-        <xslt  style="${docbook.home}/fo/docbook.xsl"
-                basedir="${userguide.dir}/xml-updated"
-                extension=".fo"
-                destdir="${fo.dir}">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
-
-        <xslt  style="${docbook.home}/html/docbook.xsl"
-                        basedir="${userguide.dir}/xml-updated"
-                        extension=".html"
-                        destdir="${userguide.dir}/html">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
-
-        <fop format="application/pdf"
-             fofile="${fo.dir}/docbook.fo"
-             outfile="${userguide.dir}/userguide.pdf" />
-
-        <delete dir="${fo.dir}"/>
-        <delete dir="${basedir}/docbook"/>
-    	<delete dir="${userguide.dir}/xml-updated"/>
-    </target>
-
-    <target name="build" depends="compile,javadoc,docs,jars"/>
+    <target name="build" depends="compile,javadoc,jars"/>
 </project>
