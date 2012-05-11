@@ -72,7 +72,9 @@ end
 class HSQLBackend < ItunesController::DatabaseBackend                
     
     def initialize()  
-        @db = java.sql.DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb", "SA", "")      
+        @db = java.sql.DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb", "SA", "")
+        stmt=@db.createStatement() 
+        stmt.executeUpdate("DROP SCHEMA PUBLIC CASCADE")
     end
     
     def prepare(sql)
@@ -142,6 +144,12 @@ class TestStuff
     def self.getDB()
         return @@db
     end
+end
+
+def resetDummyServer()
+    ItunesController::DummyITunesController::resetCommandLog()
+    ItunesController::DummyITunesController::resetTracks()
+    TestStuff::getDB().dropTables()
 end
 
 def launchServer(configPath,port)
