@@ -32,13 +32,18 @@ import org.apache.log4j.spi.RootLogger;
  */
 public class LogSetupHelper {
 
+	private static boolean setupLogging = false;
+
 	/**
 	 * Initialise the logging using the given configuration file
 	 * @param logConfigFile The logging configuration file
 	 */
 	public static void initLogingFromConfigFile(File logConfigFile) {
-		resetLogging();
-		PropertyConfigurator.configure(logConfigFile.getAbsolutePath());
+		if (!setupLogging) {
+			resetLogging();
+			PropertyConfigurator.configure(logConfigFile.getAbsolutePath());
+			setupLogging = true;
+		}
 	}
 
 	private static void resetLogging() {
@@ -52,9 +57,12 @@ public class LogSetupHelper {
 	 * @param configName The name of the configuration file stored in the same package as this class.
 	 */
 	public static void initLogingInternalConfigFile(String configName) {
-		if (!configName.equals("")) { //$NON-NLS-1$
-			resetLogging();
-			PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+		if (!setupLogging) {
+			if (!configName.equals("")) { //$NON-NLS-1$
+				resetLogging();
+				PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+			}
+			setupLogging = true;
 		}
 	}
 
@@ -64,9 +72,12 @@ public class LogSetupHelper {
 	 * @param stderr The stderr stream
 	 */
 	public static void initLogging(OutputStream stdout, OutputStream stderr) {
-		resetLogging();
-		PatternLayout layout = new PatternLayout("%m%n"); //$NON-NLS-1$
-		Logger.getRootLogger().addAppender(new StreamAppender(layout,new PrintStream(stdout),new PrintStream(stderr)));
+		if (!setupLogging) {
+			resetLogging();
+			PatternLayout layout = new PatternLayout("%m%n"); //$NON-NLS-1$
+			Logger.getRootLogger().addAppender(new StreamAppender(layout,new PrintStream(stdout),new PrintStream(stderr)));
+			setupLogging = true;
+		}
 	}
 
 }
