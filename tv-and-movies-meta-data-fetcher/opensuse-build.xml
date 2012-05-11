@@ -1,4 +1,4 @@
-<project name="MediaManager" default="all" basedir="MediaManager-CLI">
+<project name="MediaManager" default="all" basedir=".">
 
     <!-- Path properties -->
     <property name="build.dir" location="${basedir}/bin" />    
@@ -71,11 +71,11 @@
         <delete dir="${fo.dir}" failonerror="false"/>
         <delete dir="${basedir}/docbook" failonerror="false"/>
         
-        <ant dir="MediaManager-CLI" target="clean"/>
+        <ant dir="MediaManager-CLI" target="clean" antfile="opensuse-build.xml"/>
     </target>
     
     <target name="build" description="Build all the subcomponents">
-        <ant dir="MediaManager-CLI" target="clean"/>
+        <ant dir="MediaManager-CLI" target="build" antfile="opensuse-build.xml"/>
     </target>
 
     <target name="jars" description="generate the distribution">
@@ -86,54 +86,43 @@
     </target>
 
     <target name="docs" description="Converts docbook xml into pdf" >
-        <delete dir="${docbook.dir}/docbook"/>
+        <delete dir="${basedir}/docbook"/>
         <mkdir dir="${basedir}/docbook"/>
         <mkdir dir="${userguide.dir}/html"/>
 
         <unzip src="docbook.zip" dest="${basedir}/docbook"/>
 
-        <echo message="DTD: ${docbook.home}/../dtd/docbookx.dtd"/>
+        <mkdir dir="${userguide.dir}/xml-updated"/>
+        <copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>
 
-        <xmlcatalog id="dtds">                           
-            <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-            <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
-                 location="${docbook.home}/../dtd/docbookx.dtd"/>
-        </xmlcatalog>
-    	
-    	<mkdir dir="${userguide.dir}/xml-updated"/>		
-		<copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>		
-		
-		<replace file="${userguide.dir}/xml-updated/docbook.xml">
-			<replacefilter token="@@version@@" value="${project.version}"/>
-			<replacefilter token="@@name@@" value="${ant.project.name}"/>
-			<replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
-			<replacefilter token="@@mode@@" value="0"/>
-		</replace>
+        <replace file="${userguide.dir}/xml-updated/docbook.xml">
+            <replacefilter token="@@version@@" value="${project.version}"/>
+            <replacefilter token="@@name@@" value="${ant.project.name}"/>
+            <replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+            <replacefilter token="@@mode@@" value="0"/>
+        </replace>
 
-        <xslt  style="${docbook.home}/fo/docbook.xsl"
-                basedir="${userguide.dir}/xml-updated"
-                extension=".fo"
-                destdir="${fo.dir}">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
+        <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${fo.dir}/docbook.fo"/>
+            <arg value="${docbook.home}/fo/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
 
-        <xslt  style="${docbook.home}/html/docbook.xsl"
-                        basedir="${userguide.dir}/xml-updated"
-                        extension=".html"
-                        destdir="${userguide.dir}/html">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
+        <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${userguide.dir}/html/docbook.html"/>
+            <arg value="${docbook.home}/html/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
 
-        <fop format="application/pdf"
-             fofile="${fo.dir}/docbook.fo"
+        <fop format="application/pdf" 
+             fofile="${fo.dir}/docbook.fo" 
              outfile="${userguide.dir}/userguide.pdf" />
 
         <delete dir="${fo.dir}"/>
         <delete dir="${basedir}/docbook"/>
-    	<delete dir="${userguide.dir}/xml-updated"/>
+        <delete dir="${userguide.dir}/xml-updated"/>
     </target>
 
     <target name="all" depends="clean,build,docs,jars"/>
