@@ -73,14 +73,14 @@ public class TestFilmSearcher {
 			assertSearchDetails("A & Movie","2000",null,names.get(index++));
 			assertSearchDetails("A Movie's",null,null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
-			assertSearchDetails("A Movie",null,null,names.get(index++));
+			assertSearchDetails("A Movie2",null,null,names.get(index++));
 			index++;
 			assertSearchDetails("A movie 2000",null,null,names.get(index++));
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
 			assertSearchDetails("A movie",null,1,names.get(index++));
 			assertSearchDetails("A movie",null,2,names.get(index++));
-			assertSearchDetails("A movie",null,null,names.get(index++));
+			assertSearchDetails("A movie1",null,null,names.get(index++));
 			assertSearchDetails("A, Movie",null,null,names.get(index++));
 			assertSearchDetails("A Movie","2007",null,names.get(index++));
 			assertSearchDetails("A Movie","2008",null,names.get(index++));
