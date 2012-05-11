@@ -23,7 +23,7 @@
 	<property name="javac.target" value="1.6" />
 
 	<!-- Dist properties -->
-	<property name="project.version" value="2.0.98" />
+	<property name="project.version" value="2.1" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
@@ -79,7 +79,6 @@
 				<exclude name="**/ExpressionLexer.java"/>
 			</zipfileset>            
             <zipfileset file="${mm-cli.dir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>
-            <zipfileset file="${mm-cli.dir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>            
 			<zipfileset dir="${mm-cli.dir}/tests" prefix="${ant.project.name}-${project.version}/MediaManager-CLI/tests"/>
             
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>			
