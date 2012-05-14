@@ -38,6 +38,7 @@ BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
+BuildRequires:  libxslt1
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        %%release%%
