@@ -89,7 +89,7 @@ Dir.mktmpdir("osc") { |dir|
     }
 
     copyAndUpdateFile("#{projectDir}/build/specs/opensuse-nightly.spec","MediaManager.spec",params) 
-    copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-src.zip","MediaManager-#{version}-#{date}-src.zip") 
+    copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-notests-src.zip","MediaManager-#{version}-#{date}-src.zip") 
 
     executeCmd("osc --no-keyring addremove")
     executeCmd("osc --no-keyring commit -m \"nightly upload #{version}-#{date}\"")

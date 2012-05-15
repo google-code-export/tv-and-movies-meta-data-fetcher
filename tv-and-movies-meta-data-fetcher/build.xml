@@ -79,6 +79,8 @@
 				<exclude name="**/ExpressionLexer.java"/>
 			</zipfileset>            
             <zipfileset file="${mm-cli.dir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>
+            <zipfileset file="${mm-cli.dir}/build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>
+            <zipfileset dir="${mm-cli.dir}/build" prefix="${ant.project.name}-${project.version}/MediaManager-CLI/build"/>
 			<zipfileset dir="${mm-cli.dir}/tests" prefix="${ant.project.name}-${project.version}/MediaManager-CLI/tests"/>
             
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>			
@@ -95,7 +97,32 @@
 			<zipfileset file="${basedir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}"/>			
 			<zipfileset file="${basedir}/one-jar-ant-task.xml" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/docbook.zip" prefix="${ant.project.name}-${project.version}"/>
-		</zip>
+        </zip>
+
+        <zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-notests-src.zip" compress="true">
+            <zipfileset dir="${mm-cli.dir}/src" prefix="${ant.project.name}-${project.version}/MediaManager-CLI/src">
+                <exclude name="**/ExpressionParser.java"/>
+                <exclude name="**/ExpressionLexer.java"/>
+            </zipfileset>
+            <zipfileset file="${mm-cli.dir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>
+            <zipfileset file="${mm-cli.dir}/build.xml" prefix="${ant.project.name}-${project.version}/MediaManager-CLI"/>
+            <zipfileset dir="${mm-cli.dir}/build" prefix="${ant.project.name}-${project.version}/MediaManager-CLI/build"/>
+
+            <zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
+            <zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
+            <zipfileset dir="${basedir}/build" prefix="${ant.project.name}-${project.version}/build"/>
+            <zipfileset file="${basedir}/build.xml" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/VERSION" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/COPYING" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/Changelog" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/Description" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/.project" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/.classpath" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/opensuse-build.xml" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/one-jar-ant-task.xml" prefix="${ant.project.name}-${project.version}"/>
+            <zipfileset file="${basedir}/docbook.zip" prefix="${ant.project.name}-${project.version}"/>
+        </zip> 
 		
 		<zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-native.zip">
 			<zipfileset dir="${native.dir}" prefix="native"/>

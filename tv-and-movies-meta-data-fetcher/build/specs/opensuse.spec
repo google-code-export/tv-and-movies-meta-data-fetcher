@@ -1,7 +1,7 @@
 #
 # spec file for package MediaManager %%version%%
 #
-# Copyright (C) 2008-2011  John-Paul.Stanford <dev@stanwood.org.uk>
+# Copyright (C) 2008-2012 John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
@@ -19,8 +19,6 @@ Requires:       mysql-connector-java >= 5.1.6
 Requires:		antlr-java >= 3.1.3
 Requires:       ROME >= 1.0
 Requires:       jdom >= 1.1
-Requires:       jna
-BuildRequires:  jna
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  jakarta-commons-cli = 1.0
@@ -40,6 +38,7 @@ BuildRequires:  ROME >= 1.0
 BuildRequires:  jdom >= 1.1
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
+BuildRequires:  libxslt1
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        0
@@ -85,14 +84,14 @@ pushd %{buildroot}%{_javadir}
         ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`
     done
 popd
-%__install -m 755 build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
-%__install -m 755 build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
-%__install -m 755 build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
-%__install -m 755 build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
-%__install -m 755 build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
-%__install -m 755 build/scripts/opensuse/mm-mp4-list-atoms %{buildroot}%{_bindir}/mm-mp4-list-atoms
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-media-file-info %{buildroot}%{_bindir}/mm-media-file-info
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
- 
+
 # User docs
 %__install -dm 755 %{buildroot}/usr/share/doc/%{name}
 %__install -m 644 docs/userguide/userguide.pdf %{buildroot}/usr/share/doc/%{name}
@@ -100,7 +99,7 @@ popd
 %__install -dm 755 %{buildroot}%{_datadir}/applications
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(HTML\).desktop %{buildroot}%{_datadir}/applications/
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(PDF\).desktop %{buildroot}%{_datadir}/applications/
- 
+
 # javadoc
 %__install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
 %__cp -pr docs/api/* %{buildroot}%{_javadocdir}/%{name}-%{version}
@@ -121,7 +120,7 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_bindir}/mm-xbmc
 %{_bindir}/mm-copy-store-to-store
 %{_bindir}/mm-move-into-media-directory
-%{_bindir}/mm-mp4-list-atoms
+%{_bindir}/mm-media-file-info
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*
