@@ -9,6 +9,7 @@ Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Document mm-move-into-media-directory
 Fix javadoc warnings
+Move strings to resource bundles
 		
 Version 2.2
 -----------

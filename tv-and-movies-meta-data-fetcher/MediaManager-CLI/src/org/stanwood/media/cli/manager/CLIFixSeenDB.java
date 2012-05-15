@@ -80,7 +80,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 		o.setArgName("directory"); //$NON-NLS-1$
 		OPTIONS.add(o);
 
-		o = new Option(CHECK_ATOMS_OPTION, "checkAtoms",true,"Optinal argument used to specify if media file atoms chould be checked");
+		o = new Option(CHECK_ATOMS_OPTION, "checkAtoms",true,Messages.getString("CLIFixSeenDB.CHECK_ATOMS")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		o.setArgName("boolean"); //$NON-NLS-1$
 		OPTIONS.add(o);
@@ -144,7 +144,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						}
 						IVideo video = findVideo(rootMediaDir,f);
 						if (video!=null) {
-							log.info(MessageFormat.format("Mark file as seen ''{0}'' as it's in a store",f));
+							log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.MARK_AS_SEEN"),f)); //$NON-NLS-1$
 							seenDb.markAsSeen(root, f);
 						}	
 					}
@@ -195,7 +195,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				}
 			}
 			catch (StanwoodException e) {
-				log.error("Unable to get store for film",e);
+				log.error(Messages.getString("CLIFixSeenDB.UNABLE_GET_STORE"),e); //$NON-NLS-1$
 			}
 		}	
 		return video;
