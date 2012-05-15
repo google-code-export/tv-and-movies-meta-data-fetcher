@@ -6,7 +6,7 @@
 	<!ENTITY mmxbmc "mm-xbmc">
 	<!ENTITY mmmovemedia "mm-move-into-media-directory">
 	<!ENTITY mmcopystore "mm-copy-store-to-store">
-	<!ENTITY mmlistatoms "mm-mp4-list-atoms">
+	<!ENTITY mmlistatoms "mm-media-file-info">
 	<!ENTITY copyrightdate "2007-2011">
 	<!ENTITY copyholder "John-Paul Stanford">
 ]>
@@ -216,8 +216,11 @@
  				 their meta data.
                  </para>
                  <para>
-                 In order for this store to function, it uses command line tools provided by the
-                 <ulink url="http://code.google.com/p/mp4v2/">MP4v2</ulink> project. 
+                 In order to function, this store uses the command line tools provided by the AtomicParsley application.
+                 Their are different forks of this application on the Internet. The most feature rich version I've
+                 found is at <ulink url="https://bitbucket.org/shield007/atomicparsley">AtomicParsley</ulink>. 
+                 &apptitle; uses this one to add atoms that some of the other versions can't. The application must be 
+                 installed on the PATH, or pointed to by the optional store parameters.                 
                  </para>
                  <para>
                  &apptitle; should be able to find these tools if it was installed using the installer.
@@ -226,20 +229,49 @@
                  chapter or the optional parameters of the store for more information.                 
                  </para>
                  <para>
-                 The mp4tags application does not support the setting of all fields that this store can handle,
-                 a patched version of this command os installed via the installer. It can also be downloaded
-                 from the &apptitle; website. A warning will be printed if this was not found.
+                 If using a version of AtomicParsley that does not support the setting of all fields that this store
+                 can handle, then a warning will be printed. A version with the above link that fully supports this store
+                 can downloaded from the &apptitle; website or installed via the installer.                 
                  </para>
-                 <para>
-                 This manager has following optional parameters:
+                 <para>                     
+                 This store has following optional parameters:
                  <itemizedlist>
-                 	<listitem><para>mp4art - The path to the mp4art command</para></listitem>
-                 	<listitem><para>mp4info - The path to the mp4info command</para></listitem>
-                 	<listitem><para>mp4tags - The path to the mp4tags command</para></listitem>
-                 	<listitem><para>mp4file - The path to the mp4file command</para></listitem>
+                 	<listitem><para><literal>atomicparsley</literal> The path to the AtomicParsley command</para></listitem>
                  </itemizedlist>
                  </para>
-            </sect2>            
+            </sect2>
+            <sect2>
+                <title>org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStore</title>
+                <para>
+                This store is used to inform itunes of file changes in a media directory. It does this
+                by talking to a remote server running on the same machine as iTunes. The details of the server can
+                be found at <ulink url="http://code.google.com/p/itunes-remote-control-server/">iTunes Remote Server</ulink>.
+                </para>
+                <para>
+                The optional parameter file-separator can be used when &apptitle; is running
+                on a different operating system to the remote client. So for example if &apptitle;
+                is on a linux OS and the remote server is on a windows OS, then the file seperator
+                should be set to \. See the page <ulink url="http://en.wikipedia.org/wiki/Regular_expression">Regex</ulink> for
+                more information on regular expression syntax.
+                </para>
+                <para>
+                The search and replace optional parameters can be used to the media directory
+                is access at a different location on the iTunes server machine to the machine
+                that &apptitle; is running on.
+                </para>
+                <para>                     
+                 This store has following parameters:
+                 <itemizedlist>
+                    <listitem><para><literal>hostname</literal> The path to the AtomicParsley command.</para></listitem>
+                    <listitem><para><literal>port</literal> Optional parameter giving port number of the server, defaults to 7000.</para></listitem>
+                    <listitem><para><literal>username</literal> Required parameter giving name of user used to log into the server.</para></listitem>
+                    <listitem><para><literal>password</literal> Required parameter giving password of user used to log into the server.</para></listitem>
+                    <listitem><para><literal>search-pattern</literal> Optional parameter that must be used with search-replace. This parameter is used to perform a regular expression search and replace on the file paths. This parameter is used to set the pattern.</para></listitem>
+                    <listitem><para><literal>search-replace</literal> Optional parameter that must be used with search-replace. This parameter is used to perform a regular expression search and replace on the file paths. This parameter is used to set the replacement text.</para></listitem>
+                    <listitem><para><literal>file-separator</literal> Optional parameter that is used to set the file seperator used in file names sent to the server.</para></listitem>
+                 </itemizedlist>
+                 </para>
+            </sect2>
 		</sect1>	
 		<sect1>
 			<title>Actions</title>
@@ -378,6 +410,7 @@
  				with media directory. Then the actions are performed on the media directory.
  				<cmdsynopsis>
 					<command>&mmmanager;</command>
+                    <arg>-v</arg>
 					<arg>-h</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
 					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>									
@@ -389,6 +422,7 @@
 			<para>
 				The command has the following options:
 				<itemizedlist>
+                    <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
 					<listitem><para><literal>-d, --dir</literal> A requried option give the location of the media directory to manage</para></listitem>
 					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
@@ -406,6 +440,7 @@
  				or directories. 
  				<cmdsynopsis>
 					<command>&mmcopystore;</command>
+                    <arg>-v</arg>
 					<arg>-h</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
 					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>									
@@ -418,6 +453,7 @@
 			<para>
 				The command has the following options:
 				<itemizedlist>
+                    <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
 					<listitem><para><literal>-d, --dir</literal> A requried option give the location of the media directory to manage</para></listitem>
 					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
@@ -435,6 +471,7 @@
  				or directories. 
  				<cmdsynopsis>
 					<command>&mmmovemedia;</command>
+                    <arg>-v</arg>
 					<arg>-h</arg>
 					<arg>-c <replaceable>config file</replaceable></arg>
 					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>									
@@ -447,6 +484,7 @@
 			<para>
 				The command has the following options:
 				<itemizedlist>
+                    <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
 					<listitem><para><literal>-d, --dir</literal> A requried option give the location of the media directory to manage</para></listitem>
 					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
@@ -463,6 +501,7 @@
  				be used to check the metadata that iTunes will see.
  				<cmdsynopsis>
 					<command>&mmlistatoms;</command>
+                    <arg>-v</arg>
 					<arg>-h</arg>		
 					<arg>-c <replaceable>config file</replaceable></arg>
 					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>					
@@ -472,6 +511,7 @@
 			<para>
 				The command has the following options:
 				<itemizedlist>
+                    <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
 					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
 					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
 					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>					
@@ -489,6 +529,7 @@
 	 			<title>Global options:</title>
 	 			<para>
 		 			<itemizedlist>
+                        <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
 						<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
 						<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
 						<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
@@ -555,16 +596,18 @@
 				<para>
 					The following list contains the meaning for each token:
 						<itemizedlist>
-						 	<listitem><para><literal>%h</literal> - show Id</para></listitem>
+                            <listitem><para><literal>%d</literal> - If HighDef, replaced with "HD"</para></listitem>
+						 	<listitem><para><literal>%e</literal> - episode number</para></listitem>
+                            <listitem><para><literal>%h</literal> - show Id</para></listitem>
+                            <listitem><para><literal>%i</literal> - the show or film image URL</para></listitem>
+                            <listitem><para><literal>%n</literal> - show name</para></listitem>
+                            <listitem><para><literal>%p</literal> - part number</para></listitem>
 	 						<listitem><para><literal>%s</literal> - season number</para></listitem> 
-	 						<listitem><para><literal>%e</literal> - episode number</para></listitem>
-	 						<listitem><para><literal>%n</literal> - show name</para></listitem>
 	 						<listitem><para><literal>%t</literal> - episode title or film title</para></listitem>
-	 						<listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem> 						
-	 						<listitem><para><literal>%p</literal> - part number</para></listitem>
-	 						<listitem><para><literal>%y</literal> - year</para></listitem>
-	 						<listitem><para><literal>%i</literal> - the show or film image URL</para></listitem>
-	 						<listitem><para><literal>%u</literal> - the show or film short summary</para></listitem>
+                            <listitem><para><literal>%u</literal> - the show or film short summary</para></listitem>
+	 						<listitem><para><literal>%w</literal> - If Wide screen, replaced with "WS"</para></listitem>
+                            <listitem><para><literal>%x</literal> - extension (avi, mkv....)</para></listitem>                      
+                            <listitem><para><literal>%y</literal> - year</para></listitem>
 	 						<listitem><para><literal>%%</literal> - add a % char</para></listitem>
 						</itemizedlist>
 					</para>	
