@@ -4,19 +4,15 @@ TODO
 Version 2.1
 -----------
 
-Get OpenSuSE rpms building again
 Add more Linux distribution packages.
 Update docs
-	- Add the -v option to cli tools
-	- Add new store
-	- Add new patterns
 	- Add details about windows/unix paths. Patterns need correct separators
-	- Renamed CLI tool
-	- Document where to get native tools from
-Findout and fix why the mediainfo tool can't handle filenames with a ? in them.	
+	- Document mm-move-into-media-directory
+Fix javadoc warnings
 		
 Version 2.2
 -----------
+Findout and fix why the mediainfo tool can't handle filenames with a ? in them.
 If no <stores/> element, then add default stores
 If no <sources/> element, them add defauly sources
 Add a getting started guide and link to a button in the installer

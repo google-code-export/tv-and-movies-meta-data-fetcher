@@ -74,10 +74,10 @@ import org.stanwood.media.util.Version;
  * their meta data.
  * </p>
  * <p>
- * In order to function, store uses the command line tools provided by the AtomicParsley application.
- * Their are different forks of this application on the internet. The most feature rich version I've
- * found is at {@link "https://bitbucket.org/wez/atomicparsley"}. Media manager uses this one to add
- * atoms that some of the other versions can't. The applicaiton must be installed on the PATH, or pointed
+ * In order to function, this store uses the command line tools provided by the AtomicParsley application.
+ * Their are different forks of this application on the Internet. The most feature rich version I've
+ * found is at {@link "https://bitbucket.org/shield007/atomicparsley"}. Media manager uses this one to add
+ * atoms that some of the other versions can't. The application must be installed on the PATH, or pointed
  * to by the optional store parameters.
  * </p>
  * <p>
