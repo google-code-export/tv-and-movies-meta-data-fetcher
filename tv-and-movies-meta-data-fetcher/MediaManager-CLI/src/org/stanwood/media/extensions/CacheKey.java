@@ -45,6 +45,7 @@ public class CacheKey {
 		this.number = number;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,6 +55,7 @@ public class CacheKey {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

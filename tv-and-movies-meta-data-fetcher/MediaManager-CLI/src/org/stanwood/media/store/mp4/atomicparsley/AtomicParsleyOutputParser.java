@@ -31,11 +31,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * This class is used to parse the output from the atomic parsley command.
+ * The output is generated using the option --outputXML.
+ */
 public class AtomicParsleyOutputParser extends XMLParser {
 
 	private final static Log log = LogFactory.getLog(AtomicParsleyOutputParser.class);
 	private Document doc;
 
+	/**
+	 * The constructor
+	 * @param output The output XML of atomic parsley
+	 * @throws MP4Exception
+	 */
 	public AtomicParsleyOutputParser(String output) throws MP4Exception  {
 		try {
 			doc = XMLParser.strToDom(output);
@@ -45,6 +54,11 @@ public class AtomicParsleyOutputParser extends XMLParser {
 		}
 	}
 
+	/**
+	 * Used to list the atoms parsed from the output
+	 * @return List of atoms
+	 * @throws MP4Exception
+	 */
 	public List<IAtom> listAtoms() throws  MP4Exception {
 		try {
 			List<IAtom> atoms = new ArrayList<IAtom>();

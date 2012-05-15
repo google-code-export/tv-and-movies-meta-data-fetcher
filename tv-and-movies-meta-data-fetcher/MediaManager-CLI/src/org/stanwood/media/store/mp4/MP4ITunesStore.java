@@ -110,6 +110,10 @@ public class MP4ITunesStore implements IStore {
 
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),4); //$NON-NLS-1$
 
+	/**
+	 * The constructor
+	 * @param storeInfo The store information
+	 */
 	public MP4ITunesStore(MP4ITunesStoreInfo storeInfo) {
 		this.storeInfo = storeInfo;
 	}

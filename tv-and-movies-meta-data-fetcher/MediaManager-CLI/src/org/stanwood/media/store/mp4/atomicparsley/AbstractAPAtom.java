@@ -17,7 +17,7 @@ public abstract class AbstractAPAtom implements IAtom {
 
 	/**
 	 * The constructor
-	 * @param name The key of the atom
+	 * @param key The key of the atom
 	 */
 	public AbstractAPAtom(MP4AtomKey key) {
 		if (key==null) {

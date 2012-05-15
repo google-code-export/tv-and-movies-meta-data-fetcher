@@ -16,7 +16,12 @@
  */
 package org.stanwood.media.store.mp4;
 
+/** Should be implemented by atoms of type number */
 public interface IAtomNumber extends IAtom {
 
+	/**
+	 * Used to get the value of the atom
+	 * @return The value of the atom
+	 */
 	public long getValue();
 }

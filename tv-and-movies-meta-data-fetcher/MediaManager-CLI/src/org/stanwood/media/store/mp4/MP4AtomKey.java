@@ -19,56 +19,56 @@ package org.stanwood.media.store.mp4;
 
 public enum MP4AtomKey {
 
-	NAME("Name","©nam",MP4AtomKeyType.String),
-	ARTIST("Artist","©ART",MP4AtomKeyType.String),
-	ALBUM_ARTIST("Album Artist","aART",MP4AtomKeyType.String),
-	ALBUM("Album","©alb",MP4AtomKeyType.String),
-	GROUPING("Grouping","grup",MP4AtomKeyType.String),
-	COMPOSER("Composer","©wrt",MP4AtomKeyType.String),
-	COMMENT("Comment","©cmt",MP4AtomKeyType.String),
-	FLAVOUR("Flavour","flvr",MP4AtomKeyType.String),
-	GENRE_PRE_DEFINED("Genre, Pre-defined","gnre",MP4AtomKeyType.String),
-	GENRE_USER_DEFINED("Genre, User defined","©gen",MP4AtomKeyType.String),
-	RELEASE_DATE("Release Date","©day",MP4AtomKeyType.Date),
-	TRACK_NUMBER("Track Number","trkn",MP4AtomKeyType.Range),
-	DISK_NUMBER("Disc Number","disk",MP4AtomKeyType.Range),
-	TEMPO("Tempo","tmpo",MP4AtomKeyType.Short),
-	COMPILATION("Compilation","cpil",MP4AtomKeyType.Boolean),
-	TV_SHOW_NAME("TV Show Name","tvsh",MP4AtomKeyType.String),
-	TV_EPISODE_ID("TV Episode ID","tven",MP4AtomKeyType.String),
-	TV_SEASON("TV Season Number","tvsn",MP4AtomKeyType.Integer),
-	TV_EPISODE("TV Episode Number","tves",MP4AtomKeyType.Integer),
-	TV_NETWORK("TV Network","tvnn",MP4AtomKeyType.String),
-	DESCRIPTION("Description","desc",MP4AtomKeyType.String),
-	DESCRIPTION_STORE("Store Description","sdes",MP4AtomKeyType.String),
-	DESCRIPTION_LONG("Long description","ldes",MP4AtomKeyType.String),
-	LYRICS("Lyrics","©lyr",MP4AtomKeyType.String),
-	SORT_NAME("Sort Name","sonm",MP4AtomKeyType.String),
-	SORT_ARTIST("Sort Artist","soar",MP4AtomKeyType.String),
-	SORT_ALBUM_ARTIST("Sort Album Artist","soaa",MP4AtomKeyType.String),
-	SORT_ALBUM("Sort Album","soal",MP4AtomKeyType.String),
-	SORT_COMPOSER("Sort Composer","soco",MP4AtomKeyType.String),
-	SORT_SHOW("Sort Show","sosn",MP4AtomKeyType.String),
-	ARTWORK("Cover Artwork","covr",MP4AtomKeyType.Artwork),
-	COPYRIGHT("Copyright","cprt",MP4AtomKeyType.String),
-	ENCODING_TOOL("Encoding Tool","©too",MP4AtomKeyType.String),
-	ENCODED_BY("Encoded By","©enc",MP4AtomKeyType.String),
-	PURCHASED_DATE("Purchase Date","purd",MP4AtomKeyType.Date),
-	PODCAST("Podcast","pcst",MP4AtomKeyType.Boolean),
-	PODCAST_URL("Podcast URL","purl",MP4AtomKeyType.URL),
-	KEYWORDS("Keywords","keyw",MP4AtomKeyType.String),
-	CATEGORY("Category","catg",MP4AtomKeyType.String),
-	HD("HD Video","hdvd",MP4AtomKeyType.Byte),
-	MEDIA_TYPE("Media Type","stik",MP4AtomKeyType.Enum),
-	RATING("Content Rating","rtng",MP4AtomKeyType.Byte),
-	GAPLESS_PLAYBACK("Gapless Playback","pgap",MP4AtomKeyType.Boolean),
-	PURCHASE_ACCOUNT("Purchase Account","apID",MP4AtomKeyType.String),
-	ACCOUNT_TYPE("Account Type","akID",MP4AtomKeyType.Byte),
-	CATALOG_ID("Catalog ID","cnID"	,MP4AtomKeyType.Integer),
-	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer),
-	CERTIFICATION("Certification","----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes"),
-	INFO("Movie/Show Information","----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes"),
-	MM_VERSION("MediaManager Version","----",MP4AtomKeyType.String,"mmVer","com.google.code");
+	NAME("Name","©nam",MP4AtomKeyType.String), //$NON-NLS-2$
+	ARTIST("Artist","©ART",MP4AtomKeyType.String), //$NON-NLS-2$
+	ALBUM_ARTIST("Album Artist","aART",MP4AtomKeyType.String), //$NON-NLS-2$
+	ALBUM("Album","©alb",MP4AtomKeyType.String), //$NON-NLS-2$
+	GROUPING("Grouping","grup",MP4AtomKeyType.String), //$NON-NLS-2$
+	COMPOSER("Composer","©wrt",MP4AtomKeyType.String), //$NON-NLS-2$
+	COMMENT("Comment","©cmt",MP4AtomKeyType.String), //$NON-NLS-2$
+	FLAVOUR("Flavour","flvr",MP4AtomKeyType.String), //$NON-NLS-2$
+	GENRE_PRE_DEFINED("Genre, Pre-defined","gnre",MP4AtomKeyType.String), //$NON-NLS-2$
+	GENRE_USER_DEFINED("Genre, User defined","©gen",MP4AtomKeyType.String), //$NON-NLS-2$
+	RELEASE_DATE("Release Date","©day",MP4AtomKeyType.Date), //$NON-NLS-2$
+	TRACK_NUMBER("Track Number","trkn",MP4AtomKeyType.Range), //$NON-NLS-2$
+	DISK_NUMBER("Disc Number","disk",MP4AtomKeyType.Range), //$NON-NLS-2$
+	TEMPO("Tempo","tmpo",MP4AtomKeyType.Short), //$NON-NLS-2$
+	COMPILATION("Compilation","cpil",MP4AtomKeyType.Boolean), //$NON-NLS-2$
+	TV_SHOW_NAME("TV Show Name","tvsh",MP4AtomKeyType.String), //$NON-NLS-2$
+	TV_EPISODE_ID("TV Episode ID","tven",MP4AtomKeyType.String), //$NON-NLS-2$
+	TV_SEASON("TV Season Number","tvsn",MP4AtomKeyType.Integer), //$NON-NLS-2$
+	TV_EPISODE("TV Episode Number","tves",MP4AtomKeyType.Integer), //$NON-NLS-2$
+	TV_NETWORK("TV Network","tvnn",MP4AtomKeyType.String), //$NON-NLS-2$
+	DESCRIPTION("Description","desc",MP4AtomKeyType.String), //$NON-NLS-2$
+	DESCRIPTION_STORE("Store Description","sdes",MP4AtomKeyType.String), //$NON-NLS-2$
+	DESCRIPTION_LONG("Long description","ldes",MP4AtomKeyType.String), //$NON-NLS-2$
+	LYRICS("Lyrics","©lyr",MP4AtomKeyType.String), //$NON-NLS-2$
+	SORT_NAME("Sort Name","sonm",MP4AtomKeyType.String), //$NON-NLS-2$
+	SORT_ARTIST("Sort Artist","soar",MP4AtomKeyType.String),//$NON-NLS-2$
+	SORT_ALBUM_ARTIST("Sort Album Artist","soaa",MP4AtomKeyType.String), //$NON-NLS-2$
+	SORT_ALBUM("Sort Album","soal",MP4AtomKeyType.String), //$NON-NLS-2$
+	SORT_COMPOSER("Sort Composer","soco",MP4AtomKeyType.String), //$NON-NLS-2$
+	SORT_SHOW("Sort Show","sosn",MP4AtomKeyType.String), //$NON-NLS-2$
+	ARTWORK("Cover Artwork","covr",MP4AtomKeyType.Artwork), //$NON-NLS-2$
+	COPYRIGHT("Copyright","cprt",MP4AtomKeyType.String), //$NON-NLS-2$
+	ENCODING_TOOL("Encoding Tool","©too",MP4AtomKeyType.String), //$NON-NLS-2$
+	ENCODED_BY("Encoded By","©enc",MP4AtomKeyType.String), //$NON-NLS-2$
+	PURCHASED_DATE("Purchase Date","purd",MP4AtomKeyType.Date), //$NON-NLS-2$
+	PODCAST("Podcast","pcst",MP4AtomKeyType.Boolean), //$NON-NLS-2$
+	PODCAST_URL("Podcast URL","purl",MP4AtomKeyType.URL), //$NON-NLS-2$
+	KEYWORDS("Keywords","keyw",MP4AtomKeyType.String), //$NON-NLS-2$
+	CATEGORY("Category","catg",MP4AtomKeyType.String), //$NON-NLS-2$
+	HD("HD Video","hdvd",MP4AtomKeyType.Byte), //$NON-NLS-2$
+	MEDIA_TYPE("Media Type","stik",MP4AtomKeyType.Enum), //$NON-NLS-2$
+	RATING("Content Rating","rtng",MP4AtomKeyType.Byte), //$NON-NLS-2$
+	GAPLESS_PLAYBACK("Gapless Playback","pgap",MP4AtomKeyType.Boolean), //$NON-NLS-2$
+	PURCHASE_ACCOUNT("Purchase Account","apID",MP4AtomKeyType.String), //$NON-NLS-2$
+	ACCOUNT_TYPE("Account Type","akID",MP4AtomKeyType.Byte), //$NON-NLS-2$
+	CATALOG_ID("Catalog ID","cnID"	,MP4AtomKeyType.Integer), //$NON-NLS-2$
+	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer), //$NON-NLS-2$
+	CERTIFICATION("Certification","----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes"), //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	INFO("Movie/Show Information","----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes"), //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	MM_VERSION("MediaManager Version","----",MP4AtomKeyType.String,"mmVer","com.google.code"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	private String id;
 	private String displayName;
