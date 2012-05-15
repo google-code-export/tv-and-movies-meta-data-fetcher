@@ -77,7 +77,7 @@ public class MediaDirectory {
 				store.init(getController(),getController().getNativeFolder());
 				store.upgrade(this);
 			} catch (StoreException e) {
-				log.error(MessageFormat.format("Unable to upgrade stores ''{0}''",store.getClass()),e);
+				log.error(MessageFormat.format(Messages.getString("MediaDirectory.UNABLE_UPGRADE_STORES"),store.getClass()),e); //$NON-NLS-1$
 			}
 		}
 	}

@@ -113,7 +113,7 @@ public class Controller {
 			try {
 				fileInfoFetcher = new MediaFileInfoFetcher(getNativeFolder());
 			} catch (StanwoodException e) {
-				throw new ConfigException("Unable to setup media file imformation reader",e);
+				throw new ConfigException(Messages.getString("Controller.UNABLE_SETUP_FILE_FILE_INFO"),e); //$NON-NLS-1$
 			}
 		}
 		if (xbmcMgr == null) {
@@ -434,9 +434,9 @@ public class Controller {
 			try {
 				seenDb.read(new NullProgressMonitor());
 			} catch (FileNotFoundException e) {
-				throw new ConfigException("Unable to read seen database",e);
+				throw new ConfigException(Messages.getString("Controller.UNABLE_READ_SEEN_DB"),e); //$NON-NLS-1$
 			} catch (XMLParserException e) {
-				throw new ConfigException("Unable to read seen database",e);
+				throw new ConfigException(Messages.getString("Controller.UNABLE_READ_SEEN_DB"),e); //$NON-NLS-1$
 			}
 		}
 		return seenDb;

@@ -78,15 +78,15 @@ public class CLIImportMedia extends AbstractLauncher {
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(USE_DEFAULT_OPTION,"dontUseDefaults",false,"Don't use default media directiores"); //$NON-NLS-1$
+		o = new Option(USE_DEFAULT_OPTION,"dontUseDefaults",false,Messages.getString("CLIImportMedia.DONT_USE_DEFAULT_MEDIA_DIRS")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(DELETE_NON_MEDIA_OPTION,"deleteNonMedia",false,"Delete files are that are not media files (use with care)"); //$NON-NLS-1$
+		o = new Option(DELETE_NON_MEDIA_OPTION,"deleteNonMedia",false,Messages.getString("CLIImportMedia.DELETE_NON_MEDIA")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 
-		o = new Option(ACTIONS_OPTION,"actions",false,"Execute actions on new media files"); //$NON-NLS-1$
+		o = new Option(ACTIONS_OPTION,"actions",false,Messages.getString("CLIImportMedia.EXECUTE_ACTIONS")); //$NON-NLS-1$ //$NON-NLS-2$
 		o.setRequired(false);
 		OPTIONS.add(o);
 	}
@@ -129,12 +129,12 @@ public class CLIImportMedia extends AbstractLauncher {
 				try {
 					result = searcher.lookupMedia(file,useDefaults);
 					if (result==null) {
-						log.error(MessageFormat.format("Unable to find media details for file {0}",file));
+						log.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file)); //$NON-NLS-1$
 						continue;
 					}
 				}
 				catch (StanwoodException e) {
-					log.error(MessageFormat.format("Unable to find media details for file {0}",file),e);
+					log.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file),e); //$NON-NLS-1$
 					continue;
 				}
 				moveFileToMediaDir(file, newFiles, result,searcher);
@@ -184,14 +184,14 @@ public class CLIImportMedia extends AbstractLauncher {
 			for (File d : dirs) {
 				if (d !=null && !d.equals(wd.getWatchDir()) && !dirContainsMedia(d)) {
 					if (getController().isTestRun()) {
-						log.info(MessageFormat.format("Unable to deleting folder containing no media {0}, because this is a test run", d));
+						log.info(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_DELETE_FOLDER_TEST_MODE"), d)); //$NON-NLS-1$
 					}
 					else {
-						log.info(MessageFormat.format("Deleting folder containing no media {0}", d));
+						log.info(MessageFormat.format(Messages.getString("CLIImportMedia.DELETEING_FOLDER"), d)); //$NON-NLS-1$
 						try {
 							FileHelper.delete(d);
 						} catch (IOException e) {
-							log.error(MessageFormat.format("Unable to delete folder cotnain no media {0}",d),e);
+							log.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_DELETE_FOLDER"),d),e); //$NON-NLS-1$
 						}
 					}
 
@@ -262,10 +262,10 @@ public class CLIImportMedia extends AbstractLauncher {
 	private void moveFileToMediaDir(File file,final Map<File,List<File>>newFiles,MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
 		MediaDirectory dir = findMediaDir(file, result.getVideo());
 		if (dir==null) {
-			throw new ConfigException(MessageFormat.format("Unable to find media directory for file {0}",file));
+			throw new ConfigException(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DIR"),file)); //$NON-NLS-1$
 		}
 		final File mediaDirLoc = dir.getMediaDirConfig().getMediaDir();
-		log.info(MessageFormat.format("Moving ''{0}'' to media directory ''{1}'' and renaming...",file,mediaDirLoc));
+		log.info(MessageFormat.format(Messages.getString("CLIImportMedia.MOVING_MEDIA_MSG"),file,mediaDirLoc)); //$NON-NLS-1$
 		RenameAction ra = new RenameAction();
 		try {
 			ra.init(dir);
@@ -311,12 +311,12 @@ public class CLIImportMedia extends AbstractLauncher {
 			ra.finished(dir);
 		}
 		catch (ActionException e) {
-			log.error(MessageFormat.format("Unable to move file ''{0}'' into media directory",file),e);
+			log.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_TO_MOVE_FILE"),file),e); //$NON-NLS-1$
 		}
 	}
 
 	private void performActions(List<File> newFiles, MediaDirectory dir) throws ActionException, ConfigException {
-		log.info(MessageFormat.format("Performing actions on new files in media directory ''{0}''", dir.getMediaDirConfig().getMediaDir()));
+		log.info(MessageFormat.format(Messages.getString("CLIImportMedia.PERFORMING_ACTIONS"), dir.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
 		List<IAction> actions = new ArrayList<IAction>(dir.getActions());
 		ActionPerformer actionPerformer = new ActionPerformer(getController(),actions,dir,dir.getMediaDirConfig().getExtensions());
 		actionPerformer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
@@ -371,7 +371,7 @@ public class CLIImportMedia extends AbstractLauncher {
 				extensions.addAll(mediaDir.getMediaDirConfig().getExtensions());
 			}
 		} catch (ConfigException e) {
-			log.error("Unable to read configuration",e);
+			log.error(Messages.getString("CLIImportMedia.UNABLE_READ_CONFIG"),e); //$NON-NLS-1$
 			return false;
 		}
 		files = new ArrayList<File>();
@@ -389,10 +389,10 @@ public class CLIImportMedia extends AbstractLauncher {
 			}
 		}
 		if (files.size()>0) {
-			log.info (MessageFormat.format("Found {0} media files...",files.size()));
+			log.info (MessageFormat.format(Messages.getString("CLIImportMedia.FOUND_MEDIA_FILES"),files.size())); //$NON-NLS-1$
 		}
 		else {
-			log.info("Unable to find any media files");
+			log.info(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA")); //$NON-NLS-1$
 			return false;
 		}
 
