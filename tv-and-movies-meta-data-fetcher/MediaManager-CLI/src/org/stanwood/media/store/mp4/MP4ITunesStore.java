@@ -422,7 +422,7 @@ public class MP4ITunesStore implements IStore {
 				info = controller.getMediaFileInformation(mp4File);
 			}
 		} catch (StanwoodException e) {
-			log.error("Unable to read media information",e);
+			log.error(Messages.getString("MP4ITunesStore.UnableReadMediaInfo"),e); //$NON-NLS-1$
 		}
 		String flavour = getFileFlavor(mp4File,info);
 		genericAtoms(info,mp4Manager, atoms, flavour);
@@ -506,7 +506,7 @@ public class MP4ITunesStore implements IStore {
 					}
 					return artworkAtom;
 				} catch (SocketTimeoutException e) {
-					throw new MP4Exception(MessageFormat.format("Unable to fetch image ''{0}'', timed out",imageUrl.toExternalForm()),e);
+					throw new MP4Exception(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableFetchImage"),imageUrl.toExternalForm()),e); //$NON-NLS-1$
 				} catch (IOException e) {
 					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UNABLE_DOWNLOAD_ARTWORK"),imageUrl, mp4File.getName()),e); //$NON-NLS-1$
 				}
@@ -622,7 +622,7 @@ public class MP4ITunesStore implements IStore {
 				info = controller.getMediaFileInformation(mp4File);
 			}
 		} catch (StanwoodException e) {
-			log.error("Unable to read media information",e);
+			log.error(Messages.getString("MP4ITunesStore.UnableReadMediaInfo"),e); //$NON-NLS-1$
 		}
 		String flavour = getFileFlavor(mp4File,info);
 		genericAtoms(info,mp4Manager, atoms, flavour);
@@ -749,41 +749,41 @@ public class MP4ITunesStore implements IStore {
 
 	@SuppressWarnings("nls")
 	private static String certToItunesCert(Certification cert) {
-		if (cert.getType().equalsIgnoreCase("mpaa")) {
+		if (cert.getType().equalsIgnoreCase("mpaa")) { //$NON-NLS-1$
 			String certValue = cert.getCertification();
-			certValue = certValue.replaceAll("Rated ","");
-			if (certValue.equalsIgnoreCase("G")) {
-				return "mpaa|PG|100|";
+			certValue = certValue.replaceAll("Rated ",""); //$NON-NLS-1$ //$NON-NLS-2$
+			if (certValue.equalsIgnoreCase("G")) { //$NON-NLS-1$
+				return "mpaa|PG|100|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("PG")) {
-				return "mpaa|PG|200|";
+			else if (certValue.equalsIgnoreCase("PG")) { //$NON-NLS-1$
+				return "mpaa|PG|200|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("PG-13")) {
-				return "mpaa|PG-13|300|";
+			else if (certValue.equalsIgnoreCase("PG-13")) { //$NON-NLS-1$
+				return "mpaa|PG-13|300|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("R")) {
-				return "mpaa|R|400|";
+			else if (certValue.equalsIgnoreCase("R")) { //$NON-NLS-1$
+				return "mpaa|R|400|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("NC-17")) {
-				return "mpaa|R|500|";
+			else if (certValue.equalsIgnoreCase("NC-17")) { //$NON-NLS-1$
+				return "mpaa|R|500|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-Y")) {
-				return "us-tv|TV-V|100|";
+			else if (certValue.equalsIgnoreCase("TV-Y")) { //$NON-NLS-1$
+				return "us-tv|TV-V|100|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-Y7")) {
-				return "us-tv|TV-V7|200|";
+			else if (certValue.equalsIgnoreCase("TV-Y7")) { //$NON-NLS-1$
+				return "us-tv|TV-V7|200|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-G")) {
-				return "us-tv|TV-G|300|";
+			else if (certValue.equalsIgnoreCase("TV-G")) { //$NON-NLS-1$
+				return "us-tv|TV-G|300|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-PG")) {
-				return "us-tv|TV-PG|400|";
+			else if (certValue.equalsIgnoreCase("TV-PG")) { //$NON-NLS-1$
+				return "us-tv|TV-PG|400|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-14")) {
-				return "us-tv|TV-14|500|";
+			else if (certValue.equalsIgnoreCase("TV-14")) { //$NON-NLS-1$
+				return "us-tv|TV-14|500|"; //$NON-NLS-1$
 			}
-			else if (certValue.equalsIgnoreCase("TV-MA")) {
-				return "us-tv|TV-MA|600|";
+			else if (certValue.equalsIgnoreCase("TV-MA")) { //$NON-NLS-1$
+				return "us-tv|TV-MA|600|"; //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -869,9 +869,9 @@ public class MP4ITunesStore implements IStore {
 					}
 				}
 				catch (MP4Exception e) {
-					throw new StoreException(MessageFormat.format("Unable to process mp4 atoms of file ''{0}''",file),e);
+					throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableProcessMP4Atoms"),file),e); //$NON-NLS-1$
 				} catch (ConfigException e) {
-					throw new StoreException("Unable to read seen databse",e);
+					throw new StoreException(Messages.getString("MP4ITunesStore.UnableReadSeenDB"),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -949,17 +949,17 @@ public class MP4ITunesStore implements IStore {
 					}
 				}
 				catch (ActionException e) {
-					log.error(MessageFormat.format("Unable to read film details of file ''{0}''", file.getAbsoluteFile()));
+					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableReadFileDetails"), file.getAbsoluteFile())); //$NON-NLS-1$
 				}
 			}
-			log.info(MessageFormat.format("Updated atoms of file ''{0}''",file));
+			log.info(MessageFormat.format(Messages.getString("MP4ITunesStore.UpdateAtomsOfFile"),file)); //$NON-NLS-1$
 		}
 		catch (StoreException e) {
-			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+			throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableReadFileDetails1"),file),e); //$NON-NLS-1$
 		} catch (MP4Exception e) {
-			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+			throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableReadFileDetails1"),file),e); //$NON-NLS-1$
 		} catch (ActionException e) {
-			throw new StoreException(MessageFormat.format("Unable to find media details for file ''{0}''",file),e);
+			throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableReadFileDetails1"),file),e); //$NON-NLS-1$
 		}
 	}
 
@@ -968,10 +968,10 @@ public class MP4ITunesStore implements IStore {
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
 			StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
 			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
-				log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
+				log.info(MessageFormat.format(Messages.getString("MP4ITunesStore.UpgradingStore"),storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
 				upgradeMediaFiles(mediaDirectory,mediaDirectory.getMediaDirConfig().getMediaDir());
 				saveStoreVersion(mediaDirectory);
-				log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
+				log.info(MessageFormat.format(Messages.getString("MP4ITunesStore.UpgradeComplete"),storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
 			}
 	}
 
@@ -981,12 +981,12 @@ public class MP4ITunesStore implements IStore {
 		try {
 			configFile = new File(mediaDirectory.getController().getConfigDir(),CONFIG_FILE_NAME);
 		} catch (ConfigException e1) {
-			throw new StoreException("Unable to read store version",e1);
+			throw new StoreException(Messages.getString("MP4ITunesStore.UnableReadStoreVersion"),e1); //$NON-NLS-1$
 		}
 		Properties props = readStoreConfig(mediaDirectory, configFile);
 		Integer num = findMediaDirNumber(mediaDirectory,props);
 		if (num==null) {
-			num = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0"));
+			num = Integer.parseInt(props.getProperty(CONFIG_NUM_DIRS,"0")); //$NON-NLS-1$
 			props.setProperty(CONFIG_NUM_DIRS,String.valueOf(num+1));
 		}
 
@@ -1001,14 +1001,14 @@ public class MP4ITunesStore implements IStore {
 
 		}
 		catch (IOException e) {
-			throw new StoreException(MessageFormat.format("Unable to wtite configuration file ''{0}''",configFile),e);
+			throw new StoreException(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableWriteCOnfig"),configFile),e); //$NON-NLS-1$
 		}
 		finally  {
 			if (fs!=null) {
 				try {
 					fs.close();
 				} catch (IOException e) {
-					log.error(MessageFormat.format("Unable to close file: {0}",configFile),e);
+					log.error(MessageFormat.format(Messages.getString("MP4ITunesStore.UnableCloseFile"),configFile),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -1025,14 +1025,14 @@ public class MP4ITunesStore implements IStore {
 			} catch (FileNotFoundException e) {
 
 			} catch (IOException e) {
-				throw new StoreException("Unable to read store configuration",e);
+				throw new StoreException(Messages.getString("MP4ITunesStore.UnableReadConfig"),e); //$NON-NLS-1$
 			}
 			finally {
 				if (is!=null) {
 					try {
 						is.close();
 					} catch (IOException e) {
-						log.error("Unable to close stream",e);
+						log.error(Messages.getString("MP4ITunesStore.UnableCloseStream"),e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -1077,7 +1077,7 @@ public class MP4ITunesStore implements IStore {
 			return new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 		}
 		catch (ConfigException e) {
-			throw new StoreException("Unable to read store configuration",e);
+			throw new StoreException(Messages.getString("MP4ITunesStore.UnableReadConfig"),e); //$NON-NLS-1$
 		}
 	}
 

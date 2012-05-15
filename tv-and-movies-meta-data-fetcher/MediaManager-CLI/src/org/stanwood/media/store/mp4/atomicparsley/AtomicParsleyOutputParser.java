@@ -50,7 +50,7 @@ public class AtomicParsleyOutputParser extends XMLParser {
 			doc = XMLParser.strToDom(output);
 		}
 		catch (XMLParserException e) {
-			throw new MP4Exception("Unable to parse AtomicParsley output",e);
+			throw new MP4Exception(Messages.getString("AtomicParsleyOutputParser.UnableParseAtomicParsleyOutput"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -72,18 +72,18 @@ public class AtomicParsleyOutputParser extends XMLParser {
 			return atoms;
 		}
 		catch (XMLParserException e) {
-			throw new MP4Exception("Unable to parse AtomicParsley output",e);
+			throw new MP4Exception(Messages.getString("AtomicParsleyOutputParser.UnableParseAtomicParsleyOutput"),e); //$NON-NLS-1$
 		}
 	}
 
 	@SuppressWarnings("nls")
 	private IAtom parseAtom(Element node) throws MP4Exception {
-		String name = node.getAttribute("name");
+		String name = node.getAttribute("name"); //$NON-NLS-1$
 		if (name.length()==0) {
-			throw new MP4Exception("Unable to get name of atom");
+			throw new MP4Exception(Messages.getString("AtomicParsleyOutputParser.UnableGetNameOfAtom")); //$NON-NLS-1$
 		}
-		String rDnsDomain = node.getAttribute("reverseDNSdomain");
-		String rDnsName = node.getAttribute("reverseDNSname");
+		String rDnsDomain = node.getAttribute("reverseDNSdomain"); //$NON-NLS-1$
+		String rDnsName = node.getAttribute("reverseDNSname"); //$NON-NLS-1$
 		MP4AtomKey key;
 		if (rDnsDomain!=null && rDnsDomain.length()>0 &&
 				rDnsName!=null && rDnsName.length()>0) {
@@ -93,49 +93,49 @@ public class AtomicParsleyOutputParser extends XMLParser {
 			key = MP4AtomKey.fromKey(name);
 		}
 		if (key==null) {
-			log.warn(MessageFormat.format("Unable to find atom details with name ''{0}'', dns domain ''{1}'', dns name ''{2}''",name,rDnsDomain,rDnsName));
+			log.warn(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.UnableFindAtom"),name,rDnsDomain,rDnsName)); //$NON-NLS-1$
 			return null;
 		}
-		if (node.getNodeName().equals("atomString")) {
+		if (node.getNodeName().equals("atomString")) { //$NON-NLS-1$
 			return new APAtomString(key, node.getTextContent());
 		}
-		else if (node.getNodeName().equals("atomRange")) {
-			short count = (short)parseIntAttribute(node, name,"count");
+		else if (node.getNodeName().equals("atomRange")) { //$NON-NLS-1$
+			short count = (short)parseIntAttribute(node, name,"count"); //$NON-NLS-1$
 			short max = 0;
-			if (node.hasAttribute("max")) {
-				max = (short)parseIntAttribute(node, name,"max");
+			if (node.hasAttribute("max")) { //$NON-NLS-1$
+				max = (short)parseIntAttribute(node, name,"max"); //$NON-NLS-1$
 			}
 			return new APAtomRange(key, count, max);
 		}
-		else if (node.getNodeName().equals("atomNumber")) {
-			return new APAtomNumber(key,parseLongAttribute(node, name,"value"));
+		else if (node.getNodeName().equals("atomNumber")) { //$NON-NLS-1$
+			return new APAtomNumber(key,parseLongAttribute(node, name,"value")); //$NON-NLS-1$
 		}
-		else if (node.getNodeName().equals("atomBoolean")) {
-			String value = node.getAttribute("value");
-			if (value.equals("1") || value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true")) {
+		else if (node.getNodeName().equals("atomBoolean")) { //$NON-NLS-1$
+			String value = node.getAttribute("value"); //$NON-NLS-1$
+			if (value.equals("1") || value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return new APAtomBoolean(key, true);
 			}
 			else {
 				return new APAtomBoolean(key, false);
 			}
 		}
-		else if (node.getNodeName().equals("atomArtwork")) {
+		else if (node.getNodeName().equals("atomArtwork")) { //$NON-NLS-1$
 			return new APAtomArtworkSummary(key, 1);
 		}
-		throw new MP4Exception(MessageFormat.format("Unsupported atom node {0}",node.getNodeName()));
+		throw new MP4Exception(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.UnsupportedAtomNode"),node.getNodeName())); //$NON-NLS-1$
 	}
 
 	protected int parseIntAttribute(Element node, String name,String attributeName)
 			throws MP4Exception {
 		String value = node.getAttribute(attributeName);
 		if (value.length()==0) {
-			throw new MP4Exception(MessageFormat.format("Empty value for atom {0}",name));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.EmptyValue"),name)); //$NON-NLS-1$
 		}
 		try {
 			return Integer.parseInt(value);
 		}
 		catch (NumberFormatException e) {
-			throw new MP4Exception(MessageFormat.format("Unable to parse number from value {0} for atom {1}",value,name));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.UnableParseValue"),value,name)); //$NON-NLS-1$
 		}
 	}
 
@@ -143,13 +143,13 @@ public class AtomicParsleyOutputParser extends XMLParser {
 			throws MP4Exception {
 		String value = node.getAttribute(attributeName);
 		if (value.length()==0) {
-			throw new MP4Exception(MessageFormat.format("Empty value for atom {0}",name));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.EmptyValue"),name)); //$NON-NLS-1$
 		}
 		try {
 			return Long.parseLong(value);
 		}
 		catch (NumberFormatException e) {
-			throw new MP4Exception(MessageFormat.format("Unable to parse number from value {0} for atom {1}",value,name));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("AtomicParsleyOutputParser.UnableParseValue"),value,name)); //$NON-NLS-1$
 		}
 	}
 }

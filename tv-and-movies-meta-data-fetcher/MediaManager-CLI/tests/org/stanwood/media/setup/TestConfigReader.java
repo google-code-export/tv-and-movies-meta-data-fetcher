@@ -592,6 +592,14 @@ public class TestConfigReader {
 //
 //	}
 
+	/**
+	 * Used to create a configuration reader
+	 * @param testConfig The configuration
+	 * @return The configuration reader
+	 * @throws IOException Thrown if their is a IO problem
+	 * @throws FileNotFoundException Thrown if a file is not found
+	 * @throws ConfigException Thrown if their are other problems
+	 */
 	public static ConfigReader createConfigReader(StringBuilder testConfig)
 	throws IOException, FileNotFoundException, ConfigException {
 		File configFile = FileHelper.createTmpFileWithContents(testConfig);

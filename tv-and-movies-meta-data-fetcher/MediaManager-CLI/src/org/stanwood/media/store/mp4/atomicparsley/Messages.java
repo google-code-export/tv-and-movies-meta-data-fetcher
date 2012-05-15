@@ -14,28 +14,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store;
+package org.stanwood.media.store.mp4.atomicparsley;
 
-import org.stanwood.media.extensions.ExtensionException;
-import org.stanwood.media.extensions.ExtensionInfo;
-import org.stanwood.media.extensions.ExtensionType;
-import org.stanwood.media.extensions.ParameterType;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
-/**
- * A fake store info used for testing
- */
-public class FakeStoreInfo extends ExtensionInfo<FakeStore> {
+public class Messages {
+	private static final String BUNDLE_NAME = "org.stanwood.media.store.mp4.atomicparsley.messages"; //$NON-NLS-1$
 
-	/**
-	 * The constructor
-	 */
-	public FakeStoreInfo() {
-		super(FakeStore.class.getName(), ExtensionType.STORE,new ParameterType[0]);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+			.getBundle(BUNDLE_NAME);
+
+	private Messages() {
 	}
 
-	@Override
-	protected FakeStore createExtension() throws ExtensionException {
-		return new FakeStore();
+	public static String getString(String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			return '!' + key + '!';
+		}
 	}
-
 }

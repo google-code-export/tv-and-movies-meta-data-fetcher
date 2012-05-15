@@ -33,7 +33,7 @@ import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
 
 /**
- * Used to test the {@link MP4v2CLIManager} class.
+ * Used to test the {@link MP4AtomicParsleyManager} class.
  */
 @SuppressWarnings("nls")
 public class TestMP4AtomicParsleyManager {

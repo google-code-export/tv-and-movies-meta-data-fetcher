@@ -53,19 +53,19 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	@Override
 	public void init(File nativeDir) throws MP4Exception {
 		if (apCmdPath == null) {
-			apCmdPath = NativeHelper.getNativeApplication(nativeDir,"AtomicParsley");
+			apCmdPath = NativeHelper.getNativeApplication(nativeDir,"AtomicParsley"); //$NON-NLS-1$
 		}
 		boolean errors = false;
 		if (!checkCommand(apCmdPath)) {
-			log.error(MessageFormat.format("Unable to execute command {0}",apCmdPath));
+			log.error(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UnableExecuteCommand"),apCmdPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (!checkCommandVersion()) {
-			log.error(MessageFormat.format("Unable to find or execute command ''{0}''.",apCmdPath));
+			log.error(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UnableFindCommand"),apCmdPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (errors) {
-			throw new MP4Exception("Required system command not found");
+			throw new MP4Exception(Messages.getString("MP4AtomicParsleyManager.CommandNotFound")); //$NON-NLS-1$
 		}
 	}
 
@@ -77,7 +77,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		if (!mp4File.exists()) {
-			throw new MP4Exception(MessageFormat.format("Unable to find mp4 file {0}",mp4File));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UnableFindMp4File"),mp4File)); //$NON-NLS-1$
 		}
 		String output = getCommandOutput(true,false,true,apCmdPath,mp4File,"--outputXML"); //$NON-NLS-1$
 		AtomicParsleyOutputParser parser = new AtomicParsleyOutputParser(output);
@@ -118,7 +118,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 			tempFile = FileHelper.createTempFile("tempmedia", ".mp4"); //$NON-NLS-1$ //$NON-NLS-2$
 			args.add(tempFile);
 		} catch (IOException e) {
-			throw new MP4Exception("Unable to create temp file",e);
+			throw new MP4Exception(Messages.getString("MP4AtomicParsleyManager.UnableCreateTmpFile"),e); //$NON-NLS-1$
 		}
 		if (hasArtwrokAtom(atoms)) {
 			args.add("--artwork"); //$NON-NLS-1$
@@ -127,7 +127,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		for (IAtom atom : atoms) {
 			if (atom.getKey().getDnsName()!=null) {
 				args.add("--manualAtomRemove"); //$NON-NLS-1$
-				args.add("moov.udta.meta.ilst.----.name:["+atom.getKey().getDnsName()+"]"); //$NON-NLS-1$
+				args.add("moov.udta.meta.ilst.----.name:["+atom.getKey().getDnsName()+"]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -142,12 +142,12 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				FileHelper.move(tempFile, mp4File);
 			}
 			catch (IOException e) {
-				throw new MP4Exception(MessageFormat.format("Unable to move file ''{0}'' to ''{1}''",tempFile,mp4File),e);
+				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UnableMoveFIle"),tempFile,mp4File),e); //$NON-NLS-1$
 			}
 
 		}
 		else {
-			throw new MP4Exception(MessageFormat.format("Unable to update MP4 metadata of file ''{0}''",mp4File));
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UnableUpdateMetadata"),mp4File)); //$NON-NLS-1$
 		}
 
 		for (IAtom atom : atoms) {
@@ -260,16 +260,16 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				int exitCode = exec.execute(cmdLine);
 				if (failOnExitCode && exitCode!=0) {
 	                log.error(capture.toString());
-					throw new MP4Exception(MessageFormat.format("System command returned a non zero exit code ''{0}'': {1}",exitCode,cmdLine.toString()));
+					throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.NON_ZERO_EXIT_CODE"),exitCode,cmdLine.toString())); //$NON-NLS-1$
 				}
 			}
 			catch (ExecuteException e) {
 				log.error(capture.toString());
-				throw new MP4Exception(MessageFormat.format("Unable to execute system command: {0}" ,cmdLine.toString()),e);
+				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UNABLE_EXEC_COMMAND") ,cmdLine.toString()),e); //$NON-NLS-1$
 			}
 			return capture.toString();
 		} catch (IOException e) {
-			throw new MP4Exception(MessageFormat.format("Unable to execute system command: {0}" ,cmdLine.toString()),e);
+			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UNABLE_EXEC_COMMAND") ,cmdLine.toString()),e); //$NON-NLS-1$
 		}
 	}
 
@@ -316,7 +316,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		else {
 			File jpegFile = convertImageToJpeg(tmp);
 			if (!isAtomicParsleyJpeg(jpegFile)) {
-				throw new IOException(MessageFormat.format("Unable to convert image {0} to a valid AtomicParsley image",imageUrl.toExternalForm()));
+				throw new IOException(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UNABLE_CONVERT_IMAGE"),imageUrl.toExternalForm())); //$NON-NLS-1$
 			}
 			FileHelper.delete(tmp);
 			return jpegFile;
@@ -347,7 +347,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 	private static File convertImageToJpeg(File artworkFile) throws IOException {
 		File jpgArtwork = FileHelper.createTempFile("artwork", ".jpg"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (log.isDebugEnabled()) {
-			log.debug(MessageFormat.format("Convert downloaded image {0} into jpg {1}",artworkFile,jpgArtwork));
+			log.debug(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.CONVERTED_IMG_MSG"),artworkFile,jpgArtwork)); //$NON-NLS-1$
 		}
 		BufferedImage bufferedImage = ImageIO.read(artworkFile);
 		ImageIO.write(bufferedImage, "jpg", jpgArtwork); //$NON-NLS-1$

@@ -19,56 +19,56 @@ package org.stanwood.media.store.mp4;
 
 public enum MP4AtomKey {
 
-	NAME("Name","©nam",MP4AtomKeyType.String), //$NON-NLS-2$
-	ARTIST("Artist","©ART",MP4AtomKeyType.String), //$NON-NLS-2$
-	ALBUM_ARTIST("Album Artist","aART",MP4AtomKeyType.String), //$NON-NLS-2$
-	ALBUM("Album","©alb",MP4AtomKeyType.String), //$NON-NLS-2$
-	GROUPING("Grouping","grup",MP4AtomKeyType.String), //$NON-NLS-2$
-	COMPOSER("Composer","©wrt",MP4AtomKeyType.String), //$NON-NLS-2$
-	COMMENT("Comment","©cmt",MP4AtomKeyType.String), //$NON-NLS-2$
-	FLAVOUR("Flavour","flvr",MP4AtomKeyType.String), //$NON-NLS-2$
-	GENRE_PRE_DEFINED("Genre, Pre-defined","gnre",MP4AtomKeyType.String), //$NON-NLS-2$
-	GENRE_USER_DEFINED("Genre, User defined","©gen",MP4AtomKeyType.String), //$NON-NLS-2$
-	RELEASE_DATE("Release Date","©day",MP4AtomKeyType.Date), //$NON-NLS-2$
-	TRACK_NUMBER("Track Number","trkn",MP4AtomKeyType.Range), //$NON-NLS-2$
-	DISK_NUMBER("Disc Number","disk",MP4AtomKeyType.Range), //$NON-NLS-2$
-	TEMPO("Tempo","tmpo",MP4AtomKeyType.Short), //$NON-NLS-2$
-	COMPILATION("Compilation","cpil",MP4AtomKeyType.Boolean), //$NON-NLS-2$
-	TV_SHOW_NAME("TV Show Name","tvsh",MP4AtomKeyType.String), //$NON-NLS-2$
-	TV_EPISODE_ID("TV Episode ID","tven",MP4AtomKeyType.String), //$NON-NLS-2$
-	TV_SEASON("TV Season Number","tvsn",MP4AtomKeyType.Integer), //$NON-NLS-2$
-	TV_EPISODE("TV Episode Number","tves",MP4AtomKeyType.Integer), //$NON-NLS-2$
-	TV_NETWORK("TV Network","tvnn",MP4AtomKeyType.String), //$NON-NLS-2$
-	DESCRIPTION("Description","desc",MP4AtomKeyType.String), //$NON-NLS-2$
-	DESCRIPTION_STORE("Store Description","sdes",MP4AtomKeyType.String), //$NON-NLS-2$
-	DESCRIPTION_LONG("Long description","ldes",MP4AtomKeyType.String), //$NON-NLS-2$
-	LYRICS("Lyrics","©lyr",MP4AtomKeyType.String), //$NON-NLS-2$
-	SORT_NAME("Sort Name","sonm",MP4AtomKeyType.String), //$NON-NLS-2$
-	SORT_ARTIST("Sort Artist","soar",MP4AtomKeyType.String),//$NON-NLS-2$
-	SORT_ALBUM_ARTIST("Sort Album Artist","soaa",MP4AtomKeyType.String), //$NON-NLS-2$
-	SORT_ALBUM("Sort Album","soal",MP4AtomKeyType.String), //$NON-NLS-2$
-	SORT_COMPOSER("Sort Composer","soco",MP4AtomKeyType.String), //$NON-NLS-2$
-	SORT_SHOW("Sort Show","sosn",MP4AtomKeyType.String), //$NON-NLS-2$
-	ARTWORK("Cover Artwork","covr",MP4AtomKeyType.Artwork), //$NON-NLS-2$
-	COPYRIGHT("Copyright","cprt",MP4AtomKeyType.String), //$NON-NLS-2$
-	ENCODING_TOOL("Encoding Tool","©too",MP4AtomKeyType.String), //$NON-NLS-2$
-	ENCODED_BY("Encoded By","©enc",MP4AtomKeyType.String), //$NON-NLS-2$
-	PURCHASED_DATE("Purchase Date","purd",MP4AtomKeyType.Date), //$NON-NLS-2$
-	PODCAST("Podcast","pcst",MP4AtomKeyType.Boolean), //$NON-NLS-2$
-	PODCAST_URL("Podcast URL","purl",MP4AtomKeyType.URL), //$NON-NLS-2$
-	KEYWORDS("Keywords","keyw",MP4AtomKeyType.String), //$NON-NLS-2$
-	CATEGORY("Category","catg",MP4AtomKeyType.String), //$NON-NLS-2$
-	HD("HD Video","hdvd",MP4AtomKeyType.Byte), //$NON-NLS-2$
-	MEDIA_TYPE("Media Type","stik",MP4AtomKeyType.Enum), //$NON-NLS-2$
-	RATING("Content Rating","rtng",MP4AtomKeyType.Byte), //$NON-NLS-2$
-	GAPLESS_PLAYBACK("Gapless Playback","pgap",MP4AtomKeyType.Boolean), //$NON-NLS-2$
-	PURCHASE_ACCOUNT("Purchase Account","apID",MP4AtomKeyType.String), //$NON-NLS-2$
-	ACCOUNT_TYPE("Account Type","akID",MP4AtomKeyType.Byte), //$NON-NLS-2$
-	CATALOG_ID("Catalog ID","cnID"	,MP4AtomKeyType.Integer), //$NON-NLS-2$
-	COUNTRY_CODE("Country Code","sfID",MP4AtomKeyType.Integer), //$NON-NLS-2$
-	CERTIFICATION("Certification","----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes"), //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	INFO("Movie/Show Information","----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes"), //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	MM_VERSION("MediaManager Version","----",MP4AtomKeyType.String,"mmVer","com.google.code"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	NAME(Messages.getString("MP4AtomKey.0"),"©nam",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ARTIST(Messages.getString("MP4AtomKey.1"),"©ART",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ALBUM_ARTIST(Messages.getString("MP4AtomKey.2"),"aART",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ALBUM(Messages.getString("MP4AtomKey.3"),"©alb",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	GROUPING(Messages.getString("MP4AtomKey.4"),"grup",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	COMPOSER(Messages.getString("MP4AtomKey.5"),"©wrt",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	COMMENT(Messages.getString("MP4AtomKey.6"),"©cmt",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	FLAVOUR(Messages.getString("MP4AtomKey.7"),"flvr",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	GENRE_PRE_DEFINED(Messages.getString("MP4AtomKey.8"),"gnre",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	GENRE_USER_DEFINED(Messages.getString("MP4AtomKey.9"),"©gen",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	RELEASE_DATE(Messages.getString("MP4AtomKey.10"),"©day",MP4AtomKeyType.Date),  //$NON-NLS-1$//$NON-NLS-2$
+	TRACK_NUMBER(Messages.getString("MP4AtomKey.11"),"trkn",MP4AtomKeyType.Range),  //$NON-NLS-1$//$NON-NLS-2$
+	DISK_NUMBER(Messages.getString("MP4AtomKey.12"),"disk",MP4AtomKeyType.Range),  //$NON-NLS-1$//$NON-NLS-2$
+	TEMPO(Messages.getString("MP4AtomKey.13"),"tmpo",MP4AtomKeyType.Short),  //$NON-NLS-1$//$NON-NLS-2$
+	COMPILATION(Messages.getString("MP4AtomKey.14"),"cpil",MP4AtomKeyType.Boolean),  //$NON-NLS-1$//$NON-NLS-2$
+	TV_SHOW_NAME(Messages.getString("MP4AtomKey.15"),"tvsh",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	TV_EPISODE_ID(Messages.getString("MP4AtomKey.16"),"tven",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	TV_SEASON(Messages.getString("MP4AtomKey.17"),"tvsn",MP4AtomKeyType.Integer),  //$NON-NLS-1$//$NON-NLS-2$
+	TV_EPISODE(Messages.getString("MP4AtomKey.18"),"tves",MP4AtomKeyType.Integer),  //$NON-NLS-1$//$NON-NLS-2$
+	TV_NETWORK(Messages.getString("MP4AtomKey.19"),"tvnn",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	DESCRIPTION(Messages.getString("MP4AtomKey.20"),"desc",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	DESCRIPTION_STORE(Messages.getString("MP4AtomKey.21"),"sdes",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	DESCRIPTION_LONG(Messages.getString("MP4AtomKey.22"),"ldes",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	LYRICS(Messages.getString("MP4AtomKey.23"),"©lyr",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	SORT_NAME(Messages.getString("MP4AtomKey.24"),"sonm",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	SORT_ARTIST(Messages.getString("MP4AtomKey.25"),"soar",MP4AtomKeyType.String), //$NON-NLS-1$//$NON-NLS-2$
+	SORT_ALBUM_ARTIST(Messages.getString("MP4AtomKey.26"),"soaa",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	SORT_ALBUM(Messages.getString("MP4AtomKey.27"),"soal",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	SORT_COMPOSER(Messages.getString("MP4AtomKey.28"),"soco",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	SORT_SHOW(Messages.getString("MP4AtomKey.29"),"sosn",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ARTWORK(Messages.getString("MP4AtomKey.30"),"covr",MP4AtomKeyType.Artwork),  //$NON-NLS-1$//$NON-NLS-2$
+	COPYRIGHT(Messages.getString("MP4AtomKey.31"),"cprt",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ENCODING_TOOL(Messages.getString("MP4AtomKey.32"),"©too",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ENCODED_BY(Messages.getString("MP4AtomKey.33"),"©enc",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	PURCHASED_DATE(Messages.getString("MP4AtomKey.34"),"purd",MP4AtomKeyType.Date),  //$NON-NLS-1$//$NON-NLS-2$
+	PODCAST(Messages.getString("MP4AtomKey.35"),"pcst",MP4AtomKeyType.Boolean),  //$NON-NLS-1$//$NON-NLS-2$
+	PODCAST_URL(Messages.getString("MP4AtomKey.36"),"purl",MP4AtomKeyType.URL),  //$NON-NLS-1$//$NON-NLS-2$
+	KEYWORDS(Messages.getString("MP4AtomKey.37"),"keyw",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	CATEGORY(Messages.getString("MP4AtomKey.38"),"catg",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	HD(Messages.getString("MP4AtomKey.39"),"hdvd",MP4AtomKeyType.Byte),  //$NON-NLS-1$//$NON-NLS-2$
+	MEDIA_TYPE(Messages.getString("MP4AtomKey.40"),"stik",MP4AtomKeyType.Enum),  //$NON-NLS-1$//$NON-NLS-2$
+	RATING(Messages.getString("MP4AtomKey.41"),"rtng",MP4AtomKeyType.Byte),  //$NON-NLS-1$//$NON-NLS-2$
+	GAPLESS_PLAYBACK(Messages.getString("MP4AtomKey.42"),"pgap",MP4AtomKeyType.Boolean),  //$NON-NLS-1$//$NON-NLS-2$
+	PURCHASE_ACCOUNT(Messages.getString("MP4AtomKey.43"),"apID",MP4AtomKeyType.String),  //$NON-NLS-1$//$NON-NLS-2$
+	ACCOUNT_TYPE(Messages.getString("MP4AtomKey.44"),"akID",MP4AtomKeyType.Byte),  //$NON-NLS-1$//$NON-NLS-2$
+	CATALOG_ID(Messages.getString("MP4AtomKey.45"),"cnID"	,MP4AtomKeyType.Integer),  //$NON-NLS-1$//$NON-NLS-2$
+	COUNTRY_CODE(Messages.getString("MP4AtomKey.46"),"sfID",MP4AtomKeyType.Integer),  //$NON-NLS-1$//$NON-NLS-2$
+	CERTIFICATION(Messages.getString("MP4AtomKey.47"),"----",MP4AtomKeyType.String,"iTunEXTC","com.apple.iTunes"),  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	INFO(Messages.getString("MP4AtomKey.48"),"----",MP4AtomKeyType.String,"iTunMOVI","com.apple.iTunes"),  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	MM_VERSION(Messages.getString("MP4AtomKey.49"),"----",MP4AtomKeyType.String,"mmVer","com.google.code");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	private String id;
 	private String displayName;
@@ -113,7 +113,7 @@ public enum MP4AtomKey {
 
 	public static MP4AtomKey fromRDNS(String name,String domain) {
 		for (MP4AtomKey atom : values()) {
-			if (atom.getId().equals("----")) {
+			if (atom.getId().equals("----")) { //$NON-NLS-1$
 				if (atom.getDnsName().equals(name) && atom.getDnsDomain().equals(domain)) {
 					return atom;
 				}
@@ -132,8 +132,8 @@ public enum MP4AtomKey {
 
 	@Override
 	public String toString() {
-		if (getId().equals("----")) {
-			return "----;"+getDnsDomain()+";"+getDnsName();
+		if (getId().equals("----")) { //$NON-NLS-1$
+			return "----;"+getDnsDomain()+";"+getDnsName(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
 			return getId();
