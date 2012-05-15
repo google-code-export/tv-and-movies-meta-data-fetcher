@@ -22,6 +22,7 @@ public class FakeSource extends XBMCSource {
 
 	/**
 	 * The constructor
+	 * @param sourceInfo The source information
 	 * @param mgr The addon manager
 	 * @param addonId The ID of the sources XBMC addon
 	 * @throws XBMCException Thrown if their are any problems

@@ -346,6 +346,10 @@ public class PodCastActionTest {
 
 		private ExtensionInfo<? extends ISource> sourceInfo;
 
+		/**
+		 * The Constructor
+		 * @param sourceInfo The source information
+		 */
 		public DummySource(DummySourceInfo sourceInfo) {
 			this.sourceInfo = sourceInfo;
 		}
@@ -418,6 +422,7 @@ public class PodCastActionTest {
 			return new SearchResult("The Usual Suspects",DummySource.class.getName(),"http://blah/1234",part,Mode.FILM);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public ExtensionInfo<? extends ISource> getInfo() {
 			return sourceInfo;

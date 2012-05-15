@@ -61,11 +61,11 @@ public class MediaFileInfoFetcher {
 		mediaInfoCmdPath = NativeHelper.getNativeApplication(nativeDir,"mediainfo"); //$NON-NLS-1$
 		boolean errors = false;
 		if (!checkCommand(mediaInfoCmdPath)) {
-			log.error(MessageFormat.format("Unable to execute command {0}",mediaInfoCmdPath));
+			log.error(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UNABLE_EXEC_COMMAND"),mediaInfoCmdPath)); //$NON-NLS-1$
 			errors = true;
 		}
 		if (errors) {
-			throw new StanwoodException("Required system command not found");
+			throw new StanwoodException(Messages.getString("MediaFileInfoFetcher.RequiredCommandNotFound")); //$NON-NLS-1$
 		}
 
 		infoCache = new LRUMapCache<File,IMediaFileInfo>(100);
@@ -84,30 +84,30 @@ public class MediaFileInfoFetcher {
 			try {
 				File infoFile = FileHelper.createTempFile("output", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (!infoFile.delete() && infoFile.exists()) {
-					throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+					throw new IOException(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UnableDeleteFile"), infoFile)); //$NON-NLS-1$
 				}
 				try {
-					getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$
+					getCommandOutput(true,true,true,mediaInfoCmdPath,"--Output=XML","--Full","--LogFile="+infoFile.getAbsolutePath(),file.getAbsolutePath());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 				}
 				catch (StanwoodException e) {
-					log.error(MessageFormat.format("Unable to read media information for file ''{0}''", file),e);
+					log.error(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UnableReadMediaInfo"), file),e); //$NON-NLS-1$
 					return null;
 				}
 				try
 				{
 					Document dom = XMLParser.parse(infoFile, null);
 					if (!infoFile.delete() && infoFile.exists()) {
-						throw new IOException(MessageFormat.format("Unable to delete file {0}", infoFile));
+						throw new IOException(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UnableDeleteFile"), infoFile)); //$NON-NLS-1$
 					}
 					info = MediaInfoFactory.createMediaInfo(file,dom);
 					infoCache.put(file,info);
 				}
 				catch (XMLParserException e ) {
-					log.error(MessageFormat.format("Unable to get media inforamtion for file {0} as the xml is not valid", infoFile),e);
+					log.error(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UnableGetMediaInfo"), infoFile),e); //$NON-NLS-1$
 					return null;
 				}
 			} catch (IOException e) {
-				throw new StanwoodException("Unable to create temp file");
+				throw new StanwoodException(Messages.getString("MediaFileInfoFetcher.UnableCreateTmpFile")); //$NON-NLS-1$
 			}
 		}
 		return info;
@@ -157,11 +157,11 @@ public class MediaFileInfoFetcher {
 			int exitCode = exec.execute(cmdLine);
 			if (failOnExitCode && exitCode!=0) {
                 log.error(capture.toString());
-				throw new StanwoodException(MessageFormat.format("System command returned a non zero exit code ''{0}'': {1}",exitCode,cmdLine.toString()));
+				throw new StanwoodException(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.NON_ZERO"),exitCode,cmdLine.toString())); //$NON-NLS-1$
 			}
 			return capture.toString();
 		} catch (IOException e) {
-			throw new StanwoodException(MessageFormat.format("Unable to execute system command: {0}" ,cmdLine.toString()),e);
+			throw new StanwoodException(MessageFormat.format(Messages.getString("MediaFileInfoFetcher.UnableExecuteSysCmd") ,cmdLine.toString()),e); //$NON-NLS-1$
 		}
 	}
 }

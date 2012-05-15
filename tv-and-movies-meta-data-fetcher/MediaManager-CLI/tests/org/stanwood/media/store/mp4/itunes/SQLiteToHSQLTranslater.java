@@ -16,12 +16,21 @@
  */
 package org.stanwood.media.store.mp4.itunes;
 
+/**
+ * Used to translate sql in sqlite3 format to HSQLDB.
+ *
+ */
 public class SQLiteToHSQLTranslater {
 
+	/**
+	 * Used to translate sql in sqlite3 format to HSQLDB.
+	 * @param sql sqlite3 SQL
+	 * @return hsqlsb sql
+	 */
 	public static String translateSQL(String sql) {
-		sql = sql.replaceAll("TEXT", "varchar(255)");
-		if (sql.startsWith("create unique index")) {
-			sql = sql.replaceAll("unique index if not exists 'loction_index'", "unique index location_index");
+		sql = sql.replaceAll("TEXT", "varchar(255)");  //$NON-NLS-1$//$NON-NLS-2$
+		if (sql.startsWith("create unique index")) { //$NON-NLS-1$
+			sql = sql.replaceAll("unique index if not exists 'loction_index'", "unique index location_index");  //$NON-NLS-1$//$NON-NLS-2$
 		}
 		return sql;
 	}

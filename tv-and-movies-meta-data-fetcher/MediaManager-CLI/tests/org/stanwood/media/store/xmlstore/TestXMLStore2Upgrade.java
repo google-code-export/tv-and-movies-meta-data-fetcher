@@ -50,8 +50,6 @@ import org.stanwood.media.util.FileHelper;
 @SuppressWarnings("nls")
 public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 
-	private final static String LS = System.getProperty("line.separator");
-
 	/**
 	 * Used to setup the exit handler
 	 * @throws Exception Thrown if their are any problems

@@ -20,8 +20,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * Used to test the class {@link ResolutionFormat}
+ */
 public class TestResolutionFormat {
 
+	/**
+	 * Used to check that the formations are detected correctly
+	 */
 	@Test
 	public void testFormats() {
 		 ResolutionFormat format = ResolutionFormat.getFormat(1280, 720, false);
@@ -38,6 +44,6 @@ public class TestResolutionFormat {
 		 Assert.assertEquals("16:9",format.getRatio().getDescription()); //$NON-NLS-1$
 
 		 format = ResolutionFormat.getFormat(640, 352, false);
-		 Assert.assertEquals(format, ResolutionFormat.Format_480p);		 
+		 Assert.assertEquals(format, ResolutionFormat.Format_480p);
 	}
 }

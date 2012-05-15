@@ -88,6 +88,9 @@ public class TestShowSearcher {
 		}
 	}
 
+	/**
+	 * Used to test the patterns can be compiled
+	 */
 	@Test
 	public void testTokenPatterns() {
 		for (Token t : Token.values()) {
