@@ -3,7 +3,7 @@
 require 'tmpdir'
 require 'fileutils'
 
-VERSION="2.0"
+VERSION="2.1"
 
 ################# Functions ##############
 
@@ -91,7 +91,7 @@ Dir.mktmpdir("osc") { |dir|
     }
 
     copyAndUpdateFile("#{projectDir}/build/specs/opensuse.spec","MediaManager.spec",params) 
-    copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-src.zip","MediaManager-#{version}-src.zip") 
+    copyFileToProject("#{projectDir}/dist/MediaManager-#{version}-notests-src.zip","MediaManager-#{version}-src.zip") 
 
     executeCmd("osc addremove")
     executeCmd("osc commit -m \"release upload #{version}\"")
