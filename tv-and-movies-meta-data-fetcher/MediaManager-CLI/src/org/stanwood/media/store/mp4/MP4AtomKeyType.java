@@ -16,7 +16,28 @@
  */
 package org.stanwood.media.store.mp4;
 
+/** Enum used to represent MP4 atom types */
 public enum MP4AtomKeyType {
 
-	Byte,Integer,String,Boolean,Enum,Artwork, Date, URL, Range, Short
+	/** Byte type */
+	Byte,
+	/** Integer type */
+	Integer,
+	/** Byte type */
+	String,
+	/** String type */
+	Boolean,
+	/** Boolean type */
+	Enum,
+	/** Enum type */
+	Artwork,
+	/** Artwork type */
+	Date,
+	/** Date type */
+	URL,
+	/** URL type */
+	Range,
+	/** Range type */
+	Short
+	/** Short type */
 }
