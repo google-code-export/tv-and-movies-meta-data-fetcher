@@ -8,6 +8,7 @@ Add more Linux distribution packages.
 Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Document mm-move-into-media-directory
+	- Document mm-import-media 
 Fix javadoc warnings
 Move strings to resource bundles
 		
