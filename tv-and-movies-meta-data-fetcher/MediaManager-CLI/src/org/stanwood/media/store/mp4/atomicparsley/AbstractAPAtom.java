@@ -53,6 +53,10 @@ public abstract class AbstractAPAtom implements IAtom {
 	 */
 	abstract public void writeAtom(File mp4File,boolean extended, List<Object> args) throws MP4Exception;
 
+	/**
+	 * Called after processing the atom to clean up any used resources
+	 * @throws MP4Exception Thrown if their is a problem
+	 */
 	public void cleanup() throws MP4Exception {
 
 	}
