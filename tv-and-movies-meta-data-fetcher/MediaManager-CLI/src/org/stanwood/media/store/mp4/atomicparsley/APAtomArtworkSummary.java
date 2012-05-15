@@ -5,7 +5,6 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.stanwood.media.store.mp4.IAtom;
-import org.stanwood.media.store.mp4.MP4ArtworkType;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 /**
@@ -15,7 +14,6 @@ import org.stanwood.media.store.mp4.MP4AtomKey;
 public class APAtomArtworkSummary extends AbstractAPAtom implements IAtom {
 
 	private int count;
-	private MP4ArtworkType artType;
 
 	/**
 	 * The artwork summary constructor

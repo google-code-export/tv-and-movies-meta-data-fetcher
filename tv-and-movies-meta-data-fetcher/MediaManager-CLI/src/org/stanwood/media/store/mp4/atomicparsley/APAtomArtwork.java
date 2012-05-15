@@ -70,6 +70,7 @@ public class APAtomArtwork extends AbstractAPAtom implements IAtom {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cleanup() throws MP4Exception {
 		if (file!=null) {
