@@ -1,7 +1,7 @@
 #
 # spec file for package MediaManager %%version%%
 #
-# Copyright (C) 2008-2011 John-Paul.Stanford <dev@stanwood.org.uk>
+# Copyright (C) 2008-2012 John-Paul.Stanford <dev@stanwood.org.uk>
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
@@ -84,12 +84,12 @@ pushd %{buildroot}%{_javadir}
         ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`
     done
 popd
-%__install -m 755 build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
-%__install -m 755 build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
-%__install -m 755 build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
-%__install -m 755 build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
-%__install -m 755 build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
-%__install -m 755 build/scripts/opensuse/mm-mp4-list-atoms %{buildroot}%{_bindir}/mm-mp4-list-atoms
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-media-file-info %{buildroot}%{_bindir}/mm-media-file-info
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs
@@ -99,7 +99,7 @@ popd
 %__install -dm 755 %{buildroot}%{_datadir}/applications
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(HTML\).desktop %{buildroot}%{_datadir}/applications/
 %__install -m 644 build/shortcuts/Media\ Manager\ CLI\ Documentation\ \(PDF\).desktop %{buildroot}%{_datadir}/applications/
- 
+
 # javadoc
 %__install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
 %__cp -pr docs/api/* %{buildroot}%{_javadocdir}/%{name}-%{version}
@@ -120,7 +120,7 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_bindir}/mm-xbmc
 %{_bindir}/mm-copy-store-to-store
 %{_bindir}/mm-move-into-media-directory
-%{_bindir}/mm-mp4-list-atoms
+%{_bindir}/mm-media-file-info
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*

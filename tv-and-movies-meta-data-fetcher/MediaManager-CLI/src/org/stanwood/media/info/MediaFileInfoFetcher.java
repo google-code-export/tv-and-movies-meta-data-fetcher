@@ -36,8 +36,8 @@ import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.w3c.dom.Document;
+import org.stanwood.media.xml.XMLParserException;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLParseException;
 
 /**
  * Used to find information about a media file that is containted within the
@@ -102,8 +102,8 @@ public class MediaFileInfoFetcher {
 					info = MediaInfoFactory.createMediaInfo(file,dom);
 					infoCache.put(file,info);
 				}
-				catch (XMLParseException e ) {
-					log.error(MessageFormat.format("Unable to get media inforamtion for file {0} as the xml is not valid", infoFile));
+				catch (XMLParserException e ) {
+					log.error(MessageFormat.format("Unable to get media inforamtion for file {0} as the xml is not valid", infoFile),e);
 					return null;
 				}
 			} catch (IOException e) {

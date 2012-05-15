@@ -69,8 +69,7 @@ public class SeenDatabase extends XMLParser {
 		markAsSeen(mediaDirectory, lastModified, path);
 	}
 
-	private void markAsSeen(File mediaDirectory,  long lastModified,
-			String path) {
+	private void markAsSeen(File mediaDirectory,  long lastModified, String path) {
 		SortedSet<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList==null) {
 			entryList = new TreeSet<SeenEntry>(new Comparator<SeenEntry>() {

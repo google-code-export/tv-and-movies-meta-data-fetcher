@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.collections.LRUMapCache;
 import org.stanwood.media.info.IMediaFileInfo;
 import org.stanwood.media.info.IVideoFileInfo;
 import org.stanwood.media.info.ResolutionFormat;
@@ -105,6 +106,7 @@ public class MP4ITunesStore implements IStore {
 	private String atomicParsleyCmd;
 	private MP4ITunesStoreInfo storeInfo;
 	private Controller controller;
+	private static LRUMapCache<URL,IAtom> artworkCache = new LRUMapCache<URL,IAtom>(10);
 
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),4); //$NON-NLS-1$
 
@@ -483,14 +485,22 @@ public class MP4ITunesStore implements IStore {
 		File artwork = null;
 		try {
 				try {
-					artwork = mp4Manager.getArtworkFile(imageUrl);
-					byte data[] = getBytesFromFile(artwork);
-					String ext = FileHelper.getExtension(artwork);
-					MP4ArtworkType type = MP4ArtworkType.MP4_ART_JPEG;
-					if (ext.equals("png")) {  //$NON-NLS-1$
-						type = MP4ArtworkType.MP4_ART_PNG;
+					IAtom artworkAtom = artworkCache.get(imageUrl);
+					if (artworkAtom==null) {
+						artwork = mp4Manager.getArtworkFile(imageUrl);
+						byte data[] = getBytesFromFile(artwork);
+
+
+						String ext = FileHelper.getExtension(artwork);
+						MP4ArtworkType type = MP4ArtworkType.MP4_ART_JPEG;
+						if (ext.equals("png")) {  //$NON-NLS-1$
+							type = MP4ArtworkType.MP4_ART_PNG;
+						}
+
+						artworkAtom = mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
+						artworkCache.put(imageUrl,artworkAtom);
 					}
-					return mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
+					return artworkAtom;
 				} catch (SocketTimeoutException e) {
 					throw new MP4Exception(MessageFormat.format("Unable to fetch image ''{0}'', timed out",imageUrl.toExternalForm()),e);
 				} catch (IOException e) {
@@ -952,7 +962,6 @@ public class MP4ITunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void upgrade(MediaDirectory mediaDirectory) throws StoreException {
-		if (mediaDirectory.getMediaDirConfig().getMode() == Mode.FILM) {
 			StoreVersion currentVersion = getCurrentVersion(mediaDirectory);
 			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
 				log.info(MessageFormat.format("Upgrading store {0} at location {1}",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
@@ -960,7 +969,6 @@ public class MP4ITunesStore implements IStore {
 				saveStoreVersion(mediaDirectory);
 				log.info(MessageFormat.format("Upgrade complete",storeInfo.getId(),mediaDirectory.getMediaDirConfig().getMediaDir()));
 			}
-		}
 	}
 
 	protected void saveStoreVersion(MediaDirectory mediaDirectory)
