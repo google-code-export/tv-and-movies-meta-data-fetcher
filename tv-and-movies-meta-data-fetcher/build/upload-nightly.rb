@@ -57,7 +57,6 @@ end
 
 ################## Main ##################
 
-
 projectDir=File.expand_path(File.dirname(__FILE__))+"/.."
 date=Time.new.strftime("%Y%m%d%H%M%S")
 version=readVersion(projectDir)
@@ -77,7 +76,9 @@ else
     puts "Uploading version: #{version}"
 end
 
-doBuild(projectDir)
+if (ARGV[0]==nil && ARGV[0]!="--skip-build")
+    doBuild(projectDir)
+end
 
 Dir.mktmpdir("osc") { |dir|
     Dir.chdir(dir)
