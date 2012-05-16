@@ -81,10 +81,19 @@ public abstract class StreamProcessor {
 //		this(stream,null);
 //	}
 
+	/**
+	 * The constructor
+	 * @param cacheKey The cached key associated with this stream
+	 * @param forcedContentType Used to override the content type, null to use the default
+	 */
 	public StreamProcessor(String cacheKey,String forcedContentType) {
 		this.forcedContentType = forcedContentType;
 	}
 
+	/**
+	 * The constructor
+	 * @param cacheKey The cached key associated with this stream
+	 */
 	public StreamProcessor(String cacheKey) {
 		this(cacheKey,null);
 	}

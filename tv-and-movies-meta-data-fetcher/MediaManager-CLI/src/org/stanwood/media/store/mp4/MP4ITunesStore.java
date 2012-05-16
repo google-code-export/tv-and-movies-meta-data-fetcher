@@ -523,8 +523,11 @@ public class MP4ITunesStore implements IStore {
 		return null;
 	}
 
-
-
+	/**
+	 * Used to get the image URL of a video
+	 * @param video The video information
+	 * @return The image URL of the video, or null if it could not be found
+	 */
 	public static URL getVideoURL(IVideo video) {
 		URL imageUrl = null;
 		if (video instanceof IEpisode) {

@@ -43,6 +43,26 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * <p>
+ * The mm-import-media command is used import media form watched media directories.
+ * </p>
+ * <p>
+ * It has the following usage:
+ * <code>
+ * usage: mm-import-media [-a] [-c <file>] [-d] [-e] [-h] [-l <info|debug|file>] [-t] [-u] [-v]
+ *
+ * --version, -v                      Display the version
+ * --dontUseDefaults, -d              Don't use default media directories.
+ * --noupdate, -u                     If this option is present, then the XBMC addons won''t be updated
+ * --deleteNonMedia, -e               Delete files are that are not media files (use with care)
+ * --test, -t                         If this option is present, then no changes are performed.
+ * --config_file, -c <file>           The location of the config file. If not present, attempts to load it from ~/.mediaManager/mediamanager-conf.xml or /etc/mediamanager-conf.xml
+ * --actions, -a                      Execute actions on new media files
+ * --log_config, -l <info|debug|file> The log config mode [<INFO>|<DEBUG>|<log4j config file>]
+ * --help, -h                         Show the help
+ * </code>
+ */
 public class CLIImportMedia extends AbstractLauncher {
 
 	private final static Log log = LogFactory.getLog(CLIImportMedia.class);

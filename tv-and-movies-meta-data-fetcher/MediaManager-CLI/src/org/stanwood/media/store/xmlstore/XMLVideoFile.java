@@ -21,6 +21,9 @@ import java.io.File;
 import org.stanwood.media.model.IVideoFile;
 import org.w3c.dom.Element;
 
+/**
+ * Video file information for the store {@link XMLStore2}, that access the information from the XML File
+ */
 public class XMLVideoFile implements IVideoFile {
 
 	private Element fileNode;
@@ -29,6 +32,11 @@ public class XMLVideoFile implements IVideoFile {
 	private File orgLocation;
 	private Integer part;
 
+	/**
+	 * The constructor
+	 * @param rootMediaDir The media directory location
+	 * @param fileNode The root xml node of the store item
+	 */
 	public XMLVideoFile(File rootMediaDir,Element fileNode) {
 		this.fileNode = fileNode;
 		this.rootMediaDir = rootMediaDir;

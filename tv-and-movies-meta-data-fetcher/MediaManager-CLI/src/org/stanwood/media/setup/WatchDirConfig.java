@@ -18,14 +18,25 @@ package org.stanwood.media.setup;
 
 import java.io.File;
 
+/**
+ * Used to store information about a watched directory
+ */
 public class WatchDirConfig {
 
 	private File watchDir;
 
+	/**
+	 * Used to get the directory been watched
+	 * @return the directory been watched
+	 */
 	public File getWatchDir() {
 		return watchDir;
 	}
 
+	/**
+	 * Used to set the directory been watched
+	 * @param watchDir the directory been watched
+	 */
 	public void setWatchDir(File watchDir) {
 		this.watchDir = watchDir;
 	}
