@@ -25,11 +25,19 @@ import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserNotFoundException;
 import org.w3c.dom.Element;
 
+/**
+ * Episode information for the store {@link XMLStore2}, that access the information from the XML File
+ */
 public class XMLSeason extends XMLParser implements ISeason {
 
 	private Element seasonNode;
 	private IShow show;
 
+	/**
+	 * The constructor
+	 * @param show The show
+	 * @param seasonNode The season xml node
+	 */
 	public XMLSeason(IShow show, Element seasonNode) {
 		this.show = show;
 		this.seasonNode = seasonNode;

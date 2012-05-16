@@ -29,12 +29,21 @@ import org.stanwood.media.model.ISeason;
 import org.stanwood.media.xml.XMLParserNotFoundException;
 import org.w3c.dom.Element;
 
+/**
+ * Episode information for the store {@link XMLStore2}, that access the information from the XML File
+ */
 public class XMLEpisode extends XMLVideo implements IEpisode {
 
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private Element episodeNode;
 	private ISeason season;
 
+	/**
+	 * The constructor
+	 * @param season The season
+	 * @param node The episode XML node
+	 * @param rootMediaDir The media directory location
+	 */
 	public XMLEpisode(ISeason season,Element node, File rootMediaDir) {
 		super(node, rootMediaDir);
 		this.episodeNode = node;
