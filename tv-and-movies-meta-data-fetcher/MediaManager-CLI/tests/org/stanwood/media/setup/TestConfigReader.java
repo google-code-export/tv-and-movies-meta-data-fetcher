@@ -25,8 +25,6 @@ import org.stanwood.media.util.FileHelper;
 @SuppressWarnings("nls")
 public class TestConfigReader {
 
-	private final static String LS = System.getProperty("line.separator");
-	private final static String FS = File.separator;
 
 	/**
 	 * Used to test the configuration reader works correctly
@@ -40,33 +38,33 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
-			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
-//			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaManager-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+LS);
-//			testConfig.append("              version=\"2.0\""+LS);
-//			testConfig.append("<mediaManager"+LS);
-			testConfig.append(">"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" default=\"true\" ignoreSeen=\"true\" name=\"TV Shows\">"+LS);
-			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+LS);
-			testConfig.append("      </source>"+LS);
-			testConfig.append("    </sources>"+LS);
-			testConfig.append("    <stores>"+LS);
-			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+LS);
-			testConfig.append("	     </store>"+LS);
-			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm4\" value=\""+new File("/testPath/blah4").getAbsolutePath()+"\"/>"+LS);
-			testConfig.append("	     </store>"+LS);
-			testConfig.append("    </stores>"+LS);
-			testConfig.append("    <actions>"+LS);
-			testConfig.append("        <action id=\"a.test.action\">"+LS);
-			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+LS);
-			testConfig.append("        </action>"+LS);
-			testConfig.append("    </actions>"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+FileHelper.LS);
+			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+FileHelper.LS);
+//			testConfig.append("              xsi:schemaLocation=\"https://tv-and-movies-meta-data-fetcher.googlecode.com/xml/ns/MediaManager-Config https://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema/MediaInfoFetcher-Config-2.0.xsd\""+FileHelper.LS);
+//			testConfig.append("              version=\"2.0\""+FileHelper.LS);
+//			testConfig.append("<mediaManager"+FileHelper.LS);
+			testConfig.append(">"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" default=\"true\" ignoreSeen=\"true\" name=\"TV Shows\">"+FileHelper.LS);
+			testConfig.append("    <sources>"+FileHelper.LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("      </source>"+FileHelper.LS);
+			testConfig.append("    </sources>"+FileHelper.LS);
+			testConfig.append("    <stores>"+FileHelper.LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	     </store>"+FileHelper.LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm4\" value=\""+new File("/testPath/blah4").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	     </store>"+FileHelper.LS);
+			testConfig.append("    </stores>"+FileHelper.LS);
+			testConfig.append("    <actions>"+FileHelper.LS);
+			testConfig.append("        <action id=\"a.test.action\">"+FileHelper.LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("        </action>"+FileHelper.LS);
+			testConfig.append("    </actions>"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 
@@ -121,20 +119,20 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+LS);
-			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+LS);
-			testConfig.append(">"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+LS);
-			testConfig.append("    <ignore>.*incomming.*</ignore>"+LS);
-			testConfig.append("    <ignore>.*blah.*</ignore>"+LS);
-			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+LS);
-			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+LS);
-			testConfig.append("      </source>"+LS);
-			testConfig.append("    </sources>"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager xmlns=\"http://www.w3schools.com\""+FileHelper.LS);
+			testConfig.append("              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""+FileHelper.LS);
+			testConfig.append(">"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\"  >"+FileHelper.LS);
+			testConfig.append("    <ignore>.*incomming.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <ignore>.*blah.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <sources>"+FileHelper.LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\"/blahPath/blah\"/>"+FileHelper.LS);
+			testConfig.append("      </source>"+FileHelper.LS);
+			testConfig.append("    </sources>"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 
@@ -175,10 +173,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\" pattern=\"%z\"  >"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\" pattern=\"%z\"  >"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			try {
 				createConfigReader(testConfig);
@@ -207,10 +205,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"BLAH\" pattern=\"%e.%x\"  >"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"BLAH\" pattern=\"%e.%x\"  >"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			try {
 				createConfigReader(testConfig);
@@ -238,10 +236,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			Assert.assertEquals("%sx%e - %t.%x", configReader.getMediaDirectory(mediaDir).getPattern());
@@ -264,11 +262,11 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <XBMCAddons directory=\"/home/blah\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			Assert.assertEquals(new File("/home/blah").getAbsolutePath(),configReader.getXBMCAddonDir().getAbsolutePath());
@@ -292,10 +290,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			File homeDir = new File(System.getProperty("user.home"));
 			ConfigReader configReader = createConfigReader(testConfig);
@@ -320,10 +318,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			Assert.assertEquals("%t{ (%y)}{ Part %p}.%x", configReader.getMediaDirectory(mediaDir).getPattern());
@@ -343,11 +341,11 @@ public class TestConfigReader {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		StringBuilder testConfig = new StringBuilder();
-		testConfig.append("<mediaManager>"+LS);
-		testConfig.append("  <plugins>"+LS);
-		testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+LS);
-		testConfig.append("  </plugins>"+LS);
-		testConfig.append("</mediaManager>"+LS);
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <plugins>"+FileHelper.LS);
+		testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+FileHelper.LS);
+		testConfig.append("  </plugins>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
 		Assert.assertNotNull(configReader.getPlugins());
@@ -368,10 +366,10 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			List<String> exts = configReader.getMediaDirectory(mediaDir).getExtensions();
@@ -405,15 +403,15 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
-			testConfig.append("    <extensions>"+LS);
-			testConfig.append("      <extension>avi</extension>"+LS);
-			testConfig.append("      <extension>m4v</extension>"+LS);
-			testConfig.append("      <extension>qt</extension>"+LS);
-			testConfig.append("    </extensions>"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+FileHelper.LS);
+			testConfig.append("    <extensions>"+FileHelper.LS);
+			testConfig.append("      <extension>avi</extension>"+FileHelper.LS);
+			testConfig.append("      <extension>m4v</extension>"+FileHelper.LS);
+			testConfig.append("      <extension>qt</extension>"+FileHelper.LS);
+			testConfig.append("    </extensions>"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			List<String> exts = configReader.getMediaDirectory(mediaDir).getExtensions();
@@ -437,12 +435,12 @@ public class TestConfigReader {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		StringBuilder testConfig = new StringBuilder();
-		testConfig.append("<mediaManager>"+LS);
-		testConfig.append("  <global>"+LS);
-		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+LS);
-		testConfig.append("    <native>/This/is/a/test</native>"+LS);
-		testConfig.append("  </global>"+LS);
-		testConfig.append("</mediaManager>"+LS);
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <global>"+FileHelper.LS);
+		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+FileHelper.LS);
+		testConfig.append("    <native>/This/is/a/test</native>"+FileHelper.LS);
+		testConfig.append("  </global>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
 		Assert.assertEquals(new File("/blah/blah1").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());
@@ -461,41 +459,41 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <plugins>"+LS);
-			testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+LS);
-			testConfig.append("  </plugins>"+LS);
-			testConfig.append("  <XBMCAddons directory=\""+new File("/home/blah")+"\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+LS);
-			testConfig.append("  <global>"+LS);
-			testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+LS);
-			testConfig.append("    <native>/This/is/a/test</native>"+LS);
-			testConfig.append("  </global>"+LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" ignoreSeen=\"true\" >"+LS);
-			testConfig.append("    <ignore>.*incomming.*</ignore>"+LS);
-			testConfig.append("    <ignore>.*blah.*</ignore>"+LS);
-			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+LS);
-			testConfig.append("    <extensions>"+LS);
-			testConfig.append("      <extension>avi</extension>"+LS);
-			testConfig.append("      <extension>m4v</extension>"+LS);
-			testConfig.append("      <extension>qt</extension>"+LS);
-			testConfig.append("    </extensions>"+LS);
-			testConfig.append("    <sources>"+LS);
-			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/blahPath/blah")+"\"/>"+LS);
-			testConfig.append("      </source>"+LS);
-			testConfig.append("    </sources>"+LS);
-			testConfig.append("    <stores>"+LS);
-			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+LS);
-			testConfig.append("	     </store>"+LS);
-			testConfig.append("    </stores>"+LS);
-			testConfig.append("    <actions>"+LS);
-			testConfig.append("        <action id=\"a.test.action\">"+LS);
-			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+LS);
-			testConfig.append("        </action>"+LS);
-			testConfig.append("    </actions>"+LS);
-			testConfig.append("  </mediaDirectory>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <plugins>"+FileHelper.LS);
+			testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+FileHelper.LS);
+			testConfig.append("  </plugins>"+FileHelper.LS);
+			testConfig.append("  <XBMCAddons directory=\""+new File("/home/blah")+"\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+FileHelper.LS);
+			testConfig.append("  <global>"+FileHelper.LS);
+			testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+FileHelper.LS);
+			testConfig.append("    <native>/This/is/a/test</native>"+FileHelper.LS);
+			testConfig.append("  </global>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" ignoreSeen=\"true\" >"+FileHelper.LS);
+			testConfig.append("    <ignore>.*incomming.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <ignore>.*blah.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <ignore>.*[S|s]amples.*</ignore>"+FileHelper.LS);
+			testConfig.append("    <extensions>"+FileHelper.LS);
+			testConfig.append("      <extension>avi</extension>"+FileHelper.LS);
+			testConfig.append("      <extension>m4v</extension>"+FileHelper.LS);
+			testConfig.append("      <extension>qt</extension>"+FileHelper.LS);
+			testConfig.append("    </extensions>"+FileHelper.LS);
+			testConfig.append("    <sources>"+FileHelper.LS);
+			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/blahPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("      </source>"+FileHelper.LS);
+			testConfig.append("    </sources>"+FileHelper.LS);
+			testConfig.append("    <stores>"+FileHelper.LS);
+			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("	     </store>"+FileHelper.LS);
+			testConfig.append("    </stores>"+FileHelper.LS);
+			testConfig.append("    <actions>"+FileHelper.LS);
+			testConfig.append("        <action id=\"a.test.action\">"+FileHelper.LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("        </action>"+FileHelper.LS);
+			testConfig.append("    </actions>"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			File tmpFile = FileHelper.createTempFile("config", ".xml");
@@ -520,22 +518,22 @@ public class TestConfigReader {
 //		try {
 //
 //			StringBuilder testConfig = new StringBuilder();
-//			testConfig.append("<mediaManager>"+LS);
-//			testConfig.append("  <scripts>"+LS);
-//			testConfig.append("    <script lang=\"jruby\"><![CDATA["+LS);
-//			testConfig.append("      def getYear(video)"+LS);
-//			testConfig.append("          if (video.getYear()!=nil)"+LS);
-//			testConfig.append("              return video.getYear()"+LS);
-//			testConfig.append("          end"+LS);
-//			testConfig.append("          return nil;"+LS);
-//			testConfig.append("      end"+LS);
-//			testConfig.append("    ]]></script>"+LS);
-//			testConfig.append("    <script lang=\"jruby\" file=\"blah.rb\"/>"+LS);
-//			testConfig.append("  </scripts>"+LS);
-//			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+LS);
-//			testConfig.append("    <pattern type=\"jruby\"><![CDATA[\"#{video.getTitle()}#{getYear(video)}#{getPart(part)}#{File.extname(filename)}\"]]></pattern>"+LS);
-//			testConfig.append("  </mediaDirectory>"+LS);
-//			testConfig.append("</mediaManager>"+LS);
+//			testConfig.append("<mediaManager>"+FileHelper.LS);
+//			testConfig.append("  <scripts>"+FileHelper.LS);
+//			testConfig.append("    <script lang=\"jruby\"><![CDATA["+FileHelper.LS);
+//			testConfig.append("      def getYear(video)"+FileHelper.LS);
+//			testConfig.append("          if (video.getYear()!=nil)"+FileHelper.LS);
+//			testConfig.append("              return video.getYear()"+FileHelper.LS);
+//			testConfig.append("          end"+FileHelper.LS);
+//			testConfig.append("          return nil;"+FileHelper.LS);
+//			testConfig.append("      end"+FileHelper.LS);
+//			testConfig.append("    ]]></script>"+FileHelper.LS);
+//			testConfig.append("    <script lang=\"jruby\" file=\"blah.rb\"/>"+FileHelper.LS);
+//			testConfig.append("  </scripts>"+FileHelper.LS);
+//			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"FILM\">"+FileHelper.LS);
+//			testConfig.append("    <pattern type=\"jruby\"><![CDATA[\"#{video.getTitle()}#{getYear(video)}#{getPart(part)}#{File.extname(filename)}\"]]></pattern>"+FileHelper.LS);
+//			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+//			testConfig.append("</mediaManager>"+FileHelper.LS);
 //
 //			ConfigReader configReader = createConfigReader(testConfig);
 //		}
@@ -556,9 +554,9 @@ public class TestConfigReader {
 		try {
 
 			StringBuilder testConfig = new StringBuilder();
-			testConfig.append("<mediaManager>"+LS);
-			testConfig.append("  <watchDirectory directory=\""+mediaDir.getAbsolutePath()+"\"/>"+LS);
-			testConfig.append("</mediaManager>"+LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <watchDirectory directory=\""+mediaDir.getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
 			Assert.assertEquals(1,configReader.getWatchDirectories().size());

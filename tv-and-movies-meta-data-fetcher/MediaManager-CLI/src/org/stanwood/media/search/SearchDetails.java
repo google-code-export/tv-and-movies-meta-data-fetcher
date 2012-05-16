@@ -48,18 +48,34 @@ public class SearchDetails {
 		return part;
 	}
 
+	/**
+	 * Used to get the season number
+	 * @return the season number, or null if not found
+	 */
 	public Integer getSeason() {
 		return season;
 	}
 
+	/**
+	 * Used to set the season number
+	 * @param season The season number
+	 */
 	public void setSeason(Integer season) {
 		this.season = season;
 	}
 
+	/**
+	 * Used to get the episode number
+	 * @return the episode number, or null if not found
+	 */
 	public Integer getEpisode() {
 		return episode;
 	}
 
+	/**
+	 * Used to set the episode number
+	 * @param episode The episode number
+	 */
 	public void setEpisode(Integer episode) {
 		this.episode = episode;
 	}

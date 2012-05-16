@@ -747,7 +747,6 @@ public class MP4ITunesStore implements IStore {
 		return lastModified;
 	}
 
-	@SuppressWarnings("nls")
 	private static String certToItunesCert(Certification cert) {
 		if (cert.getType().equalsIgnoreCase("mpaa")) { //$NON-NLS-1$
 			String certValue = cert.getCertification();

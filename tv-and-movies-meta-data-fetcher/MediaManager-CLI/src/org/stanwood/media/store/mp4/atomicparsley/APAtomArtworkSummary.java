@@ -31,12 +31,12 @@ public class APAtomArtworkSummary extends AbstractAPAtom implements IAtom {
 	 */
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: [{1}={2} piece of artwork]",getKey().getDisplayName(),getName(),count);
+		return MessageFormat.format(Messages.getString("APAtomArtworkSummary.SummaryMsg"),getKey().getDisplayName(),getName(),count); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc}*/
 	@Override
 	public void writeAtom(File mp4File,boolean extended,List<Object> args) {
-		throw new UnsupportedOperationException("The summary artwork atom can not be written to a mp4 file");
+		throw new UnsupportedOperationException(Messages.getString("APAtomArtworkSummary.ReadOnly")); //$NON-NLS-1$
 	}
 }

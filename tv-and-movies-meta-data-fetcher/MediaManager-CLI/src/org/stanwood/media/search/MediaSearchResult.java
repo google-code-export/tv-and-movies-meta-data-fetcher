@@ -19,21 +19,36 @@ package org.stanwood.media.search;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IVideo;
 
+/**
+ * Used to store media search results
+ */
 public class MediaSearchResult {
 
 	private MediaDirectory mediaDirectory;
 	private IVideo video;
 
+	/**
+	 * The constructor
+	 * @param mediaDirectory The media directory
+	 * @param video The video information
+	 */
 	public MediaSearchResult(MediaDirectory mediaDirectory, IVideo video) {
 		super();
 		this.mediaDirectory = mediaDirectory;
 		this.video = video;
 	}
 
+	/** Used to get the media directory
+	 * @return the media directory
+	 */
 	public MediaDirectory getMediaDirectory() {
 		return mediaDirectory;
 	}
 
+	/**
+	 * Used to get the video information
+	 * @return the video information
+	 */
 	public IVideo getVideo() {
 		return video;
 	}

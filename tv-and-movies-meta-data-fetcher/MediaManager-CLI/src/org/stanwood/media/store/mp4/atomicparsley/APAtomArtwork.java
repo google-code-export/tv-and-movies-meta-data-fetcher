@@ -62,11 +62,11 @@ public class APAtomArtwork extends AbstractAPAtom implements IAtom {
 				}
 			}
 			catch (IOException e) {
-				throw new MP4Exception(MessageFormat.format("Unable to update the artwork of file ''{0}''",mp4File));
+				throw new MP4Exception(MessageFormat.format(Messages.getString("APAtomArtwork.UnableUpdateArtwork"),mp4File)); //$NON-NLS-1$
 			}
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("APAtomArtwork.AtomNotSupported"),getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -77,7 +77,7 @@ public class APAtomArtwork extends AbstractAPAtom implements IAtom {
 			try {
 				FileHelper.delete(file);
 			} catch (IOException e) {
-				throw new MP4Exception("Unable to delete temp artwork",e);
+				throw new MP4Exception(Messages.getString("APAtomArtwork.UnableDeleteTempArt"),e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -88,7 +88,7 @@ public class APAtomArtwork extends AbstractAPAtom implements IAtom {
 	 */
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: [{1}=Artwork of type {2} of size {3}]",getDisplayName(),getName(),getDisplayType(),size);
+		return MessageFormat.format(Messages.getString("APAtomArtwork.AtomValueMsg"),getDisplayName(),getName(),getDisplayType(),size); //$NON-NLS-1$
 	}
 
 	private String getDisplayType() {

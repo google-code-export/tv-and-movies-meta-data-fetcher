@@ -18,6 +18,9 @@ package org.stanwood.media.model;
 
 import java.util.List;
 
+/**
+ * Used to store certification information
+ */
 public interface IVideoCertification {
 
 	/**

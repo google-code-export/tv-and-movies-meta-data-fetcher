@@ -78,7 +78,7 @@ public class APAtomNumber extends AbstractAPAtom implements IAtomNumber {
 			// TODO handle these
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("APAtomNumber.UnsportedAtom"),getName())); //$NON-NLS-1$
 		}
 	}
 

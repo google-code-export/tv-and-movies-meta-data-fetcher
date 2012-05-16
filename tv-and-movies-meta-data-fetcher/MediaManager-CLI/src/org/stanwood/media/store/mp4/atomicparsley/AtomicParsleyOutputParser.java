@@ -76,7 +76,6 @@ public class AtomicParsleyOutputParser extends XMLParser {
 		}
 	}
 
-	@SuppressWarnings("nls")
 	private IAtom parseAtom(Element node) throws MP4Exception {
 		String name = node.getAttribute("name"); //$NON-NLS-1$
 		if (name.length()==0) {

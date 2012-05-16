@@ -113,7 +113,7 @@ public abstract class StreamProcessor {
 				return;
 			}
 			catch (SocketTimeoutException e1) {
-				log.warn("Timed out fetching stream, going to retry...");
+				log.warn(Messages.getString("StreamProcessor.Timedout")); //$NON-NLS-1$
 				if (e==null) {
 					e = e1;
 				}
@@ -236,7 +236,7 @@ public abstract class StreamProcessor {
 		}
 		catch (IOException e) {
 			if (stream==null) {
-				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
@@ -244,7 +244,7 @@ public abstract class StreamProcessor {
 		}
 		catch (ExtensionException e) {
 			if (stream==null) {
-				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$
+				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),"NULL"),e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$

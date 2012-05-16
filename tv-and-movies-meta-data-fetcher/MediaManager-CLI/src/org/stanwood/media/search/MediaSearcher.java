@@ -45,17 +45,21 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 
+/**
+ * Used to search for media information
+ */
 public class MediaSearcher {
 
 	private final static Log log = LogFactory.getLog(MediaSearcher.class);
-	private Controller controller;
 	private List<MediaDirectory> mediaDirs;
-	private boolean testMode = false;
 
+	/**
+	 * The constructor
+	 * @param controller The media controller
+	 * @throws ConfigException Thrown if their is a problem reading the configuration
+	 */
 	public MediaSearcher(Controller controller) throws ConfigException {
-		this.controller = controller;
 		if (controller!=null) {
-			this.testMode = controller.isTestRun();
 
 			mediaDirs = new ArrayList<MediaDirectory>();
 			for (File mediaDirLoc :  controller.getMediaDirectories()) {
@@ -70,6 +74,13 @@ public class MediaSearcher {
 		}
 	}
 
+	/**
+	 * Used to lookup media file information
+	 * @param mediaFile The media file
+	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @return The media file information, or null if it could not be found.
+	 * @throws ActionException Thrown if their are any problems.
+	 */
 	public MediaSearchResult lookupMedia(File mediaFile,boolean useSources) throws ActionException {
 		Mode mode = null;
 		FilmNFOSearchStrategy nfoSearcher = new FilmNFOSearchStrategy();
@@ -114,7 +125,14 @@ public class MediaSearcher {
 		}
 	}
 
-
+	/**
+	 * Used to lookup film information
+	 * @param dir The media directory
+	 * @param file The media file
+	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @return  The media file information, or null if it could not be found.
+	 * @throws ActionException Thrown if their are any problems.
+	 */
 	public static IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
@@ -213,6 +231,14 @@ public class MediaSearcher {
 		}
 	}
 
+	/**
+	 * Used to lookup TV episode information
+	 * @param dir The media directory
+	 * @param file The media file
+	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @return  The media file information, or null if it could not be found.
+	 * @throws ActionException Thrown if their are any problems.
+	 */
 	public static IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		boolean refresh = false;
 		try {

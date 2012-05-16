@@ -118,46 +118,5 @@ public class NativeHelper {
 		return result.toString();
 	}
 
-	private static String getLibArchPath(String libName) {
-		StringBuilder result = new StringBuilder("libs"+File.separator); //$NON-NLS-1$
-		switch (Platform.getOSType()) {
-		case Platform.LINUX :
-			result.append("linux"); //$NON-NLS-1$
-			break;
-		case Platform.MAC:
-			result.append("mac"); //$NON-NLS-1$
-			break;
-		case Platform.WINDOWS:
-			result.append("windows"); //$NON-NLS-1$
-			break;
-		default:
-			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_LIB_FOR_PLATFORM"),libName)); //$NON-NLS-1$
-		}
-		result.append(File.separator);
-		result.append("x86"); //$NON-NLS-1$
-		result.append(File.separator);
-		if (Platform.is64Bit()) {
-			result.append("64"); //$NON-NLS-1$
-		}
-		else {
-			result.append("32"); //$NON-NLS-1$
-		}
-		result.append(File.separator);
-		switch (Platform.getOSType()) {
-		case Platform.LINUX :
-			result.append("lib"+libName+".so"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		case Platform.MAC:
-			result.append("lib"+libName+".dylib");  //$NON-NLS-1$//$NON-NLS-2$
-			break;
-		case Platform.WINDOWS:
-			result.append("lib"+libName+".dll"); //$NON-NLS-1$ //$NON-NLS-2$
-			break;
-		default:
-			throw new Error(MessageFormat.format(Messages.getString("NativeHelper.NO_NATIVE_LIB_FOR_PLATFORM"),libName)); //$NON-NLS-1$
-		}
-		return result.toString();
-	}
-
 
 }

@@ -272,7 +272,7 @@ public class CLIImportMedia extends AbstractLauncher {
 			ra.setTestMode(getController().isTestRun());
 
 			if (result.getVideo() instanceof IFilm) {
-				Integer part = searcher.getFilmPart(result.getMediaDirectory(), file, (IFilm)result.getVideo());
+				Integer part = MediaSearcher.getFilmPart(result.getMediaDirectory(), file, (IFilm)result.getVideo());
 				ra.perform(dir, (IFilm)result.getVideo(), file,part, new IActionEventHandler() {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)

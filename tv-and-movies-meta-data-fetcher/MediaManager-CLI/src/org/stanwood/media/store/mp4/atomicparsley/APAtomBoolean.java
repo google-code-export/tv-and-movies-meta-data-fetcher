@@ -23,6 +23,9 @@ import java.util.List;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
+/**
+ * Used to represent a atomic parsley boolean atom
+ */
 public class APAtomBoolean extends AbstractAPAtom implements IAtom {
 
 	private boolean value;
@@ -67,7 +70,7 @@ public class APAtomBoolean extends AbstractAPAtom implements IAtom {
 			args.add(toAPValue(value));
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("APAtomBoolean.UnsupportedAtom"),getName())); //$NON-NLS-1$
 		}
 	}
 

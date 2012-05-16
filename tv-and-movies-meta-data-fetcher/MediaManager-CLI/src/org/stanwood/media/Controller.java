@@ -428,6 +428,11 @@ public class Controller {
 		return fileInfoFetcher.getInformation(file);
 	}
 
+	/**
+	 * Used to get the seen media file database
+	 * @return The seen media file database
+	 * @throws ConfigException Thrown if thier is a problem reading the database
+	 */
 	public SeenDatabase getSeenDB() throws ConfigException {
 		if (seenDb==null) {
 			seenDb= new SeenDatabase(getConfigDir());

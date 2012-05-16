@@ -58,6 +58,7 @@ import org.w3c.dom.Node;
  */
 public class ConfigReader extends BaseConfigReader {
 
+	/** Default file name of config file */
 	public static final String CONFIG_NAME = "mediamanager-conf.xml"; //$NON-NLS-1$
 	private static final String SCHEMA_NAME = "MediaManager-Config-2.1.xsd"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
@@ -114,7 +115,7 @@ public class ConfigReader extends BaseConfigReader {
 		for (WatchDirConfig dir : watchDirs) {
 			document.append("  <watchDirectory"); //$NON-NLS-1$
 			document.append(" directory=\""+dir.getWatchDir().getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
-			document.append(" />");
+			document.append(" />"); //$NON-NLS-1$
 		}
 	}
 
@@ -681,6 +682,10 @@ public class ConfigReader extends BaseConfigReader {
 		return mediaDirs;
 	}
 
+	/**
+	 * Used to get the watched directory configuration information
+	 * @return The watched directories
+	 */
 	public Collection<WatchDirConfig> getWatchDirectories() {
 		List<WatchDirConfig> mediaDirs = new ArrayList<WatchDirConfig>();
 		for (WatchDirConfig c : watchDirs) {
