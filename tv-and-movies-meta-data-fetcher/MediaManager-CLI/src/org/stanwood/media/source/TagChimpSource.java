@@ -52,6 +52,10 @@ public class TagChimpSource extends XMLParser implements ISource {
 
 	private TagChimpSourceInfo sourceInfo;
 
+	/**
+	 * The constructor
+	 * @param sourceInfo The source information
+	 */
 	public TagChimpSource(TagChimpSourceInfo sourceInfo) {
 		this.sourceInfo = sourceInfo;
 	}

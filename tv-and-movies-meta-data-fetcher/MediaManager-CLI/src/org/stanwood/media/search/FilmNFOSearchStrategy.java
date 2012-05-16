@@ -32,7 +32,12 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 	private final DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy"); //$NON-NLS-1$
 	private final static Pattern PATTERN_PART_FOLDER = Pattern.compile("^CD(\\d+)$"); //$NON-NLS-1$
 
-
+	/**
+	 * Used to get parse the details used to perform a search
+	 * @param mediaFile The media file that is been looked up
+	 * @param mediaDir The media directory the media file is in
+	 * @return The search details, or null if they could not be found
+	 */
 	public SearchDetails getSearch(File mediaFile, MediaDirectory mediaDir) {
 		File nfoFile = NFOSearchHelper.findNFOfile(mediaDir,mediaFile);
 		if (nfoFile!=null) {

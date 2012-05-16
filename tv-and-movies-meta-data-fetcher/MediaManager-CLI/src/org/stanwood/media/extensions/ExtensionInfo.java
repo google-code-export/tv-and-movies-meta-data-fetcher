@@ -61,6 +61,8 @@ public abstract class ExtensionInfo<T extends IExtension> {
 
 	/**
 	 * Used to get the extension class type
+	 * @param config The media directory configuration
+	 * @param number The index number of the extension
 	 * @return The extension class type
 	 * @throws ExtensionException  Thrown if their is a problem creating the extension
 	 */
@@ -79,6 +81,13 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 */
 	protected abstract T createExtension() throws ExtensionException;
 
+	/**
+	 * Used to get any extension from the media directory configuration. So if their are
+	 * multiple XBMCSources, then it will just pick one of them.
+	 * @param config The media directory configuration
+	 * @return The extension
+	 * @throws ExtensionException Thrown if their is a problem getting the extension
+	 */
 	public T getAnyExtension(MediaDirConfig config) throws ExtensionException {
 		for (Entry<CacheKey,T>ext : extension.entrySet()) {
 			if (ext.getKey().getConfig().equals(config)) {

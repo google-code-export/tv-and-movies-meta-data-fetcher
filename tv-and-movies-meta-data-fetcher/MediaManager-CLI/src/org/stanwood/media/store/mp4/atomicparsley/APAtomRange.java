@@ -39,7 +39,7 @@ public class APAtomRange extends AbstractAPAtom implements IAtom {
 			args.add(number+"/"+total);			 //$NON-NLS-1$
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getName()));
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("APAtomRange.AtomNotSupported"),getName())); //$NON-NLS-1$
 		}
 	}
 

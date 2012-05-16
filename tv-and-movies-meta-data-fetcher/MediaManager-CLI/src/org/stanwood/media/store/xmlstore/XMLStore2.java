@@ -95,6 +95,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private NodeList fileNodes;
 	private Document storeDoc;
 
+	/**
+	 * The constructor
+	 */
 	public XMLStore2() {
 	}
 
@@ -1095,7 +1098,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		else {
 			if (log.isDebugEnabled()) {
-				log.debug("Using cacched Store doc");
+				log.debug("Using cacched Store doc"); //$NON-NLS-1$
 			}
 		}
 		return storeDoc;
@@ -1136,7 +1139,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
 		if (log.isInfoEnabled()) {
-			log.info("XMLStore2: Cleaning up store after actions were performed");
+			log.info(Messages.getString("XMLStore2.CleaningUp")); //$NON-NLS-1$
 		}
 		File rootMediaDir = dir.getMediaDirConfig().getMediaDir();
 		Document cache = getCache(rootMediaDir);
@@ -1250,7 +1253,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				fileNodes = XPathAPI.selectNodeList(cache, path);
 			}
 			catch (Exception e) {
-				throw new XMLParserException(MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_PATH"),path),e); //$NON-NLS-1$
+				throw new XMLParserException(MessageFormat.format("Unable to find path ''{0}''",path),e); //$NON-NLS-1$
 			}
 		}
 		return new IterableNodeList(fileNodes);
@@ -1427,7 +1430,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				} catch (StoreException e) {
 					throw e;
 				} catch (StanwoodException e) {
-					throw new StoreException("Unable to update store",e);
+					throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 				}
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
@@ -1441,18 +1444,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				} catch (StoreException e) {
 					throw e;
 				} catch (StanwoodException e) {
-					throw new StoreException("Unable to update store",e);
+					throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 				}
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
 		} catch (XMLParserException e) {
-			throw new StoreException("Unable to upgrade the store",e);
+			throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 		}
 	}
 
 
 	protected StoreVersion getCurrentVersion(Element storeNode) {
-		StoreVersion currentVersion = new StoreVersion(new Version("2.0"),1);
+		StoreVersion currentVersion = new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
 		if (!storeNode.getAttribute("version").equals(""))  { //$NON-NLS-1$ //$NON-NLS-2$
 			currentVersion.setVersion(new Version(storeNode.getAttribute("version"))); //$NON-NLS-1$
 		}
@@ -1479,7 +1482,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgrade20to21(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to {1}",rootMediaDir,STORE_VERSION.toString()));
+		log.info(MessageFormat.format(Messages.getString("XMLStore2.UpgradingStore"),rootMediaDir,STORE_VERSION.toString())); //$NON-NLS-1$
 		if (dirConfig.getMode()==Mode.TV_SHOW) {
 			NodeList children = storeNode.getChildNodes();
 
@@ -1493,12 +1496,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					SearchResult searchResult = new SearchResult(orgShow.getShowId(),sourceId, orgShow.getShowURL().toExternalForm(), null,Mode.TV_SHOW);
 					try {
 						IShow show = getShowFromSource(mediaDirectory, searchResult);
-						log.info(MessageFormat.format("Recache show: {0}",show.getName()));
+						log.info(MessageFormat.format(Messages.getString("XMLStore2.RecacheShow"),show.getName())); //$NON-NLS-1$
 						getShowNode(doc, show,true);
 					} catch (MalformedURLException e) {
-						throw new StoreException("Unable to update store",e);
+						throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 					} catch (IOException e) {
-						throw new StoreException("Unable to update store",e);
+						throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -1520,9 +1523,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 							orgFilm.setStudio(film.getStudio());
 							orgFilm.setSourceId(sourceId);
 						} catch (MalformedURLException e) {
-							throw new StoreException("Unable to update store",e);
+							throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 						} catch (IOException e) {
-							throw new StoreException("Unable to update store",e);
+							throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 						}
 					}
 				}
@@ -1533,7 +1536,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void upgradeRevisionTo21_3(MediaDirectory mediaDirectory,Document cache, Element storeNode) throws StanwoodException {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.0 to {1}",rootMediaDir,STORE_VERSION.toString()));
+		log.info(MessageFormat.format(Messages.getString("XMLStore2.UpgradingStore"),rootMediaDir,STORE_VERSION.toString())); //$NON-NLS-1$
 		if (dirConfig.getMode()==Mode.FILM) {
 			NodeList children = storeNode.getChildNodes();
 
@@ -1553,12 +1556,12 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 									orgFilm.setWriters(film.getWriters());
 								}
 								else {
-									log.error(MessageFormat.format("Unable to fetch film information for id {0}",orgFilm.getId()));
+									log.error(MessageFormat.format(Messages.getString("XMLStore2.UnableFetchMediaInfo"),orgFilm.getId())); //$NON-NLS-1$
 								}
 							} catch (MalformedURLException e) {
-								throw new StoreException("Unable to update store",e);
+								throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 							} catch (IOException e) {
-								throw new StoreException("Unable to update store",e);
+								throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 							}
 						}
 					}
@@ -1571,7 +1574,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			Document cache, Element storeNode) {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();
-		log.info(MessageFormat.format("Upgrading store in media directory ''{0}'' from version 2.1 to 2.1.2",rootMediaDir));
+		log.info(MessageFormat.format(Messages.getString("XMLStore2.UpgradingStore2"),rootMediaDir)); //$NON-NLS-1$
 		if (dirConfig.getMode()==Mode.TV_SHOW) {
 			NodeList children = storeNode.getChildNodes();
 

@@ -18,32 +18,57 @@ package org.stanwood.media.store;
 
 import org.stanwood.media.util.Version;
 
+/**
+ * Used to represent store version
+ */
 public class StoreVersion {
 
 	private Version version;
 	private int revision;
 
+	/**
+	 * The constructor
+	 * @param version The version
+	 * @param revision The revision
+	 */
 	public StoreVersion(Version version, int revision) {
 		this.version = version;
 		this.revision = revision;
 	}
 
+	/**
+	 * Used to get the version
+	 * @return The version
+	 */
 	public Version getVersion() {
 		return version;
 	}
 
+	/**
+	 * Used to set the version
+	 * @param version The version
+	 */
 	public void setVersion(Version version) {
 		this.version = version;
 	}
 
+	/**
+	 * Used to get the revision
+	 * @return The revision
+	 */
 	public int getRevision() {
 		return revision;
 	}
 
+	/**
+	 * Used to set the revision
+	 * @param revision The revision
+	 */
 	public void setRevision(int revision) {
 		this.revision = revision;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return version.toString()+" "+revision; //$NON-NLS-1$

@@ -141,7 +141,7 @@ public class APAtomString extends AbstractAPAtom implements IAtomString {
 			}
 		}
 		else {
-			throw new UnsupportedOperationException(MessageFormat.format("Atom type ''{0}'' not supported",getKey().getId()));
+			throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("APAtomString.UnsupportedAtom"),getKey().getId())); //$NON-NLS-1$
 		}
 	}
 

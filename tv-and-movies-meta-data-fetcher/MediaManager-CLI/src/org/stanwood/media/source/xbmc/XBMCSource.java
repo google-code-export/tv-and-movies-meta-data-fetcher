@@ -63,6 +63,7 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	/**
 	 * Used to create a instance of this class
+	 * @param sourceInfo The source information
 	 * @param mgr The addon manager
 	 * @param addonId The ID of the sources XBMC addon
 	 * @throws XBMCException Thrown if their are any problems
@@ -246,7 +247,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			parseCertification(show,doc);
 
 	    			try {
-	    				String studio = getStringFromXML(doc, "details/studio/text()");
+	    				String studio = getStringFromXML(doc, "details/studio/text()"); //$NON-NLS-1$
 	    				show.setStudio(studio);
 	    			} catch (XMLParserNotFoundException e) {
 						// Ignore

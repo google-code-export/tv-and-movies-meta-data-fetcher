@@ -129,7 +129,7 @@ public class SeenDatabase extends XMLParser {
 
 	/**
 	 * Used to read the database from disk
-	 * @param parentMonitor Progress monitor
+	 * @param progress Progress monitor
 	 * @throws FileNotFoundException Thrown if their is a problem
 	 * @throws XMLParserException Thrown if possible to parse file
 	 *

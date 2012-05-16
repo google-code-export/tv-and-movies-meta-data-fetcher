@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -36,13 +35,13 @@ import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.util.Platform;
 
+/**
+ * A MP4 Manager class that uses atomic parsley {@link "https://bitbucket.org/shield007/atomicparsley"}
+ * command line application to control the atoms in the file.
+ */
 public class MP4AtomicParsleyManager implements IMP4Manager {
 
 	private final static Log log = LogFactory.getLog(MP4AtomicParsleyManager.class);
-	private final static Pattern TAG_LIST_PATTERN = Pattern.compile("^Atom \"(.+?)\" contains\\: (.+)$"); //$NON-NLS-1$
-	private final static Pattern RANGE_PATTERN = Pattern.compile("(\\d+) of (\\d+)",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-	private final static Pattern ARTWORK_PATTERN = Pattern.compile("(\\d+) .*of artwork"); //$NON-NLS-1$
-	private static final Pattern DNS_PATTERN = Pattern.compile("^Atom \"----\" \\[(.+?);(.+?)\\] contains\\: (.+)$"); //$NON-NLS-1$;
 
 	private String apCmdPath;
 
@@ -69,11 +68,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		}
 	}
 
-	private static class AtomResult {
-		MP4AtomKey key;
-		String value;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		if (!mp4File.exists()) {
@@ -95,6 +90,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
 		if (log.isDebugEnabled()) {

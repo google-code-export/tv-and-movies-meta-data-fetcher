@@ -303,7 +303,7 @@ public class XMLShow extends XMLParser implements IShow {
 			showNode.setAttribute("sourceId", sourceId); //$NON-NLS-1$
 		}
 		else {
-			throw new RuntimeException("Source node cannot be null");
+			throw new RuntimeException(Messages.getString("XMLShow.SourceCannotBeNull")); //$NON-NLS-1$
 		}
 	}
 

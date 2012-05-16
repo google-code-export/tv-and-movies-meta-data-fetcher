@@ -103,8 +103,16 @@ public interface IShow extends IVideoGenre, IVideoExtra, IVideoCertification {
 	 */
 	public void setSourceId(String sourceId);
 
+	/**
+	 * Used to get the studio of the show
+	 * @return the studio of the show
+	 */
 	public String getStudio();
 
+	/**
+	 * Used to set the studio of the show
+	 * @param studio the studio of the show
+	 */
 	public void setStudio(String studio);
 
 

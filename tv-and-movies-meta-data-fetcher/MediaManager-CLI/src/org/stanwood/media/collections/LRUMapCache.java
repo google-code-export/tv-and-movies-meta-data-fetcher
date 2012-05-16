@@ -19,12 +19,21 @@ package org.stanwood.media.collections;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+/**
+ * A Hash map cache that deletes entries that were access last when a capacity limit is reached
+ * @param <K> The map key
+ * @param <V> The map value
+ */
 public class LRUMapCache<K,V> extends LinkedHashMap<K,V> {
 
 	private final int capacity;
 	private long accessCount = 0;
 	private long hitCount = 0;
 
+	/**
+	 * The constructor
+	 * @param capacity The maximum capacity (number of entries) of the cache
+	 */
 	public LRUMapCache(int capacity) {
 		super(capacity + 1, 1.1f, true);
 		this.capacity = capacity;
@@ -35,6 +44,7 @@ public class LRUMapCache<K,V> extends LinkedHashMap<K,V> {
 		return size() > capacity;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public V get(Object key) {
 		accessCount++;
@@ -45,17 +55,12 @@ public class LRUMapCache<K,V> extends LinkedHashMap<K,V> {
 		return value;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsKey(Object key) {
 		V value = super.get(key);
 		return value!=null;
 	}
 
-	public long getAccessCount() {
-		return accessCount;
-	}
-
-	public long getHitCount() {
-		return hitCount;
-	}
+	
 }

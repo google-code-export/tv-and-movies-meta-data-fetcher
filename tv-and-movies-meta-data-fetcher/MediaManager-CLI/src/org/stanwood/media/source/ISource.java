@@ -133,5 +133,9 @@ public interface ISource extends IExtension {
 	 */
 	public SearchResult searchMedia(String name,String year, Mode mode, Integer part) throws SourceException;
 
+	/**
+	 * Used to get the source information details
+	 * @return the source information details
+	 */
 	public ExtensionInfo<? extends ISource> getInfo();
 }

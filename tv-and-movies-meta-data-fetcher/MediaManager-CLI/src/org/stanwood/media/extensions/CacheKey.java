@@ -18,29 +18,53 @@ package org.stanwood.media.extensions;
 
 import org.stanwood.media.setup.MediaDirConfig;
 
+/**
+ * Used as the key when caching extensions
+ */
 public class CacheKey {
 
 	private MediaDirConfig config;
 	private int number;
 
+	/**
+	 * The constructor
+	 * @param config The media directory configuration
+	 * @param number The index number of the extension
+	 */
 	public CacheKey(MediaDirConfig config, int number) {
 		super();
 		this.config = config;
 		this.number = number;
 	}
 
+	/**
+	 * Used to get media directory configuration
+	 * @return the media directory configuration
+	 */
 	public MediaDirConfig getConfig() {
 		return config;
 	}
 
+	/**
+	 * Used to set the media directory configuration
+	 * @param config the media directory configuration
+	 */
 	public void setConfig(MediaDirConfig config) {
 		this.config = config;
 	}
 
+	/**
+	 * Used to get the extension index number
+	 * @return the extension index number
+	 */
 	public int getNumber() {
 		return number;
 	}
 
+	/**
+	 * Used to set the extension index number
+	 * @param number the extension index number
+	 */
 	public void setNumber(int number) {
 		this.number = number;
 	}

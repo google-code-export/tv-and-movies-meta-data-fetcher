@@ -243,7 +243,7 @@ public class FileHelper {
 						error = e;
 					}
 					if (retries < MAX_RETRIES - 1) {
-						log.error(MessageFormat.format("Unable to fetch URL {0}, connection timed out. Will retry...",url.toExternalForm()));
+						log.error(MessageFormat.format(Messages.getString("FileHelper.UnableFetch1"),url.toExternalForm())); //$NON-NLS-1$
 						try {
 							Thread.sleep(FileHelper.RETRY_SLEEP_TIME);
 						} catch (InterruptedException e2) {
@@ -255,7 +255,7 @@ public class FileHelper {
 						error = e;
 					}
 					if (retries < MAX_RETRIES - 1) {
-						log.error(MessageFormat.format("Unable to fetch URL {0}, timed out. Will retry...",url.toExternalForm()));
+						log.error(MessageFormat.format(Messages.getString("FileHelper.UnableFetch2"),url.toExternalForm())); //$NON-NLS-1$
 						try {
 							Thread.sleep(FileHelper.RETRY_SLEEP_TIME);
 						} catch (InterruptedException e2) {
@@ -651,7 +651,7 @@ public class FileHelper {
 				}
 			}
 			catch (SocketTimeoutException e1) {
-				log.warn(MessageFormat.format("Timed out fetching URL ''{0}'', going to retry..",url.toExternalForm()));
+				log.warn(MessageFormat.format(Messages.getString("FileHelper.Timedout"),url.toExternalForm())); //$NON-NLS-1$
 				if (e==null) {
 					e = e1;
 				}
@@ -768,7 +768,7 @@ public class FileHelper {
 				FileHelper.delete(oldFile);
 			}
 			else {
-				throw new IOException(MessageFormat.format("Unable to copy file {0} to {1}",oldFile,newFile));
+				throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UnableCopy"),oldFile,newFile)); //$NON-NLS-1$
 			}
 		}
 	}

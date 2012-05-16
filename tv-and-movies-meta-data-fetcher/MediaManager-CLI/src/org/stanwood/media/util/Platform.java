@@ -121,7 +121,7 @@ public final class Platform {
             || "amd64".equals(arch)) { //$NON-NLS-1$
             return true;
         }
-        throw new RuntimeException("Unable to workout bitness of JVM");
+        throw new RuntimeException(Messages.getString("Platform.UnableWorkoutBitnessOfJVM")); //$NON-NLS-1$
 //        return Native.POINTER_SIZE == 8;
     }
 }

@@ -92,7 +92,7 @@ public class ITunesRemoteClient extends Thread {
 				socket = new Socket(hostname, port);
 			}
 			catch (ConnectException e) {
-				throw new StoreException(MessageFormat.format("Unable to connect to remote itunes controller at host {0} port {1}",hostname,port),e);
+				throw new StoreException(MessageFormat.format(Messages.getString("ITunesRemoteClient.UnableConnect"),hostname,port),e); //$NON-NLS-1$
 			}
 			out = new PrintWriter(socket.getOutputStream(),true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
