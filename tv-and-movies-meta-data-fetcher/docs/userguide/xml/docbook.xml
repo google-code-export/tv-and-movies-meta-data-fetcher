@@ -8,7 +8,7 @@
 	<!ENTITY mmcopystore "mm-copy-store-to-store">
 	<!ENTITY mmlistatoms "mm-media-file-info">
     <!ENTITY mmimportmedia "mm-import-media">
-	<!ENTITY copyrightdate "2007-2011">
+	<!ENTITY copyrightdate "2007-2012">
 	<!ENTITY copyholder "John-Paul Stanford">
 ]>
 <book>
