@@ -54,7 +54,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 		if (parameterInfos==null) {
 			throw new NullPointerException("Parameter types cannot be null"); //$NON-NLS-1$
 		}
-		this.parameterInfos = parameterInfos;
+		this.parameterInfos = parameterInfos.clone();
 		this.id = id;
 		this.type = type;
 	}
@@ -102,7 +102,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The parameter information
 	 */
 	public ParameterType[] getParameterInfos() {
-		return parameterInfos;
+		return parameterInfos.clone();
 	}
 
 	/**
