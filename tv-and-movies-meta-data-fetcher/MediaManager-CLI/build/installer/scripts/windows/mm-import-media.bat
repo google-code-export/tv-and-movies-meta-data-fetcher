@@ -11,7 +11,7 @@ set JAVA=%JAVA_HOME%/bin/java
 :doit
 
 REM Main class
-set MAIN=org.stanwood.media.cli.manager.CLICopyStoreToStore
+set MAIN=org.stanwood.media.cli.importer.CLIImportMedia
 
 REM Locations of libraries
 set LIB_DIR=..\lib

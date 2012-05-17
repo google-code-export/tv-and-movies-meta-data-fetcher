@@ -21,7 +21,7 @@ else
 fi
 
 # Main class
-MAIN=org.stanwood.media.info.CLIMediaFileInformation
+MAIN=org.stanwood.media.cli.importer.CLIImportMedia
 
 # Libraries location
 LIB_DIR=/usr/share/java

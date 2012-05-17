@@ -23,7 +23,6 @@ set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-cli-1.1.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-exec-1.1.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-lang-2.6.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-logging-1.0.4.jar
-set CLASSPATH=%CLASSPATH%;%LIB_DIR%\jna-3.2.7.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\jdom.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\log4j-1.2.15.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\mysql-connector-java-5.1.6.jar
