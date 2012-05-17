@@ -78,18 +78,12 @@
 			<!-- Install all the libs -->							
 			<fileset dir="@{native.dir}" targetdir="$INSTALL_PATH/native"/>
 			
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4tags" os="unix"/>									
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4info" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4file" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mp4art" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4tags" os="unix"/>									
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4info" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4file" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mp4art" os="unix"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4tags" os="mac"/>									
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4info" os="mac"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4file" os="mac"/>
-			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mp4art" os="mac"/>
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/mediainfo" os="unix"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/32/AtomicParsley" os="unix"/>			
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/mediainfo" os="unix"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/x86/64/AtomicParsley" os="unix"/>			
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/mediainfo" os="mac"/>									
+			<executable targetfile="$INSTALL_PATH/native/apps/linux/mac/64/AtomicParsley" os="mac"/>			
 		</pack>
 		
 		<pack name="Documentation" required="no" installGroups="Documentation">
