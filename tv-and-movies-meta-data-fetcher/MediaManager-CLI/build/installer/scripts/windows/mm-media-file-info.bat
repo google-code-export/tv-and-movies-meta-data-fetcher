@@ -5,8 +5,8 @@ set JAVA_HEAP_INIT_SIZE=64
 set JAVA_HEAP_MAX_SIZE=192
 
 REM Find a java installation.
-if not exist JAVA_HOME goto :javaHomeNotSet
-set JAVA=%JAVA_HOME%/bin/java
+if not defined JAVA_HOME goto :javaHomeNotSet
+set JAVA=%JAVA_HOME%\bin\java
 
 :doit
 
@@ -17,7 +17,7 @@ REM Locations of libraries
 set LIB_DIR=..\lib
 
 REM Setup class path
-set CLASSPATH=%LIB_DIR%\MediaManager-1.98.jar
+set CLASSPATH=%LIB_DIR%\MediaManager-CLI-2.1.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\antlr-runtime-3.1.3.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-cli-1.1.jar
 set CLASSPATH=%CLASSPATH%;%LIB_DIR%\commons-exec-1.1.jar
