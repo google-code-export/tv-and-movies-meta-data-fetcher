@@ -7,6 +7,7 @@
 	<!ENTITY mmmovemedia "mm-move-into-media-directory">
 	<!ENTITY mmcopystore "mm-copy-store-to-store">
 	<!ENTITY mmlistatoms "mm-media-file-info">
+    <!ENTITY mmimportmedia "mm-import-media">
 	<!ENTITY copyrightdate "2007-2011">
 	<!ENTITY copyholder "John-Paul Stanford">
 ]>
@@ -548,6 +549,40 @@
 	 			</para>
 	 		</sect2>
 		</sect1>
+		<sect1>
+			<title id="mmimportmedia.title">&mmimportmedia;</title>
+			<para>
+			The &mmimportmedia; command is used to check for new media in watched directories. If it find media, it
+			attempts to lookup the information for the files and move them to the correct media directory. 
+			See <xref linkend="watcheddirectory"/> for configuration details.
+				<cmdsynopsis>
+					<command>&mmimportmedia;</command>
+                    <arg>-v</arg>
+					<arg>-h</arg>
+					<arg>-a</arg>
+					<arg>-d</arg>
+					<arg>-e</arg>
+					<arg>-t</arg>
+					<arg>-u</arg>		
+					<arg>-c <replaceable>config file</replaceable></arg>
+					<arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>					
+				</cmdsynopsis>			
+			</para>
+			<para>
+				The command has the following options:
+				<itemizedlist>
+                    <listitem><para><literal>-v, --version</literal> Display the version</para></listitem>
+					<listitem><para><literal>-h, --help</literal> Show the help message</para></listitem>
+					<listitem><para><literal>-c, --config_file</literal> The location of the config file. If option is not given then it will load from default locations.</para></listitem>
+					<listitem><para><literal>-l, --log_config</literal> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </para></listitem>
+					<listitem><para><literal>--dontUseDefaults, -d</literal> Don't use default media directories.</para></listitem>
+					<listitem><para><literal>--noupdate, -u</literal> If this option is present, then the XBMC addons won''t be updated</para></listitem>
+					<listitem><para><literal>--deleteNonMedia, -e</literal> Delete files are that are not media files (use with care)</para></listitem>
+					<listitem><para><literal>--test, -t</literal> If this option is present, then no changes are performed.</para></listitem>
+					<listitem><para><literal>--actions, -a</literal> Execute actions on new media files</para></listitem>
+				</itemizedlist>		
+			</para>
+		</sect1>
 	</chapter>
 	<chapter id="configuration">		
 		<title>Configuration</title>
@@ -630,6 +665,23 @@
 					</example>      
 				</sect2>					
 		</sect1>
+        <sect1 id="watcheddirectory">
+        	<title>Watch Directories</title>
+        	<para>
+        	    &apptitle; is able to monitor file system directories for new media. When it finds it, it can
+        	    be processed and moved into media directories. Use the command <xref linkend="mmimportmedia.title"/> 
+        	    to check for new media. The following example shows how to setup a file system directory for monitoring.
+        	    <example>
+        	    	<title>Watch Directory</title>
+        	    	<programlisting>
+        	    	<![CDATA[<mediaManager>
+	<watchDirectory directory="/mounts/newMedia"/>			
+</mediaManager>							
+					]]>
+        	    	</programlisting>
+        	    </example>
+        	</para>
+        </sect1>
 		<sect1 id="ignore">
 			<title>Ignore</title>
 			<para>
