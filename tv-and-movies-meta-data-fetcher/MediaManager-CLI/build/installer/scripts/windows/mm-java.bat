@@ -5,8 +5,8 @@ set JAVA_HEAP_INIT_SIZE=64
 set JAVA_HEAP_MAX_SIZE=192
 
 REM Find a java installation.
-if not exist JAVA_HOME goto :javaHomeNotSet
-set JAVA=%JAVA_HOME%/bin/java
+if not defined JAVA_HOME goto :javaHomeNotSet
+set JAVA=%JAVA_HOME%\bin\java
 
 :doit
 
