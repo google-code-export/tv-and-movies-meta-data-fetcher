@@ -324,8 +324,8 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		InputStream inStream = null;
 		try {
 			inStream = new FileInputStream(imageFile);
-			inStream.read(data);
-			if (data[0]==(byte)0xFF && data[1]==(byte)0xD8 && data[2]==(byte)0xFF ) {
+			int len=inStream.read(data);
+			if (len>=4 && data[0]==(byte)0xFF && data[1]==(byte)0xD8 && data[2]==(byte)0xFF ) {
 				if (data[3]==(byte)0xE0 || data[3]==(byte)0xE1) {
 					return true;
 				}

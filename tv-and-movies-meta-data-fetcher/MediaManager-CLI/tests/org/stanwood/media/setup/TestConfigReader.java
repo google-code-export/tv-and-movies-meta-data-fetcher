@@ -47,20 +47,20 @@ public class TestConfigReader {
 			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\"TV_SHOW\" pattern=\"%e.%x\" default=\"true\" ignoreSeen=\"true\" name=\"TV Shows\">"+FileHelper.LS);
 			testConfig.append("    <sources>"+FileHelper.LS);
 			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+FileHelper.LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File(File.separator+"testPath"+File.separator+"blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
 			testConfig.append("      </source>"+FileHelper.LS);
 			testConfig.append("    </sources>"+FileHelper.LS);
 			testConfig.append("    <stores>"+FileHelper.LS);
 			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File(File.separator+"testPath"+File.separator+"blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
 			testConfig.append("	     </store>"+FileHelper.LS);
 			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm4\" value=\""+new File("/testPath/blah4").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm4\" value=\""+new File(File.separator+"testPath"+File.separator+"blah4").getAbsolutePath()+"\"/>"+FileHelper.LS);
 			testConfig.append("	     </store>"+FileHelper.LS);
 			testConfig.append("    </stores>"+FileHelper.LS);
 			testConfig.append("    <actions>"+FileHelper.LS);
 			testConfig.append("        <action id=\"a.test.action\">"+FileHelper.LS);
-			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File(File.separator+"testPath"+File.separator+"blah").getAbsolutePath()+"\"/>"+FileHelper.LS);
 			testConfig.append("        </action>"+FileHelper.LS);
 			testConfig.append("    </actions>"+FileHelper.LS);
 			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
@@ -92,9 +92,9 @@ public class TestConfigReader {
 			List<StoreConfig> stores = dirConfig.getStores();
 			Assert.assertEquals(2,stores.size());
 			Assert.assertEquals("org.stanwood.media.store.FakeStore",stores.get(0).getID());
-			Assert.assertEquals(new File("/testPath/blah").getAbsolutePath(),stores.get(0).getParams().get("TeSTPaRAm1"));
+			Assert.assertEquals(new File(File.separator+"testPath"+File.separator+"blah").getAbsolutePath(),stores.get(0).getParams().get("TeSTPaRAm1"));
 			Assert.assertEquals("org.stanwood.media.store.FakeStore",stores.get(1).getID());
-			Assert.assertEquals(new File("/testPath/blah4").getAbsolutePath(),stores.get(1).getParams().get("TeSTPaRAm4"));
+			Assert.assertEquals(new File(File.separator+"testPath"+File.separator+"blah4").getAbsolutePath(),stores.get(1).getParams().get("TeSTPaRAm4"));
 
 			List<ActionConfig> actions = dirConfig.getActions();
 			Assert.assertEquals(1,actions.size());
@@ -269,7 +269,7 @@ public class TestConfigReader {
 			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
-			Assert.assertEquals(new File("/home/blah").getAbsolutePath(),configReader.getXBMCAddonDir().getAbsolutePath());
+			Assert.assertEquals(new File(File.separator+"home"+File.separator+"blah").getAbsolutePath(),configReader.getXBMCAddonDir().getAbsolutePath());
 			Assert.assertEquals("http://blah.com/addons",configReader.getXBMCAddonSiteUrl());
 			Assert.assertEquals(Locale.FRENCH,configReader.getXBMCLocale());
 		}
@@ -443,8 +443,8 @@ public class TestConfigReader {
 		testConfig.append("</mediaManager>"+FileHelper.LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
-		Assert.assertEquals(new File("/blah/blah1").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());
-		Assert.assertEquals(new File("/This/is/a/test").getAbsolutePath(),configReader.getNativeFolder().getAbsolutePath());
+		Assert.assertEquals(new File(File.separator+"blah"+File.separator+"blah1").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());
+		Assert.assertEquals(new File(File.separator+"This"+File.separator+"is"+File.separator+"a"+File.separator+"test").getAbsolutePath(),configReader.getNativeFolder().getAbsolutePath());
 	}
 
 	/**
@@ -463,7 +463,7 @@ public class TestConfigReader {
 			testConfig.append("  <plugins>"+FileHelper.LS);
 			testConfig.append("    <plugin jar=\"/home/test/plugin.jar\" class=\"this.is.a.Test\"/>"+FileHelper.LS);
 			testConfig.append("  </plugins>"+FileHelper.LS);
-			testConfig.append("  <XBMCAddons directory=\""+new File("/home/blah")+"\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+FileHelper.LS);
+			testConfig.append("  <XBMCAddons directory=\""+new File(File.separator+"home"+File.separator+"blah")+"\" locale=\"fr\" addonSite=\"http://blah.com/addons\"/>"+FileHelper.LS);
 			testConfig.append("  <global>"+FileHelper.LS);
 			testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+FileHelper.LS);
 			testConfig.append("    <native>/This/is/a/test</native>"+FileHelper.LS);
@@ -479,17 +479,17 @@ public class TestConfigReader {
 			testConfig.append("    </extensions>"+FileHelper.LS);
 			testConfig.append("    <sources>"+FileHelper.LS);
 			testConfig.append("      <source id=\""+FakeSource.class.getName()+"\">"+FileHelper.LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File("/blahPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm2\" value=\""+new File(File.separator+"blahPath"+File.separator+"blah")+"\"/>"+FileHelper.LS);
 			testConfig.append("      </source>"+FileHelper.LS);
 			testConfig.append("    </sources>"+FileHelper.LS);
 			testConfig.append("    <stores>"+FileHelper.LS);
 			testConfig.append("	     <store id=\""+FakeStore.class.getName()+"\">"+FileHelper.LS);
-			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("	       <param name=\"TeSTPaRAm1\" value=\""+new File(File.separator+"testPath"+File.separator+"blah")+"\"/>"+FileHelper.LS);
 			testConfig.append("	     </store>"+FileHelper.LS);
 			testConfig.append("    </stores>"+FileHelper.LS);
 			testConfig.append("    <actions>"+FileHelper.LS);
 			testConfig.append("        <action id=\"a.test.action\">"+FileHelper.LS);
-			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File("/testPath/blah")+"\"/>"+FileHelper.LS);
+			testConfig.append("	           <param name=\"TeSTPaRAm1\" value=\""+new File(File.separator+"testPath"+File.separator+"blah")+"\"/>"+FileHelper.LS);
 			testConfig.append("        </action>"+FileHelper.LS);
 			testConfig.append("    </actions>"+FileHelper.LS);
 			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
