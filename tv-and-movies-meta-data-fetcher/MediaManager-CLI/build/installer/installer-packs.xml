@@ -46,6 +46,12 @@
 			<executable targetfile="$INSTALL_PATH/bin/mm-xbmc">
 				<os family="unix"/>
 			</executable>
+            <file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-import-media" targetdir="$INSTALL_PATH/bin">
+                <os family="unix"/>
+            </file>
+            <executable targetfile="$INSTALL_PATH/bin/mm-import-media">
+                <os family="unix"/>
+            </executable>
 			<file src="@{mm-cli.dir}/build/installer/scripts/unix/mm-java" targetdir="$INSTALL_PATH/bin">
 				<os family="unix"/>
 			</file>
@@ -62,6 +68,9 @@
 			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-move-into-media-directory.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>
+            <file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-import-media.bat" targetdir="$INSTALL_PATH/bin">
+                <os family="windows"/>
+            </file>
 			<file src="@{mm-cli.dir}/build/installer/scripts/windows/mm-copy-store-to-store.bat" targetdir="$INSTALL_PATH/bin">
 				<os family="windows"/>
 			</file>		
