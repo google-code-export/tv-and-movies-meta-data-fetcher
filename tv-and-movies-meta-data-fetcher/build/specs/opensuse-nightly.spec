@@ -90,6 +90,7 @@ popd
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-media-file-info %{buildroot}%{_bindir}/mm-media-file-info
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-import-media %{buildroot}%{_bindir}/mm-import-media
 %__install -m 644 etc/defaultConfig.xml %{buildroot}/etc/mediafetcher-conf.xml
  
 # User docs
@@ -121,6 +122,7 @@ ln -s %{name}-%{version} %{_javadocdir}/%{name}
 %{_bindir}/mm-copy-store-to-store
 %{_bindir}/mm-move-into-media-directory
 %{_bindir}/mm-media-file-info
+%{_bindir}/mm-import-media
 %{_datadir}/applications/*.desktop
 %dir /usr/share/doc/%{name}
 %doc /usr/share/doc/%{name}/*
