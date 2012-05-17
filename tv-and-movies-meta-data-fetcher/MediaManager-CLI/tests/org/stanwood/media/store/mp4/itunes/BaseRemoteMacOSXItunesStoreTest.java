@@ -218,7 +218,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		if (log.isDebugEnabled()) {
 			executeRubyScript("ItunesController::ItunesControllerLogging::setLogLevelFromString(\"DEBUG\")\n");
 		}
-		executeRubyScript("SERVER = launchServer(\""+configFile.getAbsolutePath().replaceAll("\\","\\\\")+"\","+port+")\n");
+		executeRubyScript("SERVER = launchServer('"+configFile.getAbsolutePath()+"',"+port+")\n");
 		started = true;
 		executeRubyScript("SERVER.join\n");
 		started = false;
