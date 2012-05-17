@@ -7,11 +7,10 @@ Version 2.1
 Add more Linux distribution packages.
 Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
-	- Document mm-move-into-media-directory
-	- Document mm-import-media 
-	- Document the configuration options for watched directory
-Fix javadoc warnings
-Move strings to resource bundles
+	- Install with windows installer and test
+	- Install with Mac installer and test
+	- Install with Linux installer and test
+	- Install with OpenSuSE RPM's and test
 		
 Version 2.2
 -----------
