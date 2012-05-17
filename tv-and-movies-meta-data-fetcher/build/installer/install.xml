@@ -92,7 +92,7 @@
 			<!-- Create start menu entries for docs -->
 			<singlefile src="@{docs.dir}/userguide/html/docbook.html" target="$INSTALL_PATH/docs/html/index.html"/>
 			<singlefile src="@{docs.dir}/userguide/userguide.pdf" target="$INSTALL_PATH/docs/pdf/userguide.pdf"/>
-		</pack>			
-		<xi:xinclude xmlns:xi="http://www.w3.org/2001/XInclude" href="${basedir}/MediaManager-CLI/build/installer/install-packs.xml"/>		
+        </pack>			
+        <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../MediaManager-CLI/build/installer/installer-packs.xml"/>            
 	</packs>
 </installation>
