@@ -208,7 +208,6 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		return port;
 	}
 
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings("RE_BAD_SYNTAX_FOR_REGULAR_EXPRESSION")
 	private static void startServer() throws  IOException, ScriptException {
 		final File configFile = createConfigFile(USER,PASSWORD);
 //		jruby.getContext().setAttribute(ScriptEngine.ARGV, new String[] {"--config",configFile.getAbsolutePath(),"--port",String.valueOf(port)}, ScriptContext.ENGINE_SCOPE);

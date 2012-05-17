@@ -108,7 +108,6 @@ public class Controller {
 	 * @param testMode If true then test mode is active and no changes are to be written to disk
 	 * @throws ConfigException Thrown if their is a problem reading the configuration
 	 */
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_EXIT")
 	public void init(boolean testMode) throws ConfigException {
 		if (fileInfoFetcher==null) {
 			try {
