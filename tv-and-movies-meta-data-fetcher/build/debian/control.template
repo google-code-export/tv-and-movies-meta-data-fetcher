@@ -1,0 +1,16 @@
+Package: @@name@@
+Version: @@version@@
+Architecture: all
+Maintainer: John-Paul Stanford <dev@stanwood.org.uk>
+Section: unknown
+Homepage: http://code.google.com/p/tv-and-movies-meta-data-fetcher/
+Depends: libcommons-cli-java,libcommons-logging-java,libjdom1-java,librome-java,liblog4j1.2-java,libcommons-lang-java,libcommons-exec-java,libantlr-java,libmysql-java
+Recommends: sun-java6-jre
+Build-depends: sun-java6-jdk, ant
+Suggests: ant, sun-java6-jdk
+Priority: optional
+Installed-Size: @@deb.installed.size@@
+Description: MediaManager is a application and a API which can be used to retrieve TV show 
+ and movie meta data from Internet sources. This information is then stored locally and can 
+ be used to perform actions upon the file files, such as renaming the media files based 
+ on meta data.
