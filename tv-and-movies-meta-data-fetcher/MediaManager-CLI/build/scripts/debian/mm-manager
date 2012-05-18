@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Set jvm heap initial and maximum sizes (in megabytes).
+JAVA_HEAP_INIT_SIZE=64
+JAVA_HEAP_MAX_SIZE=192
+
+# Find a java installation.
+if [ -z "$JAVA_HOME" ]; then
+        echo "Warning: \$JAVA_HOME environment variable not set! Consider setting it."
+        echo "          Attempting to locate java..."
+        j=`which java 2>/dev/null`
+        if [ -z "$j" ]; then
+                echo "Failed to locate the java virtual machine! Bailing..."
+                exit 1
+        else
+                echo "Found a virtual machine at: $j..."
+                JAVA="$j"
+        fi
+else
+        JAVA="$JAVA_HOME/bin/java"
+fi
+
+# Main class
+MAIN=org.stanwood.media.cli.manager.CLIMediaManager
+
+# Libraries location
+LIB_DIR=/usr/share/java
+VERSION=2.1
+
+# Launch application.
+CLASSPATH=$LIB_DIR/MediaManager-CLI-$VERSION.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/commons-cli.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/commons-logging.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/log4j-1.2.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/rome.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jdom1.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/commons-exec.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/commons-lang.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/mysql-connector-java.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/antlr.jar
+# Launch Application
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
