@@ -70,6 +70,10 @@
 		<delete dir="${cobertura.dir}"/>
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
+        
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/build/anttasks-bin" includes="**/*"/>
+        </delete>
 	</target>
 
 	<target name="jars" description="generate the distribution">		
@@ -174,14 +178,14 @@
         
         <exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
             <arg value="-o"/>
-            <arg value="${userguide.dir}/html/docbook.html"/>
+            <arg value="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"/>
             <arg value="${docbook.home}/html/docbook.xsl"/>
             <arg value="docbook.xml"/>
         </exec>
         
         <fop format="application/pdf" 
              fofile="${fo.dir}/docbook.fo" 
-             outfile="${userguide.dir}/userguide.pdf" />
+             outfile="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf" />
 		
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
@@ -256,6 +260,100 @@
 		<delete dir="${dist.dir}/wrappers"/>
 		-->
 	</target>
+    
+    <target name="compile-anttasks">
+        <mkdir dir="${basedir}/build/anttasks-bin"/>
+        <echo message="Compiling ant tasks"/>
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac debug="true" srcdir="${basedir}/build/anttasks-src" destdir="${basedir}/build/anttasks-bin" target="${javac.target}" source="${javac.source}">
+        </javac>        
+    </target>
+    
+    <target name="dist-debian" depends="compile-anttasks">
+        <taskdef name="calculatesize"
+                 classname="de.masters_of_disaster.ant.tasks.calculatesize.CalculateSize"
+                classpath="${basedir}/build/anttasks-bin"/>
+                
+        <taskdef name="deb"
+                 classname="de.masters_of_disaster.ant.tasks.deb.Deb"
+                 classpath="${basedir}/build/anttasks-bin"/>
+                 
+        <calculatesize realsizeproperty="deb.installed.size">
+            <fileset dir="${basedir}/MediaManager-CLI/build/scripts/debian/" includes="*"/>
+            <fileset dir="${basedir}/build/shortcuts/" includes="*"/>
+            <fileset file="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf"/>
+            <fileset file="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"/>
+            <fileset file="${dist.dir}/${ant.project.name}-CLI-${project.version}.jar"/>
+            <fileset file="${basedir}/COPYING"/>            
+        </calculatesize>
+        
+        <copy tofile="${basedir}/build/debian/control" file="${basedir}/build/debian/control.template"/>        
+        
+        <loadfile property="project.description" srcFile="${basedir}/Description"/>
+        <replace file="${basedir}/build/debian/control">
+            <replacefilter token="@@version@@" value="${project.version}"/>
+            <replacefilter token="@@name@@" value="${ant.project.name}"/>
+            <replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+            <replacefilter token="@@mode@@" value="0"/>         
+            <replacefilter token="@@deb.installed.size@@" value="${deb.installed.size}"/>
+        </replace>
+        
+        <deb destfile="${dist.dir}/${ant.project.name}-${project.version}.deb"
+             tempDir="${dist.dir}/debian"
+             deleteTempFiles="false"
+             includeMd5sums="true">
+            <controlfileset file="${basedir}/build/debian/control"/>
+            
+            <!-- Scripts -->
+            <datafileset file="."
+                     fullpath="usr/"/>
+            <datafileset file="."
+                     fullpath="usr/bin/"/>
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-copy-store-to-store"
+                     fullpath="usr/bin/mm-copy-store-to-store"
+                     mode="755"/>
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-import-media"
+                         fullpath="usr/bin/mm-import-media"
+                         mode="755"/>
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-java"
+                         fullpath="usr/bin/mm-java"
+                         mode="755"/>
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-manager"
+                         fullpath="usr/bin/mm-manager"
+                         mode="755"/>                         
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-media-file-info"
+                         fullpath="usr/bin/mm-media-file-info"
+                         mode="755"/>
+            <datafileset file="${basedir}/MediaManager-CLI/build/scripts/debian/mm-move-into-media-directory"
+                         fullpath="usr/bin/mm-move-into-media-directory"
+                         mode="755"/>
+            
+            <!-- docs -->
+            <datafileset file="." fullpath="usr/share/"/>
+            <datafileset file="." fullpath="usr/share/doc/"/>
+            <datafileset file="." fullpath="usr/share/doc/${ant.project.name}/"/>
+            
+            <datafileset file="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf"
+                         prefix="usr/share/doc/${ant.project.name}/"/>
+            <datafileset file="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"
+                         prefix="usr/share/doc/${ant.project.name}/"/>
+            <datafileset file="${basedir}/COPYING" prefix="usr/share/doc/${ant.project.name}/"/>
+            <datafileset file="." fullpath="usr/share/applications/"/>
+            <datafileset file="${basedir}/build/shortcuts/MediaManager Documentation (HTML).desktop" 
+                         fullpath="usr/share/applications/MediaManager Documentation (HTML).desktop"/>
+            <datafileset file="${basedir}/build/shortcuts/MediaManager Documentation (PDF).desktop" 
+                         fullpath="usr/share/applications/MediaManager Documentation (PDF).desktop"/>
+        
+            <!-- application -->
+            <datafileset file="." fullpath="usr/share/java/"/>
+            <datafileset file="${dist.dir}/${ant.project.name}-CLI-${project.version}.jar" prefix="usr/share/java/"/>
+        </deb>
+        
+        <delete file="${basedir}/build/debian/control"/>
+        <delete dir="${dist.dir}/debian"/>
+    </target>
 
-	<target name="dist" depends="clean,build,docs,jars,installer"/>	
+	<target name="dist" depends="clean,build,docs,jars,installer,dist-debian"/>	
+    
+    
 </project>
