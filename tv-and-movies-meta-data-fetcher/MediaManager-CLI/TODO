@@ -8,7 +8,6 @@ Add more Linux distribution packages.
 Update docs
 	- Add details about windows/unix paths. Patterns need correct separators
 	- Check that mm-media-file-info correctly display atoms with copyright in key on windows
-	- Install with Mac installer and test
 	- Install with OpenSuSE RPM's and test
 		
 Version 2.2
