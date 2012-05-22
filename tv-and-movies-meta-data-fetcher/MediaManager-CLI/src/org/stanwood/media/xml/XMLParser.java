@@ -312,8 +312,13 @@ public class XMLParser {
 		return result;
 	}
 
-	protected Element firstChild(Element expressionEl) {
-		NodeList children =  expressionEl.getChildNodes();
+	/**
+	 * Used to get the first XML element under a parent element
+	 * @param parent The parent element
+	 * @return The first XML element or null if none could be found
+	 */
+	public static Element firstChild(Element parent) {
+		NodeList children =  parent.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
 			Node node = children.item(i);
 			if (node instanceof Element) {
@@ -323,7 +328,14 @@ public class XMLParser {
 		return null;
 	}
 
-	protected List<Element> selectChildNodes(Node parent,String childName) {
+	/**
+	 * Used to get a list of children nodes under a parent XML node that match
+	 * a given name
+	 * @param parent The parent name
+	 * @param childName The name of the children to return
+	 * @return The children nodes
+	 */
+	public static List<Element> selectChildNodes(Node parent,String childName) {
 		List<Element>result = new ArrayList<Element>();
 		NodeList children = parent.getChildNodes();
 		for (int i=0;i<children.getLength();i++) {
@@ -334,7 +346,14 @@ public class XMLParser {
 		return result;
 	}
 
-	protected IterableNodeList selectNodeList(Node contextNode,String path) throws XMLParserException {
+	/**
+	 * Used to get a list of XML nodes using a XPath path
+	 * @param contextNode The context that the path should be used with
+	 * @param path The XPath path
+	 * @return The node list
+	 * @throws XMLParserException Thrown if their is a XML problem
+	 */
+	public static IterableNodeList selectNodeList(Node contextNode,String path) throws XMLParserException {
 		try {
 			NodeList list = XPathAPI.selectNodeList(contextNode, path);
 			return new IterableNodeList(list);
@@ -344,7 +363,14 @@ public class XMLParser {
 		}
 	}
 
-	protected Node selectSingleNode(Node contextNode,String path) throws XMLParserException {
+	/**
+	 * Used to return a single XML node using a XPath path
+	 * @param contextNode The context that the path should be used with
+	 * @param path The XPath path
+	 * @return The node, or null if it could not be found
+	 * @throws XMLParserException  Thrown if their is a XML problem
+	 */
+	public static Node selectSingleNode(Node contextNode,String path) throws XMLParserException {
 		try {
 			return XPathAPI.selectSingleNode(contextNode, path);
 		}
