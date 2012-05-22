@@ -16,19 +16,22 @@
  */
 package org.stanwood.media.model;
 
+import java.io.Serializable;
+
 /**
- * This is used to store DVD Chapter information for films 
+ * This is used to store DVD Chapter information for films
  */
-public class Chapter {
+public class Chapter implements Serializable {
+
 	private int number;
 	private String name;
-	
+
 	/**
 	 * Used to create a instance of the chapter class.
 	 * @param name The chapter name
 	 * @param number The chapter number
 	 */
-	public Chapter(String name, int number) {		
+	public Chapter(String name, int number) {
 		setName(name);
 		setNumber(number);
 	}
@@ -64,6 +67,5 @@ public class Chapter {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
 }

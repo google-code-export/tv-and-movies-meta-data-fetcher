@@ -25,6 +25,13 @@ public class Certification {
 	private String type;
 
 	/**
+	 * The constructor
+	 */
+	public Certification() {
+
+	}
+
+	/**
 	 * Used to create a instance of the certification class that holds certification information
 	 * @param certification The certification
 	 * @param type The type of certification

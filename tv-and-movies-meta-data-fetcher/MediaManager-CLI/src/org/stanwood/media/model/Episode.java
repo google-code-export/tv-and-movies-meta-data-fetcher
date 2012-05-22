@@ -42,7 +42,7 @@ public class Episode implements IEpisode {
 	/** The id of the show as found on the source site */
 	private String episodeId;
 
-	private List<? extends Actor> actors;
+	private List<Actor> actors;
 	private List<String>directors;
 	private List<String>writers;
 
@@ -200,7 +200,7 @@ public class Episode implements IEpisode {
 	 * @return a list of actors in the episode
 	 */
 	@Override
-	public List<? extends Actor> getActors() {
+	public List<Actor> getActors() {
 		return actors;
 	}
 
@@ -209,7 +209,7 @@ public class Episode implements IEpisode {
 	 * @param actors A list of actors in the episode
 	 */
 	@Override
-	public void setActors(List<? extends Actor> actors) {
+	public void setActors(List<Actor> actors) {
 		this.actors = actors;
 	}
 

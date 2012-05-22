@@ -1,9 +1,11 @@
 package org.stanwood.media.model;
 
+import java.io.Serializable;
+
 /**
  * Used to store information on video ratings
  */
-public class Rating {
+public class Rating implements Serializable {
 
 	private float rating;
 	private int numberOfVotes;

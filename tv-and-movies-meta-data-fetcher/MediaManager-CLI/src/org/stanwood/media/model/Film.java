@@ -47,7 +47,7 @@ public class Film implements IFilm {
 	private String description;
 	private String preferredGenre;
 	private String country;
-	private List<? extends Actor> actors;
+	private List<Actor> actors;
 	private SortedSet<IVideoFile> videoFiles = new VideoFileSet();
 	private String studio;
 
@@ -148,7 +148,7 @@ public class Film implements IFilm {
 	 * @return The list of actors in the video
 	 */
 	@Override
-	public List<? extends Actor> getActors() {
+	public List<Actor> getActors() {
 		return actors;
 	}
 
@@ -157,7 +157,7 @@ public class Film implements IFilm {
 	 * @param actors The list of actors in the film
 	 */
 	@Override
-	public void setActors(List<? extends Actor> actors) {
+	public void setActors(List<Actor> actors) {
 		this.actors = actors;
 	}
 

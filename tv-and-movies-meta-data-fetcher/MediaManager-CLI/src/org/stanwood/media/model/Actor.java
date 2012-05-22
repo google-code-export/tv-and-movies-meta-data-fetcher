@@ -1,9 +1,11 @@
 package org.stanwood.media.model;
 
+import java.io.Serializable;
+
 /**
  * Used to store information on actors
  */
-public class Actor {
+public class Actor implements Serializable {
 
 	private String name;
 	private String role;
