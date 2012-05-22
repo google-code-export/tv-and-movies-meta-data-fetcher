@@ -263,7 +263,7 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 				log.error(capture.toString());
 				throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UNABLE_EXEC_COMMAND") ,cmdLine.toString()),e); //$NON-NLS-1$
 			}
-			return capture.toString();
+			return capture.toString("UTF-8"); //$NON-NLS-1$
 		} catch (IOException e) {
 			throw new MP4Exception(MessageFormat.format(Messages.getString("MP4AtomicParsleyManager.UNABLE_EXEC_COMMAND") ,cmdLine.toString()),e); //$NON-NLS-1$
 		}
