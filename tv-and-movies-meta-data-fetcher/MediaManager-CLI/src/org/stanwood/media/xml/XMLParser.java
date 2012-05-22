@@ -317,7 +317,7 @@ public class XMLParser {
 	 * @param parent The parent element
 	 * @return The first XML element or null if none could be found
 	 */
-	public static Element firstChild(Element parent) {
+	public static Element firstChild(Node parent) {
 		NodeList children =  parent.getChildNodes();
 		for (int i =0;i<children.getLength();i++) {
 			Node node = children.item(i);
