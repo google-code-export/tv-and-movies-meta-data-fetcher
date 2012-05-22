@@ -20,6 +20,13 @@ public class Actor {
 	}
 
 	/**
+	 * The constructor
+	 */
+	public Actor() {
+
+	}
+
+	/**
 	 * Used to get the name of the actor
 	 * @return The name of the actor
 	 */
@@ -33,6 +40,22 @@ public class Actor {
 	 */
 	public String getRole() {
 		return role;
+	}
+
+	/**
+	 * Used to set the actor name
+	 * @param name The actor name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Used to set the actor role
+	 * @param role The actor role
+	 */
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }
