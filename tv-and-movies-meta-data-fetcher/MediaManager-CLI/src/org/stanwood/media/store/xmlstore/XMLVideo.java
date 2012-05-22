@@ -58,7 +58,7 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public List<? extends Actor> getActors() {
+	public List<Actor> getActors() {
 		try {
 			List<Actor> actors = new ArrayList<Actor>();
 			for (Node n : selectNodeList(videoNode, "actors/actor")) { //$NON-NLS-1$
@@ -75,7 +75,7 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public void setActors(List<? extends Actor> actors) {
+	public void setActors(List<Actor> actors) {
 		try {
 			Element actorsEl = getElement(videoNode,"actors"); //$NON-NLS-1$
 			for (Node n : selectNodeList(actorsEl, "actor")) { //$NON-NLS-1$
