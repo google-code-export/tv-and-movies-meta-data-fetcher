@@ -11,11 +11,11 @@ public interface IVideoActors {
 	 * Used to get a list of actors in the video
 	 * @return The list of actors in the video
 	 */
-	public List<Actor> getActors();
+	public List<? extends Actor> getActors();
 
 	/**
 	 * Used to set the list of actors in the film
 	 * @param actors The list of actors in the film
 	 */
-	public void setActors(List<Actor> actors);
+	public void setActors(List<? extends Actor> actors);
 }
