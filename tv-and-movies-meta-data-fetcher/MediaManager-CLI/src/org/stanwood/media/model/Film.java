@@ -52,6 +52,13 @@ public class Film implements IFilm {
 	private String studio;
 
 	/**
+	 * Used to create a film
+	 */
+	public Film() {
+
+	}
+
+	/**
 	 * Used to create a instance of the film class.
 	 * @param id The id of the film used by the source that it was read from.
 	 */
