@@ -10,9 +10,27 @@ Update docs
 		
 Version 2.2
 -----------
-Find out and fix why the mediainfo tool can't handle filenames with a ? in them.
 If no <stores/> element, then add default stores
 If no <sources/> element, them add default sources
+Local file Database store
+Remote Database store
+Update to latest branch of XBMC scrapers
+
+Version 2.3
+-----------
+Add script support
+	New <script> element for the config file. This will contain global script functions
+	Add ability to execute scripts before and after a processing operation of each media directory.
+	Add ability to execute scripts before importing form incoming directory
+	Make it possible to have actions completely written in scripts
+Allow script section to be loaded from files	
+Extend patterns
+	* Allow multiple patterns
+	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
+
+Version 2.4
+-----------
+Find out and fix why the mediainfo tool can't handle filenames with a ? in them.
 Add a getting started guide and link to a button in the installer
 Improve mp4 metadata
 	* Set the cnID atom
@@ -20,15 +38,6 @@ Improve mp4 metadata
 			       This can be obtained from parsing the app store data (their is a web api).
 			       Or maybe just setting it to the id of the item, however this would 
 			       not be compatible with stuff downloaded in iTunes. 			  
-Add script support
-	New <script> element for the config file. This will contain global script functions
-	Add ability to execute scripts before and after a processing operation of each media directory.
-	Add ability to execute scripts before importing form incoming directory
-	Make it possible to have actions completely written in scripts	
-Extend patterns
-	* Allow multiple patterns
-	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
-Allow script section to be loaded from files
 Add tool to rename media files to have filenames without non ascii characters.
 Create man pages for commands
 Add ability to create reports.
@@ -36,7 +45,6 @@ Add ability to create reports.
 	- Reports of new media added to all media dir's
 	- Reports of files that media details could not be found for
 	- Most recently aired report	
-Update to latest branch of XBMC scrapers
 Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
 Add support for finding Special Episode information and renaming the files	 
@@ -47,10 +55,8 @@ Make native Windows installer
 Replace windows .bat files with native .exe launchers
 Allow the checking for updates period to be configured (Default once a day)
 Add "remove from store" command line tool
-Local file Database store
-Remote Database store
 
-Version 2.3
+Version 2.5
 -----------
 SeenDBFixer
     - Remove items that are not matching rename pattern, if their is a rename action
