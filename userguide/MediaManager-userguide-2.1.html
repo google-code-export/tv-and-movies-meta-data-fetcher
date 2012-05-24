@@ -1,0 +1,420 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>MediaManager user guide</title><meta name="generator" content="DocBook XSL Stylesheets V1.62.0"><meta name="description" content="
+				This document describes usage of the application MediaManager version 2.1
+			"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id195005"></a>MediaManager user guide</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">John-Paul</span> <span class="surname">Stanford</span></h3><div class="affiliation"><div class="address"><p><tt class="email">&lt;<a href="mailto:dev@stanwood.org.uk">dev@stanwood.org.uk</a>&gt;</tt></p></div></div></div></div></div><div><p class="copyright">Copyright © 2007-2012 John-Paul Stanford</p></div><div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
+				This document describes usage of the application MediaManager version 2.1
+			</p></div></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="sect1"><a href="#id218513">Features</a></span></dt><dt><span class="sect1"><a href="#id210277">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id208711">org.stanwood.media.source.xbmc.XBMCSource</a></span></dt><dt><span class="sect2"><a href="#id202596">org.stanwood.media.source.TagChimpSource</a></span></dt><dt><span class="sect2"><a href="#id202613">org.stanwood.media.source.HybridFilmSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id195632">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id195654">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#id195666">org.stanwood.media.store.xmlstore.XMLStore2</a></span></dt><dt><span class="sect2"><a href="#id195682">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#id195047">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt><dt><span class="sect2"><a href="#id195210">org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStore</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id241244">Actions</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id241253">org.stanwood.media.actions.command.ExecuteSystemCommandAction</a></span></dt><dt><span class="sect2"><a href="#id241402">org.stanwood.media.actions.podcast.PodCastAction</a></span></dt><dt><span class="sect2"><a href="#renameaction">org.stanwood.media.actions.rename.RenameAction</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#installation">2. Installation</a></span></dt><dd><dl><dt><span class="sect1"><a href="#id241592">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#id241636">2. Installer</a></span></dt></dl></dd><dt><span class="chapter"><a href="#usage">3. CLI Usage</a></span></dt><dd><dl><dt><span class="sect1"><a href="#mediamanagercmd">mm-manager</a></span></dt><dt><span class="sect1"><a href="#mediacopystore">mm-copy-store-to-store</a></span></dt><dt><span class="sect1"><a href="#mediamovecmd">mm-move-into-media-directory</a></span></dt><dt><span class="sect1"><a href="#mp4listatomscmd">mm-media-file-info</a></span></dt><dt><span class="sect1"><a href="#id242324">mm-xbmc</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id242345">Global options:</a></span></dt><dt><span class="sect2"><a href="#id242393">Commands:</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id242441">mm-import-media</a></span></dt></dl></dd><dt><span class="chapter"><a href="#configuration">4. Configuration</a></span></dt><dd><dl><dt><span class="sect1"><a href="#id242645"></a></span></dt><dt><span class="sect1"><a href="#mediadirectory">Media directories</a></span></dt><dd><dl><dt><span class="sect2"><a href="#mode">Mode</a></span></dt><dt><span class="sect2"><a href="#patterns">Patterns</a></span></dt></dl></dd><dt><span class="sect1"><a href="#watcheddirectory">Watch Directories</a></span></dt><dt><span class="sect1"><a href="#ignore">Ignore</a></span></dt><dt><span class="sect1"><a href="#plugins">Plugins</a></span></dt><dt><span class="sect1"><a href="#native">Native applications and libraries</a></span></dt><dt><span class="sect1"><a href="#globalsettings">Global Settings</a></span></dt><dt><span class="sect1"><a href="#examples">Examples</a></span></dt></dl></dd><dt><span class="chapter"><a href="#credits-and-licenses">5. Credits and Licenses</a></span></dt></dl></div><div class="list-of-examples"><p><b>List of Examples</b></p><dl><dt>1.1. <a href="#id202576">XBMC settings example</a></dt><dt>4.1. <a href="#id242906">Examples:</a></dt><dt>4.2. <a href="#id242954">Watch Directory</a></dt><dt>4.3. <a href="#id242981">Ignore patterns</a></dt><dt>4.4. <a href="#id243008">Registering plguins</a></dt><dt>4.5. <a href="#id243106">Gloab settings</a></dt><dt>4.6. <a href="#id243132">The default configuration file</a></dt></dl></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="introduction"></a>Chapter 1. Introduction</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#id218513">Features</a></span></dt><dt><span class="sect1"><a href="#id210277">Sources</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id208711">org.stanwood.media.source.xbmc.XBMCSource</a></span></dt><dt><span class="sect2"><a href="#id202596">org.stanwood.media.source.TagChimpSource</a></span></dt><dt><span class="sect2"><a href="#id202613">org.stanwood.media.source.HybridFilmSource</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id195632">Stores</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id195654">org.stanwood.media.store.memory.MemoryStore</a></span></dt><dt><span class="sect2"><a href="#id195666">org.stanwood.media.store.xmlstore.XMLStore2</a></span></dt><dt><span class="sect2"><a href="#id195682">org.stanwood.media.store.SapphireStore</a></span></dt><dt><span class="sect2"><a href="#id195047">org.stanwood.media.store.mp4.MP4ITunesStore</a></span></dt><dt><span class="sect2"><a href="#id195210">org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStore</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id241244">Actions</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id241253">org.stanwood.media.actions.command.ExecuteSystemCommandAction</a></span></dt><dt><span class="sect2"><a href="#id241402">org.stanwood.media.actions.podcast.PodCastAction</a></span></dt><dt><span class="sect2"><a href="#renameaction">org.stanwood.media.actions.rename.RenameAction</a></span></dt></dl></dd></dl></div><p>
+			MediaManager is a application and a API which can be used to retrieve TV show 
+			and movie meta data from Internet sources. This information is then stored 
+			locally and can be used to perform actions upon the file files, such as renaming 
+			the media files based on meta data.
+		</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id218513"></a>Features</h2></div></div><div></div></div><p>
+				</p><div class="itemizedlist"><ul type="disc"><li><p>Provides a CLI tool that renames media files with the correct names.</p></li><li><p>Fetches TV Show and Film metadata from the Internet.</p></li><li><p>Multiple sources of media information including XBMC metadata parsers.</p></li><li><p>Cache media information locally in stores, including a XML store.</p></li><li><p>Run actions on the media, such as renaming it based on media information</p></li><li><p>Provides a action for executing system commands on media files</p></li><li><p>Provides a action creating video podcasts of media files</p></li><li><p>Provides a API for accessing the media information.</p></li><li><p>Provides a store that writes Sapphire XML files.</p></li><li><p>Provides a store that saves metadata into MP4/M4V files that iTunes can read.</p></li><li><p>Allows plugins to be registers so that custom Sources, Stores and Actions can be added.</p></li><li><p>Provides a command line tool to manage XBMC addon scrapers.</p></li><li><p>Runs on any platform that supports Java 1.6.</p></li></ul></div><p>				
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id210277"></a>Sources</h2></div></div><div></div></div><p>
+				Sources are the places that MediaManager retrieves media information from. Sources
+				are read only, so it's not possible to write information back too them. The following 
+				sources come with MediaManager, however others can be added.
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id208711"></a>org.stanwood.media.source.xbmc.XBMCSource</h3></div></div><div></div></div><p>
+				This is the main source that MediaManager was desgined to use. It makes use of XBMC scrappers
+				to fetch media information. It is capable of reading both TV Show and Film information if 
+				the XBMC Scraper supports it. 
+				</p><p>
+				In order for for this source to work, their must be XBMC addon scrapers installed. These can
+				be installed and managed using the command line tool mm-xbmc
+				</p><p>
+				Any parameters set on this source are passed through to the XBMC addon scrapers as parameters.
+				In addition this source also supports the following parameters
+					 </p><div class="itemizedlist"><ul type="disc"><li><p>
+                      			<tt class="literal">scrapers</tt> a comma seperated list of XBMC scraper ID's. These 
+                      			are the ID's of scrappers that are useable. If not given, then all scrappers are 
+                      			considered useable.
+                      		</p></li></ul></div><p> 
+				</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id194914"></a>Configuration</h4></div></div><div></div></div><p>
+					In addition to the source parameters, their is also a section of the configuration file that 
+					holds settings for all the XBMC sources. The XBMCAddon element in the configuration file has the 
+					following optional attributes:
+					</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">directory</tt> - The directory one system to store addons. Defaults to
+                      		 "$HOME/.mediaManager/addons".</p><p><tt class="literal">locale</tt> - The locale to use with the addons. Defaults to "en".</p><p><tt class="literal">addonSite</tt> - The site to install addons from. Defaults to 
+                      		"http://mirrors.xbmc.org/addons/dharma".</p></li></ul></div><p>
+                    </p><div class="example"><a name="id202576"></a><p class="title"><b>Example 1.1. XBMC settings example</b></p><pre class="programlisting">
+&lt;mediaManager&gt;
+	
+
+	&lt;XBMCAddons directory="$HOME/.mediaManager/addons"
+	            locale="en"
+	            addonSite="http://mirrors.xbmc.org/addons/dharma"/&gt;					
+&lt;/mediaManager&gt;	
+				
+							</pre></div><p> 
+					</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id202596"></a>org.stanwood.media.source.TagChimpSource</h3></div></div><div></div></div><p>
+				The TagChimpSource Source is film source that fetchs film information from the website 
+				<a href="http://www.tagchimp.com/" target="_top">www.tagchimp.com</a>. This also includes chapter 
+				information.
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id202613"></a>org.stanwood.media.source.HybridFilmSource</h3></div></div><div></div></div><p>
+				The HybridFilm Source is a bit different to the other sources. It uses the other sources to 
+				find the best information it can about a film. It's main use to to combine the extra information
+				film chapter information from the <tt class="literal">TagChimpSource</tt> source with the information in 
+				the <tt class="literal">XBMCSource</tt>. 				
+				</p><p>
+				This source supports the following parameters:
+				</p><div class="itemizedlist"><ul type="disc"><li><p>
+                 			<tt class="literal">xbmcSourceId</tt> Id of XBMC source to use, if parameter is not specified, then the default is used.
+                 		</p></li></ul></div><p>
+				</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id195632"></a>Stores</h2></div></div><div></div></div><p>
+				Stores are similar too sources, except that they are also writable. Once
+				information has been retrieved from a source, it is written info a store.
+				Next time the information is needed, it can be retrieved from the store.
+				This makes repeatedly retrieving information a lot faster.  
+			</p><p>
+                 Stores can have parameters. These parameters are entered via the configuration file.
+                 The stores will validated their parameters when the store is access and report
+                 back any problems that are found.
+             </p><p>
+				Thee following stores that come with MediaManager. Each of these has different
+				properties. Some of these stores can also be used by other applications such as 
+				media centre's to display media metadata. 				
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id195654"></a>org.stanwood.media.store.memory.MemoryStore</h3></div></div><div></div></div><p>
+				This store is used to store the media information in memory. This allows the tool
+ 				to reuse the media information without having to fetch it from other stores or sources 
+ 				(which would be slower). This information will be lost once the application exits. 
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id195666"></a>org.stanwood.media.store.xmlstore.XMLStore2</h3></div></div><div></div></div><p>
+				This store is used to store the tv show and film information in a XML file called '.mediaManager-xmlStore.xml'.
+ 				This file will be locationed in the root of the media directory and can store multiple films/tv shows. This
+ 				store can also be used when searching for tv show and film ID's. 				
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id195682"></a>org.stanwood.media.store.SapphireStore</h3></div></div><div></div></div><p>
+				This is a write only store that is used to store information in a format that can 
+ 				be used by the <a href="http://appletv.nanopi.net/" target="_top">Sapphire</a> frontrow plugin. 
+ 				The details of the XML format can be found <a href="http://appletv.nanopi.net/manual/overriding-metadata/" target="_top">here</a>.
+				</p><p>  				
+ 				Every time episode or film information is fetched from a source, a XML file is written with 
+ 				the name name as the episode or film file (except the extension is changed too .xml).
+				</p><p>
+ 				This store has the optional parameter "PreferredCertificationCounrty". If this is set, then
+ 				when fetching the rating, this country in the parameter's rating is used. If the paramter is not set 
+ 				or the country can't be found, then the first rating is used.
+ 				</p><p>
+                      It has the following parameters:
+                      </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">PreferredCertificationCounrty</tt> The preferred counties rating to use.</p></li></ul></div><p>
+				</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id195047"></a>org.stanwood.media.store.mp4.MP4ITunesStore</h3></div></div><div></div></div><p>
+                 This store is used to store Film/TV show information in .mp4/.m4v files used
+ 				 by iTunes. This allows iTunes to use the meta data and see the files complete with
+ 				 their meta data.
+                 </p><p>
+                 In order to function, this store uses the command line tools provided by the AtomicParsley application.
+                 Their are different forks of this application on the Internet. The most feature rich version I've
+                 found is at <a href="https://bitbucket.org/shield007/atomicparsley" target="_top">AtomicParsley</a>. 
+                 MediaManager uses this one to add atoms that some of the other versions can't. The application must be 
+                 installed on the PATH, or pointed to by the optional store parameters.                 
+                 </p><p>
+                 MediaManager should be able to find these tools if it was installed using the installer.
+                 However if it was installed via linux packages then it will look for them on the system
+                 path. It's also possible to tell it where to look for them. See the <a href="#native" title="Native applications and libraries">the section called &#8220;Native applications and libraries&#8221;</a> 
+                 chapter or the optional parameters of the store for more information.                 
+                 </p><p>
+                 If using a version of AtomicParsley that does not support the setting of all fields that this store
+                 can handle, then a warning will be printed. A version with the above link that fully supports this store
+                 can downloaded from the MediaManager website or installed via the installer.                 
+                 </p><p>                     
+                 This store has following optional parameters:
+                 </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">atomicparsley</tt> The path to the AtomicParsley command</p></li></ul></div><p>
+                 </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id195210"></a>org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStore</h3></div></div><div></div></div><p>
+                This store is used to inform itunes of file changes in a media directory. It does this
+                by talking to a remote server running on the same machine as iTunes. The details of the server can
+                be found at <a href="http://code.google.com/p/itunes-remote-control-server/" target="_top">iTunes Remote Server</a>.
+                </p><p>
+                The optional parameter file-separator can be used when MediaManager is running
+                on a different operating system to the remote client. So for example if MediaManager
+                is on a linux OS and the remote server is on a windows OS, then the file seperator
+                should be set to \. See the page <a href="http://en.wikipedia.org/wiki/Regular_expression" target="_top">Regex</a> for
+                more information on regular expression syntax.
+                </p><p>
+                The search and replace optional parameters can be used to the media directory
+                is access at a different location on the iTunes server machine to the machine
+                that MediaManager is running on.
+                </p><p>                     
+                 This store has following parameters:
+                 </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">hostname</tt> The path to the AtomicParsley command.</p></li><li><p><tt class="literal">port</tt> Optional parameter giving port number of the server, defaults to 7000.</p></li><li><p><tt class="literal">username</tt> Required parameter giving name of user used to log into the server.</p></li><li><p><tt class="literal">password</tt> Required parameter giving password of user used to log into the server.</p></li><li><p><tt class="literal">search-pattern</tt> Optional parameter that must be used with search-replace. This parameter is used to perform a regular expression search and replace on the file paths. This parameter is used to set the pattern.</p></li><li><p><tt class="literal">search-replace</tt> Optional parameter that must be used with search-replace. This parameter is used to perform a regular expression search and replace on the file paths. This parameter is used to set the replacement text.</p></li><li><p><tt class="literal">file-separator</tt> Optional parameter that is used to set the file seperator used in file names sent to the server.</p></li></ul></div><p>
+                 </p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id241244"></a>Actions</h2></div></div><div></div></div><p>
+				Actions are tasks that are to be performed upon media files by the application mm-manager. The
+				following actions are provided:  
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id241253"></a>org.stanwood.media.actions.command.ExecuteSystemCommandAction</h3></div></div><div></div></div><p>This action is used execute a system command upon media files and directories</p><p> 
+                 This action supports the following parameters, which are all optional:
+                 	</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">commandOnFile</tt> A command to execute on finding acceptable media files.</p></li><li><p><tt class="literal">commandOnDirectory</tt> A command to execute on finding acceptable directories within the media directory.</p></li><li><p><tt class="literal">extensions</tt> A comma separated list of media file extensions to accept.</p></li><li><p><tt class="literal">newFile</tt> If this command creates a new file, then the name should be in this parameter.</p></li><li><p><tt class="literal">deletedFile</tt> If this command deletes a new file, then the name should be in this parameter.</p></li><li><p><tt class="literal">abortIfFileExists</tt> The name of a file, that if it exists, then this action will not perform.</p></li></ul></div><p>                  
+                 </p><p>
+                 Parameters can also have variable in them. These can be any of the pattern variables, as well as
+                 the following special variables:
+	                 </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">$NEWFILE</tt> The value of the 'newFile' parameter.</p></li><li><p><tt class="literal">$DELETEDFILE</tt> The value of the 'deletedFile' parameter.</p></li><li><p><tt class="literal">$MEDIAFILE_NAME</tt> The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</p></li><li><p><tt class="literal">$MEDIAFILE_EXT</tt> The extension of the current media file been processed.</p></li><li><p><tt class="literal">$MEDIAFILE_DIR</tt> The directory the current media file is in.</p></li><li><p><tt class="literal">$MEDIAFILE</tt> The full path of the current media file.</p></li><li><p><tt class="literal">$HOME</tt> The current users home directory.</p></li></ul></div><p>                      	
+                 </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id241402"></a>org.stanwood.media.actions.podcast.PodCastAction</h3></div></div><div></div></div><p>This action is used create a pod cast of media that it finds. It will
+ 						add order the  most recent media files by the date they were last modified.                   
+                 </p><p> 
+                 This action supports the following parameters:
+                 	</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">mediaDirURL</tt> - This is a required parameter that specifies the URL used to find the root media directory.</p></li><li><p><tt class="literal">fileLocation</tt> - This is a required parameter that specifies the location of the RSS feed relative to the root of the media directory. It can contain standard rename patterns with the value.</p></li><li><p><tt class="literal">numberEntries</tt> - The maximum number of entries in the feed. The default if not set is unlimited.</p></li><li><p><tt class="literal">extensions</tt> - A comma separated list of media file extensions to accept.</p></li><li><p><tt class="literal">restrictPattern</tt> - This can be used to restrict the media files. It can contain standard rename patterns with the value.</p></li><li><p><tt class="literal">feedTitle</tt> - Used to give a title to the RSS feed. It can contain standard rename patterns with the value.</p></li><li><p><tt class="literal">feedDescription</tt> - Used to give a description to the RSS feed. It can contain standard rename patterns with the value.</p></li></ul></div><p>                  
+                 </p><p>
+                 	 Parameters can also have variable in them. These can be any of the following special variables:
+	                 </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">$MEDIAFILE_NAME</tt> The name part of the current media file been processed. So after the last file seperator, until it finds the extension.</p></li><li><p><tt class="literal">$MEDIAFILE_EXT</tt> The extension of the current media file been processed.</p></li><li><p><tt class="literal">$MEDIAFILE_DIR</tt> The directory the current media file is in.</p></li><li><p><tt class="literal">$MEDIAFILE</tt> The full path of the current media file.</p></li><li><p><tt class="literal">$HOME</tt> The current users home directory.</p></li></ul></div><p>                      	
+                 </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="renameaction"></a>org.stanwood.media.actions.rename.RenameAction</h3></div></div><div></div></div><p>
+                     This action is used to rename media files in a media directory based on a pattern 
+                     found in the configuration file. The action can also move the file to different
+                     directory if the pattern has directories in it.               
+                 </p><p> 
+                 This action supports the following parameters:
+                 	    </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">pruneEmptyFolders</tt> - If true, then after renaming, empty folders will be deleted.</p></li></ul></div><p>                      	
+                 </p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="installation"></a>Chapter 2. Installation</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#id241592">1. Linux Binary Distribution Packages</a></span></dt><dt><span class="sect1"><a href="#id241636">2. Installer</a></span></dt></dl></div><p>
+			Their are a few different ways to install MediaManager. The different distributions 
+		    can be found at <a href="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/list" target="_top"><i class="citetitle">Downloads</i></a> 
+		</p><p>
+			All of the distributions will require a Java 1.6 compatible JRE.
+		</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id241592"></a>1. Linux Binary Distribution Packages</h2></div></div><div></div></div><p>
+				Their are several linux distribution packages that can be found in the downloads section of the website.
+				If your distribution uses RPM packages, then following these instructions.
+				</p><div class="orderedlist"><ol type="1"><li><p>Pick the packages for your distribution</p></li><li><p>Download them to a directory</p></li><li><p>Change to that directory from the console</p></li><li><p>Log in as root and run the command <span><b class="command">rpm -Uvh *.rpm</b></span></p></li></ol></div><p>				
+			</p><p>
+				This will install the the application and a scripts too launch it. 
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id241636"></a>2. Installer</h2></div></div><div></div></div><p>
+				Their is a generic java installer that will run on any platform. Execute the following command upon 
+				the installer jar file to start the installer:
+				</p><div class="cmdsynopsis"><p><tt class="command">java -jar MediaManager-2.1-install.jar </tt>  [options]</p></div><p>
+				This will prompt you for the location to install the application and create start menu links to
+				the documentation. 			    
+			</p><p>
+				Their are also platform specific installers that can be launched easier on some platforms. 
+				Here are the names of the installers and the platforms they run on:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">MediaManager-2.1-install.sh</tt> - Linux installer</p></li><li><p><tt class="literal">MediaManager-2.1-install.windows.zip</tt> - Windows installer</p></li><li><p><tt class="literal">MediaManager-2.1-install.jar</tt> - Any Platform installer (including Mac OSX)</p></li></ul></div><p>
+			</p><p>
+				More installation guides can be found on the <a href="http://code.google.com/p/tv-and-movies-meta-data-fetcher/w/list" target="_top">MediaManager Wiki</a>
+			</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="usage"></a>Chapter 3. CLI Usage</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#mediamanagercmd">mm-manager</a></span></dt><dt><span class="sect1"><a href="#mediacopystore">mm-copy-store-to-store</a></span></dt><dt><span class="sect1"><a href="#mediamovecmd">mm-move-into-media-directory</a></span></dt><dt><span class="sect1"><a href="#mp4listatomscmd">mm-media-file-info</a></span></dt><dt><span class="sect1"><a href="#id242324">mm-xbmc</a></span></dt><dd><dl><dt><span class="sect2"><a href="#id242345">Global options:</a></span></dt><dt><span class="sect2"><a href="#id242393">Commands:</a></span></dt></dl></dd><dt><span class="sect1"><a href="#id242441">mm-import-media</a></span></dt></dl></div><p></p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediamanagercmd"></a>mm-manager</h2></div></div><div></div></div><p>
+				The mm-manager command is used to managed a media directory. It reads
+ 				the configuration file to work out which sources, stores and actions are to be used
+ 				with media directory. Then the actions are performed on the media directory.
+ 				</p><div class="cmdsynopsis"><p><tt class="command">mm-manager</tt>  [-v] [-h] [-c <i class="replaceable"><tt>config file</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>] [-d <i class="replaceable"><tt>media directory</tt></i>] [-t ] [-u ]</p></div><p>
+			</p><p>
+				The command has the following options:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-d, --dir</tt> A requried option give the location of the media directory to manage</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li><li><p><tt class="literal">-t, --test</tt> Enable test mode that cause no changes to be written to the filesystem.</p></li><li><p><tt class="literal">-u, --noupdate</tt> If option is given, the XBMC addon scrapers are not updated.</p></li></ul></div><p>				
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediacopystore"></a>mm-copy-store-to-store</h2></div></div><div></div></div><p>			
+ 				The mm-copy-store-to-store command is used to move media files into a directory. It then uses the sources 
+ 				and stores with the media file and performs the actions on it. The media files can be either files
+ 				or directories. 
+ 				</p><div class="cmdsynopsis"><p><tt class="command">mm-copy-store-to-store</tt>  [-v] [-h] [-c <i class="replaceable"><tt>config file</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>] [-d <i class="replaceable"><tt>media directory</tt></i>] [-t ] [-u ] [&lt;media file/directory...&gt;]</p></div><p>
+			</p><p>
+				The command has the following options:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-d, --dir</tt> A requried option give the location of the media directory to manage</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li><li><p><tt class="literal">-t, --test</tt> Enable test mode that cause no changes to be written to the filesystem.</p></li><li><p><tt class="literal">-u, --noupdate</tt> If option is given, the XBMC addon scrapers are not updated.</p></li></ul></div><p>								
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediamovecmd"></a>mm-move-into-media-directory</h2></div></div><div></div></div><p>			
+ 				The mm-move-into-media-directory command is used to move media files into a directory. It then uses the sources 
+ 				and stores with the media file and performs the actions on it. The media files can be either files
+ 				or directories. 
+ 				</p><div class="cmdsynopsis"><p><tt class="command">mm-move-into-media-directory</tt>  [-v] [-h] [-c <i class="replaceable"><tt>config file</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>] [-d <i class="replaceable"><tt>media directory</tt></i>] [-t ] [-u ] [&lt;media file/directory...&gt;]</p></div><p>
+			</p><p>
+				The command has the following options:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-d, --dir</tt> A requried option give the location of the media directory to manage</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li><li><p><tt class="literal">-t, --test</tt> Enable test mode that cause no changes to be written to the filesystem.</p></li><li><p><tt class="literal">-u, --noupdate</tt> If option is given, the XBMC addon scrapers are not updated.</p></li></ul></div><p>								
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mp4listatomscmd"></a>mm-media-file-info</h2></div></div><div></div></div><p>			
+ 				The mm-media-file-info command is used to list the Apple atoms in a MP4/M4V media file which is given as a argument. It can
+ 				be used to check the metadata that iTunes will see.
+ 				</p><div class="cmdsynopsis"><p><tt class="command">mm-media-file-info</tt>  [-v] [-h] [-c <i class="replaceable"><tt>config file</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>] [&lt;media file&gt;]</p></div><p>
+			</p><p>
+				The command has the following options:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li></ul></div><p>								
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id242324"></a>mm-xbmc</h2></div></div><div></div></div><p>
+			The mm-xbmc command is used to manage XBMC addons. It has the sub commands and arguments
+	 		listed below.
+	 		</p><p><tt class="literal">usage: mm-xbmc [--global-options] &lt;command&gt; [--command-options] [arguments]</tt></p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id242345"></a>Global options:</h3></div></div><div></div></div><p>
+		 			</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li></ul></div><p>								
+	 			</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id242393"></a>Commands:</h3></div></div><div></div></div><p>
+	 				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">list</tt> - Lists the installed XBMC addons</p></li><li><p><tt class="literal">update</tt> - Update the installed XBMC addons to the latest versions</p></li><li><p><tt class="literal">install</tt> - Install a new XBMC addon</p></li><li><p><tt class="literal">remove</tt> - Install a new XBMC addon</p></li></ul></div><p>
+	 			</p></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id242441"></a>mm-import-media</h2></div></div><div></div></div><p>
+			The mm-import-media command is used to check for new media in watched directories. If it find media, it
+			attempts to lookup the information for the files and move them to the correct media directory. 
+			See <a href="#watcheddirectory" title="Watch Directories">the section called &#8220;Watch Directories&#8221;</a> for configuration details.
+				</p><div class="cmdsynopsis"><p><tt class="command">mm-import-media</tt>  [-v] [-h] [-a] [-d] [-e] [-t] [-u] [-c <i class="replaceable"><tt>config file</tt></i>] [-l <i class="replaceable"><tt>INFO|DEBUG|log4j configuration file</tt></i>]</p></div><p>			
+			</p><p>
+				The command has the following options:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">-v, --version</tt> Display the version</p></li><li><p><tt class="literal">-h, --help</tt> Show the help message</p></li><li><p><tt class="literal">-c, --config_file</tt> The location of the config file. If option is not given then it will load from default locations.</p></li><li><p><tt class="literal">-l, --log_config</tt> The log configuration mode. Either INFO, or DEBUG for the built in configurations, or a file name of a log4j configuration file. </p></li><li><p><tt class="literal">--dontUseDefaults, -d</tt> Don't use default media directories.</p></li><li><p><tt class="literal">--noupdate, -u</tt> If this option is present, then the XBMC addons won''t be updated</p></li><li><p><tt class="literal">--deleteNonMedia, -e</tt> Delete files are that are not media files (use with care)</p></li><li><p><tt class="literal">--test, -t</tt> If this option is present, then no changes are performed.</p></li><li><p><tt class="literal">--actions, -a</tt> Execute actions on new media files</p></li></ul></div><p>		
+			</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="configuration"></a>Chapter 4. Configuration</h2></div></div><div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="#id242645"></a></span></dt><dt><span class="sect1"><a href="#mediadirectory">Media directories</a></span></dt><dd><dl><dt><span class="sect2"><a href="#mode">Mode</a></span></dt><dt><span class="sect2"><a href="#patterns">Patterns</a></span></dt></dl></dd><dt><span class="sect1"><a href="#watcheddirectory">Watch Directories</a></span></dt><dt><span class="sect1"><a href="#ignore">Ignore</a></span></dt><dt><span class="sect1"><a href="#plugins">Plugins</a></span></dt><dt><span class="sect1"><a href="#native">Native applications and libraries</a></span></dt><dt><span class="sect1"><a href="#globalsettings">Global Settings</a></span></dt><dt><span class="sect1"><a href="#examples">Examples</a></span></dt></dl></div><p></p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id242645"></a></h2></div></div><div></div></div><p>The applications and the API make use of a XML configuration file. This stores information
+					about the media directories and how they should be managed.
+			</p><p>
+				The applications have CLI options that can be used too tell it which configuration
+				file too use. If this option is not present, then it will look for the file at the 
+				location <tt class="filename">/etc/mediamanager-conf.xml</tt> and <tt class="filename">$HOME/.mediaManager/mediamanager-conf.xml</tt>. 
+				If these can't be found, then a default configuration file will be created at			
+				<tt class="filename">$HOME/.mediaManager/mediamanager-conf.xml</tt>.
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="mediadirectory"></a>Media directories</h2></div></div><div></div></div><p>
+				MediaManager is used to manage media in media directories, this means you need to 
+				tell it about the media directories. Their is a mediaDirectory entity in the configuration
+				file used to do this. It has the following attributes:
+				</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">directory</tt> - The location of the media directory.</p></li><li><p><tt class="literal">mode</tt> - The type of media. . See <a href="#mode" title="Mode">the section called &#8220;Mode&#8221;</a>.</p></li><li><p><tt class="literal">pattern</tt> - The rename pattern. See <a href="#patterns" title="Patterns">the section called &#8220;Patterns&#8221;</a>. </p></li><li><p><tt class="literal">ignoreSeen</tt> - option attribute, if set to true then once a file is seen it will not be processed again</p></li></ul></div><p>
+			</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="mode"></a>Mode</h3></div></div><div></div></div><p>Media directories can operate in different modes. This effects how the media is handled and
+				      which pattern tokens can be used. The currently supported modes are:
+				    </p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">TV_SHOW</tt> - Media files are tv episodes</p></li><li><p><tt class="literal">FILM</tt> - Media files are films</p></li></ul></div><p>
+				 </p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="patterns"></a>Patterns</h3></div></div><div></div></div><p>A pattern can be associated with a media directory. This is used by actions like the 
+				      Renameaction to rename file media files and change the directory structure.
+				</p><p>
+					The following list contains the meaning for each token:
+						</p><div class="itemizedlist"><ul type="disc"><li><p><tt class="literal">%d</tt> - If HighDef, replaced with "HD"</p></li><li><p><tt class="literal">%e</tt> - episode number</p></li><li><p><tt class="literal">%h</tt> - show Id</p></li><li><p><tt class="literal">%i</tt> - the show or film image URL</p></li><li><p><tt class="literal">%n</tt> - show name</p></li><li><p><tt class="literal">%p</tt> - part number</p></li><li><p><tt class="literal">%s</tt> - season number</p></li><li><p><tt class="literal">%t</tt> - episode title or film title</p></li><li><p><tt class="literal">%u</tt> - the show or film short summary</p></li><li><p><tt class="literal">%w</tt> - If Wide screen, replaced with "WS"</p></li><li><p><tt class="literal">%x</tt> - extension (avi, mkv....)</p></li><li><p><tt class="literal">%y</tt> - year</p></li><li><p><tt class="literal">%%</tt> - add a % char</p></li></ul></div><p>
+					</p><p>
+					The patterns also support the syntax <tt class="literal">"{ Part %p }"</tt>. The braces 
+					means the contents inside are optional. So in this case if the media does not have a part number,
+					then it would be added to the filename.
+					</p><div class="example"><a name="id242906"></a><p class="title"><b>Example 4.1. Examples:</b></p><p>
+							The following options show what happens when they are used to rename 
+						     the 4th episode of the 2nd season of the show heroes.
+						     </p><div class="itemizedlist"><ul type="disc"><li><p>"S%s E%e - %t.%x" = "S2 E04 - The Kindness of Strangers.avi"</p></li><li><p>"%sx%e.%n.%t.%x" = "2x04.Heroes.The Kindness of Strangers.avi"</p></li><li><p>"%sx%e.%h.%t.%x" = "2x04.17552.The Kindness of Strangers.avi"</p></li></ul></div><p>
+						</p></div></div></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="watcheddirectory"></a>Watch Directories</h2></div></div><div></div></div><p>
+        	    MediaManager is able to monitor file system directories for new media. When it finds it, it can
+        	    be processed and moved into media directories. Use the command <a href="#mmimportmedia.title">the section called &#8220;mm-import-media&#8221;</a> 
+        	    to check for new media. The following example shows how to setup a file system directory for monitoring.
+        	    </p><div class="example"><a name="id242954"></a><p class="title"><b>Example 4.2. Watch Directory</b></p><pre class="programlisting">
+        	    	&lt;mediaManager&gt;
+	&lt;watchDirectory directory="/mounts/newMedia"/&gt;			
+&lt;/mediaManager&gt;							
+					
+        	    	</pre></div><p>
+        	</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ignore"></a>Ignore</h2></div></div><div></div></div><p>
+				It's possible a multiple regular expressions to a media directory which are compared agaist each
+				media file when performing actions. If they do mach, then the media file is ignored.
+				</p><div class="example"><a name="id242981"></a><p class="title"><b>Example 4.3. Ignore patterns</b></p><pre class="programlisting">	
+					&lt;mediaManager&gt;
+	&lt;mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ Part %p}.%x"&gt;
+		&lt;ignore&gt;.*[S|s]amples.*&lt;/ignore&gt;
+		&lt;ignore&gt;.*temp.*&lt;/ignore&gt;
+	&lt;/mediaDirectory&gt;						
+&lt;/mediaManager&gt;							
+					
+					</pre></div><p>
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="plugins"></a>Plugins</h2></div></div><div></div></div><p>
+			It is possible to extend MediaManager with plugins. Plugins are capable of adding new Sources, Stores
+			and Actions. Plugins must extend the correct interfaces like the internal Sources, Stores and Actions.
+			They must then be packaged into a .jar file and imported into MediaManager. The following example shows 
+			the configuration file entries needed to tell MediaManager about a plugin. 
+			</p><div class="example"><a name="id243008"></a><p class="title"><b>Example 4.4. Registering plguins</b></p><pre class="programlisting">
+				&lt;mediaManager&gt;
+	&lt;plugins&gt;
+		&lt;plugin jar="$HOME/.mediaManager/plguins/myplugin.jar" class="com.mm.plugins.MyPlugin"/&gt;
+	&lt;/plugins&gt;						
+&lt;/mediaManager&gt;	
+				
+				</pre></div><p> 
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="native"></a>Native applications and libraries</h2></div></div><div></div></div><p>
+			Some parts of MediaManager depend on native applications/libraries to function. Usally MediaManager
+			runs on any platform that supports Java 1.6. However these parts need native applcations, so
+			they must either be installed on the system or MediaManager must be told how to find them. If they
+			can't be found, then parts of MediaManager that use then will be disabled. 
+			</p><p> 
+			If MediaManager was installed via the installer, then the native folder will have been installed 
+			already and it should find then. If installing from a linux package, then their is a chance 
+			that native applications and libraries won't be found. MediaManager will fist look for them
+			in a folder pointed to by configuration, then an envoriment varaible MM_NATIVE_DIR and lastly
+			on the system path.			
+			</p><p>
+			If they are not install, then they can be downloaded from the media manager website at
+			<a href="http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=MediaManager-2.1-native.zip&amp;can=2&amp;q=" target="_top">http://code.google.com/p/tv-and-movies-meta-data-fetcher/downloads/detail?name=MediaManager-2.1-native.zip&amp;can=2&amp;q=</a>.
+			The native folder should be unzipped from the downloaded file and pointed to by the 
+			configuration. See the section <a href="#nativesetting">the section called &#8220;Global Settings&#8221;</a>.
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="globalsettings"></a>Global Settings</h2></div></div><div></div></div><p>
+			Their are some global settings which can be configured. Belowe is a list of settings:
+			</p><div class="itemizedlist"><ul type="disc"><li><p>configDirectory - The location of the local configuration directory</p></li><li><p>native - A directory which contains the native applications/libraries used by MediaManager</p></li></ul></div><p>
+			</p><p><a name="nativesetting"></a>
+			The native setting is used to specify the location of a directory containg the native applications and
+			libraries that MediaManager depends on. See the <a href="#native" title="Native applications and libraries">the section called &#8220;Native applications and libraries&#8221;</a> section for mare information.
+			</p><p>
+			</p><div class="example"><a name="id243106"></a><p class="title"><b>Example 4.5. Gloab settings</b></p><pre class="programlisting">
+				&lt;mediaManager&gt;	
+	&lt;global&gt;
+		&lt;configDirectory&gt;$HOME/.mediaManager&lt;/configDirectory&gt;
+		&lt;native&gt;$HOME/.mediaManager/native&lt;/native&gt;
+	&lt;/global&gt;
+				
+				</pre></div><p> 
+			</p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="examples"></a>Examples</h2></div></div><div></div></div><p>			
+				</p><div class="example"><a name="id243132"></a><p class="title"><b>Example 4.6. The default configuration file</b></p><pre class="programlisting">
+				&lt;mediaManager&gt;	
+	&lt;global&gt;
+		&lt;!-- Used to define the location where configuration settings are stored --&gt;
+		&lt;configDirectory&gt;$HOME/.mediaManager&lt;/configDirectory&gt;
+	&lt;/global&gt;
+
+	&lt;!-- Example Film media directory --&gt;
+	&lt;mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ (%y)}{ Part %p}.%x" ignoreSeen="true"&gt;
+		&lt;!-- The default extensions have been overriden for this directory so that the media manager
+	     will only consider .avi and .m4v files as media files. --&gt;
+		&lt;extensions&gt;
+			&lt;extension&gt;avi&lt;/extension&gt;
+			&lt;extension&gt;m4v&lt;/extension&gt;
+		&lt;/extensions&gt;
+		&lt;sources&gt;
+			&lt;source id="org.stanwood.media.source.xbmc.XBMCSource"/&gt;
+		&lt;/sources&gt;
+		&lt;stores&gt;
+			&lt;!-- Update MP4 files with meta data --&gt;
+			&lt;store id="org.stanwood.media.store.mp4.MP4ITunesStore"/&gt;
+			&lt;!-- Cache film info in a XML Store --&gt;			
+			&lt;store id="org.stanwood.media.store.xmlstore.XMLStore2"/&gt;			
+		&lt;/stores&gt;
+		&lt;actions&gt;
+			&lt;!-- Make sure files and directories have the correct owner. Only works on a unix system,
+			     when MediaManager is running as root. --&gt;
+			&lt;action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction"&gt;
+                    &lt;param name="commandOnFile" value="chown jp.users &amp;quot;$MEDIAFILE&amp;quot;"/&gt;
+                    &lt;param name="commandOnDirectory" value="chown jp.users &amp;quot;$MEDIAFILE&amp;quot;"/&gt;
+            &lt;/action&gt;
+            
+            &lt;!-- Make sure files and directories have the correct permissions. Only works on a unix system,
+			     when MediaManager is running as root. --&gt;
+            &lt;action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction"&gt;
+                    &lt;param name="commandOnFile" value="chmod 660 &amp;quot;$MEDIAFILE&amp;quot;"/&gt;
+                    &lt;param name="commandOnDirectory" value="chmod 770 &amp;quot;$MEDIAFILE&amp;quot;"/&gt;
+            &lt;/action&gt;
+            
+			&lt;!-- Give all the media the correct name based on the pattern --&gt;
+			&lt;action id="org.stanwood.media.actions.rename.RenameAction"/&gt;	
+			
+			&lt;!-- Create a potcast of the newest films, using the default number of entries --&gt;
+			&lt;action id="org.stanwood.media.actions.podcast.PodCastAction"&gt;
+                    &lt;param name="mediaDirURL" value="http://my.media.com/podcasts/Films"/&gt;
+                    &lt;param name="fileLocation" value="rss.xml"/&gt;
+                    &lt;param name="extensions" value="m4v"/&gt;
+            &lt;/action&gt;	
+            
+            &lt;!-- Encode any .avi files into .m4v files using the HandBrakeCLI application --&gt;
+            &lt;action id="org.stanwood.media.actions.command.ExecuteSystemCommandAction"&gt;
+                    &lt;param name="commandOnFile" value="/usr/bin/HandBrakeCLI -i &amp;quot;$MEDIAFILE&amp;quot; -o &amp;quot;$NEWFILE&amp;quot; preset=&amp;apos;AppleTV 2&amp;apos;"/&gt;
+                    &lt;param name="newFile" value="$MEDIAFILE_DIR/$MEDIAFILE_NAME.m4v"/&gt;
+                    &lt;param name="extensions" value="avi"/&gt;
+                    &lt;param name="abortIfFileExists" value="$NEWFILE"/&gt;
+            &lt;/action&gt;											
+		&lt;/actions&gt;
+	&lt;/mediaDirectory&gt;
+	
+	&lt;!-- Example TV show media directory --&gt;
+	&lt;mediaDirectory directory="/media/TV" mode="TV_SHOW" pattern="%n/Season %s/%sx%e - %t.%x"&gt;
+		&lt;sources&gt;
+			&lt;source id="org.stanwood.media.source.xbmc.XBMCSource"&gt;
+				&lt;param name="posters" value="true"/&gt;
+			&lt;/source&gt;
+		&lt;/sources&gt;
+		&lt;stores&gt;
+			&lt;store id="org.stanwood.media.store.xmlstore.XMLStore2"/&gt;			
+		&lt;/stores&gt;
+		&lt;actions&gt;
+			&lt;!-- Give all the media the correct name based on the pattern --&gt;
+			&lt;action id="org.stanwood.media.actions.rename.RenameAction"/&gt;
+			
+			&lt;!-- Create per show RSS video podcasts that contain the most recent 5 show episodes --&gt;
+			&lt;action id="org.stanwood.media.actions.podcast.PodCastAction"&gt;
+                &lt;param name="mediaDirURL" value="http://my.media.com/podcasts/TV"/&gt;
+                &lt;param name="numberEntries" value="5"/&gt;
+                &lt;param name="fileLocation" value="%n/rss.xml"/&gt;
+                &lt;param name="extensions" value="avi,mkv,mp4,m4v"/&gt;
+                &lt;param name="feedDescription" value="%u"/&gt;
+                &lt;param name="feedTitle" value="%n"/&gt;
+            &lt;/action&gt;
+		&lt;/actions&gt;		
+	&lt;/mediaDirectory&gt;
+	 
+	 &lt;!-- Used to change the location and locale of the XBMC addons been used by the XBMC source --&gt;
+	 &lt;!--
+	 &lt;XBMCAddons directory="$HOME/.mediaManager/xbmc" locale="en"/&gt; 
+	  --&gt;	 
+&lt;/mediaManager&gt;			
+					</pre></div><p>			
+			</p></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="credits-and-licenses"></a>Chapter 5. Credits and Licenses</h2></div></div><div></div></div><p>MediaManager</p><div class="itemizedlist"><ul type="disc"><li><p>John-Paul Stanford <tt class="email">&lt;<a href="mailto:dev@stanwood.org.uk">dev@stanwood.org.uk</a>&gt;</tt> - Original Author</p></li></ul></div><p>
+        	Documentation copyright 2007-2012, John-Paul Stanford
+            <tt class="email">&lt;<a href="mailto:dev@stanwood.org.uk">dev@stanwood.org.uk</a>&gt;</tt>
+		</p></div></div></body></html>
