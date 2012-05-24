@@ -1,13 +1,6 @@
 TODO
 ====
-
-Version 2.1
------------
-
-Update docs
-	- Add details about windows/unix paths. Patterns need correct separators
-	- Install with OpenSuSE RPM's and test
-		
+	
 Version 2.2
 -----------
 If no <stores/> element, then add default stores
