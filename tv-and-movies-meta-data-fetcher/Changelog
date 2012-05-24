@@ -1,3 +1,16 @@
+* Tur May 24 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.1
+- Seen files can be ignored
+- Directiores can be watched for new media, and this can be moved to the
+correct media directory.
+- MP4 Files metadata now handles by fork of atomic parsley.
+- Much improived MP4/M4V metadata.
+- Support for High Def media.
+- New Store for notifiying iTunes of media file changes via a remote server
+running on the iTunes box.
+- Improved windows support.
+- Imporoved TV Show/Film searching.
+- Fixed issues with launch scripts.
+- Debian/Ubuntu install packges.
 * Tue Aug 23 2011 John-Paul.stanford <dev@stanwood.org.uk> - v2.0.89
 - Files are no longer marked as seen if the media info can't be found.
 - Once a file has been renamed the seendb is updated.
