@@ -18,13 +18,13 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
+
+import org.stanwood.media.collections.SortedList;
 
 /**
  * This class is used to hold film related information
@@ -48,7 +48,7 @@ public class Film implements IFilm {
 	private String preferredGenre;
 	private String country;
 	private List<Actor> actors;
-	private SortedSet<IVideoFile> videoFiles = new VideoFileSet();
+	private List<VideoFile> files = new SortedList<VideoFile>(new VideoFileComparator());
 	private String studio;
 
 	/**
@@ -426,15 +426,14 @@ public class Film implements IFilm {
 
 	/** {@inheritDoc} */
 	@Override
-	public SortedSet<IVideoFile> getFiles() {
-		return videoFiles;
+	public List<VideoFile> getFiles() {
+		return files;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(Collection<IVideoFile> videoFiles) {
-		this.videoFiles.clear();
-		this.videoFiles.addAll(videoFiles);
+	public void setFiles(List<VideoFile> videoFiles) {
+		this.files = videoFiles;
 	}
 
 	/** {@inheritDoc} */

@@ -27,8 +27,8 @@ import java.util.Map;
  * This is used to store and retrive information about shows
  */
 public class Show implements IShow {
-	private final String showId;
 
+	private String showId;
 	private String longSummary;
 	private String shortSummary;
 	private List<String> genres = new ArrayList<String>();
@@ -41,12 +41,25 @@ public class Show implements IShow {
 	private Map<String,String>extraInfo = new HashMap<String,String>();
 	private List<Certification> certifications = new ArrayList<Certification>();
 
+	/** The constructor */
+	public Show() {
+
+	}
+
 	/**
 	 * The constructor used to create a instance of the class
 	 *
 	 * @param showId The id of the show
 	 */
 	public Show(String showId) {
+		this.showId = showId;
+	}
+
+	/**
+	 * Used to set the show id
+	 * @param showId The show id
+	 */
+	public void setShowId(String showId) {
 		this.showId = showId;
 	}
 

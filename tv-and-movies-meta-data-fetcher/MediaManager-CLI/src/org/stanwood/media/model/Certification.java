@@ -16,19 +16,30 @@
  */
 package org.stanwood.media.model;
 
+import java.io.Serializable;
+
 /**
  * Used to hold a certification rating of a episode or film
  */
-public class Certification {
+public class Certification implements Serializable {
 
 	private String certification;
 	private String type;
+	private Integer id;
 
 	/**
 	 * The constructor
 	 */
 	public Certification() {
 
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

@@ -18,15 +18,16 @@ package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.stanwood.media.collections.SortedList;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Rating;
+import org.stanwood.media.model.VideoFile;
+import org.stanwood.media.model.VideoFileComparator;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -193,8 +194,8 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public Collection<IVideoFile> getFiles() {
-		List<IVideoFile> files = new ArrayList<IVideoFile>();
+	public List<VideoFile> getFiles() {
+		List<VideoFile> files = new SortedList<VideoFile>(new VideoFileComparator());
 
 		for (Element node : selectChildNodes(videoNode, "file")) { //$NON-NLS-1$
 			files.add(new XMLVideoFile(rootMediaDir,node));
@@ -204,9 +205,9 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(Collection<IVideoFile> videoFiles) {
+	public void setFiles(List<VideoFile> videoFiles) {
 		try {
-			for (IVideoFile filename : videoFiles) {
+			for (VideoFile filename : videoFiles) {
 				appendFile(doc, videoNode, filename,rootMediaDir);
 			}
 			for (Element n : selectChildNodes(videoNode, "file")) { //$NON-NLS-1$
@@ -253,8 +254,8 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 		}
 	}
 
-	private IVideoFile findFile(IVideoFile file) {
-		for (IVideoFile f : getFiles()) {
+	private VideoFile findFile(VideoFile file) {
+		for (VideoFile f : getFiles()) {
 			if (f.getLocation().equals(file.getLocation())) {
 				return f;
 			}
@@ -262,9 +263,9 @@ public class XMLVideo extends XMLParser implements IVideo,IVideoActors,IVideoRat
 		return null;
 	}
 
-	private void appendFile(Document doc, Node parent, IVideoFile file,File rootMediaDir) throws StoreException {
+	private void appendFile(Document doc, Node parent, VideoFile file,File rootMediaDir) throws StoreException {
 		if (file!=null) {
-			IVideoFile vidFile = findFile(file);
+			VideoFile vidFile = findFile(file);
 			if (vidFile==null) {
 				Element fileNode = doc.createElement("file"); //$NON-NLS-1$
 				parent.appendChild(fileNode);

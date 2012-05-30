@@ -11,6 +11,28 @@ public class Rating implements Serializable {
 	private int numberOfVotes;
 
 	/**
+	 * The constructor
+	 */
+	public Rating() {
+	}
+
+	/**
+	 * Used to set the rating
+	 * @param rating The rating
+	 */
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+
+	/**
+	 * Used to set the number of votes
+	 * @param numberOfVotes The number of votes
+	 */
+	public void setNumberOfVotes(int numberOfVotes) {
+		this.numberOfVotes = numberOfVotes;
+	}
+
+	/**
 	 * The constructor used to create a instance of the rating class
 	 * @param rating The value of the rating
 	 * @param numberOfVotes the number of votes the thing been rated had

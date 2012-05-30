@@ -18,8 +18,8 @@ import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.search.ReversePatternSearchStrategy;
 import org.stanwood.media.search.SearchDetails;
 import org.stanwood.media.search.SearchHelper;
@@ -168,7 +168,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 	protected Integer getFilmPart(File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
-			for (IVideoFile vf : film.getFiles()) {
+			for (VideoFile vf : film.getFiles()) {
 				if (vf.getLocation().equals(file)) {
 					part = vf.getPart();
 				}

@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.collections.SortedList;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -41,7 +41,6 @@ import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.IVideoActors;
 import org.stanwood.media.model.IVideoCertification;
 import org.stanwood.media.model.IVideoExtra;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.IVideoGenre;
 import org.stanwood.media.model.IVideoRating;
 import org.stanwood.media.model.Mode;
@@ -50,7 +49,7 @@ import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.Season;
 import org.stanwood.media.model.Show;
 import org.stanwood.media.model.VideoFile;
-import org.stanwood.media.model.VideoFileSet;
+import org.stanwood.media.model.VideoFileComparator;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.source.HybridFilmSource;
@@ -207,7 +206,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		episode.setActors(actors);
 	}
 
-	private void appendFile(Document doc, Node parent, IVideoFile file, File rootMediaDir) throws StoreException {
+	private void appendFile(Document doc, Node parent, VideoFile file, File rootMediaDir) throws StoreException {
 		if (file != null) {
 			try {
 
@@ -459,7 +458,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a tore releated problem
 	 */
 	protected void writeFilenames(Document doc, Node parent, IVideo video, File rootMediaDir) throws StoreException {
-		for (IVideoFile filename : video.getFiles()) {
+		for (VideoFile filename : video.getFiles()) {
 			appendFile(doc, parent, filename, rootMediaDir);
 		}
 	}
@@ -698,7 +697,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void readFiles(IVideo video, Element videoNode, File rootMediaDir) throws XMLParserException {
-		SortedSet<IVideoFile> files = new VideoFileSet();
+		List<VideoFile> files = new SortedList<VideoFile>(new VideoFileComparator());
 
 		for (Node node : selectNodeList(videoNode, "file")) { //$NON-NLS-1$
 			String location = ((Element) node).getAttribute("location"); //$NON-NLS-1$
@@ -1512,7 +1511,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			for (int i=0;i<children.getLength();i++) {
 				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
 					XMLFilm orgFilm = new XMLFilm((Element) children.item(i),rootMediaDir);
-					for (IVideoFile files : orgFilm.getFiles()) {
+					for (VideoFile files : orgFilm.getFiles()) {
 						String sourceId = orgFilm.getSourceId();
 						if (getUpgradedSourceId(mediaDirectory.getController(), sourceId)!=null) {
 							sourceId = getUpgradedSourceId(mediaDirectory.getController(), sourceId);
@@ -1543,7 +1542,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			for (int i=0;i<children.getLength();i++) {
 				if (children.item(i).getNodeName().equals("film")) { //$NON-NLS-1$
 					XMLFilm orgFilm = new XMLFilm((Element) children.item(i),rootMediaDir);
-					for (IVideoFile files : orgFilm.getFiles()) {
+					for (VideoFile files : orgFilm.getFiles()) {
 						if (orgFilm.getImageURL()== null || orgFilm.getImageURL().toExternalForm().contains("cf1.imgobject.com")){ //$NON-NLS-1$
 							String sourceId = orgFilm.getSourceId();
 							SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);

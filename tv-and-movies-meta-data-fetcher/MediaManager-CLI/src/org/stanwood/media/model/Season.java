@@ -29,6 +29,13 @@ public class Season implements ISeason {
 	private IShow show;
 
 	/**
+	 * The constructor
+	 */
+	public Season() {
+
+	}
+
+	/**
 	 * The constructor used to create a instance of the season.
 	 * @param show The show the season belongs too
 	 * @param seasonNumber The season number
@@ -66,6 +73,15 @@ public class Season implements ISeason {
 	}
 
 	/**
+	 * Used to set the season number
+	 * @param seasonNumber the season number
+	 */
+	@Override
+	public void setSeasonNumber(int seasonNumber) {
+		this.seasonNumber = seasonNumber;
+	}
+
+	/**
 	 * Get the show the season belongs too
 	 * @return The show the season belongs too
 	 */
@@ -74,4 +90,11 @@ public class Season implements ISeason {
 		return show;
 	}
 
+	/**
+	 * Used to set the show
+	 * @param show the show
+	 */
+	public void setShow(IShow show) {
+		this.show = show;
+	}
 }

@@ -16,7 +16,6 @@
  */
 package org.stanwood.media.model;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -76,12 +75,12 @@ public interface IVideo {
 	 * Used to get a list of files that belong to the video entry
 	 * @return The list of files
 	 */
-	public Collection<IVideoFile> getFiles();
+	public List<VideoFile> getFiles();
 
 	/**
 	 * Used to set the list of files that belong to the video entry
 	 * @param videoFiles The list of files
 	 */
-	public void setFiles(Collection<IVideoFile> videoFiles);
+	public void setFiles(List<VideoFile> videoFiles);
 
 }
