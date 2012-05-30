@@ -18,13 +18,13 @@ package org.stanwood.media.store.xmlstore;
 
 import java.io.File;
 
-import org.stanwood.media.model.IVideoFile;
+import org.stanwood.media.model.VideoFile;
 import org.w3c.dom.Element;
 
 /**
  * Video file information for the store {@link XMLStore2}, that access the information from the XML File
  */
-public class XMLVideoFile implements IVideoFile {
+public class XMLVideoFile extends VideoFile  {
 
 	private Element fileNode;
 	private File location;

@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.model;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Interface for all the film classes
  */
-public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVideoCertification {
+public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVideoCertification, Serializable {
 
 	/**
 	 * Used to get the id of the film used by the source that it was read from.

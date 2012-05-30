@@ -1,16 +1,24 @@
 package org.stanwood.media.model;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * This is used to store information about files in a media directory
  */
-public class VideoFile implements IVideoFile {
+public class VideoFile implements Serializable  {
 
 	private File location;
 	private File orginalLocation;
 	private Integer part;
 	private File rootMediaDir;
+
+	/**
+	 * The constructor
+	 */
+	public VideoFile() {
+
+	}
 
 	/**
 	 * The constructor
@@ -30,7 +38,6 @@ public class VideoFile implements IVideoFile {
 	 * Used to get the current location of the video file
 	 * @return The current location of the video file
 	 */
-	@Override
 	public File getLocation() {
 		return location;
 	}
@@ -40,7 +47,6 @@ public class VideoFile implements IVideoFile {
 	 * it was first seen in.
 	 * @return The original location of the file
 	 */
-	@Override
 	public File getOrginalLocation() {
 		return orginalLocation;
 	}
@@ -50,7 +56,6 @@ public class VideoFile implements IVideoFile {
 	 * it was first seen in.
 	 * @param orginalLocation The original location of the file
 	 */
-	@Override
 	public void setOrginalLocation(File orginalLocation) {
 		this.orginalLocation = orginalLocation;
 	}
@@ -59,7 +64,6 @@ public class VideoFile implements IVideoFile {
 	 * Used to set the current location of the video file
 	 * @param location The current location of the video file
 	 */
-	@Override
 	public void setLocation(File location) {
 		this.location = location;
 	}
@@ -68,7 +72,6 @@ public class VideoFile implements IVideoFile {
 	 * Used to get the part number of the file
 	 * @return The part number or null if not known/supported
 	 */
-	@Override
 	public Integer getPart() {
 		return part;
 	}
@@ -77,14 +80,31 @@ public class VideoFile implements IVideoFile {
 	 * Used to set the part number of the file
 	 * @param part The part number or null if not known/supported
 	 */
-	@Override
 	public void setPart(Integer part) {
 		this.part = part;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Used to set the media directory
+	 * @param rootMediaDir The media directory
+	 */
+	public void setMediaDirectory(File rootMediaDir) {
+		this.rootMediaDir = rootMediaDir;
+	}
+
+	/**
+	 * Used to get the media directory
+	 * @return the media directory
+	 */
 	public File getMediaDirectory() {
 		return rootMediaDir;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return location.getAbsolutePath();
+	}
+
+
 }

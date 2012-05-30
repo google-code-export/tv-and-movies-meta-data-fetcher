@@ -37,9 +37,9 @@ import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
@@ -195,7 +195,7 @@ public class MediaSearcher {
 			if (!dir.getController().isTestRun()) {
 				boolean found = false;
 				Integer maxPart = 0;
-				for (IVideoFile vf : film.getFiles()) {
+				for (VideoFile vf : film.getFiles()) {
 					if (vf.getLocation().equals(file)) {
 						found = true;
 					}
@@ -213,7 +213,7 @@ public class MediaSearcher {
 
 				// Update existing stores with new part
 				if (result.getPart()!=null && result.getPart()>maxPart) {
-					for (IVideoFile vf : film.getFiles()) {
+					for (VideoFile vf : film.getFiles()) {
 						if (!vf.getLocation().equals(file)) {
 							for (IStore store : dir.getStores()) {
 								if (vf.getLocation().exists()) {
@@ -277,7 +277,7 @@ public class MediaSearcher {
 
 					boolean found = false;
 					if (episode.getFiles()!=null) {
-						for (IVideoFile vf : episode.getFiles()) {
+						for (VideoFile vf : episode.getFiles()) {
 							if (vf.getLocation().equals(file)) {
 								found = true;
 							}
@@ -314,7 +314,7 @@ public class MediaSearcher {
 	public static Integer getFilmPart(MediaDirectory dir,File file, IFilm film) {
 		Integer part = null;
 		if (film.getFiles()!=null) {
-			for (IVideoFile vf : film.getFiles()) {
+			for (VideoFile vf : film.getFiles()) {
 				if (vf.getLocation().equals(file)) {
 					part = vf.getPart();
 				}

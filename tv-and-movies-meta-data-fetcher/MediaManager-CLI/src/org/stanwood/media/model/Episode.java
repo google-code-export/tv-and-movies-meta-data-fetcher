@@ -17,10 +17,10 @@
 package org.stanwood.media.model;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.SortedSet;
+
+import org.stanwood.media.collections.SortedList;
 
 /**
  * This is used to store episode information
@@ -50,7 +50,12 @@ public class Episode implements IEpisode {
 
 	private URL imageURL;
 
-	private SortedSet<IVideoFile>videoFiles = new VideoFileSet();
+	private List<VideoFile>videoFiles = new SortedList<VideoFile>(new VideoFileComparator());
+
+	/** The constructor */
+	public Episode() {
+
+	}
 
 	/**
 	 * The constructor used to create a episode instance
@@ -71,6 +76,14 @@ public class Episode implements IEpisode {
 	@Override
 	public ISeason getSeason() {
 		return season;
+	}
+
+	/**
+	 * Used to set the episode season
+	 * @param season the episode season
+	 */
+	public void setSeason(ISeason season) {
+		this.season = season;
 	}
 
 	/**
@@ -124,7 +137,12 @@ public class Episode implements IEpisode {
 	 */
 	@Override
 	public void setDate(Date airDate) {
-		this.airDate = new Date(airDate.getTime());
+		if (airDate!=null) {
+			this.airDate = new Date(airDate.getTime());
+		}
+		else {
+			this.airDate = null;
+		}
 	}
 
 	/**
@@ -296,13 +314,13 @@ public class Episode implements IEpisode {
 
 	/** {@inheritDoc} */
 	@Override
-	public SortedSet<IVideoFile> getFiles() {
+	public List<VideoFile> getFiles() {
 		return videoFiles;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFiles(Collection<IVideoFile> videoFiles) {
+	public void setFiles(List<VideoFile> videoFiles) {
 		this.videoFiles.clear();
 		this.videoFiles.addAll(videoFiles);
 	}

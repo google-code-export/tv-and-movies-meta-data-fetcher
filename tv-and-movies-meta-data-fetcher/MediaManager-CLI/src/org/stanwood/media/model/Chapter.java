@@ -27,6 +27,13 @@ public class Chapter implements Serializable {
 	private String name;
 
 	/**
+	 * Constructor
+	 */
+	public Chapter() {
+
+	}
+
+	/**
 	 * Used to create a instance of the chapter class.
 	 * @param name The chapter name
 	 * @param number The chapter number

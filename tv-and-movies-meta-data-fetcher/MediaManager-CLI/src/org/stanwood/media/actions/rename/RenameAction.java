@@ -17,7 +17,7 @@ import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.IVideo;
-import org.stanwood.media.model.IVideoFile;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
@@ -136,7 +136,7 @@ public class RenameAction extends AbstractAction {
 						log.error(MessageFormat.format(Messages.getString("RenameAction.FAILED_RENAME"),file.getAbsolutePath(),newFile.getName()),e); //$NON-NLS-1$
 						return;
 					}
-					for (IVideoFile vf : video.getFiles()) {
+					for (VideoFile vf : video.getFiles()) {
 						if (vf.getLocation().equals(file)) {
 							vf.setLocation(newFile);
 							if (vf.getOrginalLocation()==null) {

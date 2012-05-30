@@ -16,40 +16,17 @@
  */
 package org.stanwood.media.model;
 
-import java.net.URL;
+import java.io.Serializable;
+import java.util.Comparator;
 
-/** Base interface for all season classes */
-public interface ISeason {
+/**
+ * Used to compare video files
+ */
+public class VideoFileComparator implements Comparator<VideoFile>, Serializable {
 
-	/**
-	 * Used to get the episode listing URL for the season
-	 * @return The episode listing URL for the season
-	 */
-	public URL getURL();
-
-	/**
-	 * Sets the episode listing URL for the season
-	 * @param url The episode listing URL for the season
-	 */
-	public void setURL(URL url);
-
-	/**
-	 * Get the number of the season
-	 * @return The season number
-	 */
-	public int getSeasonNumber();
-
-	/**
-	 * Get the show the season belongs too
-	 * @return The show the season belongs too
-	 */
-	public IShow getShow();
-
-
-	/**
-	 * Used to set the season number
-	 * @param seasonNumber the season number
-	 */
-	public void setSeasonNumber(int seasonNumber);
-
+	/** {@inheritDoc} */
+	@Override
+	public int compare(VideoFile o1, VideoFile o2) {
+		return o1.getLocation().compareTo(o2.getLocation());
+	}
 }

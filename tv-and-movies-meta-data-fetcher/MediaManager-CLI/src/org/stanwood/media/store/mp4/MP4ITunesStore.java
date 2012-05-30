@@ -52,9 +52,9 @@ import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.IVideo;
-import org.stanwood.media.model.IVideoFile;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.search.MediaSearcher;
 import org.stanwood.media.setup.ConfigException;
@@ -598,7 +598,7 @@ public class MP4ITunesStore implements IStore {
 //		atoms.add(mp4Manager.createAtom("rtng", )); // None = 0, clean = 2, explicit  = 4
 		if (part!=null) {
 			byte total =0;
-			for (IVideoFile vf : film.getFiles()) {
+			for (VideoFile vf : film.getFiles()) {
 				if (vf.getPart()!=null && vf.getPart()>total) {
 					total = (byte)(int)vf.getPart();
 				}
@@ -940,7 +940,7 @@ public class MP4ITunesStore implements IStore {
 					film = MediaSearcher.getFilm(mediaDir, file,true);
 					if (film!=null) {
 						Integer part = null;
-						for (IVideoFile vfile : film.getFiles()) {
+						for (VideoFile vfile : film.getFiles()) {
 							if (vfile.getLocation().equals(file)) {
 								part = vfile.getPart();
 								break;
