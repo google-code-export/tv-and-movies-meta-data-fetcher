@@ -60,24 +60,27 @@ public class MediaDirectory {
 		createSearchers();
 
 		dirConfig = config.getMediaDirectory(mediaDir);
-		stores = config.loadStoresFromConfigFile(controller,dirConfig);
-		sources = config.loadSourcesFromConfigFile(controller,dirConfig);
-		actions = config.loadActionsFromConfigFile(controller,dirConfig);
-		try {
-			for (ISource source : sources) {
-				source.setMediaDirConfig(this);
-			}
-		} catch (SourceException e) {
-			throw new ConfigException(Messages.getString("MediaDirectory.UNABLE_TO_SETUP_SOURCES"),e); //$NON-NLS-1$
-		}
+		if (controller!=null) {
+			stores = config.loadStoresFromConfigFile(controller,dirConfig);
+			sources = config.loadSourcesFromConfigFile(controller,dirConfig);
+			actions = config.loadActionsFromConfigFile(controller,dirConfig);
 
-
-		for (IStore store : stores) {
 			try {
-				store.init(getController(),getController().getNativeFolder());
-				store.upgrade(this);
-			} catch (StoreException e) {
-				log.error(MessageFormat.format(Messages.getString("MediaDirectory.UNABLE_UPGRADE_STORES"),store.getClass()),e); //$NON-NLS-1$
+				for (ISource source : sources) {
+					source.setMediaDirConfig(this);
+				}
+			} catch (SourceException e) {
+				throw new ConfigException(Messages.getString("MediaDirectory.UNABLE_TO_SETUP_SOURCES"),e); //$NON-NLS-1$
+			}
+
+
+			for (IStore store : stores) {
+				try {
+					store.init(getController(),getController().getNativeFolder());
+					store.upgrade(this);
+				} catch (StoreException e) {
+					log.error(MessageFormat.format(Messages.getString("MediaDirectory.UNABLE_UPGRADE_STORES"),store.getClass()),e); //$NON-NLS-1$
+				}
 			}
 		}
 	}

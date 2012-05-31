@@ -321,8 +321,7 @@ public class Episode implements IEpisode {
 	/** {@inheritDoc} */
 	@Override
 	public void setFiles(List<VideoFile> videoFiles) {
-		this.videoFiles.clear();
-		this.videoFiles.addAll(videoFiles);
+		this.videoFiles = videoFiles;
 	}
 
 

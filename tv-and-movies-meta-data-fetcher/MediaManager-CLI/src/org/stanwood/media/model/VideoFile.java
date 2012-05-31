@@ -12,12 +12,30 @@ public class VideoFile implements Serializable  {
 	private File orginalLocation;
 	private Integer part;
 	private File rootMediaDir;
+	private Long id;
 
 	/**
 	 * The constructor
 	 */
 	public VideoFile() {
 
+	}
+
+	/**
+	 * Used to get a unique ID for the video file. This can be null if the
+	 * store does not support it.
+	 * @return The ID
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * Used to get a unique ID for the video file.
+	 * @param id The id
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
