@@ -3,7 +3,7 @@
 require 'tmpdir'
 require 'fileutils'
 
-VERSION="2.1"
+VERSION="2.2"
 
 ################# Functions ##############
 
