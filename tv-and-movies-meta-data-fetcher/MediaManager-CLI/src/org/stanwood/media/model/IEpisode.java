@@ -97,4 +97,10 @@ public interface IEpisode extends IVideo, IVideoActors, IVideoRating {
 	 */
 	public void setImageURL(URL imageURL);
 
+	/**
+	 * Used to flag this as a special episode
+	 * @param special The special value to set
+	 */
+	public void setSpecial(boolean special);
+
 }

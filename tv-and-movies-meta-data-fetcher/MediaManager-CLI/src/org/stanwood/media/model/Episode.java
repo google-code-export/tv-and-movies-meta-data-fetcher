@@ -324,5 +324,11 @@ public class Episode implements IEpisode {
 		this.videoFiles = videoFiles;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void setSpecial(boolean special) {
+		this.special = special;
+	}
+
 
 }
