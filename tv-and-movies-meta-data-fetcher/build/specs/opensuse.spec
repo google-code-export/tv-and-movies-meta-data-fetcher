@@ -86,7 +86,7 @@ pushd %{buildroot}%{_javadir}
 popd
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-java %{buildroot}%{_bindir}/mm-java
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-xbmc %{buildroot}%{_bindir}/mm-xbmc
-%__install -m 755 MediaManager-CLI/build/csripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
+%__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-manager %{buildroot}%{_bindir}/mm-manager
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-copy-store-to-store %{buildroot}%{_bindir}/mm-copy-store-to-store
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-move-into-media-directory %{buildroot}%{_bindir}/mm-move-into-media-directory
 %__install -m 755 MediaManager-CLI/build/scripts/opensuse/mm-media-file-info %{buildroot}%{_bindir}/mm-media-file-info

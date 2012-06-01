@@ -1,3 +1,5 @@
+* Fri Jun 01 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
+- Added ability to configure database resources
 * Tue May 24 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.1
 - Seen files can be ignored
 - Directiores can be watched for new media, and this can be moved to the
