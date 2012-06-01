@@ -162,6 +162,58 @@ public class TestConfigReader {
 	}
 
 	/**
+	 * Used to test the reading and writing of resources
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testResources() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <resources>"+FileHelper.LS);
+		testConfig.append("    <databaseResource id=\"testDB\">"+FileHelper.LS);
+		testConfig.append("      <url>jdbc:/test/test</url>"+FileHelper.LS);
+		testConfig.append("      <dialect>test.dialect</dialect>"+FileHelper.LS);
+		testConfig.append("    </databaseResource>"+FileHelper.LS);
+		testConfig.append("    <databaseResource id=\"testDB2\">"+FileHelper.LS);
+		testConfig.append("      <url>jdbc:/test/test1</url>"+FileHelper.LS);
+		testConfig.append("      <username>testuser1</username>"+FileHelper.LS);
+		testConfig.append("      <password>testpass1</password>"+FileHelper.LS);
+		testConfig.append("      <dialect>test.dialect1</dialect>"+FileHelper.LS);
+		testConfig.append("    </databaseResource>"+FileHelper.LS);
+		testConfig.append("  </resources>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
+
+		ConfigReader config = createConfigReader(testConfig);
+
+		Map<String, DBResource> resources = config.getDatabaseResoruces();
+		DBResource resource = resources.get("testDB");
+		Assert.assertNotNull(resource);
+		Assert.assertEquals("jdbc:/test/test",resource.getUrl());
+		Assert.assertEquals("test.dialect",resource.getDialect());
+		Assert.assertNull(resource.getUsername());
+		Assert.assertNull(resource.getPassword());
+
+		resource = resources.get("testDB2");
+		Assert.assertNotNull(resource);
+		Assert.assertEquals("jdbc:/test/test1",resource.getUrl());
+		Assert.assertEquals("test.dialect1",resource.getDialect());
+		Assert.assertEquals("testuser1",resource.getUsername());
+		Assert.assertEquals("testpass1",resource.getPassword());
+
+		File tmpFile = FileHelper.createTempFile("config", ".xml");
+		config.writeConfig(new NullProgressMonitor(), tmpFile);
+
+		String written = FileHelper.readFileContents(tmpFile);
+		Assert.assertEquals(testConfig.toString(), written);
+
+		FileHelper.delete(tmpFile);
+
+	}
+
+	/**
 	 * Used to check the configuration reader spots that a invalid pattern was used
 	 * @throws Exception Thrown if their are any problems
 	 */
@@ -616,3 +668,4 @@ public class TestConfigReader {
 		return configReader;
 	}
 }
+
