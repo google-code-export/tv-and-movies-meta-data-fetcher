@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.stanwood.media.store.db">
+	<class name="DBShow" table="shows">						
+		<id name="id">
+			<generator class="native"/>
+		</id>		
+		<property name="showURL" index="showUrl" unique="false" not-null="true"/>					
+		<property name="showId" index="showId" unique="false" not-null="true"/>
+		<property name="sourceId" not-null="true"/>
+		<property name="longSummary" type="text"/>
+		<property name="shortSummary" type="text"/>
+		<property name="studio" length="50"/>
+		<property name="preferredGenre" length="30"/>						
+		<property name="name"/>
+		<property name="imageURL"/>
+		<list name="genres">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string"/>
+		</list>
+		<list name="certifications" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.model.Certification"/>									 	
+		</list>
+		<map name="extraInfo">
+			<key column="parent_id"/>
+			<map-key type="string"/>
+			<element type="string"/>
+		</map>
+		
+		<list name="seasons" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.store.db.DBSeason"/>									 	
+		</list>	
+		<many-to-one name="mediaDirectory" not-null="true"/>
+	</class>
+</hibernate-mapping>

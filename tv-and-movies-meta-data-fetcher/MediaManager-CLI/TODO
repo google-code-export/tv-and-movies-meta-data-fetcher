@@ -5,11 +5,17 @@ Version 2.2
 -----------
 If no <stores/> element, then add default stores
 If no <sources/> element, them add default sources
-Local file Database store
-Remote Database store
+DatabaseStore
+	* Make sure correct indexes are in place
+	* Suppress Hibernate log output when in info mode
+FileDatabaseStore
+	* Create A HSQLDB store that saves stuff in the file
+	* If no stores are set, then use this one
 Update to latest branch of XBMC scrapers
 Update Documents
 	* Add Resources section
+	* Add new Database store
+		- Document how to create the initial database (give examples for mysql)
 
 Version 2.3
 -----------

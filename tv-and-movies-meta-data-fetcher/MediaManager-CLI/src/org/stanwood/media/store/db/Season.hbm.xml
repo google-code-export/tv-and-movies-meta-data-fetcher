@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.stanwood.media.store.db">
+	<class name="DBSeason" table="seasons">			
+		<id name="id">
+			<generator class="native"/>
+		</id>		
+			
+		<property name="seasonNumber" not-null="true"/>
+		<property name="url" access="field"/>
+		
+		<list name="episodes" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.store.db.DBEpisode"/>									 	
+		</list>
+		<many-to-one name="show" access="field" column="tvshow" class="org.stanwood.media.store.db.DBShow" not-null="true"/>			
+	</class>
+</hibernate-mapping>

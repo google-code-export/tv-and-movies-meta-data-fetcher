@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.stanwood.media.model">
+	<class name="Film" table="films">						
+		<id name="filmUrl">
+			<generator class="assigned"/>
+		</id>		
+		
+		<property name="id" index="filmId" unique="false" not-null="true"/>
+		<property name="sourceId" not-null="true"/>
+		<property name="title"/>
+		<property name="date"/>
+		<property name="description" type="text"/>
+		<property name="studio" length="50"/> 
+		<property name="preferredGenre" length="30"/>
+		<property name="country"/>
+		<property name="summary" type="text"/>
+		
+		<list name="directors">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string" length="30"/> 			
+		</list>	
+		<list name="writers">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string" /> 			
+		</list>					
+		<list name="genres">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string"/>
+		</list>		
+			
+		<property name="imageURL"/>	
+		<component name="rating" class="org.stanwood.media.model.Rating">
+			<property name="rating"/>
+			<property name="numberOfVotes"/>
+		</component>			
+		<list name="chapters" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<composite-element class="org.stanwood.media.model.Chapter">
+				<property name="number"/>
+				<property name="name"/>
+			</composite-element>					
+		</list>		
+		<list name="actors" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<composite-element class="org.stanwood.media.model.Actor">
+				<property name="name"/>
+				<property name="role"/>
+			</composite-element>
+		</list>		
+		<list name="certifications" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.model.Certification"/>									 	
+		</list>
+		<list name="files" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.model.VideoFile"/>									 	
+		</list>		
+	</class>
+		<!-- 
+	<query name="getFilmsInMediaDir">select films from DBMediaDirectory as dir join dir.films as film where dir.location=:loc</query>
+	 -->
+</hibernate-mapping>

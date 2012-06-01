@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.stanwood.media.model">
+	<class name="VideoFile" table="files">	
+		<id name="id">
+			<generator class="native"/>
+		</id>
+		<property name="location" type="org.stanwood.media.store.db.FileType"/>
+		<property name="orginalLocation" type="org.stanwood.media.store.db.FileType"/>
+		<property name="part"/>		
+		<property name="mediaDirectory" type="org.stanwood.media.store.db.FileType"/>		
+	</class>
+	
+	<query name="filesByLocation">from VideoFile where location=:location</query>
+</hibernate-mapping>
