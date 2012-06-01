@@ -8,6 +8,9 @@ If no <sources/> element, them add default sources
 DatabaseStore
 	* Make sure correct indexes are in place
 	* Suppress Hibernate log output when in info mode
+	* Added missing licenses for hibernate libs
+	* Update launch scripts with new libs
+	* Update RPM/DEP spec files with new libs
 FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file
 	* If no stores are set, then use this one
