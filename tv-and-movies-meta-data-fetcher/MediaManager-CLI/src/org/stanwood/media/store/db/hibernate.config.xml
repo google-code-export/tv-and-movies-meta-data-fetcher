@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
+
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="hibernate.connection.pool_size">1</property>
+
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="hibernate.current_session_context_class">thread</property>
+
+        <!-- Disable the second-level cache  -->
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="use_sql_comments">false</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hbm2ddl.auto">validate</property>
+        
+        <!-- Types -->        
+        <typedef class="org.stanwood.media.store.db.FileType" name="FileType" />
+        <typedef class="org.stanwood.media.store.db.VersionType" name="VersionType" />
+        
+        <!-- Mappings -->        
+        <mapping class="org.stanwood.media.store.db.DBMediaDirectory"/>
+        <mapping resource="org/stanwood/media/store/db/VideoFile.hbm.xml"/>
+        <mapping resource="org/stanwood/media/store/db/Certification.hbm.xml"/>
+        <mapping resource="org/stanwood/media/store/db/Film.hbm.xml"/>
+        <mapping resource="org/stanwood/media/store/db/Episode.hbm.xml"/>
+        <mapping resource="org/stanwood/media/store/db/Season.hbm.xml"/>
+        <mapping resource="org/stanwood/media/store/db/Show.hbm.xml"/>        
+    </session-factory>
+</hibernate-configuration>

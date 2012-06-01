@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.stanwood.media.store.db">
+	<class name="DBEpisode" table="episodes">			
+		<id name="id">
+			<generator class="native"/>
+		</id>		
+			
+		<property name="episodeNumber" not-null="true"/>
+		<property name="summary" type="text"/>
+		<property name="title"/>
+		<property name="date"/>
+		<property name="special"/>
+		<property name="url" access="field"/>
+		<property name="episodeId"/>
+		<property name="imageURL" access="field"/>	
+		<component name="rating" class="org.stanwood.media.model.Rating">
+			<property name="rating"/>
+			<property name="numberOfVotes"/>
+		</component>
+		<list name="actors" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<composite-element class="org.stanwood.media.model.Actor">
+				<property name="name"/>
+				<property name="role"/>
+			</composite-element>
+		</list>	
+		
+		<many-to-one name="season" access="field" class="org.stanwood.media.store.db.DBSeason" not-null="true"/>
+		
+		<list name="directors">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string" length="30"/> 			
+		</list>	
+		<list name="writers">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<element type="string" /> 			
+		</list>	
+		<list name="files" cascade="all">
+			<key column="parent_id"/>
+			<index column="idx"/>
+			<many-to-many class="org.stanwood.media.model.VideoFile" not-found="ignore"/>									 	
+		</list>			
+	</class>
+</hibernate-mapping>

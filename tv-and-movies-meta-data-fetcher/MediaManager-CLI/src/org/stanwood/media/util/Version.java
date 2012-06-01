@@ -1,11 +1,12 @@
 package org.stanwood.media.util;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  * Used to store version information and allow it to be compared to another version
  */
-public class Version implements Comparable<Version> {
+public class Version implements Comparable<Version>,Serializable {
 
 	private String normalised;
 	private String version;
