@@ -45,6 +45,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
+import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.Plugin;
 import org.stanwood.media.setup.WatchDirConfig;
 import org.stanwood.media.source.HybridFilmSourceInfo;
@@ -101,6 +102,14 @@ public class Controller {
 	 */
 	public Controller(ConfigReader config) {
 		this.configReader = config;
+	}
+
+	/**
+	 * Used to get the database resources
+	 * @return the database resources
+	 */
+	public Map<String,DBResource>getDatabaseResources() {
+		return configReader.getDatabaseResoruces();
 	}
 
 	/**

@@ -103,6 +103,17 @@ public class XMLEpisode extends XMLVideo implements IEpisode {
 		return (episodeNode.getNodeName().equals("special")); //$NON-NLS-1$
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void setSpecial(boolean special) {
+		if (special) {
+			episodeNode.getOwnerDocument().renameNode(episodeNode, null, "special"); //$NON-NLS-1$
+		}
+		else {
+			episodeNode.getOwnerDocument().renameNode(episodeNode, null, "episode"); //$NON-NLS-1$
+		}
+	}
+
 
 	/** {@inheritDoc} */
 	@Override
