@@ -23,8 +23,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
@@ -60,7 +62,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	/** Default file name of config file */
 	public static final String CONFIG_NAME = "mediamanager-conf.xml"; //$NON-NLS-1$
-	private static final String SCHEMA_NAME = "MediaManager-Config-2.1.xsd"; //$NON-NLS-1$
+	private static final String SCHEMA_NAME = "MediaManager-Config-2.2.xsd"; //$NON-NLS-1$
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
@@ -74,6 +76,7 @@ public class ConfigReader extends BaseConfigReader {
 	private InputStream is;
 	private List<MediaDirConfig>mediaDir;
 	private List<WatchDirConfig> watchDirs;
+	private Map<String,DBResource> databaseResources = new HashMap<String,DBResource>();
 
 	private File xbmcAddonDir;
 
@@ -106,6 +109,7 @@ public class ConfigReader extends BaseConfigReader {
 			parseMediaDirs(doc);
 			parseWatchDirs(doc);
 			parsePlguins(doc);
+			parseResources(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG"),e); //$NON-NLS-1$
 		}
@@ -182,6 +186,46 @@ public class ConfigReader extends BaseConfigReader {
 				document.append(" value=\""+e.getValue()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 				document.append("/>"+FileHelper.LS); //$NON-NLS-1$
 			}
+		}
+	}
+
+	private void writeDBResources(StringBuilder document, SubMonitor progress) {
+		if (databaseResources.size()>0) {
+			document.append("  <resources>"+FileHelper.LS); //$NON-NLS-1$
+			for (Entry<String,DBResource>e : databaseResources.entrySet() ) {
+				DBResource resource = e.getValue();
+				document.append("    <databaseResource id=\""+e.getKey()+"\">"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+
+				document.append("      <url>"+resource.getUrl()+"</url>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				if (resource.getUsername()!=null) {
+					document.append("      <username>"+resource.getUsername()+"</username>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				if (resource.getPassword()!=null) {
+					document.append("      <password>"+resource.getPassword()+"</password>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				document.append("      <dialect>"+resource.getDialect()+"</dialect>"+FileHelper.LS);  //$NON-NLS-1$//$NON-NLS-2$
+				document.append("    </databaseResource>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			document.append("  </resources>"+FileHelper.LS); //$NON-NLS-1$
+		}
+	}
+
+	private void parseResources(Document doc) throws XMLParserException, ConfigException {
+		for (Node node : selectNodeList(doc,"/mediaManager/resources/databaseResource")) { //$NON-NLS-1$
+			Element dbRsourceNode = (Element) node;
+			DBResource dbResource = new DBResource();
+			String id = dbRsourceNode.getAttribute("id"); //$NON-NLS-1$
+			if (id.length()==0) {
+				throw new ConfigException("Database ID cannot be empty");
+			}
+			if (databaseResources.containsKey(id)){
+				throw new ConfigException(MessageFormat.format("Database resource ID {0} must be unique", id));
+			}
+			dbResource.setDialect(getStringFromXML(dbRsourceNode, "dialect/text()")); //$NON-NLS-1$
+			dbResource.setUsername(getStringFromXMLOrNull(dbRsourceNode, "username/text()")); //$NON-NLS-1$
+			dbResource.setPassword(getStringFromXMLOrNull(dbRsourceNode, "password/text()")); //$NON-NLS-1$
+			dbResource.setUrl(getStringFromXML(dbRsourceNode, "url/text()")); //$NON-NLS-1$
+			databaseResources.put(id,dbResource);
 		}
 	}
 
@@ -527,17 +571,21 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private void writeXBMCSettings(StringBuilder document) throws ConfigException {
-		document.append("  <XBMCAddons"); //$NON-NLS-1$
+		StringBuilder subDoc = new StringBuilder();
 		if (xbmcAddonDir!=null) {
-			document.append(" directory=\""+xbmcAddonDir+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			subDoc.append(" directory=\""+xbmcAddonDir+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!xbmcLocale.equals(Locale.ENGLISH)) {
-			document.append(" locale=\""+xbmcLocale.getLanguage()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			subDoc.append(" locale=\""+xbmcLocale.getLanguage()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!xbmcAddonSite.equals(DEFAULT_XBMC_ADDON_DIR)) {
-			document.append(" addonSite=\""+xbmcAddonSite+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			subDoc.append(" addonSite=\""+xbmcAddonSite+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		document.append("/>"+FileHelper.LS); //$NON-NLS-1$
+		if (subDoc.length()>0) {
+			document.append("  <XBMCAddons"); //$NON-NLS-1$
+			document.append(subDoc);
+			document.append("/>"+FileHelper.LS); //$NON-NLS-1$
+		}
 	}
 
 
@@ -567,14 +615,18 @@ public class ConfigReader extends BaseConfigReader {
 
 	private void writeGlobalSettings(StringBuilder document)
 	throws ConfigException {
-		document.append("  <global>"+FileHelper.LS); //$NON-NLS-1$
-		if (!configDir.equals(getDefaultConfigDir())) {
-			document.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+		StringBuilder subDoc = new StringBuilder();
+		if (configDir!=null && !configDir.equals(getDefaultConfigDir())) {
+			subDoc.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (nativeFolder!=null) {
-			document.append("    <native>"+nativeFolder.getAbsolutePath()+"</native>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+			subDoc.append("    <native>"+nativeFolder.getAbsolutePath()+"</native>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		document.append("  </global>"+FileHelper.LS); //$NON-NLS-1$
+		if (subDoc.length()>0) {
+			document.append("  <global>"+FileHelper.LS); //$NON-NLS-1$
+			document.append(subDoc);
+			document.append("  </global>"+FileHelper.LS); //$NON-NLS-1$
+		}
 	}
 
 	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
@@ -723,7 +775,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is a problem
 	 */
 	public void writeConfig(IProgressMonitor monitor,File file) throws  ConfigException {
-		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+5);
+		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+6);
 
 		try {
 			StringBuilder document = new StringBuilder();
@@ -737,6 +789,8 @@ public class ConfigReader extends BaseConfigReader {
 			writeMediaDirs(document,progress);
 			progress.worked(1);
 			writeWatchDirs(document,progress);
+			progress.worked(1);
+			writeDBResources(document,progress);
 			document.append("</mediaManager>"+FileHelper.LS); //$NON-NLS-1$
 			Document doc = XMLParser.strToDom(document.toString(),SCHEMA_NAME);
 			XMLParser.writeXML(file, doc);
@@ -749,5 +803,13 @@ public class ConfigReader extends BaseConfigReader {
 			progress.done();
 		}
 
+	}
+
+	/**
+	 * Used to get the database resources
+	 * @return the database resources
+	 */
+	public Map<String,DBResource> getDatabaseResoruces() {
+		return databaseResources;
 	}
 }
