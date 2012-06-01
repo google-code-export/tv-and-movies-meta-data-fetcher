@@ -8,6 +8,8 @@ If no <sources/> element, them add default sources
 Local file Database store
 Remote Database store
 Update to latest branch of XBMC scrapers
+Update Documents
+	* Add Resources section
 
 Version 2.3
 -----------
@@ -22,6 +24,14 @@ Extend patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
 
 Version 2.4
+-----------
+Make media manager able to run as a daemon server
+Install media manager as a server (optional)
+Add ability to run jobs at certain times
+Resource to directory/file changed notifications and trigger jobs
+	* Allow for a quite period 
+
+Version 2.5
 -----------
 Find out and fix why the mediainfo tool can't handle filenames with a ? in them.
 Add a getting started guide and link to a button in the installer
@@ -49,19 +59,20 @@ Replace windows .bat files with native .exe launchers
 Allow the checking for updates period to be configured (Default once a day)
 Add "remove from store" command line tool
 
-Version 2.5
+Version 2.6
 -----------
+Add action for creating film/show/season/epiosde art in the folders
 SeenDBFixer
     - Remove items that are not matching rename pattern, if their is a rename action
 Add a tool for specifying a Media's ID and changing all the stored data.
 Handle episode files that contain multiple episodes
-Make the search strategies extendable via plugins.
+Make the search strategies expendable via plugins.
+	* And scriptable
 Implement a pure java MP4 Manager
 Option to delete anything that did not get renamed in the NFO folder
 Create XBMC nfo files from a store instead of the source
     * Also test this with XBMC to make sure it works as expected
 Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
-Deamon mode
 UPnP server
 Add scripting support for sources, actions, stores and searching strategies
