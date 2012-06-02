@@ -39,6 +39,7 @@ import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * This store is used to store the show and film information in a database.
@@ -55,6 +56,7 @@ public class DatabaseStore implements IStore {
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("1.0"),1);
 	private Session session;
 	private String resourceId;
+	private String hbm2ddlAuto;
 
 	/** {@inheritDoc} */
 	@Override
@@ -559,7 +561,7 @@ public class DatabaseStore implements IStore {
 				dialect=CustomMySQLDialect.class.getName();
 			}
 			Configuration configuration = getConfiguration(resource.getUrl(),
-					connectionUserName, connectionPassword,dialect);
+					connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
 			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
 					.applySettings(configuration.getProperties())
 					.buildServiceRegistry();
@@ -581,7 +583,7 @@ public class DatabaseStore implements IStore {
 	 * @throws XMLParserException Thrown if their is a problem
 	 */
 	public static Configuration getConfiguration(String url, String username,
-			String password, String dialect) throws XMLParserException {
+			String password, String dialect,String hbm2ddlAuto) throws XMLParserException {
 		Document dom = XMLParser
 				.parse(DatabaseStore.class
 						.getResourceAsStream("hibernate.config.xml"), null); //$NON-NLS-1$
@@ -603,6 +605,12 @@ public class DatabaseStore implements IStore {
 		propEl.setAttribute("name", "hibernate.connection.username"); //$NON-NLS-1$//$NON-NLS-2$
 		propEl.appendChild(dom.createTextNode(username));
 		element.appendChild(propEl);
+
+		if (!hbm2ddlAuto.equals("validate")) { //$NON-NLS-1$
+			Node node = XMLParser.selectSingleNode(element, "property[@name='hbm2ddl.auto']"); //$NON-NLS-1$
+			node.setTextContent(hbm2ddlAuto);
+		}
+
 		Configuration configuration = new Configuration().configure(dom);
 		return configuration;
 	}
@@ -644,6 +652,10 @@ public class DatabaseStore implements IStore {
 	public void fileUpdated(MediaDirectory mediaDirectory, File file)
 			throws StoreException {
 
+	}
+
+	public void setHbm2ddlAuto(String value) {
+		hbm2ddlAuto = value;
 	}
 
 }
