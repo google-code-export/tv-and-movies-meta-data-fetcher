@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,14 +33,14 @@ import org.stanwood.media.util.FileHelper;
 @SuppressWarnings("nls")
 public class DatabaseStoreTest {
 
-	private final static String URL = "jdbc:mysql://localhost/mediamanager";
-	private final static String USERNAME = "mm";
-	private final static String PASSWORD = "mm-test";
-	private final static String DIALECT = "org.hibernate.dialect.MySQLDialect";
-//	private final static String URL = "jdbc:hsqldb:mem:db";
-//	private final static String USERNAME = "root";
-//	private final static String PASSWORD = "";
-//	private final static String DIALECT = "org.hibernate.dialect.HSQLDialect";
+//	private final static String URL = "jdbc:mysql://localhost/mediamanager";
+//	private final static String USERNAME = "mm";
+//	private final static String PASSWORD = "mm-test";
+//	private final static String DIALECT = "org.hibernate.dialect.MySQLDialect";
+	private final static String URL = "jdbc:hsqldb:mem:db";
+	private final static String USERNAME = "sa";
+	private final static String PASSWORD = "";
+	private final static String DIALECT = "org.hibernate.dialect.HSQLDialect";
 
 	private DatabaseStore createStore() throws StoreException {
 		DatabaseStore store = new DatabaseStore();
@@ -51,7 +49,9 @@ public class DatabaseStoreTest {
 		resource.setUrl(URL);
 		resource.setUsername(USERNAME);
 		resource.setPassword(PASSWORD);
+		store.setHbm2ddlAuto("update");
 		store.init(resource);
+
 		return store;
 	}
 
@@ -62,9 +62,9 @@ public class DatabaseStoreTest {
 	@Before
 	public void createDatabase() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-		Configuration configuration = DatabaseStore.getConfiguration(URL, USERNAME, PASSWORD, DIALECT);
-//		new SchemaExport(configuration).drop(true, true);
-		new SchemaExport(configuration).create(true, false);
+//		Configuration configuration = DatabaseStore.getConfiguration(URL, USERNAME, PASSWORD, DIALECT);
+//		new SchemaExport(configuration).drop(false, true);
+//		new SchemaExport(configuration).create(false, false);
 	}
 
 	/**
