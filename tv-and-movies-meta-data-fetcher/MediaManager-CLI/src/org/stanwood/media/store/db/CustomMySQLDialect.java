@@ -1,7 +1,8 @@
 package org.stanwood.media.store.db;
 
+import java.sql.Types;
+
 import org.hibernate.dialect.MySQLDialect;
-import org.hsqldb.types.Types;
 
 public class CustomMySQLDialect extends MySQLDialect {
 
