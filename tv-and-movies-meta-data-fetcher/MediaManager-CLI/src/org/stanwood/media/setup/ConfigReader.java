@@ -103,6 +103,9 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public void parse() throws ConfigException {
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Parsing configuration"); //$NON-NLS-1$
+			}
 			Document doc = XMLParser.parse(is, SCHEMA_NAME);
 			parseGlobal(doc);
 			parseXBMCSettings(doc);
@@ -211,10 +214,17 @@ public class ConfigReader extends BaseConfigReader {
 	}
 
 	private void parseResources(Document doc) throws XMLParserException, ConfigException {
+		if (log.isDebugEnabled()) {
+			log.debug("Parsing resources"); //$NON-NLS-1$
+		}
 		for (Node node : selectNodeList(doc,"/mediaManager/resources/databaseResource")) { //$NON-NLS-1$
+
 			Element dbRsourceNode = (Element) node;
 			DBResource dbResource = new DBResource();
 			String id = dbRsourceNode.getAttribute("id"); //$NON-NLS-1$
+			if (log.isDebugEnabled()) {
+				log.debug("Parsing database resource resources: " + id); //$NON-NLS-1$
+			}
 			if (id.length()==0) {
 				throw new ConfigException("Database ID cannot be empty");
 			}
