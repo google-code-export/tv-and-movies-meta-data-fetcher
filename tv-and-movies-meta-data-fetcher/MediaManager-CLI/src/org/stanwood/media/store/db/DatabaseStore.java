@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,6 +19,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Film;
@@ -565,9 +567,17 @@ public class DatabaseStore implements IStore {
 			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
 					.applySettings(configuration.getProperties())
 					.buildServiceRegistry();
-			SessionFactory factory = configuration
+			try {
+				SessionFactory factory = configuration
 					.buildSessionFactory(serviceRegistry);
-			session = factory.openSession();
+				session = factory.openSession();
+			}
+			catch (HibernateException e1) {
+				new SchemaExport(configuration).create(false, false);
+				SessionFactory factory = configuration
+						.buildSessionFactory(serviceRegistry);
+					session = factory.openSession();
+			}
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to connect to database", e);
 		}
