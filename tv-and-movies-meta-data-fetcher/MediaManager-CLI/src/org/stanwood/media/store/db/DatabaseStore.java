@@ -435,6 +435,9 @@ public class DatabaseStore implements IStore {
 			MediaDirConfig dirConfig, File mediaFile) throws StoreException {
 		if (mode == Mode.FILM) {
 			Film film = findFilm(mediaFile, dirConfig.getMediaDir());
+			if (film==null) {
+				return null;
+			}
 			return new SearchResult(film.getId(), film.getSourceId(), film
 					.getFilmUrl().toExternalForm(), part, mode);
 		} else {
