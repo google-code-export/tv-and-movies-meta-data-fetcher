@@ -579,6 +579,7 @@ public class DatabaseStore implements IStore {
 	 * @param username User name of the DB user
 	 * @param password Password of the DB user
 	 * @param dialect The SQL dialect to used when talking to the database
+	 * @param hbm2ddlAuto The hibernate hbm2ddl.auto setting value
 	 * @return The Configuration
 	 * @throws XMLParserException Thrown if their is a problem
 	 */
@@ -606,7 +607,7 @@ public class DatabaseStore implements IStore {
 		propEl.appendChild(dom.createTextNode(username));
 		element.appendChild(propEl);
 
-		if (!hbm2ddlAuto.equals("validate")) { //$NON-NLS-1$
+		if (hbm2ddlAuto!=null && !hbm2ddlAuto.equals("validate")) { //$NON-NLS-1$
 			Node node = XMLParser.selectSingleNode(element, "property[@name='hbm2ddl.auto']"); //$NON-NLS-1$
 			node.setTextContent(hbm2ddlAuto);
 		}
