@@ -562,21 +562,27 @@ public class DatabaseStore implements IStore {
 			if (dialect.equals(MySQLDialect.class.getName())) {
 				dialect=CustomMySQLDialect.class.getName();
 			}
-			Configuration configuration = getConfiguration(resource.getUrl(),
-					connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
-			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-					.applySettings(configuration.getProperties())
-					.buildServiceRegistry();
+
 			try {
+				Configuration configuration = getConfiguration(resource.getUrl(),
+						connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(configuration.getProperties())
+						.buildServiceRegistry();
 				SessionFactory factory = configuration
 					.buildSessionFactory(serviceRegistry);
 				session = factory.openSession();
 			}
 			catch (HibernateException e1) {
+				Configuration configuration = getConfiguration(resource.getUrl(),
+						connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
 				new SchemaExport(configuration).create(false, false);
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+				.applySettings(configuration.getProperties())
+				.buildServiceRegistry();
 				SessionFactory factory = configuration
 						.buildSessionFactory(serviceRegistry);
-					session = factory.openSession();
+				session = factory.openSession();
 			}
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to connect to database", e);
