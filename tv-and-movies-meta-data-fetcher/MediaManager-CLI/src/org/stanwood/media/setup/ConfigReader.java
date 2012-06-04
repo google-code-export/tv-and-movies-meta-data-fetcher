@@ -68,7 +68,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private final static String DEFAULT_TV_FILE_PATTERN = "%sx%e - %t.%x"; //$NON-NLS-1$
 	private final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x"; //$NON-NLS-1$
-	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/dharma"; //$NON-NLS-1$
+	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/eden"; //$NON-NLS-1$
 
 	/** The default location to store configuration */
 	private static final File DEFAULT_MEDIA_CONFIG_DIR = new File(FileHelper.HOME_DIR,".mediaManager"); //$NON-NLS-1$
