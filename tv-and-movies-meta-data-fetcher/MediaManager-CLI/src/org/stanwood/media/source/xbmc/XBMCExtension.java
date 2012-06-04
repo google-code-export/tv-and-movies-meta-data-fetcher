@@ -219,7 +219,18 @@ public abstract class XBMCExtension extends XMLParser {
 			regexp = applyParams(regexp, params);
 			regexp = processInfoVars(regexp);
 
-			Pattern p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
+			Pattern p;
+			try {
+				p = Pattern.compile(regexp,Pattern.MULTILINE | Pattern.DOTALL);
+			}
+			catch (java.util.regex.PatternSyntaxException e) {
+				try {
+					p = Pattern.compile(regexp.replaceAll(Pattern.quote("{"), Matcher.quoteReplacement("\\{")),Pattern.MULTILINE | Pattern.DOTALL);  //$NON-NLS-1$//$NON-NLS-2$
+				}
+				catch (java.util.regex.PatternSyntaxException e1) {
+					throw e;
+				}
+			}
 			expr.setPattern(p);
 
 			expr.setNoClean(expNode.getAttribute("noclean")); //$NON-NLS-1$
