@@ -112,6 +112,11 @@ public class XBMCAddon extends XMLParser {
 				}
 				eval.getVariables().put(id,value);
 			}
+			else {
+				if (log.isDebugEnabled()) {
+					log.debug("Setting already exists: " + id + " : " + type + " = " + value); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
 		}
 		else if(type.equals("labelenum")) { //$NON-NLS-1$
 			Value value = new StringValue(ValueType.STRING,defaultValue);
@@ -122,6 +127,16 @@ public class XBMCAddon extends XMLParser {
 				}
 
 				eval.getVariables().put(id,value);
+			}
+			else {
+				if (log.isDebugEnabled()) {
+					log.debug("Setting already exists: " + id + " : " + type + " = " + value); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+		}
+		else {
+			if (log.isDebugEnabled()) {
+				log.debug("Unable to add setting type: " + id + " : " + type); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
