@@ -76,7 +76,8 @@ public class XBMCAddon extends XMLParser {
 				}
 				Document doc = getDocument(settingsFile);
 
-				IterableNodeList settings = selectNodeList(doc, "/settings/setting"); //$NON-NLS-1$
+				Element settingsNode = getFirstChildElement(doc, "settings"); //$NON-NLS-1$
+				IterableNodeList settings = selectNodeList(settingsNode, "**/setting"); //$NON-NLS-1$
 				for (Node node : settings) {
 					addSetting((Element)node);
 				}
@@ -91,6 +92,9 @@ public class XBMCAddon extends XMLParser {
 		String type = node.getAttribute("type"); //$NON-NLS-1$
 		String defaultValue = node.getAttribute("default"); //$NON-NLS-1$
 		String id = node.getAttribute("id"); //$NON-NLS-1$
+		if (log.isDebugEnabled()) {
+			log.debug("Found setting: "+id+" of type " + type); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		// Fix a broken scraper so the trailer part is ignored (not needed anyhow)
 		if (id.equals("trailer")) { //$NON-NLS-1$
