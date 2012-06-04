@@ -369,9 +369,20 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			}
 	    			film.setSummary(overview.trim());
 
-	    			String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	    			Integer vote = Integer.parseInt(rawVote);
-	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote)); //$NON-NLS-1$
+	    			Integer vote = null;
+	    			try {
+	    				String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	    				vote = Integer.parseInt(rawVote);
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+
+	    			}
+	    			try {
+	    				film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote)); //$NON-NLS-1$
+	    			}
+	    			catch (XMLParserNotFoundException e) {
+
+	    			}
 	    			try {
 	    				film.setCountry(getStringFromXML(doc, "details/country/text()")); //$NON-NLS-1$
 	    			}
