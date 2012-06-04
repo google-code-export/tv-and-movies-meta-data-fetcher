@@ -70,6 +70,7 @@ Add "remove from store" command line tool
 
 Version 2.6
 -----------
+Add option to crypt passwords in config file
 Add action for creating film/show/season/epiosde art in the folders
 SeenDBFixer
     - Remove items that are not matching rename pattern, if their is a rename action
