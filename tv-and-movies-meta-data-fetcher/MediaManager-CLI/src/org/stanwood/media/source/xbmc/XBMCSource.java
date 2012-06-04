@@ -329,6 +329,9 @@ public class XBMCSource extends XMLParser implements ISource {
 
 			@Override
 			public void processContents(String contents) throws SourceException {
+				if (contents==null) {
+					return;
+				}
 				try {
 	    			Document doc = addon.getScraper(Mode.FILM).getGetDetails(file,contents,filmId);
 	    			try {
