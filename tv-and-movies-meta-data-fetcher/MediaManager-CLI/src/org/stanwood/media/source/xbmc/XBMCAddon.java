@@ -77,7 +77,7 @@ public class XBMCAddon extends XMLParser {
 				Document doc = getDocument(settingsFile);
 
 				Element settingsNode = getFirstChildElement(doc, "settings"); //$NON-NLS-1$
-				IterableNodeList settings = selectNodeList(settingsNode, "//setting"); //$NON-NLS-1$
+				IterableNodeList settings = selectNodeList(settingsNode, ".//setting"); //$NON-NLS-1$
 				for (Node node : settings) {
 					addSetting((Element)node);
 				}
