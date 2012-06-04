@@ -65,6 +65,9 @@ public class XBMCAddon extends XMLParser {
 	}
 
 	private void parseSettings() throws XBMCException {
+		if (log.isDebugEnabled()) {
+			log.debug("Checking for addon " + addonDir.getName() + " settings");  //$NON-NLS-1$//$NON-NLS-2$
+		}
 		File settingsFile = getFile("resources"+File.separator+"settings.xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!settingsFile.getAbsolutePath().contains("visualization.projectm") && settingsFile.exists()) { //$NON-NLS-1$
 			try {
