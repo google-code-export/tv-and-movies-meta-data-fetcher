@@ -31,7 +31,7 @@ public class SearchHelper {
 
 	private static final String STRIPED_CHARS[] = {"?","'",","};   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3","1080p","720p","Blueray","x264"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3","1080p","720p","Blueray","x264","Ntsc"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$"); //$NON-NLS-1$
 
 	/**
