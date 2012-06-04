@@ -357,7 +357,9 @@ public class XBMCSource extends XMLParser implements ISource {
 	    				throw new XBMCException("Unable to find title"); //$NON-NLS-1$
 	    			}
 //	    			title = SearchHelper.decodeHtmlEntities(title);
-	    			film.setTitle(title);
+	    			if (title!=null) {
+	    				film.setTitle(title.trim());
+	    			}
 	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()"); //$NON-NLS-1$
 	    			if (overview==null) {
 	    				if (plot.length()>100) {
