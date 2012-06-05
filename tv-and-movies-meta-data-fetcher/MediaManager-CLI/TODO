@@ -11,6 +11,9 @@ DatabaseStore
 	* Added missing licenses for hibernate libs
 	* Update launch scripts with new libs
 	* Update RPM/DEP spec files with new libs
+	* Remove files that don't exist any more
+	* Handle episode cache without show/sesaon
+	* Add postgress drivers
 FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file
 	* If no stores are set, then use this one
@@ -19,6 +22,8 @@ Update Documents
 	* Add Resources section
 	* Add new Database store
 		- Document how to create the initial database (give examples for mysql)
+Allow ignore tokens to be configured
+	* Also allow ignore tokens to be regexps
 
 Version 2.3
 -----------
@@ -82,7 +87,6 @@ Implement a pure java MP4 Manager
 Option to delete anything that did not get renamed in the NFO folder
 Create XBMC nfo files from a store instead of the source
     * Also test this with XBMC to make sure it works as expected
-Allow ignore tokens to be configured
 Add support for TV to the TagChimp Source
 UPnP server
 Add scripting support for sources, actions, stores and searching strategies
