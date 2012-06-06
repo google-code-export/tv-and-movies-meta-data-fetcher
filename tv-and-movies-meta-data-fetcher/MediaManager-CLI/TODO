@@ -10,10 +10,13 @@ DatabaseStore
 	* Update launch scripts with new libs
 	* Update RPM/DEP spec files with new libs
 		- remove MySQL and PostgreSQL drivers as a requirement
+		- Make scripts check if the drivers are present before adding to classpath
+		- Build hibernate4
+		- Make a update site for deps/rpms?
+		- One click install?
 	* Remove files that don't exist any more
-	* Add PostgreSQL drivers
-	* Add option to configure database driver path
 	* Downgrade to hibernate3?
+	* Document how to add other database drivers
 FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file
 	* If no stores are set, then use this one
@@ -22,6 +25,7 @@ Update Documents
 	* Add new Database store
 		- Document how to create the initial database (give examples for MySQL)
 	* Spell check document
+	* Update requirements
 Allow ignore tokens to be configured
 	* Also allow ignore tokens to be regexps
 Allow the seen DB to use the database resource	
