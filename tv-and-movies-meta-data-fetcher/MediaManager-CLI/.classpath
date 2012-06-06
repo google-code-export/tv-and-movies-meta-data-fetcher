@@ -7,7 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/test-time/xmlunit-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/commons-logging-1.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/log4j-1.2.15.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/run-time/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/commons-lang-2.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/commons-exec-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/run-time/rome-1.0.jar"/>
