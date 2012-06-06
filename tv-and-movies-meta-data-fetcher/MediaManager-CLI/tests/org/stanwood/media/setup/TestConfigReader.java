@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -560,6 +562,70 @@ public class TestConfigReader {
 		finally {
 			FileHelper.delete(mediaDir);
 		}
+	}
+
+	/**
+	 * Used to set the default sources/stores/actions
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testDefaults() throws Exception {
+		File mediaDir = FileHelper.createTmpDir("media");
+		try {
+			File tvShowsDir = new File(mediaDir,"shows");
+			if (!tvShowsDir.mkdir() && !tvShowsDir.exists()) {
+				throw new IOException("Unable to create dir: " + tvShowsDir);
+			}
+			File filmsDir = new File(mediaDir,"films");
+			if (!filmsDir.mkdir() && !filmsDir.exists()) {
+				throw new IOException("Unable to create dir: " + filmsDir);
+			}
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+filmsDir.getAbsolutePath()+"\" mode=\"FILM\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+tvShowsDir.getAbsolutePath()+"\" mode=\"TV_SHOW\">"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
+
+			ConfigReader configReader = createConfigReader(testConfig);
+			Collection<File> dirs = configReader.getMediaDirectories();
+			Iterator<File> it = dirs.iterator();
+			Assert.assertEquals(2,dirs.size());
+			MediaDirConfig dir = configReader.getMediaDirectory(it.next());
+			Assert.assertEquals(Mode.FILM,dir.getMode());
+			Assert.assertEquals(filmsDir,dir.getMediaDir());
+			List<SourceConfig> sources = dir.getSources();
+			Assert.assertEquals(2,sources.size());
+			Assert.assertEquals("org.stanwood.media.source.xbmc.XBMCSource#metadata.themoviedb.org",sources.get(0).getID());
+			Assert.assertEquals("org.stanwood.media.source.xbmc.XBMCSource#metadata.imdb.com",sources.get(1).getID());
+//			List<StoreConfig> stores = dir.getStores();
+//			Assert.assertEquals(2,stores.size());
+//			Assert.assertEquals("org.stanwood.media.store.mp4.MP4ITunesStore",stores.get(0).getID());
+//			Assert.assertEquals("org.stanwood.media.store.db.FileDatabaseStore",stores.get(1).getID());
+			List<ActionConfig> actions = dir.getActions();
+			Assert.assertEquals(1,actions.size());
+			Assert.assertEquals("org.stanwood.media.actions.rename.RenameAction",actions.get(0).getID());
+
+			dir = configReader.getMediaDirectory(it.next());
+			Assert.assertEquals(Mode.TV_SHOW,dir.getMode());
+			Assert.assertEquals(tvShowsDir,dir.getMediaDir());
+			sources = dir.getSources();
+			Assert.assertEquals(1,sources.size());
+			Assert.assertEquals("org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com",sources.get(0).getID());
+//			stores = dir.getStores();
+//			Assert.assertEquals(2,stores.size());
+//			Assert.assertEquals("org.stanwood.media.store.mp4.MP4ITunesStore",stores.get(0).getID());
+//			Assert.assertEquals("org.stanwood.media.store.db.FileDatabaseStore",stores.get(1).getID());
+			actions = dir.getActions();
+			Assert.assertEquals(1,actions.size());
+			Assert.assertEquals("org.stanwood.media.actions.rename.RenameAction",actions.get(0).getID());
+
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+
 	}
 
 //	@Test
