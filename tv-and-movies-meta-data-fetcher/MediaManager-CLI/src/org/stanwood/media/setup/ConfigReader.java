@@ -47,6 +47,7 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
@@ -644,7 +645,7 @@ public class ConfigReader extends BaseConfigReader {
 	private List<SourceConfig> readSources(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<SourceConfig> sources = new ArrayList<SourceConfig>();
-		if (selectSingleNode(configNode, "sources/source") == null) { //$NON-NLS-1$
+		if (selectSingleNode(configNode, "sources") == null) { //$NON-NLS-1$
 			if (mode==Mode.FILM) {
 				SourceConfig config = new SourceConfig();
 				config.setNumber(num++);
@@ -683,19 +684,27 @@ public class ConfigReader extends BaseConfigReader {
 	private List<StoreConfig>readStores(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<StoreConfig>stores = new ArrayList<StoreConfig>();
-		for (Node storeElement : selectNodeList(configNode, "stores/store")) { //$NON-NLS-1$
-			StoreConfig store = new StoreConfig();
-			store.setNumber(num);
-			store.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
+		if (selectSingleNode(configNode, "stores") == null) { //$NON-NLS-1$
+			StoreConfig config = new StoreConfig();
+			config.setNumber(num++);
+			config.setID(MP4ITunesStore.class.getName());
+			stores.add(config);
+		}
+		else {
+			for (Node storeElement : selectNodeList(configNode, "stores/store")) { //$NON-NLS-1$
+				StoreConfig store = new StoreConfig();
+				store.setNumber(num);
+				store.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
-			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
-				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
-				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
-				store.addParam(name, value);
+				for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
+					String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+					String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
+					store.addParam(name, value);
+				}
+
+				stores.add(store);
+				num++;
 			}
-
-			stores.add(store);
-			num++;
 		}
 		return stores;
 	}
@@ -703,7 +712,7 @@ public class ConfigReader extends BaseConfigReader {
 	private List<ActionConfig>readActions(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<ActionConfig>actions = new ArrayList<ActionConfig>();
-		if (selectSingleNode(configNode, "actions/action") == null) { //$NON-NLS-1$
+		if (selectSingleNode(configNode, "actions") == null) { //$NON-NLS-1$
 			ActionConfig config = new ActionConfig();
 			config.setNumber(num++);
 			config.setID(RenameAction.class.getName());
