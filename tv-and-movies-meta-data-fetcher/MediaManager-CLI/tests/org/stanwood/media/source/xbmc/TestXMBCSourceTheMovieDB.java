@@ -65,8 +65,8 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Film film = source.getFilm("1726",new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"),null);
 		Assert.assertNotNull(film);
 		Assert.assertEquals(15,film.getActors().size());
-		Assert.assertEquals("Robert Downey Jr",film.getActors().get(0).getName());
-		Assert.assertEquals("Tony Stark",film.getActors().get(0).getRole());
+		Assert.assertEquals("Robert Downey Jr.",film.getActors().get(0).getName());
+		Assert.assertEquals("Tony Stark / Iron Man",film.getActors().get(0).getRole());
 		Assert.assertEquals("Faran Tahir",film.getActors().get(5).getName());
 		Assert.assertEquals("Raza",film.getActors().get(5).getRole());
 		Assert.assertEquals("Shaun Toub",film.getActors().get(6).getName());
@@ -76,27 +76,27 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 		Assert.assertEquals("PG-13",film.getCertifications().get(0).getCertification());
 		Assert.assertEquals(0,film.getChapters().size());
 		Assert.assertEquals("United States of America",film.getCountry());
-		Assert.assertEquals("Tony Stark (Robert Downey Jr.) is a wealthy playboy and talented weapons manufacturer. When he discovers a deadly conspiracy that could destabilize the entire globe, he develops a powerful robotic suit to fight the villians and save the world.",film.getDescription());
+		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getDescription());
 		Assert.assertEquals(1,film.getDirectors().size());
 		Assert.assertEquals("Jon Favreau",film.getDirectors().get(0));
 		Assert.assertEquals("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726",film.getFilmUrl().toExternalForm());
-		Assert.assertEquals(5,film.getGenres().size());
+		Assert.assertEquals(4,film.getGenres().size());
 		Assert.assertEquals("Action",film.getGenres().get(0));
 		Assert.assertEquals("Adventure",film.getGenres().get(1));
-		Assert.assertEquals("Fantasy",film.getGenres().get(2));
-		Assert.assertEquals("Science Fiction",film.getGenres().get(3));
-		Assert.assertEquals("Thriller",film.getGenres().get(4));
+		Assert.assertEquals("Science Fiction",film.getGenres().get(2));
+		Assert.assertEquals("Thriller",film.getGenres().get(3));
 		Assert.assertEquals("1726",film.getId());
-		Assert.assertEquals("http://cf2.imgobject.com/t/p/original/i0SQvqddrAs1qS7K3M20qVfBmge.jpg",film.getImageURL().toExternalForm());
+		Assert.assertEquals("http://cf2.imgobject.com/t/p/original/848chlIWVT41VtAAgyh9bWymAYb.jpg",film.getImageURL().toExternalForm());
 		Assert.assertEquals("Action",film.getPreferredGenre());
 		Assert.assertEquals(8.4F,film.getRating().getRating());
-		Assert.assertEquals(82,film.getRating().getNumberOfVotes());
+		Assert.assertEquals(95,film.getRating().getNumberOfVotes());
 		Assert.assertEquals(XBMCSource.class.getName()+"#metadata.themoviedb.org",film.getSourceId());
-		Assert.assertEquals("Tony Stark (Robert Downey Jr.) is a wealthy playboy and talented weapons manufacturer. When he discovers a deadly conspiracy that could destabilize the entire globe, he develops a powerful robotic suit to fight the villians and save the world.",film.getSummary());
+		Assert.assertEquals("After escaping from kidnappers using makeshift power armor, an ultrarich inventor and weapons maker turns his creation into a force for good by using it to fight crime. But his skills are stretched to the limit when he must face the evil Iron Monger.",film.getSummary());
 		Assert.assertEquals("Iron Man",film.getTitle());
 		Assert.assertEquals(2,film.getWriters().size());
-		Assert.assertEquals("Art Marcum",film.getWriters().get(0));
-		Assert.assertEquals("Matt Holloway",film.getWriters().get(1));
+		Assert.assertEquals("Matt Holloway",film.getWriters().get(0));
+		Assert.assertEquals("Art Marcum",film.getWriters().get(1));
+
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(film.getDate());
