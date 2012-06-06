@@ -36,6 +36,7 @@ import org.stanwood.media.Controller;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.rename.PatternMatcher;
+import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.model.Mode;
@@ -43,6 +44,7 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.SubMonitor;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
+import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
@@ -226,10 +228,10 @@ public class ConfigReader extends BaseConfigReader {
 				log.debug("Parsing database resource resources: " + id); //$NON-NLS-1$
 			}
 			if (id.length()==0) {
-				throw new ConfigException("Database ID cannot be empty");
+				throw new ConfigException(Messages.getString("ConfigReader.DATABASE_ID_EMPTY")); //$NON-NLS-1$
 			}
 			if (databaseResources.containsKey(id)){
-				throw new ConfigException(MessageFormat.format("Database resource ID {0} must be unique", id));
+				throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.DATABASE_ID_NOT_UNIQUE"), id)); //$NON-NLS-1$
 			}
 			dbResource.setDialect(getStringFromXML(dbRsourceNode, "dialect/text()")); //$NON-NLS-1$
 			dbResource.setUsername(getStringFromXMLOrNull(dbRsourceNode, "username/text()")); //$NON-NLS-1$
@@ -294,9 +296,9 @@ public class ConfigReader extends BaseConfigReader {
 			dirConfig.setMode(mode);
 			dirConfig.setIgnoreSeen(ignoreSeen);
 
-			dirConfig.setSources(readSources(node));
-			dirConfig.setStores(readStores(node));
-			dirConfig.setActions(readActions(node));
+			dirConfig.setSources(readSources(node,mode));
+			dirConfig.setStores(readStores(node,mode));
+			dirConfig.setActions(readActions(node,mode));
 
 			List<String>exts = new ArrayList<String>();
 			for (Node extNode : selectNodeList(node,"extensions/extension/text()")) { //$NON-NLS-1$
@@ -639,26 +641,46 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
-	private List<SourceConfig> readSources(Node configNode) throws XMLParserException {
+	private List<SourceConfig> readSources(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<SourceConfig> sources = new ArrayList<SourceConfig>();
-		for (Node sourceElement : selectNodeList(configNode, "sources/source")) { //$NON-NLS-1$
-			SourceConfig source = new SourceConfig();
-			source.setNumber(num);
-			source.setID(((Element)sourceElement).getAttribute("id")); //$NON-NLS-1$
-			for (Node paramNode : selectNodeList(sourceElement, "param")) { //$NON-NLS-1$
-				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
-				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
-				source.addParam(name, value);
+		if (selectSingleNode(configNode, "sources/source") == null) { //$NON-NLS-1$
+			if (mode==Mode.FILM) {
+				SourceConfig config = new SourceConfig();
+				config.setNumber(num++);
+				config.setID(XBMCSource.class.getName()+"#metadata.themoviedb.org"); //$NON-NLS-1$
+				sources.add(config);
+				config = new SourceConfig();
+				config.setNumber(num++);
+				config.setID(XBMCSource.class.getName()+"#metadata.imdb.com"); //$NON-NLS-1$
+				sources.add(config);
 			}
+			else {
+				SourceConfig config = new SourceConfig();
+				config.setNumber(num++);
+				config.setID(XBMCSource.class.getName()+"#metadata.tvdb.com"); //$NON-NLS-1$
+				sources.add(config);
+			}
+		}
+		else {
+			for (Node sourceElement : selectNodeList(configNode, "sources/source")) { //$NON-NLS-1$
+				SourceConfig source = new SourceConfig();
+				source.setNumber(num);
+				source.setID(((Element)sourceElement).getAttribute("id")); //$NON-NLS-1$
+				for (Node paramNode : selectNodeList(sourceElement, "param")) { //$NON-NLS-1$
+					String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+					String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
+					source.addParam(name, value);
+				}
 
-			sources.add(source);
-			num++;
+				sources.add(source);
+				num++;
+			}
 		}
 		return sources;
 	}
 
-	private List<StoreConfig>readStores(Node configNode) throws XMLParserException {
+	private List<StoreConfig>readStores(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<StoreConfig>stores = new ArrayList<StoreConfig>();
 		for (Node storeElement : selectNodeList(configNode, "stores/store")) { //$NON-NLS-1$
@@ -678,22 +700,30 @@ public class ConfigReader extends BaseConfigReader {
 		return stores;
 	}
 
-	private List<ActionConfig>readActions(Node configNode) throws XMLParserException {
+	private List<ActionConfig>readActions(Node configNode,Mode mode) throws XMLParserException {
 		int num = 0;
 		List<ActionConfig>actions = new ArrayList<ActionConfig>();
-		for (Node storeElement : selectNodeList(configNode, "actions/action")) { //$NON-NLS-1$
-			ActionConfig action = new ActionConfig();
-			action.setNumber(num);
-			action.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
+		if (selectSingleNode(configNode, "actions/action") == null) { //$NON-NLS-1$
+			ActionConfig config = new ActionConfig();
+			config.setNumber(num++);
+			config.setID(RenameAction.class.getName());
+			actions.add(config);
+		}
+		else {
+			for (Node storeElement : selectNodeList(configNode, "actions/action")) { //$NON-NLS-1$
+				ActionConfig action = new ActionConfig();
+				action.setNumber(num);
+				action.setID(((Element)storeElement).getAttribute("id")); //$NON-NLS-1$
 
-			for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
-				String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
-				String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
-				action.addParam(name, value);
+				for (Node paramNode : selectNodeList(storeElement, "param")) { //$NON-NLS-1$
+					String name = ((Element)paramNode).getAttribute("name"); //$NON-NLS-1$
+					String value = parseString(((Element)paramNode).getAttribute("value")); //$NON-NLS-1$
+					action.addParam(name, value);
+				}
+
+				actions.add(action);
+				num++;
 			}
-
-			actions.add(action);
-			num++;
 		}
 		return actions;
 	}
