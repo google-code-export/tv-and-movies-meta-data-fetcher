@@ -26,11 +26,14 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 	private static final Pattern THE_MOVIE_DB_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getInfo/.*/(\\d+)");
 	private static final Pattern THE_MOVIE_DB_IMDB_LOOKUP = Pattern.compile(".*themoviedb.*/Movie\\.imdbLookup/.*/(tt\\d+)");
 	private static final Pattern THE_MOVIE_DB_IMAGES_PATTERN = Pattern.compile(".*themoviedb.*/Movie\\.getImages/.*/(.*?)");
+	private static final Pattern THE_MOVIE_DB_API_PATTERN = Pattern.compile(".*api\\.themoviedb.*/3/movie/(.+?)\\?.*");
+	private static final Pattern THE_MOVIE_DB_API_IMAGES_PATTERN = Pattern.compile(".*api\\.themoviedb.*/3/movie/(.+?)/images\\?.*");
+	private static final Pattern THE_MOVIE_DB_API_TRAILERS_PATTERN = Pattern.compile(".*api\\.themoviedb.*/3/movie/(.+?)/trailers\\?.*");
 	private static final Pattern IDBM_PATTERN = Pattern.compile(".*imdb.com/title/(tt\\d+)/");
 	private static final Pattern IDBM_COMBINED = Pattern.compile(".*imdb.com/title/(tt\\d+)/combined");
 	private static final Pattern IDBM_POSTERS = Pattern.compile(".*imdb.com/title/(tt\\d+)/posters");
 	private static final Pattern IMDB_SEARCH = Pattern.compile(".*imdb.com/find\\?s=tt\\;q=(.+)");
-	private static final Pattern UPDATE_SIZE = Pattern.compile(".*mirrors.xbmc.org/addons/dharma/(.*)");
+	private static final Pattern UPDATE_SIZE = Pattern.compile(".*mirrors.xbmc.org/addons/eden/(.*)");
 
 	private File updateSite;
 
@@ -97,6 +100,22 @@ public class DummyXBMCAddonManager extends XBMCAddonManager {
 			term=term.replaceAll("\\%..","");
 			term=term.replaceAll("[\\(\\)]","");
 			return new Stream(Data.class.getResourceAsStream("imdb-search-"+term+".html"),"text/html","UTF-8",url.toExternalForm(),url);
+		}
+
+		m = THE_MOVIE_DB_API_IMAGES_PATTERN.matcher(strUrl);
+		if (m.matches()) {
+			String id = getSearchName(m.group(1));
+			return new Stream(Data.class.getResourceAsStream("themoviedb-api-images-"+id+".json"),"application/json","UTF-8",url.toExternalForm(),url);
+		}
+		m = THE_MOVIE_DB_API_TRAILERS_PATTERN.matcher(strUrl);
+		if (m.matches()) {
+			String id = getSearchName(m.group(1));
+			return new Stream(Data.class.getResourceAsStream("themoviedb-api-trailers-"+id+".json"),"application/json","UTF-8",url.toExternalForm(),url);
+		}
+		m = THE_MOVIE_DB_API_PATTERN.matcher(strUrl);
+		if (m.matches()) {
+			String id = getSearchName(m.group(1));
+			return new Stream(Data.class.getResourceAsStream("themoviedb-api-"+id+".json"),"application/json","UTF-8",url.toExternalForm(),url);
 		}
 		throw new IOException("Unable to find test data for url: " + url);
 	}

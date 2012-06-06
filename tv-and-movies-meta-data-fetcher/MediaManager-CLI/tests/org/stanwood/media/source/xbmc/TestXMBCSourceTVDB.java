@@ -66,7 +66,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("Heroes is a cult serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Not only are they discovering what having superpowers means to them but also the larger picture of where those powers come from and what they might mean to the rest of the world.",show.getLongSummary());
 		Assert.assertEquals("Heroes is a cult serial saga about people all over the world discovering that they have superpowers...",show.getShortSummary());
 		Assert.assertEquals("Heroes",show.getName());
-		Assert.assertEquals(4,show.getGenres().size());
+		Assert.assertEquals(3,show.getGenres().size());
 		Assert.assertEquals("Action and Adventure",show.getGenres().get(0));
 		Assert.assertEquals("Drama",show.getGenres().get(1));
 		Assert.assertEquals("Fantasy",show.getGenres().get(2));
@@ -194,7 +194,7 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("2008-09-22",EPISODE_DATE_FORMAT.format(special.getDate()));
 		Assert.assertEquals("389760",special.getEpisodeId());
 		Assert.assertEquals(1,special.getEpisodeNumber());
-		Assert.assertEquals(8.0F,special.getRating().getRating(),0);
+		Assert.assertEquals(7.0F,special.getRating().getRating(),0);
 		Assert.assertEquals(1,special.getRating().getNumberOfVotes());
 		Assert.assertEquals("Before the third season premiere, a brief recap of Seasons 1 and 2 and interviews with the cast at the premiere party is shown.",special.getSummary());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",special.getUrl().toExternalForm());

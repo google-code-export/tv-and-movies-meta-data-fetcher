@@ -56,7 +56,7 @@ public class TestUpdater extends XBMCAddonTestBase {
 		try {
 			XBMCAddonManager mgr = createAddonManager(addonsDir,Locale.ENGLISH);
 			int count = mgr.getUpdater().update(console);
-			Assert.assertEquals("Check number of updated plugins",12,count);
+			Assert.assertEquals("Check number of updated plugins",14,count);
 
 			count = mgr.getUpdater().update(console);
 			Assert.assertEquals("Check number of updated plugins",0,count);
@@ -64,19 +64,19 @@ public class TestUpdater extends XBMCAddonTestBase {
 			assertFiles(addonsDir);
 
 			Set<String> addons = mgr.listAddons();
-			Assert.assertEquals("Check number of addons registered",12,addons.size());
+			Assert.assertEquals("Check number of addons registered",14,addons.size());
 
 			XBMCAddon addon = mgr.getAddon("metadata.themoviedb.org");
 			Assert.assertEquals("metadata.themoviedb.org",addon.getId());
 			Assert.assertEquals("The MovieDB",addon.getName());
-			Assert.assertEquals("1.4.5",addon.getVersion().toString());
+			Assert.assertEquals("3.2.0",addon.getVersion().toString());
 
 			Assert.assertNotNull(addon.getScraper(Mode.FILM));
 
 			addon = mgr.getAddon("metadata.tvdb.com");
 			Assert.assertEquals("metadata.tvdb.com",addon.getId());
 			Assert.assertEquals("The TVDB",addon.getName());
-			Assert.assertEquals("1.2.3",addon.getVersion().toString());
+			Assert.assertEquals("1.2.4",addon.getVersion().toString());
 
 			Assert.assertNotNull(addon.getScraper(Mode.TV_SHOW));
 
@@ -96,20 +96,20 @@ public class TestUpdater extends XBMCAddonTestBase {
 
 		XBMCAddonManager mgr = createAddonManager(Locale.ENGLISH);
 		Set<AddonDetails> addonDetails = mgr.getUpdater().listAddons(console);
-		assertPluginStatus(addonDetails,27,274,9);
+		assertPluginStatus(addonDetails,25,295,11);
 
 		Set<String>ids = new HashSet<String>();
 		ids.add("metadata.themoviedb.org");
 		Assert.assertEquals(1,mgr.getUpdater().uninstallAddons(console,ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(console),27,275,8);
+		assertPluginStatus( mgr.getUpdater().listAddons(console),25,296,10);
 
-		Assert.assertEquals(7,mgr.getUpdater().installAddons(console,ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(console),34,271,5);
+		Assert.assertEquals(9,mgr.getUpdater().installAddons(console,ids));
+		assertPluginStatus( mgr.getUpdater().listAddons(console),34,290,7);
 
 		ids = new HashSet<String>();
 		ids.add("metadata.common.hdtrailers.net");
 		Assert.assertEquals(2,mgr.getUpdater().uninstallAddons(console,ids));
-		assertPluginStatus( mgr.getUpdater().listAddons(console),32,273,5);
+		assertPluginStatus( mgr.getUpdater().listAddons(console),32,292,7);
 	}
 
 	protected void assertPluginStatus(Collection<AddonDetails> addonDetails,int expectedInstalled,int expectedUninstalled,int expectedUpdateable) {
@@ -132,16 +132,16 @@ public class TestUpdater extends XBMCAddonTestBase {
 			}
 		}
 
-		Assert.assertEquals(expectedInstalled,installed);
-		Assert.assertEquals(expectedUninstalled,uninstalled);
-		Assert.assertEquals(expectedUpdateable,updateable);
+		if (expectedInstalled!=installed || expectedUninstalled!=uninstalled || expectedUpdateable!=updateable) {
+			Assert.fail("Expected: "+expectedInstalled+", "+expectedUninstalled+", "+expectedUpdateable+" But got: "+installed+", "+uninstalled+", "+updateable);
+		}
 	}
 
 	private void assertFiles(File addonsDir) {
 		List<String> files = FileHelper.listFilesAsStrings(addonsDir);
 		Collections.sort(files);
 
-		Assert.assertEquals(113, files.size());
+		Assert.assertEquals(155, files.size());
 //		int index=0;
 //		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"metadata.common.hdtrailers.net/addon.xml");
 //		Assert.assertEquals(files.get(index++),addonsDir+File.separator+"metadata.common.hdtrailers.net/hdtrailers.xml");

@@ -518,8 +518,8 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+LS);
 		testConfig.append("  </global>"+LS);
 		testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" mode=\""+mode.toString()+"\" pattern=\""+pattern+"\" ignoreSeen=\""+ignoreSeen+"\" >"+LS);
+		testConfig.append("    <sources>"+LS);
 		if (sourceId!=null) {
-			testConfig.append("    <sources>"+LS);
 			testConfig.append("      <source id=\""+sourceId+"\">"+LS);
 			if (sourceParams!=null) {
 				for (Entry<String,String> e : sourceParams.entrySet()) {
@@ -528,20 +528,22 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 			}
 
 			testConfig.append("      </source>"+LS);
-			testConfig.append("    </sources>"+LS);
 		}
+		testConfig.append("    </sources>"+LS);
+
+		testConfig.append("    <stores>"+LS);
 		if (storeId!=null) {
-			testConfig.append("    <stores>"+LS);
 			testConfig.append("      <store id=\""+storeId+"\"/>"+LS);
-			testConfig.append("    </stores>"+LS);
 		}
+		testConfig.append("    </stores>"+LS);
+
+		testConfig.append("    <actions>"+LS);
 		if (actions!=null) {
 			for (String action : actions) {
-				testConfig.append("    <actions>"+LS);
 				testConfig.append("      <action id=\""+action+"\"/>"+LS);
-				testConfig.append("    </actions>"+LS);
 			}
 		}
+		testConfig.append("    </actions>"+LS);
 
 		testConfig.append("  </mediaDirectory>"+LS);
 		testConfig.append("</mediaManager>"+LS);

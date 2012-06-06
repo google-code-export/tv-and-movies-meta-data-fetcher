@@ -1519,6 +1519,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 						SearchResult searchResult = new SearchResult(orgFilm.getId(),sourceId, orgFilm.getFilmUrl().toExternalForm(), files.getPart(),Mode.TV_SHOW);
 						try {
 							IFilm film= getFilmFromSource(mediaDirectory, searchResult);
+							if (film==null) {
+								throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore")); //$NON-NLS-1$
+							}
 							orgFilm.setStudio(film.getStudio());
 							orgFilm.setSourceId(sourceId);
 						} catch (MalformedURLException e) {

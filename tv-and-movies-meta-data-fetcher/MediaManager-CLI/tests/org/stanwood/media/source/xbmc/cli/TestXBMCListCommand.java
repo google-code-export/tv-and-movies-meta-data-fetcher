@@ -81,7 +81,7 @@ public class TestXBMCListCommand extends BaseCLITest {
 		}
 
 		StringBuilder expected = new StringBuilder();
-		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.6"+FileHelper.LS);
+		expected.append("Downloaded plugin 'metadata.common.hdtrailers.net' version=1.0.8"+FileHelper.LS);
 		expected.append("Installed plugin 'metadata.common.hdtrailers.net'"+FileHelper.LS);
 		Assert.assertEquals(expected.toString(), stdout.toString());
 		Assert.assertEquals("",stderr.toString());
@@ -138,6 +138,10 @@ public class TestXBMCListCommand extends BaseCLITest {
 			Assert.fail("No exit code");
 		}
 		catch (ExitException e) {
+			if (e.getExitCode()!=0) {
+				System.out.println(stdout);
+				System.err.println(stderr);
+			}
 			Assert.assertEquals(0,e.getExitCode());
 		}
 

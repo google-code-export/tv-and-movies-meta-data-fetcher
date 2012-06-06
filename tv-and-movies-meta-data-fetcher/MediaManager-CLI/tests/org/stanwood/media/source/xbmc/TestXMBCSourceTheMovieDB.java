@@ -64,7 +64,7 @@ public class TestXMBCSourceTheMovieDB extends XBMCAddonTestBase {
 
 		Film film = source.getFilm("1726",new URL("http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/57983e31fb435df4df77afb854740ea9/1726"),null);
 		Assert.assertNotNull(film);
-		Assert.assertEquals(7,film.getActors().size());
+		Assert.assertEquals(15,film.getActors().size());
 		Assert.assertEquals("Robert Downey Jr",film.getActors().get(0).getName());
 		Assert.assertEquals("Tony Stark",film.getActors().get(0).getRole());
 		Assert.assertEquals("Faran Tahir",film.getActors().get(5).getName());

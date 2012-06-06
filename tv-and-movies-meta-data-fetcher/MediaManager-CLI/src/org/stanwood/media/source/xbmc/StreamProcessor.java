@@ -102,7 +102,7 @@ public abstract class StreamProcessor {
 
 	private Stream openStream() throws ExtensionException, IOException {
 		Stream stream = getStream();
-		if (stream==null) {
+		if (stream==null || stream.getInputStream()==null) {
 			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
 		}
 		return stream;
@@ -210,7 +210,12 @@ public abstract class StreamProcessor {
 					Reader r = null;
 					StringWriter sw = null;
 					try {
-						r = new InputStreamReader(stream.getInputStream(),encoding);
+						try {
+							r = new InputStreamReader(stream.getInputStream(),encoding);
+						}
+						catch (NullPointerException ee) {
+							throw ee;
+						}
 						sw = new StringWriter();
 
 						char[] buffer = new char[1024];
