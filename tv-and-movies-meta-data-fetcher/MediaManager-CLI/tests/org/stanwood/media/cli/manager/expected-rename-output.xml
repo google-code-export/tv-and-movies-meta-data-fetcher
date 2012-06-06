@@ -3,7 +3,8 @@
                        "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.1.dtd">
 <store revision="3" version="2.1">
   <show id="79501" imageUrl="" name="Heroes"
-    sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com" studio="NBC" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
+    sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com"
+    studio="NBC" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
     <description>
       <short><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers...]]></short>
       <long><![CDATA[Heroes is a cult serial saga about people all over the world discovering that they have superpowers and trying to deal with how this change affects their lives. Not only are they discovering what having superpowers means to them but also the larger picture of where those powers come from and what they might mean to the rest of the world.]]></long>
@@ -12,8 +13,7 @@
       <certification certification="TV-14" type="mpaa"/>
     </certifications>
     <genres>
-      <genre name="Action and Adventure" preferred="true"/>
-      <genre name="Drama"/>
+      <genre name="Drama" preferred="true"/>
       <genre name="Fantasy"/>
       <genre name="Science-Fiction"/>
     </genres>
@@ -44,13 +44,13 @@
           <actor name="Richard Roundtree" role=""/>
           <actor name="Shishir Kurup" role=""/>
         </actors>
-        <file location="Heroes$fs$Season 1$fs$01 - Genesis.avi" orginalLocation="Heroes$fs$101 - Blah Blah Blah.avi"/>
+        <file location="Heroes/Season 1/01 - Genesis.avi" orginalLocation="Heroes/101 - Blah Blah Blah.avi"/>
       </episode>
       <episode episodeId="308907" firstAired="2006-10-02"
         imageUrl="http://thetvdb.com/banners/episodes/79501/308907.jpg"
         number="2" title="Don't Look Back" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
         <summary>Los Angeles Police Officer Matt Parkman is working crowd control at a murder scene when he alone begins to hear the muffled cries of a little girl somewhere in the house. Claire's heroism brings her unwanted attention. Peter comes closer to learning the truth about his and Nathan's powers. Hiro finds a comic book which leads him to Isaac.</summary>
-        <rating numberOfVotes="1" value="7.8"/>
+        <rating numberOfVotes="1" value="7.7"/>
         <directors>
           <director>Allan Arkush</director>
         </directors>
@@ -71,7 +71,7 @@
           <actor name="Richard Steinmetz" role=""/>
           <actor name="Matt Lander" role=""/>
         </actors>
-        <file location="Heroes$fs$Season 1$fs$02 - Don't Look Back.mkv" orginalLocation="Heroes$fs$S01E02 - Hello this is a test.mkv"/>
+        <file location="Heroes/Season 1/02 - Don't Look Back.mkv" orginalLocation="Heroes/S01E02 - Hello this is a test.mkv"/>
       </episode>
     </season>
     <season number="2" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
@@ -95,7 +95,7 @@
           <actor name="Holt McCallany" role=""/>
           <actor name="Dianna Agron" role=""/>
         </actors>
-        <file location="Heroes$fs$Season 2$fs$02 - Lizards.mpg" orginalLocation="Heroes$fs$s02e02 - Hello this is a test.mpg"/>
+        <file location="Heroes/Season 2/02 - Lizards.mpg" orginalLocation="Heroes/s02e02 - Hello this is a test.mpg"/>
       </episode>
     </season>
   </show>

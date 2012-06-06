@@ -67,10 +67,9 @@ public class TestXMBCSourceTVDB extends XBMCAddonTestBase {
 		Assert.assertEquals("Heroes is a cult serial saga about people all over the world discovering that they have superpowers...",show.getShortSummary());
 		Assert.assertEquals("Heroes",show.getName());
 		Assert.assertEquals(3,show.getGenres().size());
-		Assert.assertEquals("Action and Adventure",show.getGenres().get(0));
-		Assert.assertEquals("Drama",show.getGenres().get(1));
-		Assert.assertEquals("Fantasy",show.getGenres().get(2));
-		Assert.assertEquals("Science-Fiction",show.getGenres().get(3));
+		Assert.assertEquals("Drama",show.getGenres().get(0));
+		Assert.assertEquals("Fantasy",show.getGenres().get(1));
+		Assert.assertEquals("Science-Fiction",show.getGenres().get(2));
 		Assert.assertEquals("79501",show.getShowId());
 		Assert.assertEquals("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip",show.getShowURL().toExternalForm());
 		Assert.assertEquals(XBMCSource.class.getName()+"#metadata.tvdb.com",show.getSourceId());
