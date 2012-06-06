@@ -60,6 +60,7 @@ import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.SapphireStoreInfo;
 import org.stanwood.media.store.db.DatabaseStoreInfo;
+import org.stanwood.media.store.db.FileDatabaseStoreInfo;
 import org.stanwood.media.store.memory.MemoryStoreInfo;
 import org.stanwood.media.store.mp4.MP4ITunesStoreInfo;
 import org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStoreInfo;
@@ -178,6 +179,7 @@ public class Controller {
 		pluginStores.add(new MP4ITunesStoreInfo());
 		pluginStores.add(new XMLStore2Info());
 		pluginStores.add(new DatabaseStoreInfo());
+		pluginStores.add(new FileDatabaseStoreInfo());
 		pluginStores.add(new RemoteMacOSXItunesStoreInfo());
 
 		pluginActions.add(new ExecuteSystemCommandActionInfo());

@@ -21,13 +21,14 @@ FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file
 	* If no stores are set, then use this one
 Update to latest branch of XBMC scrapers
+	* Download latest test data, and fix tests
 Update Documents
 	* Add new Database store
 		- Document how to create the initial database (give examples for MySQL)
 	* Spell check document
 	* Update requirements
 Allow ignore tokens to be configured
-	* Also allow ignore tokens to be regexps
+	* Also allow ignore tokens to be regexps	
 Allow the seen DB to use the database resource	
 
 Version 2.3
