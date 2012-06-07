@@ -47,6 +47,7 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
+import org.stanwood.media.store.db.FileDatabaseStore;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
@@ -688,6 +689,11 @@ public class ConfigReader extends BaseConfigReader {
 			StoreConfig config = new StoreConfig();
 			config.setNumber(num++);
 			config.setID(MP4ITunesStore.class.getName());
+			stores.add(config);
+
+			config = new StoreConfig();
+			config.setNumber(num++);
+			config.setID(FileDatabaseStore.class.getName());
 			stores.add(config);
 		}
 		else {
