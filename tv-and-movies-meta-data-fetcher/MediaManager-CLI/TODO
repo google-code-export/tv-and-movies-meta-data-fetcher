@@ -3,8 +3,6 @@ TODO
 	
 Version 2.2
 -----------
-If no <stores/> element, then add default stores
-	* Use File DatabaseStore and MP4ItunesStore
 DatabaseStore
 	* Make sure correct indexes are in place	
 	* Update launch scripts with new libs
