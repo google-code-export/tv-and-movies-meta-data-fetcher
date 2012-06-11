@@ -235,6 +235,8 @@
 			<delete includeemptydirs="true" >
 				<fileset dir="${build.dir}" includes="**/*"/>
 				<fileset dir="${test.build.dir}" includes="**/*"/>
+				<fileset dir="${scripts.dir}/debian" excludes="*.template" includes="mm-*"/>
+				<fileset dir="${scripts.dir}/opensuse" excludes="*.template" includes="mm-*"/>
 			</delete>
 			<delete dir="${api.docs.dir}" />
 			<delete dir="${cobertura.dir}"/>
