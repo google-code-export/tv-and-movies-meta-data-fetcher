@@ -59,15 +59,20 @@ public class DatabaseStore implements IStore {
 	private Session session;
 	private String resourceId;
 	private String hbm2ddlAuto;
+	private Transaction currentTransaction = null;
 
 	/** {@inheritDoc} */
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile,
 			IEpisode episode) throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		DBEpisode dbEpisode = findEpisode(rootMediaDir, episode);
 		if (dbEpisode == null) {
 			DBSeason season = findSeason(rootMediaDir, episode.getSeason());
+			if (season == null) {
+				cacheSeason(rootMediaDir,episodeFile,episode.getSeason());
+				season = findSeason(rootMediaDir, episode.getSeason());
+			}
 			if (season == null) {
 				throw new StoreException(
 						MessageFormat
@@ -88,7 +93,19 @@ public class DatabaseStore implements IStore {
 			updateEpisode(episode, dbEpisode,episodeFile,rootMediaDir);
 			session.update(dbEpisode);
 		}
-		trans.commit();
+		commitTransaction();
+	}
+
+	protected void commitTransaction() {
+		currentTransaction.commit();
+		currentTransaction= null;
+	}
+
+	protected void beginTransaction() throws StoreException {
+		if (currentTransaction!=null) {
+			throw new StoreException("Database transaction already open");
+		}
+		currentTransaction = session.beginTransaction();
 	}
 
 	protected void updateEpisode(IEpisode episode, DBEpisode dbEpisode,File episodeFile,File rootMediaDir) {
@@ -165,13 +182,17 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season)
 			throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		DBSeason dbSeason = findSeason(rootMediaDir, season);
 		if (dbSeason == null) {
 			if (log.isDebugEnabled()) {
 				log.debug(MessageFormat.format("Creating new season {0} in the database for show {1} {2}",season.getSeasonNumber(),season.getShow().getShowId(),season.getShow().getSourceId()));
 			}
 			DBShow show = findShow(rootMediaDir, season.getShow());
+			if (show == null) {
+				cacheShow(rootMediaDir,episodeFile,season.getShow());
+				show = findShow(rootMediaDir, season.getShow());
+			}
 			if (show == null) {
 				throw new StoreException(
 						MessageFormat
@@ -191,7 +212,7 @@ public class DatabaseStore implements IStore {
 			updateSeason(season, dbSeason);
 			session.update(dbSeason);
 		}
-		trans.commit();
+		commitTransaction();
 	}
 
 	protected void updateSeason(ISeason season, DBSeason dbSeason) {
@@ -223,7 +244,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void cacheShow(File rootMediaDir, File episodeFile, IShow show)
 			throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		DBShow foundShow = findShow(rootMediaDir, show);
 		if (foundShow == null) {
 			foundShow = new DBShow();
@@ -239,7 +260,7 @@ public class DatabaseStore implements IStore {
 			session.saveOrUpdate(foundShow);
 		}
 
-		trans.commit();
+		commitTransaction();
 	}
 
 	protected void updateShow(IShow show, DBShow foundShow) {
@@ -262,13 +283,13 @@ public class DatabaseStore implements IStore {
 	@Override
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		Query q = session
 				.createQuery("select films from DBMediaDirectory as dir where dir.location=:loc"); //$NON-NLS-1$
 		q.setString("loc", dirConfig.getMediaDir().getAbsolutePath()); //$NON-NLS-1$
 		@SuppressWarnings("rawtypes")
 		List result = q.list();
-		trans.commit();
+		commitTransaction();
 		return result;
 	}
 
@@ -276,18 +297,18 @@ public class DatabaseStore implements IStore {
 	@Override
 	public IFilm getFilm(File rootMediaDir, File filmFile, String filmId)
 			throws StoreException, MalformedURLException, IOException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		Film foundFilm = findFilm(filmFile, rootMediaDir);
-		trans.commit();
+		commitTransaction();
 		return foundFilm;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public IFilm getFilm(MediaDirectory dir, File file) throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		Film film = findFilm(file, dir.getMediaDirConfig().getMediaDir());
-		trans.commit();
+		commitTransaction();
 		return film;
 	}
 
@@ -295,7 +316,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,
 			Integer part) throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		DBMediaDirectory dir = getMediaDir(rootMediaDir, true);
 		Film foundFilm = findFilm(film.getId(), film.getSourceId(), dir);
 		if (foundFilm == null) {
@@ -324,7 +345,7 @@ public class DatabaseStore implements IStore {
 		foundFilm.setFiles(film.getFiles());
 
 		session.saveOrUpdate(dir);
-		trans.commit();
+		commitTransaction();
 	}
 
 	private Film findFilm(File file, File mediaDirLocation) {
@@ -433,6 +454,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,
 			MediaDirConfig dirConfig, File mediaFile) throws StoreException {
+		beginTransaction();
 		if (mode == Mode.FILM) {
 			Film film = findFilm(mediaFile, dirConfig.getMediaDir());
 			if (film==null) {
@@ -450,7 +472,7 @@ public class DatabaseStore implements IStore {
 				return sresult ;
 			}
 		}
-
+		commitTransaction();
 		return null;
 	}
 
@@ -458,7 +480,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile)
 			throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		Query q = session.createQuery("from VideoFile where location = :loc"); //$NON-NLS-1$
 		q.setString("loc", oldFile.getAbsolutePath()); //$NON-NLS-1$
 		@SuppressWarnings("rawtypes")
@@ -468,7 +490,7 @@ public class DatabaseStore implements IStore {
 			vf.setLocation(newFile);
 			session.update(vf);
 		}
-		trans.commit();
+		commitTransaction();
 	}
 
 	/** {@inheritDoc} */
@@ -504,7 +526,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file)
 			throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		if (dir.getMediaDirConfig().getMode() == Mode.TV_SHOW) {
 			IEpisode episode = getEpisode(dir, file);
 			Iterator<VideoFile> it = episode.getFiles().iterator();
@@ -532,7 +554,7 @@ public class DatabaseStore implements IStore {
 			session.update(film);
 
 		}
-		trans.commit();
+		commitTransaction();
 	}
 
 	/** {@inheritDoc} */
@@ -552,6 +574,7 @@ public class DatabaseStore implements IStore {
 	}
 
 	protected void init(DBResource resource) throws StoreException {
+		currentTransaction = null;
 		try {
 			String connectionUserName = resource.getUsername();
 			if (connectionUserName==null) {
@@ -644,7 +667,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
-		Transaction trans = session.beginTransaction();
+		beginTransaction();
 		Query q = session.createQuery("select episode " +
 				                      "  from DBMediaDirectory as dir " + //$NON-NLS-1$
 				                      "  join dir.shows as show"+ //$NON-NLS-1$
@@ -654,7 +677,7 @@ public class DatabaseStore implements IStore {
 		q.setString("loc", dirConfig.getMediaDir().getAbsolutePath()); //$NON-NLS-1$
 		@SuppressWarnings("rawtypes")
 		List result = q.list();
-		trans.commit();
+		commitTransaction();
 		return result;
 	}
 
