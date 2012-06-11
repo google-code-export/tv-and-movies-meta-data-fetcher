@@ -1,3 +1,5 @@
+* Wed Jun 07 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
+- If now sources, stores or actions are configured, sensible defaults are used.
 * Sat Jun 02 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
 - Added new database store
 - Searchers by adding new ignore tokens
