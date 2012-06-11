@@ -183,7 +183,43 @@
 			<delete file="cobertura.ser" />
 		</target>
 	
-		<target name="dist">
+		<scriptdef name="create-scripts" language="ruby">
+			<classpath path="${libs.dir}/test-time/jruby-complete-1.6.6.jar"/>
+			<attribute name="pkg.classpath"/>
+			<element name="fileset" type="fileset"/>
+			<![CDATA[				
+			    filesets = $elements['fileset']
+				filesets.each { | fileset |
+					scanner = fileset.getDirectoryScanner($project)
+					scanner.scan()
+					files = scanner.getIncludedFiles()
+					files.each { | filename |
+						
+						basedir = fileset.getDir($project)
+						contents = File.read(basedir.getAbsolutePath()+"/"+filename)
+						contents = contents.gsub(/@@CLASSPATH@@/,$attributes['pkg.classpath'])
+						newFile = basedir.getAbsolutePath()+"/"+filename.gsub(/\.template/,"")
+						File.open(newFile, 'w') do |fout|
+							fout.puts(contents)
+						end	
+						puts "Created script #{newFile}"
+					}
+				}				
+			]]>
+		</scriptdef>
+	
+		<target name="scripts">
+			<loadfile property="pkg.classpath" srcFile="${scripts.dir}/debian/classpath"/>			
+			<create-scripts pkg.classpath="${pkg.classpath}">			
+				<fileset dir="${scripts.dir}/debian" includes="*.template"/>				
+			</create-scripts>
+			<loadfile property="pkg.classpath" srcFile="${scripts.dir}/opensuse/classpath"/>			
+			<create-scripts pkg.classpath="${pkg.classpath}">			
+				<fileset dir="${scripts.dir}/opensuse" includes="*.template"/>				
+			</create-scripts>
+		</target>
+	
+		<target name="dist" depends="scripts">									
 			<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
 				<fileset dir="${src.dir}" />
 				<fileset dir="${test.src.dir}" />			
