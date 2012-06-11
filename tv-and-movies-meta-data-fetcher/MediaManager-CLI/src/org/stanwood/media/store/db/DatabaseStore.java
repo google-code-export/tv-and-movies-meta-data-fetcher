@@ -1,5 +1,6 @@
 package org.stanwood.media.store.db;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,8 +18,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
@@ -609,19 +608,12 @@ public class DatabaseStore implements IStore {
 			Configuration configuration = getConfiguration(resource.getUrl(),
 					connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
 			try {
-
-				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-						.applySettings(configuration.getProperties())
-						.buildServiceRegistry();
-				SessionFactory factory = configuration
-					.buildSessionFactory(serviceRegistry);
+				SessionFactory factory = configuration.buildSessionFactory();
 				session = factory.openSession();
 			}
 			catch (HibernateException e1) {
 				new SchemaExport(configuration).create(false, true);
-				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
-				SessionFactory factory = configuration
-						.buildSessionFactory(serviceRegistry);
+				SessionFactory factory = configuration.buildSessionFactory();
 				session = factory.openSession();
 			}
 		} catch (XMLParserException e) {
