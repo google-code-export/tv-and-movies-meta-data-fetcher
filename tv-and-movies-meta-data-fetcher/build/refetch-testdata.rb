@@ -97,23 +97,31 @@ downloadFile("http://akas.imdb.com/title/tt0371746/",testDataDir+"/imdb-tt037174
 downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/1726",testDataDir+"/themoviedb-images-1726.html")
 downloadFile("http://api.themoviedb.org/2.1/Movie.getImages/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-images-tt0371746.html")
 downloadFile("http://api.themoviedb.org/2.1/Movie.imdbLookup/en/xml/57983e31fb435df4df77afb854740ea9/tt0371746",testDataDir+"/themoviedb-imdbLookup-tt0371746.html")
+downloadFile("http://api.themoviedb.org/3/movie/tt0371746?api_key=57983e31fb435df4df77afb854740ea9&language=en",testDataDir+"/themoviedb-api-tt0371746.json");
+downloadFile("http://api.themoviedb.org/3/movie/tt0371746/images?api_key=57983e31fb435df4df77afb854740ea9&language=en",testDataDir+"/themoviedb-api-images-tt0371746.json");
+downloadFile("http://api.themoviedb.org/3/movie/tt0371746/trailers?api_key=57983e31fb435df4df77afb854740ea9",testDataDir+"/themoviedb-api-trailers-tt0371746.json");
+downloadFile("http://api.themoviedb.org/3/movie/1726/images?api_key=57983e31fb435df4df77afb854740ea9&language=en",testDataDir+"/themoviedb-api-images-1726.json");
 
 
 # Create a ziped update site of XBMC plugins
 files=[
     "addons.xml",
     "addons.xml.md5",
-    "metadata.themoviedb.org/metadata.themoviedb.org-1.4.5.zip",
-    "metadata.common.hdtrailers.net/metadata.common.hdtrailers.net-1.0.6.zip",
-    "metadata.common.imdb.com/metadata.common.imdb.com-2.1.3.zip",
-    "metadata.tvdb.com/metadata.tvdb.com-1.2.3.zip",
-    "metadata.common.themoviedb.org/metadata.common.themoviedb.org-1.1.0.zip",
-    "metadata.imdb.com/metadata.imdb.com-2.3.2.zip",
-    "plugin.video.youtube/plugin.video.youtube-2.1.2.zip",
-    "script.module.beautifulsoup/script.module.beautifulsoup-3.0.8.zip",
-    "metadata.common.movieposterdb.com/metadata.common.movieposterdb.com-1.0.4.zip",
+    "metadata.themoviedb.org/metadata.themoviedb.org-3.2.0.zip",
+    "metadata.common.hdtrailers.net/metadata.common.hdtrailers.net-1.0.8.zip",
+    "metadata.common.imdb.com/metadata.common.imdb.com-2.2.3.zip",
+    "metadata.tvdb.com/metadata.tvdb.com-1.2.4.zip",
+    "metadata.common.themoviedb.org/metadata.common.themoviedb.org-2.1.6.zip",
+    "metadata.imdb.com/metadata.imdb.com-2.5.3.zip",
+    "plugin.video.youtube/plugin.video.youtube-2.9.2.zip",
+    "script.module.beautifulsoup/script.module.beautifulsoup-3.2.0.zip",
+    "metadata.common.movieposterdb.com/metadata.common.movieposterdb.com-1.0.5.zip",
     "metadata.common.impa.com/metadata.common.impa.com-1.0.4.zip",
     "script.module.simplejson/script.module.simplejson-2.0.10.zip",
-    "metadata.common.youtubetrailers/metadata.common.youtubetrailers-1.0.4.zip"
+    "metadata.common.youtubetrailers/metadata.common.youtubetrailers-1.0.4.zip",
+    "script.module.simple.downloader/script.module.simple.downloader-0.9.2.zip",
+    "script.common.plugin.cache/script.common.plugin.cache-0.9.2.zip",
+    "script.module.parsedom/script.module.parsedom-0.9.2.zip"
+
 ]
-zipWebsite(testsDir+"/org/stanwood/media/source/xbmc/updates.zip","http://mirrors.xbmc.org/addons/dharma","addons",files)
+zipWebsite(testsDir+"/org/stanwood/media/source/xbmc/updates.zip","http://mirrors.xbmc.org/addons/eden","addons",files)

@@ -4,8 +4,8 @@ Architecture: all
 Maintainer: John-Paul Stanford <dev@stanwood.org.uk>
 Section: unknown
 Homepage: http://code.google.com/p/tv-and-movies-meta-data-fetcher/
-Depends: libcommons-cli-java,libcommons-logging-java,libjdom1-java,librome-java,liblog4j1.2-java,libcommons-lang-java,libcommons-exec-java,libantlr-java,libmysql-java
-Recommends: sun-java6-jre
+Depends: libcommons-cli-java,libcommons-logging-java,libjdom1-java,librome-java,liblog4j1.2-java,libcommons-lang-java,libcommons-exec-java,libantlr-java,libjavassist-java,libdom4j-java,libhsqldb-java libhibernate3-java
+Recommends: sun-java6-jre,libmysql-java,libpostgresql-jdbc-java
 Build-depends: sun-java6-jdk, ant
 Suggests: ant, sun-java6-jdk
 Priority: optional
