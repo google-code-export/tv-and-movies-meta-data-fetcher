@@ -24,7 +24,6 @@ Update Documents
 	* Spell check document
 	* Update requirements
 Allow ignore tokens to be configured
-	* Also allow ignore tokens to be regexps	
 Allow the seen DB to use the database resource	
 
 Version 2.3

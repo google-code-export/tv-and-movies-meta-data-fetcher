@@ -31,7 +31,15 @@ public class SearchHelper {
 
 	private static final String STRIPED_CHARS[] = {"?","'",","};   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-	private final static String IGNORED_TOKENS[] = {"dvdrip","xvid","proper","ac3","1080p","720p","Blueray","x264","Ntsc"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private final static Pattern IGNORED_TOKENS[] = {Pattern.compile("dvdrip",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("xvid",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("proper",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("ac3",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("1080p",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("720p",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("Blueray",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("x264",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
+													   Pattern.compile("Ntsc",Pattern.CASE_INSENSITIVE)};  //$NON-NLS-1$
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$"); //$NON-NLS-1$
 
 	/**
@@ -152,11 +160,19 @@ public class SearchHelper {
 	 * @param term The search term
 	 */
 	public static void removeIgnoredTokens(StringBuilder term) {
-		for (String it : IGNORED_TOKENS) {
-			int pos = -1;
-			while ((pos = term.toString().toLowerCase().indexOf(it.toLowerCase()))!=-1) {
-				term.replace(pos, pos+it.length(), ""); //$NON-NLS-1$
+		for (Pattern it : IGNORED_TOKENS) {
+			StringBuffer buffer = new StringBuffer();
+			Matcher m = it.matcher(term);
+			while (m.find()) {
+				m.appendReplacement(buffer,"");
 			}
+			m.appendTail(buffer);
+			term.replace(0, term.length(), buffer.toString());
+//			int pos = -1;
+
+//			while ((pos = term.toString().toLowerCase().indexOf(it.toLowerCase()))!=-1) {
+//				term.replace(pos, pos+it.length(), ""); //$NON-NLS-1$
+//			}
 		}
 	}
 
@@ -169,8 +185,9 @@ public class SearchHelper {
 		StringTokenizer tok = new StringTokenizer(term.toString()," -"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
-			for (String it : IGNORED_TOKENS) {
-				if (token.equalsIgnoreCase(it)) {
+			for (Pattern it : IGNORED_TOKENS) {
+				Matcher m = it.matcher(token);
+				if (m.matches()) {
 					return true;
 				}
 			}
