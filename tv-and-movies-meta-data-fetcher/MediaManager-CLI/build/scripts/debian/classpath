@@ -6,5 +6,14 @@ CLASSPATH=$CLASSPATH:$LIB_DIR/rome.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jdom1.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/commons-exec.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/commons-lang.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/mysql-connector-java.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/antlr.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/libhibernate3-java
+CLASSPATH=$CLASSPATH:$LIB_DIR/dom4j.jar
+if [ -f $LIB_DIR/mysql-connector-java.jar ]
+then
+	CLASSPATH=$CLASSPATH:$LIB_DIR/mysql-connector-java.jar
+fi
+if [ -f $LIB_DIR/postgresql-jdbc4.jar ]
+then
+	CLASSPATH=$CLASSPATH:$LIB_DIR/postgresql-jdbc4.jar
+fi
