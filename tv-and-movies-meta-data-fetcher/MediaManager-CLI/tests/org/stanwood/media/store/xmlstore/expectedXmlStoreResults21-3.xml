@@ -5,12 +5,6 @@
   <show id="79501" imageUrl="" name="Heroes"
     sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com"
     studio="NBC" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
-    <genres>
-      <genre name="Action and Adventure" preferred="true"/>
-      <genre name="Drama"/>
-      <genre name="Fantasy"/>
-      <genre name="Science-Fiction"/>
-    </genres>
     <extra>
       <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"/>
     </extra>
@@ -95,12 +89,6 @@
     <certifications>
       <certification certification="TV-14" type="mpaa"/>
     </certifications>
-    <genres>
-      <genre name="Action and Adventure" preferred="true"/>
-      <genre name="Drama"/>
-      <genre name="Fantasy"/>
-      <genre name="Science-Fiction"/>
-    </genres>
     <extra>
       <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"/>
     </extra>
@@ -112,8 +100,7 @@
       <certification certification="TV-14" type="mpaa"/>
     </certifications>
     <genres>
-      <genre name="Action and Adventure" preferred="true"/>
-      <genre name="Drama"/>
+      <genre name="Drama" preferred="true"/>
       <genre name="Fantasy"/>
       <genre name="Science-Fiction"/>
     </genres>

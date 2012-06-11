@@ -574,6 +574,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				appendDescription(doc, show.getShortSummary(), show.getLongSummary(), showElement);
 
 				writeCertifications(show, showElement);
+				for (Node n : selectNodeList(showElement, "genres")) { //$NON-NLS-1$
+					n.getParentNode().removeChild(n);
+				}
 				writeGenres(show, showElement);
 				writeExtraParams(show, showElement);
 
