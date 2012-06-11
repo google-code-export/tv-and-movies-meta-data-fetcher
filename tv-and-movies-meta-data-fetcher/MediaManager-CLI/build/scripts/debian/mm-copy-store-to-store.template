@@ -21,23 +21,14 @@ else
 fi
 
 # Main class
-MAIN=org.stanwood.media.info.CLIMediaFileInformation
+MAIN=org.stanwood.media.cli.manager.CLICopyStoreToStore
 
 # Libraries location
 LIB_DIR=/usr/share/java
 VERSION=2.1
 
 # Launch application.
-CLASSPATH=$LIB_DIR/MediaManager-CLI-$VERSION.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-cli.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-logging.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/log4j-1.2.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/rome.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/jdom1.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-exec.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/commons-lang.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/mysql-connector-java.jar
-CLASSPATH=$CLASSPATH:$LIB_DIR/antlr.jar
+@@CLASSPATH@@
 
 # Launch Application
 exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"
