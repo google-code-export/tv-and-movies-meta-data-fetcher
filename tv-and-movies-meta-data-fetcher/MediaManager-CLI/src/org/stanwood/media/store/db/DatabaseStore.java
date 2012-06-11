@@ -66,11 +66,17 @@ public class DatabaseStore implements IStore {
 	public void cacheEpisode(File rootMediaDir, File episodeFile,
 			IEpisode episode) throws StoreException {
 		beginTransaction();
+		cacheEpisodeNoTrans(rootMediaDir, episodeFile, episode);
+		commitTransaction();
+	}
+
+	protected void cacheEpisodeNoTrans(File rootMediaDir, File episodeFile,
+			IEpisode episode) throws StoreException {
 		DBEpisode dbEpisode = findEpisode(rootMediaDir, episode);
 		if (dbEpisode == null) {
 			DBSeason season = findSeason(rootMediaDir, episode.getSeason());
 			if (season == null) {
-				cacheSeason(rootMediaDir,episodeFile,episode.getSeason());
+				cacheSeasonNoTrans(rootMediaDir,episodeFile,episode.getSeason());
 				season = findSeason(rootMediaDir, episode.getSeason());
 			}
 			if (season == null) {
@@ -93,7 +99,6 @@ public class DatabaseStore implements IStore {
 			updateEpisode(episode, dbEpisode,episodeFile,rootMediaDir);
 			session.update(dbEpisode);
 		}
-		commitTransaction();
 	}
 
 	protected void commitTransaction() {
@@ -183,6 +188,12 @@ public class DatabaseStore implements IStore {
 	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season)
 			throws StoreException {
 		beginTransaction();
+		cacheSeasonNoTrans(rootMediaDir, episodeFile, season);
+		commitTransaction();
+	}
+
+	protected void cacheSeasonNoTrans(File rootMediaDir, File episodeFile,
+			ISeason season) throws StoreException {
 		DBSeason dbSeason = findSeason(rootMediaDir, season);
 		if (dbSeason == null) {
 			if (log.isDebugEnabled()) {
@@ -190,7 +201,7 @@ public class DatabaseStore implements IStore {
 			}
 			DBShow show = findShow(rootMediaDir, season.getShow());
 			if (show == null) {
-				cacheShow(rootMediaDir,episodeFile,season.getShow());
+				cacheShowNoTrans(rootMediaDir,episodeFile,season.getShow());
 				show = findShow(rootMediaDir, season.getShow());
 			}
 			if (show == null) {
@@ -212,7 +223,6 @@ public class DatabaseStore implements IStore {
 			updateSeason(season, dbSeason);
 			session.update(dbSeason);
 		}
-		commitTransaction();
 	}
 
 	protected void updateSeason(ISeason season, DBSeason dbSeason) {
@@ -245,6 +255,12 @@ public class DatabaseStore implements IStore {
 	public void cacheShow(File rootMediaDir, File episodeFile, IShow show)
 			throws StoreException {
 		beginTransaction();
+		cacheShowNoTrans(rootMediaDir,episodeFile, show);
+
+		commitTransaction();
+	}
+
+	protected void cacheShowNoTrans(File rootMediaDir,File episodeFile, IShow show) {
 		DBShow foundShow = findShow(rootMediaDir, show);
 		if (foundShow == null) {
 			foundShow = new DBShow();
@@ -259,8 +275,6 @@ public class DatabaseStore implements IStore {
 			updateShow(show, foundShow);
 			session.saveOrUpdate(foundShow);
 		}
-
-		commitTransaction();
 	}
 
 	protected void updateShow(IShow show, DBShow foundShow) {
