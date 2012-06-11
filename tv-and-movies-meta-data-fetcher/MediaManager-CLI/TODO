@@ -25,6 +25,8 @@ Update Documents
 	* Update requirements
 Allow ignore tokens to be configured
 Allow the seen DB to use the database resource	
+Add scripts to the installer if they are found in the scripts dirs
+Add scripts to the packages if they are found in the scripts dirs
 
 Version 2.3
 -----------
