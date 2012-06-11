@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 import org.stanwood.media.util.Version;
@@ -48,17 +47,15 @@ public class VersionType implements UserType {
 	}
 
 	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names,
-			SessionImplementor session, Object arg3) throws HibernateException,
+	public Object nullSafeGet(ResultSet rs, String[] names, Object arg3) throws HibernateException,
 			SQLException {
-		String val =  StringType.INSTANCE.nullSafeGet(rs, names[0],session);
+		String val =  StringType.INSTANCE.nullSafeGet(rs, names[0]);
 		Version version = new Version(val);
 		return version;
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement stmt, Object o, int i,
-			SessionImplementor arg3) throws HibernateException, SQLException {
+	public void nullSafeSet(PreparedStatement stmt, Object o, int i) throws HibernateException, SQLException {
 		Version value = (Version)o;
 		if (value!=null) {
 			stmt.setString(i, value.toString());
