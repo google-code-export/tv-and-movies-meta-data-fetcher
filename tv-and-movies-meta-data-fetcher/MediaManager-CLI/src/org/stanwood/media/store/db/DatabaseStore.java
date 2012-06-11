@@ -455,24 +455,28 @@ public class DatabaseStore implements IStore {
 	public SearchResult searchMedia(String name, Mode mode, Integer part,
 			MediaDirConfig dirConfig, File mediaFile) throws StoreException {
 		beginTransaction();
-		if (mode == Mode.FILM) {
-			Film film = findFilm(mediaFile, dirConfig.getMediaDir());
-			if (film==null) {
-				return null;
-			}
-			return new SearchResult(film.getId(), film.getSourceId(), film
-					.getFilmUrl().toExternalForm(), part, mode);
-		} else {
-			DBEpisode result = findEpisode(mediaFile, dirConfig.getMediaDir());
-			if (result!=null) {
-				IShow show = result.getSeason().getShow();
-				SearchResult sresult = new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null, mode);
-				sresult.setEpisode(result.getEpisodeNumber());
-				sresult.setSeason(result.getSeason().getSeasonNumber());
-				return sresult ;
+		try {
+			if (mode == Mode.FILM) {
+				Film film = findFilm(mediaFile, dirConfig.getMediaDir());
+				if (film==null) {
+					return null;
+				}
+				return new SearchResult(film.getId(), film.getSourceId(), film
+						.getFilmUrl().toExternalForm(), part, mode);
+			} else {
+				DBEpisode result = findEpisode(mediaFile, dirConfig.getMediaDir());
+				if (result!=null) {
+					IShow show = result.getSeason().getShow();
+					SearchResult sresult = new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null, mode);
+					sresult.setEpisode(result.getEpisodeNumber());
+					sresult.setSeason(result.getSeason().getSeasonNumber());
+					return sresult ;
+				}
 			}
 		}
-		commitTransaction();
+		finally {
+			commitTransaction();
+		}
 		return null;
 	}
 
