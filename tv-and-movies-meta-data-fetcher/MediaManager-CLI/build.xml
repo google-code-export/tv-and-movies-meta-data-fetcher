@@ -208,6 +208,36 @@
 			]]>
 		</scriptdef>
 	
+		<scriptdef name="windows-scripts" language="ruby">
+			<classpath path="${libs.dir}/test-time/jruby-complete-1.6.6.jar"/>
+			<attribute name="libsdir"/>
+			<element name="fileset" type="fileset"/>
+			<![CDATA[		
+				libs=""
+				Dir.foreach($attributes['libsdir']) do | lib |
+					if (lib.end_with?('.jar'))
+						libs=libs+"set CLASSPATH=%CLASSPATH%;%LIB_DIR%\\"+lib+"\r\n"						
+					end					
+				end
+			    filesets = $elements['fileset']
+				filesets.each { | fileset |
+					scanner = fileset.getDirectoryScanner($project)
+					scanner.scan()
+					files = scanner.getIncludedFiles()
+					files.each { | filename |					
+						basedir = fileset.getDir($project)
+						contents = File.read(basedir.getAbsolutePath()+"/"+filename)
+						contents = contents.gsub(/@@CLASSPATH@@/,libs)
+						newFile = basedir.getAbsolutePath()+"/"+filename.gsub(/\.template/,"")
+						File.open(newFile, 'w') do |fout|
+							fout.puts(contents)
+						end	
+						puts "Created script #{newFile}"
+					}
+				}				
+			]]>
+		</scriptdef>
+	
 		<target name="scripts">
 			<loadfile property="pkg.classpath" srcFile="${scripts.dir}/debian/classpath"/>			
 			<create-scripts pkg.classpath="${pkg.classpath}">			
@@ -217,6 +247,9 @@
 			<create-scripts pkg.classpath="${pkg.classpath}">			
 				<fileset dir="${scripts.dir}/opensuse" includes="*.template"/>				
 			</create-scripts>
+			<windows-scripts libsdir="${libs.dir}/run-time">
+				<fileset dir="${basedir}/build/installer/scripts/windows" includes="*.template"/>
+			</windows-scripts>
 		</target>
 	
 		<target name="dist" depends="scripts">									
@@ -237,6 +270,7 @@
 				<fileset dir="${test.build.dir}" includes="**/*"/>
 				<fileset dir="${scripts.dir}/debian" excludes="*.template" includes="mm-*"/>
 				<fileset dir="${scripts.dir}/opensuse" excludes="*.template" includes="mm-*"/>
+				<fileset dir="${basedir}/build/installer/scripts/windows" excludes="*.template" includes="mm-*"/>
 			</delete>
 			<delete dir="${api.docs.dir}" />
 			<delete dir="${cobertura.dir}"/>
