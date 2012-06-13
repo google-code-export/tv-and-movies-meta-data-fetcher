@@ -79,6 +79,7 @@ public class XMLSeason extends XMLParser implements ISeason {
 		return show;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setSeasonNumber(int seasonNumber) {
 		seasonNode.setAttribute("number", String.valueOf(seasonNumber)); //$NON-NLS-1$
