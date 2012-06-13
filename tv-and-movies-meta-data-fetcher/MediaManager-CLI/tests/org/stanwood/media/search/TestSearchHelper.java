@@ -33,15 +33,15 @@ public class TestSearchHelper {
 	public void testRemoveIgnoredTokens() {
 		MediaDirConfig config = new MediaDirConfig();
 		StringBuilder term = new StringBuilder("this is a test");
-		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
+		SearchHelper.removeStripTokens(config.getStripTokens(),term);
 		Assert.assertEquals("this is a test",term.toString());
 
 		term = new StringBuilder("this is a ac3 1080p test");
-		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
+		SearchHelper.removeStripTokens(config.getStripTokens(),term);
 		Assert.assertEquals("this is a   test",term.toString());
 
 		term = new StringBuilder("this is a AC3 test 1080P");
-		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
+		SearchHelper.removeStripTokens(config.getStripTokens(),term);
 		Assert.assertEquals("this is a  test ",term.toString());
 	}
 }

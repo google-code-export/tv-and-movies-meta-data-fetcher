@@ -20,7 +20,7 @@ Update Documents
 		- Document how to create the initial database (give examples for MySQL)
 	* Spell check document
 	* Update requirements
-Allow ignore tokens to be configured
+	* Document strip token configuration
 Allow the seen DB to use the database resource	
 Add scripts to the packages if they are found in the scripts dirs
 

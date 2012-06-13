@@ -163,6 +163,47 @@ public class TestConfigReader {
 
 	}
 
+	@Test
+	public void testStripTokens() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File mediaDir = FileHelper.createTmpDir("films");
+		try {
+			StringBuilder testConfig = new StringBuilder();
+			testConfig.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
+			testConfig.append("<mediaManager>"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" ignoreSeen=\"true\"\n    mode=\"FILM\" pattern=\"%e.%x\">"+FileHelper.LS);
+			testConfig.append("    <strip>dvd\\d</strip>"+FileHelper.LS);
+			testConfig.append("    <strip>xvid</strip>"+FileHelper.LS);
+			testConfig.append("    <sources>"+FileHelper.LS);
+			testConfig.append("      <source id=\"org.stanwood.media.source.xbmc.XBMCSource#metadata.themoviedb.org\"/>"+FileHelper.LS);
+			testConfig.append("      <source id=\"org.stanwood.media.source.xbmc.XBMCSource#metadata.imdb.com\"/>"+FileHelper.LS);
+			testConfig.append("    </sources>"+FileHelper.LS);
+			testConfig.append("    <stores>"+FileHelper.LS);
+			testConfig.append("      <store id=\"org.stanwood.media.store.mp4.MP4ITunesStore\"/>"+FileHelper.LS);
+			testConfig.append("      <store id=\"org.stanwood.media.store.db.FileDatabaseStore\"/>"+FileHelper.LS);
+			testConfig.append("    </stores>"+FileHelper.LS);
+			testConfig.append("    <actions>"+FileHelper.LS);
+			testConfig.append("      <action id=\"org.stanwood.media.actions.rename.RenameAction\"/>"+FileHelper.LS);
+			testConfig.append("    </actions>"+FileHelper.LS);
+			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
+			testConfig.append("</mediaManager>"+FileHelper.LS);
+
+			ConfigReader config = createConfigReader(testConfig);
+
+			File tmpFile = FileHelper.createTempFile("config", ".xml");
+			config.writeConfig(new NullProgressMonitor(), tmpFile);
+
+			String written = FileHelper.readFileContents(tmpFile);
+			Assert.assertEquals(testConfig.toString(), written);
+
+			FileHelper.delete(tmpFile);
+		}
+		finally {
+			FileHelper.delete(mediaDir);
+		}
+
+	}
+
 	/**
 	 * Used to test the reading and writing of resources
 	 * @throws Exception Thrown if their is a problem

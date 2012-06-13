@@ -1,7 +1,6 @@
 package org.stanwood.media.setup;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -23,28 +22,28 @@ public class MediaDirConfig {
 	private boolean ignoreSeen;
 	private String name;
 	private boolean defaultForMode;
-	private List<Pattern> ignoredTokens;
+	private List<Pattern> stripTokens;
 
-	@SuppressWarnings("javadoc")
+	/**
+	 * The constructor
+	 */
 	public MediaDirConfig() {
-		ignoredTokens = new ArrayList<Pattern>();
-		ignoredTokens.add(Pattern.compile("dvdrip",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("xvid",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("proper",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("ac3",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("1080p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("720p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("Blueray",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("x264",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
-		ignoredTokens.add(Pattern.compile("Ntsc",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 	}
 
 	/**
-	 * Used to get a list of ignored token patterns
-	 * @return The ignored token patterns
+	 * Used to set the list of tokens that can be striped from filenames
+	 * @param stripTokens The tokens that can be stripped from filenames
 	 */
-	public List<Pattern> getIgnoredTokens() {
-		return ignoredTokens;
+	public void setStripTokens(List<Pattern> stripTokens) {
+		this.stripTokens = stripTokens;
+	}
+
+	/**
+	 * Used to get a list of token patterns that can be stripped from filenames
+	 * @return The strip token patterns
+	 */
+	public List<Pattern> getStripTokens() {
+		return stripTokens;
 	}
 
 	/**

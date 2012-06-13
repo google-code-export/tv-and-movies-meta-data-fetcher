@@ -92,6 +92,20 @@ public class ConfigReader extends BaseConfigReader {
 
 	private String xbmcAddonSite = DEFAULT_XBMC_ADDON_DIR;
 
+	private final static List<Pattern> DEFAULT_STRIP_TOKENS;
+	static {
+		DEFAULT_STRIP_TOKENS = new ArrayList<Pattern>();
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("dvdrip",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("xvid",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("proper",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("ac3",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("1080p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("720p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("Blueray",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("x264",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("Ntsc",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+	}
+
 	/**
 	 * The constructor used to create a instance of the configuration reader
 	 * @param is The configuration file input stream
@@ -141,9 +155,19 @@ public class ConfigReader extends BaseConfigReader {
 			document.append(" pattern=\""+dir.getPattern()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 			document.append(" ignoreSeen=\""+dir.getIgnoreSeen()+"\">"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
 
-			for (Pattern p : dir.getIgnorePatterns()) {
-				document.append("    <ignore>"+p.pattern()+"</ignore>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+			if (dir.getIgnorePatterns()!=null) {
+				for (Pattern p : dir.getIgnorePatterns()) {
+					document.append("    <ignore>"+p.pattern()+"</ignore>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 			}
+			if (dir.getStripTokens()!=null) {
+				if (dir.getStripTokens()!=DEFAULT_STRIP_TOKENS) {
+					for (Pattern p : dir.getStripTokens()) {
+						document.append("<strip>"+p.pattern()+"</strip>"+FileHelper.LS);  //$NON-NLS-1$//$NON-NLS-2$
+					}
+				}
+			}
+
 			if (dir.getExtensions().size()>0 && !Arrays.equals(dir.getExtensions().toArray(new String[0]),DEFAULT_EXTS)) {
 				document.append("    <extensions>"+FileHelper.LS); //$NON-NLS-1$
 				for (String ext : dir.getExtensions()) {
@@ -160,20 +184,20 @@ public class ConfigReader extends BaseConfigReader {
 					}
 				document.append("    </sources>"+FileHelper.LS); //$NON-NLS-1$
 			}
-			if (dir.getSources().size()>0) {
+			if (dir.getStores().size()>0) {
 				document.append("    <stores>"+FileHelper.LS); //$NON-NLS-1$
-					for (SourceConfig source : dir.getSources()) {
+					for (StoreConfig store : dir.getStores()) {
 						document.append("      <store"); //$NON-NLS-1$
-						witeBaseMediaDirSubItem(document, source);
+						witeBaseMediaDirSubItem(document, store);
 						document.append("      </store>"); //$NON-NLS-1$
 					}
 				document.append("    </stores>"+FileHelper.LS); //$NON-NLS-1$
 			}
-			if (dir.getSources().size()>0) {
+			if (dir.getActions().size()>0) {
 				document.append("    <actions>"+FileHelper.LS); //$NON-NLS-1$
-					for (SourceConfig source : dir.getSources()) {
+					for (ActionConfig action : dir.getActions()) {
 						document.append("      <action"); //$NON-NLS-1$
-						witeBaseMediaDirSubItem(document, source);
+						witeBaseMediaDirSubItem(document, action);
 						document.append("      </action>"); //$NON-NLS-1$
 					}
 				document.append("    </actions>"+FileHelper.LS); //$NON-NLS-1$
@@ -183,7 +207,7 @@ public class ConfigReader extends BaseConfigReader {
 		}
 	}
 
-	protected void witeBaseMediaDirSubItem(StringBuilder document,SourceConfig subItem) {
+	protected void witeBaseMediaDirSubItem(StringBuilder document,BaseMediaDirSubItem subItem) {
 		document.append(" id=\""+subItem.getID()+"\"");  //$NON-NLS-1$//$NON-NLS-2$
 		document.append(">"+FileHelper.LS); //$NON-NLS-1$
 		if (subItem.getParams().entrySet().size()>0) {
@@ -314,6 +338,7 @@ public class ConfigReader extends BaseConfigReader {
 			dirConfig.setExtensions(exts);
 
 			parseIgnorePatterns(node,dirConfig);
+			parseStripPatterns(node,dirConfig);
 			dirConfigs.add(dirConfig);
 
 
@@ -336,6 +361,18 @@ public class ConfigReader extends BaseConfigReader {
 		this.watchDirs = watchDirs;
 	}
 
+	private void parseStripPatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException {
+		List<Pattern>stripTokens = new ArrayList<Pattern>();
+		if (selectSingleNode(dirNode,"strip/text()")!=null) { //$NON-NLS-1$
+			for (Node node : selectNodeList(dirNode,"strip/text()")) { //$NON-NLS-1$
+				stripTokens.add(Pattern.compile(node.getTextContent()));
+			}
+			dirConfig.setStripTokens(stripTokens);
+		}
+		else {
+			dirConfig.setStripTokens(DEFAULT_STRIP_TOKENS);
+		}
+	}
 
 	private void parseIgnorePatterns(Node dirNode, MediaDirConfig dirConfig) throws XMLParserException, ConfigException {
 		List<Pattern>patterns = new ArrayList<Pattern>();
