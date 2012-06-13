@@ -33,7 +33,17 @@ public class FileType implements UserType {
 
 	@Override
 	public boolean equals(Object arg0, Object arg1) throws HibernateException {
-		return arg0.equals(arg1);
+		if (arg0 == arg1) {
+			return true;
+		}
+		if (arg0 == null) {
+			if (arg1!= null) {
+				return false;
+			}
+		} else if (!arg0.equals(arg1)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
