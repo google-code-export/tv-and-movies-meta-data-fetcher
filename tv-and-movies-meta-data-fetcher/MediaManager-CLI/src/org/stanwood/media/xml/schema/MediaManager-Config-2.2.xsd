@@ -58,6 +58,14 @@
 									</xs:simpleContent>													
 								</xs:complexType>
 			  			    </xs:element>
+			  			    <xs:element name="strip" minOccurs="0" maxOccurs="unbounded">
+			  			    	<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+										</xs:extension>
+									</xs:simpleContent>													
+								</xs:complexType>
+			  			    </xs:element>			  			    
 				  			<xs:element name="extensions" minOccurs="0" maxOccurs="1">
 								<xs:complexType>
 									<xs:sequence minOccurs="0" maxOccurs="unbounded">

@@ -31,7 +31,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir,
 					String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder term = new StringBuilder(mediaFile.getName());
-				List<Pattern> ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
+				List<Pattern> stripTokens = mediaDir.getMediaDirConfig().getStripTokens();
 				if (term.indexOf(" ")==-1) { //$NON-NLS-1$
 					extractExtension(term);
 
@@ -42,12 +42,12 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder end= new StringBuilder(m.group(3));
 						SearchHelper.replaceWithSpaces(start);
 						SearchHelper.replaceWithSpaces(end);
-						if (SearchHelper.hasIgnoredTokens(ignoredTokens,start)) {
+						if (SearchHelper.hasStripTokens(stripTokens,start)) {
 							term.delete(0, term.length());
 							term.append(end);
 							return new SearchDetails(term.toString().trim(), year,null);
 						}
-						else if (SearchHelper.hasIgnoredTokens(ignoredTokens,end)) {
+						else if (SearchHelper.hasStripTokens(stripTokens,end)) {
 							term.delete(0, term.length());
 							term.append(start);
 							return new SearchDetails(term.toString().trim(), year,null);
@@ -63,14 +63,14 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 		strategies.add(new ISearchStrategy() {
 			@Override
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
-				List<Pattern> ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
+				List<Pattern> stripTokens = mediaDir.getMediaDirConfig().getStripTokens();
 				StringBuilder term = new StringBuilder(mediaFile.getName());
 
 				extractExtension(term);
 				String year = extractYear(term);
 				Integer part = SearchHelper.extractPart(term);
 				removeUpToHyphon(term);
-				SearchHelper.removeIgnoredTokens(ignoredTokens,term);
+				SearchHelper.removeStripTokens(stripTokens,term);
 				SearchHelper.replaceWithSpaces(term);
 				SearchHelper.trimRubishFromEnds(term);
 

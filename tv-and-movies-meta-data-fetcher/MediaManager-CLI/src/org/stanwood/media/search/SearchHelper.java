@@ -148,36 +148,33 @@ public class SearchHelper {
 	}
 
 	/**
-	 * Used to remove tokens that should be ignored from a search term
+	 * Used to strip tokens that should be ignored from a search term
+	 * @param stripTokens The tokens to strip
 	 * @param term The search term
 	 */
-	public static void removeIgnoredTokens(List<Pattern> ignoredTokens,StringBuilder term) {
-		for (Pattern it : ignoredTokens) {
+	public static void removeStripTokens(List<Pattern> stripTokens,StringBuilder term) {
+		for (Pattern it : stripTokens) {
 			StringBuffer buffer = new StringBuffer();
 			Matcher m = it.matcher(term);
 			while (m.find()) {
-				m.appendReplacement(buffer,"");
+				m.appendReplacement(buffer,""); //$NON-NLS-1$
 			}
 			m.appendTail(buffer);
 			term.replace(0, term.length(), buffer.toString());
-//			int pos = -1;
-
-//			while ((pos = term.toString().toLowerCase().indexOf(it.toLowerCase()))!=-1) {
-//				term.replace(pos, pos+it.length(), ""); //$NON-NLS-1$
-//			}
 		}
 	}
 
 	/**
-	 * Used to check if a search term has ignored tokens
+	 * Used to check if a search term has tokens that can be stripped
 	 * @param term The search term
+	 * @param stripTokens The tokens to check for
 	 * @return True if ignore tokens are found
 	 */
-	public static boolean hasIgnoredTokens(List<Pattern> ignoredTokens,StringBuilder term) {
+	public static boolean hasStripTokens(List<Pattern> stripTokens,StringBuilder term) {
 		StringTokenizer tok = new StringTokenizer(term.toString()," -"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
-			for (Pattern it : ignoredTokens) {
+			for (Pattern it : stripTokens) {
 				Matcher m = it.matcher(token);
 				if (m.matches()) {
 					return true;

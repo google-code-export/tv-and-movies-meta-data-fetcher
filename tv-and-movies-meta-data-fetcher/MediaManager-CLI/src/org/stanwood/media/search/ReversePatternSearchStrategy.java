@@ -45,14 +45,14 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			return null;
 		}
 		String fileName = mediaFile.getAbsolutePath();
-		List<Pattern> ignoredTokens;
+		List<Pattern> stripTokens;
 		if (mediaDir!=null) {
-			ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
+			stripTokens = mediaDir.getMediaDirConfig().getStripTokens();
 		}
 		else {
-			ignoredTokens = new ArrayList<Pattern>();
+			stripTokens = new ArrayList<Pattern>();
 		}
-		if (renamePattern != null && !hasIgnoreTokens(ignoredTokens,mediaFile)) {
+		if (renamePattern != null && !hasStripTokens(stripTokens,mediaFile)) {
 			boolean stripped = false;
 			if (mediaDir!=null) {
 				for (WatchDirConfig c : mediaDir.getController().getWatchDirectories()) {
@@ -90,13 +90,13 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 		return null;
 	}
 
-	private boolean hasIgnoreTokens(List<Pattern>ingnoredTokens,File file) {
+	private boolean hasStripTokens(List<Pattern>ingnoredTokens,File file) {
 		if (!disallowIgnoreTokens) {
 			return false;
 		}
 		StringBuilder term = new StringBuilder(file.getName());
 		SearchHelper.replaceWithSpaces(term);
-		return SearchHelper.hasIgnoredTokens(ingnoredTokens,term);
+		return SearchHelper.hasStripTokens(ingnoredTokens,term);
 	}
 
 	private int patternComplextity(String renamePattern) {
