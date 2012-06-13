@@ -1,6 +1,9 @@
 package org.stanwood.media.search;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.Token;
@@ -42,7 +45,14 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 			return null;
 		}
 		String fileName = mediaFile.getAbsolutePath();
-		if (renamePattern != null && !hasIgnoreTokens(mediaFile)) {
+		List<Pattern> ignoredTokens;
+		if (mediaDir!=null) {
+			ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
+		}
+		else {
+			ignoredTokens = new ArrayList<Pattern>();
+		}
+		if (renamePattern != null && !hasIgnoreTokens(ignoredTokens,mediaFile)) {
 			boolean stripped = false;
 			if (mediaDir!=null) {
 				for (WatchDirConfig c : mediaDir.getController().getWatchDirectories()) {
@@ -80,13 +90,13 @@ public class ReversePatternSearchStrategy implements ISearchStrategy {
 		return null;
 	}
 
-	private boolean hasIgnoreTokens(File file) {
+	private boolean hasIgnoreTokens(List<Pattern>ingnoredTokens,File file) {
 		if (!disallowIgnoreTokens) {
 			return false;
 		}
 		StringBuilder term = new StringBuilder(file.getName());
 		SearchHelper.replaceWithSpaces(term);
-		return SearchHelper.hasIgnoredTokens(term);
+		return SearchHelper.hasIgnoredTokens(ingnoredTokens,term);
 	}
 
 	private int patternComplextity(String renamePattern) {

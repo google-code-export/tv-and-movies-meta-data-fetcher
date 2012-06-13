@@ -31,6 +31,7 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir,
 					String renamePattern,MediaDirectory mediaDir) {
 				StringBuilder term = new StringBuilder(mediaFile.getName());
+				List<Pattern> ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
 				if (term.indexOf(" ")==-1) { //$NON-NLS-1$
 					extractExtension(term);
 
@@ -41,12 +42,12 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 						StringBuilder end= new StringBuilder(m.group(3));
 						SearchHelper.replaceWithSpaces(start);
 						SearchHelper.replaceWithSpaces(end);
-						if (SearchHelper.hasIgnoredTokens(start)) {
+						if (SearchHelper.hasIgnoredTokens(ignoredTokens,start)) {
 							term.delete(0, term.length());
 							term.append(end);
 							return new SearchDetails(term.toString().trim(), year,null);
 						}
-						else if (SearchHelper.hasIgnoredTokens(end)) {
+						else if (SearchHelper.hasIgnoredTokens(ignoredTokens,end)) {
 							term.delete(0, term.length());
 							term.append(start);
 							return new SearchDetails(term.toString().trim(), year,null);
@@ -62,13 +63,14 @@ public abstract class FilmSearcher extends AbstractMediaSearcher {
 		strategies.add(new ISearchStrategy() {
 			@Override
 			public SearchDetails getSearch(File mediaFile, File rootMediaDir, String renamePattern,MediaDirectory mediaDir) {
+				List<Pattern> ignoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
 				StringBuilder term = new StringBuilder(mediaFile.getName());
 
 				extractExtension(term);
 				String year = extractYear(term);
 				Integer part = SearchHelper.extractPart(term);
 				removeUpToHyphon(term);
-				SearchHelper.removeIgnoredTokens(term);
+				SearchHelper.removeIgnoredTokens(ignoredTokens,term);
 				SearchHelper.replaceWithSpaces(term);
 				SearchHelper.trimRubishFromEnds(term);
 

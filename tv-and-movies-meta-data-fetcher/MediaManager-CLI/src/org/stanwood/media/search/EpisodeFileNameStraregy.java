@@ -1,6 +1,8 @@
 package org.stanwood.media.search;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,11 +32,17 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		}
 		SearchHelper.replaceWithSpaces(term);
 		SearchHelper.replaceHyphens(term);
-
+		List<Pattern> ingoredTokens;
+		if (mediaDir!=null) {
+			ingoredTokens = mediaDir.getMediaDirConfig().getIgnoredTokens();
+		}
+		else {
+			ingoredTokens = new ArrayList<Pattern>();
+		}
 		for (Pattern p : PATTERNS) {
 			Matcher m = p.matcher(term);
 			if (m.matches()) {
-				return createSearchDetails(m.group(1),Integer.parseInt(m.group(2)),Integer.parseInt(m.group(3)));
+				return createSearchDetails(ingoredTokens,m.group(1),Integer.parseInt(m.group(2)),Integer.parseInt(m.group(3)));
 			}
 		}
 
@@ -48,9 +56,9 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		}
 	}
 
-	protected SearchDetails createSearchDetails(String rawTerm,int season,int episode) {
+	protected SearchDetails createSearchDetails(List<Pattern>ignoredTokens,String rawTerm,int season,int episode) {
 		StringBuilder term = new StringBuilder(rawTerm);
-		SearchHelper.removeIgnoredTokens(term);
+		SearchHelper.removeIgnoredTokens(ignoredTokens,term);
 		SearchHelper.trimRubishFromEnds(term);
 		SearchDetails details = new SearchDetails(term.toString(), null, null);
 		details.setSeason(season);
