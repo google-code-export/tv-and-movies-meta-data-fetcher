@@ -193,8 +193,7 @@
 					scanner = fileset.getDirectoryScanner($project)
 					scanner.scan()
 					files = scanner.getIncludedFiles()
-					files.each { | filename |
-						
+					files.each { | filename |						
 						basedir = fileset.getDir($project)
 						contents = File.read(basedir.getAbsolutePath()+"/"+filename)
 						contents = contents.gsub(/@@CLASSPATH@@/,$attributes['pkg.classpath'])
@@ -238,6 +237,38 @@
 			]]>
 		</scriptdef>
 	
+		<scriptdef name="installer-scripts" language="ruby">
+			<classpath path="${libs.dir}/test-time/jruby-complete-1.6.6.jar"/>
+			<attribute name="installerdir"/>
+			<![CDATA[			
+				installerDir=$attributes['installerdir']
+				installerConfig=""				
+				Dir.foreach(installerDir+"/scripts/windows") do | script |
+					if (script.start_with?('mm-') and script.end_with?('.bat'))
+						installerConfig=installerConfig+"			<file src=\"@{mm-cli.dir}/build/installer/scripts/windows/#{script}\" targetdir=\"$INSTALL_PATH/bin\">\n"
+						installerConfig=installerConfig+"				<os family=\"windows\"/>\n"
+						installerConfig=installerConfig+"           </file>\n"
+					end					
+				end				
+				Dir.foreach(installerDir+"/scripts/unix") do | script |
+					if (script.start_with?('mm-'))
+						installerConfig=installerConfig+"			<file src=\"@{mm-cli.dir}/build/installer/scripts/unix/#{script}\" targetdir=\"\$INSTALL_PATH/bin\">\n"
+						installerConfig=installerConfig+"				<os family=\"unix\"/>\n"
+						installerConfig=installerConfig+"           </file>\n"
+						installerConfig=installerConfig+"           <executable targetfile=\"$INSTALL_PATH/bin/#{script}\">\n"
+						installerConfig=installerConfig+"          		<os family=\"unix\"/>\n"
+						installerConfig=installerConfig+"          	</executable>\n"
+					end
+				end
+				contents = File.read(installerDir+"/installer-packs.xml.template")
+				contents = contents.gsub(/@@CLI_APPLICATIONS@@/,installerConfig)
+				newFile = installerDir+"/installer-packs.xml"
+				File.open(newFile, 'w') do |fout|
+					fout.puts(contents)
+				end	
+			]]>
+		</scriptdef>
+	
 		<target name="scripts">
 			<loadfile property="pkg.classpath" srcFile="${scripts.dir}/debian/classpath"/>			
 			<create-scripts pkg.classpath="${pkg.classpath}">			
@@ -250,6 +281,8 @@
 			<windows-scripts libsdir="${libs.dir}/run-time">
 				<fileset dir="${basedir}/build/installer/scripts/windows" includes="*.template"/>
 			</windows-scripts>
+			<installer-scripts installerdir="${basedir}/build/installer">
+			</installer-scripts>
 		</target>
 	
 		<target name="dist" depends="scripts">									

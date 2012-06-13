@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<xfragment>	
+		<pack name="CLI 3rd Party Java Libraries" required="yes" installGroups="Libraries" >
+			<description>3rd Pary libraries needed by the command line applications</description>
+			
+			<!-- Install all the libs -->
+			<fileset targetdir="$INSTALL_PATH/lib" dir="@{mm-cli.dir}/libs/run-time" includes="*.jar"/>
+        </pack>
+		
+		<pack name="CLI Application Libaray" required="yes" installGroups="Libraries">
+			<description>The libraries need by the the command line tools</description>
+			
+			<file src="@{dist.dir}/@{ant.project.name}-CLI-@{project.version}.jar" targetdir="$INSTALL_PATH/lib"/>
+		</pack>
+		
+		<pack name="CLI Application" required="yes" installGroups="Application">
+			<description>Command line application</description>
+@@CLI_APPLICATIONS@@
+		</pack>		
+</xfragment>
