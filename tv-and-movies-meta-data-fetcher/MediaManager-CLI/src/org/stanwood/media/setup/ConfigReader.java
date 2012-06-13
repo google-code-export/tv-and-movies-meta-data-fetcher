@@ -92,6 +92,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private String xbmcAddonSite = DEFAULT_XBMC_ADDON_DIR;
 
+	/** The default strip tokens */
 	public final static List<Pattern> DEFAULT_STRIP_TOKENS;
 	static {
 		DEFAULT_STRIP_TOKENS = new ArrayList<Pattern>();
