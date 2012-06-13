@@ -20,6 +20,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.store.FakeStore;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.xml.XMLParser;
 
 /**
  * Test the config reader
@@ -163,6 +164,10 @@ public class TestConfigReader {
 
 	}
 
+	/**
+	 * Used to test that strip tokens can be configured correctly
+	 * @throws Exception Throw if their are any problems
+	 */
 	@Test
 	public void testStripTokens() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -171,7 +176,7 @@ public class TestConfigReader {
 			StringBuilder testConfig = new StringBuilder();
 			testConfig.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
 			testConfig.append("<mediaManager>"+FileHelper.LS);
-			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" ignoreSeen=\"true\"\n    mode=\"FILM\" pattern=\"%e.%x\">"+FileHelper.LS);
+			testConfig.append("  <mediaDirectory directory=\""+mediaDir.getAbsolutePath()+"\" ignoreSeen=\"true\" mode=\"FILM\" pattern=\"%e.%x\">"+FileHelper.LS);
 			testConfig.append("    <strip>dvd\\d</strip>"+FileHelper.LS);
 			testConfig.append("    <strip>xvid</strip>"+FileHelper.LS);
 			testConfig.append("    <sources>"+FileHelper.LS);
@@ -188,13 +193,16 @@ public class TestConfigReader {
 			testConfig.append("  </mediaDirectory>"+FileHelper.LS);
 			testConfig.append("</mediaManager>"+FileHelper.LS);
 
+			String expected = XMLParser.domToStr(XMLParser.strToDom(testConfig.toString()));
+
 			ConfigReader config = createConfigReader(testConfig);
 
 			File tmpFile = FileHelper.createTempFile("config", ".xml");
 			config.writeConfig(new NullProgressMonitor(), tmpFile);
 
 			String written = FileHelper.readFileContents(tmpFile);
-			Assert.assertEquals(testConfig.toString(), written);
+
+			Assert.assertEquals(expected, written);
 
 			FileHelper.delete(tmpFile);
 		}
