@@ -417,14 +417,14 @@ public class XMLParser {
 			    		}
 			    		return new InputSource(stream);
 			        }
-			    	else if (publicId.equals("-//Hibernate/Hibernate Configuration DTD 3.0//EN")) {
+			    	else if (publicId.equals("-//Hibernate/Hibernate Configuration DTD 3.0//EN")) { //$NON-NLS-1$
 			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/hibernate-configuration-3.0.dtd"); //$NON-NLS-1$
 			    		if (stream==null) {
 			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
 			    		}
 			    		return new InputSource(stream);
 			    	}
-			    	else if (publicId.equals("-//Hibernate/Hibernate Mapping DTD 3.0//EN")) {
+			    	else if (publicId.equals("-//Hibernate/Hibernate Mapping DTD 3.0//EN")) { //$NON-NLS-1$
 			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/hibernate-mapping-3.0.dtd"); //$NON-NLS-1$
 			    		if (stream==null) {
 			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
