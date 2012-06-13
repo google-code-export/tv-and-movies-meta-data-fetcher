@@ -10,7 +10,6 @@ DatabaseStore
 		- remove MySQL and PostgreSQL drivers as a requirement
 		- Make scripts check if the drivers are present before adding to classpath
 		- One click install?
-	* Remove files that don't exist any more
 	* Document how to add other database drivers
 FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file

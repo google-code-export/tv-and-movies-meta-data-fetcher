@@ -536,6 +536,18 @@ public class DatabaseStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
+		beginTransaction();
+		log.info("Checking for deleted files in Database Store...");
+		Query q = session.createQuery("from VideoFile"); //$NON-NLS-1$
+		@SuppressWarnings("unchecked")
+		List<VideoFile> files = q.list();
+		for (VideoFile f : files) {
+			if (!f.getLocation().exists()) {
+				log.info("Remove file "+f.getLocation()+" from database as it's not found on disk");
+				session.delete(f);
+			}
+		}
+		commitTransaction();
 		session.flush();
 	}
 
@@ -678,7 +690,7 @@ public class DatabaseStore implements IStore {
 	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
 		beginTransaction();
-		Query q = session.createQuery("select episode " +
+		Query q = session.createQuery("select episode " + //$NON-NLS-1$
 				                      "  from DBMediaDirectory as dir " + //$NON-NLS-1$
 				                      "  join dir.shows as show"+ //$NON-NLS-1$
 				                      "  join show.seasons as season"+ //$NON-NLS-1$

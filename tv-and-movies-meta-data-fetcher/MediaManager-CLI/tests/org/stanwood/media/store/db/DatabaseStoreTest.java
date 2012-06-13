@@ -158,6 +158,8 @@ public class DatabaseStoreTest {
 			Assert.assertNull(store.getEpisode(rawMediaDir,new File(eurekaDir,"000 - blah"),null,0));
 			IEpisode special = store.getSpecial(rawMediaDir,new File(eurekaDir,"000 - blah"),null,0);
 			Assert.assertNotNull(special);
+
+			store.performedActions(mediaDir);
 		}
 		finally {
 			FileHelper.delete(rawMediaDir);
