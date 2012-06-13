@@ -18,6 +18,7 @@ package org.stanwood.media.search;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.setup.MediaDirConfig;
 
 /**
  * Used to test the class {@link SearchHelper}
@@ -30,16 +31,17 @@ public class TestSearchHelper {
 	 */
 	@Test
 	public void testRemoveIgnoredTokens() {
+		MediaDirConfig config = new MediaDirConfig();
 		StringBuilder term = new StringBuilder("this is a test");
-		SearchHelper.removeIgnoredTokens(term);
+		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
 		Assert.assertEquals("this is a test",term.toString());
 
 		term = new StringBuilder("this is a ac3 1080p test");
-		SearchHelper.removeIgnoredTokens(term);
+		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
 		Assert.assertEquals("this is a   test",term.toString());
 
 		term = new StringBuilder("this is a AC3 test 1080P");
-		SearchHelper.removeIgnoredTokens(term);
+		SearchHelper.removeIgnoredTokens(config.getIgnoredTokens(),term);
 		Assert.assertEquals("this is a  test ",term.toString());
 	}
 }

@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.search;
 
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,15 +32,6 @@ public class SearchHelper {
 
 	private static final String STRIPED_CHARS[] = {"?","'",","};   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-	private final static Pattern IGNORED_TOKENS[] = {Pattern.compile("dvdrip",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("xvid",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("proper",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("ac3",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("1080p",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("720p",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("Blueray",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("x264",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-													   Pattern.compile("Ntsc",Pattern.CASE_INSENSITIVE)};  //$NON-NLS-1$
 	private final static Pattern PATTERN_STRIP_CHARS = Pattern.compile("^[\\s|\\-]*(.*?)[\\s|\\-]*$"); //$NON-NLS-1$
 
 	/**
@@ -159,8 +151,8 @@ public class SearchHelper {
 	 * Used to remove tokens that should be ignored from a search term
 	 * @param term The search term
 	 */
-	public static void removeIgnoredTokens(StringBuilder term) {
-		for (Pattern it : IGNORED_TOKENS) {
+	public static void removeIgnoredTokens(List<Pattern> ignoredTokens,StringBuilder term) {
+		for (Pattern it : ignoredTokens) {
 			StringBuffer buffer = new StringBuffer();
 			Matcher m = it.matcher(term);
 			while (m.find()) {
@@ -181,11 +173,11 @@ public class SearchHelper {
 	 * @param term The search term
 	 * @return True if ignore tokens are found
 	 */
-	public static boolean hasIgnoredTokens(StringBuilder term) {
+	public static boolean hasIgnoredTokens(List<Pattern> ignoredTokens,StringBuilder term) {
 		StringTokenizer tok = new StringTokenizer(term.toString()," -"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
-			for (Pattern it : IGNORED_TOKENS) {
+			for (Pattern it : ignoredTokens) {
 				Matcher m = it.matcher(token);
 				if (m.matches()) {
 					return true;
