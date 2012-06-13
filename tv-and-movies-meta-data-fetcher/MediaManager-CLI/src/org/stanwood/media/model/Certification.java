@@ -34,10 +34,18 @@ public class Certification implements Serializable {
 
 	}
 
+	/**
+	 * Used to get the certification ID, this is can be NULL if it's not known
+	 * @return the certification ID
+	 */
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * Used to set the certification ID
+	 * @param id the certification ID
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
