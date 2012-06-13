@@ -155,16 +155,20 @@
               <listitem>
                 <para><literal>directory</literal> - The directory one system
                 to store addons. Defaults to
-                "$HOME/.mediaManager/addons".</para>
+                "$HOME/.mediaManager/addons".<literal/></para>
+              </listitem>
 
+              <listitem>
                 <para><literal>locale</literal> - The locale to use with the
                 addons. Defaults to "en".</para>
+              </listitem>
 
+              <listitem>
                 <para><literal>addonSite</literal> - The site to install
                 addons from. Defaults to
                 "http://mirrors.xbmc.org/addons/dharma".</para>
               </listitem>
-            </itemizedlist> <example>
+            </itemizedlist><example>
               <title>XBMC settings example</title>
 
               <programlisting>&lt;mediaManager&gt;
@@ -242,6 +246,38 @@
         <para>The store needs a empty database to be created and the user
         specified in the resource must have access to it. Upon first
         connection, the store will create the database tables.</para>
+
+        <example>
+          <title>Local MySQL database setup</title>
+
+          <para>The following commands in the mysql console will setup the
+          database when connecting locally.</para>
+
+          <programlisting>mysql&gt; CREATE DATABASE mediamanager;
+mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' IDENTIFIED BY 'password'
+</programlisting>
+
+          <para>Using the database created above, the following connfiguration
+          would connect the store to the datbase:</para>
+
+          <programlisting>&lt;mediaManager&gt;
+  &lt;mediaDirectory directory="/media/films" mode="FILM"&gt;
+    &lt;stores&gt;
+      &lt;store id="org.stanwood.media.store.db.DatabaseStore"&gt;
+        &lt;param name="resourceId" value="mainDB"/&gt;
+      &lt;/store&gt;
+    &lt;/stores&gt;
+  &lt;/mediaDirectory&gt;
+  &lt;resources&gt;
+    &lt;databaseResource id="mainDB"&gt;
+        &lt;url&gt;jdbc:mysql://localhost:3306/mediamanager&lt;/url&gt;
+        &lt;dialect&gt;org.hibernate.dialect.MySQLDialect&lt;/dialect&gt;
+        &lt;username&gt;mediamanager&lt;/username&gt;
+        &lt;password&gt;password&lt;/password&gt;
+    &lt;/databaseResources&gt;
+  &lt;/resources
+&lt;/mediaManager&gt;</programlisting>
+        </example>
 
         <para>This store has the following parameters:</para>
 
@@ -1229,11 +1265,11 @@
     </sect1>
 
     <sect1 id="ignore">
-      <title>Ignore</title>
+      <title>Ignore Patterns</title>
 
-      <para>It's possible a multiple regular expressions to a media directory
-      which are compared agaist each media file when performing actions. If
-      they do mach, then the media file is ignored. <example>
+      <para>@@name@@ can be configured to ignore media files that match a
+      regular expressions. The following example shows how to configure ignore
+      patterns that cause files to be not be processed. <example>
           <title>Ignore patterns</title>
 
           <programlisting>&lt;mediaManager&gt;
@@ -1244,6 +1280,29 @@
 &lt;/mediaManager&gt;
 </programlisting>
         </example></para>
+    </sect1>
+
+    <sect1>
+      <title>Strip patterns</title>
+
+      <para>Quite offten before a media file is renamed, it can contain tokens
+      to indercate where it came from and the type of media. @@name@@ makes
+      use of these when looking up the media information and has a default
+      list of know strip patterns. It's possible to configure different stip
+      patterns for each media directory which will override the default
+      patterens in use. The patterens are regualar expressions.</para>
+
+      <example>
+        <title>Strip patterns</title>
+
+        <programlisting>&lt;mediaManager&gt;
+  &lt;mediaDirectory directory="/media/films" mode="FILM" pattern="%t{ Part %p}.%x"&gt;
+    &lt;strip&gt;blueray&lt;/strip&gt;
+    &lt;strip&gt;xvid&lt;/strip&gt;
+    &lt;strip&gt;dvd(\d+)&lt;/strip&gt;
+  &lt;/mediaDirectory&gt;
+&lt;/mediaManager&gt;</programlisting>
+      </example>
     </sect1>
 
     <sect1 id="plugins">
@@ -1435,19 +1494,19 @@
             </listitem>
 
             <listitem>
-              <para>stores - <xref linkend="FileDatabaseStore"/>, <xref linkend="MP4ITunesStore"/></para>
+              <para>stores - <xref linkend="FileDatabaseStore"/>, <xref
+              linkend="MP4ITunesStore"/></para>
             </listitem>
 
             <listitem>
               <para>actions - <xref linkend="renameaction"/></para>
             </listitem>
           </itemizedlist>
-          
-          <para>
-          	The default stores, sources and actions will ensure that the latest meta data is
-          	downloaded for the media directory and that the files are renamed according to their
-          	metadata. If the file is a m4v/mp4 file, then meta data is inserted into the file.
-          </para>
+
+          <para>The default stores, sources and actions will ensure that the
+          latest meta data is downloaded for the media directory and that the
+          files are renamed according to their metadata. If the file is a
+          m4v/mp4 file, then meta data is inserted into the file.</para>
 
           <programlisting>&lt;!-- A configuration file that uses defualt sources, stores and actions --&gt;
 &lt;mediaManager&gt;

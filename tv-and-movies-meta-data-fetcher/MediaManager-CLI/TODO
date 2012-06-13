@@ -14,13 +14,8 @@ DatabaseStore
 	* Document how to add other database drivers
 FileDatabaseStore
 	* Create A HSQLDB store that saves stuff in the file
-	* If no stores are set, then use this one
 Update Documents
-	* Add new Database store
-		- Document how to create the initial database (give examples for MySQL)
 	* Spell check document
-	* Update requirements
-	* Document strip token configuration
 Allow the seen DB to use the database resource	
 Add scripts to the packages if they are found in the scripts dirs
 
