@@ -22,6 +22,20 @@ public class VideoFile implements Serializable  {
 	}
 
 	/**
+	 * The constructor
+	 * @param filename The current location of the video file
+	 * @param originalLocation The original location of the file
+	 * @param part The part number or null if not known/supported
+	 * @param rootMediaDir The media dir the file is in
+	 */
+	public VideoFile(File filename,File originalLocation,Integer part,File rootMediaDir) {
+		this.location = filename;
+		this.orginalLocation = originalLocation;
+		this.part = part;
+		this.rootMediaDir = rootMediaDir;
+	}
+
+	/**
 	 * Used to get a unique ID for the video file. This can be null if the
 	 * store does not support it.
 	 * @return The ID
@@ -38,19 +52,7 @@ public class VideoFile implements Serializable  {
 		this.id = id;
 	}
 
-	/**
-	 * The constructor
-	 * @param filename The current location of the video file
-	 * @param originalLocation The original location of the file
-	 * @param part The part number or null if not known/supported
-	 * @param rootMediaDir The media dir the file is in
-	 */
-	public VideoFile(File filename,File originalLocation,Integer part,File rootMediaDir) {
-		this.location = filename;
-		this.orginalLocation = originalLocation;
-		this.part = part;
-		this.rootMediaDir = rootMediaDir;
-	}
+
 
 	/**
 	 * Used to get the current location of the video file
