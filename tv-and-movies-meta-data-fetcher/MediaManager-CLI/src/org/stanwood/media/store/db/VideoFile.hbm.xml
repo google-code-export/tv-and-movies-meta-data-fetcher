@@ -9,8 +9,8 @@
 			<generator class="native"/>
 		</id>
 		<property name="location" type="org.stanwood.media.store.db.FileType" not-null="true"/>
-		<property name="orginalLocation" type="org.stanwood.media.store.db.FileType" not-null="true"/>
-		<property name="part"/>		
+		<property name="orginalLocation" type="org.stanwood.media.store.db.FileType" not-null="false"/>
+		<property name="part" not-null="false"/>		
 		<property name="mediaDirectory" type="org.stanwood.media.store.db.FileType" not-null="true"/>		
 	</class>
 	

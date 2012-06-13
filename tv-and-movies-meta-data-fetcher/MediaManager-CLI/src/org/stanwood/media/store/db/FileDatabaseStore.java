@@ -8,23 +8,22 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.store.StoreException;
 
-
-
 public class FileDatabaseStore extends DatabaseStore {
 
+	/** {@inheritDoc} */
 	@Override
 	public void init(Controller controller, File nativeDir) throws StoreException {
 		File file;
 		try {
-			file = new File(controller.getConfigDir(),"mediaInfo.db");
+			file = new File(controller.getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
 		} catch (ConfigException e) {
 			throw new StoreException("Unable to find configuration directory");
 		}
 		DBResource resource = new DBResource();
-		resource.setDialect("org.hibernate.dialect.HSQLDialect");
-		resource.setUsername("sa");
-		resource.setPassword("");
-		resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath());
+		resource.setDialect("org.hibernate.dialect.HSQLDialect"); //$NON-NLS-1$
+		resource.setUsername("sa"); //$NON-NLS-1$
+		resource.setPassword(""); //$NON-NLS-1$
+		resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath()); //$NON-NLS-1$
 		init(resource);
 	}
 
