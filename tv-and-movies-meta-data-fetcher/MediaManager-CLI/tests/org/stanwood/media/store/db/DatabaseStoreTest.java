@@ -194,7 +194,7 @@ public class DatabaseStoreTest {
 			IFilm film = Data.createFilm();
 			film.getFiles().add(new VideoFile(filmFile.getAbsoluteFile(), filmFile.getAbsoluteFile(), 1, dir));
 			store.cacheFilm(dir,filmFile, film,1);
-			store.performedActions(null);
+//			store.performedActions(null);
 
 			IFilm foundFilm = store.getFilm(dir, filmFile, film.getId());
 			Assert.assertNotNull(foundFilm);
