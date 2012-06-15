@@ -297,12 +297,18 @@ public class DatabaseStore implements IStore {
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
 		beginTransaction();
+		Collection<IFilm> result = listFilmsNoTrans(dirConfig);
+		commitTransaction();
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Collection<IFilm> listFilmsNoTrans(MediaDirConfig dirConfig) throws StoreException {
 		Query q = session
 				.createQuery("select films from DBMediaDirectory as dir where dir.location=:loc"); //$NON-NLS-1$
 		q.setString("loc", dirConfig.getMediaDir().getAbsolutePath()); //$NON-NLS-1$
 		@SuppressWarnings("rawtypes")
 		List result = q.list();
-		commitTransaction();
 		return result;
 	}
 
@@ -537,14 +543,37 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
 		beginTransaction();
-		log.info("Checking for deleted files in Database Store...");
-		Query q = session.createQuery("from VideoFile"); //$NON-NLS-1$
-		@SuppressWarnings("unchecked")
-		List<VideoFile> files = q.list();
-		for (VideoFile f : files) {
-			if (!f.getLocation().exists()) {
-				log.info("Remove file "+f.getLocation()+" from database as it's not found on disk");
-				session.delete(f);
+		log.info("DatabaseStore: Checking for deleted files...");
+		Collection<IEpisode> epList = listEpisodesNoTrans(dir.getMediaDirConfig());
+		for (IEpisode ep : epList) {
+			DBEpisode dbEp = (DBEpisode) ep;
+			Iterator<VideoFile> it = dbEp.getFiles().iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				VideoFile vf = it.next();
+				if (!vf.getLocation().exists()) {
+					it.remove();
+					changed = true;
+				}
+			}
+			if (changed) {
+				session.update(dbEp);
+			}
+		}
+
+		Collection<IFilm> films = listFilmsNoTrans(dir.getMediaDirConfig());
+		for (IFilm film : films) {
+			Iterator<VideoFile> it = film.getFiles().iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				VideoFile vf = it.next();
+				if (!vf.getLocation().exists()) {
+					it.remove();
+					changed = true;
+				}
+			}
+			if (changed) {
+				session.update(film);
 			}
 		}
 		commitTransaction();
@@ -684,21 +713,25 @@ public class DatabaseStore implements IStore {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Collection<IEpisode> listEpisodesNoTrans(MediaDirConfig dirConfig) throws StoreException {
+		Query q = session.createQuery("select episode " + //$NON-NLS-1$
+                "  from DBMediaDirectory as dir " + //$NON-NLS-1$
+                "  join dir.shows as show"+ //$NON-NLS-1$
+                "  join show.seasons as season"+ //$NON-NLS-1$
+                "  join season.episodes as episode"+ //$NON-NLS-1$
+                " where dir.location=:loc"); //$NON-NLS-1$
+		q.setString("loc", dirConfig.getMediaDir().getAbsolutePath()); //$NON-NLS-1$
+		List result = q.list();
+		return result;
+	}
+
 	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<IEpisode> listEpisodes(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
 		beginTransaction();
-		Query q = session.createQuery("select episode " + //$NON-NLS-1$
-				                      "  from DBMediaDirectory as dir " + //$NON-NLS-1$
-				                      "  join dir.shows as show"+ //$NON-NLS-1$
-				                      "  join show.seasons as season"+ //$NON-NLS-1$
-				                      "  join season.episodes as episode"+ //$NON-NLS-1$
-				                      " where dir.location=:loc"); //$NON-NLS-1$
-		q.setString("loc", dirConfig.getMediaDir().getAbsolutePath()); //$NON-NLS-1$
-		@SuppressWarnings("rawtypes")
-		List result = q.list();
+		Collection<IEpisode> result = listEpisodesNoTrans(dirConfig);
 		commitTransaction();
 		return result;
 	}
