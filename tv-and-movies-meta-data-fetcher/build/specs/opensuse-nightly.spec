@@ -14,24 +14,27 @@ Requires:       jakarta-commons-cli = 1.0
 Requires:		jakarta-commons-lang >= 2.4
 Requires:		jakarta-commons-exec >= 1.1
 Requires:       jakarta-commons-logging >= 1.0.4
+Requires:       jakarta-commons-collections >= 3.2
 Requires:       log4j >= 1.2.15
 Requires:       mysql-connector-java >= 5.1.6
 Requires:		antlr-java >= 3.1.3
 Requires:       ROME >= 1.0
 Requires:       jdom >= 1.1
+Requires:       hibernate3
+Requires:       antlr-java >= 2.7.7
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  jakarta-commons-cli = 1.0
 BuildRequires:	jakarta-commons-lang >= 2.4
 BuildRequires:  jakarta-commons-exec >= 1.1
 BuildRequires:  jakarta-commons-logging >= 1.0.4
+BuildRequires:  jakarta-commons-collections >= 3.2
 BuildRequires:  java >= 1.6
 BuildRequires:  java-devel >= 1.6
 BuildRequires:  log4j >= 1.2.15
 BuildRequires:  fop >= 0.95
 BuildRequires:  ant
 BuildRequires:  ant-trax
-#BuildRequires:  ant-apache-xalan2
 BuildRequires:  xalan-j2
 BuildRequires:	antlr-java >= 3.1.3
 BuildRequires:  ROME >= 1.0
@@ -39,6 +42,7 @@ BuildRequires:  jdom >= 1.1
 BuildRequires:  excalibur-avalon-framework >= 4.3.1
 BuildRequires:  xmlgraphics-batik >= 1.7
 BuildRequires:  xsltproc
+BuildRequires:  hibernate3
 Summary:        A application for correcting the name of TV shows and films
 Version:        %%version%%
 Release:        %%release%%
