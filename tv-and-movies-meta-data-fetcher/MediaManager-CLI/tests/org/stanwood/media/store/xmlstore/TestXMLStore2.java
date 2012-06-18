@@ -99,7 +99,7 @@ public class TestXMLStore2 {
 	@Test
 	public void testReadShows() throws Exception{
 		File dir = FileHelper.createTmpDir("test");
-		XMLStore2 xmlSource = new XMLStore2();
+		XMLStore2 xmlStore = new XMLStore2();
 		try {
 			File cacheFile = new File(dir,".mediaManager-xmlStore.xml");
 			Map<String, String> params = new HashMap<String,String>();
@@ -124,7 +124,7 @@ public class TestXMLStore2 {
 //			episodeFile = new File(eurekaDir,"2x13 - blah");
 //			episodeFile = new File(eurekaDir,"000 - blah");
 
-			IShow show = xmlSource.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
+			IShow show = xmlStore.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
 			Assert.assertNotNull(show);
 			Assert.assertEquals("Eureka", show.getName());
 			StringBuilder summary = new StringBuilder();
@@ -140,12 +140,12 @@ public class TestXMLStore2 {
 			Assert.assertEquals("58448", show.getShowId());
 			Assert.assertEquals("http://www.tv.com/show/58448/summary.html", show.getShowURL().toExternalForm());
 
-			ISeason season = xmlSource.getSeason(dir,episodeFile,show, 1);
+			ISeason season = xmlStore.getSeason(dir,episodeFile,show, 1);
 			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=1",season.getURL().toExternalForm());
 			Assert.assertEquals(1,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        IEpisode episode = xmlSource.getEpisode(dir,episodeFile,season, 1);
+	        IEpisode episode = xmlStore.getEpisode(dir,episodeFile,season, 1);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
 	        Assert.assertEquals("784857",episode.getEpisodeId());
@@ -167,7 +167,7 @@ public class TestXMLStore2 {
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
-	        episode = xmlSource.getEpisode(dir,episodeFile,season, 2);
+	        episode = xmlStore.getEpisode(dir,episodeFile,season, 2);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -179,12 +179,12 @@ public class TestXMLStore2 {
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
-			season = xmlSource.getSeason(dir,episodeFile,show, 2);
+			season = xmlStore.getSeason(dir,episodeFile,show, 2);
 			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getURL().toExternalForm());
 			Assert.assertEquals(2,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        episode = xmlSource.getEpisode(dir,episodeFile,season, 2);
+	        episode = xmlStore.getEpisode(dir,episodeFile,season, 2);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -195,7 +195,7 @@ public class TestXMLStore2 {
 	        Assert.assertEquals("2007-07-10",df.format(episode.getDate()));
 
 	        episodeFile = new File(eurekaDir,"000 - blah.avi");
-	        episode = xmlSource.getSpecial(dir,episodeFile,season, 0);
+	        episode = xmlStore.getSpecial(dir,episodeFile,season, 0);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -206,7 +206,7 @@ public class TestXMLStore2 {
 	        Assert.assertTrue(episode.isSpecial());
 
 	        File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
-	        IFilm film = xmlSource.getFilm(dir, filmFile1, "114814");
+	        IFilm film = xmlStore.getFilm(dir, filmFile1, "114814");
 	        Assert.assertNotNull(film);
 	        Assert.assertEquals(15,film.getActors().size());
 			Assert.assertEquals("Stephen Baldwin",film.getActors().get(0).getName());
