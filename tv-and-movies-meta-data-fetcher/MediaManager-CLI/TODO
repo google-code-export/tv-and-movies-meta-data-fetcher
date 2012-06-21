@@ -3,20 +3,15 @@ TODO
 	
 Version 2.2
 -----------
-DatabaseStore
-	* Make sure correct indexes are in place	
-	* Update launch scripts with new libs
-	* Update RPM/DEP spec files with new libs
-		- Remove MySQL and PostgreSQL drivers as a requirement
-		- Make scripts check if the drivers are present before adding to classpath
-		- One click install?
 FileDatabaseStore
-	* Create A HSQLDB store that saves stuff in the file
+	* Port XMLStore2 tests to this store
 Update Documents
 	* Spell check document
 	* Document how to add other database drivers
-Allow the seen DB to use the database resource	
-Add scripts to the packages if they are found in the scripts dirs
+Allow the seen DB to use the database resource
+	* Add config option for the seen DB to be used.
+	* Migrate the previous SeenDB entries to the newly configured one
+Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore	
 
 Version 2.3
 -----------

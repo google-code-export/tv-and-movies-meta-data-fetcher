@@ -1,7 +1,6 @@
 package org.stanwood.media.cli.manager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -13,7 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.IAction;
-import org.stanwood.media.actions.SeenDatabase;
+import org.stanwood.media.actions.seendb.ISeenDatabase;
+import org.stanwood.media.actions.seendb.SeenDBException;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
@@ -119,7 +119,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			for (IAction action : rootMediaDir.getActions()) {
 				action.setTestMode(getController().isTestRun());
 			}
-			SeenDatabase seenDb = rootMediaDir.getController().getSeenDB();
+			ISeenDatabase seenDb = rootMediaDir.getController().getSeenDB();
 			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
 			mp4Manager.init(getController().getNativeFolder());
 
@@ -146,7 +146,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						if (video!=null) {
 							log.info(MessageFormat.format(Messages.getString("CLIFixSeenDB.MARK_AS_SEEN"),f)); //$NON-NLS-1$
 							seenDb.markAsSeen(root, f);
-						}	
+						}
 					}
 					else {
 						if (log.isDebugEnabled()) {
@@ -156,7 +156,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 						if (video==null) {
 							log.info(MessageFormat.format("Remove file ''{0}'' from seen DB as it's not in a store",f)); //$NON-NLS-1$
 							seenDb.removeFile(root,f);
-						}						
+						}
 					}
 				}
 			}
@@ -169,7 +169,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 		} catch (ConfigException e) {
 			log.error(e.getMessage(),e);
-		} catch (FileNotFoundException e) {
+		} catch (SeenDBException e) {
 			log.error(e.getMessage(),e);
 		}
 		return false;
@@ -197,10 +197,10 @@ public class CLIFixSeenDB extends AbstractLauncher {
 			catch (StanwoodException e) {
 				log.error(Messages.getString("CLIFixSeenDB.UNABLE_GET_STORE"),e); //$NON-NLS-1$
 			}
-		}	
+		}
 		return video;
 	}
-	
+
 	private boolean validateFile(MediaDirConfig mediaDirConfig,IMP4Manager mp4Manager,File f) throws MP4Exception {
 		if (f.getAbsolutePath().endsWith(".m4v")) { //$NON-NLS-1$
 			if (checkAtoms) {

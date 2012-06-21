@@ -18,7 +18,6 @@ package org.stanwood.media.actions;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +33,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.seendb.ISeenDatabase;
+import org.stanwood.media.actions.seendb.SeenDBException;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
@@ -56,7 +57,7 @@ public class ActionPerformer implements IActionEventHandler {
 	private MediaDirectory dir;
 	private List<IAction> actions;
 	private File nativeFolder;
-	private SeenDatabase seenDb;
+	private ISeenDatabase seenDb;
 
 	/**
 	 * Constructor used to create a instance of the class
@@ -91,7 +92,7 @@ public class ActionPerformer implements IActionEventHandler {
 			if (seenDb!=null) {
 				try {
 					seenDb.write(new SubProgressMonitor(monitor,1));
-				} catch (FileNotFoundException e) {
+				} catch (SeenDBException e) {
 					throw new ActionException(Messages.getString("ActionPerformer.UNABLE_WRITE_SEEN_DATABASE"),e); //$NON-NLS-1$
 				}
 			}
@@ -187,9 +188,14 @@ public class ActionPerformer implements IActionEventHandler {
 			Iterator<File> it = sortedFiles.iterator();
 			while (it.hasNext()) {
 				File f = it.next();
-				if (seenDb.isSeen(dir.getMediaDirConfig().getMediaDir(), f)) {
-					log.debug(MessageFormat.format(Messages.getString("ActionPerformer.INGORED_SEEN_FILE"),f.getAbsolutePath())); //$NON-NLS-1$
-					it.remove();
+				try {
+					if (seenDb.isSeen(dir.getMediaDirConfig().getMediaDir(), f)) {
+						log.debug(MessageFormat.format(Messages.getString("ActionPerformer.INGORED_SEEN_FILE"),f.getAbsolutePath())); //$NON-NLS-1$
+						it.remove();
+					}
+				}
+				catch (SeenDBException e) {
+					throw new ActionException("Unable to access the seen database",e);
 				}
 			}
 		}
@@ -245,7 +251,12 @@ public class ActionPerformer implements IActionEventHandler {
 						action.perform(dir,film,file,part,this);
 					}
 					if (seenDb!=null && file.exists()) {
-						seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+						try {
+							seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+						}
+						catch (SeenDBException e) {
+							throw new ActionException("Unable to access the seen database",e);
+						}
 					}
 				}
 			}
@@ -256,7 +267,12 @@ public class ActionPerformer implements IActionEventHandler {
 						action.perform(dir,episode, file,this);
 					}
 					if (seenDb!=null && file.exists()) {
-						seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+						try {
+							seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
+						}
+						catch (SeenDBException e) {
+							throw new ActionException("Unable to access the seen database",e);
+						}
 					}
 				}
 			}
@@ -322,7 +338,12 @@ public class ActionPerformer implements IActionEventHandler {
 		try {
 			dir.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
 			if (seenDb!=null) {
-				seenDb.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+				try {
+					seenDb.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+				}
+				catch (SeenDBException e) {
+					throw new ActionException("Unable to access the seen database",e);
+				}
 			}
 		} catch (StoreException e) {
 			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_RENAME_FILE"),e); //$NON-NLS-1$

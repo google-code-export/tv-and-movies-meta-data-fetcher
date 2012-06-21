@@ -77,13 +77,10 @@ public class TestFileDatabaseStore {
 				throw new IOException("Unable to create directory: " + eurekaDir);
 			}
 
-//			File episodeFile = new File(eurekaDir,"1x01 - blah");
 			File episodeFile = new File(eurekaDir,"1x02 - blah");
 			if (!episodeFile.createNewFile() && !episodeFile.exists()) {
 				throw new IOException("Unable to create temp file: " + episodeFile);
 			}
-//			episodeFile = new File(eurekaDir,"2x13 - blah");
-//			episodeFile = new File(eurekaDir,"000 - blah");
 
 			IShow show = store.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
 			Assert.assertNotNull(show);

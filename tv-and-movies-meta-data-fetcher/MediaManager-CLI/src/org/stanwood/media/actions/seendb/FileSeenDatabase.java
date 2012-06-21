@@ -1,4 +1,4 @@
-package org.stanwood.media.actions;
+package org.stanwood.media.actions.seendb;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +13,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.stanwood.media.actions.Messages;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.xml.IterableNodeList;
 import org.stanwood.media.xml.XMLParser;
@@ -25,7 +26,7 @@ import org.w3c.dom.Node;
  * This class is used to maintain a list of files that have been seen by the actions
  * in media directories
  */
-public class SeenDatabase extends XMLParser {
+public class FileSeenDatabase extends XMLParser implements ISeenDatabase {
 
 	private Map<File,SortedSet<SeenEntry>> entries = new HashMap<File,SortedSet<SeenEntry>>();
 	private File seenFile;
@@ -34,7 +35,7 @@ public class SeenDatabase extends XMLParser {
 	 * The constructor
 	 * @param configDir The configuration directory
 	 */
-	public SeenDatabase(File configDir) {
+	public FileSeenDatabase(File configDir) {
 		seenFile = new File(configDir,"seenFiles.xml"); //$NON-NLS-1$
 	}
 
@@ -44,6 +45,7 @@ public class SeenDatabase extends XMLParser {
 	 * @param file The file
 	 * @return True if seen, otherwise false
 	 */
+	@Override
 	public boolean isSeen(File mediaDirectory,File file) {
 		Set<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList!=null) {
@@ -63,6 +65,7 @@ public class SeenDatabase extends XMLParser {
 	 * @param mediaDirectory The media directory the file lives in
 	 * @param file The file
 	 */
+	@Override
 	public void markAsSeen(File mediaDirectory,File file) {
 		long lastModified = file.lastModified();
 		String path = file.getAbsolutePath();
@@ -98,12 +101,18 @@ public class SeenDatabase extends XMLParser {
 	/**
 	 * Used to write the database to disc
 	 * @param parentMonitor Parent progress monitor
-	 * @throws FileNotFoundException Thrown if their is a problem
+	 * @throws SeenDBException Thrown if their is a problem
 	 */
-	public void write(IProgressMonitor parentMonitor) throws FileNotFoundException {
+	@Override
+	public void write(IProgressMonitor parentMonitor) throws SeenDBException {
 		PrintStream ps = null;
 		try {
-			ps = new PrintStream(seenFile);
+			try {
+				ps = new PrintStream(seenFile);
+			}
+			catch (FileNotFoundException e) {
+				throw new SeenDBException("Unable to find the seen database file",e);
+			}
 			ps.println("<seen>"); //$NON-NLS-1$
 			Set<Entry<File, SortedSet<SeenEntry>>> entriesSet = entries.entrySet();
 			parentMonitor.beginTask(Messages.getString("SeenDatabase.WRITING_SEEN_DB"), entriesSet.size()); //$NON-NLS-1$
@@ -130,27 +139,32 @@ public class SeenDatabase extends XMLParser {
 	/**
 	 * Used to read the database from disk
 	 * @param progress Progress monitor
-	 * @throws FileNotFoundException Thrown if their is a problem
-	 * @throws XMLParserException Thrown if possible to parse file
+	 * @throws SeenDBException Thrown if their is a problem
 	 *
 	 */
-	public void read(IProgressMonitor progress) throws FileNotFoundException, XMLParserException {
-		entries = new HashMap<File,SortedSet<SeenEntry>>();
-		if (seenFile.exists()) {
-			Document doc = XMLParser.parse(seenFile, null);
-			IterableNodeList nodes = selectNodeList(doc, "seen/mediaDir"); //$NON-NLS-1$
-			progress.beginTask(Messages.getString("SeenDatabase.READING_SEEN_DB"), nodes.getLength()); //$NON-NLS-1$
-			for (Node mediaDirNode : nodes) {
-				Element mediaDirEl = (Element)mediaDirNode;
-				File mediaDir = new File(mediaDirEl.getAttribute("dir")); //$NON-NLS-1$
-				for (Node fileNode : selectNodeList(mediaDirEl,"file")) { //$NON-NLS-1$
-					Element fileElement = (Element)fileNode;
-					String path = fileElement.getAttribute("path"); //$NON-NLS-1$
-					long lastModified = Long.parseLong(fileElement.getAttribute("lastModified")); //$NON-NLS-1$
-					markAsSeen(mediaDir, lastModified, path);
+	@Override
+	public void read(IProgressMonitor progress) throws SeenDBException {
+		try {
+			entries = new HashMap<File,SortedSet<SeenEntry>>();
+			if (seenFile.exists()) {
+				Document doc = XMLParser.parse(seenFile, null);
+				IterableNodeList nodes = selectNodeList(doc, "seen/mediaDir"); //$NON-NLS-1$
+				progress.beginTask(Messages.getString("SeenDatabase.READING_SEEN_DB"), nodes.getLength()); //$NON-NLS-1$
+				for (Node mediaDirNode : nodes) {
+					Element mediaDirEl = (Element)mediaDirNode;
+					File mediaDir = new File(mediaDirEl.getAttribute("dir")); //$NON-NLS-1$
+					for (Node fileNode : selectNodeList(mediaDirEl,"file")) { //$NON-NLS-1$
+						Element fileElement = (Element)fileNode;
+						String path = fileElement.getAttribute("path"); //$NON-NLS-1$
+						long lastModified = Long.parseLong(fileElement.getAttribute("lastModified")); //$NON-NLS-1$
+						markAsSeen(mediaDir, lastModified, path);
+					}
+					progress.worked(1);
 				}
-				progress.worked(1);
 			}
+		}
+		catch (XMLParserException e) {
+			throw new SeenDBException("Unable to parse the Seen Database",e);
 		}
 		progress.done();
 	}
@@ -161,6 +175,7 @@ public class SeenDatabase extends XMLParser {
 	 * @param oldFile The old filename
 	 * @param newFile The new filename
 	 */
+	@Override
 	public void renamedFile(File mediaDirectory, File oldFile, File newFile) {
 		removeFile(mediaDirectory, oldFile);
 		markAsSeen(mediaDirectory, newFile);
@@ -171,6 +186,7 @@ public class SeenDatabase extends XMLParser {
 	 * @param mediaDirectory The media directory of the file to remove
 	 * @param file The file to remove
 	 */
+	@Override
 	public void removeFile(File mediaDirectory, File file) {
 		Set<SeenEntry>entryList = entries.get(mediaDirectory);
 		if (entryList!=null) {

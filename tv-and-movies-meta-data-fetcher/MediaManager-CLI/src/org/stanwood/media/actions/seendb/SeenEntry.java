@@ -1,4 +1,4 @@
-package org.stanwood.media.actions;
+package org.stanwood.media.actions.seendb;
 
 import java.io.Serializable;
 

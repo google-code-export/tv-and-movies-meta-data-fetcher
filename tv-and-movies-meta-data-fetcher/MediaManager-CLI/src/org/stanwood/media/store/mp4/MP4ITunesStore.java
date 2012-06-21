@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
+import org.stanwood.media.actions.seendb.SeenDBException;
 import org.stanwood.media.collections.LRUMapCache;
 import org.stanwood.media.info.IMediaFileInfo;
 import org.stanwood.media.info.IVideoFileInfo;
@@ -860,14 +861,19 @@ public class MP4ITunesStore implements IStore {
 		else {
 			if (isItunesExtension(file)) {
 				try {
-					if (!mediaDir.getMediaDirConfig().getIgnoreSeen() || mediaDir.getController().getSeenDB().isSeen(mediaDir.getMediaDirConfig().getMediaDir(), file)) {
-						List<IAtom> atoms = mp4Manager.listAtoms(file);
-						if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
-							doUpgrade(atoms,mediaDir,file);
-							if (mediaDir.getMediaDirConfig().getIgnoreSeen()) {
-								mediaDir.getController().getSeenDB().markAsSeen(mediaDir.getMediaDirConfig().getMediaDir(), file);
+					try {
+						if (!mediaDir.getMediaDirConfig().getIgnoreSeen() || mediaDir.getController().getSeenDB().isSeen(mediaDir.getMediaDirConfig().getMediaDir(), file)) {
+							List<IAtom> atoms = mp4Manager.listAtoms(file);
+							if (hasAtom(atoms,MP4AtomKey.MEDIA_TYPE)) {
+								doUpgrade(atoms,mediaDir,file);
+								if (mediaDir.getMediaDirConfig().getIgnoreSeen()) {
+									mediaDir.getController().getSeenDB().markAsSeen(mediaDir.getMediaDirConfig().getMediaDir(), file);
+								}
 							}
 						}
+					}
+					catch (SeenDBException e) {
+						throw new StoreException("Unable to access the seen database",e);
 					}
 				}
 				catch (MP4Exception e) {
