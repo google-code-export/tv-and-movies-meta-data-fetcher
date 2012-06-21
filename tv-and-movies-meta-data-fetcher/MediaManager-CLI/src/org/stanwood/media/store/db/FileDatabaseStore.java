@@ -8,6 +8,16 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.store.StoreException;
 
+/**
+ * <p>
+ * The file database store. This store is used to store show/film information in a
+ * database located in a file. The file is stored in the configuration directory and
+ * called &quot;mediaInfo.db.&quot;
+ * </p>
+ * <p>
+ * This store has no parameters
+ * </p>
+ */
 public class FileDatabaseStore extends DatabaseStore {
 
 	/** {@inheritDoc} */
@@ -24,6 +34,7 @@ public class FileDatabaseStore extends DatabaseStore {
 		resource.setUsername("sa"); //$NON-NLS-1$
 		resource.setPassword(""); //$NON-NLS-1$
 		resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath()); //$NON-NLS-1$
+		setHbm2ddlAuto("none"); //$NON-NLS-1$
 		init(resource);
 	}
 

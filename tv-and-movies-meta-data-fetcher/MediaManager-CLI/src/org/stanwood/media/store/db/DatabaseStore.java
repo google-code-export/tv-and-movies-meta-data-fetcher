@@ -522,6 +522,17 @@ public class DatabaseStore implements IStore {
 		if (key.equalsIgnoreCase(DatabaseStoreInfo.PARAM_DATABASE_RESOURCE_ID.getName())) {
 			resourceId = value;
 		}
+		else if (key.equalsIgnoreCase(DatabaseStoreInfo.PARAM_SCHEMA_CHECK.getName())) {
+			if (value.equalsIgnoreCase("validate")) { //$NON-NLS-1$
+				this.hbm2ddlAuto = "validate"; //$NON-NLS-1$
+			}
+			else if (value.equalsIgnoreCase("none")) { //$NON-NLS-1$
+				this.hbm2ddlAuto = "none"; //$NON-NLS-1$
+			}
+			else {
+				throw new StoreException(MessageFormat.format("Invalid parameter value of {1} for parameter {0}, valid values are none and validate",DatabaseStoreInfo.PARAM_SCHEMA_CHECK.getName(), value));
+			}
+		}
 		else {
 			throw new StoreException(MessageFormat.format(
 					"Unknown parameter {0}", key));
@@ -537,6 +548,10 @@ public class DatabaseStore implements IStore {
 			throw new StoreException(MessageFormat.format(
 					"Unknown parameter {0}", key));
 		}
+	}
+
+	public void setHbm2ddlAuto(String hbm2ddlAuto) {
+		this.hbm2ddlAuto = hbm2ddlAuto;
 	}
 
 	/** {@inheritDoc} */
@@ -746,10 +761,6 @@ public class DatabaseStore implements IStore {
 	public void fileUpdated(MediaDirectory mediaDirectory, File file)
 			throws StoreException {
 
-	}
-
-	public void setHbm2ddlAuto(String value) {
-		hbm2ddlAuto = value;
 	}
 
 }
