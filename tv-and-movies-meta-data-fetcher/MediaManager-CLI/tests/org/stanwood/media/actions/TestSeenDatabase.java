@@ -6,11 +6,12 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.stanwood.media.actions.seendb.FileSeenDatabase;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.util.FileHelper;
 
 /**
- * This is used to test the class {@link SeenDatabase}
+ * This is used to test the class {@link FileSeenDatabase}
  */
 @SuppressWarnings("nls")
 public class TestSeenDatabase {
@@ -24,7 +25,7 @@ public class TestSeenDatabase {
 		File configDir = FileHelper.createTmpDir("config");
 		File mediaDir = FileHelper.createTmpDir("config");
 		try {
-			SeenDatabase db = new SeenDatabase(configDir);
+			FileSeenDatabase db = new FileSeenDatabase(configDir);
 
 			db.markAsSeen(mediaDir,createFile(mediaDir,"test1.avi"));
 			File test2 = createFile(mediaDir,"test2.avi");
@@ -63,7 +64,7 @@ public class TestSeenDatabase {
 		File configDir = FileHelper.createTmpDir("config");
 		File mediaDir = FileHelper.createTmpDir("config");
 		try {
-			SeenDatabase db = new SeenDatabase(configDir);
+			FileSeenDatabase db = new FileSeenDatabase(configDir);
 
 			File test1 = createFile(mediaDir,"test1.avi");
 			db.markAsSeen(mediaDir,test1);
@@ -81,7 +82,7 @@ public class TestSeenDatabase {
 			Assert.assertTrue(orgTime!=test2.lastModified());
 			db.write(new NullProgressMonitor());
 
-			db = new SeenDatabase(configDir);
+			db = new FileSeenDatabase(configDir);
 			Assert.assertFalse(db.isSeen(mediaDir, test1));
 			Assert.assertFalse(db.isSeen(mediaDir, test2));
 			Assert.assertFalse(db.isSeen(mediaDir, test3));

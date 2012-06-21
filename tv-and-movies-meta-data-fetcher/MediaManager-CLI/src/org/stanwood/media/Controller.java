@@ -17,7 +17,6 @@
 package org.stanwood.media;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,10 +30,12 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.actions.IAction;
-import org.stanwood.media.actions.SeenDatabase;
 import org.stanwood.media.actions.command.ExecuteSystemCommandActionInfo;
 import org.stanwood.media.actions.podcast.PodCastActionInfo;
 import org.stanwood.media.actions.rename.RenameActionInfo;
+import org.stanwood.media.actions.seendb.ISeenDatabase;
+import org.stanwood.media.actions.seendb.SeenDBException;
+import org.stanwood.media.actions.seendb.SeenDatabaseFactory;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.info.IMediaFileInfo;
@@ -65,7 +66,6 @@ import org.stanwood.media.store.memory.MemoryStoreInfo;
 import org.stanwood.media.store.mp4.MP4ITunesStoreInfo;
 import org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStoreInfo;
 import org.stanwood.media.store.xmlstore.XMLStore2Info;
-import org.stanwood.media.xml.XMLParserException;
 
 /**
  * The controller is used to control access to the stores and and sources. This
@@ -91,7 +91,7 @@ public class Controller {
 
 	private boolean testMode;
 
-	private SeenDatabase seenDb;
+	private ISeenDatabase seenDb;
 
 	private static MediaFileInfoFetcher fileInfoFetcher;
 
@@ -446,14 +446,12 @@ public class Controller {
 	 * @return The seen media file database
 	 * @throws ConfigException Thrown if thier is a problem reading the database
 	 */
-	public SeenDatabase getSeenDB() throws ConfigException {
+	public ISeenDatabase getSeenDB() throws ConfigException {
 		if (seenDb==null) {
-			seenDb= new SeenDatabase(getConfigDir());
+			seenDb= SeenDatabaseFactory.createSeenDatabase(getConfigDir());
 			try {
 				seenDb.read(new NullProgressMonitor());
-			} catch (FileNotFoundException e) {
-				throw new ConfigException(Messages.getString("Controller.UNABLE_READ_SEEN_DB"),e); //$NON-NLS-1$
-			} catch (XMLParserException e) {
+			} catch (SeenDBException e) {
 				throw new ConfigException(Messages.getString("Controller.UNABLE_READ_SEEN_DB"),e); //$NON-NLS-1$
 			}
 		}
