@@ -29,13 +29,14 @@
         <typedef class="org.stanwood.media.store.db.FileType" name="FileType" />
         <typedef class="org.stanwood.media.store.db.VersionType" name="VersionType" />
         
-        <!-- Mappings -->        
+        <!-- Mappings -->
+        <mapping class="org.stanwood.media.actions.seendb.SeenEntry"/>        
         <mapping class="org.stanwood.media.store.db.DBMediaDirectory"/>
         <mapping resource="org/stanwood/media/store/db/VideoFile.hbm.xml"/>
         <mapping resource="org/stanwood/media/store/db/Certification.hbm.xml"/>
         <mapping resource="org/stanwood/media/store/db/Film.hbm.xml"/>
         <mapping resource="org/stanwood/media/store/db/Episode.hbm.xml"/>
         <mapping resource="org/stanwood/media/store/db/Season.hbm.xml"/>
-        <mapping resource="org/stanwood/media/store/db/Show.hbm.xml"/>        
+        <mapping resource="org/stanwood/media/store/db/Show.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

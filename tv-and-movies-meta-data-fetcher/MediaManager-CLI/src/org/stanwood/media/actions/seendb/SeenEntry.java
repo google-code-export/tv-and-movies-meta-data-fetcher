@@ -2,15 +2,41 @@ package org.stanwood.media.actions.seendb;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Index;
+
 /**
  * Used to store information on files that have been seen
  */
+@Entity
+@Table(name = "seen_files")
 public class SeenEntry implements Serializable {
 
 	private static final long serialVersionUID = 1687449172780260088L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private Long id;
+	@Column(name = "filename",nullable= false,unique=true)
+	@Index(name="filename")
 	private String fileName;
+	@Column(name = "lastModified",nullable= false)
 	private long lastModified;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * Used to get the filename the seen file

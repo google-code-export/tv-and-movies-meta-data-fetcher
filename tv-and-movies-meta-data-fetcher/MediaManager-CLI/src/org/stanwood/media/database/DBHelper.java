@@ -27,7 +27,6 @@ import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.SchemaCheck;
-import org.stanwood.media.store.db.DatabaseStore;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -114,7 +113,7 @@ public class DBHelper {
 	private static Configuration getConfiguration(String url, String username,
 			String password, String dialect,SchemaCheck schemaCheck) throws XMLParserException {
 		Document dom = XMLParser
-				.parse(DatabaseStore.class
+				.parse(DBHelper.class
 						.getResourceAsStream("hibernate.config.xml"), null); //$NON-NLS-1$
 		Element element = XMLParser.firstChild(dom);
 		element = XMLParser.firstChild(element);
