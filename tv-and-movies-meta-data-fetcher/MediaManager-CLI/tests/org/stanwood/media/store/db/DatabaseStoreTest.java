@@ -50,7 +50,7 @@ public class DatabaseStoreTest {
 		resource.setUsername(USERNAME);
 		resource.setPassword(PASSWORD);
 		store.setHbm2ddlAuto("update");
-		store.init(resource);
+		store.init(resource,false);
 
 		return store;
 	}
@@ -96,34 +96,7 @@ public class DatabaseStoreTest {
 			List<EpisodeData> epsiodes = Data.createEurekaShow(eurekaDir);
 			epsiodes.addAll(Data.createHeroesShow(heroesDir));
 
-			for (EpisodeData ed : epsiodes) {
-				FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),ed.getFile());
-				File episodeFile = ed.getFile();
-				IEpisode episode = ed.getEpisode();
-				ISeason season = episode.getSeason();
-				IShow show = season.getShow();
-				Assert.assertNull("Check not found before episode is cached",store.getShow(rawMediaDir, episodeFile, show.getShowId()));
-				Assert.assertNull("Check not found before episode is cached",store.getSeason(rawMediaDir, episodeFile, show,1));
-				store.cacheShow(rawMediaDir, episodeFile, show);
-				store.cacheSeason(rawMediaDir, episodeFile, season);
-				store.cacheEpisode(rawMediaDir, episodeFile, episode);
-
-
-				IShow foundShow = store.getShow(rawMediaDir, episodeFile, show.getShowId());
-				Assert.assertNotNull(foundShow);
-				ISeason foundSeason = store.getSeason(rawMediaDir, episodeFile, foundShow, 1);
-				Assert.assertNotNull(foundSeason);
-				if (episode.isSpecial()) {
-					IEpisode foundEpisode = store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1) ;
-					Assert.assertNotNull(foundEpisode);
-					Assert.assertNull(store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1));
-				}
-				else {
-					IEpisode foundEpisode = store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1) ;
-					Assert.assertNotNull(foundEpisode);
-					Assert.assertNull(store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1));
-				}
-			}
+			cacheEpisodes(store, rawMediaDir, epsiodes);
 
 			SearchResult result = store.searchMedia("Blah", Mode.TV_SHOW, null, config, orgFile);
 			Assert.assertNotNull(result);
@@ -163,6 +136,38 @@ public class DatabaseStoreTest {
 		}
 		finally {
 			FileHelper.delete(rawMediaDir);
+		}
+	}
+
+	public static void cacheEpisodes(DatabaseStore store, File rawMediaDir,
+			List<EpisodeData> epsiodes) throws Exception {
+		for (EpisodeData ed : epsiodes) {
+			FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),ed.getFile());
+			File episodeFile = ed.getFile();
+			IEpisode episode = ed.getEpisode();
+			ISeason season = episode.getSeason();
+			IShow show = season.getShow();
+			Assert.assertNull("Check not found before episode is cached",store.getShow(rawMediaDir, episodeFile, show.getShowId()));
+			Assert.assertNull("Check not found before episode is cached",store.getSeason(rawMediaDir, episodeFile, show,1));
+			store.cacheShow(rawMediaDir, episodeFile, show);
+			store.cacheSeason(rawMediaDir, episodeFile, season);
+			store.cacheEpisode(rawMediaDir, episodeFile, episode);
+
+
+			IShow foundShow = store.getShow(rawMediaDir, episodeFile, show.getShowId());
+			Assert.assertNotNull(foundShow);
+			ISeason foundSeason = store.getSeason(rawMediaDir, episodeFile, foundShow, 1);
+			Assert.assertNotNull(foundSeason);
+			if (episode.isSpecial()) {
+				IEpisode foundEpisode = store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1) ;
+				Assert.assertNotNull(foundEpisode);
+				Assert.assertNull(store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1));
+			}
+			else {
+				IEpisode foundEpisode = store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1) ;
+				Assert.assertNotNull(foundEpisode);
+				Assert.assertNull(store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1));
+			}
 		}
 	}
 

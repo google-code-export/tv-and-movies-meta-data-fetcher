@@ -20,11 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.stanwood.media.Controller;
+import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
@@ -33,6 +34,7 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.testdata.Data;
+import org.stanwood.media.testdata.EpisodeData;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -61,8 +63,7 @@ public class TestFileDatabaseStore {
 	 * @throws Exception Thrown if their are any problems
 	 */
 	@Test
-	@Ignore
-	public void testCacheShow() throws Exception {
+	public void testStore() throws Exception {
 		File configDir = FileHelper.createTmpDir("config");
 		File dir = FileHelper.createTmpDir("test");
 		try {
@@ -77,11 +78,13 @@ public class TestFileDatabaseStore {
 				throw new IOException("Unable to create directory: " + eurekaDir);
 			}
 
-			File episodeFile = new File(eurekaDir,"1x02 - blah");
-			if (!episodeFile.createNewFile() && !episodeFile.exists()) {
-				throw new IOException("Unable to create temp file: " + episodeFile);
-			}
+			List<EpisodeData> episodes = Data.createEurekaShow(eurekaDir);
+			DatabaseStoreTest.cacheEpisodes(store, dir, episodes);
+			Film filmData = Data.createFilm();
+			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
+			store.cacheFilm(dir, filmFile1, filmData, 1);
 
+			File episodeFile = episodes.get(0).getFile();
 			IShow show = store.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);
 			Assert.assertNotNull(show);
 			Assert.assertEquals("Eureka", show.getName());
@@ -124,7 +127,7 @@ public class TestFileDatabaseStore {
 	        Assert.assertEquals("http://blah/image.jpg",episode.getImageURL().toExternalForm());
 	        Assert.assertFalse(episode.isSpecial());
 
-	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
+	        episodeFile = episodes.get(1).getFile();
 	        episode = store.getEpisode(dir,episodeFile,season, 2);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
@@ -136,7 +139,8 @@ public class TestFileDatabaseStore {
 	        Assert.assertNull(episode.getImageURL());
 	        Assert.assertFalse(episode.isSpecial());
 
-	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
+	        episodeFile = episodes.get(2).getFile();
+//	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
 			season = store.getSeason(dir,episodeFile,show, 2);
 			Assert.assertEquals("http://www.tv.com/show/58448/episode_listings.html?season=2",season.getURL().toExternalForm());
 			Assert.assertEquals(2,season.getSeasonNumber());
@@ -152,7 +156,8 @@ public class TestFileDatabaseStore {
 	        Assert.assertEquals("Phoenix Rising",episode.getTitle());
 	        Assert.assertEquals("2007-07-10",df.format(episode.getDate()));
 
-	        episodeFile = new File(eurekaDir,"000 - blah.avi");
+	        episodeFile = episodes.get(3).getFile();
+//	        episodeFile = new File(eurekaDir,"000 - blah.avi");
 	        episode = store.getSpecial(dir,episodeFile,season, 0);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
@@ -163,7 +168,6 @@ public class TestFileDatabaseStore {
 	        Assert.assertEquals("2007-07-09",df.format(episode.getDate()));
 	        Assert.assertTrue(episode.isSpecial());
 
-	        File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
 	        IFilm film = store.getFilm(dir, filmFile1, "114814");
 	        Assert.assertNotNull(film);
 	        Assert.assertEquals(15,film.getActors().size());

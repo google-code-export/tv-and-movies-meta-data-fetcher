@@ -88,8 +88,6 @@ public class TestXMLStore2 {
 		} finally {
 			FileHelper.delete(dir);
 		}
-
-
 	}
 
 	/**
