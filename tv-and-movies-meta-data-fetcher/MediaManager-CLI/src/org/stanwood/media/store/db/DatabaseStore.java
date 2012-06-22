@@ -361,7 +361,18 @@ public class DatabaseStore implements IStore {
 		foundFilm.setSummary(film.getSummary());
 		foundFilm.setTitle(film.getTitle());
 		foundFilm.setWriters(film.getWriters());
-		foundFilm.setFiles(film.getFiles());
+
+		List<VideoFile> files = film.getFiles();
+		boolean found = false;
+		for (VideoFile vf : files ) {
+			if (vf.getLocation().equals(filmFile)) {
+				found = true;
+			}
+		}
+		if (!found) {
+			files.add(new VideoFile(filmFile, filmFile, null, rootMediaDir));
+		}
+		foundFilm.setFiles(files);
 
 		session.saveOrUpdate(dir);
 		commitTransaction();
@@ -643,10 +654,10 @@ public class DatabaseStore implements IStore {
 			throws StoreException {
 		validateParameters();
 		DBResource resource = controller.getDatabaseResources().get(resourceId);
-		init(resource);
+		init(resource,false);
 	}
 
-	protected void init(DBResource resource) throws StoreException {
+	protected void init(DBResource resource,boolean create) throws StoreException {
 		currentTransaction = null;
 		try {
 			String connectionUserName = resource.getUsername();
@@ -663,14 +674,21 @@ public class DatabaseStore implements IStore {
 			}
 			Configuration configuration = getConfiguration(resource.getUrl(),
 					connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
-			try {
-				SessionFactory factory = configuration.buildSessionFactory();
-				session = factory.openSession();
-			}
-			catch (HibernateException e1) {
+			if (create) {
 				new SchemaExport(configuration).create(false, true);
 				SessionFactory factory = configuration.buildSessionFactory();
 				session = factory.openSession();
+			}
+			else {
+				try {
+					SessionFactory factory = configuration.buildSessionFactory();
+					session = factory.openSession();
+				}
+				catch (HibernateException e1) {
+					new SchemaExport(configuration).create(false, true);
+					SessionFactory factory = configuration.buildSessionFactory();
+					session = factory.openSession();
+				}
 			}
 		} catch (XMLParserException e) {
 			throw new StoreException("Unable to connect to database", e);

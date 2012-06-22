@@ -1,6 +1,7 @@
 package org.stanwood.media.store.db;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.stanwood.media.Controller;
@@ -26,6 +27,16 @@ public class FileDatabaseStore extends DatabaseStore {
 		File file;
 		try {
 			file = new File(controller.getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
+			if (!file.exists()) {
+				try {
+					if (!file.createNewFile() && !file.exists()) {
+						throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file));
+					}
+				}
+				catch (IOException e) {
+					throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file),e);
+				}
+			}
 		} catch (ConfigException e) {
 			throw new StoreException("Unable to find configuration directory");
 		}
@@ -35,7 +46,7 @@ public class FileDatabaseStore extends DatabaseStore {
 		resource.setPassword(""); //$NON-NLS-1$
 		resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath()); //$NON-NLS-1$
 		setHbm2ddlAuto("none"); //$NON-NLS-1$
-		init(resource);
+		init(resource,true);
 	}
 
 	/** {@inheritDoc} */
