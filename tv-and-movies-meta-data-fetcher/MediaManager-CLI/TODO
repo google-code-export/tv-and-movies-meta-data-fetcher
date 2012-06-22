@@ -3,8 +3,6 @@ TODO
 	
 Version 2.2
 -----------
-FileDatabaseStore
-	* Port XMLStore2 tests to this store
 Update Documents
 	* Spell check document
 	* Document how to add other database drivers
@@ -15,6 +13,8 @@ Check the copy store to store script works and can copy from XMLStore2 -> Databa
 
 Version 2.3
 -----------
+Add feature to check for updates of media manager
+Handle episode files that contain multiple episodes
 Add script support
 	New <script> element for the config file. This will contain global script functions
 	Add ability to execute scripts before and after a processing operation of each media directory.
@@ -27,11 +27,15 @@ Extend patterns
 
 Version 2.4
 -----------
-Make media manager able to run as a daemon server
+
 Install media manager as a server (optional)
-Add ability to run jobs at certain times
-Resource to directory/file changed notifications and trigger jobs
-	* Allow for a quite period 
+Make media manager able to run as a daemon server
+	* Add ability to run jobs at certain times
+	* What media directories/watch folders for changes 
+		* Allow for a quite period 
+	* Check for XBMC plugin updates	
+Allow the checking for updates period to be configured (Default once a day)
+	* Either when in server mode, or every time script is executed 
 
 Version 2.5
 -----------
@@ -58,7 +62,6 @@ Add support for Music
 Make native MacOSX installer
 Make native Windows installer
 Replace windows .bat files with native .exe launchers
-Allow the checking for updates period to be configured (Default once a day)
 Add "remove from store" command line tool
 
 Version 2.6
@@ -68,7 +71,6 @@ Add action for creating film/show/season/epiosde art in the folders
 SeenDBFixer
     - Remove items that are not matching rename pattern, if their is a rename action
 Add a tool for specifying a Media's ID and changing all the stored data.
-Handle episode files that contain multiple episodes
 Make the search strategies expendable via plugins.
 	* And scriptable
 Implement a pure java MP4 Manager
