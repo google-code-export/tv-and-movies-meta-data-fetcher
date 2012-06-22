@@ -25,6 +25,32 @@ public class DBResource {
 	private String username;
 	private String password;
 	private String dialect;
+	private String resourceId;
+	private SchemaCheck schemaCheck;
+
+	public SchemaCheck getSchemaCheck() {
+		return schemaCheck;
+	}
+
+	public void setSchemaCheck(SchemaCheck schemaCheck) {
+		this.schemaCheck = schemaCheck;
+	}
+
+	/**
+	 * Used to get the resource ID
+	 * @return The resource ID
+	 */
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	/**
+	 * Used to set the resource ID
+	 * @param resourceId The resource ID
+	 */
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
 
 	/**
 	 * Used to get the database connection URL

@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.Controller;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.DBResource;
+import org.stanwood.media.setup.SchemaCheck;
 import org.stanwood.media.store.StoreException;
 
 /**
@@ -24,29 +27,35 @@ public class FileDatabaseStore extends DatabaseStore {
 	/** {@inheritDoc} */
 	@Override
 	public void init(Controller controller, File nativeDir) throws StoreException {
-		File file;
 		try {
-			file = new File(controller.getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
+			File file = new File(controller.getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
+			DBResource resource = new DBResource();
+			resource.setDialect("org.hibernate.dialect.HSQLDialect"); //$NON-NLS-1$
+			resource.setUsername("sa"); //$NON-NLS-1$
+			resource.setPassword(""); //$NON-NLS-1$
+			resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath()); //$NON-NLS-1$
+			resource.setResourceId("file-"+file.getAbsolutePath()); //$NON-NLS-1$
+			resource.setSchemaCheck(SchemaCheck.NONE);
+
 			if (!file.exists()) {
 				try {
 					if (!file.createNewFile() && !file.exists()) {
 						throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file));
 					}
+					Configuration configuration = DBFactory.getInstance().getConfiguration(resource);
+					new SchemaExport(configuration).create(false, true);
 				}
 				catch (IOException e) {
 					throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file),e);
+				} catch (DatabaseException e) {
+					throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file),e);
 				}
 			}
+
+			init(resource);
 		} catch (ConfigException e) {
 			throw new StoreException("Unable to find configuration directory");
 		}
-		DBResource resource = new DBResource();
-		resource.setDialect("org.hibernate.dialect.HSQLDialect"); //$NON-NLS-1$
-		resource.setUsername("sa"); //$NON-NLS-1$
-		resource.setPassword(""); //$NON-NLS-1$
-		resource.setUrl("jdbc:hsqldb:file:"+file.getAbsolutePath()); //$NON-NLS-1$
-		setHbm2ddlAuto("none"); //$NON-NLS-1$
-		init(resource,true);
 	}
 
 	/** {@inheritDoc} */

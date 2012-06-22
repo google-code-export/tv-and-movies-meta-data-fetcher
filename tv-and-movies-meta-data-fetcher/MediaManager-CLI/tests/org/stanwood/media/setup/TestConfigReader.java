@@ -233,6 +233,7 @@ public class TestConfigReader {
 		testConfig.append("      <username>testuser1</username>"+FileHelper.LS);
 		testConfig.append("      <password>testpass1</password>"+FileHelper.LS);
 		testConfig.append("      <dialect>test.dialect1</dialect>"+FileHelper.LS);
+		testConfig.append("      <schemaCheck>none</schemaCheck>"+FileHelper.LS);
 		testConfig.append("    </databaseResource>"+FileHelper.LS);
 		testConfig.append("  </resources>"+FileHelper.LS);
 		testConfig.append("</mediaManager>"+FileHelper.LS);
@@ -246,6 +247,7 @@ public class TestConfigReader {
 		Assert.assertEquals("test.dialect",resource.getDialect());
 		Assert.assertNull(resource.getUsername());
 		Assert.assertNull(resource.getPassword());
+		Assert.assertNull(resource.getSchemaCheck());
 
 		resource = resources.get("testDB2");
 		Assert.assertNotNull(resource);
@@ -253,6 +255,7 @@ public class TestConfigReader {
 		Assert.assertEquals("test.dialect1",resource.getDialect());
 		Assert.assertEquals("testuser1",resource.getUsername());
 		Assert.assertEquals("testpass1",resource.getPassword());
+		Assert.assertEquals(SchemaCheck.NONE,resource.getSchemaCheck());
 
 		File tmpFile = FileHelper.createTempFile("config", ".xml");
 		config.writeConfig(new NullProgressMonitor(), tmpFile);

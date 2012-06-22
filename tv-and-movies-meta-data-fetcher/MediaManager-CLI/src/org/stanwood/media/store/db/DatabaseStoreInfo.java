@@ -12,10 +12,8 @@ public class DatabaseStoreInfo extends ExtensionInfo<DatabaseStore>  {
 
 	/** Parameter key for resourceId */
 	public static final ParameterType PARAM_DATABASE_RESOURCE_ID = new ParameterType("resourceId",String.class,false); //$NON-NLS-1$
-	/** Parameter key for schema check */
-	public static final ParameterType PARAM_SCHEMA_CHECK = new ParameterType("schemaCheck",Enum.class,false); //$NON-NLS-1$
 
-	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_DATABASE_RESOURCE_ID,PARAM_SCHEMA_CHECK};
+	private final static ParameterType PARAM_TYPES[] = new ParameterType[]{PARAM_DATABASE_RESOURCE_ID};
 
 
 
