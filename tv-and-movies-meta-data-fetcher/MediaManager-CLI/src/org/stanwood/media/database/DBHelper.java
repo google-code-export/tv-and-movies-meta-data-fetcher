@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.store.db;
+package org.stanwood.media.database;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,24 +27,28 @@ import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.SchemaCheck;
+import org.stanwood.media.store.db.DatabaseStore;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class DBFactory {
+/**
+ * This class is used to get DB sessions
+ */
+public class DBHelper {
 
-	private static DBFactory instance = null;
+	private static DBHelper instance = null;
 	private Map<String,Session>sessions = new HashMap<String,Session>();
 
-	private DBFactory() {
+	private DBHelper() {
 
 	}
 
-	public synchronized static DBFactory getInstance() {
+	public synchronized static DBHelper getInstance() {
 		if (instance==null) {
-			instance = new DBFactory();
+			instance = new DBHelper();
 		}
 		return instance;
 	}
@@ -52,7 +56,7 @@ public class DBFactory {
 	public synchronized Session getSession(DBResource resource) throws DatabaseException {
 		Session session = sessions.get(resource.getResourceId());
 		if (session == null) {
-			Configuration configuration = DBFactory.getInstance().getConfiguration(resource);
+			Configuration configuration = DBHelper.getInstance().getConfiguration(resource);
 			try {
 				SessionFactory factory = configuration.buildSessionFactory();
 				session = factory.openSession();

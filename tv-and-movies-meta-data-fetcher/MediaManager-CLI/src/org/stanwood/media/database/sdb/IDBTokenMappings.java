@@ -1,4 +1,4 @@
-package org.stanwood.media.database;
+package org.stanwood.media.database.sdb;
 
 /**
  * This interfaces should be implemented by classes that want
