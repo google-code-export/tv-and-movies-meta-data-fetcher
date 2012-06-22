@@ -16,6 +16,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.database.DBHelper;
+import org.stanwood.media.database.DatabaseException;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -634,7 +636,7 @@ public class DatabaseStore implements IStore {
 	protected void init(DBResource resource) throws StoreException {
 		currentTransaction = null;
 		try {
-			session = DBFactory.getInstance().getSession(resource);
+			session = DBHelper.getInstance().getSession(resource);
 		} catch (DatabaseException e) {
 			throw new StoreException("Error talking to the database",e);
 		}

@@ -7,6 +7,8 @@ import java.text.MessageFormat;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.Controller;
+import org.stanwood.media.database.DBHelper;
+import org.stanwood.media.database.DatabaseException;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.SchemaCheck;
@@ -42,7 +44,7 @@ public class FileDatabaseStore extends DatabaseStore {
 					if (!file.createNewFile() && !file.exists()) {
 						throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file));
 					}
-					Configuration configuration = DBFactory.getInstance().getConfiguration(resource);
+					Configuration configuration = DBHelper.getInstance().getConfiguration(resource);
 					new SchemaExport(configuration).create(false, true);
 				}
 				catch (IOException e) {

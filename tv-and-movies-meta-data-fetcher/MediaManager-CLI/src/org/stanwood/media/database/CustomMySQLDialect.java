@@ -1,4 +1,4 @@
-package org.stanwood.media.store.db;
+package org.stanwood.media.database;
 
 import java.sql.Types;
 

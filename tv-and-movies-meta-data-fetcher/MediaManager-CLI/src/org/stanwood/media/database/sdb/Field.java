@@ -1,4 +1,4 @@
-package org.stanwood.media.database;
+package org.stanwood.media.database.sdb;
 
 /**
  * This is used to represent a field in a database table. It is mainly used for inserting rows into
