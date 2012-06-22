@@ -236,7 +236,11 @@ public class ConfigReader extends BaseConfigReader {
 					document.append("      <password>"+resource.getPassword()+"</password>"+FileHelper.LS); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				document.append("      <dialect>"+resource.getDialect()+"</dialect>"+FileHelper.LS);  //$NON-NLS-1$//$NON-NLS-2$
+				if (resource.getSchemaCheck()!=null) {
+					document.append("      <schemaCheck>"+resource.getSchemaCheck().getValue()+"</schemaCheck>"+FileHelper.LS);  //$NON-NLS-1$//$NON-NLS-2$
+				}
 				document.append("    </databaseResource>"+FileHelper.LS); //$NON-NLS-1$
+
 			}
 			document.append("  </resources>"+FileHelper.LS); //$NON-NLS-1$
 		}
@@ -264,6 +268,15 @@ public class ConfigReader extends BaseConfigReader {
 			dbResource.setUsername(getStringFromXMLOrNull(dbRsourceNode, "username/text()")); //$NON-NLS-1$
 			dbResource.setPassword(getStringFromXMLOrNull(dbRsourceNode, "password/text()")); //$NON-NLS-1$
 			dbResource.setUrl(getStringFromXML(dbRsourceNode, "url/text()")); //$NON-NLS-1$
+			dbResource.setResourceId(id);
+			String schemaCheck = getStringFromXMLOrNull(dbRsourceNode, "schemaCheck/text()"); //$NON-NLS-1$
+			if (schemaCheck!=null) {
+				SchemaCheck sc = SchemaCheck.fromValue(schemaCheck);
+				if (sc==null) {
+					throw new ConfigException(MessageFormat.format("Invalid schemaCheck value {0}, possible values are validate and none",schemaCheck));
+				}
+				dbResource.setSchemaCheck(sc);
+			}
 			databaseResources.put(id,dbResource);
 		}
 	}

@@ -286,16 +286,6 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
             <para>resourceId - The ID of the resource that specifies the
             connection information. This is a required paramter.</para>
           </listitem>
-
-          <listitem>
-            <para>schemaCheck - Optional paramter that controls how the
-            database schema should be checked when connecting to the database.
-            Possible values are "validate" and "none". This defaults to
-            validate which causes the database schema to be validated. On some
-            database connections, the validation reports problems when their
-            are none. So setting this parameter to none, will cause no schema
-            checks to be done.</para>
-          </listitem>
         </itemizedlist>
       </sect2>
 
@@ -1451,6 +1441,16 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         <listitem>
           <para>password - The password of the user used to access the
           database</para>
+        </listitem>
+
+        <listitem>
+          <para>schemaCheck - Optional paramter that controls how the database
+          schema should be checked when connecting to the database. Possible
+          values are "validate" and "none". This defaults to validate which
+          causes the database schema to be validated. On some database
+          connections, the validation reports problems when their are none. So
+          setting this parameter to none, will cause no schema checks to be
+          done.</para>
         </listitem>
       </itemizedlist>
 

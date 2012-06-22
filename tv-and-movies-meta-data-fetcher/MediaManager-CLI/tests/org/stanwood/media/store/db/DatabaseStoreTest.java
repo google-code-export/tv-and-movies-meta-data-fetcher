@@ -22,6 +22,7 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.MediaDirConfig;
+import org.stanwood.media.setup.SchemaCheck;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.testdata.EpisodeData;
@@ -47,10 +48,11 @@ public class DatabaseStoreTest {
 		DBResource resource = new DBResource();
 		resource.setDialect(DIALECT);
 		resource.setUrl(URL);
+		resource.setResourceId("test");
 		resource.setUsername(USERNAME);
 		resource.setPassword(PASSWORD);
-		store.setHbm2ddlAuto("update");
-		store.init(resource,false);
+		resource.setSchemaCheck(SchemaCheck.UPDATE);
+		store.init(resource);
 
 		return store;
 	}

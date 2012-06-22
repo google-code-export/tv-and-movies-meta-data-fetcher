@@ -11,14 +11,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Film;
@@ -36,11 +31,6 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.util.Version;
-import org.stanwood.media.xml.XMLParser;
-import org.stanwood.media.xml.XMLParserException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * This store is used to store the show and film information in a database.
@@ -57,7 +47,6 @@ public class DatabaseStore implements IStore {
 	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("1.0"),1);
 	private Session session;
 	private String resourceId;
-	private String hbm2ddlAuto;
 	private Transaction currentTransaction = null;
 
 	/** {@inheritDoc} */
@@ -533,17 +522,6 @@ public class DatabaseStore implements IStore {
 		if (key.equalsIgnoreCase(DatabaseStoreInfo.PARAM_DATABASE_RESOURCE_ID.getName())) {
 			resourceId = value;
 		}
-		else if (key.equalsIgnoreCase(DatabaseStoreInfo.PARAM_SCHEMA_CHECK.getName())) {
-			if (value.equalsIgnoreCase("validate")) { //$NON-NLS-1$
-				this.hbm2ddlAuto = "validate"; //$NON-NLS-1$
-			}
-			else if (value.equalsIgnoreCase("none")) { //$NON-NLS-1$
-				this.hbm2ddlAuto = "none"; //$NON-NLS-1$
-			}
-			else {
-				throw new StoreException(MessageFormat.format("Invalid parameter value of {1} for parameter {0}, valid values are none and validate",DatabaseStoreInfo.PARAM_SCHEMA_CHECK.getName(), value));
-			}
-		}
 		else {
 			throw new StoreException(MessageFormat.format(
 					"Unknown parameter {0}", key));
@@ -559,10 +537,6 @@ public class DatabaseStore implements IStore {
 			throw new StoreException(MessageFormat.format(
 					"Unknown parameter {0}", key));
 		}
-	}
-
-	public void setHbm2ddlAuto(String hbm2ddlAuto) {
-		this.hbm2ddlAuto = hbm2ddlAuto;
 	}
 
 	/** {@inheritDoc} */
@@ -654,88 +628,16 @@ public class DatabaseStore implements IStore {
 			throws StoreException {
 		validateParameters();
 		DBResource resource = controller.getDatabaseResources().get(resourceId);
-		init(resource,false);
+		init(resource);
 	}
 
-	protected void init(DBResource resource,boolean create) throws StoreException {
+	protected void init(DBResource resource) throws StoreException {
 		currentTransaction = null;
 		try {
-			String connectionUserName = resource.getUsername();
-			if (connectionUserName==null) {
-				connectionUserName = ""; //$NON-NLS-1$
-			}
-			String connectionPassword = resource.getPassword();
-			if (connectionPassword==null) {
-				connectionPassword = ""; //$NON-NLS-1$
-			}
-			String dialect = resource.getDialect();
-			if (dialect.equals(MySQLDialect.class.getName())) {
-				dialect=CustomMySQLDialect.class.getName();
-			}
-			Configuration configuration = getConfiguration(resource.getUrl(),
-					connectionUserName, connectionPassword,dialect,hbm2ddlAuto);
-			if (create) {
-				new SchemaExport(configuration).create(false, true);
-				SessionFactory factory = configuration.buildSessionFactory();
-				session = factory.openSession();
-			}
-			else {
-				try {
-					SessionFactory factory = configuration.buildSessionFactory();
-					session = factory.openSession();
-				}
-				catch (HibernateException e1) {
-					new SchemaExport(configuration).create(false, true);
-					SessionFactory factory = configuration.buildSessionFactory();
-					session = factory.openSession();
-				}
-			}
-		} catch (XMLParserException e) {
-			throw new StoreException("Unable to connect to database", e);
+			session = DBFactory.getInstance().getSession(resource);
+		} catch (DatabaseException e) {
+			throw new StoreException("Error talking to the database",e);
 		}
-	}
-
-	/**
-	 * Used to create a database configuration
-	 * @param url The URL of the database connection
-	 * @param username User name of the DB user
-	 * @param password Password of the DB user
-	 * @param dialect The SQL dialect to used when talking to the database
-	 * @param hbm2ddlAuto The hibernate hbm2ddl.auto setting value
-	 * @return The Configuration
-	 * @throws XMLParserException Thrown if their is a problem
-	 */
-	public static Configuration getConfiguration(String url, String username,
-			String password, String dialect,String hbm2ddlAuto) throws XMLParserException {
-		Document dom = XMLParser
-				.parse(DatabaseStore.class
-						.getResourceAsStream("hibernate.config.xml"), null); //$NON-NLS-1$
-		Element element = XMLParser.firstChild(dom);
-		element = XMLParser.firstChild(element);
-		Element propEl = dom.createElement("property"); //$NON-NLS-1$
-		propEl.setAttribute("name", "hibernate.connection.url"); //$NON-NLS-1$ //$NON-NLS-2$
-		propEl.appendChild(dom.createTextNode(url));
-		element.appendChild(propEl);
-		propEl = dom.createElement("property"); //$NON-NLS-1$
-		propEl.setAttribute("name", "hibernate.dialect"); //$NON-NLS-1$//$NON-NLS-2$
-		propEl.appendChild(dom.createTextNode(dialect));
-		element.appendChild(propEl);
-		propEl = dom.createElement("property"); //$NON-NLS-1$
-		propEl.setAttribute("name", "hibernate.connection.password"); //$NON-NLS-1$ //$NON-NLS-2$
-		propEl.appendChild(dom.createTextNode(password));
-		element.appendChild(propEl);
-		propEl = dom.createElement("property"); //$NON-NLS-1$
-		propEl.setAttribute("name", "hibernate.connection.username"); //$NON-NLS-1$//$NON-NLS-2$
-		propEl.appendChild(dom.createTextNode(username));
-		element.appendChild(propEl);
-
-		if (hbm2ddlAuto!=null && !hbm2ddlAuto.equals("validate")) { //$NON-NLS-1$
-			Node node = XMLParser.selectSingleNode(element, "property[@name='hbm2ddl.auto']"); //$NON-NLS-1$
-			node.setTextContent(hbm2ddlAuto);
-		}
-
-		Configuration configuration = new Configuration().configure(dom);
-		return configuration;
 	}
 
 	private void validateParameters() throws StoreException {
