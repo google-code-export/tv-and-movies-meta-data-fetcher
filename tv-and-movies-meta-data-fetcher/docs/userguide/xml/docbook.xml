@@ -9,6 +9,7 @@
 <!ENTITY mmcopystore "mm-copy-store-to-store">
 <!ENTITY mmlistatoms "mm-media-file-info">
 <!ENTITY mmimportmedia "mm-import-media">
+<!ENTITY mmprintdbschema "mm-print-db-schema">
 <!ENTITY copyrightdate "2007-2012">
 <!ENTITY copyholder "John-Paul Stanford">
 ]>
@@ -1007,6 +1008,57 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
     </sect1>
 
     <sect1>
+      <title id="mmprintdbschema.title">&mmprintdbschema;</title>
+
+      <para>The &mmprintdbschema; command is used to print the database schema
+      for creating an intital database. A hibernate dialect must be passed to
+      it, see <xref linkend="hibernateDialects"/> for more information on
+      dialects.</para>
+
+      <cmdsynopsis>
+        <command>&mmprintdbschema;</command>
+
+        <arg>-v</arg>
+
+        <arg>-h</arg>
+
+        <arg>-d <replaceable>dialect</replaceable></arg>
+
+        <arg>-c <replaceable>config file</replaceable></arg>
+
+        <arg>-l <replaceable>INFO|DEBUG|log4j configuration
+        file</replaceable></arg>
+      </cmdsynopsis>
+
+      <para>The command has the following options: <itemizedlist>
+          <listitem>
+            <para><literal>-v, --version</literal> Display the version</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>-h, --help</literal> Show the help message</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>-c, --config_file</literal> The location of the
+            config file. If option is not given then it will load from default
+            locations.</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>-l, --log_config</literal> The log configuration
+            mode. Either INFO, or DEBUG for the built in configurations, or a
+            file name of a log4j configuration file.</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>-d, --dialect</literal> The database
+            dialect.</para>
+          </listitem>
+        </itemizedlist></para>
+    </sect1>
+
+    <sect1>
       <title id="mmimportmedia.title">&mmimportmedia;</title>
 
       <para>The &mmimportmedia; command is used to check for new media in
@@ -1404,7 +1456,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
           and database name.</para>
         </listitem>
 
-        <listitem>
+        <listitem id="hibernateDialects">
           <para>dialect - The is the SQL dilect that the hibernate database
           library should use. Belowe are some examples:</para>
 
@@ -1465,7 +1517,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         &lt;username&gt;dbuser&lt;/username&gt;
         &lt;password&gt;dbpassword&lt;/password&gt;
     &lt;/databaseResources&gt;
-  &lt;/resources
+  &lt;/resources&gt;
 &lt;/mediaManager&gt;
 </programlisting>
       </example>
@@ -1481,9 +1533,41 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         &lt;username&gt;dbuser&lt;/username&gt;
         &lt;password&gt;dbpassword&lt;/password&gt;
     &lt;/databaseResources&gt;
-  &lt;/resources
+  &lt;/resources&gt;
 &lt;/mediaManager&gt;
 </programlisting></para>
+      </example>
+    </sect1>
+
+    <sect1>
+      <title>Seen Database</title>
+
+      <para>The seen database is used to store a list of files that have been
+      seen before. This also records the time the file was last modified so
+      that if it's updated the changes will be noticed. Media directiores can
+      be set to ignore seen media files. This seeds up the processing of media
+      files. By default the seen database is stored in a file in the
+      configuration directory. It's also possible to store the seen database
+      in a actual database. To do this the resource to use with the seen
+      database must be configured.</para>
+
+      <example>
+        <title>Storeing the seen database within a database resource</title>
+
+        <para>This will set the seen database to use the database resource
+        "mainDB".</para>
+
+        <programlisting>&lt;mediaManager&gt;
+  &lt;resources&gt;
+    &lt;databaseResource id="mainDB"&gt;
+        &lt;url&gt;jdbc:mysql://localhost:3306/SampleDB&lt;/url&gt;
+        &lt;dialect&gt;org.hibernate.dialect.MySQLDialect&lt;/dialect&gt;
+        &lt;username&gt;dbuser&lt;/username&gt;
+        &lt;password&gt;dbpassword&lt;/password&gt;
+    &lt;/databaseResources&gt;
+  &lt;/resources&gt;
+  &lt;seenDatabase resourceId="mainDB"/&gt;
+&lt;/mediaManager&gt;</programlisting>
       </example>
     </sect1>
 

@@ -12,7 +12,6 @@ Allow the seen DB to use the database resource
 		* Make the seen DB use it
 	* Migrate the previous SeenDB entries to the newly configured one
 Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore	
-Added tool to print the database schema
 Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
 	- Update stores to reflect this
