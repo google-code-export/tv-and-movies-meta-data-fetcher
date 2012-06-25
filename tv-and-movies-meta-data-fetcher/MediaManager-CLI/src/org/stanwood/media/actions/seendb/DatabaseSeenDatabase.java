@@ -17,6 +17,7 @@
 package org.stanwood.media.actions.seendb;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -31,8 +32,12 @@ public class DatabaseSeenDatabase implements ISeenDatabase{
 
 	private Session session;
 
-	public DatabaseSeenDatabase(DBResource resource) throws DatabaseException {
-		this.session = DBHelper.getInstance().getSession(resource);
+	public DatabaseSeenDatabase(DBResource resource) throws SeenDBException {
+		try {
+			this.session = DBHelper.getInstance().getSession(resource);
+		} catch (DatabaseException e) {
+			throw new SeenDBException("Unable to create database session",e);
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -115,6 +120,13 @@ public class DatabaseSeenDatabase implements ISeenDatabase{
 		q.setString("path",file.getAbsolutePath()); //$NON-NLS-1$
 		q.executeUpdate();
 		trans.commit();
+	}
+
+	@Override
+	public Collection<SeenEntry> getEntries() {
+		Transaction trans = session.beginTransaction();
+		Query q = session.createQuery("from SeenEntry"); //$NON-NLS-1$
+		return q.list();
 	}
 
 }

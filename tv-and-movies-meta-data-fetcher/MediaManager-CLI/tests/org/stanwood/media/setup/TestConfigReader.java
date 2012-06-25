@@ -213,6 +213,32 @@ public class TestConfigReader {
 	}
 
 	/**
+	 * Test the seen database setup
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testSeenDatabase() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <seenDatabase resourceId=\"blah\"/>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
+
+		ConfigReader config = createConfigReader(testConfig);
+		SeenDatabaseConfig seenDB = config.getSeenDatabase();
+		Assert.assertEquals("blah",seenDB.getResourceId());
+		File tmpFile = FileHelper.createTempFile("config", ".xml");
+		config.writeConfig(new NullProgressMonitor(), tmpFile);
+
+		String written = FileHelper.readFileContents(tmpFile);
+		Assert.assertEquals(testConfig.toString(), written);
+
+		FileHelper.delete(tmpFile);
+	}
+
+	/**
 	 * Used to test the reading and writing of resources
 	 * @throws Exception Thrown if their is a problem
 	 */
@@ -240,7 +266,7 @@ public class TestConfigReader {
 
 		ConfigReader config = createConfigReader(testConfig);
 
-		Map<String, DBResource> resources = config.getDatabaseResoruces();
+		Map<String, DBResource> resources = config.getDatabaseResources();
 		DBResource resource = resources.get("testDB");
 		Assert.assertNotNull(resource);
 		Assert.assertEquals("jdbc:/test/test",resource.getUrl());

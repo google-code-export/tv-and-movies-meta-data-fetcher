@@ -30,10 +30,19 @@ public class SeenEntry implements Serializable {
 	@Column(name = "lastModified",nullable= false)
 	private long lastModified;
 
+	/**
+	 * Used to get the id of the Seen Entry, can be null if the seen database does not
+	 * support it.
+	 * @return The id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Used to set the if the Seen Entry, can be null if the seen database does not support it.
+	 * @param id The id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}

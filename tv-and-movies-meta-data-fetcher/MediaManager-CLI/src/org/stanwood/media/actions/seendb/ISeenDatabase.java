@@ -17,6 +17,7 @@
 package org.stanwood.media.actions.seendb;
 
 import java.io.File;
+import java.util.Collection;
 
 import org.stanwood.media.progress.IProgressMonitor;
 
@@ -72,4 +73,11 @@ public interface ISeenDatabase {
 	 * @throws SeenDBException Thrown if their is a problem
 	 */
 	public void removeFile(File mediaDirectory, File file) throws SeenDBException;
+
+	/**
+	 * Uses to get a list of seen entries for a media directory
+	 * @param mediaDirectory The media directory
+	 * @return The entries
+	 */
+	public Collection<SeenEntry>getEntries();
 }
