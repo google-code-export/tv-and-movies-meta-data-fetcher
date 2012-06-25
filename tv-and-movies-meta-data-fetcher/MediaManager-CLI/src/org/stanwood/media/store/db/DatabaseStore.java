@@ -109,6 +109,7 @@ public class DatabaseStore implements IStore {
 		dbEpisode.setDirectors(episode.getDirectors());
 		dbEpisode.setEpisodeId(episode.getEpisodeId());
 		dbEpisode.setEpisodeNumber(episode.getEpisodeNumber());
+		dbEpisode.setEpisodes(episode.getEpisodes());
 		List<VideoFile> files = episode.getFiles();
 		boolean found = false;
 		for (VideoFile vf : files ) {

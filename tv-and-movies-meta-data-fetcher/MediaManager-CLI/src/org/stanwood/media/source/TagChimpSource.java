@@ -81,7 +81,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 		film.setFilmUrl(url);
 		film.setSourceId(sourceInfo.getId());
 
-		StreamProcessor processor = new StreamProcessor("text/xml") { //$NON-NLS-1$
+		StreamProcessor processor = new StreamProcessor(url.toExternalForm(),"text/xml") { //$NON-NLS-1$
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {

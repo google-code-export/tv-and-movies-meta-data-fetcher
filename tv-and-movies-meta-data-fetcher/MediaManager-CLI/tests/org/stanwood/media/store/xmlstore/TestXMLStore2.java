@@ -96,6 +96,7 @@ public class TestXMLStore2 {
 	 */
 	@Test
 	public void testReadShows() throws Exception{
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
 		File dir = FileHelper.createTmpDir("test");
 		XMLStore2 xmlStore = new XMLStore2();
 		try {

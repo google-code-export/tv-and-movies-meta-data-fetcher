@@ -84,7 +84,7 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21-3.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults22.xml"),new FileInputStream(cacheFile),params);
 
 			IShow upgradedShow = mediaDir.getSources().get(0).getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), null);
 			Assert.assertEquals("NBC",upgradedShow.getStudio());
@@ -114,7 +114,7 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults21-3.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expectedXmlStoreResults22.xml"),new FileInputStream(cacheFile),params);
 
 			IShow upgradedShow = mediaDir.getSources().get(0).getShow("79501", new URL("http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip"), null);
 			Assert.assertEquals("NBC",upgradedShow.getStudio());
@@ -146,7 +146,7 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21-3.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output22.xml"),new FileInputStream(cacheFile),params);
 
 			IFilm upgradedShow = mediaDir.getSources().get(0).getFilm("tt0371746", new URL("http://akas.imdb.com/title/tt0371746/"), null);
 			Assert.assertEquals("Paramount Pictures",upgradedShow.getStudio());
@@ -178,7 +178,7 @@ public class TestXMLStore2Upgrade extends XBMCAddonTestBase {
 			Controller controller = new Controller(configReader);
 			controller.init(false);
 			MediaDirectory mediaDir = new MediaDirectory(controller, configReader, dir);
-			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output21-3.xml"),new FileInputStream(cacheFile),params);
+			Helper.assertXMLEquals(TestXMLStore2.class.getResourceAsStream("expected-film-rename-output22.xml"),new FileInputStream(cacheFile),params);
 
 			IFilm upgradedShow = mediaDir.getSources().get(0).getFilm("tt0371746", new URL("http://akas.imdb.com/title/tt0371746/"), null);
 			Assert.assertEquals("Paramount Pictures",upgradedShow.getStudio());

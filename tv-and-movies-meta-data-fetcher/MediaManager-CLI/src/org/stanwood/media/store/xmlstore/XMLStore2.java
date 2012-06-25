@@ -14,9 +14,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -82,7 +84,7 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
  */
 public class XMLStore2 extends BaseXMLStore implements IStore {
 
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("2.2"),1); //$NON-NLS-1$
 	private final static String DTD_WEB_LOCATION = XMLParser.DTD_WEB_LOCATION + "/MediaManager-XmlStore-"+STORE_VERSION.getVersion()+".dtd"; //$NON-NLS-1$ //$NON-NLS-2$
 	private final static String DTD_LOCATION = "-//STANWOOD//DTD XMLStore "+STORE_VERSION.getVersion()+"//EN"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -93,6 +95,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private NodeList fileNodes;
 	private Document storeDoc;
+
 
 	/**
 	 * The constructor
@@ -167,6 +170,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (summaryNode != null) {
 				summaryNode.getParentNode().removeChild(summaryNode);
 			}
+			writeEpisodeNumbers((Element) node, episode);
 			summaryNode = doc.createElement("summary"); //$NON-NLS-1$
 			node.appendChild(summaryNode);
 			summaryNode.appendChild(doc.createTextNode(episode.getSummary()));
@@ -426,6 +430,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private void writeExtraParams(IVideoExtra video, Element node) {
 		Document doc = node.getOwnerDocument();
+		deleteNode(node, "extra"); //$NON-NLS-1$
 		Element extraNode = doc.createElement("extra"); //$NON-NLS-1$
 		if (video.getExtraInfo() != null) {
 			for (Entry<String, String> e : video.getExtraInfo().entrySet()) {
@@ -435,7 +440,16 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				extraNode.appendChild(param);
 			}
 		}
-		node.appendChild(extraNode);
+
+		Element season = getFirstChildElement(node, "season"); //$NON-NLS-1$
+		if (season==null) {
+			node.appendChild(extraNode);
+		}
+		else {
+			node.insertBefore(extraNode, season);
+		}
+
+
 	}
 
 	protected void readExtraParams(IVideoExtra video, Node videoNode) throws XMLParserException, NotInStoreException {
@@ -828,6 +842,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			episode.setImageURL(imageUrl);
 			readActors(episodeNode, episode);
 			readWriters(episode, episodeNode);
+			readEpisodeNumbers(episode,episodeNode);
 			parseRating(episode, (Element) episodeNode);
 			readDirectors(episode, episodeNode);
 			readFiles(episode, (Element) episodeNode, rootMediaDir);
@@ -835,6 +850,27 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			throw new NotInStoreException();
 		}
 
+	}
+
+	private void readEpisodeNumbers(IEpisode episode, Node episodeNode) throws XMLParserException {
+		Set<Integer> episodes = new HashSet<Integer>();
+
+		for (Node node : selectNodeList(episodeNode, "episodeNum")) { //$NON-NLS-1$
+			String strNum = ((Element) node).getAttribute("number"); //$NON-NLS-1$
+			episodes.add(Integer.valueOf(strNum));
+		}
+		episode.setEpisodes(episodes);
+	}
+
+	private void writeEpisodeNumbers(Element node, IEpisode episode) {
+		if (episode.getEpisodes()!=null) {
+			Document doc = node.getOwnerDocument();
+			for (Integer value : episode.getEpisodes()) {
+				Element episodeNumNode = doc.createElement("episodeNum"); //$NON-NLS-1$
+				episodeNumNode.setAttribute("number", String.valueOf(value)); //$NON-NLS-1$
+				node.appendChild(episodeNumNode);
+			}
+		}
 	}
 
 	private ISeason getSeasonFromCache(int seasonNum, IShow show, Document doc) throws StoreException,
@@ -1424,30 +1460,35 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document cache = getCache(rootMediaDirectory);
 		try {
 			Element storeNode = getStoreNode(cache);
-
+			boolean upgraded = false;
 			StoreVersion currentVersion = getCurrentVersion(storeNode);
-			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
+			if (currentVersion.compareTo(new StoreVersion(new Version("2.1"),3))<0) { //$NON-NLS-1$
 				try {
 					upgrade20to21(mediaDirectory,cache,storeNode);
+					upgradeRevision22(mediaDirectory,cache,storeNode);
+//					upgradeRevisionTo21_3(mediaDirectory, cache, storeNode);
+					fixEntraNodes(mediaDirectory,cache,storeNode);
 				} catch (StoreException e) {
 					throw e;
 				} catch (StanwoodException e) {
 					throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 				}
-				writeUpgradedStore(rootMediaDirectory, storeNode);
+				currentVersion = new StoreVersion(new Version("2.1"),3); //$NON-NLS-1$
+				upgraded = true;
 			}
-			else if (currentVersion.getRevision() < 2) {
-				upgradeRevision21(mediaDirectory,cache,storeNode);
-				writeUpgradedStore(rootMediaDirectory, storeNode);
-			}
-			else if (currentVersion.getRevision() < STORE_VERSION.getRevision()) {
+			if (currentVersion.getVersion().compareTo(STORE_VERSION.getVersion())<0) {
 				try {
-					upgradeRevisionTo21_3(mediaDirectory,cache,storeNode);
+					upgrade21to22(mediaDirectory,cache,storeNode);
 				} catch (StoreException e) {
 					throw e;
 				} catch (StanwoodException e) {
 					throw new StoreException(Messages.getString("XMLStore2.UnableUpdateStore"),e); //$NON-NLS-1$
 				}
+//				currentVersion = STORE_VERSION;
+				upgraded = true;
+			}
+
+			if (upgraded) {
 				writeUpgradedStore(rootMediaDirectory, storeNode);
 			}
 		} catch (XMLParserException e) {
@@ -1455,6 +1496,42 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
+
+	private void fixEntraNodes(MediaDirectory mediaDirectory, Document cache,
+			Element storeNode) {
+		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
+		if (dirConfig.getMode()==Mode.TV_SHOW) {
+			NodeList children = storeNode.getChildNodes();
+
+			for (int i=0;i<children.getLength();i++) {
+				if (children.item(i).getNodeName().equals("show")) { //$NON-NLS-1$
+					Element showEl = (Element) children.item(i);
+					XMLShow show = new XMLShow(showEl);
+					List<Certification> certs = show.getCertifications();
+					Map<String, String> extraInfo = show.getExtraInfo();
+					NodeList showChildren = showEl.getChildNodes();
+					Map<String,Node> nodes = new HashMap<String,Node>();
+					for (int j=0;j<showChildren.getLength();j++) {
+						Node showChild = showChildren.item(j);
+						String name = showChild.getNodeName();
+//						if (name.equals("certifications") || //$NON-NLS-1$
+//						    name.equals("extra") ) { //$NON-NLS-1$
+						if (name.equals("certifications")) { //$NON-NLS-1$
+							if (nodes.get(name)!=null) {
+								showChild.getParentNode().removeChild(showChild);
+							}
+							else {
+								nodes.put(name,showChild);
+								deleteNode((Element)showChild,null);
+							}
+						}
+					}
+					show.setCertifications(certs);
+					show.setExtraInfo(extraInfo);
+				}
+			}
+		}
+	}
 
 	protected StoreVersion getCurrentVersion(Element storeNode) {
 		StoreVersion currentVersion = new StoreVersion(new Version("2.0"),1); //$NON-NLS-1$
@@ -1479,6 +1556,34 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 
 		writeCache(file, upgraded);
+	}
+
+	private void upgrade21to22(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
+		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
+		File rootMediaDir = dirConfig.getMediaDir();
+		log.info(MessageFormat.format(Messages.getString("XMLStore2.UpgradingStore"),rootMediaDir,STORE_VERSION.toString())); //$NON-NLS-1$
+		if (dirConfig.getMode()==Mode.TV_SHOW) {
+			for (Node episodeNode : selectNodeList(storeNode, "//episode")) { //$NON-NLS-1$
+				Element seasonNode = (Element) episodeNode.getParentNode();
+				Element showNode = (Element) seasonNode.getParentNode();
+				XMLShow show = new XMLShow(showNode);
+				XMLSeason season = new XMLSeason(show,seasonNode);
+				XMLEpisode episode = new XMLEpisode(season, (Element)episodeNode, rootMediaDir);
+				Set<Integer> epsiodes = new HashSet<Integer>();
+				epsiodes.add(episode.getEpisodeNumber());
+				episode.setEpisodes(epsiodes);
+			}
+			for (Node episodeNode : selectNodeList(storeNode, "//special")) { //$NON-NLS-1$
+				Element seasonNode = (Element) episodeNode.getParentNode();
+				Element showNode = (Element) seasonNode.getParentNode();
+				XMLShow show = new XMLShow(showNode);
+				XMLSeason season = new XMLSeason(show,seasonNode);
+				XMLEpisode episode = new XMLEpisode(season, (Element)episodeNode, rootMediaDir);
+				Set<Integer> epsiodes = new HashSet<Integer>();
+				epsiodes.add(episode.getEpisodeNumber());
+				episode.setEpisodes(epsiodes);
+			}
+		}
 	}
 
 	private void upgrade20to21(MediaDirectory mediaDirectory,Document doc,Element storeNode) throws StanwoodException {
@@ -1575,7 +1680,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void upgradeRevision21(MediaDirectory mediaDirectory,
+	private void upgradeRevision22(MediaDirectory mediaDirectory,
 			Document cache, Element storeNode) {
 		MediaDirConfig dirConfig = mediaDirectory.getMediaDirConfig();
 		File rootMediaDir = dirConfig.getMediaDir();

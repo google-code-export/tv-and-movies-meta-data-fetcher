@@ -21,7 +21,7 @@ import org.stanwood.media.util.Version;
 /**
  * Used to represent store version
  */
-public class StoreVersion {
+public class StoreVersion implements Comparable<StoreVersion> {
 
 	private Version version;
 	private int revision;
@@ -72,6 +72,56 @@ public class StoreVersion {
 	@Override
 	public String toString() {
 		return version.toString()+" "+revision; //$NON-NLS-1$
+	}
+
+	/**
+	 * Used to compare this store version to anther
+	 * @param storeVersion The store version to compare to
+	 * @return a negative integer, zero, or a positive integer as this object
+     *		is less than, equal to, or greater than the specified object.
+	 */
+	@Override
+	public int compareTo(StoreVersion storeVersion) {
+		if (this.getVersion().compareTo(storeVersion.getVersion())==0) {
+			return Integer.valueOf(this.getRevision()).compareTo(storeVersion.getRevision());
+		}
+		return this.getVersion().compareTo(storeVersion.getVersion());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + revision;
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		StoreVersion other = (StoreVersion) obj;
+		if (revision != other.revision) {
+			return false;
+		}
+		if (version == null) {
+			if (other.version != null) {
+				return false;
+			}
+		} else if (!version.equals(other.version)) {
+			return false;
+		}
+		return true;
 	}
 
 

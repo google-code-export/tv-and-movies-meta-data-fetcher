@@ -20,9 +20,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.stanwood.media.model.Certification;
 import org.stanwood.media.model.IShow;
@@ -132,14 +134,18 @@ public class XMLShow extends XMLParser implements IShow {
 	/** {@inheritDoc} */
 	@Override
 	public void setExtraInfo(Map<String, String> params) {
+		Element extraNode = getElement(showNode,"extra"); //$NON-NLS-1$
 		if (params!=null) {
-			Element extraNode = getElement(showNode,"extra"); //$NON-NLS-1$
-
+//			deleteNode(extraNode, "param"); //$NON-NLS-1$
+			Set<String>writtenKeys = new HashSet<String>();
 			for (Entry<String, String> e : params.entrySet()) {
-				Element param = doc.createElement("param"); //$NON-NLS-1$
-				param.setAttribute("key",e.getKey()); //$NON-NLS-1$
-				param.setAttribute("value", e.getValue()); //$NON-NLS-1$
-				extraNode.appendChild(param);
+				if (writtenKeys.contains(e.getKey())) {
+					Element param = doc.createElement("param"); //$NON-NLS-1$
+					param.setAttribute("key",e.getKey()); //$NON-NLS-1$
+					param.setAttribute("value", e.getValue()); //$NON-NLS-1$
+					extraNode.appendChild(param);
+					writtenKeys.add(e.getKey());
+				}
 			}
 		}
 	}
@@ -349,13 +355,14 @@ public class XMLShow extends XMLParser implements IShow {
 		Element certificationsNode = getElement(showNode,"certifications"); //$NON-NLS-1$
 		deleteNode(certificationsNode, "certification"); //$NON-NLS-1$
 		if (certifications!=null) {
-			for (Certification cert : certifications) {
+			Set<Certification> certsSoted = new HashSet<Certification>();
+			certsSoted.addAll(certifications);
+			for (Certification cert : certsSoted) {
 				Element certificationNode = doc.createElement("certification"); //$NON-NLS-1$
 				certificationNode.setAttribute("type", cert.getType()); //$NON-NLS-1$
 				certificationNode.setAttribute("certification", cert.getCertification()); //$NON-NLS-1$
 				certificationsNode.appendChild(certificationNode);
 			}
 		}
-		certificationsNode.appendChild(certificationsNode);
 	}
 }
