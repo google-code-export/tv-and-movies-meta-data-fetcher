@@ -176,6 +176,9 @@ public class TestXMLStore2 {
 	        Assert.assertEquals("2006-10-11",df.format(episode.getDate()));
 	        Assert.assertNull(episode.getImageURL());
 	        Assert.assertFalse(episode.isSpecial());
+	        Assert.assertEquals(2,episode.getEpisodes().size());
+	        Assert.assertTrue(episode.getEpisodes().contains(Integer.valueOf(2)));
+	        Assert.assertTrue(episode.getEpisodes().contains(Integer.valueOf(3)));
 
 	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");
 			season = xmlStore.getSeason(dir,episodeFile,show, 2);
