@@ -3,9 +3,12 @@ package org.stanwood.media.actions.seendb;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -58,6 +61,20 @@ public class FileSeenDatabase extends XMLParser implements ISeenDatabase {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Uses to get a list of seen entries for a media directory
+	 * @param mediaDirectory The media directory
+	 * @return The entries
+	 */
+	@Override
+	public Collection<SeenEntry>getEntries() {
+		List<SeenEntry>result = new ArrayList<SeenEntry>();
+		for (Entry<File,SortedSet<SeenEntry>> e : entries.entrySet()) {
+			result.addAll(e.getValue());
+		}
+		return result;
 	}
 
 	/**

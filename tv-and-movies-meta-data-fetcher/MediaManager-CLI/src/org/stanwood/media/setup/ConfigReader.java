@@ -91,6 +91,7 @@ public class ConfigReader extends BaseConfigReader {
 	private File nativeFolder;
 
 	private String xbmcAddonSite = DEFAULT_XBMC_ADDON_DIR;
+	private SeenDatabaseConfig seenDBConfig;
 
 	/** The default strip tokens */
 	public final static List<Pattern> DEFAULT_STRIP_TOKENS;
@@ -132,8 +133,36 @@ public class ConfigReader extends BaseConfigReader {
 			parseWatchDirs(doc);
 			parsePlguins(doc);
 			parseResources(doc);
+			parseSeenDatabase(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG"),e); //$NON-NLS-1$
+		}
+	}
+
+	private void parseSeenDatabase(Document doc) throws XMLParserException, ConfigException {
+		if (selectSingleNode(doc,"/mediaManager/seenDatabase")!=null) { //$NON-NLS-1$
+			SeenDatabaseConfig seenDBConfig = new SeenDatabaseConfig();
+			for (Node node : selectNodeList(doc,"/mediaManager/seenDatabase")) { //$NON-NLS-1$
+				Element seenDBNode = (Element) node;
+				String resourceId = seenDBNode.getAttribute("resourceId"); //$NON-NLS-1$
+				if (resourceId.length()>0) {
+					seenDBConfig.setResourceId(resourceId);
+				}
+			}
+			this.seenDBConfig = seenDBConfig;
+		}
+		else {
+			this.seenDBConfig = null;
+		}
+	}
+
+	private void writeSeenDatabase(StringBuilder document, IProgressMonitor progress) {
+		if (seenDBConfig!=null) {
+			document.append("  <seenDatabase"); //$NON-NLS-1$
+			if (seenDBConfig.getResourceId()!=null) {
+				document.append(" resourceId=\""+seenDBConfig.getResourceId()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			document.append(" />"); //$NON-NLS-1$
 		}
 	}
 
@@ -881,7 +910,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is a problem
 	 */
 	public void writeConfig(IProgressMonitor monitor,File file) throws  ConfigException {
-		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+6);
+		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+7);
 
 		try {
 			StringBuilder document = new StringBuilder();
@@ -897,6 +926,8 @@ public class ConfigReader extends BaseConfigReader {
 			writeWatchDirs(document,progress);
 			progress.worked(1);
 			writeDBResources(document,progress);
+			progress.worked(1);
+			writeSeenDatabase(document,progress);
 			document.append("</mediaManager>"+FileHelper.LS); //$NON-NLS-1$
 			Document doc = XMLParser.strToDom(document.toString(),SCHEMA_NAME);
 			XMLParser.writeXML(file, doc);
@@ -915,7 +946,15 @@ public class ConfigReader extends BaseConfigReader {
 	 * Used to get the database resources
 	 * @return the database resources
 	 */
-	public Map<String,DBResource> getDatabaseResoruces() {
+	public Map<String,DBResource> getDatabaseResources() {
 		return databaseResources;
+	}
+
+	/**
+	 * Used to get the seen database configuration. If none configured, then this returns NULL
+	 * @return The seen database configuration
+	 */
+	public SeenDatabaseConfig getSeenDatabase() {
+		return seenDBConfig;
 	}
 }

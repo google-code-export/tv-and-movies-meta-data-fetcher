@@ -17,6 +17,11 @@
 	  					<xs:attribute name="addonSite" type="xs:string"/>
   					</xs:complexType>
   				</xs:element>
+  				<xs:element name="seenDatabase" minOccurs="0" maxOccurs="1">
+  					<xs:complexType>
+  						<xs:attribute name="resourceId" type="xs:string"/>
+  					</xs:complexType>
+  				</xs:element>
   				<xs:element name="global" minOccurs="0" maxOccurs="1">
   					<xs:complexType>  							  				
   						<xs:choice minOccurs="0" maxOccurs="unbounded">

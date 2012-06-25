@@ -33,9 +33,10 @@ import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.command.ExecuteSystemCommandActionInfo;
 import org.stanwood.media.actions.podcast.PodCastActionInfo;
 import org.stanwood.media.actions.rename.RenameActionInfo;
+import org.stanwood.media.actions.seendb.DatabaseSeenDatabase;
+import org.stanwood.media.actions.seendb.FileSeenDatabase;
 import org.stanwood.media.actions.seendb.ISeenDatabase;
 import org.stanwood.media.actions.seendb.SeenDBException;
-import org.stanwood.media.actions.seendb.SeenDatabaseFactory;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.info.IMediaFileInfo;
@@ -111,7 +112,7 @@ public class Controller {
 	 * @return the database resources
 	 */
 	public Map<String,DBResource>getDatabaseResources() {
-		return configReader.getDatabaseResoruces();
+		return configReader.getDatabaseResources();
 	}
 
 	/**
@@ -448,8 +449,16 @@ public class Controller {
 	 */
 	public ISeenDatabase getSeenDB() throws ConfigException {
 		if (seenDb==null) {
-			seenDb= SeenDatabaseFactory.createSeenDatabase(getConfigDir());
 			try {
+				if (configReader.getSeenDatabase()!=null &&
+					configReader.getSeenDatabase().getResourceId()!=null) {
+					DBResource resource = getDatabaseResources().get(configReader.getSeenDatabase().getResourceId());
+					seenDb = new DatabaseSeenDatabase(resource);
+
+				}
+				else {
+					seenDb = new FileSeenDatabase(getConfigDir());
+				}
 				seenDb.read(new NullProgressMonitor());
 			} catch (SeenDBException e) {
 				throw new ConfigException(Messages.getString("Controller.UNABLE_READ_SEEN_DB"),e); //$NON-NLS-1$
