@@ -417,6 +417,13 @@ public class XMLParser {
 			    		}
 			    		return new InputSource(stream);
 			        }
+			    	else if (publicId.equals("-//STANWOOD//DTD XMLStore 2.2//EN")) { //$NON-NLS-1$
+			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.2.dtd"); //$NON-NLS-1$
+			    		if (stream==null) {
+			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
+			    		}
+			    		return new InputSource(stream);
+			        }
 			    	else if (publicId.equals("-//Hibernate/Hibernate Configuration DTD 3.0//EN")) { //$NON-NLS-1$
 			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/hibernate-configuration-3.0.dtd"); //$NON-NLS-1$
 			    		if (stream==null) {
@@ -652,14 +659,13 @@ public class XMLParser {
 	protected void deleteNode(Element parent, String name) {
 		NodeList children = parent.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
-			if (children.item(i).getNodeName().equals(name)) {
+			if (name==null || children.item(i).getNodeName().equals(name)) {
 				children.item(i).getParentNode().removeChild(children.item(i));
-				return;
 			}
 		}
 	}
 
-	protected Element getElement(Element parent, String name) {
+	protected Element getElement(Node parent, String name) {
 		NodeList children = parent.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			if (children.item(i).getNodeName().equals(name)) {

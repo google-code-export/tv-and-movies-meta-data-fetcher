@@ -18,6 +18,7 @@ package org.stanwood.media.model;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * A base interface for all episodes
@@ -41,6 +42,19 @@ public interface IEpisode extends IVideo, IVideoActors, IVideoRating {
 	 * @param episodeNumner
 	 */
 	public void setEpisodeNumber(int episodeNumner);
+
+
+	/**
+	 * Used to get the episode numbers that this episode contains
+	 * @return the episode numbers that this episode contains
+	 */
+	public Set<Integer> getEpisodes();
+
+	/**
+	 * Used to set the episode numbers that this episode contains
+	 * @param epsiodes the episode numbers that this episode contains
+	 */
+	public void setEpisodes(Set<Integer> epsiodes);
 
 	/**
 	 * Sets the air date of the show

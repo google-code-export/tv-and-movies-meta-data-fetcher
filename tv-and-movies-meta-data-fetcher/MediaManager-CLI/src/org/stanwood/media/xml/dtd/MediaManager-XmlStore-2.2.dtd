@@ -1,0 +1,149 @@
+<!--
+	This is the DTD that describes MediaManager 
+	(http://code.google.com/p/tv-and-movies-meta-data-fetcher/) 
+	XMLStore file format. 
+-->
+<!ELEMENT store (show|film)*>
+
+<!ATTLIST store
+    version  CDATA     #REQUIRED
+	revision NMTOKENS  #REQUIRED
+>
+
+<!ELEMENT show (description|certifications|genres|extra|season)*>
+
+<!ELEMENT genres (genre*)>
+
+<!ATTLIST show
+  id       CDATA     #REQUIRED     
+  imageUrl CDATA     #IMPLIED
+  name     CDATA     #IMPLIED
+  sourceId CDATA     #REQUIRED
+  url      CDATA     #IMPLIED
+  studio   CDATA     #IMPLIED
+>
+
+<!ELEMENT description (short?,long?)>
+
+<!ELEMENT short (#PCDATA)>
+
+<!ELEMENT long (#PCDATA)>
+
+<!ELEMENT season (episode|special)*>
+
+<!ATTLIST season
+  url          CDATA   #IMPLIED
+  number       CDATA   #REQUIRED
+>
+
+<!ELEMENT episodeNum EMPTY>
+<!ATTLIST episodeNum
+	number           CDATA  #REQUIRED
+>
+
+<!ELEMENT episode (episodeNum+,summary?,rating?,directors?,writers?,actors?,file*)>
+
+
+<!ATTLIST episode
+  episodeId          CDATA  #REQUIRED
+  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED    
+  title              CDATA  #IMPLIED
+  url                CDATA  #IMPLIED
+  imageUrl           CDATA  #IMPLIED
+  showEpisodeNumber  CDATA  #IMPLIED
+>
+
+<!ELEMENT special (episodeNum+,summary?,rating?,directors?,writers?,actors?,file*)>
+
+<!ATTLIST special
+  episodeId          CDATA  #REQUIRED
+  firstAired         CDATA  #IMPLIED
+  number             CDATA  #REQUIRED  
+  title              CDATA  #IMPLIED
+  url                CDATA  #IMPLIED
+  imageUrl           CDATA  #IMPLIED
+  showEpisodeNumber  CDATA  #IMPLIED
+>
+
+<!ELEMENT summary (#PCDATA)>
+<!ELEMENT film (description?,rating?,country?,genres?,certifications?,directors?,writers?,actors?,chapters?,file*)>
+
+<!ATTLIST film
+	id            CDATA     #REQUIRED
+	imageUrl      CDATA     #IMPLIED 
+	rating        CDATA     #IMPLIED
+	releaseDate   CDATA     #IMPLIED
+	sourceId      CDATA     #IMPLIED
+	title         CDATA     #IMPLIED
+	url           CDATA     #IMPLIED
+	studio        CDATA     #IMPLIED
+>
+
+<!ELEMENT country (#PCDATA)>
+
+<!ELEMENT genre EMPTY>
+
+<!ATTLIST genre
+  name      CDATA              #REQUIRED
+  preferred (true|false) "false"
+>
+
+<!ELEMENT directors (director*)>
+
+<!ELEMENT director (#PCDATA)>
+
+<!ELEMENT writers (writer*)>
+
+<!ELEMENT writer (#PCDATA)>
+
+<!ELEMENT actors (actor*)>
+
+<!ELEMENT extra (param*)>
+
+<!ELEMENT param EMPTY>
+
+<!ATTLIST param
+  key            CDATA    #REQUIRED
+  value          CDATA    #REQUIRED
+>
+
+<!ELEMENT rating EMPTY>
+
+<!ATTLIST rating
+  numberOfVotes  NMTOKENS    #REQUIRED
+  value          CDATA       #REQUIRED
+>
+
+<!ELEMENT actor EMPTY>
+
+<!ATTLIST actor
+  name     CDATA    #REQUIRED
+  role     CDATA    #IMPLIED
+>
+
+<!ELEMENT file EMPTY>
+
+<!ATTLIST file
+    location CDATA #REQUIRED
+    orginalLocation CDATA #IMPLIED
+    part NMTOKENS #IMPLIED
+>
+
+<!ELEMENT chapters (chapter*)>
+
+<!ELEMENT chapter EMPTY>
+
+<!ATTLIST chapter
+    name    CDATA    #REQUIRED
+	number  NMTOKENS #REQUIRED
+>
+
+<!ELEMENT certifications (certification*)>
+
+<!ELEMENT certification EMPTY>
+
+<!ATTLIST certification
+  certification CDATA #REQUIRED
+  type CDATA          #REQUIRED
+>

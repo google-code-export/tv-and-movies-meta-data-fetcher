@@ -220,7 +220,7 @@ public class XMLFilm extends XMLVideo implements IFilm {
 				certificationsNode.appendChild(certificationNode);
 			}
 		}
-		certificationsNode.appendChild(certificationsNode);
+//		certificationsNode.appendChild(certificationsNode);
 	}
 
 	/** {@inheritDoc} */

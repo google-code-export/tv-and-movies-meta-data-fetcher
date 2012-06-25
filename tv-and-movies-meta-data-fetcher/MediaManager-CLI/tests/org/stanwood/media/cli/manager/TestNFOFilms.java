@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.source.xbmc.XBMCSource;
@@ -69,6 +70,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testNFOFilmsRenaming() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		File mediaDir = FileHelper.createTmpDir("films");
 		try {
 			createFiles(mediaDir);

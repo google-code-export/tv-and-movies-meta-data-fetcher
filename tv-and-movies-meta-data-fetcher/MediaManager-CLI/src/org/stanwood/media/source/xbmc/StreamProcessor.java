@@ -13,6 +13,7 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.media.collections.LRUMapCache;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
@@ -30,6 +31,11 @@ public abstract class StreamProcessor {
 
 	private Stream stream = null;
 	private String forcedContentType = null;
+
+	private String cacheKey;
+
+	// TODO find way of storeing more entries
+	static private LRUMapCache<String, String> cache = new LRUMapCache<String,String>(100);
 
 	private static Map<String,String> HTML_ENTITIES;
 	  static {
@@ -59,28 +65,6 @@ public abstract class StreamProcessor {
 	    HTML_ENTITIES.put("&euro;","\u20a0"); //$NON-NLS-1$ //$NON-NLS-2$
 	  }
 
-//	/**
-//	 * Used to create a instance of the class.
-//	 * @param stream The stream to be processed.
-//	 * @param forcedContentType Used to force the stream content type and ignore what the
-//	 *                          web site reports.
-//	 */
-//	public StreamProcessor(Stream stream,String forcedContentType) {
-//		if (stream==null || stream.getInputStream()==null) {
-//			throw new NullPointerException(Messages.getString("StreamProcessor.STREAM_NULL")); //$NON-NLS-1$
-//		}
-//		this.stream = stream;
-//		this.forcedContentType = forcedContentType;
-//	}
-//
-//	/**
-//	 * Used to create a instance of the class.
-//	 * @param stream The stream to be processed.
-//	 */
-//	public StreamProcessor(Stream stream) {
-//		this(stream,null);
-//	}
-
 	/**
 	 * The constructor
 	 * @param cacheKey The cached key associated with this stream
@@ -88,6 +72,7 @@ public abstract class StreamProcessor {
 	 */
 	public StreamProcessor(String cacheKey,String forcedContentType) {
 		this.forcedContentType = forcedContentType;
+		this.cacheKey = cacheKey;
 	}
 
 	/**
@@ -107,7 +92,6 @@ public abstract class StreamProcessor {
 		}
 		return stream;
 	}
-
 
 	/**
 	 * Called to process the stream. This causes the method {@link #processContents(String)} to be
@@ -144,6 +128,14 @@ public abstract class StreamProcessor {
 	}
 
 	private void processStream() throws SourceException, SocketTimeoutException {
+		String cacheValue = cache.get(cacheKey);
+		if (cacheValue!=null) {
+			if (log.isDebugEnabled()) {
+				log.debug("Cache hit for key "+cacheKey);
+			}
+			processContents(cacheValue);
+			return;
+		}
 		try {
 			this.stream = openStream();
 
@@ -179,6 +171,8 @@ public abstract class StreamProcessor {
 	                }
 
 	                if (contents.length()>0) {
+	                	//TODO cache this also
+//	                	cache(cacheKey,contents.toString());
 	                	processContents(contents.toString());
 	                }
 	            }
@@ -190,57 +184,41 @@ public abstract class StreamProcessor {
 					//TODO check the encoding
 					encoding = "UTF-8"; //$NON-NLS-1$
 				}
-//					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//					dbf.setValidating(false);
-//					DocumentBuilder db = null;
-//					try {
-//						db = dbf.newDocumentBuilder();
-//						Document dom = db.parse(stream.getInputStream());
-//						data = XMLParser.domToStr(dom);
-//					}
-//					catch (ParserConfigurationException e){
-//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-//					} catch (SAXException e) {
-//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-//					} catch (XMLParserException e) {
-//						throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
-//					}
-//				}
-//				else {
-					Reader r = null;
-					StringWriter sw = null;
+				Reader r = null;
+				StringWriter sw = null;
+				try {
 					try {
-						try {
-							r = new InputStreamReader(stream.getInputStream(),encoding);
-						}
-						catch (NullPointerException ee) {
-							throw ee;
-						}
-						sw = new StringWriter();
+						r = new InputStreamReader(stream.getInputStream(),encoding);
+					}
+					catch (NullPointerException ee) {
+						throw ee;
+					}
+					sw = new StringWriter();
 
-						char[] buffer = new char[1024];
-						for (int n; (n = r.read(buffer)) != -1; ) {
-							sw.write(buffer, 0, n);
-						}
-						String str = sw.toString();
-						if (str.length()>0) {
-							data = str;
+					char[] buffer = new char[1024];
+					for (int n; (n = r.read(buffer)) != -1; ) {
+						sw.write(buffer, 0, n);
+					}
+					String str = sw.toString();
+					if (str.length()>0) {
+						data = str;
 
-							if (contentType.equals("text/html")) { //$NON-NLS-1$
-								data = unescapeHTML(data);
-							}
+						if (contentType.equals("text/html")) { //$NON-NLS-1$
+							data = unescapeHTML(data);
 						}
 					}
-					finally {
-						if (sw!=null) {
-							sw.close();
-						}
-						if (r!=null) {
-							r.close();
-						}
+				}
+				finally {
+					if (sw!=null) {
+						sw.close();
 					}
-//				}
+					if (r!=null) {
+						r.close();
+					}
+				}
+
 				if (data!=null) {
+					cache(cacheKey,data);
 					processContents(data);
 				}
 			}
@@ -276,6 +254,13 @@ public abstract class StreamProcessor {
 				stream = null;
 			}
 		}
+	}
+
+	private static void cache(String cacheKey,String value) {
+		if (log.isDebugEnabled()) {
+			log.debug("Caching key "+cacheKey); //$NON-NLS-1$
+		}
+		cache.put(cacheKey,value);
 	}
 
 

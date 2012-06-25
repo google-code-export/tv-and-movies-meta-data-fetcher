@@ -150,6 +150,12 @@ public class TestTagChimpSource {
 		Assert.assertEquals("Check chapter name", "Official Statement",chapters.get(15).getName());
 		Assert.assertEquals("Check chapter number", 17,chapters.get(16).getNumber());
 		Assert.assertEquals("Check chapter name", "End Credits",chapters.get(16).getName());
+
+		// Test cached film
+		film = source.getFilm( FILM_ID_IRON_MAN,new URL("http://www.tagchimp.com/ape/search.php?token=11151451274D8F94339E891&type=lookup&id=39752"),null);
+		Assert.assertEquals("Check id",FILM_ID_IRON_MAN,film.getId());
+		Assert.assertEquals("Check title","Iron Man",film.getTitle().trim());
+		Assert.assertEquals("Check summary","When wealthy industrialist Tony Stark (Robert Downey Jr.) is forced to build an armored suit after a life-threatening incident, he ultimately decides to use its technology to fight against evil.",film.getSummary());
 	}
 
 	private TagChimpSource getSource() {

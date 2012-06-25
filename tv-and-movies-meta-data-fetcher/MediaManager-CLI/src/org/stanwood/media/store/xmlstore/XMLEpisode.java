@@ -23,11 +23,16 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.ISeason;
+import org.stanwood.media.xml.XMLParserException;
 import org.stanwood.media.xml.XMLParserNotFoundException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Episode information for the store {@link XMLStore2}, that access the information from the XML File
@@ -171,6 +176,48 @@ public class XMLEpisode extends XMLVideo implements IEpisode {
 			throw new RuntimeException(e.getMessage(),e);
 		}
 		return url;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Set<Integer> getEpisodes() {
+		Set<Integer> episodes = new HashSet<Integer>();
+
+		try {
+			for (Node node : selectNodeList(episodeNode, "episodeNum")) { //$NON-NLS-1$
+				String strNum = ((Element) node).getAttribute("number"); //$NON-NLS-1$
+				episodes.add(Integer.valueOf(strNum));
+			}
+		} catch (XMLParserNotFoundException e) {
+			return null;
+		}
+		catch (XMLParserException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
+
+		return episodes;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setEpisodes(Set<Integer> epsiodes) {
+		try {
+			for (Node node : selectNodeList(episodeNode, "episodeNum")) { //$NON-NLS-1$
+				node.getParentNode().removeChild(node);
+			}
+
+			if (epsiodes!=null) {
+				Document doc = episodeNode.getOwnerDocument();
+				for (Integer value : epsiodes) {
+					Element episodeNumNode = doc.createElement("episodeNum"); //$NON-NLS-1$
+					episodeNumNode.setAttribute("number", String.valueOf(value)); //$NON-NLS-1$
+					episodeNode.insertBefore(episodeNumNode, episodeNode.getFirstChild());
+				}
+			}
+		}
+		catch (XMLParserException e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
 	}
 
 }
