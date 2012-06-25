@@ -7,9 +7,17 @@ Update Documents
 	* Spell check document
 	* Document how to add other database drivers
 Allow the seen DB to use the database resource
+    * Move the code from the FileDatabaseStore that creates the initial DB to a generic place so it can be used by the seenDB
 	* Add config option for the seen DB to be used.
+		* Make the seen DB use it
 	* Migrate the previous SeenDB entries to the newly configured one
 Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore	
+Added tool to print the database schema
+Allow TV episodes to contain more than one episode
+	- Add rename pattern for the other episodes in the file
+	- Update stores to reflect this
+	- Make methods that query for a episode by it's number able to return episodes with multiples in them
+
 
 Version 2.3
 -----------
@@ -54,8 +62,6 @@ Add ability to create reports.
 	- Reports of new media added to all media dir's
 	- Reports of files that media details could not be found for
 	- Most recently aired report	
-Allow TV episodes to contain more than one episode
-	- Add rename pattern for the other episodes in the file
 Add support for finding Special Episode information and renaming the files	 
 Add support for Music Videos
 Add support for Music
