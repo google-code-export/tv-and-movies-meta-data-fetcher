@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.database;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.SchemaCheck;
+import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.xml.XMLParser;
 import org.stanwood.media.xml.XMLParserException;
 import org.w3c.dom.Document;
@@ -45,6 +48,10 @@ public class DBHelper {
 
 	}
 
+	/**
+	 * Used to get a instance of the helper
+	 * @return a instance of the helper
+	 */
 	public synchronized static DBHelper getInstance() {
 		if (instance==null) {
 			instance = new DBHelper();
@@ -52,6 +59,12 @@ public class DBHelper {
 		return instance;
 	}
 
+	/**
+	 * Used to get the database session for a given resource
+	 * @param resource The resource
+	 * @return The database session
+	 * @throws DatabaseException Thrown if their is a problem
+	 */
 	public synchronized Session getSession(DBResource resource) throws DatabaseException {
 		Session session = sessions.get(resource.getResourceId());
 		if (session == null) {
@@ -143,5 +156,33 @@ public class DBHelper {
 		return configuration;
 	}
 
-
+	/**
+	 * Uses to get the database schema for a given dialect
+	 * @param dialect The dialect
+	 * @return The schema
+	 * @throws DatabaseException Thrown if their is a problem with hibernate
+	 */
+	public String getSchema(String dialect) throws DatabaseException {
+		try {
+			Configuration config = getConfiguration("","","",dialect,SchemaCheck.NONE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			SchemaExport exporter = new SchemaExport(config);
+			exporter.setFormat(true);
+			File file = FileHelper.createTempFile("schema", ".sql");  //$NON-NLS-1$//$NON-NLS-2$
+			try {
+				exporter.setOutputFile(file.getAbsolutePath());
+				exporter.create(true, false);
+				return FileHelper.readFileContents(file);
+			}
+			finally {
+				FileHelper.delete(file);
+			}
+		}
+		catch (HibernateException e) {
+			throw new DatabaseException("Unable to print database schema",e);
+		} catch (XMLParserException e) {
+			throw new DatabaseException("Unable to print database schema",e);
+		} catch (IOException e) {
+			throw new DatabaseException("Unable to print database schema",e);
+		}
+	}
 }
