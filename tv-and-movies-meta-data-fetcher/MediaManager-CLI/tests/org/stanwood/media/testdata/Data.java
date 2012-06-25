@@ -23,7 +23,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -196,6 +198,10 @@ public class Data {
 		episode2.setTitle("Many Happy Returns");
 		episode2.setRating(new Rating(9.5F,2355));
 		episode2.setEpisodeId("800578");
+		Set<Integer> epsiodes = new HashSet<Integer>();
+		epsiodes.add(2);
+		epsiodes.add(3);
+		episode2.setEpisodes(epsiodes);
 		result.add(new EpisodeData(episode2,episodeFile));
 
 		season = new Season(show,2);

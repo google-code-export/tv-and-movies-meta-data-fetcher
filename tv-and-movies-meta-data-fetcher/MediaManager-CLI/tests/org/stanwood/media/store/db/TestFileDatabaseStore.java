@@ -126,6 +126,9 @@ public class TestFileDatabaseStore {
 	        Assert.assertEquals(1.0F,episode.getRating().getRating(),0);
 	        Assert.assertEquals("http://blah/image.jpg",episode.getImageURL().toExternalForm());
 	        Assert.assertFalse(episode.isSpecial());
+	        Assert.assertEquals(1,episode.getEpisodes().size());
+	        Assert.assertTrue(episode.getEpisodes().contains(Integer.valueOf(1)));
+	        Assert.assertFalse(episode.getEpisodes().contains(Integer.valueOf(3)));
 
 	        episodeFile = episodes.get(1).getFile();
 	        episode = store.getEpisode(dir,episodeFile,season, 2);
@@ -138,6 +141,9 @@ public class TestFileDatabaseStore {
 	        Assert.assertEquals("2006-10-11",df.format(episode.getDate()));
 	        Assert.assertNull(episode.getImageURL());
 	        Assert.assertFalse(episode.isSpecial());
+	        Assert.assertEquals(2,episode.getEpisodes().size());
+	        Assert.assertTrue(episode.getEpisodes().contains(Integer.valueOf(2)));
+	        Assert.assertTrue(episode.getEpisodes().contains(Integer.valueOf(3)));
 
 	        episodeFile = episodes.get(2).getFile();
 //	        episodeFile = new File(eurekaDir,"2x02 - blah.avi");

@@ -11,10 +11,8 @@ Allow the seen DB to use the database resource
 Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore	
 Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
-	- Update stores to reflect this
 	- Make methods that query for a episode by it's number able to return episodes with multiples in them
-	- A tests to XMLStore2 tests for new episodes
-	- Change database store to store episode numbers
+	- Upgrade the searches to be able to find muti episode details
 Cache HTML downloads
 
 Version 2.3
