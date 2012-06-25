@@ -6,17 +6,19 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.collections.LRUMapCache;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.HttpCache;
 import org.stanwood.media.util.Stream;
 
 /**
@@ -34,8 +36,7 @@ public abstract class StreamProcessor {
 
 	private String cacheKey;
 
-	// TODO find way of storeing more entries
-	static private LRUMapCache<String, String> cache = new LRUMapCache<String,String>(100);
+	private HttpCache cache = HttpCache.getInstance();
 
 	private static Map<String,String> HTML_ENTITIES;
 	  static {
@@ -128,12 +129,14 @@ public abstract class StreamProcessor {
 	}
 
 	private void processStream() throws SourceException, SocketTimeoutException {
-		String cacheValue = cache.get(cacheKey);
+		List<String> cacheValue = cache.get(cacheKey);
 		if (cacheValue!=null) {
 			if (log.isDebugEnabled()) {
 				log.debug("Cache hit for key "+cacheKey);
 			}
-			processContents(cacheValue);
+			for (String contents : cacheValue) {
+				processContents(contents);
+			}
 			return;
 		}
 		try {
@@ -146,6 +149,7 @@ public abstract class StreamProcessor {
 			if (stream.getInputStream() instanceof ZipInputStream) {
 				ZipInputStream zis = (ZipInputStream) stream.getInputStream();
 				ZipEntry entry = null;
+				List<String>lcontents = new ArrayList<String>();
 	            while ((entry = zis.getNextEntry())!=null) {
 	            	StringBuilder contents = new StringBuilder();
 	                if (!entry.isDirectory()) {
@@ -171,10 +175,12 @@ public abstract class StreamProcessor {
 	                }
 
 	                if (contents.length()>0) {
-	                	//TODO cache this also
-//	                	cache(cacheKey,contents.toString());
-	                	processContents(contents.toString());
+	                	lcontents.add(contents.toString());
 	                }
+	            }
+	            for (String contents : lcontents) {
+                	cache(cacheKey,lcontents);
+	            	processContents(contents);
 	            }
 			}
 			else {
@@ -218,7 +224,9 @@ public abstract class StreamProcessor {
 				}
 
 				if (data!=null) {
-					cache(cacheKey,data);
+					List<String>lcontents = new ArrayList<String>();
+					lcontents.add(data);
+					cache(cacheKey,lcontents);
 					processContents(data);
 				}
 			}
@@ -256,10 +264,7 @@ public abstract class StreamProcessor {
 		}
 	}
 
-	private static void cache(String cacheKey,String value) {
-		if (log.isDebugEnabled()) {
-			log.debug("Caching key "+cacheKey); //$NON-NLS-1$
-		}
+	private void cache(String cacheKey,List<String> value) {
 		cache.put(cacheKey,value);
 	}
 
