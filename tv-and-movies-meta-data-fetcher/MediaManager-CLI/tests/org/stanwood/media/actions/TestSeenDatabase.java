@@ -48,6 +48,8 @@ public class TestSeenDatabase {
 			Assert.assertFalse(db.isSeen(mediaDir, test2));
 			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test3.avi")));
 			Assert.assertFalse(db.isSeen(mediaDir, new File(mediaDir,"test4.avi")));
+
+			Assert.assertEquals(2,db.getEntries().size());
 		}
 		finally {
 			FileHelper.delete(configDir);

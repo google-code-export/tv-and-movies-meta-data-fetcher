@@ -18,6 +18,9 @@ package org.stanwood.media.database;
 
 import org.stanwood.media.logging.StanwoodException;
 
+/**
+ * This exception is thrown if their is a problem with a database
+ */
 public class DatabaseException extends StanwoodException {
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.

@@ -122,11 +122,25 @@ public class DatabaseSeenDatabase implements ISeenDatabase{
 		trans.commit();
 	}
 
+	/** {@inheritDoc} */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Collection<SeenEntry> getEntries() {
 		Transaction trans = session.beginTransaction();
 		Query q = session.createQuery("from SeenEntry"); //$NON-NLS-1$
-		return q.list();
+		List result = q.list();
+		trans.commit();
+		return result;
 	}
 
+	/**
+	 * Used to count the number of seen entries
+	 * @return The number of seen entries
+	 */
+	public long numberOfEntries() {
+		Transaction trans = session.beginTransaction();
+		Long count = (Long) session.createQuery("select count(*) from SeenEntry").uniqueResult(); //$NON-NLS-1$
+		trans.commit();
+		return count;
+	}
 }

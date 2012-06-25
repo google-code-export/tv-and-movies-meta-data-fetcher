@@ -37,6 +37,7 @@ import org.stanwood.media.actions.seendb.DatabaseSeenDatabase;
 import org.stanwood.media.actions.seendb.FileSeenDatabase;
 import org.stanwood.media.actions.seendb.ISeenDatabase;
 import org.stanwood.media.actions.seendb.SeenDBException;
+import org.stanwood.media.actions.seendb.SeenEntry;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.info.IMediaFileInfo;
@@ -454,7 +455,7 @@ public class Controller {
 					configReader.getSeenDatabase().getResourceId()!=null) {
 					DBResource resource = getDatabaseResources().get(configReader.getSeenDatabase().getResourceId());
 					seenDb = new DatabaseSeenDatabase(resource);
-
+					migrateSeenEntries();
 				}
 				else {
 					seenDb = new FileSeenDatabase(getConfigDir());
@@ -465,5 +466,25 @@ public class Controller {
 			}
 		}
 		return seenDb;
+	}
+
+	protected void migrateSeenEntries() throws ConfigException, SeenDBException {
+		if (((DatabaseSeenDatabase)seenDb).numberOfEntries()==0) {
+			File seenFile = new File(getConfigDir(),"seenFiles.xml"); //$NON-NLS-1$
+			if (seenFile.exists()) {
+				FileSeenDatabase fileSeenDb = new FileSeenDatabase(getConfigDir());
+				log.info("Migrating file seen database to database seen database...");
+				Collection<SeenEntry> entries = fileSeenDb.getEntries();
+				int count = 0;
+				for (SeenEntry e : entries) {
+					seenDb.markAsSeen(null, new File(e.getFileName()));
+					count++;
+					if (count % 200 == 0) {
+						log.info("Migrated "+count+" of "+entries.size()+" seen entries...");
+					}
+				}
+				log.info("Migrated "+count+" of "+entries.size()+" seen entries...");
+			}
+		}
 	}
 }
