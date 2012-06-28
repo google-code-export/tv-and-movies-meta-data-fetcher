@@ -322,8 +322,8 @@ public class MediaDirectory {
 					if (source.getInfo().getId().equals(sourceId)) {
 						episode = source.getEpisode(season, episodeNums.get(0),episodeFile);
 						if (episode != null) {
+							episode.setEpisodes(episodeNums);
 							for (IStore store : stores) {
-								// TODO Handle multiple episode numbers
 								store.cacheEpisode(rootMediaDir,episodeFile, episode);
 							}
 							break;
