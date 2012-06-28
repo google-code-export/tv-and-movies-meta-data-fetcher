@@ -34,17 +34,13 @@ public interface IEpisode extends IVideo, IVideoActors, IVideoRating {
 	/**
 	 * Gets the number of the episode.
 	 * @return The number of the episode
-	 * @deprecated This will be removed, use instead {@link #getEpisodes()}
 	 */
-	@Deprecated
 	public int getEpisodeNumber();
 
 	/**
 	 * Sets the number of the episode.
 	 * @param episodeNumner
-	 * @deprecated This will be removed, use instead {@link #setEpisodes()}
 	 */
-	@Deprecated
 	public void setEpisodeNumber(int episodeNumner);
 
 
