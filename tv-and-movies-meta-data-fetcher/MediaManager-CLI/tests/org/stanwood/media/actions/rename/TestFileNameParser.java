@@ -89,9 +89,6 @@ public class TestFileNameParser {
 			assertEpisode(1,new Integer[]{10,11},dirConfig, new File(dir,"110,111 - The.Show.Title.m4v"),null);
 			assertEpisode(1,new Integer[]{12,13},dirConfig, new File(dir,"112, 113 - The.Show.Title.m4v"),null);
 			assertEpisode(10,new Integer[]{19,20,21},dirConfig, new File(dir,"a.show.S10E19 - 1021 - The.Show.Title.m4v"),null);
-
-
-			// TODO Handle multiple episode numbers
 		}
 		finally {
 			FileHelper.delete(dir);
