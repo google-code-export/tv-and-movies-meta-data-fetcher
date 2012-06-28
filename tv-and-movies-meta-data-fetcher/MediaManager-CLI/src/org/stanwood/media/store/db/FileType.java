@@ -70,6 +70,9 @@ public class FileType implements UserType {
 	public Object nullSafeGet(ResultSet rs, String[] names, Object arg3) throws HibernateException,
 			SQLException {
 		String val =  StringType.INSTANCE.nullSafeGet(rs, names[0]);
+		if (val==null) {
+			return null;
+		}
 		File file = new File(val);
 		return file;
 	}
