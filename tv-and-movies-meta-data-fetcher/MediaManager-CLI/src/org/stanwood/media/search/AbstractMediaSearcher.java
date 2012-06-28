@@ -60,7 +60,7 @@ public abstract class AbstractMediaSearcher implements IMediaSearcher {
 			if (searchDetails!=null) {
 				SearchResult result = doSearch(mediaFile,searchDetails.getTerm(),searchDetails.getYear(),searchDetails.getPart(),useSources);
 				if (result!=null) {
-					result.setEpisode(searchDetails.getEpisode());
+					result.setEpisodes(searchDetails.getEpisodes());
 					result.setSeason(searchDetails.getSeason());
 					return result;
 				}

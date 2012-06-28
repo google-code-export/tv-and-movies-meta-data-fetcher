@@ -348,7 +348,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public IEpisode getEpisode(File rootMediaDir, File episodeFile,
-			ISeason season, int episodeNum) throws StoreException,
+			ISeason season, List<Integer> episodeNums) throws StoreException,
 			MalformedURLException, IOException {
 		return null;
 	}
@@ -370,7 +370,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public IEpisode getSpecial(File rootMediaDir, File episodeFile,
-			ISeason season, int specialNumber) throws MalformedURLException,
+			ISeason season, List<Integer> specialNumbers) throws MalformedURLException,
 			IOException, StoreException {
 		return null;
 	}

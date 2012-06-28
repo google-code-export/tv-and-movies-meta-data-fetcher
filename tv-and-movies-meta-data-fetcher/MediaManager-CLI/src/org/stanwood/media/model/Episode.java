@@ -17,10 +17,9 @@
 package org.stanwood.media.model;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.stanwood.media.collections.SortedList;
 
@@ -53,7 +52,7 @@ public class Episode implements IEpisode {
 	private URL imageURL;
 
 	private List<VideoFile>videoFiles = new SortedList<VideoFile>(new VideoFileComparator());
-	private Set<Integer>episodes = new HashSet<Integer>();
+	private List<Integer>episodes = new ArrayList<Integer>();
 
 	/** The constructor */
 	public Episode() {
@@ -113,7 +112,7 @@ public class Episode implements IEpisode {
 	 * @return the episode numbers that this episode contains
 	 */
 	@Override
-	public Set<Integer> getEpisodes() {
+	public List<Integer> getEpisodes() {
 		return episodes;
 	}
 
@@ -122,7 +121,7 @@ public class Episode implements IEpisode {
 	 * @param epsiodes the episode numbers that this episode contains
 	 */
 	@Override
-	public void setEpisodes(Set<Integer> epsiodes) {
+	public void setEpisodes(List<Integer> epsiodes) {
 		this.episodes = epsiodes;
 	}
 

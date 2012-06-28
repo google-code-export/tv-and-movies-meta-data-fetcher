@@ -261,11 +261,11 @@ public class SapphireStore implements IStore {
 	 * Always returns null as it is not implemented for this store.
 	 *
 	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode
+	 * @param episodeNums The numbers of the episode
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, int episodeNum) {
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, List<Integer> episodeNums) {
 		return null;
 	}
 
@@ -296,11 +296,11 @@ public class SapphireStore implements IStore {
 	 * Always returns null as it is not implemented for this store.
 	 *
 	 * @param season The season the special episode belongs too
-	 * @param specialNumber The number of the special episode
+	 * @param specialNumbers The numbers of the special episode
 	 * @param episodeFile the file which the episode is stored in
 	 */
 	@Override
-	public IEpisode getSpecial(File rootMediaDir,File episodeFile, ISeason season, int specialNumber) {
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile, ISeason season, List<Integer> specialNumbers) {
 		return null;
 	}
 

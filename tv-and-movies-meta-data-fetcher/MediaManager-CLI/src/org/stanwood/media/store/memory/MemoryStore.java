@@ -98,50 +98,32 @@ public class MemoryStore implements IStore {
 		shows.add(new CacheShow(show));
 	}
 
-	/**
-	 * This gets a episode from the store. If it can't be found, then it will
-	 * return null;
-	 * @param episodeFile The file the episode is stored in
-	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode too get
-	 * @return The episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum)
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, List<Integer> episodeNums)
 			throws StoreException, MalformedURLException, IOException {
 		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
 		}
 
 		if (season instanceof CacheSeason) {
-			return ((CacheSeason)season).getEpisode(episodeNum);
+			return ((CacheSeason)season).getEpisode(episodeNums);
 		}
 		return null;
 	}
 
 	/**
-	 * This gets a special episode from the store. If it can't be found, then it will
-	 * return null;
-	 * @param episodeFile The file the episode is stored in
-	 * @param season The season the special episode belongs too
-	 * @param specialNumber The number of the special episode too get
-	 * @return The special episode, or null if it can't be found
-	 * @throws StoreException Thrown if their is a problem with the source
-	 * @throws MalformedURLException Thrown if their is a problem creating URL's
-	 * @throws IOException Thrown if their is a I/O related problem.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, int specialNumber)
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, List<Integer> specialNumbers)
 			throws MalformedURLException, IOException, StoreException {
 		if (!(season instanceof CacheSeason)) {
 			season = this.getSeason(rootMediaDir, episodeFile, season.getShow(), season.getSeasonNumber());
 		}
 
 		if (season instanceof CacheSeason) {
-			return ((CacheSeason)season).getSpecial(specialNumber);
+			return ((CacheSeason)season).getSpecial(specialNumbers);
 		}
 		return null;
 	}

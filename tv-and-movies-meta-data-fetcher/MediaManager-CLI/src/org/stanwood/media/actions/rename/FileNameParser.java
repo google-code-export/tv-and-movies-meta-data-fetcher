@@ -71,11 +71,14 @@ public class FileNameParser {
 		for (Pattern pattern : PATTERNS) {
 			Matcher m = pattern.matcher(file.getName());
 			if (m.matches()) {
+				// TODO Handle multiple episode numbers
 				ParsedFileName result = new ParsedFileName();
 				int seasonNumber = Integer.parseInt(m.group(1));
 				int episodeNumber = Integer.parseInt(m.group(2));
 				result.setSeason(seasonNumber);
-				result.setEpisode(episodeNumber);
+				List<Integer>episodes = new ArrayList<Integer>();
+				episodes.add(episodeNumber);
+				result.setEpisodes(episodes);
 				return result;
 			}
  		}
@@ -90,9 +93,9 @@ public class FileNameParser {
 	 * @return The parsed information
 	 */
 	public static ParsedFileName parse(MediaDirConfig dirConfig,File file,SearchResult lookupResults) {
-		if (lookupResults!=null && lookupResults.getSeason()!=null && lookupResults.getEpisode()!=null) {
+		if (lookupResults!=null && lookupResults.getSeason()!=null && lookupResults.getEpisodes()!=null && lookupResults.getEpisodes().size()>0) {
 			ParsedFileName parsed = new ParsedFileName();
-			parsed.setEpisode(lookupResults.getEpisode());
+			parsed.setEpisodes(lookupResults.getEpisodes());
 			parsed.setSeason(lookupResults.getSeason());
 			return parsed;
 		}
@@ -104,13 +107,16 @@ public class FileNameParser {
 
 		Map<Token,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
+			// TODO Handle multiple episode numbers
 			String episodeNumber = tokens.get(Token.EPISODE);
 			String seasonNumber = tokens.get(Token.SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
 				result = new ParsedFileName();
 				try {
 					result.setSeason(Integer.parseInt(seasonNumber));
-					result.setEpisode(Integer.parseInt(episodeNumber));
+					List<Integer>episodes = new ArrayList<Integer>();
+					episodes.add(Integer.parseInt(episodeNumber));
+					result.setEpisodes(episodes);
 					return result;
 				}
 				catch (NumberFormatException e) {

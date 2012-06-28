@@ -22,9 +22,9 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.ISeason;
@@ -180,13 +180,16 @@ public class XMLEpisode extends XMLVideo implements IEpisode {
 
 	/** {@inheritDoc} */
 	@Override
-	public Set<Integer> getEpisodes() {
-		Set<Integer> episodes = new HashSet<Integer>();
+	public List<Integer> getEpisodes() {
+		List<Integer> episodes = new ArrayList<Integer>();
 
 		try {
 			for (Node node : selectNodeList(episodeNode, "episodeNum")) { //$NON-NLS-1$
 				String strNum = ((Element) node).getAttribute("number"); //$NON-NLS-1$
-				episodes.add(Integer.valueOf(strNum));
+				Integer value = Integer.valueOf(strNum);
+				if (!episodes.contains(value)) {
+					episodes.add(value);
+				}
 			}
 		} catch (XMLParserNotFoundException e) {
 			return null;
@@ -200,7 +203,7 @@ public class XMLEpisode extends XMLVideo implements IEpisode {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setEpisodes(Set<Integer> epsiodes) {
+	public void setEpisodes(List<Integer> epsiodes) {
 		try {
 			for (Node node : selectNodeList(episodeNode, "episodeNum")) { //$NON-NLS-1$
 				node.getParentNode().removeChild(node);

@@ -1,6 +1,8 @@
 package org.stanwood.media.actions.rename;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +29,9 @@ public class TestFileNameParser {
 			dirConfig.setMode(Mode.TV_SHOW);
 
 			SearchResult result = new SearchResult("1234","xbmc","http://blah",null,Mode.TV_SHOW);
-			result.setEpisode(6);
+			List<Integer>episodeNums = new ArrayList<Integer>();
+			episodeNums.add(6);
+			result.setEpisodes(episodeNums);
 			result.setSeason(4);
 			assertEpisode(4,6,dirConfig, new File(dir,"show.2009.406.hdtv-lol.avi"),result);
 			assertEpisode(5,15,dirConfig, new File(dir,"The Show/Season 5/5 15 - Cycle 5.avi"),null);
@@ -54,6 +58,7 @@ public class TestFileNameParser {
 			assertEpisode(9,11,dirConfig, new File(dir,"The show season 9 episode 11 - A title.m4v"),null);
 			assertEpisode(20,11,dirConfig, new File(dir,"The show season 20 episode 11 - A title.m4v"),null);
 
+			// TODO Handle multiple episode numbers
 
 			Assert.assertNull(FileNameParser.parse(dirConfig, new File(dir,"A Film (2011).m4v"),null));
 		}
@@ -65,6 +70,6 @@ public class TestFileNameParser {
 	private void assertEpisode(int expectedSeason, int expectedEpisode,MediaDirConfig dirConfig,File file,SearchResult result) {
 		ParsedFileName parse =  FileNameParser.parse(dirConfig, file,result);
 		Assert.assertEquals("Check season",expectedSeason,parse.getSeason());
-		Assert.assertEquals("Check episode",expectedEpisode,parse.getEpisode());
+		Assert.assertEquals("Check episode",expectedEpisode,parse.getEpisodes().get(0).intValue());
 	}
 }

@@ -78,7 +78,7 @@ public class FakeStore implements IStore {
 	 * @param episodeNum The number of the episode to read
 	 */
 	@Override
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum) {
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, List<Integer> episodeNums) {
 		return null;
 	}
 
@@ -107,10 +107,10 @@ public class FakeStore implements IStore {
 	 * This always returns null as this store does not support reading episodes.
 	 * @param episodeFile The file the episode is stored in
 	 * @param season The season the episode belongs to.
-	 * @param specialNumber The number of the special episode to read
+	 * @param specialNumbers The numbers of the special episode to read
 	 */
 	@Override
-	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, int specialNumber) {
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, List<Integer> specialNumbers) {
 		return null;
 	}
 

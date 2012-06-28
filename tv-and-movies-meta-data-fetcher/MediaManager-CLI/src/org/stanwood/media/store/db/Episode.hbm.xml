@@ -21,10 +21,11 @@
 			<property name="rating"/>
 			<property name="numberOfVotes"/>
 		</component>
-		<set name="episodes" cascade="all">
+		<list name="episodes" cascade="all">
 			<key column="parent_id"/>
-			<element type="integer"/>
-		</set>
+			<index column="idx"/>
+			<element type="integer"/>			
+		</list>
 		
 		<list name="actors" cascade="all">
 			<key column="parent_id"/>
