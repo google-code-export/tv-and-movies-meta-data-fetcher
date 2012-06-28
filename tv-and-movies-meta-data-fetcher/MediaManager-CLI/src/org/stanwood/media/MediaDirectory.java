@@ -379,7 +379,7 @@ public class MediaDirectory {
 					episode = source.getSpecial(season, specialNums.get(0),specialFile);
 					if (episode != null) {
 						for (IStore store : stores) {
-							// TODO Handle multiple episode numbers
+							episode.setEpisodes(specialNums);
 							store.cacheEpisode(rootMediaDir,specialFile, episode);
 						}
 						break;
