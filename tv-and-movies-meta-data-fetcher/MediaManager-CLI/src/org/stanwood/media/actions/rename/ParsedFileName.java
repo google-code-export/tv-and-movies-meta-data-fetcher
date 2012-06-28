@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.actions.rename;
 
+import java.util.List;
+
 /**
  * This class is used to hold information about a episode that has been parsed
  * with the @see FileNameParser.
@@ -23,8 +25,8 @@ package org.stanwood.media.actions.rename;
 public class ParsedFileName {
 
 	private int season;
-	private int episode;
-	
+	private List<Integer> episodes;
+
 	/**
 	 * Returns the season of the file
 	 * @return the season of the file
@@ -32,7 +34,7 @@ public class ParsedFileName {
 	public int getSeason() {
 		return season;
 	}
-	
+
 	/**
 	 * Used to set the season of the file
 	 * @param season the season of the file
@@ -40,20 +42,20 @@ public class ParsedFileName {
 	public void setSeason(int season) {
 		this.season = season;
 	}
-	
+
 	/**
-	 * Used to get the episode number of the file
-	 * @return The episode number of the file
+	 * Used to get the episode numbers of the file
+	 * @return The episode numbers of the file
 	 */
-	public int getEpisode() {
-		return episode;
+	public List<Integer> getEpisodes() {
+		return episodes;
 	}
-	
+
 	/**
-	 * Used to set the episode number of the file
-	 * @param episode The episode number of the file 
+	 * Used to set the episode numbers of the file
+	 * @param episodes The episode numbers of the file
 	 */
-	public void setEpisode(int episode) {
-		this.episode = episode;
+	public void setEpisodes(List<Integer> episodes) {
+		this.episodes = episodes;
 	}
 }

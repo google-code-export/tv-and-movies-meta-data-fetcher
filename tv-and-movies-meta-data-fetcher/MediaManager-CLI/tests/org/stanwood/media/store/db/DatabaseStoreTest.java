@@ -2,6 +2,7 @@ package org.stanwood.media.store.db;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -93,7 +94,9 @@ public class DatabaseStoreTest {
 			}
 
 			File orgFile = new File(rawMediaDir,"Eureka"+File.separator+"1x01 - blah");
-			Assert.assertNull("Test show is not found before caching",store.getEpisode(rawMediaDir, orgFile, null, 1) );
+			List<Integer>episodeNums = new ArrayList<Integer>();
+			episodeNums.add(1);
+			Assert.assertNull("Test show is not found before caching",store.getEpisode(rawMediaDir, orgFile, null, episodeNums) );
 
 			List<EpisodeData> epsiodes = Data.createEurekaShow(eurekaDir);
 			epsiodes.addAll(Data.createHeroesShow(heroesDir));
@@ -106,7 +109,7 @@ public class DatabaseStoreTest {
 			Assert.assertEquals("http://www.tv.com/show/58448/summary.html",result.getUrl());
 			Assert.assertEquals("58448",result.getId());
 			Assert.assertEquals(Mode.TV_SHOW,result.getMode());
-			Assert.assertEquals(1,result.getEpisode().intValue());
+			Assert.assertEquals(1,result.getEpisodes().get(0).intValue());
 			Assert.assertEquals(1,result.getSeason().intValue());
 
 			Collection<IEpisode> episodes = store.listEpisodes(config, new NullProgressMonitor());
@@ -130,8 +133,11 @@ public class DatabaseStoreTest {
 			Assert.assertNull(store.getEpisode(mediaDir, new File(rawMediaDir,"Eureka"+File.separator+"1x01 - blah.m4v")));
 
 			store.fileUpdated(mediaDir, orgFile);
-			Assert.assertNull(store.getEpisode(rawMediaDir,new File(eurekaDir,"000 - blah"),null,0));
-			IEpisode special = store.getSpecial(rawMediaDir,new File(eurekaDir,"000 - blah"),null,0);
+			episodeNums = new ArrayList<Integer>();
+			episodeNums.add(0);
+
+			Assert.assertNull(store.getEpisode(rawMediaDir,new File(eurekaDir,"000 - blah"),null,episodeNums));
+			IEpisode special = store.getSpecial(rawMediaDir,new File(eurekaDir,"000 - blah"),null,episodeNums);
 			Assert.assertNotNull(special);
 
 			store.performedActions(mediaDir);
@@ -161,14 +167,14 @@ public class DatabaseStoreTest {
 			ISeason foundSeason = store.getSeason(rawMediaDir, episodeFile, foundShow, 1);
 			Assert.assertNotNull(foundSeason);
 			if (episode.isSpecial()) {
-				IEpisode foundEpisode = store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1) ;
+				IEpisode foundEpisode = store.getSpecial(rawMediaDir, episodeFile, foundSeason, null) ;
 				Assert.assertNotNull(foundEpisode);
-				Assert.assertNull(store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1));
+				Assert.assertNull(store.getEpisode(rawMediaDir, episodeFile, foundSeason, null));
 			}
 			else {
-				IEpisode foundEpisode = store.getEpisode(rawMediaDir, episodeFile, foundSeason, 1) ;
+				IEpisode foundEpisode = store.getEpisode(rawMediaDir, episodeFile, foundSeason, null) ;
 				Assert.assertNotNull(foundEpisode);
-				Assert.assertNull(store.getSpecial(rawMediaDir, episodeFile, foundSeason, 1));
+				Assert.assertNull(store.getSpecial(rawMediaDir, episodeFile, foundSeason, null));
 			}
 		}
 	}
@@ -222,7 +228,7 @@ public class DatabaseStoreTest {
 			Assert.assertEquals("http://www.imdb.com/title/tt0114814/",result.getUrl());
 			Assert.assertEquals("114814",result.getId());
 			Assert.assertEquals(Mode.FILM,result.getMode());
-			Assert.assertNull(result.getEpisode());
+			Assert.assertNull(result.getEpisodes());
 			Assert.assertNull(result.getSeason());
 
 

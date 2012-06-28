@@ -62,7 +62,9 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		SearchHelper.trimRubishFromEnds(term);
 		SearchDetails details = new SearchDetails(term.toString(), null, null);
 		details.setSeason(season);
-		details.setEpisode(episode);
+		// TODO Handle multiple episode numbers
+		List<Integer>episodeNums = new ArrayList<Integer>();
+		details.setEpisodes(episodeNums);
 		return details;
 	}
 

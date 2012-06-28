@@ -18,6 +18,7 @@ package org.stanwood.media.model;
 
 import java.security.InvalidParameterException;
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * This is used to hold the results of searching for a show id
@@ -31,7 +32,7 @@ public class SearchResult {
 	private Integer part;
 	private Mode mode;
 	private Integer season;
-	private Integer episode;
+	private List<Integer> episodes;
 
 	/**
 	 * Constructor of the class
@@ -145,19 +146,19 @@ public class SearchResult {
 	}
 
 	/**
-	 * Used to get the episode number
-	 * @return the episode number, or null if it could not be found
+	 * Used to get the episode numbers
+	 * @return the episode numbers, or null if it could not be found
 	 */
-	public Integer getEpisode() {
-		return episode;
+	public List<Integer> getEpisodes() {
+		return episodes;
 	}
 
 	/**
-	 * Used to set the episode number
-	 * @param episode The episode number
+	 * Used to set the episode numbers
+	 * @param episodes The episode numbers
 	 */
-	public void setEpisode(Integer episode) {
-		this.episode = episode;
+	public void setEpisodes(List<Integer> episodes) {
+		this.episodes = episodes;
 	}
 
 

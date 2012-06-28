@@ -13,7 +13,6 @@ Allow TV episodes to contain more than one episode
 	- Add rename pattern for the other episodes in the file
 	- Make methods that query for a episode by it's number able to return episodes with multiples in them
 	- Upgrade the searches to be able to find muti episode details
-Cache HTML downloads
 
 Version 2.3
 -----------

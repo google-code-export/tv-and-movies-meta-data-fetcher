@@ -221,7 +221,6 @@ public class FileHelper {
 					out = new FileOutputStream(dest);
 					if (url.getProtocol().equals("http")) { //$NON-NLS-1$
 						is = new WebFileInputStream(url);
-
 					}
 					else {
 						is = url.openStream();

@@ -429,7 +429,7 @@ public class DatabaseStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public IEpisode getEpisode(File rootMediaDir, File episodeFile,
-			ISeason season, int episodeNum) throws StoreException,
+			ISeason season, List<Integer> episodeNums) throws StoreException,
 			MalformedURLException, IOException {
 		DBEpisode episode = findEpisode(episodeFile,rootMediaDir);
 		if (episode==null || episode.isSpecial()) {
@@ -463,7 +463,7 @@ public class DatabaseStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public IEpisode getSpecial(File rootMediaDir, File episodeFile,
-			ISeason season, int specialNumber) throws MalformedURLException,
+			ISeason season, List<Integer> specialNumbers) throws MalformedURLException,
 			IOException, StoreException {
 		DBEpisode episode = findEpisode(episodeFile,rootMediaDir);
 		if (episode==null ||  !episode.isSpecial()) {
@@ -490,7 +490,7 @@ public class DatabaseStore implements IStore {
 				if (result!=null) {
 					IShow show = result.getSeason().getShow();
 					SearchResult sresult = new SearchResult(show.getShowId(), show.getSourceId(), show.getShowURL().toExternalForm(), null, mode);
-					sresult.setEpisode(result.getEpisodeNumber());
+					sresult.setEpisodes(result.getEpisodes());
 					sresult.setSeason(result.getSeason().getSeasonNumber());
 					return sresult ;
 				}

@@ -183,12 +183,12 @@ public class MP4ITunesStore implements IStore {
 	 * This will always return null as this is a write only store
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode too get
+	 * @param episodeNums The numbers of the episode too get
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum) throws StoreException {
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, List<Integer> episodeNums) throws StoreException {
 		validate();
 		return null;
 	}
@@ -250,12 +250,12 @@ public class MP4ITunesStore implements IStore {
 	 * This will always return null as this is a write only store
 	 * @param episodeFile the file which the special episode is stored in
 	 * @param season The season the episode belongs too
-	 * @param specialNumber The number of the special episode too get
+	 * @param specialNumbers The numbers of the special episode too get
 	 * @return Always returns null
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public IEpisode getSpecial(File rootMediaDir,File episodeFile, ISeason season, int specialNumber) throws MalformedURLException,
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile, ISeason season, List<Integer> specialNumbers) throws MalformedURLException,
 			IOException, StoreException {
 		return null;
 	}

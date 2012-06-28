@@ -1,5 +1,7 @@
 package org.stanwood.media.search;
 
+import java.util.List;
+
 /**
  * The search details returned by the different {@link ISearchStrategy} classes.
  */
@@ -9,7 +11,7 @@ public class SearchDetails {
 	private String year;
 	private Integer part;
 	private Integer season;
-	private Integer episode;
+	private List<Integer> episodes;
 
 	/**
 	 * The constructor
@@ -65,19 +67,19 @@ public class SearchDetails {
 	}
 
 	/**
-	 * Used to get the episode number
-	 * @return the episode number, or null if not found
+	 * Used to get the episode numbers
+	 * @return the episode numbers, or null if not found
 	 */
-	public Integer getEpisode() {
-		return episode;
+	public List<Integer> getEpisodes() {
+		return episodes;
 	}
 
 	/**
-	 * Used to set the episode number
-	 * @param episode The episode number
+	 * Used to set the episode numbers
+	 * @param episodes The episode numbers
 	 */
-	public void setEpisode(Integer episode) {
-		this.episode = episode;
+	public void setEpisodes(List<Integer> episodes) {
+		this.episodes = episodes;
 	}
 
 

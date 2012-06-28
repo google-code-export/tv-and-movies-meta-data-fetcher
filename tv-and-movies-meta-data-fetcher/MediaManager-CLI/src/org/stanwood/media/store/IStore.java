@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.List;
 
 import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
@@ -90,7 +91,7 @@ public interface IStore extends IExtension  {
 	 * return null;
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the episode belongs too
-	 * @param episodeNum The number of the episode too get
+	 * @param episodeNums The numbers of the episode too get
 	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The episode, or null if it can't be found
@@ -98,7 +99,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, int episodeNum) throws StoreException, MalformedURLException, IOException;
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, List<Integer> episodeNums) throws StoreException, MalformedURLException, IOException;
 
 	/**
 	 * This will get a season from the store. If the season can't be found,
@@ -133,7 +134,7 @@ public interface IStore extends IExtension  {
 	 * return null;
 	 * @param episodeFile the file which the episode is stored in
 	 * @param season The season the special episode belongs too
-	 * @param specialNumber The number of the special episode too get
+	 * @param specialNumbers The numbers of the special episode too get
 	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @return The special episode, or null if it can't be found
@@ -141,7 +142,7 @@ public interface IStore extends IExtension  {
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 */
-	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, int specialNumber) throws MalformedURLException, IOException, StoreException;
+	public IEpisode getSpecial(File rootMediaDir,File episodeFile,ISeason season, List<Integer> specialNumbers) throws MalformedURLException, IOException, StoreException;
 
 	/**
 	 * Used to search for store for media

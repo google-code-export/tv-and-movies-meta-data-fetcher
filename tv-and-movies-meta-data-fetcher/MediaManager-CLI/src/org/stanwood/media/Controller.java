@@ -76,9 +76,6 @@ import org.stanwood.media.store.xmlstore.XMLStore2Info;
  * getInstance() can be called to a access the methods used to control stores
  * and sources.
  */
-
-//TODO make all the extensions be added as though they were plugins
-//TODO don't pass out the Classes, instead use the info classes of extensions
 public class Controller {
 
 	private final static Log log = LogFactory.getLog(Controller.class);

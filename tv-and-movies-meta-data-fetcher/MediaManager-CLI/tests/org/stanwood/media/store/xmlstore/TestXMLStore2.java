@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +145,9 @@ public class TestXMLStore2 {
 			Assert.assertEquals(1,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        IEpisode episode = xmlStore.getEpisode(dir,episodeFile,season, 1);
+			List<Integer>episodeNums = new ArrayList<Integer>();
+			episodeNums.add(1);
+	        IEpisode episode = xmlStore.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
 	        Assert.assertEquals("784857",episode.getEpisodeId());
@@ -166,7 +169,12 @@ public class TestXMLStore2 {
 	        Assert.assertFalse(episode.isSpecial());
 
 	        episodeFile = new File(eurekaDir,"1x02 - blah.avi");
-	        episode = xmlStore.getEpisode(dir,episodeFile,season, 2);
+	        episodeNums = new ArrayList<Integer>();
+			episodeNums.add(2);
+	        episode = xmlStore.getEpisode(dir,episodeFile,season, episodeNums);
+	        Assert.assertNull(episode);
+	        episodeNums.add(3);
+	        episode = xmlStore.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -186,7 +194,9 @@ public class TestXMLStore2 {
 			Assert.assertEquals(2,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        episode = xmlStore.getEpisode(dir,episodeFile,season, 2);
+			episodeNums = new ArrayList<Integer>();
+			episodeNums.add(2);
+	        episode = xmlStore.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -197,7 +207,9 @@ public class TestXMLStore2 {
 	        Assert.assertEquals("2007-07-10",df.format(episode.getDate()));
 
 	        episodeFile = new File(eurekaDir,"000 - blah.avi");
-	        episode = xmlStore.getSpecial(dir,episodeFile,season, 0);
+	        episodeNums = new ArrayList<Integer>();
+			episodeNums.add(0);
+	        episode = xmlStore.getSpecial(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());

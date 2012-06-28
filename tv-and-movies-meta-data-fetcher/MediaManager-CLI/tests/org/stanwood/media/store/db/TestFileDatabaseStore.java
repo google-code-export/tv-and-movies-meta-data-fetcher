@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -106,7 +107,9 @@ public class TestFileDatabaseStore {
 			Assert.assertEquals(1,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        IEpisode episode = store.getEpisode(dir,episodeFile,season, 1);
+			List<Integer>episodeNums = new ArrayList<Integer>();
+			episodeNums.add(1);
+	        IEpisode episode = store.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(1,episode.getEpisodeNumber());
 	        Assert.assertEquals("784857",episode.getEpisodeId());
@@ -131,7 +134,9 @@ public class TestFileDatabaseStore {
 	        Assert.assertFalse(episode.getEpisodes().contains(Integer.valueOf(3)));
 
 	        episodeFile = episodes.get(1).getFile();
-	        episode = store.getEpisode(dir,episodeFile,season, 2);
+	        episodeNums = new ArrayList<Integer>();
+			episodeNums.add(2);
+	        episode = store.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -152,7 +157,9 @@ public class TestFileDatabaseStore {
 			Assert.assertEquals(2,season.getSeasonNumber());
 			Assert.assertEquals(show,season.getShow());
 
-	        episode = store.getEpisode(dir,episodeFile,season, 2);
+			episodeNums = new ArrayList<Integer>();
+			episodeNums.add(2);
+	        episode = store.getEpisode(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(2,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());
@@ -164,7 +171,9 @@ public class TestFileDatabaseStore {
 
 	        episodeFile = episodes.get(3).getFile();
 //	        episodeFile = new File(eurekaDir,"000 - blah.avi");
-	        episode = store.getSpecial(dir,episodeFile,season, 0);
+	        episodeNums = new ArrayList<Integer>();
+			episodeNums.add(0);
+	        episode = store.getSpecial(dir,episodeFile,season, episodeNums);
 	        Assert.assertNotNull(episode);
 	        Assert.assertEquals(0,episode.getEpisodeNumber());
 	        Assert.assertEquals("800578",episode.getEpisodeId());

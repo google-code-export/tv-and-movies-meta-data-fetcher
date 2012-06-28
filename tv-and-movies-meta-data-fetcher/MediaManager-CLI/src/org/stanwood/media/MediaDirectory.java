@@ -293,7 +293,7 @@ public class MediaDirectory {
 	 *
 	 * @param rootMediaDir The root media directory
 	 * @param season The season the episode belongs too
-	 * @param episodeNum The episode number
+	 * @param episodeNums The episode numbers
 	 * @param refresh If true, then the stores are ignored.
 	 * @param episodeFile The file the episode is stored in
 	 * @return The episode, or null if it can't be found.
@@ -302,12 +302,12 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, int episodeNum, boolean refresh) throws SourceException,
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, List<Integer> episodeNums, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		IEpisode episode = null;
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getEpisode(rootMediaDir,episodeFile, season, episodeNum);
+				episode = store.getEpisode(rootMediaDir,episodeFile, season, episodeNums);
 				if (episode != null) {
 					break;
 				}
@@ -320,9 +320,10 @@ public class MediaDirectory {
 			for (ISource source : sources) {
 				try {
 					if (source.getInfo().getId().equals(sourceId)) {
-						episode = source.getEpisode(season, episodeNum,episodeFile);
+						episode = source.getEpisode(season, episodeNums.get(0),episodeFile);
 						if (episode != null) {
 							for (IStore store : stores) {
+								// TODO Handle multiple episode numbers
 								store.cacheEpisode(rootMediaDir,episodeFile, episode);
 							}
 							break;
@@ -348,7 +349,7 @@ public class MediaDirectory {
 	 *
 	 * @param rootMediaDir The root media directory
 	 * @param season The season the episode belongs too
-	 * @param specialNum The special episode number
+	 * @param specialNums The special episode numbers
 	 * @param refresh If true, then the stores are ignored.
 	 * @param specialFile The file the special episode is stored in
 	 * @return The special episode, or null if it can't be found.
@@ -357,13 +358,13 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public IEpisode getSpecial(File rootMediaDir,File specialFile, ISeason season, int specialNum, boolean refresh) throws SourceException,
+	public IEpisode getSpecial(File rootMediaDir,File specialFile, ISeason season, List<Integer> specialNums, boolean refresh) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		IEpisode episode = null;
 
 		if (!refresh) {
 			for (IStore store : stores) {
-				episode = store.getSpecial(rootMediaDir,specialFile, season, specialNum);
+				episode = store.getSpecial(rootMediaDir,specialFile, season, specialNums);
 				if (episode != null) {
 					break;
 				}
@@ -375,9 +376,10 @@ public class MediaDirectory {
 			String sourceId = season.getShow().getSourceId();
 			for (ISource source : sources) {
 				if (source.getInfo().getId().equals(sourceId)) {
-					episode = source.getSpecial(season, specialNum,specialFile);
+					episode = source.getSpecial(season, specialNums.get(0),specialFile);
 					if (episode != null) {
 						for (IStore store : stores) {
+							// TODO Handle multiple episode numbers
 							store.cacheEpisode(rootMediaDir,specialFile, episode);
 						}
 						break;

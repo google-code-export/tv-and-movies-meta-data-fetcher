@@ -8,9 +8,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
@@ -559,7 +557,7 @@ public class XBMCSource extends XMLParser implements ISource {
 				episode.setDisplaySeason(displaySeason);
 				episode.setDisplayEpisode(displayEpisode);
 				episode.setEpisodeNumber(displayEpisode);
-				Set<Integer> episodes = new HashSet<Integer>();
+				List<Integer> episodes = new ArrayList<Integer>();
 				episodes.add(displayEpisode);
 				episode.setEpisodes(episodes);
 			}

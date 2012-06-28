@@ -1,7 +1,6 @@
 package org.stanwood.media.store.memory;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +17,8 @@ import org.stanwood.media.model.Season;
  */
 public class CacheSeason extends Season {
 
-	private Map<Integer,IEpisode>episodes = new HashMap<Integer,IEpisode>();
-	private List<IEpisode> specials = new ArrayList<IEpisode>();
+	private Map<List<Integer>,IEpisode>episodes = new HashMap<List<Integer>,IEpisode>();
+	private Map<List<Integer>,IEpisode>specials = new HashMap<List<Integer>,IEpisode>();
 	private ISeason season;
 
 
@@ -35,21 +34,21 @@ public class CacheSeason extends Season {
 
 	/**
 	 * Used to get a episode with a given episode number
-	 * @param episodeNum The episode number of the episode to fetch
+	 * @param episodeNums The episode numbers of the episode to fetch
 	 * @return The episode
 	 */
-	public IEpisode getEpisode(int episodeNum) {
-		IEpisode episode =episodes.get(episodeNum);
+	public IEpisode getEpisode(List<Integer> episodeNums) {
+		IEpisode episode =episodes.get(episodeNums);
 		return episode;
 	}
 
 	/**
 	 * Used to get a special episode with a given episode number
-	 * @param specialNumber The special episode number of the episode to fetch
+	 * @param specialNums The special episode numbers of the episode to fetch
 	 * @return The special episode
 	 */
-	public IEpisode getSpecial(int specialNumber) {
-		return specials.get(specialNumber-1);
+	public IEpisode getSpecial(List<Integer> specialNums) {
+		return specials.get(specialNums);
 	}
 
 	/**
@@ -65,15 +64,15 @@ public class CacheSeason extends Season {
 	 * @param episode The special episode too add
 	 */
 	public void addSepcial(Episode episode) {
-		specials.add(episode);
+		specials.put(episode.getEpisodes(),episode);
 	}
 
 	/**
 	 * Get all the special episodes in the season
 	 * @return The special episodes in the season
 	 */
-	public List<IEpisode> getSpecials() {
-		return specials;
+	public Collection<IEpisode> getSpecials() {
+		return specials.values();
 	}
 
 
@@ -82,7 +81,7 @@ public class CacheSeason extends Season {
 	 * @param episode The episode to add to the season
 	 */
 	public void addEpisode(IEpisode episode) {
-		episodes.put(episode.getEpisodeNumber(),episode);
+		episodes.put(episode.getEpisodes(),episode);
 	}
 
 	/**
