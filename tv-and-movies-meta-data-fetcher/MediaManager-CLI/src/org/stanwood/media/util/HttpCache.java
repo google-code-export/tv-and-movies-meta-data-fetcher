@@ -22,11 +22,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.collections.LRUMapCache;
 
+/**
+ * This class is used to cache HTTP downloads
+ */
 public class HttpCache {
 
 	private final static Log log = LogFactory.getLog(HttpCache.class);
 
-	// TODO find way of storing more entries
+	// TODO find way of storing more entries, disk based?
 	private static LRUMapCache<String, List<String>> cache = new LRUMapCache<String,List<String>>(300);
 	private static HttpCache instance;
 
@@ -34,10 +37,20 @@ public class HttpCache {
 
 	}
 
+	/**
+	 * Get element from cache or null if it can't be found
+	 * @param key The key of the item to get
+	 * @return The item, or null if it can't be found
+	 */
 	public List<String> get(String key) {
 		return cache.get(key);
 	}
 
+	/**
+	 * Put a item into the cache
+	 * @param key The key of the item
+	 * @param value The item
+	 */
 	public void put(String key,List<String> value) {
 		if (log.isDebugEnabled()) {
 			log.debug("Caching key "+key); //$NON-NLS-1$
@@ -45,6 +58,10 @@ public class HttpCache {
 		cache.put(key, value);
 	}
 
+	/**
+	 * Used to get a singleton instance of the cache
+	 * @return a singleton instance of the cache
+	 */
 	public static HttpCache getInstance() {
 		if (instance==null) {
 			instance = new HttpCache();

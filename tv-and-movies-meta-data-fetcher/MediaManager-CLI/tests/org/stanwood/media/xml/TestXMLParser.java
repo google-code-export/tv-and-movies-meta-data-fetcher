@@ -42,8 +42,8 @@ public class TestXMLParser {
 		expected.append("<test test1=\"this is a test\" test2=\"Don't look back\" test3=\"me &amp; you\"/>\n");
 		Assert.assertEquals(expected.toString(),XMLParser.domToStr(dom));
 
-		Assert.assertNotNull(parser.selectSingleNode(dom, "/test[@test1="+parser.quoteXPathQuery("this is a test")+"]"));
-		Assert.assertNotNull(parser.selectSingleNode(dom, "/test[@test2="+parser.quoteXPathQuery("Don't look back")+"]"));
-		Assert.assertNotNull(parser.selectSingleNode(dom, "/test[@test3="+parser.quoteXPathQuery("me & you")+"]"));
+		Assert.assertNotNull(XMLParser.selectSingleNode(dom, "/test[@test1="+parser.quoteXPathQuery("this is a test")+"]"));
+		Assert.assertNotNull(XMLParser.selectSingleNode(dom, "/test[@test2="+parser.quoteXPathQuery("Don't look back")+"]"));
+		Assert.assertNotNull(XMLParser.selectSingleNode(dom, "/test[@test3="+parser.quoteXPathQuery("me & you")+"]"));
 	}
 }

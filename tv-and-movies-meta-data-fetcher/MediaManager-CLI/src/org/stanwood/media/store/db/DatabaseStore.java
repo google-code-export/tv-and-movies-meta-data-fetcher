@@ -46,7 +46,7 @@ import org.stanwood.media.util.Version;
 public class DatabaseStore implements IStore {
 
 	private final static Log log = LogFactory.getLog(DatabaseStore.class);
-	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("1.0"),1);
+	private final static StoreVersion STORE_VERSION = new StoreVersion(new Version("1.0"),1); //$NON-NLS-1$
 	private Session session;
 	private String resourceId;
 	private Transaction currentTransaction = null;
@@ -72,7 +72,7 @@ public class DatabaseStore implements IStore {
 			if (season == null) {
 				throw new StoreException(
 						MessageFormat
-								.format("Unable to find episode {1}x{0} with sourceID {2} and show Id {3}",
+								.format(Messages.getString("DatabaseStore.UnableFindEpisode"), //$NON-NLS-1$
 										episode.getEpisodeNumber(),
 										episode.getSeason().getSeasonNumber(),
 										episode.getSeason().getShow().getSourceId(),
@@ -98,7 +98,7 @@ public class DatabaseStore implements IStore {
 
 	protected void beginTransaction() throws StoreException {
 		if (currentTransaction!=null) {
-			throw new StoreException("Database transaction already open");
+			throw new StoreException(Messages.getString("DatabaseStore.TransactionAlreadyOpen")); //$NON-NLS-1$
 		}
 		currentTransaction = session.beginTransaction();
 	}
@@ -188,7 +188,7 @@ public class DatabaseStore implements IStore {
 		DBSeason dbSeason = findSeason(rootMediaDir, season);
 		if (dbSeason == null) {
 			if (log.isDebugEnabled()) {
-				log.debug(MessageFormat.format("Creating new season {0} in the database for show {1} {2}",season.getSeasonNumber(),season.getShow().getShowId(),season.getShow().getSourceId()));
+				log.debug(MessageFormat.format(Messages.getString("DatabaseStore.CreatingNewSeason"),season.getSeasonNumber(),season.getShow().getShowId(),season.getShow().getSourceId())); //$NON-NLS-1$
 			}
 			DBShow show = findShow(rootMediaDir, season.getShow());
 			if (show == null) {
@@ -198,7 +198,7 @@ public class DatabaseStore implements IStore {
 			if (show == null) {
 				throw new StoreException(
 						MessageFormat
-								.format("Unable to find show with sourceID {0} and show Id {1}",
+								.format(Messages.getString("DatabaseStore.UnableFidShow"), //$NON-NLS-1$
 										season.getShow().getSourceId(), season.getShow().getShowId()));
 			}
 			dbSeason = new DBSeason();
@@ -209,7 +209,7 @@ public class DatabaseStore implements IStore {
 		}
 		else {
 			if (log.isDebugEnabled()) {
-				log.debug(MessageFormat.format("Updating existing {0} in the database for show {1} {2}",season.getSeasonNumber(),season.getShow().getShowId(),season.getShow().getSourceId()));
+				log.debug(MessageFormat.format(Messages.getString("DatabaseStore.UpdatingExistingSeason"),season.getSeasonNumber(),season.getShow().getShowId(),season.getShow().getSourceId())); //$NON-NLS-1$
 			}
 			updateSeason(season, dbSeason);
 			session.update(dbSeason);
@@ -284,7 +284,6 @@ public class DatabaseStore implements IStore {
 	}
 
 	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<IFilm> listFilms(MediaDirConfig dirConfig,
 			IProgressMonitor monitor) throws StoreException {
@@ -527,7 +526,7 @@ public class DatabaseStore implements IStore {
 		}
 		else {
 			throw new StoreException(MessageFormat.format(
-					"Unknown parameter {0}", key));
+					Messages.getString("DatabaseStore.UnknownParam"), key)); //$NON-NLS-1$
 		}
 	}
 
@@ -538,7 +537,7 @@ public class DatabaseStore implements IStore {
 			return resourceId;
 		} else {
 			throw new StoreException(MessageFormat.format(
-					"Unknown parameter {0}", key));
+					Messages.getString("DatabaseStore.UnknownParam"), key)); //$NON-NLS-1$
 		}
 	}
 
@@ -546,7 +545,7 @@ public class DatabaseStore implements IStore {
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
 		beginTransaction();
-		log.info("DatabaseStore: Checking for deleted files...");
+		log.info(Messages.getString("DatabaseStore.CheckForDeletedFIles")); //$NON-NLS-1$
 		Collection<IEpisode> epList = listEpisodesNoTrans(dir.getMediaDirConfig());
 		for (IEpisode ep : epList) {
 			DBEpisode dbEp = (DBEpisode) ep;
@@ -639,14 +638,14 @@ public class DatabaseStore implements IStore {
 		try {
 			session = DBHelper.getInstance().getSession(resource);
 		} catch (DatabaseException e) {
-			throw new StoreException("Error talking to the database",e);
+			throw new StoreException(Messages.getString("DatabaseStore.UnableTalkDB"),e); //$NON-NLS-1$
 		}
 	}
 
 	private void validateParameters() throws StoreException {
 		if (resourceId == null) {
 			throw new StoreException(MessageFormat.format(
-					"The required parameter ''{0}'' was not set",
+					Messages.getString("DatabaseStore.MissingRequiredParam"), //$NON-NLS-1$
 					DatabaseStoreInfo.PARAM_DATABASE_RESOURCE_ID.getName()));
 		}
 	}

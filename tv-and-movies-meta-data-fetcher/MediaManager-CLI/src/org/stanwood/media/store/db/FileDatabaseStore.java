@@ -42,33 +42,33 @@ public class FileDatabaseStore extends DatabaseStore {
 			if (!file.exists()) {
 				try {
 					if (!file.createNewFile() && !file.exists()) {
-						throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file));
+						throw new StoreException(MessageFormat.format(Messages.getString("FileDatabaseStore.UnableCreateStoreFile"),file)); //$NON-NLS-1$
 					}
 					Configuration configuration = DBHelper.getInstance().getConfiguration(resource);
 					new SchemaExport(configuration).create(false, true);
 				}
 				catch (IOException e) {
-					throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file),e);
+					throw new StoreException(MessageFormat.format(Messages.getString("FileDatabaseStore.UnableCreateStoreFile"),file),e); //$NON-NLS-1$
 				} catch (DatabaseException e) {
-					throw new StoreException(MessageFormat.format("Unable to create store file: {0}",file),e);
+					throw new StoreException(MessageFormat.format(Messages.getString("FileDatabaseStore.UnableCreateStoreFile"),file),e); //$NON-NLS-1$
 				}
 			}
 
 			init(resource);
 		} catch (ConfigException e) {
-			throw new StoreException("Unable to find configuration directory");
+			throw new StoreException(Messages.getString("FileDatabaseStore.UnableFindConfigDir")); //$NON-NLS-1$
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) throws StoreException {
-		throw new StoreException(MessageFormat.format("Unknown parameter {0}", key));
+		throw new StoreException(MessageFormat.format(Messages.getString("FileDatabaseStore.KnownParam"), key)); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) throws StoreException {
-		throw new StoreException(MessageFormat.format("Unknown parameter {0}", key));
+		throw new StoreException(MessageFormat.format(Messages.getString("FileDatabaseStore.KnownParam"), key)); //$NON-NLS-1$
 	}
 }
