@@ -49,17 +49,34 @@ import org.stanwood.media.source.xbmc.expression.ValueType;
  */
 public class FileNameParser {
 
-	private static Pattern PATTERNS[] = new Pattern[] {
-			Pattern.compile(".*[s]([\\d]+)[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*[s]([\\d]+)\\.[e]([\\d]+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*?([\\d]{1,2})\\D([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*season ([\\d]{1,2}) episode ([\\d]{1,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile(".*S([\\d]{1,2}) E([\\d]{2,2}).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-			Pattern.compile("^([\\d]{2,2})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$
-			Pattern.compile("^([\\d]{1,1})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$
-			Pattern.compile(".*[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$
-			Pattern.compile(".*[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*",Pattern.CASE_INSENSITIVE ) //$NON-NLS-1$
+	private static String ONLY_EP_PATTERN="[e ]?[\\d]{2,2}"; //$NON-NLS-1$
+	private static String FULL_EP_PATTERN="s?[\\d]{1,2}"+ONLY_EP_PATTERN; //$NON-NLS-1$
+	private static String AND_SEP = "[\\&\\+\\. ]"; //$NON-NLS-1$
+	private static String WHITE_SPACE = "[\\. ]*"; //$NON-NLS-1$
+
+	@SuppressWarnings("nls")
+	private static Pattern MULTI_PATTERNS[] = new Pattern[] {
+		Pattern.compile(".*?("+FULL_EP_PATTERN+")"+WHITE_SPACE+AND_SEP+WHITE_SPACE+"("+FULL_EP_PATTERN+").*",Pattern.CASE_INSENSITIVE ),
+		Pattern.compile(".*?("+FULL_EP_PATTERN+")"+WHITE_SPACE+AND_SEP+WHITE_SPACE+"("+ONLY_EP_PATTERN+").*",Pattern.CASE_INSENSITIVE ),
 	};
+
+	@SuppressWarnings("nls")
+	private static Pattern PATTERNS[] = new Pattern[] {
+		// Single episode patterns
+		compile(".*[s]([\\d]+)[e]([\\d]+).*"),
+		compile(".*[s]([\\d]+)\\.[e]([\\d]+).*"),
+		compile(".*?([\\d]{1,2})\\D([\\d]{2,2}).*"),
+		compile(".*season"+WHITE_SPACE+"([\\d]{1,2})"+WHITE_SPACE+"episode"+WHITE_SPACE+"([\\d]{1,2}).*"),
+		compile(".*S([\\d]{1,2})"+WHITE_SPACE+"E([\\d]{2,2}).*"),
+		compile("^([\\d]{2,2})([\\d]{2,2})"+WHITE_SPACE+".*"),
+		compile("^([\\d]{1,1})([\\d]{2,2})"+WHITE_SPACE+".*"),
+		compile(".*[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*"),
+		compile(".*[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*")
+	};
+
+	private static Pattern compile(String pattern) {
+		return Pattern.compile(pattern,Pattern.CASE_INSENSITIVE);
+	}
 
 	/**
 	 * Parse the filename and work out the episode and season number. This does not use the media directory
@@ -68,20 +85,65 @@ public class FileNameParser {
 	 * @return The parsed information
 	 */
 	public static ParsedFileName parse(File file) {
-		for (Pattern pattern : PATTERNS) {
-			Matcher m = pattern.matcher(file.getName());
-			if (m.matches()) {
-				// TODO Handle multiple episode numbers
+		for (Pattern multiPattern : MULTI_PATTERNS) {
+			Matcher multiMatcher = multiPattern.matcher(file.getName());
+			if (multiMatcher.matches()) {
+				ParsedFileName result1 = matchSinglePattern(multiMatcher.group(1));
+				if (result1!=null) {
+					ParsedFileName result2 = matchSinglePattern(multiMatcher.group(2));
+					if (result2!=null && result1.getSeason()==result2.getSeason()) {
+						ParsedFileName result = new ParsedFileName();
+						result.setSeason(result1.getSeason());
+						List<Integer> episodes = new ArrayList<Integer>();
+						for (int i=result1.getEpisodes().get(0);i<=result2.getEpisodes().get(0);i++) {
+							episodes.add(i);
+						}
+						result.setEpisodes(episodes);
+						return result;
+					}
+					else if (isInteger(multiMatcher.group(2))) {
+						ParsedFileName result = new ParsedFileName();
+						result.setSeason(result1.getSeason());
+						List<Integer> episodes = new ArrayList<Integer>();
+						for (int i=result1.getEpisodes().get(0);i<=Integer.valueOf(multiMatcher.group(2));i++) {
+							episodes.add(i);
+						}
+						result.setEpisodes(episodes);
+						return result;
+					}
+				}
+			}
+		}
+
+		ParsedFileName result = matchSinglePattern(file.getName());
+		return result;
+	}
+
+	private static boolean isInteger(String value) {
+		try {
+			Integer.parseInt(value);
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+
+	}
+
+	protected static ParsedFileName matchSinglePattern(String text) {
+		for (Pattern singlePattern : PATTERNS) {
+			Matcher singleMatcher = singlePattern.matcher(text);
+			if (singleMatcher.matches()) {
 				ParsedFileName result = new ParsedFileName();
-				int seasonNumber = Integer.parseInt(m.group(1));
-				int episodeNumber = Integer.parseInt(m.group(2));
-				result.setSeason(seasonNumber);
+				int seasonNumber = Integer.parseInt(singleMatcher.group(1));
+				int episodeNumber = Integer.parseInt(singleMatcher.group(2));
 				List<Integer>episodes = new ArrayList<Integer>();
 				episodes.add(episodeNumber);
+				result.setSeason(seasonNumber);
 				result.setEpisodes(episodes);
 				return result;
 			}
- 		}
+		}
 		return null;
 	}
 
