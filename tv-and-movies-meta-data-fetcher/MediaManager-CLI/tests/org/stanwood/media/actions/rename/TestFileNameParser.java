@@ -83,11 +83,12 @@ public class TestFileNameParser {
 			List<Integer>episodeNums = new ArrayList<Integer>();
 			episodeNums.add(6);
 			assertEpisode(1,new Integer[]{1,2},dirConfig, new File(dir,"The Show/Season 1/1 01 & 1 02 - The.Show.Title.m4v"),null);
+			assertEpisode(1,new Integer[]{1,2},dirConfig, new File(dir,"The Show/Season 1/1 01 , 1 02 - The.Show.Title.m4v"),null);
 			assertEpisode(4,new Integer[]{25,26},dirConfig, new File(dir,"a.show.S04E25+26.hdtv-lol-Exodus (Part 2 & 3).avi"),null);
 			assertEpisode(4,new Integer[]{25,26},dirConfig, new File(dir,"a.show.s04e25.26.hdtv-lol-Exodus (Part 2 & 3).avi"),null);
-//			assertEpisode(1,new Integer[]{10,11},dirConfig, new File(dir,"110,111 - The.Show.Title.m4v"),null);
-//			assertEpisode(1,new Integer[]{12,13},dirConfig, new File(dir,"112, 113 - The.Show.Title.m4v"),null);
-//			assertEpisode(1,new Integer[]{10,11},dirConfig, new File(dir,"a.show.S10E19 - 1020 - The.Show.Title.m4v"),null);
+			assertEpisode(1,new Integer[]{10,11},dirConfig, new File(dir,"110,111 - The.Show.Title.m4v"),null);
+			assertEpisode(1,new Integer[]{12,13},dirConfig, new File(dir,"112, 113 - The.Show.Title.m4v"),null);
+			assertEpisode(10,new Integer[]{19,20,21},dirConfig, new File(dir,"a.show.S10E19 - 1021 - The.Show.Title.m4v"),null);
 
 
 			// TODO Handle multiple episode numbers
