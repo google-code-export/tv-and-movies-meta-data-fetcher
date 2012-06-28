@@ -28,10 +28,18 @@ public class DBResource {
 	private String resourceId;
 	private SchemaCheck schemaCheck;
 
+	/**
+	 * Used to get the schema check
+	 * @return the schema check
+	 */
 	public SchemaCheck getSchemaCheck() {
 		return schemaCheck;
 	}
 
+	/**
+	 * Used to set the schema check option
+	 * @param schemaCheck the schema check option
+	 */
 	public void setSchemaCheck(SchemaCheck schemaCheck) {
 		this.schemaCheck = schemaCheck;
 	}
