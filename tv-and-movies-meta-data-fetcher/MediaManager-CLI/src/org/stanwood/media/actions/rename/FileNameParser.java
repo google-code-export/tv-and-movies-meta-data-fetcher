@@ -18,15 +18,14 @@ package org.stanwood.media.actions.rename;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.search.ReverseFilePatternMatcher;
 import org.stanwood.media.setup.MediaDirConfig;
-import org.stanwood.media.source.xbmc.expression.ValueType;
 
 /**
  * Used to parse a filename and work out the correct season and episode number
@@ -221,39 +220,9 @@ public class FileNameParser {
 	}
 
 	private static Map<Token, String> getTokens(File rootMediaDir,String renamePattern,String filename) {
-		List<String>groups = new ArrayList<String>();
-		Pattern p = Pattern.compile("(%.)"); //$NON-NLS-1$
-		renamePattern = renamePattern.replaceAll("\\"+File.separator,"\\\\"+File.separator );  //$NON-NLS-1$//$NON-NLS-2$
-		renamePattern = renamePattern.replaceAll("\\.","\\\\." );  //$NON-NLS-1$//$NON-NLS-2$
-		StringBuffer buffer = new StringBuffer();
-		Matcher m = p.matcher(renamePattern);
-		while (m.find()) {
-			String group = m.group();
-			if (Token.fromFull(group).getType()==ValueType.INTEGER){
-				m.appendReplacement(buffer,"([\\\\d]+)"); //$NON-NLS-1$
-				groups.add(group);
-			}
-			else {
-				m.appendReplacement(buffer,"(.*)"); //$NON-NLS-1$
-				groups.add(group);
-			}
-		}
-		m.appendTail(buffer);
-		renamePattern = buffer.toString();
-
-		p  = Pattern.compile(renamePattern);
-		if (filename.startsWith(rootMediaDir.getAbsolutePath())) {
-			filename=filename.substring(rootMediaDir.getAbsolutePath().length()+1);
-		}
-		m = p.matcher(filename);
-		if (m.matches()) {
-			Map<Token,String>result = new HashMap<Token,String>();
-			for (int i=0;i<m.groupCount();i++) {
-				result.put(Token.fromFull(groups.get(i)),m.group(i+1));
-			}
-			return result;
-		}
-		return null;
+		ReverseFilePatternMatcher reverseFilePatternMatcher = new ReverseFilePatternMatcher();
+		reverseFilePatternMatcher.parse(filename, renamePattern);
+		return reverseFilePatternMatcher.getValues();
 	}
 
 }
