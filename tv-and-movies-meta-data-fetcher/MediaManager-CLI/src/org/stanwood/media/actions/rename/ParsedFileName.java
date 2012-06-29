@@ -26,6 +26,7 @@ public class ParsedFileName {
 
 	private int season;
 	private List<Integer> episodes;
+	private String term;
 
 	/**
 	 * Returns the season of the file
@@ -58,4 +59,20 @@ public class ParsedFileName {
 	public void setEpisodes(List<Integer> episodes) {
 		this.episodes = episodes;
 	}
+
+	public String getTerm() {
+		return term;
+	}
+
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return term+" - "+season+"x"+episodes.toString();  //$NON-NLS-1$//$NON-NLS-2$
+	}
+
+
 }

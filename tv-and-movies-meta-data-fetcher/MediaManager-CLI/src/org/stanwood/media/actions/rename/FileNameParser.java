@@ -48,22 +48,22 @@ public class FileNameParser {
 
 	@SuppressWarnings("nls")
 	private static Pattern MULTI_PATTERNS[] = new Pattern[] {
-		Pattern.compile(".*?("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+FULL_EP_PATTERN+").*",Pattern.CASE_INSENSITIVE ),
-		Pattern.compile(".*?("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+").*",Pattern.CASE_INSENSITIVE ),
+		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+FULL_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ),
+		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ),
 	};
 
 	@SuppressWarnings("nls")
 	private static Pattern PATTERNS[] = new Pattern[] {
 		// Single episode patterns
-		compile(".*[s]([\\d]+)[e]([\\d]+).*"),
-		compile(".*[s]([\\d]+)\\.[e]([\\d]+).*"),
-		compile(".*?([\\d]{1,2})\\D([\\d]{2,2}).*"),
-		compile(".*season"+WHITE_SPACE+"([\\d]{1,2})"+WHITE_SPACE+"episode"+WHITE_SPACE+"([\\d]{1,2}).*"),
-		compile(".*S([\\d]{1,2})"+WHITE_SPACE+"E([\\d]{2,2}).*"),
-		compile("^([\\d]{2,2})([\\d]{2,2})"+WHITE_SPACE+".*"),
-		compile("^([\\d]{1,1})([\\d]{2,2})"+WHITE_SPACE+".*"),
-		compile(".*[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*"),
-		compile(".*[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*")
+		compile("(.*)[s]([\\d]+)[e]([\\d]+).*"),
+		compile("(.*)[s]([\\d]+)\\.[e]([\\d]+).*"),
+		compile("(.*?)([\\d]{1,2})\\D([\\d]{2,2}).*"),
+		compile("(.*)season"+WHITE_SPACE+"([\\d]{1,2})"+WHITE_SPACE+"episode"+WHITE_SPACE+"([\\d]{1,2}).*"),
+		compile("(.*)S([\\d]{1,2})"+WHITE_SPACE+"E([\\d]{2,2}).*"),
+		compile("^()([\\d]{2,2})([\\d]{2,2})"+WHITE_SPACE+".*"),
+		compile("^()([\\d]{1,1})([\\d]{2,2})"+WHITE_SPACE+".*"),
+		compile("(.*)[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*"),
+		compile("(.*)[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*")
 	};
 
 	private static Pattern compile(String pattern) {
@@ -77,32 +77,49 @@ public class FileNameParser {
 	 * @return The parsed information
 	 */
 	public static ParsedFileName parse(File file) {
+		return parse(file.getName());
+	}
+
+	/**
+	 * Parse the filename and work out the episode and season number. This does not use the media directory
+	 * to do reverse pattern lookups.
+	 * @param file The file been renamed
+	 * @return The parsed information
+	 */
+	public static ParsedFileName parse(String file) {
 		for (Pattern multiPattern : MULTI_PATTERNS) {
-			Matcher multiMatcher = multiPattern.matcher(file.getName());
+			Matcher multiMatcher = multiPattern.matcher(file);
 			if (multiMatcher.matches()) {
-				ParsedFileName result1 = matchSinglePattern(multiMatcher.group(1));
+				ParsedFileName result1 = matchSinglePattern(multiMatcher.group(2));
 				if (result1!=null) {
-					ParsedFileName result2 = matchSinglePattern(multiMatcher.group(3));
+					ParsedFileName result2 = matchSinglePattern(multiMatcher.group(4));
 					if (result2!=null && result1.getSeason()==result2.getSeason()) {
 						int endEp = result2.getEpisodes().get(0);
-						return getMultiResult(result1, endEp,multiMatcher.group(2));
+						return getMultiResult(result1, endEp,multiMatcher.group(3),multiMatcher.group(1),multiMatcher.group(5));
 					}
-					else if (isInteger(multiMatcher.group(3))) {
-						int endEp = Integer.valueOf(multiMatcher.group(3));
-						return getMultiResult(result1, endEp,multiMatcher.group(2));
+					else if (isInteger(multiMatcher.group(4))) {
+						int endEp = Integer.valueOf(multiMatcher.group(4));
+						ParsedFileName result = getMultiResult(result1, endEp,multiMatcher.group(3),multiMatcher.group(1),multiMatcher.group(5));
+						if (result!=null) {
+							return result;
+						}
 					}
 				}
 			}
 		}
 
-		ParsedFileName result = matchSinglePattern(file.getName());
+		ParsedFileName result = matchSinglePattern(file);
 		return result;
 	}
 
 	protected static ParsedFileName getMultiResult(ParsedFileName result1,
-			int endEp,String sep) {
+			int endEp,String sep,String term,String right) {
 		if (sep.equals("-")) { //$NON-NLS-1$
+			if (right.startsWith(".") || isInteger(right.substring(0,1))) {
+				return null;
+			}
 			ParsedFileName result = new ParsedFileName();
+			result.setTerm(term);
 			result.setSeason(result1.getSeason());
 			List<Integer> episodes = new ArrayList<Integer>();
 			for (int i=result1.getEpisodes().get(0);i<=endEp;i++) {
@@ -113,6 +130,7 @@ public class FileNameParser {
 		}
 		else {
 			ParsedFileName result = new ParsedFileName();
+			result.setTerm(term);
 			result.setSeason(result1.getSeason());
 			List<Integer> episodes = new ArrayList<Integer>();
 			episodes.add(result1.getEpisodes().get(0));
@@ -138,12 +156,13 @@ public class FileNameParser {
 			Matcher singleMatcher = singlePattern.matcher(text);
 			if (singleMatcher.matches()) {
 				ParsedFileName result = new ParsedFileName();
-				int seasonNumber = Integer.parseInt(singleMatcher.group(1));
-				int episodeNumber = Integer.parseInt(singleMatcher.group(2));
+				int seasonNumber = Integer.parseInt(singleMatcher.group(2));
+				int episodeNumber = Integer.parseInt(singleMatcher.group(3));
 				List<Integer>episodes = new ArrayList<Integer>();
 				episodes.add(episodeNumber);
 				result.setSeason(seasonNumber);
 				result.setEpisodes(episodes);
+				result.setTerm(singleMatcher.group(1));
 				return result;
 			}
 		}
@@ -172,7 +191,6 @@ public class FileNameParser {
 
 		Map<Token,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
-			// TODO Handle multiple episode numbers
 			String episodeNumber = tokens.get(Token.EPISODE);
 			String seasonNumber = tokens.get(Token.SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
