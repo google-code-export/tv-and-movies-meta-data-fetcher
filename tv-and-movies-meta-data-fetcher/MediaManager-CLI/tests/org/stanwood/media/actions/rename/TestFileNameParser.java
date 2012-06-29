@@ -26,7 +26,7 @@ public class TestFileNameParser {
 		try {
 			MediaDirConfig dirConfig = new MediaDirConfig();
 			dirConfig.setMediaDir(dir);
-			dirConfig.setPattern("%n/Season %s/%s %e - %t.%x");
+			dirConfig.setPattern("%n/Season %s/%s %e {to %f }- %t.%x");
 			dirConfig.setMode(Mode.TV_SHOW);
 
 			SearchResult result = new SearchResult("1234","xbmc","http://blah",null,Mode.TV_SHOW);
