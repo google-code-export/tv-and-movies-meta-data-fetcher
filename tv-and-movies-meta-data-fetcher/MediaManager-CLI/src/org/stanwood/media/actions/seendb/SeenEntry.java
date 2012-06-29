@@ -24,8 +24,7 @@ public class SeenEntry implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "filename",nullable= false,unique=true)
-	@Index(name="filename")
+	@Column(name = "filename",nullable= false,unique=true)	
 	private String fileName;
 	@Column(name = "lastModified",nullable= false)
 	private long lastModified;
