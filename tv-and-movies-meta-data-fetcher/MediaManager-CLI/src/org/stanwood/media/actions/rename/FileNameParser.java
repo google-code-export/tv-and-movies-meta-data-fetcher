@@ -192,13 +192,23 @@ public class FileNameParser {
 		Map<Token,String> tokens = getTokens(dirConfig.getMediaDir(),dirConfig.getPattern(),file.getAbsolutePath());
 		if (tokens!=null) {
 			String episodeNumber = tokens.get(Token.EPISODE);
+			String episodeNumberMax = tokens.get(Token.EPISODE_MAX);
 			String seasonNumber = tokens.get(Token.SEASON);
 			if (episodeNumber!=null && seasonNumber!=null) {
 				result = new ParsedFileName();
 				try {
 					result.setSeason(Integer.parseInt(seasonNumber));
 					List<Integer>episodes = new ArrayList<Integer>();
-					episodes.add(Integer.parseInt(episodeNumber));
+					int startEp = Integer.parseInt(episodeNumber);
+					if (episodeNumberMax==null) {
+						episodes.add(startEp);
+					}
+					else {
+						int endEp = Integer.parseInt(episodeNumberMax);
+						for (int i=startEp;i<=endEp;i++) {
+							episodes.add(i);
+						}
+					}
 					result.setEpisodes(episodes);
 					return result;
 				}
