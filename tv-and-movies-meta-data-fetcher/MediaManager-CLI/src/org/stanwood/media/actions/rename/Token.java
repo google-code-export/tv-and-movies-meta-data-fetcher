@@ -13,6 +13,8 @@ public enum Token {
 	SHOW_NAME('n',"([^\\"+File.separator+"]*?)",ValueType.STRING), //$NON-NLS-1$ //$NON-NLS-2$
 	/** the token for "episode number" */
 	EPISODE('e',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
+	/** the token for "last episode in the file" */
+	EPISODE_MAX('f',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "season number" */
 	SEASON('s',"(\\d+)",ValueType.INTEGER), //$NON-NLS-1$
 	/** the token for "extension" */
