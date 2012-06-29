@@ -6,20 +6,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.actions.rename.FileNameParser;
+import org.stanwood.media.actions.rename.ParsedFileName;
 
 /**
  * This searching strategy will search using common show naming conventions
  */
 public class EpisodeFileNameStraregy implements ISearchStrategy {
 
-	private final static Pattern PATTERNS[] = new Pattern[] {
-		Pattern.compile("(.+?)S(\\d+)E(\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) (\\d+)x(\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?)S(\\d+) E(\\d+) .*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) (\\d+)[^0-9](\\d+).*",Pattern.CASE_INSENSITIVE), //$NON-NLS-1$
-		Pattern.compile("(.+?) (\\d)(\\d\\d) .*",Pattern.CASE_INSENSITIVE) //$NON-NLS-1$
-	};
+	private final static Log log = LogFactory.getLog(EpisodeFileNameStraregy.class);
 
 	private final static Pattern PATTERN_WEB_ADDRESS = Pattern.compile("^(\\[ *www\\..*\\.com *] *\\- *).*",Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
@@ -39,14 +37,20 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		else {
 			stripTokens = new ArrayList<Pattern>();
 		}
-		for (Pattern p : PATTERNS) {
-			Matcher m = p.matcher(term);
-			if (m.matches()) {
-				return createSearchDetails(stripTokens,m.group(1),Integer.parseInt(m.group(2)),Integer.parseInt(m.group(3)));
+		SearchDetails result = null;
+		ParsedFileName parsedFile = FileNameParser.parse(term.toString());
+		if (parsedFile!=null) {
+			if (parsedFile.getTerm().trim().length()>0) {
+				result = createSearchDetails(stripTokens,parsedFile.getTerm(),parsedFile.getSeason(),parsedFile.getEpisodes());
+			}
+		}
+		if (log.isDebugEnabled()) {
+			if (result==null) {
+				log.debug("Unable to find search details for "+mediaFile.getAbsolutePath()); //$NON-NLS-1$
 			}
 		}
 
-		return null;
+		return result;
 	}
 
 	private void stripWebAddresses(StringBuilder term) {
@@ -56,15 +60,13 @@ public class EpisodeFileNameStraregy implements ISearchStrategy {
 		}
 	}
 
-	protected SearchDetails createSearchDetails(List<Pattern>stripTokens,String rawTerm,int season,int episode) {
+	protected SearchDetails createSearchDetails(List<Pattern>stripTokens,String rawTerm,int season,List<Integer> episodes) {
 		StringBuilder term = new StringBuilder(rawTerm);
 		SearchHelper.removeStripTokens(stripTokens,term);
 		SearchHelper.trimRubishFromEnds(term);
 		SearchDetails details = new SearchDetails(term.toString(), null, null);
 		details.setSeason(season);
-		// TODO Handle multiple episode numbers
-		List<Integer>episodeNums = new ArrayList<Integer>();
-		details.setEpisodes(episodeNums);
+		details.setEpisodes(episodes);
 		return details;
 	}
 
