@@ -213,7 +213,13 @@ public class MediaDirectory {
 						if (film != null) {
 							for (IStore store : stores) {
 								if (!controller.isTestRun()) {
-									store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+									try {
+										store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+									}
+									catch(StoreException e) {
+										log.error("Unable to cache film",e);
+										return null;
+									}
 								}
 							}
 							break;
@@ -324,7 +330,13 @@ public class MediaDirectory {
 						if (episode != null) {
 							episode.setEpisodes(episodeNums);
 							for (IStore store : stores) {
-								store.cacheEpisode(rootMediaDir,episodeFile, episode);
+								try {
+									store.cacheEpisode(rootMediaDir,episodeFile, episode);
+								}
+								catch(StoreException e) {
+									log.error("Unable to cache episode",e);
+									return null;
+								}
 							}
 							break;
 						}

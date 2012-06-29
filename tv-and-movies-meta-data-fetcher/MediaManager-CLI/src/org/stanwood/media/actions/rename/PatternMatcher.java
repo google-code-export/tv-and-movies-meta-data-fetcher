@@ -44,6 +44,7 @@ public class PatternMatcher {
 			return text;
 		}
 		s2 = s2.replaceAll("\\?",""); //$NON-NLS-1$ //$NON-NLS-2$
+		s2 = s2.trim();
 		return s2;
 	}
 
