@@ -1,7 +1,13 @@
+* Fri Jun 29 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
+- Handle TV episodes that contain more than one episode
+* Thu Jun 28 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
+- Added new File Database store
+- Added ability to store seen file information within a database resources
+- Added command line tool to print database schemas
 * Wed Jun 13 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
 - Added configuration option for strip tokens.
 * Wed Jun 07 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
-- If now sources, stores or actions are configured, sensible defaults are used.
+- If sources, stores or actions are configured, sensible defaults are used.
 * Sat Jun 02 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v2.2
 - Added new database store
 - Searchers by adding new ignore tokens
