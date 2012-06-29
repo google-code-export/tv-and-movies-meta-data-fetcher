@@ -47,7 +47,7 @@ public class TestNormalizeFilename {
 	@Test
 	public void testAccents() {
 		Assert.assertEquals("Finale",PatternMatcher.normalizeText("Finalé"));
-		Assert.assertEquals(" hello A",PatternMatcher.normalizeText("口水雞 hello Ä"));
+		Assert.assertEquals("hello A",PatternMatcher.normalizeText("口水雞 hello Ä"));
 		Assert.assertEquals("AAACEeo",PatternMatcher.normalizeText("ÃÄÅÆÇÈØèæöø©®"));
 	}
 
