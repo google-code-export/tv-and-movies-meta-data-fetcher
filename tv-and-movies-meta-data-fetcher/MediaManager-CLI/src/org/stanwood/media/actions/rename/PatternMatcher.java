@@ -110,9 +110,13 @@ public class PatternMatcher {
 		}
 
 		newName = newName.replaceAll(Token.EPISODE.getFull(), episodeNum);
-		String lastEpisodeNum = String.valueOf(episode.getEpisodes().get(episode.getEpisodes().size()-1));
-		if (!lastEpisodeNum.equals(episodeNum)) {
-			newName = newName.replaceAll(Token.EPISODE_MAX.getFull(), episodeNum);
+		int lastEpisodeNum = episode.getEpisodes().get(episode.getEpisodes().size()-1);
+		if (lastEpisodeNum!=episode.getEpisodeNumber() && lastEpisodeNum>episode.getEpisodeNumber()) {
+			String lastEpisodeNumStr = String.valueOf(lastEpisodeNum);
+			if (lastEpisodeNumStr.length()==1) {
+				lastEpisodeNumStr = "0" +lastEpisodeNumStr; //$NON-NLS-1$
+			}
+			newName = newName.replaceAll(Token.EPISODE_MAX.getFull(), lastEpisodeNumStr);
 		}
 
 		newName = newName.replaceAll(Token.PERCENT.getFull(), "%"); //$NON-NLS-1$
