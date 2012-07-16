@@ -457,7 +457,15 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				ExtensionInfo<? extends ISource> sourceInfo = controller.getSourceInfo(id);
 				if (sourceInfo==null) {
-					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id)); //$NON-NLS-1$
+					StringBuilder sb = new StringBuilder();
+					for (ExtensionInfo<? extends ISource> si : controller.getAvalibaleSources() ) {
+						if (sb.length()>0) {
+							sb.append(", "); //$NON-NLS-1$
+						}
+						sb.append(si.getId());
+					}
+
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id,sb.toString())); //$NON-NLS-1$
 				}
 				ISource source = sourceInfo.getExtension(dirConfig,num++);
 				if (sourceConfig.getParams() != null) {
@@ -490,7 +498,15 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				ExtensionInfo<? extends IStore> storeInfo = controller.getStoreInfo(id);
 				if (storeInfo==null) {
-					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id)); //$NON-NLS-1$
+					StringBuilder sb = new StringBuilder();
+					for (ExtensionInfo<? extends IStore> si : controller.getAvalibaleStores() ) {
+						if (sb.length()>0) {
+							sb.append(", "); //$NON-NLS-1$
+						}
+						sb.append(si.getId());
+					}
+
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id,sb.toString())); //$NON-NLS-1$
 				}
 				IStore store = storeInfo.getExtension(dirConfig,num++);
 				if (storeConfig.getParams() != null) {
@@ -524,7 +540,15 @@ public class ConfigReader extends BaseConfigReader {
 			try {
 				ExtensionInfo<? extends IAction> actionInfo = controller.getActionInfo(id);
 				if (actionInfo==null) {
-					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id)); //$NON-NLS-1$
+					StringBuilder sb = new StringBuilder();
+					for (ExtensionInfo<? extends IAction> ai : controller.getAvalibaleActions() ) {
+						if (sb.length()>0) {
+							sb.append(", "); //$NON-NLS-1$
+						}
+						sb.append(ai.getId());
+					}
+
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id,sb.toString())); //$NON-NLS-1$
 				}
 				IAction action = actionInfo.getExtension(dirConfig,num++);
 				if (actionConfig.getParams() != null) {
