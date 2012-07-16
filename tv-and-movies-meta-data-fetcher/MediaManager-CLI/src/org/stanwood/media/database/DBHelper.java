@@ -25,6 +25,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
+import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.stanwood.media.setup.DBResource;
@@ -101,6 +102,9 @@ public class DBHelper {
 		String dialect = resource.getDialect();
 		if (dialect.equals(MySQLDialect.class.getName())) {
 			dialect=CustomMySQLDialect.class.getName();
+		}
+		else if (dialect.equals(MySQL5Dialect.class.getName())) {
+			dialect=CustomMySQL5Dialect.class.getName();
 		}
 		Configuration configuration;
 		try {
