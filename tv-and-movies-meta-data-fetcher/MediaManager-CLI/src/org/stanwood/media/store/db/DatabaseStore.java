@@ -4,6 +4,7 @@ package org.stanwood.media.store.db;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
@@ -142,8 +143,10 @@ public class DatabaseStore implements IStore {
 						"  and episode.season.seasonNumber = :seasonNum " + //$NON-NLS-1$
 						"  and episode.episodeNumber = :episodeNum" + //$NON-NLS-1$
 						"  and episode.season.show.mediaDirectory.location = :mediaDir"); //$NON-NLS-1$
-		q.setString(
-				"showUrl", episode.getSeason().getShow().getShowURL().toExternalForm()); //$NON-NLS-1$
+		ISeason season = episode.getSeason();
+		IShow show = season.getShow();
+		URL showUrl = show.getShowURL();
+		q.setString("showUrl", showUrl.toExternalForm()); //$NON-NLS-1$
 		q.setInteger("seasonNum", episode.getSeason().getSeasonNumber()); //$NON-NLS-1$
 		q.setInteger("episodeNum", episode.getEpisodeNumber()); //$NON-NLS-1$
 		q.setString("mediaDir", mediaDir.getAbsolutePath()); //$NON-NLS-1$
