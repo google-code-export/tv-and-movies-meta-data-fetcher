@@ -8,7 +8,10 @@ Update Documents
 	* Document how to add other database drivers
 Allow the seen DB to use the database resource
     * Move the code from the FileDatabaseStore that creates the initial DB to a generic place so it can be used by the seenDB
-Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore	
+Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore
+	* Add support for copying whole directiores
+	* Update docs to show example of usaage
+	* Update docs to show correct usage	
 Docs
 	- Document new %f pattern	
 

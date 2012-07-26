@@ -2,12 +2,15 @@ package org.stanwood.media.cli.manager;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.MediaDirectory;
@@ -153,7 +156,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				else {
 					IEpisode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
 					if (episode==null) {
-						fatal(MessageFormat.format("Unable to find episode {0} in media directory {1}",mediaFile,rootMediaDir));
+						fatal(MessageFormat.format("Unable to find episode ''{0}'' in media directory ''{1}''",mediaFile,rootMediaDir));
 						return false;
 					}
 					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
@@ -294,6 +297,15 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 		return null;
 	}
 
+
+	@Override
+	protected void printUsage(Options options,PrintStream stdout,PrintStream stderr) {
+		PrintWriter pw = new PrintWriter(stdout);
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printUsage(pw, 80, getName(),options);
+		pw.flush();
+		stdout.println(getPrintArguments());
+	}
 
 	protected String getPrintArguments() {
 		return Messages.getString("CLICopyStoreToStore.MEDIA_FILES"); //$NON-NLS-1$
