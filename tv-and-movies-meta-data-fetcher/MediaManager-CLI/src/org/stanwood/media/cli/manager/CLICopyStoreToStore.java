@@ -152,6 +152,10 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				}
 				else {
 					IEpisode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
+					if (episode==null) {
+						fatal(MessageFormat.format("Unable to find episode {0} in media directory {1}",mediaFile,rootMediaDir));
+						return false;
+					}
 					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
 				}
 				log.info(MessageFormat.format(Messages.getString("CLICopyStoreToStore.STORE_UPDATED"),toStore.getClass().getName(),mediaFile)); //$NON-NLS-1$
