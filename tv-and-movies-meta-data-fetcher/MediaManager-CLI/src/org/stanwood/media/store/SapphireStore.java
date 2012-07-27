@@ -439,4 +439,16 @@ public class SapphireStore implements IStore {
 			throws StoreException {
 
 	}
+
+	/** {@inheritDoc}} */
+	@Override
+	public boolean fileKnownByStore(MediaDirectory mediaDirectory, File file) throws StoreException {
+		if (getEpisode(mediaDirectory,file)!=null) {
+			return true;
+		}
+		if (getFilm(mediaDirectory, file)!=null) {
+			return true;
+		}
+		return false;
+	}
 }

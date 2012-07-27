@@ -228,7 +228,8 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 		else {
 			files = new ArrayList<File>();
 			for (String s : cmd.getArgs()) {
-				files.add(new File(s));
+				File f = new File(s);
+				files.add(f);
 			}
 		}
 
@@ -237,6 +238,12 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 		}
 		return true;
 	}
+
+	private void stripFilesNotInStore(List<File> files) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 	protected String getPrintArguments() {
 		return Messages.getString("CLICopyToMediaDir.MEDIA_FILES"); //$NON-NLS-1$

@@ -688,4 +688,20 @@ public class DatabaseStore implements IStore {
 
 	}
 
+	/** {@inheritDoc}} */
+	@Override
+	public boolean fileKnownByStore(MediaDirectory mediaDirectory, File file)
+			throws StoreException {
+		boolean result = false;
+		beginTransaction();
+		Query q = session.createQuery("from VideoFile where location = :loc"); //$NON-NLS-1$
+		q.setString("loc", file.getAbsolutePath()); //$NON-NLS-1$
+
+		if (q.list().size() > 0) {
+			result = true;
+		}
+		commitTransaction();
+		return result;
+	}
+
 }

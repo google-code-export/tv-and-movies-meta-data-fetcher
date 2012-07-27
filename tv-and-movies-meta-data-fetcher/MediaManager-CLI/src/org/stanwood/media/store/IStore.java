@@ -276,4 +276,7 @@ public interface IStore extends IExtension  {
 	 * @throws StoreException Thrown if their are any problems
 	 */
 	public void fileUpdated(MediaDirectory mediaDirectory,File file) throws StoreException;
+
+
+	public boolean fileKnownByStore(MediaDirectory mediaDirectory,File file) throws StoreException;
 }

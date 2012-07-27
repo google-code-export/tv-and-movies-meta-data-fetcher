@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -32,6 +33,7 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.store.IStore;
+import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -277,14 +279,41 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 					fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UNABLE_FIND_FILE"),file)); //$NON-NLS-1$
 					return false;
 				}
-				files.add(file);
+
+				if (file.isDirectory()) {
+					files.addAll(FileHelper.listFiles(file));
+				}
+				else {
+					files.add(file);
+				}
+			}
+
+			try {
+				stripFilesNotInStore(files);
+			} catch (StoreException e) {
+				fatal(e);
+				return false;
 			}
 		}
+
 
 		if (cmd.hasOption(NOUPDATE_OPTION)) {
 			xbmcUpdate = false;
 		}
 		return true;
+	}
+
+	private void stripFilesNotInStore(List<File> files) throws StoreException {
+		Iterator<File> it = files.iterator();
+		while (it.hasNext()) {
+			File f = it.next();
+			if (!fromStore.fileKnownByStore(rootMediaDir, f)) {
+				if (log.isDebugEnabled()) {
+					log.debug(MessageFormat.format("Not copying file {0} because it's not knowm by the from store",f));
+				}
+				it.remove();
+			}
+		}
 	}
 
 	private IStore findStoreById(String id) {
