@@ -439,4 +439,16 @@ public class RemoteMacOSXItunesStore implements IStore {
 	protected boolean shouldUpdateItunes() {
 		return filesDeleted.size()+filesAdded.size()+filesUpdated.size()>MAX_FILE_COUNT;
 	}
+
+	/** {@inheritDoc}} */
+	@Override
+	public boolean fileKnownByStore(MediaDirectory mediaDirectory, File file) throws StoreException {
+		if (getEpisode(mediaDirectory,file)!=null) {
+			return true;
+		}
+		if (getFilm(mediaDirectory, file)!=null) {
+			return true;
+		}
+		return false;
+	}
 }
