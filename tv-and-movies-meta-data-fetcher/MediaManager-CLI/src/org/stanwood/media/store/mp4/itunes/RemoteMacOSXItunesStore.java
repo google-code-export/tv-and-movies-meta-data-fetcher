@@ -105,6 +105,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile,
 			IEpisode episode) throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("Cache Episode: "+ episodeFile); //$NON-NLS-1$
+		}
 		if (!inited) {
 			init();
 		}
@@ -119,6 +122,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	@Override
 	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,
 			Integer part) throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("Caching Film: "+filmFile); //$NON-NLS-1$
+		}
 		if (!inited) {
 			init();
 		}
@@ -132,6 +138,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("Rename File: "+oldFile+" -> " +newFile ); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		if (!inited) {
 			init();
 		}
@@ -147,6 +156,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("File Deleted: "+file); //$NON-NLS-1$
+		}
 		if (!inited) {
 			init();
 		}
@@ -167,6 +179,9 @@ public class RemoteMacOSXItunesStore implements IStore {
 	}
 
 	protected void updateItunes() throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("Updating iTunes"); //$NON-NLS-1$
+		}
 		if (filesAdded.size()==0 && filesDeleted.size()==0 && filesUpdated.size()==0) {
 			if (log.isDebugEnabled()) {
 				log.debug("No changes to send to the server");				 //$NON-NLS-1$
@@ -427,6 +442,10 @@ public class RemoteMacOSXItunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void fileUpdated(MediaDirectory mediaDirectory, File file) throws StoreException {
+		if (log.isDebugEnabled()) {
+			log.debug("File Updated: "+ file); //$NON-NLS-1$
+		}
+
 		if (!inited) {
 			init();
 		}
