@@ -6,14 +6,15 @@ Version 2.2
 Update Documents
 	* Spell check document
 	* Document how to add other database drivers
+	* - Document new %f pattern	
 Allow the seen DB to use the database resource
     * Move the code from the FileDatabaseStore that creates the initial DB to a generic place so it can be used by the seenDB
 Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore
 	* Add support for copying whole directiores
 	* Update docs to show example of usaage
-	* Update docs to show correct usage	
-Docs
-	- Document new %f pattern	
+	* Update docs to show correct usag
+Bugs
+	* Find out why the remote itune store does not seem to be triggering	
 
 Version 2.3
 -----------
