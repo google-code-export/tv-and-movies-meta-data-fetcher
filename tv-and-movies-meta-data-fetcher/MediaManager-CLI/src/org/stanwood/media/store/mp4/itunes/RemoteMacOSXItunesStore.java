@@ -28,7 +28,6 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
-import org.stanwood.media.store.mp4.Messages;
 
 /**
  * <p>
@@ -189,15 +188,15 @@ public class RemoteMacOSXItunesStore implements IStore {
 			return;
 		}
 		log.info("Connecting to itunes...");
-		ITunesRemoteClient client = new ITunesRemoteClient();
-		client.connect(hostname,port);
-		client.login(user, password);
-		try {
-			updateITunes(client);
-		} catch (StoreException e) {
-			log.error(Messages.getString("RemoteMacOSXItunesStore.UNABLE_UPDATE"),e); //$NON-NLS-1$
-		}
-		client.disconnect();
+//		ITunesRemoteClient client = new ITunesRemoteClient();
+//		client.connect(hostname,port);
+//		client.login(user, password);
+//		try {
+//			updateITunes(client);
+//		} catch (StoreException e) {
+//			log.error(Messages.getString("RemoteMacOSXItunesStore.UNABLE_UPDATE"),e); //$NON-NLS-1$
+//		}
+//		client.disconnect();
 	}
 
 	private void checkParameters() throws StoreException {
@@ -226,7 +225,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 			try {
 				this.hostname = InetAddress.getByName(value);
 			} catch (UnknownHostException e) {
-				throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.INVALID_HOSTNAME"), hostname),e); //$NON-NLS-1$
+				throw new StoreException(MessageFormat.format(Messages.getString("RemoteMacOSXItunesStore.INVALID_HOSTNAME"), value),e); //$NON-NLS-1$
 			}
 		}
 		else if (key.equals(RemoteMacOSXItunesStoreInfo.PARAM_PORT.getName())) {
