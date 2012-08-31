@@ -7,9 +7,7 @@ Update Documents
 	* Spell check document
 	* Document how to add other database drivers	
 Check the copy store to store script works and can copy from XMLStore2 -> DatabaseStore
-	* Add support for copying whole directiores
 	* Update docs to show example of usaage
-	* Update docs to show correct usag
 Bugs
 	* Find out why the remote itune store does not seem to be triggering	
 
