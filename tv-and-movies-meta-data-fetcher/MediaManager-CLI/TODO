@@ -5,7 +5,8 @@ Version 2.2
 -----------
 Update Documents
 	* Spell check document
-	* Document how to add other database drivers	
+	* Document how to add other database drivers
+Check all message strings are in bundles
 Bugs
 	* Find out why the remote itune store does not seem to be triggering	
 
