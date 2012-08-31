@@ -137,7 +137,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 		try {
 			episode.getFiles().add(new VideoFile(episodeFile, episodeFile, null, rootMediaDir));
-			Node node = selectSingleNode(seasonNode, nodeName + "[number=" + episode.getEpisodeNumber() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+			Node node = selectSingleNode(seasonNode, nodeName + "[@number=" + episode.getEpisodeNumber() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (node == null) {
 				node = doc.createElement(nodeName);
 				((Element) node).setAttribute("number", String.valueOf(episode.getEpisodeNumber())); //$NON-NLS-1$
@@ -187,6 +187,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeActors(Node node, IVideoActors episode) {
+		deleteIfFound(node, "actors"); //$NON-NLS-1$
 		Document doc = node.getOwnerDocument();
 		Element actors = doc.createElement("actors"); //$NON-NLS-1$
 		if (episode.getActors() != null) {
@@ -212,13 +213,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void appendFile(Document doc, Node parent, VideoFile file, File rootMediaDir) throws StoreException {
 		if (file != null) {
 			try {
-
+				String query = "file[@location=" + quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir)) + "]";
 				Element fileNode = (Element) selectSingleNode(
 						parent,
-						"file[@location=" + quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir)) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+						query);
 				if (fileNode == null) {
 					fileNode = doc.createElement("file"); //$NON-NLS-1$
-					parent.appendChild(fileNode);
+					appendChildAtBottom(parent,fileNode);
 				}
 
 				fileNode.setAttribute("location", makePathRelativeToMediaDir(file.getLocation(), rootMediaDir)); //$NON-NLS-1$
@@ -230,6 +231,28 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 		}
 	}
+
+	private void appendChildAtBottom(Node parent, Element newElement) {
+		Node lastChild = getLastChild(parent);
+		insertAfter(parent,lastChild,newElement);
+//		parent.getParentNode().insertBefore(newElement, parent.getNextSibling());
+//		parent.appendChild(newElement);
+	}
+
+	private Node getLastChild(Node parent) {
+		return parent.getChildNodes().item(parent.getChildNodes().getLength()-1);
+	}
+
+	private void insertAfter(Node parent,Node refChild,Element newChild) {
+		Node next = refChild.getNextSibling();
+		if(next!=null) {
+			parent.insertBefore(newChild, next);
+		}
+		else {
+			parent.appendChild(newChild);
+		}
+	}
+
 
 	/**
 	 * This is used to write a film to the store.
@@ -303,6 +326,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeChapters(IFilm film, Element filmNode) {
+		deleteIfFound(filmNode, "chapters"); //$NON-NLS-1$
 		Document doc = filmNode.getOwnerDocument();
 		Element chaptersNode = doc.createElement("chapters"); //$NON-NLS-1$
 		for (Chapter chapter : film.getChapters()) {
@@ -336,6 +360,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeWriters(Element node, IVideo video) {
+		deleteIfFound(node, "writers"); //$NON-NLS-1$
 		Document doc = node.getOwnerDocument();
 		Element writersNode = doc.createElement("writers"); //$NON-NLS-1$
 		if (video.getWriters() != null) {
@@ -359,6 +384,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private void writeDirectors(Element node, IVideo video) {
 		Document doc = node.getOwnerDocument();
+		deleteIfFound(node, "directors"); //$NON-NLS-1$
 		Element directorsNode = doc.createElement("directors"); //$NON-NLS-1$
 		if (video.getDirectors() != null) {
 			for (String value : video.getDirectors()) {
@@ -368,6 +394,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			}
 		}
 		node.appendChild(directorsNode);
+	}
+
+	private void deleteIfFound(Node parent, String name) {
+		Element node = getFirstChildElement(parent, name);
+		if (node!=null) {
+			node.getParentNode().removeChild(node);
+		}
 	}
 
 	protected void readCertifications(IVideoCertification video, Node videoNode) throws XMLParserException,
@@ -383,6 +416,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeCertifications(IVideoCertification video, Element node) {
+		deleteIfFound(node, "certifications"); //$NON-NLS-1$
 		Document doc = node.getOwnerDocument();
 		Element certificationsNode = doc.createElement("certifications"); //$NON-NLS-1$
 		if (video.getCertifications() != null) {
@@ -397,6 +431,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeGenres(IVideoGenre video, Element node) {
+		deleteIfFound(node, "genres"); //$NON-NLS-1$
 		Document doc = node.getOwnerDocument();
 		Element genresNode = doc.createElement("genres"); //$NON-NLS-1$
 		if (video.getGenres() != null) {
@@ -604,6 +639,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void appendDescription(Document doc, String shortSummary, String longSummary, Element parent) {
+		deleteIfFound(parent, "description"); //$NON-NLS-1$
 		Element description = doc.createElement("description"); //$NON-NLS-1$
 		if (shortSummary != null) {
 			Element shortDesc = doc.createElement("short"); //$NON-NLS-1$
@@ -615,7 +651,13 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			longDesc.appendChild(doc.createCDATASection(longSummary));
 			description.appendChild(longDesc);
 		}
-		parent.appendChild(description);
+		Node extraNode=getFirstChildElement(parent, "extra"); //$NON-NLS-1$
+		if (extraNode!=null) {
+			insertAfter(parent, extraNode, description);
+		}
+		else {
+			parent.appendChild(description);
+		}
 	}
 
 	/**
@@ -744,6 +786,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	}
 
 	private void writeRating(IVideoRating video, Element node) {
+		deleteIfFound(node, "rating"); //$NON-NLS-1$
 		if (video.getRating() != null) {
 			Element ratingNode = node.getOwnerDocument().createElement("rating"); //$NON-NLS-1$
 			ratingNode.setAttribute("value", String.valueOf(video.getRating().getRating())); //$NON-NLS-1$
@@ -873,13 +916,16 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		}
 	}
 
-	private void writeEpisodeNumbers(Element node, IEpisode episode) {
+	private void writeEpisodeNumbers(Element node, IEpisode episode) throws XMLParserException {
 		if (episode.getEpisodes()!=null) {
+
 			Document doc = node.getOwnerDocument();
 			for (Integer value : episode.getEpisodes()) {
-				Element episodeNumNode = doc.createElement("episodeNum"); //$NON-NLS-1$
-				episodeNumNode.setAttribute("number", String.valueOf(value)); //$NON-NLS-1$
-				node.appendChild(episodeNumNode);
+				if (selectSingleNode(node, "episodeNum[@number="+value+"]")==null) { //$NON-NLS-1$ //$NON-NLS-2$
+					Element episodeNumNode = doc.createElement("episodeNum"); //$NON-NLS-1$
+					episodeNumNode.setAttribute("number", String.valueOf(value)); //$NON-NLS-1$
+					node.appendChild(episodeNumNode);
+				}
 			}
 		}
 	}

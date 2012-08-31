@@ -193,23 +193,23 @@ public class MediaSearcher {
 				return null;
 			}
 			if (!dir.getController().isTestRun()) {
-				boolean found = false;
+//				boolean found = false;
 				Integer maxPart = 0;
 				for (VideoFile vf : film.getFiles()) {
-					if (vf.getLocation().equals(file)) {
-						found = true;
-					}
+//					if (vf.getLocation().equals(file)) {
+//						found = true;
+//					}
 					if (result.getPart()!=null) {
 						if (vf.getPart()!=null && vf.getPart()>maxPart) {
 							maxPart = vf.getPart();
 						}
 					}
 				}
-				if (!found) {
+//				if (!found) {
 					for (IStore store : dir.getStores()) {
 						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
 					}
-				}
+//				}
 
 				// Update existing stores with new part
 				if (result.getPart()!=null && result.getPart()>maxPart) {
@@ -275,19 +275,25 @@ public class MediaSearcher {
 						return null;
 					}
 
-					boolean found = false;
-					if (episode.getFiles()!=null) {
-						for (VideoFile vf : episode.getFiles()) {
-							if (vf.getLocation().equals(file)) {
-								found = true;
-							}
-						}
-					}
-					if (!found) {
-						for (IStore store : dir.getStores()) {
-							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
-						}
-					}
+//					boolean found = false;
+//					if (episode.getFiles()!=null) {
+//						for (VideoFile vf : episode.getFiles()) {
+//							if (vf.getLocation().equals(file)) {
+//								if (log.isDebugEnabled()) {
+//									log.debug("Found file : " + file); //$NON-NLS-1$
+//								}
+//								found = true;
+//							}
+//						}
+//					}
+//					if (!found) {
+//						for (IStore store : dir.getStores()) {
+//							if (log.isDebugEnabled()) {
+//								log.debug("Caching episode "+file+" in store " + store.getClass());  //$NON-NLS-1$//$NON-NLS-2$
+//							}
+//							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
+//						}
+//					}
 
 					return episode;
 				}

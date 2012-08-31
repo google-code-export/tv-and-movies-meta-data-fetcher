@@ -1,6 +1,7 @@
 package org.stanwood.media.store.mp4.itunes;
 
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -188,15 +189,15 @@ public class RemoteMacOSXItunesStore implements IStore {
 			return;
 		}
 		log.info("Connecting to itunes...");
-//		ITunesRemoteClient client = new ITunesRemoteClient();
-//		client.connect(hostname,port);
-//		client.login(user, password);
-//		try {
-//			updateITunes(client);
-//		} catch (StoreException e) {
-//			log.error(Messages.getString("RemoteMacOSXItunesStore.UNABLE_UPDATE"),e); //$NON-NLS-1$
-//		}
-//		client.disconnect();
+		ITunesRemoteClient client = new ITunesRemoteClient();
+		client.connect(hostname,port);
+		client.login(user, password);
+		try {
+			updateITunes(client);
+		} catch (StoreException e) {
+			log.error(Messages.getString("RemoteMacOSXItunesStore.UNABLE_UPDATE"),e); //$NON-NLS-1$
+		}
+		client.disconnect();
 	}
 
 	private void checkParameters() throws StoreException {
