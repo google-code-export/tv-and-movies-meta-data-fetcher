@@ -1223,6 +1223,11 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
             </listitem>
 
             <listitem>
+              <para><literal>%f</literal> - last episode number of the episode contains multiple
+              episodes</para>
+            </listitem>
+
+            <listitem>
               <para><literal>%h</literal> - show Id</para>
             </listitem>
 
