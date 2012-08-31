@@ -774,56 +774,86 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
     <sect1 id="mediacopystore">
       <title id="mediacopystore.title">&mmcopystore;</title>
 
-      <para>The &mmcopystore; command is used to copy media file information from one
-      store to another. <cmdsynopsis>
+      <para>The &mmcopystore; command is used to copy media file information
+      from one store to another. This can be usefull for migrating media
+      information if add store.<cmdsynopsis>
           <command>&mmcopystore;</command>
-		  <arg>-c <replaceable>config file</replaceable></arg>
-		  <arg>-d <replaceable>directory</replaceable></arg>
-		  <arg>-f <replaceable>from store ID</replaceable></arg>          
+
+          <arg>-c <replaceable>config file</replaceable></arg>
+
+          <arg>-d <replaceable>directory</replaceable></arg>
+
+          <arg>-f <replaceable>from store ID</replaceable></arg>
+
           <arg>-h</arg>
-		  <arg>-l <replaceable>INFO|DEBUG|log4j configuration file</replaceable></arg>
-		  <arg>-o <replaceable>to store ID</replaceable></arg>
+
+          <arg>-l <replaceable>INFO|DEBUG|log4j configuration
+          file</replaceable></arg>
+
+          <arg>-o <replaceable>to store ID</replaceable></arg>
+
           <arg>-t</arg>
+
           <arg>-u</arg>
+
           <arg>-v</arg>
+
           <arg>&lt;media files.../directory...&gt;</arg>
         </cmdsynopsis></para>
 
       <para>The command has the following options: <itemizedlist>
-      	  <listitem>
-            <para><literal>-f, --fromStore</literal> The store to read from</para>
+          <listitem>
+            <para><literal>-f, --fromStore</literal> The store to read
+            from</para>
           </listitem>
+
           <listitem>
             <para><literal>-v, --version</literal> Display the version</para>
           </listitem>
+
           <listitem>
             <para><literal>-u, --noupdate</literal> If option is given, the
             XBMC addon scrapers are not updated.</para>
           </listitem>
+
           <listitem>
-            <para><literal>-d, --dir</literal> The media directory been used.</para>
+            <para><literal>-d, --dir</literal> The media directory been
+            used.</para>
           </listitem>
+
           <listitem>
             <para><literal>-t, --test</literal> Enable test mode that cause no
             changes to be written to the filesystem.</para>
           </listitem>
+
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
             config file. If option is not given then it will load from default
             locations.</para>
           </listitem>
-		  <listitem>
+
+          <listitem>
             <para><literal>-o, --toStore</literal> The store to copy to</para>
           </listitem>
+
           <listitem>
             <para><literal>-l, --log_config</literal> The log configuration
             mode. Either INFO, or DEBUG for the built in configurations, or a
             file name of a log4j configuration file.</para>
           </listitem>
+
           <listitem>
             <para><literal>-h, --help</literal> Show the help message</para>
+
           </listitem>
         </itemizedlist></para>
+        <example>
+              <title>Useage examples of &mmcopystore;</title>
+              <para>Example of copying a single files details from one storeto another</para>
+              <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows/Heroes/Season\ 1/1\ 18\ -\ Parasite.m4v</programlisting>
+              <para>Example of copying the details of all media files in a media directory from one store to another</para>
+              <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows</programlisting>              	
+        </example>
     </sect1>
 
     <sect1 id="mediamovecmd">
@@ -1213,8 +1243,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
             </listitem>
 
             <listitem>
-              <para><literal>%f</literal> - last episode number of the episode contains multiple
-              episodes</para>
+              <para><literal>%f</literal> - last episode number of the episode
+              contains multiple episodes</para>
             </listitem>
 
             <listitem>
