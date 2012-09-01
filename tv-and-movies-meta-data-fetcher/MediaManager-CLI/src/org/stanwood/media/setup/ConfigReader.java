@@ -104,6 +104,7 @@ public class ConfigReader extends BaseConfigReader {
 		DEFAULT_STRIP_TOKENS.add(Pattern.compile("1080p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 		DEFAULT_STRIP_TOKENS.add(Pattern.compile("720p",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 		DEFAULT_STRIP_TOKENS.add(Pattern.compile("Blueray",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
+		DEFAULT_STRIP_TOKENS.add(Pattern.compile("Bluray",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 		DEFAULT_STRIP_TOKENS.add(Pattern.compile("x264",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 		DEFAULT_STRIP_TOKENS.add(Pattern.compile("Ntsc",Pattern.CASE_INSENSITIVE));  //$NON-NLS-1$
 	}
