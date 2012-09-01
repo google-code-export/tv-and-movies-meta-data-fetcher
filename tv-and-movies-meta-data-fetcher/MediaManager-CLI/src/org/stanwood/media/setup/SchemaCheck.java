@@ -18,9 +18,9 @@ package org.stanwood.media.setup;
 
 public enum SchemaCheck {
 
-	NONE("none"),
-	UPDATE("update"),
-	VALIDATE("validate");
+	NONE("none"), //$NON-NLS-1$
+	UPDATE("update"), //$NON-NLS-1$
+	VALIDATE("validate"); //$NON-NLS-1$
 
 	private String value;
 

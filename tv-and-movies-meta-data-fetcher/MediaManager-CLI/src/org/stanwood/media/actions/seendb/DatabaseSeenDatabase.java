@@ -36,7 +36,7 @@ public class DatabaseSeenDatabase implements ISeenDatabase{
 		try {
 			this.session = DBHelper.getInstance().getSession(resource);
 		} catch (DatabaseException e) {
-			throw new SeenDBException("Unable to create database session",e);
+			throw new SeenDBException(Messages.getString("DatabaseSeenDatabase.UnableCreateSeenDatabase"),e); //$NON-NLS-1$
 		}
 	}
 

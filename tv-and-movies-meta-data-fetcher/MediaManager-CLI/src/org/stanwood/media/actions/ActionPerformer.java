@@ -195,7 +195,7 @@ public class ActionPerformer implements IActionEventHandler {
 					}
 				}
 				catch (SeenDBException e) {
-					throw new ActionException("Unable to access the seen database",e);
+					throw new ActionException(Messages.getString("ActionPerformer.UnableAccessSeenDatabase"),e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -255,7 +255,7 @@ public class ActionPerformer implements IActionEventHandler {
 							seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
 						}
 						catch (SeenDBException e) {
-							throw new ActionException("Unable to access the seen database",e);
+							throw new ActionException(Messages.getString("ActionPerformer.UnableAccessSeenDatabase"),e); //$NON-NLS-1$
 						}
 					}
 				}
@@ -271,7 +271,7 @@ public class ActionPerformer implements IActionEventHandler {
 							seenDb.markAsSeen(dir.getMediaDirConfig().getMediaDir(), file);
 						}
 						catch (SeenDBException e) {
-							throw new ActionException("Unable to access the seen database",e);
+							throw new ActionException(Messages.getString("ActionPerformer.UnableAccessSeenDatabase"),e); //$NON-NLS-1$
 						}
 					}
 				}
@@ -342,7 +342,7 @@ public class ActionPerformer implements IActionEventHandler {
 					seenDb.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
 				}
 				catch (SeenDBException e) {
-					throw new ActionException("Unable to access the seen database",e);
+					throw new ActionException(Messages.getString("ActionPerformer.UnableAccessSeenDatabase"),e); //$NON-NLS-1$
 				}
 			}
 		} catch (StoreException e) {

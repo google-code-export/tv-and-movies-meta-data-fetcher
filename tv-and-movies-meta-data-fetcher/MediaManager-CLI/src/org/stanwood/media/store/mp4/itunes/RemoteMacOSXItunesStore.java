@@ -174,7 +174,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	 */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
-		log.info("RemoveMacOSXItunesStore: Itunes has been told about all changes");
+		log.info(Messages.getString("RemoteMacOSXItunesStore.ItunesTold")); //$NON-NLS-1$
 		updateItunes();
 	}
 
@@ -188,7 +188,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 			}
 			return;
 		}
-		log.info("Connecting to itunes...");
+		log.info(Messages.getString("RemoteMacOSXItunesStore.ConnectingItunes")); //$NON-NLS-1$
 		ITunesRemoteClient client = new ITunesRemoteClient();
 		client.connect(hostname,port);
 		client.login(user, password);

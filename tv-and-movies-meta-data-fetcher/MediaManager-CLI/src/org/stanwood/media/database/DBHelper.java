@@ -111,7 +111,7 @@ public class DBHelper {
 			configuration = getConfiguration(resource.getUrl(),
 					connectionUserName, connectionPassword,dialect,resource.getSchemaCheck());
 		} catch (XMLParserException e) {
-			throw new DatabaseException("Unable to configure database", e);
+			throw new DatabaseException(Messages.getString("DBHelper.UnableConfigDb"), e); //$NON-NLS-1$
 		}
 		return configuration;
 	}
@@ -182,11 +182,11 @@ public class DBHelper {
 			}
 		}
 		catch (HibernateException e) {
-			throw new DatabaseException("Unable to print database schema",e);
+			throw new DatabaseException(Messages.getString("DBHelper.UnablePrintSchema"),e); //$NON-NLS-1$
 		} catch (XMLParserException e) {
-			throw new DatabaseException("Unable to print database schema",e);
+			throw new DatabaseException(Messages.getString("DBHelper.UnablePrintSchema"),e); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new DatabaseException("Unable to print database schema",e);
+			throw new DatabaseException(Messages.getString("DBHelper.UnablePrintSchema"),e); //$NON-NLS-1$
 		}
 	}
 }
