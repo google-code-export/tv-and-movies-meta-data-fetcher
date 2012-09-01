@@ -57,4 +57,22 @@ public class TSearchDetails {
 	public Integer getPart() {
 		return part;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("TSearchDetails [term="); //$NON-NLS-1$
+		stringBuilder.append(term);
+		stringBuilder.append(", year="); //$NON-NLS-1$
+		stringBuilder.append(year);
+		stringBuilder.append(", part="); //$NON-NLS-1$
+		stringBuilder.append(part);
+		stringBuilder.append("]"); //$NON-NLS-1$
+		return stringBuilder.toString();
+	}
+
+
 }
