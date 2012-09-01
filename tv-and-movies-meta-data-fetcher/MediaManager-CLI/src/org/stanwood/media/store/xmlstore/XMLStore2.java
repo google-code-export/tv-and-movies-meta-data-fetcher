@@ -213,7 +213,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	private void appendFile(Document doc, Node parent, VideoFile file, File rootMediaDir) throws StoreException {
 		if (file != null) {
 			try {
-				String query = "file[@location=" + quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir)) + "]";
+				String query = "file[@location=" + quoteXPathQuery(makePathRelativeToMediaDir(file.getLocation(), rootMediaDir)) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 				Element fileNode = (Element) selectSingleNode(
 						parent,
 						query);
@@ -912,7 +912,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			return episodes;
 		}
 		catch (XMLParserException e) {
-			throw new StoreException("Unable to parse episode numbers");
+			throw new StoreException(Messages.getString("XMLStore2.UnableParseEpisodeNumbers")); //$NON-NLS-1$
 		}
 	}
 

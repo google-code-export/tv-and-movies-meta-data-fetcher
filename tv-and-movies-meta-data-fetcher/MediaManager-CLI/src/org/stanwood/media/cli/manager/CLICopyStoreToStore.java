@@ -158,7 +158,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 				else {
 					IEpisode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
 					if (episode==null) {
-						fatal(MessageFormat.format("Unable to find episode ''{0}'' in media directory ''{1}''",mediaFile,rootMediaDir));
+						fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UnableFindEpisodeInMediaDir"),mediaFile,rootMediaDir)); //$NON-NLS-1$
 						return false;
 					}
 					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
@@ -309,7 +309,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 			File f = it.next();
 			if (!fromStore.fileKnownByStore(rootMediaDir, f)) {
 				if (log.isDebugEnabled()) {
-					log.debug(MessageFormat.format("Not copying file {0} because it's not knowm by the from store",f));
+					log.debug(MessageFormat.format(Messages.getString("CLICopyStoreToStore.NotCopyUnknownFormat"),f)); //$NON-NLS-1$
 				}
 				it.remove();
 			}

@@ -217,7 +217,7 @@ public class MediaDirectory {
 										store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
 									}
 									catch(StoreException e) {
-										log.error("Unable to cache film",e);
+										log.error(Messages.getString("MediaDirectory.UnableCacheFilm"),e); //$NON-NLS-1$
 										return null;
 									}
 								}
@@ -334,7 +334,7 @@ public class MediaDirectory {
 									store.cacheEpisode(rootMediaDir,episodeFile, episode);
 								}
 								catch(StoreException e) {
-									log.error("Unable to cache episode",e);
+									log.error(Messages.getString("MediaDirectory.UnableCacheEpisode"),e); //$NON-NLS-1$
 									return null;
 								}
 							}

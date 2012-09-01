@@ -873,7 +873,7 @@ public class MP4ITunesStore implements IStore {
 						}
 					}
 					catch (SeenDBException e) {
-						throw new StoreException("Unable to access the seen database",e);
+						throw new StoreException(Messages.getString("MP4ITunesStore.UnableAccessSeenDB"),e); //$NON-NLS-1$
 					}
 				}
 				catch (MP4Exception e) {

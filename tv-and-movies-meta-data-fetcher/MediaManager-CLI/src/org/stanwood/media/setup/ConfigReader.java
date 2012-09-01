@@ -302,7 +302,7 @@ public class ConfigReader extends BaseConfigReader {
 			if (schemaCheck!=null) {
 				SchemaCheck sc = SchemaCheck.fromValue(schemaCheck);
 				if (sc==null) {
-					throw new ConfigException(MessageFormat.format("Invalid schemaCheck value {0}, possible values are validate and none",schemaCheck));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidValue"),schemaCheck)); //$NON-NLS-1$
 				}
 				dbResource.setSchemaCheck(sc);
 			}

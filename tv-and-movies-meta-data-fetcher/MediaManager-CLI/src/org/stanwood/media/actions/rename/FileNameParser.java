@@ -47,22 +47,22 @@ public class FileNameParser {
 
 	@SuppressWarnings("nls")
 	private static Pattern MULTI_PATTERNS[] = new Pattern[] {
-		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+FULL_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ),
-		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ),
+		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+FULL_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	};
 
 	@SuppressWarnings("nls")
 	private static Pattern PATTERNS[] = new Pattern[] {
 		// Single episode patterns
-		compile("(.*)[s]([\\d]+)[e]([\\d]+).*"),
-		compile("(.*)[s]([\\d]+)\\.[e]([\\d]+).*"),
-		compile("(.*?)([\\d]{1,2})\\D([\\d]{2,2}).*"),
-		compile("(.*)season"+WHITE_SPACE+"([\\d]{1,2})"+WHITE_SPACE+"episode"+WHITE_SPACE+"([\\d]{1,2}).*"),
-		compile("(.*)S([\\d]{1,2})"+WHITE_SPACE+"E([\\d]{2,2}).*"),
-		compile("^()([\\d]{2,2})([\\d]{2,2})"+WHITE_SPACE+".*"),
-		compile("^()([\\d]{1,1})([\\d]{2,2})"+WHITE_SPACE+".*"),
-		compile("(.*)[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*"),
-		compile("(.*)[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*")
+		compile("(.*)[s]([\\d]+)[e]([\\d]+).*"), //$NON-NLS-1$
+		compile("(.*)[s]([\\d]+)\\.[e]([\\d]+).*"), //$NON-NLS-1$
+		compile("(.*?)([\\d]{1,2})\\D([\\d]{2,2}).*"), //$NON-NLS-1$
+		compile("(.*)season"+WHITE_SPACE+"([\\d]{1,2})"+WHITE_SPACE+"episode"+WHITE_SPACE+"([\\d]{1,2}).*"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		compile("(.*)S([\\d]{1,2})"+WHITE_SPACE+"E([\\d]{2,2}).*"), //$NON-NLS-1$ //$NON-NLS-2$
+		compile("^()([\\d]{2,2})([\\d]{2,2})"+WHITE_SPACE+".*"), //$NON-NLS-1$ //$NON-NLS-2$
+		compile("^()([\\d]{1,1})([\\d]{2,2})"+WHITE_SPACE+".*"), //$NON-NLS-1$ //$NON-NLS-2$
+		compile("(.*)[\\. ]([\\d]{2,2})([\\d]{2,2})[\\. ].*"), //$NON-NLS-1$
+		compile("(.*)[\\. ]([\\d]{1,1})([\\d]{2,2})[\\. ].*") //$NON-NLS-1$
 	};
 
 	private static Pattern compile(String pattern) {
@@ -114,7 +114,7 @@ public class FileNameParser {
 	protected static ParsedFileName getMultiResult(ParsedFileName result1,
 			int endEp,String sep,String term,String right) {
 		if (sep.equals("-")) { //$NON-NLS-1$
-			if (right.startsWith(".") || isInteger(right.substring(0,1))) {
+			if (right.startsWith(".") || isInteger(right.substring(0,1))) { //$NON-NLS-1$
 				return null;
 			}
 			ParsedFileName result = new ParsedFileName();

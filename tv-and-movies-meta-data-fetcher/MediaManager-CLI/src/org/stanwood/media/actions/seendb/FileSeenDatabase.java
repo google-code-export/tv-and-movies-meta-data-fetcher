@@ -128,7 +128,7 @@ public class FileSeenDatabase extends XMLParser implements ISeenDatabase {
 				ps = new PrintStream(seenFile);
 			}
 			catch (FileNotFoundException e) {
-				throw new SeenDBException("Unable to find the seen database file",e);
+				throw new SeenDBException(Messages.getString("FileSeenDatabase.UnableFindSeenDB"),e); //$NON-NLS-1$
 			}
 			ps.println("<seen>"); //$NON-NLS-1$
 			Set<Entry<File, SortedSet<SeenEntry>>> entriesSet = entries.entrySet();
@@ -181,7 +181,7 @@ public class FileSeenDatabase extends XMLParser implements ISeenDatabase {
 			}
 		}
 		catch (XMLParserException e) {
-			throw new SeenDBException("Unable to parse the Seen Database",e);
+			throw new SeenDBException(Messages.getString("FileSeenDatabase.UnableParseSeenDB"),e); //$NON-NLS-1$
 		}
 		progress.done();
 	}
