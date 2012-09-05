@@ -63,7 +63,7 @@ public class TestFilmSearcher {
 					return o1.getOriginalFile().compareTo(o2.getOriginalFile());
 				}
 			});
-//			Assert.assertEquals(51,names.size());
+			Assert.assertEquals(51,names.size());
 			int index = 0;
 			assertSearchDetails("A Movie",null,null,names.get(index++));
 			assertSearchDetails("'Movie'",null,null,names.get(index++));
