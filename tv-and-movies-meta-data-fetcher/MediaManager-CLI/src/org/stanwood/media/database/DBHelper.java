@@ -67,7 +67,10 @@ public class DBHelper {
 	 * @throws DatabaseException Thrown if their is a problem
 	 */
 	public synchronized Session getSession(DBResource resource) throws DatabaseException {
-		Session session = sessions.get(resource.getResourceId());
+		if (resource==null) {
+			throw new DatabaseException(Messages.getString("DBHelper.UnableFindDBResource")); //$NON-NLS-1$
+		}
+ 		Session session = sessions.get(resource.getResourceId());
 		if (session == null) {
 			Configuration configuration = DBHelper.getInstance().getConfiguration(resource);
 			try {

@@ -633,6 +633,9 @@ public class DatabaseStore implements IStore {
 			throws StoreException {
 		validateParameters();
 		DBResource resource = controller.getDatabaseResources().get(resourceId);
+		if (resource==null) {
+			throw new StoreException(MessageFormat.format(Messages.getString("DatabaseStore.UnableFindDBResource"),resourceId)); //$NON-NLS-1$
+		}
 		init(resource);
 	}
 
