@@ -71,6 +71,7 @@ public class TestFilmSearcher {
 			assertSearchDetails("blah - Movie","1995",1,names.get(index++));
 			assertSearchDetails("blah - Movie","1995",2,names.get(index++));
 			assertSearchDetails("A & Movie","2000",null,names.get(index++));
+			assertSearchDetails("A Movie","2010",null,names.get(index++));
 			assertSearchDetails("A Movie","2007",null,names.get(index++));
 			assertSearchDetails("A Movie's",null,null,names.get(index++));
 			assertSearchDetails("A Movie",null,null,names.get(index++));
