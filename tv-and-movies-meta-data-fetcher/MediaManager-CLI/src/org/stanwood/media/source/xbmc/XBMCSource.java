@@ -340,8 +340,11 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			catch (XMLParserNotFoundException e) {
 	    				// Ignore if not found
 	    			}
-	    			String plot = getStringFromXML(doc, "details/plot/text()"); //$NON-NLS-1$
-	    			film.setDescription(plot.trim());
+
+	    			String plot = getStringFromXMLOrNull(doc, "details/plot/text()"); //$NON-NLS-1$
+	    			if (plot!=null) {
+	    				film.setDescription(plot.trim());
+	    			}
 	    			film.setId(filmId);
 	    			try {
 	    				film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()"))); //$NON-NLS-1$
