@@ -470,6 +470,7 @@ public class Controller {
 			File seenFile = new File(getConfigDir(),"seenFiles.xml"); //$NON-NLS-1$
 			if (seenFile.exists()) {
 				FileSeenDatabase fileSeenDb = new FileSeenDatabase(getConfigDir());
+				fileSeenDb.read(new NullProgressMonitor());
 				log.info(Messages.getString("Controller.MigratingFileSeenDBtoDB")); //$NON-NLS-1$
 				Collection<SeenEntry> entries = fileSeenDb.getEntries();
 				int count = 0;
@@ -480,6 +481,7 @@ public class Controller {
 						log.info(MessageFormat.format(Messages.getString("Controller.MigratedSeenEntries"),count,entries.size())); //$NON-NLS-1$
 					}
 				}
+				seenDb.write(new NullProgressMonitor());
 				log.info(MessageFormat.format(Messages.getString("Controller.MigratedSeenEntries"),count,entries.size())); //$NON-NLS-1$
 			}
 		}
