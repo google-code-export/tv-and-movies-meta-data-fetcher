@@ -365,14 +365,18 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			}
 	    			String overview = getStringFromXMLOrNull(doc, "details/overview/text()"); //$NON-NLS-1$
 	    			if (overview==null) {
-	    				if (plot.length()>100) {
-	    					overview = plot.substring(0,99)+"..."; //$NON-NLS-1$
-						}
-						else {
-							overview = plot;
-						}
+	    				if (plot!=null) {
+		    				if (plot.length()>100) {
+		    					overview = plot.substring(0,99)+"..."; //$NON-NLS-1$
+							}
+							else {
+								overview = plot;
+							}
+	    				}
 	    			}
-	    			film.setSummary(overview.trim());
+	    			if (overview!=null) {
+	    				film.setSummary(overview.trim());
+	    			}
 
 	    			Integer vote = null;
 	    			try {
