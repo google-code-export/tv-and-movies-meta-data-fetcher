@@ -7,6 +7,7 @@ Update Documents
 	* Spell check document
 	* Document how to add other database drivers
 	* Check docs show how to configure a seen db within a database
+Check that the XBMC update site defaults to latest XBMC release
 Bugs
 	* Find out why the remote itune store does not seem to be triggering
 

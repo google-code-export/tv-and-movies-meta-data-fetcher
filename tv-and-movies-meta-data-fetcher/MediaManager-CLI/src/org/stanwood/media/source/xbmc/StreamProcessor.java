@@ -132,7 +132,7 @@ public abstract class StreamProcessor {
 		List<String> cacheValue = cache.get(cacheKey);
 		if (cacheValue!=null) {
 			if (log.isDebugEnabled()) {
-				log.debug("Cache hit for key "+cacheKey);
+				log.debug("Cache hit for key "+cacheKey); //$NON-NLS-1$
 			}
 			for (String contents : cacheValue) {
 				processContents(contents);
@@ -241,6 +241,9 @@ public abstract class StreamProcessor {
 			else {
 				throw new SourceException(MessageFormat.format(Messages.getString("StreamProcessor.UNABLE_READ_URL"),stream.getURL()),e); //$NON-NLS-1$
 			}
+		}
+		catch (XBMCHttpResponseError e) {
+			throw e;
 		}
 		catch (ExtensionException e) {
 			if (stream==null) {
