@@ -59,7 +59,7 @@ public class Data {
 	 */
 	public static Film createFilm() throws Exception {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Film film = new Film("114814");
+		Film film = new Film("114814",new URL("http://www.imdb.com/title/tt0114814/"));
 		film.setImageURL(new URL("http://test/image.jpg"));
 		film.setTitle("The Usual Suspects");
 		List<String> genres = new ArrayList<String>();
@@ -103,7 +103,7 @@ public class Data {
 		film.setCertifications(certifications);
 		film.setDate(df.parse("1995-08-25"));
 		film.setDirectors(createStringList(new String[] {"Bryan Singer"}));
-		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
+//		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 		List<Actor> guestStars = new ArrayList<Actor>();
 		guestStars.add(new Actor("Stephen Baldwin","Michael McManus"));
 		guestStars.add(new Actor("Gabriel Byrne","Dean Keaton"));

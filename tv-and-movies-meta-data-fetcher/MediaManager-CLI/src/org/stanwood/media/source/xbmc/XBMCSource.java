@@ -317,8 +317,8 @@ public class XBMCSource extends XMLParser implements ISource {
 	}
 
 	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
-		final Film film = new Film(filmId);
-		film.setFilmUrl(url);
+		final Film film = new Film(filmId,url);
+//		film.setFilmUrl(url);
 		film.setSourceId(sourceInfo.getId());
 
 		StreamProcessor processor = new StreamProcessor(url.toExternalForm()) {
@@ -345,7 +345,7 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			if (plot!=null) {
 	    				film.setDescription(plot.trim());
 	    			}
-	    			film.setId(filmId);
+//	    			film.setId(filmId);
 	    			try {
 	    				film.setImageURL(new URL(getStringFromXML(doc, "details/thumb/text()"))); //$NON-NLS-1$
 	    			}

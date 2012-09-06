@@ -62,8 +62,9 @@ public class Film implements IFilm {
 	 * Used to create a instance of the film class.
 	 * @param id The id of the film used by the source that it was read from.
 	 */
-	public Film(String id) {
+	public Film(String id,URL url) {
 		setId(id);
+		setFilmUrl(url);
 	}
 
 	/**
@@ -101,11 +102,19 @@ public class Film implements IFilm {
 	 * Used to set the id of the film used by the source that it was read from.
 	 * @param id The id of the film
 	 */
-	@Override
+//	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * Used to set the URL used to get a summary of the film
+	 * @param url The summary URL
+	 */
+//	@Override
+	public void setFilmUrl(URL url) {
+		filmUrl = url;
+	}
 
 	/**
 	 * Used to get the source id of the source that was used to retrieve the film information.
@@ -215,14 +224,7 @@ public class Film implements IFilm {
 		this.summary = summary;
 	}
 
-	/**
-	 * Used to set the URL used to get a summary of the film
-	 * @param url The summary URL
-	 */
-	@Override
-	public void setFilmUrl(URL url) {
-		filmUrl = url;
-	}
+
 
 	/**
 	 * Used to get the URL used to get a summary of the film

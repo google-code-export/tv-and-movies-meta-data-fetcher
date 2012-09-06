@@ -619,7 +619,7 @@ public class TestMP4AtomicParsleyManager {
 	}
 
 	private Film createTestFilm() throws Exception {
-		Film film = new Film("123");
+		Film film = new Film("123",new URL("http://www.imdb.com/title/tt0114814/"));
 		List<Certification> certifications= new ArrayList<Certification>();
 		certifications.add(new Certification("R","mpaa"));
 		film.setCertifications(certifications);
@@ -627,7 +627,7 @@ public class TestMP4AtomicParsleyManager {
 		List<String> directors = new ArrayList<String>();
 		directors.add("Bryan Singer");
 		film.setDirectors(directors);
-		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
+//		film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 		List<String>genres = new ArrayList<String>();
 		genres.add("SciFi");
 		genres.add("Drama");

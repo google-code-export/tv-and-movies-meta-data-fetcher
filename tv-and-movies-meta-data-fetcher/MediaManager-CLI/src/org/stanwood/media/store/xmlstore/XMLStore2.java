@@ -719,7 +719,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	private IFilm parseFilmNode(File rootMediaDir, Element filmNode) throws XMLParserException, NotInStoreException,
 			ParseException, MalformedURLException {
-		Film film = new Film(getAttribute(filmNode, "id")); //$NON-NLS-1$
+		Film film = new Film(getAttribute(filmNode, "id"),new URL(getAttribute(filmNode, "url"))); //$NON-NLS-1$
 		readGenres(film, filmNode);
 		film.setCountry(getStringFromXMLOrNull(filmNode, "country/text()")); //$NON-NLS-1$
 		try {
@@ -734,7 +734,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			// Ignore does not have a date
 		}
 
-		film.setFilmUrl(new URL(getAttribute(filmNode, "url"))); //$NON-NLS-1$
+//		film.setFilmUrl(new URL(getAttribute(filmNode, "url"))); //$NON-NLS-1$
 		film.setDescription(getStringFromXML(filmNode, "description/long/text()")); //$NON-NLS-1$
 		film.setSummary(getStringFromXML(filmNode, "description/short/text()")); //$NON-NLS-1$
 		try {

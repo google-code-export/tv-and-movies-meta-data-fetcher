@@ -335,6 +335,8 @@ public class DatabaseStore implements IStore {
 		if (foundFilm == null) {
 			foundFilm = new Film();
 			dir.getFilms().add(foundFilm);
+			foundFilm.setFilmUrl(film.getFilmUrl());
+			foundFilm.setId(film.getId());
 		}
 
 		foundFilm.setActors(film.getActors());
@@ -344,9 +346,7 @@ public class DatabaseStore implements IStore {
 		foundFilm.setDate(film.getDate());
 		foundFilm.setDescription(film.getDescription());
 		foundFilm.setDirectors(film.getDirectors());
-		foundFilm.setFilmUrl(film.getFilmUrl());
 		foundFilm.setGenres(film.getGenres());
-		foundFilm.setId(film.getId());
 		foundFilm.setImageURL(film.getImageURL());
 		foundFilm.setPreferredGenre(film.getPreferredGenre());
 		foundFilm.setRating(film.getRating());
@@ -370,6 +370,7 @@ public class DatabaseStore implements IStore {
 
 		session.saveOrUpdate(dir);
 		commitTransaction();
+		session.flush();
 	}
 
 	private Film findFilm(File file, File mediaDirLocation) {
