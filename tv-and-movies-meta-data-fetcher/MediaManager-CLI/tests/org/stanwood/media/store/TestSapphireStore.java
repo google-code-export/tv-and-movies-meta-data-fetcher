@@ -62,7 +62,7 @@ public class TestSapphireStore  {
 		File dir = FileHelper.createTmpDir("show");
 		try {
 			File filmFile = new File(dir,"The Usual Suspects.avi");
-			Film film = new Film("114814");
+			Film film = new Film("114814",new URL("http://www.imdb.com/title/tt0114814/"));
 			film.setDescription("This is a test description");
 			film.setTitle("The Usual Suspects");
 			List<String> genres = new ArrayList<String>();
@@ -104,7 +104,7 @@ public class TestSapphireStore  {
 			List<String> directors = new ArrayList<String>();
 			directors.add("Bryan Singer");
 			film.setDirectors(directors);
-			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
+//			film.setFilmUrl(new URL("http://www.imdb.com/title/tt0114814/"));
 			List<Actor> guestStars = new ArrayList<Actor>();
 			guestStars.add(new Actor("Stephen Baldwin",""));
 			guestStars.add(new Actor("Gabriel Byrne",""));

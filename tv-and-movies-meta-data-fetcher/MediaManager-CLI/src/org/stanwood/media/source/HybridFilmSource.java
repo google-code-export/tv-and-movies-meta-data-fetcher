@@ -166,14 +166,14 @@ public class HybridFilmSource implements ISource {
 		}
 
 		if (tagChimpFilm!=null && imdbFilm!=null) {
-			IFilm film = new Film(filmId);
+			IFilm film = new Film(filmId,imdbFilm.getFilmUrl());
 			film.setTitle(imdbFilm.getTitle());
 			film.setCertifications(imdbFilm.getCertifications());
 			film.setChapters(tagChimpFilm.getChapters());
 			film.setDate(imdbFilm.getDate());
 			film.setDescription(tagChimpFilm.getDescription());
 			film.setDirectors(imdbFilm.getDirectors());
-			film.setFilmUrl(imdbFilm.getFilmUrl());
+//			film.setFilmUrl(imdbFilm.getFilmUrl());
 			film.setActors(imdbFilm.getActors());
 			film.setCountry(imdbFilm.getCountry());
 			if (tagChimpFilm.getImageURL()!=null){

@@ -77,8 +77,8 @@ public class TagChimpSource extends XMLParser implements ISource {
 	}
 
 	private Film parseFilm(final String filmId,final URL url,final File file) throws IOException, SourceException {
-		final Film film = new Film(filmId);
-		film.setFilmUrl(url);
+		final Film film = new Film(filmId,url);
+//		film.setFilmUrl(url);
 		film.setSourceId(sourceInfo.getId());
 
 		StreamProcessor processor = new StreamProcessor(url.toExternalForm(),"text/xml") { //$NON-NLS-1$
@@ -88,7 +88,7 @@ public class TagChimpSource extends XMLParser implements ISource {
 	    			Document doc = parse(contents, null);
 	    			film.setDate(RELEASE_DATE_FORMAT.parse(getStringFromXML(doc, "/items/movie/movieTags/info/releaseDate/text()"))); //$NON-NLS-1$
 	    			film.setDescription(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/longDescription/text()")," ")); //$NON-NLS-1$ //$NON-NLS-2$
-	    			film.setId(filmId);
+//	    			film.setId(filmId);
 	    			film.setTitle(getStringFromXML(doc, "/items/movie/movieTags/info/movieTitle/text()")); //$NON-NLS-1$
 	    			film.setSummary(stripLineBreaks(getStringFromXML(doc, "/items/movie/movieTags/info/shortDescription/text()")," ")); //$NON-NLS-1$ //$NON-NLS-2$
 //	    			film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),getIntegerFromXML(doc, "details/votes/text()")));
