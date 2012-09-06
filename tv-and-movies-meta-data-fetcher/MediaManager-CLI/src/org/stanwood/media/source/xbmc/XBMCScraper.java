@@ -150,10 +150,15 @@ public class XBMCScraper extends XBMCExtension {
 			if (result == null) {
 				result = ""; //$NON-NLS-1$
 			}
-			Document doc = XMLParser.strToDom(result);
-			checkForError(doc,funcName);
-			resolveElements(doc);
-			return doc;
+			try {
+				Document doc = XMLParser.strToDom(result);
+				checkForError(doc,funcName);
+				resolveElements(doc);
+				return doc;
+			}
+			catch (XMLParserException e) {
+				return XMLParser.strToDom(""); //$NON-NLS-1$
+			}
 		} catch (Exception e) {
 			throw new XBMCException(MessageFormat.format(Messages.getString("XBMCScraper.UNABLE_TO_EXECUTE_SCRAPER_FUNCTION"),funcName,getAddon().getId()),e); //$NON-NLS-1$
 		}
