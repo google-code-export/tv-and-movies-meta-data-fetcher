@@ -382,16 +382,17 @@ public class XBMCSource extends XMLParser implements ISource {
 	    			try {
 	    				String rawVote = getStringFromXML(doc, "details/votes/text()").replaceAll(",",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	    				vote = Integer.parseInt(rawVote);
+	    				try {
+		    				film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote)); //$NON-NLS-1$
+		    			}
+		    			catch (XMLParserNotFoundException e) {
+
+		    			}
 	    			}
 	    			catch (XMLParserNotFoundException e) {
 
 	    			}
-	    			try {
-	    				film.setRating(new Rating(getFloatFromXML(doc, "details/rating/text()"),vote)); //$NON-NLS-1$
-	    			}
-	    			catch (XMLParserNotFoundException e) {
 
-	    			}
 	    			try {
 	    				film.setCountry(getStringFromXML(doc, "details/country/text()")); //$NON-NLS-1$
 	    			}
@@ -542,7 +543,6 @@ public class XBMCSource extends XMLParser implements ISource {
 
 	private void parseEpisode(final XBMCEpisode episode,Document doc) throws SourceException {
 		try {
-
 			episode.setSummary(getStringFromXML(doc, "details/plot/text()")); //$NON-NLS-1$
 			parseWriters(episode, doc);
 			parseDirectors(episode, doc);

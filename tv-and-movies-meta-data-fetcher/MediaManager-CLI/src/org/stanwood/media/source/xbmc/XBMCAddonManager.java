@@ -18,6 +18,7 @@ import org.stanwood.media.source.SourceException;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 import org.stanwood.media.source.xbmc.updater.XBMCWebUpdater;
 import org.stanwood.media.util.FileHelper;
+import org.stanwood.media.util.HttpResponseError;
 import org.stanwood.media.util.Stream;
 
 /**
@@ -121,6 +122,8 @@ public class XBMCAddonManager implements IContentFetcher {
 				throw new SourceException(MessageFormat.format(Messages.getString("XBMCAddonManager.UNABLE_GET_RESOURCE"), url)); //$NON-NLS-1$
 			}
 			return stream;
+		} catch (HttpResponseError e) {
+			throw new XBMCHttpResponseError(e.getMessage(),e.getStatusCode(),e.getUrl(),e.getData(),e);
 		} catch (IOException e) {
 			throw new SourceException(MessageFormat.format(Messages.getString("XBMCAddonManager.UNABLE_GET_RESOURCE"), url),e); //$NON-NLS-1$
 		}

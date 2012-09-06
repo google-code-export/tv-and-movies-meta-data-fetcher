@@ -185,7 +185,14 @@ public class XBMCScraper extends XBMCExtension {
 
 
 		for (Node node : selectNodeList(doc, "details/url")) { //$NON-NLS-1$
-			resolveUrlNodes(doc,(Element) node);
+			try {
+				resolveUrlNodes(doc,(Element) node);
+			} catch (XBMCHttpResponseError e) {
+				if (e.getStatusCode()!=404) {
+					throw e;
+				}
+			}
+
 		}
 	}
 

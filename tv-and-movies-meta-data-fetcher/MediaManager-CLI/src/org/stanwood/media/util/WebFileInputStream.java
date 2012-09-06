@@ -62,23 +62,6 @@ public class WebFileInputStream extends InputStream {
 		// Get the response.
 		responseHeader = conn.getHeaderFields();
 		responseCode = conn.getResponseCode();
-		if (responseCode!=200) {
-			if (log.isDebugEnabled()) {
-				log.debug(getErrors(conn));
-			}
-			if (responseCode==404) {
-				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_404"),url.toExternalForm())); //$NON-NLS-1$
-			}
-			else if (responseCode==500) {
-				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_500"),url.toExternalForm())); //$NON-NLS-1$
-			}
-			else if (responseCode==403) {
-				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_403"),url.toExternalForm())); //$NON-NLS-1$
-			}
-			else {
-				throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_OTHER"),url.toExternalForm(),responseCode)); //$NON-NLS-1$
-			}
-		}
 
 		final String type = conn.getContentType();
 		if (type != null) {
@@ -90,6 +73,26 @@ public class WebFileInputStream extends InputStream {
 				if (index != -1) {
 					charset = t.substring(index + 8);
 				}
+			}
+		}
+
+		if (responseCode!=200) {
+			String errorData = getErrors(conn);
+			if (log.isDebugEnabled()) {
+				log.debug(errorData);
+			}
+
+			if (responseCode==404) {
+				throw new HttpResponseError(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_404"),url.toExternalForm()),url,responseCode,errorData); //$NON-NLS-1$
+			}
+			else if (responseCode==500) {
+				throw new HttpResponseError(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_500"),url.toExternalForm()),url,responseCode,errorData); //$NON-NLS-1$
+			}
+			else if (responseCode==403) {
+				throw new HttpResponseError(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_403"),url.toExternalForm()),url,responseCode,errorData); //$NON-NLS-1$
+			}
+			else {
+				throw new HttpResponseError(MessageFormat.format(Messages.getString("WebFileInputStream.ERROR_OTHER"),url.toExternalForm(),responseCode),url,responseCode,errorData); //$NON-NLS-1$
 			}
 		}
 
@@ -106,6 +109,7 @@ public class WebFileInputStream extends InputStream {
 			content = conn.getInputStream();
 //			throw new IOException(MessageFormat.format(Messages.getString("WebFileInputStream.DID_NOT_RETURN_INPUTSTREAM"),c.getClass())); //$NON-NLS-1$
 		}
+
 	}
 
 	private String getErrors(java.net.HttpURLConnection conn) throws IOException {
