@@ -287,12 +287,12 @@ public class MediaSearcher {
 //						}
 //					}
 //					if (!found) {
-//						for (IStore store : dir.getStores()) {
-//							if (log.isDebugEnabled()) {
-//								log.debug("Caching episode "+file+" in store " + store.getClass());  //$NON-NLS-1$//$NON-NLS-2$
-//							}
-//							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
-//						}
+						for (IStore store : dir.getStores()) {
+							if (log.isDebugEnabled()) {
+								log.debug("Caching episode "+file+" in store " + store.getClass());  //$NON-NLS-1$//$NON-NLS-2$
+							}
+							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
+						}
 //					}
 
 					return episode;
