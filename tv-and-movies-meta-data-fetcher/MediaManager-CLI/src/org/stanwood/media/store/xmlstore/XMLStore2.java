@@ -136,7 +136,16 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			log.debug("cache episode"); //$NON-NLS-1$
 		}
 		try {
-			episode.getFiles().add(new VideoFile(episodeFile, episodeFile, null, rootMediaDir));
+			boolean found = false;
+			for (VideoFile vf : episode.getFiles() ) {
+				if (vf.getLocation().equals(episodeFile)) {
+					found = true;
+				}
+			}
+			if (!found) {
+				episode.getFiles().add(new VideoFile(episodeFile, episodeFile, null, rootMediaDir));
+			}
+
 			Node node = selectSingleNode(seasonNode, nodeName + "[@number=" + episode.getEpisodeNumber() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (node == null) {
 				node = doc.createElement(nodeName);

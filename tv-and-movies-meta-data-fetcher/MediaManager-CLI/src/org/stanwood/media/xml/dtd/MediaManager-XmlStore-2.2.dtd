@@ -41,7 +41,7 @@
 	number           CDATA  #REQUIRED
 >
 
-<!ELEMENT episode (episodeNum+,summary?,rating?,directors?,writers?,actors?,file*)>
+<!ELEMENT episode (episodeNum+ | summary? | rating? | directors? | writers? | actors? | file*)*>
 
 
 <!ATTLIST episode
@@ -54,7 +54,7 @@
   showEpisodeNumber  CDATA  #IMPLIED
 >
 
-<!ELEMENT special (episodeNum+,summary?,rating?,directors?,writers?,actors?,file*)>
+<!ELEMENT special (episodeNum+ | summary? | rating? | directors? | writers? | actors? | file*)*>
 
 <!ATTLIST special
   episodeId          CDATA  #REQUIRED
