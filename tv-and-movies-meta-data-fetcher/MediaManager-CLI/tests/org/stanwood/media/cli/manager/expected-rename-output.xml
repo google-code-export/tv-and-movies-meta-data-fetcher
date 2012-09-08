@@ -25,6 +25,7 @@
         imageUrl="http://thetvdb.com/banners/episodes/79501/308906.jpg"
         number="1" title="Genesis" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
         <episodeNum number="1"/>
+        <file location="Heroes/Season 1/01 - Genesis.avi" orginalLocation="Heroes/101 - Blah Blah Blah.avi"/>
         <summary>In this episode, we are introduced to Peter Petrelli, a young man who dreams of flying, and his brother Nathan, a ruthless politician who thinks that Peter is dreaming his life away. Meanwhile, ordinary people from all around the world are starting to suspect that they have abilities beyond those of normal humans. Artist Isaac Mendez believes that he is painting the future, high school cheerleader Claire Bennet is suddenly able to recover from any wound almost instantly, Japanese businessman Hiro Nakamura tries to convince a friend that he can bend space and time, and single mother Niki Sanders starts seeing strange things in mirrors.Upon learning of his father's death, genetics Professor Mohinder Suresh begins to look into his research for a clue to why he was killed. When he follows his father's trail to New York City, however, Mohinder learns that someone else is on the trail of the same research.  Someone who may kill to protect the secrets of the next step in human evolution.</summary>
         <rating numberOfVotes="1" value="8.1"/>
         <directors>
@@ -44,13 +45,13 @@
           <actor name="Brian Tarantina" role=""/>
           <actor name="Richard Roundtree" role=""/>
           <actor name="Shishir Kurup" role=""/>
-        </actors>
-        <file location="Heroes/Season 1/01 - Genesis.avi" orginalLocation="Heroes/101 - Blah Blah Blah.avi"/>
+        </actors>       
       </episode>
       <episode episodeId="308907" firstAired="2006-10-02"
         imageUrl="http://thetvdb.com/banners/episodes/79501/308907.jpg"
         number="2" title="Don't Look Back" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
         <episodeNum number="2"/>
+        <file location="Heroes/Season 1/02 - Don't Look Back.mkv" orginalLocation="Heroes/S01E02 - Hello this is a test.mkv"/>
         <summary>Los Angeles Police Officer Matt Parkman is working crowd control at a murder scene when he alone begins to hear the muffled cries of a little girl somewhere in the house. Claire's heroism brings her unwanted attention. Peter comes closer to learning the truth about his and Nathan's powers. Hiro finds a comic book which leads him to Isaac.</summary>
         <rating numberOfVotes="1" value="7.7"/>
         <directors>
@@ -72,8 +73,7 @@
           <actor name="Stacy Haiduk" role=""/>
           <actor name="Richard Steinmetz" role=""/>
           <actor name="Matt Lander" role=""/>
-        </actors>
-        <file location="Heroes/Season 1/02 - Don't Look Back.mkv" orginalLocation="Heroes/S01E02 - Hello this is a test.mkv"/>
+        </actors>        
       </episode>
     </season>
     <season number="2" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
@@ -81,6 +81,7 @@
         imageUrl="http://thetvdb.com/banners/episodes/79501/335417.jpg"
         number="2" title="Lizards" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip">
         <episodeNum number="2"/>
+        <file location="Heroes/Season 2/02 - Lizards.mpg" orginalLocation="Heroes/s02e02 - Hello this is a test.mpg"/>
         <summary>Peter falls in with Irish gangsters who know about his past. Hiro works to contain the damage caused by his journey into the past. Kensei's power will be revealed. Suresh locates and cures the Haitian. Matt investigates the murder of Mr. Nakamura. West comes to know of Claire's powers. Maya and Alejandro enter Mexico and find their powers more of a hindrance than a help.</summary>
         <rating numberOfVotes="1" value="7.1"/>
         <directors>
@@ -98,7 +99,6 @@
           <actor name="Holt McCallany" role=""/>
           <actor name="Dianna Agron" role=""/>
         </actors>
-        <file location="Heroes/Season 2/02 - Lizards.mpg" orginalLocation="Heroes/s02e02 - Hello this is a test.mpg"/>
       </episode>
     </season>
   </show>

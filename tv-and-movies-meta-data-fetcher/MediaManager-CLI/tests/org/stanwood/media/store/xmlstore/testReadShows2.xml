@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE store PUBLIC "-//STANWOOD//DTD XMLStore 2.2//EN"
+                       "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd/MediaManager-XmlStore-2.2.dtd">
+<store revision="1" version="2.2">
+   <show id="74285"
+    imageUrl="http://thetvdb.com/banners/posters/74285-7.jpg"
+    name="Project Runway"
+    sourceId="org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com"
+    studio="Lifetime" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip">
+    <genres>
+      <genre name="Reality" preferred="true"/>
+    </genres>
+    <extra>
+      <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip"/>
+    </extra>
+    <season number="10" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip">
+      <episode episodeId="4373962" firstAired="2012-08-23"
+        imageUrl="http://thetvdb.com/banners/episodes/74285/4373962.jpg"
+        number="6" title="Fix My Friend" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip">
+        <episodeNum number="6"/>
+        <summary>The clothiers create looks to accompany new hairstyles for women who are in need of makeovers. British fashion designer Alice Temperley serves as the guest judge.</summary>
+        <directors/>
+        <writers/>
+        <actors/>
+        <file location="Project Runway/Season 10/10 06 - Fix My Friend.m4v"/>
+      </episode>
+      <episode episodeId="4389000" firstAired="2012-09-06"
+        imageUrl="http://thetvdb.com/banners/episodes/74285/4389000.jpg"
+        number="8" title="Starving Artist" url="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip">
+        <episodeNum number="8"/>
+        <file location="/newMedia/Project.Runway.S10E08.Starving.Artist.SDTVx264.RKSTR.m4v"/>
+        <summary>In a sales-based test, the clothiers are tasked to sell their goods to folks on the street. They must also spin out fall looks. Designer Anna Sui is the guest judge. </summary>
+        <rating numberOfVotes="1" value="7.0"/>
+        <directors/>
+        <writers/>
+        <actors/>              
+      </episode>
+    </season>
+     <description>
+      <short><![CDATA[From the minds of the Bravo Network, supermodel Heidi Klum, and Elle Magazine comes Project Runway ...]]></short>
+      <long><![CDATA[From the minds of the Bravo Network, supermodel Heidi Klum, and Elle Magazine comes Project Runway (a spinoff of the Emmy-nominated series Project Greenlight), an all-new behind-the-scene documentary series and competition set in the other most glamorous business in the world: the fashion industry. Cameras will roll as up-and-coming designers compete in weekly challenges and are given all the resources of a top designer to prepare a competitive runway show for the next Fashion Week. Supermodel Heidi Klum co-developed the series and appears as one of the celebrity judges.  Dan Cutforth and Jane Lipsitz of Project Greenlight serve as executive producers. ]]></long>
+    </description>
+    <certifications>
+      <certification certification="TV-14" type="mpaa"/>
+    </certifications>
+    <genres>
+      <genre name="Reality" preferred="true"/>
+    </genres>
+    <extra>
+      <param key="episodeGuideURL" value="http://www.thetvdb.com/api/1D62F2F90030C444/series/74285/all/en.zip"/>
+    </extra>
+  </show>
+</store>

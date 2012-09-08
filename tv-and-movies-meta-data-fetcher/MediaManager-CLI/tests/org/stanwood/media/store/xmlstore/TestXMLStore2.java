@@ -92,12 +92,42 @@ public class TestXMLStore2 {
 	}
 
 	/**
+	 * Used to check that shows can be parsed from a real XML output
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testReadShows2() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		File dir = FileHelper.createTmpDir("test");
+
+		try {
+			File cacheFile = new File(dir,".mediaManager-xmlStore.xml");
+			Map<String, String> params = new HashMap<String,String>();
+			params.put("rootMedia", dir.getAbsolutePath());
+			FileHelper.copy(TestXMLStore2.class.getResourceAsStream("testReadShows2.xml"),cacheFile,params);
+
+			File episodeFile = new File(dir,"Project Runway/Season 10/10 06 - Fix My Friend.m4v");
+			XMLStore2 xmlStore = new XMLStore2();
+			IShow show = xmlStore.getShow(dir, episodeFile, "74285");
+			Assert.assertNotNull(show);
+			ISeason season = xmlStore.getSeason(dir, episodeFile, show, 10);
+			Assert.assertNotNull(season);
+			List<Integer>episodes = new ArrayList<Integer>();
+			episodes.add(6);
+			IEpisode episode = xmlStore.getEpisode(dir, episodeFile,season,episodes);
+			Assert.assertEquals("Fix My Friend",episode.getTitle());
+		} finally {
+			FileHelper.delete(dir);
+		}
+	}
+
+	/**
 	 * Used to test that data can be read back from the store
 	 * @throws Exception Thrown if their is a problem in the test
 	 */
 	@Test
 	public void testReadShows() throws Exception{
-		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		File dir = FileHelper.createTmpDir("test");
 		XMLStore2 xmlStore = new XMLStore2();
 		try {
