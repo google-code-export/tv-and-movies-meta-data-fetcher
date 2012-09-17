@@ -9,7 +9,6 @@ Bugs
 Version 2.3
 -----------
 Add feature to check for updates of media manager
-Handle episode files that contain multiple episodes
 Add script support
 	New <script> element for the config file. This will contain global script functions
 	Add ability to execute scripts before and after a processing operation of each media directory.
