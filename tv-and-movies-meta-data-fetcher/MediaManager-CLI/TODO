@@ -3,10 +3,6 @@ TODO
 	
 Version 2.2
 -----------
-Update Documents
-	* Spell check document
-	* Document how to add other database drivers
-	* Check docs show how to configure a seen db within a database
 Bugs
 	* Find out why the remote itune store does not seem to be triggering
 
@@ -23,6 +19,7 @@ Allow script section to be loaded from files
 Extend patterns
 	* Allow multiple patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
+Document how to add other database drivers
 
 Version 2.4
 -----------

@@ -96,8 +96,8 @@
           </listitem>
 
           <listitem>
-            <para>Provides a store that saves metadata into MP4/M4V files that
-            iTunes can read.</para>
+            <para>Provides a store that saves meta data into MP4/M4V files
+            that iTunes can read.</para>
           </listitem>
 
           <listitem>
@@ -127,12 +127,12 @@
       <sect2 id="XBMCSource">
         <title>org.stanwood.media.source.xbmc.XBMCSource</title>
 
-        <para>This is the main source that &apptitle; was desgined to use. It
+        <para>This is the main source that &apptitle; was designed to use. It
         makes use of XBMC scrappers to fetch media information. It is capable
         of reading both TV Show and Film information if the XBMC Scraper
         supports it.</para>
 
-        <para>In order for for this source to work, their must be XBMC addon
+        <para>In order for this source to work, their must be XBMC addon
         scrapers installed. These can be installed and managed using the
         command line tool &mmxbmc;</para>
 
@@ -140,9 +140,9 @@
         addon scrapers as parameters. In addition this source also supports
         the following parameters <itemizedlist>
             <listitem>
-              <para><literal>scrapers</literal> a comma seperated list of XBMC
-              scraper ID's. These are the ID's of scrappers that are useable.
-              If not given, then all scrappers are considered useable.</para>
+              <para><literal>scrapers</literal> a comma separated list of XBMC
+              scraper ID's. These are the ID's of scrappers that are usable.
+              If not given, then all scrappers are considered usable.</para>
             </listitem>
           </itemizedlist></para>
 
@@ -185,7 +185,7 @@
       <sect2>
         <title>org.stanwood.media.source.TagChimpSource</title>
 
-        <para>The TagChimpSource Source is film source that fetchs film
+        <para>The TagChimpSource Source is film source that fetches film
         information from the website <ulink
         url="http://www.tagchimp.com/">www.tagchimp.com</ulink>. This also
         includes chapter information.</para>
@@ -196,7 +196,7 @@
 
         <para>The HybridFilm Source is a bit different to the other sources.
         It uses the other sources to find the best information it can about a
-        film. It's main use to to combine the extra information film chapter
+        film. It's main use is to combine the extra information film chapter
         information from the <literal>TagChimpSource</literal> source with the
         information in the <literal>XBMCSource</literal>.</para>
 
@@ -224,7 +224,7 @@
 
       <para>Thee following stores that come with &apptitle;. Each of these has
       different properties. Some of these stores can also be used by other
-      applications such as media centre's to display media metadata.</para>
+      applications such as media centre's to display media meta data.</para>
 
       <sect2>
         <title>org.stanwood.media.store.memory.MemoryStore</title>
@@ -240,7 +240,7 @@
 
         <para>This is a store used to store TV show and film information in a
         database. The database can be remote or local. This store is also used
-        when searching for media detials. The database connection details
+        when searching for media details. The database connection details
         should be specified in the <xref linkend="resources"/> section of the
         configuration.</para>
 
@@ -258,8 +258,8 @@
 mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' IDENTIFIED BY 'password'
 </programlisting>
 
-          <para>Using the database created above, the following connfiguration
-          would connect the store to the datbase:</para>
+          <para>Using the database created above, the following configuration
+          would connect the store to the database:</para>
 
           <programlisting>&lt;mediaManager&gt;
   &lt;mediaDirectory directory="/media/films" mode="FILM"&gt;
@@ -285,7 +285,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         <itemizedlist>
           <listitem>
             <para>resourceId - The ID of the resource that specifies the
-            connection information. This is a required paramter.</para>
+            connection information. This is a required parameter.</para>
           </listitem>
         </itemizedlist>
       </sect2>
@@ -296,7 +296,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         <para>This is a store used to store TV show and film information in a
         database file. File file is stored withing the &apptitle;
         configuration directory. This store is also used when searching for
-        media detials. This is the default store when no stores are specified
+        media details. This is the default store when no stores are specified
         for a media directory.</para>
 
         <para>This store has no parameters</para>
@@ -307,8 +307,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
         <para>This store is used to store the TV show and film information in
         a XML file called '.mediaManager-xmlStore.xml'. This file will be
-        locationed in the root of the media directory and can store multiple
-        films/tv shows. This store can also be used when searching for tv show
+        located in the root of the media directory and can store multiple
+        films/tv shows. This store can also be used when searching for TV show
         and film ID's.</para>
       </sect2>
 
@@ -322,13 +322,13 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         url="http://appletv.nanopi.net/manual/overriding-metadata/">here</ulink>.</para>
 
         <para>Every time episode or film information is fetched from a source,
-        a XML file is written with the name name as the episode or film file
+        a XML file is written with the same name as the episode or film file
         (except the extension is changed too .xml).</para>
 
         <para>This store has the optional parameter
         "PreferredCertificationCounrty". If this is set, then when fetching
         the rating, this country in the parameter's rating is used. If the
-        paramter is not set or the country can't be found, then the first
+        parameter is not set or the country can't be found, then the first
         rating is used.</para>
 
         <para>It has the following parameters: <itemizedlist>
@@ -356,7 +356,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         the optional store parameters.</para>
 
         <para>&apptitle; should be able to find these tools if it was
-        installed using the installer. However if it was installed via linux
+        installed using the installer. However if it was installed via Linux
         packages then it will look for them on the system path. It's also
         possible to tell it where to look for them. See the <xref
         linkend="native"/> chapter or the optional parameters of the store for
@@ -379,7 +379,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       <sect2>
         <title>org.stanwood.media.store.mp4.itunes.RemoteMacOSXItunesStore</title>
 
-        <para>This store is used to inform itunes of file changes in a media
+        <para>This store is used to inform iTunes of file changes in a media
         directory. It does this by talking to a remote server running on the
         same machine as iTunes. The details of the server can be found at
         <ulink
@@ -388,8 +388,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
         <para>The optional parameter file-separator can be used when
         &apptitle; is running on a different operating system to the remote
-        client. So for example if &apptitle; is on a linux OS and the remote
-        server is on a windows OS, then the file seperator should be set to \.
+        client. So for example if &apptitle; is on a Linux OS and the remote
+        server is on a windows OS, then the file separator should be set to \.
         See the page <ulink
         url="http://en.wikipedia.org/wiki/Regular_expression">Regex</ulink>
         for more information on regular expression syntax.</para>
@@ -436,7 +436,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
             <listitem>
               <para><literal>file-separator</literal> Optional parameter that
-              is used to set the file seperator used in file names sent to the
+              is used to set the file separator used in file names sent to the
               server.</para>
             </listitem>
           </itemizedlist></para>
@@ -505,7 +505,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
             <listitem>
               <para><literal>$MEDIAFILE_NAME</literal> The name part of the
               current media file been processed. So after the last file
-              seperator, until it finds the extension.</para>
+              separator, until it finds the extension.</para>
             </listitem>
 
             <listitem>
@@ -585,7 +585,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
             <listitem>
               <para><literal>$MEDIAFILE_NAME</literal> The name part of the
               current media file been processed. So after the last file
-              seperator, until it finds the extension.</para>
+              separator, until it finds the extension.</para>
             </listitem>
 
             <listitem>
@@ -641,7 +641,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
     <sect1>
       <title>1. Linux Binary Distribution Packages</title>
 
-      <para>Their are several linux distribution packages that can be found in
+      <para>Their are several Linux distribution packages that can be found in
       the downloads section of the website. If your distribution uses RPM
       packages, then following these instructions. <orderedlist>
           <listitem>
@@ -662,17 +662,17 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
           </listitem>
         </orderedlist></para>
 
-      <para>This will install the the application and a scripts too launch
+      <para>This will install the application and a scripts too launch
       it.</para>
     </sect1>
 
     <sect1>
       <title>2. Installer</title>
 
-      <para>Their is a generic java installer that will run on any platform.
+      <para>Their is a generic Java installer that will run on any platform.
       Execute the following command upon the installer jar file to start the
       installer: <cmdsynopsis>
-          <command>java -jar &apptitle;-&version;-install.jar</command>
+          <command>Java -jar &apptitle;-&version;-install.jar</command>
 
           <arg>options</arg>
         </cmdsynopsis> This will prompt you for the location to install the
@@ -743,14 +743,14 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
           </listitem>
 
           <listitem>
-            <para><literal>-d, --dir</literal> A requried option give the
+            <para><literal>-d, --dir</literal> A required option give the
             location of the media directory to manage</para>
           </listitem>
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -775,7 +775,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       <title id="mediacopystore.title">&mmcopystore;</title>
 
       <para>The &mmcopystore; command is used to copy media file information
-      from one store to another. This can be usefull for migrating media
+      from one store to another. This can be useful for migrating media
       information if add store.<cmdsynopsis>
           <command>&mmcopystore;</command>
 
@@ -823,13 +823,13 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-t, --test</literal> Enable test mode that cause no
-            changes to be written to the filesystem.</para>
+            changes to be written to the file system.</para>
           </listitem>
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -844,16 +844,22 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-h, --help</literal> Show the help message</para>
-
           </listitem>
         </itemizedlist></para>
-        <example>
-              <title>Useage examples of &mmcopystore;</title>
-              <para>Example of copying a single files details from one storeto another</para>
-              <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows/Heroes/Season\ 1/1\ 18\ -\ Parasite.m4v</programlisting>
-              <para>Example of copying the details of all media files in a media directory from one store to another</para>
-              <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows</programlisting>              	
-        </example>
+
+      <example>
+        <title>Usage examples of &mmcopystore;</title>
+
+        <para>Example of copying a single files details from one store to
+        another</para>
+
+        <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows/Heroes/Season\ 1/1\ 18\ -\ Parasite.m4v</programlisting>
+
+        <para>Example of copying the details of all media files in a media
+        directory from one store to another</para>
+
+        <programlisting>&mmcopystore; --dir /mounts/TVShows --fromStore org.stanwood.media.store.xmlstore.XMLStore2 --toStore org.stanwood.media.store.db.DatabaseStore /mounts/TVShows</programlisting>
+      </example>
     </sect1>
 
     <sect1 id="mediamovecmd">
@@ -893,14 +899,14 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
           </listitem>
 
           <listitem>
-            <para><literal>-d, --dir</literal> A requried option give the
+            <para><literal>-d, --dir</literal> A required option give the
             location of the media directory to manage</para>
           </listitem>
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -911,7 +917,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-t, --test</literal> Enable test mode that cause no
-            changes to be written to the filesystem.</para>
+            changes to be written to the file system.</para>
           </listitem>
 
           <listitem>
@@ -926,7 +932,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
       <para>The &mmlistatoms; command is used to list the Apple atoms in a
       MP4/M4V media file which is given as a argument. It can be used to check
-      the metadata that iTunes will see. <cmdsynopsis>
+      the meta data that iTunes will see. <cmdsynopsis>
           <command>&mmlistatoms;</command>
 
           <arg>-v</arg>
@@ -952,8 +958,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -988,8 +994,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
             <listitem>
               <para><literal>-c, --config_file</literal> The location of the
-              config file. If option is not given then it will load from
-              default locations.</para>
+              configuration file. If option is not given then it will load
+              from default locations.</para>
             </listitem>
 
             <listitem>
@@ -1031,7 +1037,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       <title id="mmprintdbschema.title">&mmprintdbschema;</title>
 
       <para>The &mmprintdbschema; command is used to print the database schema
-      for creating an intital database. A hibernate dialect must be passed to
+      for creating an intimal database. A hibernate dialect must be passed to
       it, see <xref linkend="hibernateDialects"/> for more information on
       dialects.</para>
 
@@ -1061,8 +1067,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -1119,8 +1125,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>-c, --config_file</literal> The location of the
-            config file. If option is not given then it will load from default
-            locations.</para>
+            configuration file. If option is not given then it will load from
+            default locations.</para>
           </listitem>
 
           <listitem>
@@ -1136,7 +1142,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <listitem>
             <para><literal>--noupdate, -u</literal> If this option is present,
-            then the XBMC addons won''t be updated</para>
+            then the XBMC addons won't be updated</para>
           </listitem>
 
           <listitem>
@@ -1214,7 +1220,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         how the media is handled and which pattern tokens can be used. The
         currently supported modes are: <itemizedlist>
             <listitem>
-              <para><literal>TV_SHOW</literal> - Media files are tv
+              <para><literal>TV_SHOW</literal> - Media files are TV
               episodes</para>
             </listitem>
 
@@ -1228,8 +1234,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         <title>Patterns</title>
 
         <para>A pattern can be associated with a media directory. This is used
-        by actions like the Renameaction to rename file media files and change
-        the directory structure.</para>
+        by actions like the Rename action to rename file media files and
+        change the directory structure.</para>
 
         <para>The following list contains the meaning for each token:
         <itemizedlist>
@@ -1362,12 +1368,12 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
     <sect1>
       <title>Strip patterns</title>
 
-      <para>Quite offten before a media file is renamed, it can contain tokens
-      to indercate where it came from and the type of media. @@name@@ makes
-      use of these when looking up the media information and has a default
-      list of know strip patterns. It's possible to configure different stip
-      patterns for each media directory which will override the default
-      patterens in use. The patterens are regualar expressions.</para>
+      <para>Quite often before a media file is renamed, it can contain tokens
+      to indicate where it came from and the type of media. @@name@@ makes use
+      of these when looking up the media information and has a default list of
+      know strip patterns. It's possible to configure different strip patterns
+      for each media directory which will override the default patterns in
+      use. The patterns are regular expressions.</para>
 
       <example>
         <title>Strip patterns</title>
@@ -1391,7 +1397,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       They must then be packaged into a .jar file and imported into
       MediaManager. The following example shows the configuration file entries
       needed to tell &apptitle; about a plugin. <example>
-          <title>Registering plguins</title>
+          <title>Registering plugins</title>
 
           <programlisting>&lt;mediaManager&gt;
   &lt;plugins&gt;
@@ -1406,18 +1412,18 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       <title>Native applications and libraries</title>
 
       <para>Some parts of &apptitle; depend on native applications/libraries
-      to function. Usally &apptitle; runs on any platform that supports Java
-      1.6. However these parts need native applcations, so they must either be
-      installed on the system or &apptitle; must be told how to find them. If
-      they can't be found, then parts of &apptitle; that use then will be
+      to function. Usually &apptitle; runs on any platform that supports Java
+      1.6. However these parts need native applications, so they must either
+      be installed on the system or &apptitle; must be told how to find them.
+      If they can't be found, then parts of &apptitle; that use then will be
       disabled.</para>
 
       <para>If &apptitle; was installed via the installer, then the native
       folder will have been installed already and it should find then. If
-      installing from a linux package, then their is a chance that native
+      installing from a Linux package, then their is a chance that native
       applications and libraries won't be found. &apptitle; will fist look for
-      them in a folder pointed to by configuration, then an envoriment
-      varaible MM_NATIVE_DIR and lastly on the system path.</para>
+      them in a folder pointed to by configuration, then an environment
+      variable MM_NATIVE_DIR and lastly on the system path.</para>
 
       <para>If they are not install, then they can be downloaded from the
       media manager website at <ulink
@@ -1430,8 +1436,8 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
     <sect1 id="globalsettings">
       <title>Global Settings</title>
 
-      <para>Their are some global settings which can be configured. Belowe is
-      a list of settings: <itemizedlist>
+      <para>Their are some global settings which can be configured. Below is a
+      list of settings: <itemizedlist>
           <listitem>
             <para>configDirectory - The location of the local configuration
             directory</para>
@@ -1444,12 +1450,12 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         </itemizedlist></para>
 
       <para id="nativesetting">The native setting is used to specify the
-      location of a directory containg the native applications and libraries
+      location of a directory containing the native applications and libraries
       that &apptitle; depends on. See the <xref linkend="native"/> section for
       mare information.</para>
 
       <para><example>
-          <title>Gloab settings</title>
+          <title>Global settings</title>
 
           <programlisting>&lt;mediaManager&gt;
   &lt;global&gt;
@@ -1476,14 +1482,14 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         </listitem>
 
         <listitem>
-          <para>url - The JDBC url to the database. The url syntax depends on
+          <para>url - The JDBC URL to the database. The URL syntax depends on
           the database been connected to, but typical contains the hostname
           and database name.</para>
         </listitem>
 
         <listitem id="hibernateDialects">
-          <para>dialect - The is the SQL dilect that the hibernate database
-          library should use. Belowe are some examples:</para>
+          <para>dialect - The is the SQL dialect that the hibernate database
+          library should use. Below are some examples:</para>
 
           <itemizedlist>
             <listitem>
@@ -1521,10 +1527,10 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
         </listitem>
 
         <listitem>
-          <para>schemaCheck - Optional paramter that controls how the database
-          schema should be checked when connecting to the database. Possible
-          values are "validate" and "none". This defaults to validate which
-          causes the database schema to be validated. On some database
+          <para>schemaCheck - Optional parameter that controls how the
+          database schema should be checked when connecting to the database.
+          Possible values are "validate" and "none". This defaults to validate
+          which causes the database schema to be validated. On some database
           connections, the validation reports problems when their are none. So
           setting this parameter to none, will cause no schema checks to be
           done.</para>
@@ -1532,7 +1538,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
       </itemizedlist>
 
       <example>
-        <title>MYSQL database resource</title>
+        <title>MySQL database resource</title>
 
         <programlisting>&lt;mediaManager&gt;
   &lt;resources&gt;
@@ -1569,15 +1575,15 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
       <para>The seen database is used to store a list of files that have been
       seen before. This also records the time the file was last modified so
-      that if it's updated the changes will be noticed. Media directiores can
+      that if it's updated the changes will be noticed. Media directories can
       be set to ignore seen media files. This seeds up the processing of media
       files. By default the seen database is stored in a file in the
       configuration directory. It's also possible to store the seen database
-      in a actual database. To do this the resource to use with the seen
-      database must be configured.</para>
+      in a actual database. This is done be setting up a database resource and
+      configuring the seen database to use it.</para>
 
       <example>
-        <title>Storeing the seen database within a database resource</title>
+        <title>Storing the seen database within a database resource</title>
 
         <para>This will set the seen database to use the database resource
         "mainDB".</para>
@@ -1624,7 +1630,7 @@ mysql&gt; GRANT ALL PRIVILEGES ON mediamanager.* TO 'mediamanager'@'localhost' I
 
           <para>The default stores, sources and actions will ensure that the
           latest meta data is downloaded for the media directory and that the
-          files are renamed according to their metadata. If the file is a
+          files are renamed according to their meta data. If the file is a
           m4v/mp4 file, then meta data is inserted into the file.</para>
 
           <programlisting>&lt;!-- A configuration file that uses defualt sources, stores and actions --&gt;
