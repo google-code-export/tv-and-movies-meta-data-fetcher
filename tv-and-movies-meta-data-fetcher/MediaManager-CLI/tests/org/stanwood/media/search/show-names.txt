@@ -15,3 +15,5 @@
 %n/%s/%e - %t.%x,A Show season 3/Show.s03e10.HDTV.XviD-LOL.[BLAH].m4v
 %n/Season %s/%s %e - %t.%x,A.TV.Show..S04E25.Show Title.DVDRip.xvid-djw.m4v
 %n/Season %s/%s %e - %t.%x,A Show 3-01 The Show Title.m4v
+%n/Season %s/%s %e {to %f }- %t{ %d}.%x,A.Show.Show.S02E03This.Is.Title.HDTV.x264-RKSTR.m4v
+%n/Season %s/%s %e {to %f }- %t{ %d}.%x,Show S05E08 Title Title HDTV x264-LOL [eztv].m4v
