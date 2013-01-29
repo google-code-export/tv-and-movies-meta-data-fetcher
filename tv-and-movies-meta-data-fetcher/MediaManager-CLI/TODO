@@ -3,6 +3,7 @@ TODO
 	
 Version 2.2
 -----------
+Add way of overriding a show name.
 Bugs
 	* Find out why the remote itune store does not seem to be triggering
 
