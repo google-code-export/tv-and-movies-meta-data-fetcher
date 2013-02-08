@@ -139,7 +139,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
 		if (log.isDebugEnabled()) {
-			log.debug("Rename File: "+oldFile+" -> " +newFile ); //$NON-NLS-1$ //$NON-NLS-2$
+			log.debug("RemoteMaxOSXItunesStore - Rename File: "+oldFile+" -> " +newFile ); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!inited) {
 			init();
