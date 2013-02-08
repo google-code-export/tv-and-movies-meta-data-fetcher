@@ -131,7 +131,6 @@ public class CLIImportMedia extends AbstractLauncher {
 		super("mm-import-media",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
-
 	/**
 	 * This does the actual work of the tool.
 	 * @return true if successful, otherwise false.
@@ -142,7 +141,7 @@ public class CLIImportMedia extends AbstractLauncher {
 			Map<File, List<File>> newFiles = setupStoresAndActions();
 
 			doUpdateCheck();
-
+			List<RenamedEntry> renamedFiles = new ArrayList<RenamedEntry>();
 			MediaSearcher searcher = new MediaSearcher(getController());
 			for (File file : files) {
 				MediaSearchResult result;
@@ -157,7 +156,13 @@ public class CLIImportMedia extends AbstractLauncher {
 					log.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file),e); //$NON-NLS-1$
 					continue;
 				}
-				moveFileToMediaDir(file, newFiles, result,searcher);
+
+				moveFileToMediaDir(file, renamedFiles,newFiles, result,searcher);
+			}
+
+			for (RenamedEntry e : renamedFiles) {
+				e.getMediaDirectory().renamedFile(e.getMediaDirectory().getMediaDirConfig().getMediaDir()
+						                         ,e.getOldName(), e.getNewName());
 			}
 
 			if (doActions) {
@@ -279,8 +284,8 @@ public class CLIImportMedia extends AbstractLauncher {
 		return null;
 	}
 
-	private void moveFileToMediaDir(File file,final Map<File,List<File>>newFiles,MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
-		MediaDirectory dir = findMediaDir(file, result.getVideo());
+	private void moveFileToMediaDir(File file,final List<RenamedEntry>renamed,final Map<File,List<File>>newFiles,MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
+		final MediaDirectory dir = findMediaDir(file, result.getVideo());
 		if (dir==null) {
 			throw new ConfigException(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DIR"),file)); //$NON-NLS-1$
 		}
@@ -297,6 +302,7 @@ public class CLIImportMedia extends AbstractLauncher {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
+						renamed.add(new RenamedEntry(oldName, newName,dir));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 
@@ -315,6 +321,7 @@ public class CLIImportMedia extends AbstractLauncher {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
+						renamed.add(new RenamedEntry(oldName, newName,dir));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 

@@ -1048,6 +1048,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 */
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
+
 		Document doc = getCache(rootMediaDir);
 		if (doc != null) {
 			try {
@@ -1057,6 +1058,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 					fileNode.setAttribute("location", makePathRelativeToMediaDir(newFile, rootMediaDir)); //$NON-NLS-1$
 					if (fileNode.getAttribute("orginalLocation").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
 						fileNode.setAttribute("orginalLocation", makePathRelativeToMediaDir(oldFile, rootMediaDir)); //$NON-NLS-1$
+					}
+					if (log.isDebugEnabled()) {
+						log.debug("XMLStore2 rename file "+oldFile+" to " + newFile);  //$NON-NLS-1$//$NON-NLS-2$
 					}
 				}
 
