@@ -299,7 +299,14 @@ public class RemoteMacOSXItunesStore implements IStore {
 			}
 			if (filesAdded.size()>0) {
 				for (File file : filesAdded) {
-					client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAULT_TIMEOUT); //$NON-NLS-1$
+					if (file.exists()) {
+						client.sendCommand(ITunesRemoteClient.CMD_FILE+":"+getFilePath(file.getAbsolutePath()),220,ITunesRemoteClient.DEFAULT_TIMEOUT); //$NON-NLS-1$
+					}
+					else {
+						if (log.isDebugEnabled()) {
+							log.debug("Unable to find file, so itunes not told: " + file); //$NON-NLS-1$
+						}
+					}
 				}
 				client.sendCommand(ITunesRemoteClient.CMD_ADD_FILES,220,ITunesRemoteClient.NO_TIMEOUT);
 			}
