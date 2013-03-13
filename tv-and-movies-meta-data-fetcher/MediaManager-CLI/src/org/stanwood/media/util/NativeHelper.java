@@ -52,7 +52,7 @@ public class NativeHelper {
 			}
 		}
 		if (method==null || method.length()==0 || method.equals("project")) { //$NON-NLS-1$
-			File f =new File(FileHelper.getWorkingDirectory(),".."+File.separator+"native"+File.separator+nativePath); //$NON-NLS-1$ //$NON-NLS-2$
+			File f =new File(FileHelper.getWorkingDirectory(),".."+File.separator+".."+File.separator+".."+File.separator+".."+File.separator+"native"+File.separator+nativePath); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			if (log.isDebugEnabled()) {
 				log.debug("Checking via project: " + f.getAbsolutePath()); //$NON-NLS-1$
 			}
