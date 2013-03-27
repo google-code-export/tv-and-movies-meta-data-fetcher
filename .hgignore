@@ -11,3 +11,7 @@ syntax: regexp
 ^tv-and-movies-meta-data-fetcher/MediaManager-CLI/src/org/stanwood/media/source/xbmc/expression/ExpressionLexer\.java$
 syntax: regexp
 ^tv-and-movies-meta-data-fetcher/MediaManager-CLI/src/org/stanwood/media/source/xbmc/expression/ExpressionParser\.java$
+syntax: regexp
+^tv-and-movies-meta-data-fetcher/MediaManager-CLI/tests-bin$
+syntax: regexp
+^tv-and-movies-meta-data-fetcher/VERSION$
