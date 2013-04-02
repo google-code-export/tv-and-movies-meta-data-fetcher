@@ -14,9 +14,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.server;
+package org.stanwood.media.server.commands;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import org.stanwood.media.Controller;
+import org.stanwood.media.progress.IProgressMonitor;
 
 public abstract class AbstractServerCommand {
 
-	public abstract void execute();
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface param {
+		String name();
+		String description();
+	}
+
+	private Controller controller;
+
+	public AbstractServerCommand(Controller controller) {
+		this.controller = controller;
+	}
+
+	public Controller getController() {
+		return this.controller;
+	}
+
+	public abstract boolean execute(ICommandLogger logger,IProgressMonitor monitor);
 }

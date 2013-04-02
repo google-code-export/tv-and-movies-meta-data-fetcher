@@ -14,13 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.stanwood.media.server;
+package org.stanwood.media.server.commands;
 
-public class ManageMediaCommand extends AbstractServerCommand {
+public interface ICommandLogger {
 
-	@Override
-	public void execute() {
+	public void trace(String message,Throwable t);
 
-	}
+	public void trace(String message);
 
+	public void debug(String message,Throwable t);
+
+	public void debug(String message);
+
+	public void error(String message,Throwable t);
+
+	public void error(String message);
+
+	public void warn(String message);
+
+	public void info(String message);
 }
