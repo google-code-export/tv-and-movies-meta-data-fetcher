@@ -61,6 +61,7 @@ public class TestFileNameParser {
 
 
 			Assert.assertNull(FileNameParser.parse(dirConfig, new File(dir,"A Film (2011).m4v"),null));
+			Assert.assertNull(FileNameParser.parse(dirConfig, new File(dir,"iron.man.2009.dvdrip.xvid-amiable.avi"),null));
 		}
 		finally {
 			FileHelper.delete(dir);
