@@ -44,6 +44,7 @@ import org.stanwood.media.model.IVideo;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.progress.SubProgressMonitor;
 import org.stanwood.media.search.MediaSearchResult;
 import org.stanwood.media.search.MediaSearcher;
 import org.stanwood.media.setup.ConfigException;
@@ -65,8 +66,9 @@ public class ImportMediaCommand extends AbstractServerCommand {
 	@Override
 	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		try {
-			Set<String> extensions = getAcceptableExtensions();
-			List<File> files = getNewMediaFiles(extensions);
+			monitor.beginTask("Importing media...", 105);
+			Set<String> extensions = getAcceptableExtensions(monitor);
+			List<File> files = getNewMediaFiles(extensions,monitor);
 			if (files.size()>0) {
 				logger.info (MessageFormat.format(Messages.getString("CLIImportMedia.FOUND_MEDIA_FILES"),files.size())); //$NON-NLS-1$
 			}
@@ -75,41 +77,64 @@ public class ImportMediaCommand extends AbstractServerCommand {
 				return false;
 			}
 
-			Map<File, List<File>> newFiles = setupStoresAndActions();
 
+			Map<File, List<File>> newFiles = setupStoresAndActions();
 			List<RenamedEntry> renamedFiles = new ArrayList<RenamedEntry>();
-			MediaSearcher searcher = new MediaSearcher(getController());
-			for (File file : files) {
-				MediaSearchResult result;
-				try {
-					result = searcher.lookupMedia(file,useDefaults);
-					if (result==null) {
-						logger.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file)); //$NON-NLS-1$
+
+			SubProgressMonitor importMediaMonitor = new SubProgressMonitor(monitor,100);
+			try {
+				importMediaMonitor.beginTask("Importing media...", files.size());
+				MediaSearcher searcher = new MediaSearcher(getController());
+				for (File file : files) {
+					importMediaMonitor.setTaskName(MessageFormat.format("Importing {0}...",file.getAbsolutePath()));
+					MediaSearchResult result;
+					try {
+						result = searcher.lookupMedia(file,useDefaults);
+						if (result==null) {
+							logger.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file)); //$NON-NLS-1$
+							continue;
+						}
+					}
+					catch (StanwoodException e) {
+						logger.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file),e); //$NON-NLS-1$
 						continue;
 					}
-				}
-				catch (StanwoodException e) {
-					logger.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file),e); //$NON-NLS-1$
-					continue;
-				}
 
-				moveFileToMediaDir(logger,file, renamedFiles,newFiles, result,searcher);
+					moveFileToMediaDir(logger,file, renamedFiles,newFiles, result,searcher);
+					importMediaMonitor.worked(1);
+				}
+			}
+			finally {
+				importMediaMonitor.done();
 			}
 
-			for (RenamedEntry e : renamedFiles) {
-				e.getMediaDirectory().renamedFile(e.getMediaDirectory().getMediaDirConfig().getMediaDir()
-						                         ,e.getOldName(), e.getNewName());
+			SubProgressMonitor renamedFilesMonitor = new SubProgressMonitor(monitor,100);
+			try {
+				renamedFilesMonitor.beginTask("Informing stores of new filenames", renamedFiles.size());
+				for (RenamedEntry e : renamedFiles) {
+					e.getMediaDirectory().renamedFile(e.getMediaDirectory().getMediaDirConfig().getMediaDir()
+							                         ,e.getOldName(), e.getNewName());
+					renamedFilesMonitor.worked(1);
+				}
+			}
+			finally {
+				renamedFilesMonitor.done();
 			}
 
 			if (executeActions) {
 				for (Entry<File,List<File>> e : newFiles.entrySet()) {
-					performActions(logger,e.getValue(),getController().getMediaDirectory(e.getKey()));
+					MediaDirectory mediaDir = getController().getMediaDirectory(e.getKey());
+					monitor.setTaskName(MessageFormat.format("Execute store actions on media directory {0}",mediaDir.getMediaDirConfig().getMediaDir()));
+					performActions(logger,e.getValue(),mediaDir);
 				}
 			}
+			monitor.worked(1);
 
 			if (deleteNonMedia) {
+				monitor.setTaskName("Removing non media files in watched directories");
 				cleanUpNonMediaFiles(logger,extensions);
 			}
+			monitor.worked(1);
 
 			return true;
 		} catch (ConfigException e) {
@@ -119,6 +144,9 @@ public class ImportMediaCommand extends AbstractServerCommand {
 			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
+		}
+		finally {
+			monitor.done();
 		}
 		return false;
 	}
@@ -162,9 +190,6 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		}
 		return newFiles;
 	}
-
-
-
 
 	private boolean dirContainsMedia(Set<String>extensions,File d) {
 		File files[] = d.listFiles();
@@ -290,7 +315,8 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		actionPerformer.performActions(newFiles,new HashSet<File>(),new NullProgressMonitor());
 	}
 
-	private List<File> getNewMediaFiles(Set<String>extensions) {
+	private List<File> getNewMediaFiles(Set<String>extensions,IProgressMonitor monitor) {
+		monitor.setTaskName("Finding new media files");
 		List<File>newMediaFiles = new ArrayList<File>();
 		for (WatchDirConfig c : getController().getWatchDirectories()) {
 			File f = c.getWatchDir();
@@ -305,16 +331,19 @@ public class ImportMediaCommand extends AbstractServerCommand {
 				newMediaFiles .add(f);
 			}
 		}
+		monitor.worked(1);
 		return newMediaFiles;
 	}
 
 
-	private Set<String> getAcceptableExtensions() throws ConfigException {
+	private Set<String> getAcceptableExtensions(IProgressMonitor monitor) throws ConfigException {
+		monitor.setTaskName("Getting accetable media file extensions");
 		Set<String>extensions = new HashSet<String>();
 		for (File mediaDirLoc :  getController().getMediaDirectories()) {
 			MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
 			extensions.addAll(mediaDir.getMediaDirConfig().getExtensions());
 		}
+		monitor.worked(1);
 		return extensions;
 	}
 
