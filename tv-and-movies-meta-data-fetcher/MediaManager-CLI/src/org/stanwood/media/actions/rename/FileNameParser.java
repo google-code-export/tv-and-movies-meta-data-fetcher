@@ -23,8 +23,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
+import org.stanwood.media.search.FilmSearcher;
 import org.stanwood.media.search.ReverseFilePatternMatcher;
+import org.stanwood.media.search.SearchHelper;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.MediaDirConfig;
 
 /**
@@ -181,6 +185,26 @@ public class FileNameParser {
 			parsed.setEpisodes(lookupResults.getEpisodes());
 			parsed.setSeason(lookupResults.getSeason());
 			return parsed;
+		}
+
+		if (dirConfig.getMode()==Mode.TV_SHOW){
+			List<Pattern> stripTokens = dirConfig.getStripTokens();
+			if (stripTokens==null) {
+				stripTokens = ConfigReader.DEFAULT_STRIP_TOKENS;
+			}
+			StringBuilder term = new StringBuilder(file.getName());
+			SearchHelper.replaceDots(term);
+			Matcher m = FilmSearcher.PATTERN_YEAR2.matcher(term);
+			if (m.matches()) {
+//				StringBuilder start= new StringBuilder(m.group(1));
+//				String year= m.group(2);
+				StringBuilder end= new StringBuilder(m.group(3));
+	//			SearchHelper.replaceWithSpaces(start);
+				SearchHelper.replaceWithSpaces(end);
+				if (SearchHelper.hasStripTokens(stripTokens,end)) {
+					return null;
+				}
+			}
 		}
 
 		ParsedFileName result = parse(file);
