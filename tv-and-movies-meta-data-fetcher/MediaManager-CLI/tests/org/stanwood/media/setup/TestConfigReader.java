@@ -374,7 +374,7 @@ public class TestConfigReader {
 			testConfig.append("</mediaManager>"+FileHelper.LS);
 
 			ConfigReader configReader = createConfigReader(testConfig);
-			Assert.assertEquals("%sx%e - %t.%x", configReader.getMediaDirectory(mediaDir).getPattern());
+			Assert.assertEquals("%n/Season %s/%sx%e - %t{ %d}.%x", configReader.getMediaDirectory(mediaDir).getPattern());
 
 		}
 		finally {
