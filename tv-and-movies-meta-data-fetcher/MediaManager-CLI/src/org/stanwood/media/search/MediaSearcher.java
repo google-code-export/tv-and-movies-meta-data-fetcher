@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +43,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
 import org.stanwood.media.model.VideoFile;
 import org.stanwood.media.setup.ConfigException;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.SourceException;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
@@ -94,6 +97,17 @@ public class MediaSearcher {
 			}
 		}
 
+
+		if (mode==null) {
+			if (possibleFilm(mediaFile)) {
+				mode = Mode.FILM;
+			}
+		}
+
+		if (mode==null && mediaFile.getParentFile().getName().toLowerCase().equals("sample")) {
+			return null;
+		}
+
 		if (mode==null) {
 			ParsedFileName parsed = FileNameParser.parse(mediaFile);
 			if (parsed==null) {
@@ -114,6 +128,22 @@ public class MediaSearcher {
 			}
 		}
 		return null;
+	}
+
+	private boolean possibleFilm(File mediaFile) {
+		List<Pattern> stripTokens  = ConfigReader.DEFAULT_STRIP_TOKENS;
+		StringBuilder term = new StringBuilder(mediaFile.getName());
+		SearchHelper.replaceDots(term);
+		Matcher m = FilmSearcher.PATTERN_YEAR2.matcher(term);
+		if (m.matches()) {
+			StringBuilder end= new StringBuilder(m.group(3));
+			SearchHelper.replaceWithSpaces(end);
+			if (SearchHelper.hasStripTokens(stripTokens,end)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private IVideo getMediaDetails(MediaDirectory dir,File file,boolean useSources) throws ActionException {

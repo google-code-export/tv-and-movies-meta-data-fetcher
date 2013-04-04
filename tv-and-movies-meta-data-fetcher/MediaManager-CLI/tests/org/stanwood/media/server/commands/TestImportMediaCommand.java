@@ -20,17 +20,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.Controller;
 import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
+import org.stanwood.media.cli.manager.TestNFOFilms;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
@@ -97,7 +101,6 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 		List<String> files = FileHelper.listFilesAsStrings(watchDir);
 		Collections.sort(files);
-		System.out.println(files);
 		Assert.assertEquals(0,files.size());
 
 		files = FileHelper.listFilesAsStrings(showDir);
@@ -108,9 +111,62 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 		files = FileHelper.listFilesAsStrings(filmDir);
 		Collections.sort(files);
-		System.out.println(files);
 		Assert.assertEquals(1,files.size());
 
+	}
+
+	@Test
+	public void testImportFilmWithNFOFile() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File watchDir = FileHelper.createTmpDir("watchdir");
+		File filmDir = FileHelper.createTmpDir("filmDir");
+		File showDir = FileHelper.createTmpDir("showDir");
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		Controller controller = new Controller(config);
+		controller.init(false);
+
+		ImportMediaCommand cmd = new ImportMediaCommand(controller);
+		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
+
+		// Install IMDB Source
+		XBMCInstallAddonsCommand installAddonsCmd = new XBMCInstallAddonsCommand(controller);
+		List<String>addons = new ArrayList<String>();
+		addons.add("metadata.imdb.com");
+		installAddonsCmd.setAddons(addons);
+		Assert.assertTrue(installAddonsCmd.execute(logger, new NullProgressMonitor()));
+		XBMCUpdateAddonsCommand updateAddonsCmd = new XBMCUpdateAddonsCommand(controller);
+		Set<String> updateAddons = new HashSet<String>();
+		updateAddons.add("metadata.imdb.com");
+		updateAddons.add("metadata.common.themoviedb.org");
+		updateAddonsCmd.setAddons(updateAddons);
+		Assert.assertTrue(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertTrue(logger.getResult().contains("Installed plugin 'metadata.common.imdb.com"));
+
+		// Create test NFO folder
+		TestNFOFilms.createFiles(watchDir);
+
+		// Import media
+//		cmd.setDeleteNonMedia(true);
+		Assert.assertTrue(cmd.execute(logger, new NullProgressMonitor()));
+
+		List<String> files = FileHelper.listFilesAsStrings(watchDir);
+		Collections.sort(files);
+		Assert.assertEquals(new File(watchDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Read This Guide Now.txt").getAbsolutePath(),files.get(0));
+		Assert.assertEquals(new File(watchDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Sample"+File.separator+"ironman.avi").getAbsolutePath(),files.get(1));
+		Assert.assertEquals(new File(watchDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"kkid.nfo").getAbsolutePath(),files.get(2));
+		Assert.assertEquals(new File(watchDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"www.Torrentday.com.txt").getAbsolutePath(),files.get(3));
+		Assert.assertEquals(4,files.size());
+
+		files = FileHelper.listFilesAsStrings(showDir);
+		Collections.sort(files);
+		Assert.assertEquals(0,files.size());
+
+		files = FileHelper.listFilesAsStrings(filmDir);
+		Collections.sort(files);
+		Assert.assertEquals(new File(filmDir,File.separator+"Iron Man (2008) Part 1.avi").getAbsolutePath(),files.get(0));
+		Assert.assertEquals(new File(filmDir,File.separator+"Iron Man (2008) Part 2.avi").getAbsolutePath(),files.get(1));
+		Assert.assertEquals(2,files.size());
 	}
 
 	private void appendMediaDirectory(StringBuilder testConfig,File mediaDir,Mode mode,String sourceId,Map<String,String> sourceParams,String storeId,String dummy,String ... actions) {

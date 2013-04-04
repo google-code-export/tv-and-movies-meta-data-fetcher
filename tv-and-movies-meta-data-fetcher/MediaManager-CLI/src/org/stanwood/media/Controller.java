@@ -156,7 +156,8 @@ public class Controller {
 		registerPlugins();
 	}
 
-	private void registerInbuild() throws ConfigException {
+	public synchronized void reloadSources() throws ConfigException {
+		pluginSources = new ArrayList<ExtensionInfo<? extends ISource>>();
 		pluginSources.add(new TagChimpSourceInfo());
 		pluginSources.add(new HybridFilmSourceInfo());
 
@@ -172,6 +173,11 @@ public class Controller {
 		catch (XBMCException e) {
 			throw new ConfigException(Messages.getString("Controller.UNABLE_REGISTER_ADDONS"),e); //$NON-NLS-1$
 		}
+
+	}
+
+	private void registerInbuild() throws ConfigException {
+		reloadSources();
 
 		pluginStores.add(new SapphireStoreInfo());
 		pluginStores.add(new MemoryStoreInfo());
