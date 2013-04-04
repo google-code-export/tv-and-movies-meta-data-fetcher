@@ -19,6 +19,7 @@ package org.stanwood.media.server.commands;
 import org.stanwood.media.Controller;
 import org.stanwood.media.progress.IProgressMonitor;
 
+
 public class ManageMediaCommand extends AbstractServerCommand {
 
 	public ManageMediaCommand(Controller controller) {
@@ -26,7 +27,7 @@ public class ManageMediaCommand extends AbstractServerCommand {
 	}
 
 	@Override
-	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
+	public boolean execute(ICommandLogger logger, IProgressMonitor monitor) {
 		return false;
 	}
 

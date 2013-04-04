@@ -17,15 +17,19 @@
 package org.stanwood.media.server.commands;
 
 import java.text.MessageFormat;
+import java.util.Set;
 
 import org.stanwood.media.Controller;
 import org.stanwood.media.cli.manager.Messages;
 import org.stanwood.media.progress.IProgressMonitor;
+import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 
 public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
+
+	private Set<String> addons;
 
 	public XBMCUpdateAddonsCommand(Controller controller) {
 		super(controller);
@@ -36,7 +40,7 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 		if (!getController().isTestRun()) {
 			try {
 				logger.info(Messages.getString("CLICopyToMediaDir.CHECKING_UPTODATE")); //$NON-NLS-1$
-				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
+				IConsole console = new IConsole() {
 					@Override
 					public void error(String error) {
 						logger.info(error);
@@ -46,17 +50,32 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 					public void info(String info) {
 						logger.info(info);
 					}
-				});
+				};
+				int count;
+				if (addons ==null) {
+					count = getController().getXBMCAddonManager().getUpdater().update(console);
+				}
+				else {
+					count = getController().getXBMCAddonManager().getUpdater().update(console,addons);
+				}
 				if (count>0 ) {
 					logger.info(MessageFormat.format(Messages.getString("CLICopyToMediaDir.DOWNLOAD_INSTALL_UPDATE"),count)); //$NON-NLS-1$
 				}
+				getController().reloadSources();
 			} catch (XBMCUpdaterException e) {
 				logger.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
 			} catch (XBMCException e) {
 				logger.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
+			} catch (ConfigException e) {
+				logger.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
 			}
 		}
 		return true;
+	}
+
+	@param(name="addons",description="The addons to update. If none are given, then all addons are updated")
+	public void setAddons(Set<String> addons) {
+		this.addons = addons;
 	}
 
 }

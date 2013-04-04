@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.stanwood.media.Controller;
 
 /**
  * This is a abstract base class for the sub commands of CLI commands
@@ -37,6 +38,11 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 	 */
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public Controller getController() {
+		return rootCommand.getController();
 	}
 
 	@Override

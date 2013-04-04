@@ -41,7 +41,9 @@ public class FilmNFOSearchStrategy implements ISearchStrategy {
 	public SearchDetails getSearch(File mediaFile, MediaDirectory mediaDir) {
 		File nfoFile = NFOSearchHelper.findNFOfile(mediaDir,mediaFile);
 		if (nfoFile!=null) {
-
+			if (mediaFile.getParentFile().getName().toLowerCase().equals("sample")) { //$NON-NLS-1$
+				return null;
+			}
 			// Read the IMDB from the NFO file
 			String imdbId = getIMDBIDFromFile(nfoFile);
 			if (imdbId!=null) {

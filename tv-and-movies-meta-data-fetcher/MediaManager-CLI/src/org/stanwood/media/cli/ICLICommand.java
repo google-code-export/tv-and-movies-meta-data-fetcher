@@ -1,5 +1,7 @@
 package org.stanwood.media.cli;
 
+import org.stanwood.media.Controller;
+
 
 /**
  * All CLI launchers must implement this interface
@@ -11,5 +13,7 @@ public interface ICLICommand {
 	 * @return The name
 	 */
 	public String getName();
+
+	public Controller getController();
 
 }

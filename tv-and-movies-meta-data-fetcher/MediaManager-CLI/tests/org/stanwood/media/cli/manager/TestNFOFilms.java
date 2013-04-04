@@ -122,7 +122,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		CLIManageAddons.main(cmd);
 	}
 
-	private void createFiles(File mediaDir) throws IOException {
+	public static void createFiles(File mediaDir) throws IOException {
 		File nfoDir = new File(mediaDir,"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]");
 		createFile(new File(nfoDir,"CD1"+File.separator+"ironman_part1.avi"));
 		createFile(new File(nfoDir,"CD2"+File.separator+"ironman_part2.avi"));
@@ -132,7 +132,7 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		createFile(new File(nfoDir,"www.Torrentday.com.txt"));
 	}
 
-	private void createFile(File file) throws IOException {
+	private static void createFile(File file) throws IOException {
 		// Create dirs
 		if (!file.getParentFile().exists()) {
 			if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
