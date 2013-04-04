@@ -96,7 +96,6 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		}
 
 		boolean result = cmd.execute(logger, new NullProgressMonitor());
-		System.out.println(logger.getResult().toString());
 		Assert.assertTrue(result);
 
 		List<String> files = FileHelper.listFilesAsStrings(watchDir);
@@ -116,7 +115,62 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 	}
 
 	@Test
+	public void testImportFilmWithNFOFileRemoveNonMedia() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File watchDir = FileHelper.createTmpDir("watchdir");
+		File filmDir = FileHelper.createTmpDir("filmDir");
+		File showDir = FileHelper.createTmpDir("showDir");
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		Controller controller = new Controller(config);
+		controller.init(false);
+
+		ImportMediaCommand cmd = new ImportMediaCommand(controller);
+		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
+
+		// Install IMDB Source
+		XBMCInstallAddonsCommand installAddonsCmd = new XBMCInstallAddonsCommand(controller);
+		List<String>addons = new ArrayList<String>();
+		addons.add("metadata.imdb.com");
+		installAddonsCmd.setAddons(addons);
+		Assert.assertTrue(installAddonsCmd.execute(logger, new NullProgressMonitor()));
+		XBMCUpdateAddonsCommand updateAddonsCmd = new XBMCUpdateAddonsCommand(controller);
+		Set<String> updateAddons = new HashSet<String>();
+		updateAddons.add("metadata.imdb.com");
+		updateAddons.add("metadata.common.themoviedb.org");
+		updateAddonsCmd.setAddons(updateAddons);
+		Assert.assertTrue(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertTrue(logger.getResult().contains("Installed plugin 'metadata.common.imdb.com"));
+
+		// Create test NFO folder
+		TestNFOFilms.createFiles(watchDir);
+		FileHelper.delete(new File(watchDir,"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Sample"+File.separator+"ironman.avi"));
+
+		// Import media
+		cmd.setDeleteNonMedia(true);
+		Assert.assertTrue(cmd.execute(logger, new NullProgressMonitor()));
+
+		List<String> files = FileHelper.listFilesAsStrings(watchDir);
+		Collections.sort(files);
+		Assert.assertEquals(0,files.size());
+
+		files = FileHelper.listFilesAsStrings(showDir);
+		Collections.sort(files);
+		Assert.assertEquals(0,files.size());
+
+		files = FileHelper.listFilesAsStrings(filmDir);
+		Collections.sort(files);
+		Assert.assertEquals(new File(filmDir,File.separator+"Iron Man (2008) Part 1.avi").getAbsolutePath(),files.get(0));
+		Assert.assertEquals(new File(filmDir,File.separator+"Iron Man (2008) Part 2.avi").getAbsolutePath(),files.get(1));
+		Assert.assertEquals(2,files.size());
+	}
+
+	@Test
 	public void testImportFilmWithNFOFile() throws Exception {
+		cleanup();
+		setupTestFile();
+		setup();
+
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		File watchDir = FileHelper.createTmpDir("watchdir");

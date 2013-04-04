@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -154,6 +155,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 	private void cleanUpNonMediaFiles(ICommandLogger logger,Set<String>extensions) {
 		for (WatchDirConfig wd : getController().getWatchDirectories()) {
 			List<File> dirs = FileHelper.listDirectories(wd.getWatchDir());
+			Collections.reverse(dirs);
 			for (File d : dirs) {
 				if (d !=null && !d.equals(wd.getWatchDir()) && !dirContainsMedia(extensions,d)) {
 					if (getController().isTestRun()) {
