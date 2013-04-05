@@ -85,10 +85,11 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 			Assert.assertEquals(6,files.size());
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron Man (2008) Part 1.avi").getAbsolutePath(),files.get(0));
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron Man (2008) Part 2.avi").getAbsolutePath(),files.get(1));
-			Assert.assertEquals(new File(mediaDir,File.separator+"Iron Man (2008).avi").getAbsolutePath(),files.get(2));
-			Assert.assertEquals(new File(mediaDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Read This Guide Now.txt").getAbsolutePath(),files.get(3));
+			Assert.assertEquals(new File(mediaDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Read This Guide Now.txt").getAbsolutePath(),files.get(2));
+			Assert.assertEquals(new File(mediaDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"Sample"+File.separator+"ironman.avi").getAbsolutePath(),files.get(3));
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"kkid.nfo").getAbsolutePath(),files.get(4));
 			Assert.assertEquals(new File(mediaDir,File.separator+"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]"+File.separator+"www.Torrentday.com.txt").getAbsolutePath(),files.get(5));
+
 
 			Assert.assertEquals("Check exit code",0,exitCode);
 
