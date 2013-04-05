@@ -22,23 +22,45 @@ import java.lang.annotation.RetentionPolicy;
 import org.stanwood.media.Controller;
 import org.stanwood.media.progress.IProgressMonitor;
 
+/**
+ * The base of server commands
+ */
 public abstract class AbstractServerCommand {
 
+	/**
+	 * Used to annotate parameters
+	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface param {
+		/** The name of the parameter */
 		String name();
+		/** The description of the parameter */
 		String description();
 	}
 
 	private Controller controller;
 
+	/**
+	 * The constructor
+	 * @param controller The media controller
+	 */
 	public AbstractServerCommand(Controller controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * Used to get the controller
+	 * @return The controller
+	 */
 	public Controller getController() {
 		return this.controller;
 	}
 
+	/**
+	 * Used to execute the command
+	 * @param logger The command logger
+	 * @param monitor The progress monitor
+	 * @return True if success, or false if their were errors
+	 */
 	public abstract boolean execute(ICommandLogger logger,IProgressMonitor monitor);
 }

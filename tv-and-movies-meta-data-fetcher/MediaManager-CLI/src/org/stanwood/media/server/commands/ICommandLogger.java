@@ -16,21 +16,60 @@
  */
 package org.stanwood.media.server.commands;
 
+/**
+ * Used to log output from commands
+ */
 public interface ICommandLogger {
 
+	/**
+	 * Log trace message
+	 * @param message The message
+	 * @param t an exception to log
+	 */
 	public void trace(String message,Throwable t);
 
+	/**
+	 * Log trace message
+	 * @param message The message
+	 */
 	public void trace(String message);
 
+	/**
+	 * Log debug message
+	 * @param message The message
+	 * @param t an exception to log
+	 */
 	public void debug(String message,Throwable t);
 
+	/**
+	 * Log a debug message
+	 * @param message The message
+	 */
 	public void debug(String message);
 
+
+	/**
+	 * Log error message
+	 * @param message The message
+	 * @param t an exception to log
+	 */
 	public void error(String message,Throwable t);
 
+	/**
+	 * Log a debug message
+	 * @param message The message
+	 */
 	public void error(String message);
 
+	/**
+	 * Log a warning message
+	 * @param message The message
+	 */
 	public void warn(String message);
 
+	/**
+	 * Log a info message
+	 * @param message The message
+	 */
 	public void info(String message);
 }
