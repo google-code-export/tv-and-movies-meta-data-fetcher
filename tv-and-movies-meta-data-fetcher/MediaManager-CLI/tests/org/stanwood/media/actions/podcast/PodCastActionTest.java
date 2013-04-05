@@ -441,7 +441,7 @@ public class PodCastActionTest {
 		}
 
 		@Override
-		protected DummySource createExtension() throws ExtensionException {
+		protected DummySource createExtension(Controller controller) throws ExtensionException {
 
 			return new DummySource(this);
 		}

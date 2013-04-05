@@ -83,17 +83,16 @@ public class RemoteMacOSXItunesStore implements IStore {
 	private String fileSeperator;
 	private boolean inited = false;
 
+	public RemoteMacOSXItunesStore(Controller controller) {
+	}
+
 	/** {@inheritDoc}
 	 * <p>
 	 * This will connect and login to the server
 	 * </p>
 	 */
 	@Override
-	public void init(Controller controller,File nativeDir) throws StoreException {
-		init();
-	}
-
-	protected void init() throws StoreException {
+	public void init() throws StoreException {
 		filesAdded = new ArrayList<File>();
 		filesDeleted = new ArrayList<File>();
 		filesUpdated = new ArrayList<File>();

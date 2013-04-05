@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.source;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -37,7 +38,7 @@ public class TagChimpSourceInfo extends ExtensionInfo<TagChimpSource> {
 
 	/** {@inheritDoc} */
 	@Override
-	protected TagChimpSource createExtension() {
+	protected TagChimpSource createExtension(Controller controller) {
 		return new TagChimpSource(this);
 	}
 }

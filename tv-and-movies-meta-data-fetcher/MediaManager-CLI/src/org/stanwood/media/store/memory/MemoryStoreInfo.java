@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store.memory;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -33,7 +34,7 @@ public class MemoryStoreInfo extends ExtensionInfo<MemoryStore> {
 	}
 
 	@Override
-	protected MemoryStore createExtension() {
+	protected MemoryStore createExtension(Controller controller) {
 		return new MemoryStore();
 	}
 }

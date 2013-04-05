@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -33,7 +34,7 @@ public class SapphireStoreInfo extends ExtensionInfo<SapphireStore> {
 	}
 
 	@Override
-	protected SapphireStore createExtension() {
+	protected SapphireStore createExtension(Controller controller) {
 		return new SapphireStore();
 	}
 }

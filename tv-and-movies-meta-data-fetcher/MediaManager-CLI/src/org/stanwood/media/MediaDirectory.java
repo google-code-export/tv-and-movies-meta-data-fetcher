@@ -76,7 +76,7 @@ public class MediaDirectory {
 
 			for (IStore store : stores) {
 				try {
-					store.init(getController(),getController().getNativeFolder());
+					store.init();
 					store.upgrade(this);
 				} catch (StoreException e) {
 					log.error(MessageFormat.format(Messages.getString("MediaDirectory.UNABLE_UPGRADE_STORES"),store.getClass()),e); //$NON-NLS-1$

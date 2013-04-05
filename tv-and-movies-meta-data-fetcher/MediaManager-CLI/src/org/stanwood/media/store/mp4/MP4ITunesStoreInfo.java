@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store.mp4;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -40,7 +41,7 @@ public class MP4ITunesStoreInfo extends ExtensionInfo<MP4ITunesStore> {
 	}
 
 	@Override
-	protected MP4ITunesStore createExtension() {
-		return new MP4ITunesStore(this);
+	protected MP4ITunesStore createExtension(Controller controller) {
+		return new MP4ITunesStore(controller,this);
 	}
 }

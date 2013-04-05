@@ -115,19 +115,18 @@ public class MP4ITunesStore implements IStore {
 	 * The constructor
 	 * @param storeInfo The store information
 	 */
-	public MP4ITunesStore(MP4ITunesStoreInfo storeInfo) {
+	public MP4ITunesStore(Controller controller,MP4ITunesStoreInfo storeInfo) {
 		this.storeInfo = storeInfo;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller,File nativeDir) throws StoreException {
-		this.controller = controller;
+	public void init() throws StoreException {
 		if (atomicParsleyCmd == null) {
-			atomicParsleyCmd = NativeHelper.getNativeApplication(nativeDir,MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName());
+			atomicParsleyCmd = NativeHelper.getNativeApplication(controller.getNativeFolder(),MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName());
 		}
 		try {
-			getMP4Manager().init(nativeDir);
+			getMP4Manager().init(controller.getNativeFolder());
 		} catch (MP4Exception e) {
 			throw new StoreException(Messages.getString("MP4ITunesStore.UNABLE_SETUP_STORE"),e); //$NON-NLS-1$
 		}

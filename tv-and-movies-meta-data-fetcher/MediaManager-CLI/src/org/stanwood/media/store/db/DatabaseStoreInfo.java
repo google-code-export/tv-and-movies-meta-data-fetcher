@@ -1,5 +1,6 @@
 package org.stanwood.media.store.db;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
@@ -25,8 +26,8 @@ public class DatabaseStoreInfo extends ExtensionInfo<DatabaseStore>  {
 	}
 
 	@Override
-	protected DatabaseStore createExtension() throws ExtensionException {
-		return new DatabaseStore();
+	protected DatabaseStore createExtension(Controller controller) throws ExtensionException {
+		return new DatabaseStore(controller);
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.stanwood.media.store.db;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
@@ -20,8 +21,8 @@ public class FileDatabaseStoreInfo extends ExtensionInfo<FileDatabaseStore>  {
 	}
 
 	@Override
-	protected FileDatabaseStore createExtension() throws ExtensionException {
-		return new FileDatabaseStore();
+	protected FileDatabaseStore createExtension(Controller controller) throws ExtensionException {
+		return new FileDatabaseStore(controller);
 	}
 
 }

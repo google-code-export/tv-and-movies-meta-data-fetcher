@@ -51,6 +51,11 @@ public class DatabaseStore implements IStore {
 	private Session session;
 	private String resourceId;
 	private Transaction currentTransaction = null;
+	private Controller controller;
+
+	public DatabaseStore(Controller controller) {
+		this.controller = controller;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -630,8 +635,7 @@ public class DatabaseStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller, File nativeDir)
-			throws StoreException {
+	public void init() throws StoreException {
 		validateParameters();
 		DBResource resource = controller.getDatabaseResources().get(resourceId);
 		if (resource==null) {
@@ -708,4 +712,7 @@ public class DatabaseStore implements IStore {
 		return result;
 	}
 
+	protected Controller getController() {
+		return controller;
+	}
 }

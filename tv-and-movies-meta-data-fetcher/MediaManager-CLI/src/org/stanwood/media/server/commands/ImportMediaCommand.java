@@ -187,7 +187,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 		for (File mediaDirLoc :  getController().getMediaDirectories()) {
 			for (IStore store : getController().getMediaDirectory(mediaDirLoc).getStores()) {
-				store.init(getController(),getController().getNativeFolder());
+				store.init();
 			}
 		}
 		return newFiles;

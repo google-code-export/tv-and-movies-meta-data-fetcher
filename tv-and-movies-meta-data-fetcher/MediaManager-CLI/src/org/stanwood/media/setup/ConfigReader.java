@@ -468,7 +468,7 @@ public class ConfigReader extends BaseConfigReader {
 
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_SOURCE"),id,sb.toString())); //$NON-NLS-1$
 				}
-				ISource source = sourceInfo.getExtension(dirConfig,num++);
+				ISource source = sourceInfo.getExtension(controller,dirConfig,num++);
 				if (sourceConfig.getParams() != null) {
 					for (String key : sourceConfig.getParams().keySet()) {
 						String value = sourceConfig.getParams().get(key);
@@ -509,7 +509,7 @@ public class ConfigReader extends BaseConfigReader {
 
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_STORE"),id,sb.toString())); //$NON-NLS-1$
 				}
-				IStore store = storeInfo.getExtension(dirConfig,num++);
+				IStore store = storeInfo.getExtension(controller,dirConfig,num++);
 				if (storeConfig.getParams() != null) {
 					for (String key : storeConfig.getParams().keySet()) {
 						String value = storeConfig.getParams().get(key);
@@ -551,7 +551,7 @@ public class ConfigReader extends BaseConfigReader {
 
 					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UNABLE_FIND_ACTION"),id,sb.toString())); //$NON-NLS-1$
 				}
-				IAction action = actionInfo.getExtension(dirConfig,num++);
+				IAction action = actionInfo.getExtension(controller,dirConfig,num++);
 				if (actionConfig.getParams() != null) {
 					for (String key : actionConfig.getParams().keySet()) {
 						String value = actionConfig.getParams().get(key);
