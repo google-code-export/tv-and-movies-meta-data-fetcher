@@ -190,7 +190,7 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public IFilm getFilm(File rootMediaDir,File filmFile, SearchResult searchResult, boolean refresh) throws MalformedURLException,
+	public IFilm getFilm(File rootMediaDir,File filmFile, SearchResult searchResult, boolean refresh,boolean cacheIfNew) throws MalformedURLException,
 			SourceException, IOException, StoreException {
 		IFilm film = null;
 		if (!refresh) {
@@ -210,15 +210,17 @@ public class MediaDirectory {
 				try {
 					if (source.getInfo().getId().equals(sourceId)) {
 						film = source.getFilm(searchResult.getId(),url,filmFile);
-						if (film != null) {
-							for (IStore store : stores) {
-								if (!controller.isTestRun()) {
-									try {
-										store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
-									}
-									catch(StoreException e) {
-										log.error(Messages.getString("MediaDirectory.UnableCacheFilm"),e); //$NON-NLS-1$
-										return null;
+						if (cacheIfNew) {
+							if (film != null) {
+								for (IStore store : stores) {
+									if (!controller.isTestRun()) {
+										try {
+											store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+										}
+										catch(StoreException e) {
+											log.error(Messages.getString("MediaDirectory.UnableCacheFilm"),e); //$NON-NLS-1$
+											return null;
+										}
 									}
 								}
 							}
@@ -308,7 +310,7 @@ public class MediaDirectory {
 	 * @throws IOException Thrown if their is a I/O related problem.
 	 * @throws StoreException Thrown if their is a store related problem.
 	 */
-	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, List<Integer> episodeNums, boolean refresh) throws SourceException,
+	public IEpisode getEpisode(File rootMediaDir,File episodeFile, ISeason season, List<Integer> episodeNums, boolean refresh,boolean storeIfNew) throws SourceException,
 			MalformedURLException, IOException, StoreException {
 		IEpisode episode = null;
 		if (!refresh) {
@@ -329,13 +331,15 @@ public class MediaDirectory {
 						episode = source.getEpisode(season, episodeNums.get(0),episodeFile);
 						if (episode != null) {
 							episode.setEpisodes(episodeNums);
-							for (IStore store : stores) {
-								try {
-									store.cacheEpisode(rootMediaDir,episodeFile, episode);
-								}
-								catch(StoreException e) {
-									log.error(Messages.getString("MediaDirectory.UnableCacheEpisode"),e); //$NON-NLS-1$
-									return null;
+							if (storeIfNew) {
+								for (IStore store : stores) {
+									try {
+										store.cacheEpisode(rootMediaDir,episodeFile, episode);
+									}
+									catch(StoreException e) {
+										log.error(Messages.getString("MediaDirectory.UnableCacheEpisode"),e); //$NON-NLS-1$
+										return null;
+									}
 								}
 							}
 							break;

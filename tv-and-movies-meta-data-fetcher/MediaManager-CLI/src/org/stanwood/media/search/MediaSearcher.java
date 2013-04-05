@@ -166,9 +166,11 @@ public class MediaSearcher {
 	public static IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
-				IFilm film = store.getFilm(dir,file);
-				if (film!=null) {
-					return film;
+				if (file.getAbsolutePath().startsWith(dir.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
+					IFilm film = store.getFilm(dir,file);
+					if (film!=null) {
+						return film;
+					}
 				}
 			}
 			SearchResult result = findFilm(dir, file,useSources);
@@ -217,7 +219,7 @@ public class MediaSearcher {
 		}
 		boolean refresh = false;
 		try {
-			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh);
+			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh,false);
 			if (film==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
@@ -235,11 +237,6 @@ public class MediaSearcher {
 						}
 					}
 				}
-//				if (!found) {
-					for (IStore store : dir.getStores()) {
-						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file, film, result.getPart());
-					}
-//				}
 
 				// Update existing stores with new part
 				if (result.getPart()!=null && result.getPart()>maxPart) {
@@ -273,9 +270,11 @@ public class MediaSearcher {
 		boolean refresh = false;
 		try {
 			for (IStore store : dir.getStores()) {
-				IEpisode ep = store.getEpisode(dir,file);
-				if (ep!=null) {
-					return ep;
+					if (file.getAbsolutePath().startsWith(dir.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
+					IEpisode ep = store.getEpisode(dir,file);
+					if (ep!=null) {
+						return ep;
+					}
 				}
 			}
 			SearchResult result = searchForId(dir,file,useSources);
@@ -299,31 +298,11 @@ public class MediaSearcher {
 				if (season == null) {
 					log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABVLE_TO_FIMD_SEASON"),file)); //$NON-NLS-1$
 				} else {
-					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisodes(), refresh);
+					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisodes(), refresh,false);
 					if (episode==null) {
 						log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_EPISODE_NUMBER"),file)); //$NON-NLS-1$
 						return null;
 					}
-
-//					boolean found = false;
-//					if (episode.getFiles()!=null) {
-//						for (VideoFile vf : episode.getFiles()) {
-//							if (vf.getLocation().equals(file)) {
-//								if (log.isDebugEnabled()) {
-//									log.debug("Found file : " + file); //$NON-NLS-1$
-//								}
-//								found = true;
-//							}
-//						}
-//					}
-//					if (!found) {
-						for (IStore store : dir.getStores()) {
-							if (log.isDebugEnabled()) {
-								log.debug("Caching episode "+file+" in store " + store.getClass());  //$NON-NLS-1$//$NON-NLS-2$
-							}
-							store.cacheEpisode(dir.getMediaDirConfig().getMediaDir(), file, episode);
-						}
-//					}
 
 					return episode;
 				}
