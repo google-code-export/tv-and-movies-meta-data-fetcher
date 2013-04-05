@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
@@ -34,7 +35,7 @@ public class FakeStoreInfo extends ExtensionInfo<FakeStore> {
 	}
 
 	@Override
-	protected FakeStore createExtension() throws ExtensionException {
+	protected FakeStore createExtension(Controller controller) throws ExtensionException {
 		return new FakeStore();
 	}
 

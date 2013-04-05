@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Actor;
 import org.stanwood.media.model.Certification;
@@ -70,7 +69,9 @@ public class SapphireStore implements IStore {
 	private final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private String preferedRating = null;
 
+	public SapphireStore() {
 
+	}
 
 	/**
 	 * This will store the episode and show details in a XML file next too the media file. The XML file will be in the
@@ -412,7 +413,7 @@ public class SapphireStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller,File nativeDir) throws StoreException {
+	public void init() throws StoreException {
 	}
 
 	/** {@inheritDoc} */

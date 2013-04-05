@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.store.xmlstore;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -33,7 +34,7 @@ public class XMLStore2Info extends ExtensionInfo<XMLStore2> {
 	}
 
 	@Override
-	protected XMLStore2 createExtension() {
+	protected XMLStore2 createExtension(Controller controller) {
 		return new XMLStore2();
 	}
 }

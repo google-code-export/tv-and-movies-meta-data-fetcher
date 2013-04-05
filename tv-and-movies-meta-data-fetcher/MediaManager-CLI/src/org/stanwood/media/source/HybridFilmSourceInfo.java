@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.source;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
@@ -37,7 +38,7 @@ public class HybridFilmSourceInfo extends ExtensionInfo<HybridFilmSource> {
 	}
 
 	@Override
-	protected HybridFilmSource createExtension() throws ExtensionException {
+	protected HybridFilmSource createExtension(Controller controller) throws ExtensionException {
 		return new HybridFilmSource(this);
 	}
 

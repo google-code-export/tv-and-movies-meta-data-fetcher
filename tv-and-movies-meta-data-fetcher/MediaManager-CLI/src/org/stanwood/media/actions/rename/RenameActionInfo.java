@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.actions.rename;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -38,7 +39,7 @@ public class RenameActionInfo extends ExtensionInfo<RenameAction> {
 	}
 
 	@Override
-	protected RenameAction createExtension() {
+	protected RenameAction createExtension(Controller controller) {
 		return new RenameAction();
 	}
 }

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.setup.MediaDirConfig;
 
 
@@ -66,10 +67,10 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The extension class type
 	 * @throws ExtensionException  Thrown if their is a problem creating the extension
 	 */
-	public T getExtension(MediaDirConfig config,int number) throws ExtensionException {
+	public T getExtension(Controller controller,MediaDirConfig config,int number) throws ExtensionException {
 		CacheKey cacheKey = new CacheKey(config,number);
 		if (extension.get(new CacheKey(config,number))==null) {
-			extension.put(cacheKey,createExtension());
+			extension.put(cacheKey,createExtension(controller));
 		}
 		return extension.get(cacheKey);
 	}
@@ -79,7 +80,7 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The extension
 	 * @throws ExtensionException Thrown if their is a problem
 	 */
-	protected abstract T createExtension() throws ExtensionException;
+	protected abstract T createExtension(Controller controller) throws ExtensionException;
 
 	/**
 	 * Used to get any extension from the media directory configuration. So if their are
@@ -88,13 +89,13 @@ public abstract class ExtensionInfo<T extends IExtension> {
 	 * @return The extension
 	 * @throws ExtensionException Thrown if their is a problem getting the extension
 	 */
-	public T getAnyExtension(MediaDirConfig config) throws ExtensionException {
+	public T getAnyExtension(Controller controller,MediaDirConfig config) throws ExtensionException {
 		for (Entry<CacheKey,T>ext : extension.entrySet()) {
 			if (ext.getKey().getConfig().equals(config)) {
 				return ext.getValue();
 			}
 		}
-		return createExtension();
+		return createExtension(controller);
 	}
 
 	/**

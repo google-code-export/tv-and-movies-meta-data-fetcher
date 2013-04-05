@@ -26,11 +26,15 @@ import org.stanwood.media.store.StoreException;
  */
 public class FileDatabaseStore extends DatabaseStore {
 
+	public FileDatabaseStore(Controller controller) {
+		super(controller);
+	}
+
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller, File nativeDir) throws StoreException {
+	public void init() throws StoreException {
 		try {
-			File file = new File(controller.getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
+			File file = new File(getController().getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
 			DBResource resource = new DBResource();
 			resource.setDialect("org.hibernate.dialect.HSQLDialect"); //$NON-NLS-1$
 			resource.setUsername("sa"); //$NON-NLS-1$

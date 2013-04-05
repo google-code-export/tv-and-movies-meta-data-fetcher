@@ -42,6 +42,8 @@ import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.source.xbmc.XBMCSource;
+import org.stanwood.media.store.LoggingStore;
+import org.stanwood.media.store.LoggingStoreInfo;
 import org.stanwood.media.util.FileHelper;
 
 @SuppressWarnings("nls")
@@ -55,7 +57,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
 
-		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir,null);
 		Controller controller = new Controller(config);
 		controller.init(false);
 
@@ -75,9 +77,11 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		File watchDir = FileHelper.createTmpDir("watchdir");
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
-		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir,LoggingStore.class.getName());
 		Controller controller = new Controller(config);
 		controller.init(false);
+
+		Assert.assertEquals(0,LoggingStore.getEvents().size());
 
 		ImportMediaCommand cmd = new ImportMediaCommand(controller);
 		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
@@ -111,7 +115,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		files = FileHelper.listFilesAsStrings(filmDir);
 		Collections.sort(files);
 		Assert.assertEquals(1,files.size());
-
+		System.out.println(LoggingStore.getEvents());
 	}
 
 	@Test
@@ -121,7 +125,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		File watchDir = FileHelper.createTmpDir("watchdir");
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
-		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir,null);
 		Controller controller = new Controller(config);
 		controller.init(false);
 
@@ -176,7 +180,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		File watchDir = FileHelper.createTmpDir("watchdir");
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
-		ConfigReader config = createTestConfig(watchDir,filmDir,showDir);
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir,null);
 		Controller controller = new Controller(config);
 		controller.init(false);
 
@@ -261,19 +265,22 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 	}
 
-	private ConfigReader createTestConfig(File watchDir,File filmDir,File showDir) throws IOException, ConfigException {
+	private ConfigReader createTestConfig(File watchDir,File filmDir,File showDir,String store) throws IOException, ConfigException {
 		File configDir = FileHelper.createTmpDir("configDir");
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+FileHelper.LS);
 		testConfig.append("  <global>"+FileHelper.LS);
 		testConfig.append("    <configDirectory>"+configDir.getAbsolutePath()+"</configDirectory>"+FileHelper.LS);
 		testConfig.append("  </global>"+FileHelper.LS);
+		testConfig.append("  <plugins>"+FileHelper.LS);
+		testConfig.append("    <plugin class=\""+LoggingStoreInfo.class.getName()+"\"/>"+FileHelper.LS);
+		testConfig.append("  </plugins>"+FileHelper.LS);
 		testConfig.append("  <watchDirectory directory=\""+watchDir.getAbsolutePath()+"\"/>"+FileHelper.LS);
 		Map<String,String>params = new HashMap<String,String>();
 		params.put("posters", "false");
-		appendMediaDirectory(testConfig, filmDir, Mode.FILM, XBMCSource.class.getName()+"#metadata.themoviedb.org",params,null,"",RenameAction.class.getName());
+		appendMediaDirectory(testConfig, filmDir, Mode.FILM, XBMCSource.class.getName()+"#metadata.themoviedb.org",params,store,"",RenameAction.class.getName());
 		params = new HashMap<String,String>();
-		appendMediaDirectory(testConfig, showDir, Mode.TV_SHOW, XBMCSource.class.getName()+"#metadata.tvdb.com",params,null,"",RenameAction.class.getName());
+		appendMediaDirectory(testConfig, showDir, Mode.TV_SHOW, XBMCSource.class.getName()+"#metadata.tvdb.com",params,store,"",RenameAction.class.getName());
 		testConfig.append("</mediaManager>"+FileHelper.LS);
 
 		File configFile = createConfigFileWithContents(testConfig);

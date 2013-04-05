@@ -24,7 +24,6 @@ import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
 
-import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.IExtension;
 import org.stanwood.media.model.IEpisode;
@@ -238,7 +237,7 @@ public interface IStore extends IExtension  {
 	 * @param nativeDir The native folder been used or configured. Null if can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
-	public void init(Controller controller,File nativeDir) throws StoreException;
+	public void init() throws StoreException;
 
 	/**
 	 * This is used to list all the episodes within the store if the store supports the operation.

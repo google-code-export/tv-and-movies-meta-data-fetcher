@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4.itunes;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -34,7 +35,7 @@ public class RemoteMacOSXItunesStoreInfo extends ExtensionInfo<RemoteMacOSXItune
 	}
 
 	@Override
-	protected RemoteMacOSXItunesStore createExtension() {
-		return new RemoteMacOSXItunesStore();
+	protected RemoteMacOSXItunesStore createExtension(Controller controller) {
+		return new RemoteMacOSXItunesStore(controller);
 	}
 }

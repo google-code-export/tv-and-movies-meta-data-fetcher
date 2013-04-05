@@ -66,8 +66,8 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
-			store.init(controller,nativeDir);
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(controller,mediaDir.getMediaDirConfig(),0);
+			store.init();
 
 			File eurekaDir = new File(rawMediaDir, "Eureka");
 			if (!eurekaDir.mkdir()) {
@@ -134,11 +134,11 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(controller,mediaDir.getMediaDirConfig(),0);
 			store.setParameter("search-pattern", ".*"+rawMediaDir.getName());
 			store.setParameter("search-replace", "/media-blah");
 			store.setParameter("file-separator", ".");
-			store.init(controller,nativeDir);
+			store.init();
 
 			File eurekaDir = new File(rawMediaDir, "Eureka");
 			if (!eurekaDir.mkdir()) {
@@ -197,8 +197,8 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 		try {
 			Controller controller = createController(rawMediaDir, Mode.TV_SHOW, "%s %e - %t.%x");
 			MediaDirectory mediaDir = controller.getMediaDirectory(rawMediaDir);
-			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(mediaDir.getMediaDirConfig(),0);
-			store.init(controller,nativeDir);
+			RemoteMacOSXItunesStore store = (RemoteMacOSXItunesStore) controller.getStoreInfo(RemoteMacOSXItunesStore.class.getName()).getExtension(controller,mediaDir.getMediaDirConfig(),0);
+			store.init();
 
 			File filmFile1 = new File(rawMediaDir,"The Usual Suspects part1.avi");
 			FileHelper.copy(Data.class.getResourceAsStream("a_video.mp4"),filmFile1);

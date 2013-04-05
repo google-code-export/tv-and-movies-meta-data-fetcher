@@ -47,7 +47,7 @@ public class TestFileDatabaseStore {
 	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 	private DatabaseStore createStore(final File configDir) throws StoreException {
-		FileDatabaseStore store = new FileDatabaseStore();
+
 		Controller controller = new Controller(null) {
 			@Override
 			public File getConfigDir() throws ConfigException {
@@ -55,7 +55,8 @@ public class TestFileDatabaseStore {
 			}
 
 		};
-		store.init(controller,null);
+		FileDatabaseStore store = new FileDatabaseStore(controller);
+		store.init();
 		return store;
 	}
 

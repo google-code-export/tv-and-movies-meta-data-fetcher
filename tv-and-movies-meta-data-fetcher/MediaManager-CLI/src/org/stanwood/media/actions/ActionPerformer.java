@@ -56,7 +56,6 @@ public class ActionPerformer implements IActionEventHandler {
 	private List<String> exts;
 	private MediaDirectory dir;
 	private List<IAction> actions;
-	private File nativeFolder;
 	private ISeenDatabase seenDb;
 
 	/**
@@ -72,10 +71,8 @@ public class ActionPerformer implements IActionEventHandler {
 		this.exts = exts;
 		this.actions = actions;
 		if (controller!=null) {
-			this.nativeFolder = controller.getNativeFolder();
 			seenDb = controller.getSeenDB();
 		}
-
 	}
 
 	/**
@@ -150,7 +147,7 @@ public class ActionPerformer implements IActionEventHandler {
 		boolean hasErrors = false;
 		for (IStore store : dir.getStores()) {
 			try {
-				store.init(dir.getController(),nativeFolder);
+				store.init();
 			}
 			catch (StoreException e ) {
 				log.debug(e.getMessage(),e);

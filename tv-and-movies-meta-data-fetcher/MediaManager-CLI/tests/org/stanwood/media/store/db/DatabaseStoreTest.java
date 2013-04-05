@@ -45,7 +45,7 @@ public class DatabaseStoreTest {
 	private final static String DIALECT = "org.hibernate.dialect.HSQLDialect";
 
 	private DatabaseStore createStore() throws StoreException {
-		DatabaseStore store = new DatabaseStore();
+		DatabaseStore store = new DatabaseStore(null);
 		DBResource resource = new DBResource();
 		resource.setDialect(DIALECT);
 		resource.setUrl(URL);

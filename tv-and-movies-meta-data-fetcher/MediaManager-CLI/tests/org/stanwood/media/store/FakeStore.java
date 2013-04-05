@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.Episode;
 import org.stanwood.media.model.Film;
@@ -211,7 +210,7 @@ public class FakeStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller,File nativeDir) throws StoreException {
+	public void init() throws StoreException {
 
 	}
 

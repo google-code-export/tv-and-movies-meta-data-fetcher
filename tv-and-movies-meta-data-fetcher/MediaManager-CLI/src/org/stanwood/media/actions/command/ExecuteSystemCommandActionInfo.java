@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.actions.command;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
 import org.stanwood.media.extensions.ParameterType;
@@ -48,7 +49,7 @@ public class ExecuteSystemCommandActionInfo extends ExtensionInfo<ExecuteSystemC
 	}
 
 	@Override
-	protected ExecuteSystemCommandAction createExtension() {
+	protected ExecuteSystemCommandAction createExtension(Controller controller) {
 		return new ExecuteSystemCommandAction();
 	}
 

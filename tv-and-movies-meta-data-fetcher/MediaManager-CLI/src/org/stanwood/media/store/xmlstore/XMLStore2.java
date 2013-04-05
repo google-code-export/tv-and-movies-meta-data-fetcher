@@ -1428,7 +1428,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init(Controller controller,File nativeDir) throws StoreException {
+	public void init() throws StoreException {
 
 	}
 

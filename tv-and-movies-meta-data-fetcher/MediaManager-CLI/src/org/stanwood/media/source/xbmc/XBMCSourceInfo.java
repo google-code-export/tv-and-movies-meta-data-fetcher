@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.stanwood.media.Controller;
 import org.stanwood.media.extensions.ExtensionException;
 import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.extensions.ExtensionType;
@@ -68,7 +69,7 @@ public class XBMCSourceInfo extends ExtensionInfo<XBMCSource>{
 	}
 
 	@Override
-	protected XBMCSource createExtension() throws ExtensionException {
+	protected XBMCSource createExtension(Controller controller) throws ExtensionException {
 		return new XBMCSource(this,addon.getManager(), addon.getId());
 	}
 
