@@ -19,18 +19,23 @@ package org.stanwood.media.cli.importer;
 import java.io.File;
 
 import org.stanwood.media.MediaDirectory;
+import org.stanwood.media.model.IVideo;
 
 public class RenamedEntry {
 
 	private File oldName;
 	private File newName;
 	private MediaDirectory dir;
+	private IVideo video;
+	private Integer part;
 
-	public RenamedEntry(File oldName, File newName,MediaDirectory dir) {
+	public RenamedEntry(File oldName, File newName,MediaDirectory dir,IVideo video,Integer part) {
 		super();
 		this.oldName = oldName;
 		this.newName = newName;
 		this.dir = dir;
+		this.video = video;
+		this.part = part;
 	}
 
 	public File getOldName() {
@@ -48,6 +53,14 @@ public class RenamedEntry {
 	}
 	public MediaDirectory getMediaDirectory() {
 		return dir;
+	}
+
+	public IVideo getVideo() {
+		return video;
+	}
+
+	public Integer getPart() {
+		return part;
 	}
 
 }

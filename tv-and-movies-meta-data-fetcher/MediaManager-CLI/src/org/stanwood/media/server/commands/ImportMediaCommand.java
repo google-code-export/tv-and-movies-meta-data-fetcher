@@ -111,10 +111,17 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 			SubProgressMonitor renamedFilesMonitor = new SubProgressMonitor(monitor,100);
 			try {
-				renamedFilesMonitor.beginTask("Informing stores of new filenames", renamedFiles.size());
+				renamedFilesMonitor.beginTask("Informing stores of new media", renamedFiles.size());
 				for (RenamedEntry e : renamedFiles) {
-					e.getMediaDirectory().renamedFile(e.getMediaDirectory().getMediaDirConfig().getMediaDir()
-							                         ,e.getOldName(), e.getNewName());
+					for (IStore store : e.getMediaDirectory().getStores()) {
+						File mediaDir = e.getMediaDirectory().getMediaDirConfig().getMediaDir();
+						if (e.getVideo() instanceof IFilm) {
+							store.cacheFilm(mediaDir, e.getNewName(),(IFilm)e.getVideo(), e.getPart());
+						}
+						else {
+							store.cacheEpisode(mediaDir, e.getNewName(), (IEpisode)e.getVideo());
+						}
+					}
 					renamedFilesMonitor.worked(1);
 				}
 			}
@@ -252,7 +259,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		return null;
 	}
 
-	private void moveFileToMediaDir(ICommandLogger logger,File file,final List<RenamedEntry>renamed,final Map<File,List<File>>newFiles,MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
+	private void moveFileToMediaDir(ICommandLogger logger,File file,final List<RenamedEntry>renamed,final Map<File,List<File>>newFiles,final MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
 		final MediaDirectory dir = findMediaDir(file, result.getVideo());
 		if (dir==null) {
 			throw new ConfigException(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DIR"),file)); //$NON-NLS-1$
@@ -265,12 +272,12 @@ public class ImportMediaCommand extends AbstractServerCommand {
 			ra.setTestMode(getController().isTestRun());
 
 			if (result.getVideo() instanceof IFilm) {
-				Integer part = MediaSearcher.getFilmPart(result.getMediaDirectory(), file, (IFilm)result.getVideo());
+				final Integer part = MediaSearcher.getFilmPart(result.getMediaDirectory(), file, (IFilm)result.getVideo());
 				ra.perform(dir, (IFilm)result.getVideo(), file,part, new IActionEventHandler() {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
-						renamed.add(new RenamedEntry(oldName, newName,dir));
+						renamed.add(new RenamedEntry(oldName, newName,dir,result.getVideo(),part));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 
@@ -289,7 +296,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
-						renamed.add(new RenamedEntry(oldName, newName,dir));
+						renamed.add(new RenamedEntry(oldName, newName,dir,result.getVideo(),null));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 

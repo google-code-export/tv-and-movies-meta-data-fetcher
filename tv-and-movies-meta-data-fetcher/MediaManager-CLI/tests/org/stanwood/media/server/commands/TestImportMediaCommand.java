@@ -84,6 +84,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals(0,LoggingStore.getEvents().size());
 
 		ImportMediaCommand cmd = new ImportMediaCommand(controller);
+		cmd.setExecuteActions(true);
 		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
 
 		File f = new File(watchDir,"Heroes S02E01 - Blah Blah Blah.avi");
@@ -116,6 +117,65 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Collections.sort(files);
 		Assert.assertEquals(1,files.size());
 		System.out.println(LoggingStore.getEvents());
+		List<String> events = LoggingStore.getEvents();
+		int index=0;
+		Assert.assertEquals("init()",events.get(index++));
+		Assert.assertEquals("upgrade()",events.get(index++));
+		Assert.assertEquals("init()",events.get(index++));
+		Assert.assertEquals("upgrade()",events.get(index++));
+		Assert.assertEquals("init()",events.get(index++));
+		Assert.assertEquals("init()",events.get(index++));
+		Assert.assertEquals("searchMedia()",events.get(index++));
+		Assert.assertEquals("getShow()",events.get(index++));
+		Assert.assertEquals("cacheShow()",events.get(index++));
+		Assert.assertEquals("getSeason()",events.get(index++));
+		Assert.assertEquals("cacheSeason()",events.get(index++));
+		Assert.assertEquals("getEpisode()",events.get(index++));
+		Assert.assertEquals("getShow()",events.get(index++));
+		Assert.assertEquals("searchMedia()",events.get(index++));
+		Assert.assertEquals("getShow()",events.get(index++));
+		Assert.assertEquals("getSeason()",events.get(index++));
+		Assert.assertEquals("cacheSeason()",events.get(index++));
+		Assert.assertEquals("getEpisode()",events.get(index++));
+		Assert.assertEquals("getShow()",events.get(index++));
+		Assert.assertEquals("searchMedia()",events.get(index++));
+		Assert.assertEquals("getFilm()",events.get(index++));
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.get(index++));
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.get(index++));
+		Assert.assertEquals("cacheFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
+		Assert.assertEquals("init()",events.get(index++));
+		if (!events.get(index).equals("searchMedia()")) {
+			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
+			Assert.assertEquals("performedActions()",events.get(index++));
+			Assert.assertEquals("init()",events.get(index++));
+			Assert.assertEquals("searchMedia()",events.get(index++));
+			Assert.assertEquals("getShow()",events.get(index++));
+			Assert.assertEquals("getSeason()",events.get(index++));
+			Assert.assertEquals("cacheSeason()",events.get(index++));
+			Assert.assertEquals("getEpisode()",events.get(index++));
+			Assert.assertEquals("searchMedia()",events.get(index++));
+			Assert.assertEquals("getShow()",events.get(index++));
+			Assert.assertEquals("getSeason()",events.get(index++));
+			Assert.assertEquals("cacheSeason()",events.get(index++));
+			Assert.assertEquals("getEpisode()",events.get(index++));
+			Assert.assertEquals("performedActions()",events.get(index++));
+		}
+		else {
+			Assert.assertEquals("searchMedia()",events.get(index++));
+			Assert.assertEquals("getShow()",events.get(index++));
+			Assert.assertEquals("getSeason()",events.get(index++));
+			Assert.assertEquals("cacheSeason()",events.get(index++));
+			Assert.assertEquals("getEpisode()",events.get(index++));
+			Assert.assertEquals("searchMedia()",events.get(index++));
+			Assert.assertEquals("getShow()",events.get(index++));
+			Assert.assertEquals("getSeason()",events.get(index++));
+			Assert.assertEquals("cacheSeason()",events.get(index++));
+			Assert.assertEquals("getEpisode()",events.get(index++));
+			Assert.assertEquals("performedActions()",events.get(index++));
+			Assert.assertEquals("init()",events.get(index++));
+			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
+			Assert.assertEquals("performedActions()",events.get(index++));
+		}
 	}
 
 	@Test
