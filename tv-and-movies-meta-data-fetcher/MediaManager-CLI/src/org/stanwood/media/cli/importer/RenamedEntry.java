@@ -21,6 +21,9 @@ import java.io.File;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IVideo;
 
+/**
+ * Used to store details of files imported from a watch directory
+ */
 public class RenamedEntry {
 
 	private File oldName;
@@ -29,6 +32,14 @@ public class RenamedEntry {
 	private IVideo video;
 	private Integer part;
 
+	/**
+	 * The constructor
+	 * @param oldName The old name of the file
+	 * @param newName The new name of the file
+	 * @param dir The media directory
+	 * @param video The media file information
+	 * @param part The part number of the file or null
+	 */
 	public RenamedEntry(File oldName, File newName,MediaDirectory dir,IVideo video,Integer part) {
 		super();
 		this.oldName = oldName;
@@ -38,19 +49,22 @@ public class RenamedEntry {
 		this.part = part;
 	}
 
+	/**
+	 * Used to get the old file name
+	 * @return the old file name
+	 */
 	public File getOldName() {
 		return oldName;
 	}
 
-	public void setOldName(File oldName) {
-		this.oldName = oldName;
-	}
+	/**
+	 * Used to get the new filename
+	 * @return the new filename
+	 */
 	public File getNewName() {
 		return newName;
 	}
-	public void setNewName(File newName) {
-		this.newName = newName;
-	}
+
 	public MediaDirectory getMediaDirectory() {
 		return dir;
 	}

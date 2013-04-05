@@ -104,7 +104,7 @@ public class MediaSearcher {
 			}
 		}
 
-		if (mode==null && mediaFile.getParentFile().getName().toLowerCase().equals("sample")) {
+		if (mode==null && mediaFile.getParentFile().getName().toLowerCase().equals("sample")) { //$NON-NLS-1$
 			return null;
 		}
 
