@@ -35,6 +35,9 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.memory.MemoryStore;
 
+/**
+ * This store is used to log access to a wrapped store. It's meant for testing store useage
+ */
 @SuppressWarnings("nls")
 public class LoggingStore implements IStore {
 
@@ -43,6 +46,7 @@ public class LoggingStore implements IStore {
 
 	private IStore store = new MemoryStore();
 
+	/** {@inheritDoc} */
 	@Override
 	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFile,IEpisode episode) throws StoreException {
 		events.add("cacheEpisode("+rootMediaDir.getAbsolutePath()+","+episodeFile.getAbsolutePath()+")");
@@ -52,6 +56,7 @@ public class LoggingStore implements IStore {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season) throws StoreException {
 		events.add("cacheSeason()");
@@ -60,6 +65,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cacheShow(File rootMediaDir, File episodeFile, IShow show)
 			throws StoreException {
@@ -69,6 +75,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void cacheFilm(File rootMediaDir, File filmFile,File oldFile, IFilm film, Integer part) throws StoreException {
 		events.add("cacheFilm("+rootMediaDir.getAbsolutePath()+","+filmFile.getAbsolutePath()+")");
@@ -77,7 +84,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
-
+	/** {@inheritDoc} */
 	@Override
 	public ISeason getSeason(File rootMediaDir, File episodeFile, IShow show,
 			int seasonNum) throws StoreException, IOException {
@@ -88,6 +95,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IShow getShow(File rootMediaDir, File episodeFile, String showId)
 			throws StoreException, MalformedURLException, IOException {
@@ -98,8 +106,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
-
-
+	/** {@inheritDoc} */
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,
 			MediaDirConfig dirConfig, File mediaFile) throws StoreException {
@@ -110,6 +117,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void renamedFile(File rootMediaDir, File oldFile, File newFile)
 			throws StoreException {
@@ -119,6 +127,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IFilm getFilm(File rootMediaDir, File filmFile, String filmId)
 			throws StoreException, MalformedURLException, IOException {
@@ -129,10 +138,15 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/**
+	 * Used to get the logged events
+	 * @return the logged events
+	 */
 	public static Queue<String>getEvents() {
 		return events;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameter(String key, String value) throws StoreException {
 		events.add("setParameter()");
@@ -141,6 +155,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String key) throws StoreException {
 		events.add("getParameter()");
@@ -150,6 +165,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
 		events.add("performedActions()");
@@ -158,6 +174,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void fileDeleted(MediaDirectory dir, File file) throws StoreException {
 		events.add("fileDeleted()");
@@ -186,6 +203,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void init() throws StoreException {
 		events.add("init()");
@@ -233,6 +251,7 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IEpisode getEpisode(File rootMediaDir, File episodeFile,
 			ISeason season, List<Integer> episodeNums) throws StoreException,
@@ -244,6 +263,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IEpisode getSpecial(File rootMediaDir, File episodeFile,
 			ISeason season, List<Integer> specialNumbers)
@@ -255,6 +275,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean fileKnownByStore(MediaDirectory mediaDirectory, File file)
 			throws StoreException {
@@ -265,6 +286,10 @@ public class LoggingStore implements IStore {
 		return false;
 	}
 
+	/**
+	 * Used to print all the events left in the event queue. Event queue will be empty after calling
+	 * this.
+	 */
 	public static void printEvents() {
 		String item = null;
 		try {
@@ -283,4 +308,5 @@ public class LoggingStore implements IStore {
 			}
 		}
 	}
+
 }
