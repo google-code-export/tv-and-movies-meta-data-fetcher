@@ -53,6 +53,10 @@ public class DatabaseStore implements IStore {
 	private Transaction currentTransaction = null;
 	private Controller controller;
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public DatabaseStore(Controller controller) {
 		this.controller = controller;
 	}

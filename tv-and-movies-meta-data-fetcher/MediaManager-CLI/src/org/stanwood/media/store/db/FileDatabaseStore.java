@@ -26,6 +26,10 @@ import org.stanwood.media.store.StoreException;
  */
 public class FileDatabaseStore extends DatabaseStore {
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public FileDatabaseStore(Controller controller) {
 		super(controller);
 	}

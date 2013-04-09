@@ -48,6 +48,7 @@ public interface IStore extends IExtension  {
 	 * This is used to write a episode or special too the store
 	 * @param episode The episode or special too write
 	 * @param episodeFile the file witch the episode is stored in
+	 * @param orginalFile The name of the file before it was moved into the store
 	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
@@ -78,6 +79,7 @@ public interface IStore extends IExtension  {
 	 * This is used to write a film to the store.
 	 * @param filmFile The file which the film is stored in
 	 * @param film The film to write
+	 * @param orginalFile The name of the file before it was moved into the store
 	 * @param part The part number of the film
 	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
 	 *         it was not specified on the command line.
@@ -233,8 +235,6 @@ public interface IStore extends IExtension  {
 	/**
 	 * Called to initialise the stores and check all their resources can be found. This
 	 * is called before performing any actions.
-	 * @param controller The media controller
-	 * @param nativeDir The native folder been used or configured. Null if can't be found
 	 * @throws StoreException Thrown if their are any problems
 	 */
 	public void init() throws StoreException;
@@ -276,6 +276,12 @@ public interface IStore extends IExtension  {
 	 */
 	public void fileUpdated(MediaDirectory mediaDirectory,File file) throws StoreException;
 
-
+	/**
+	 * Used to check that a media file is known by a store
+	 * @param mediaDirectory The media directory
+	 * @param file The media file to check
+	 * @return True if it's know, otherwise false
+	 * @throws StoreException
+	 */
 	public boolean fileKnownByStore(MediaDirectory mediaDirectory,File file) throws StoreException;
 }
