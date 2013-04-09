@@ -153,7 +153,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 						return false;
 					}
 					Integer part =getFilmPart(mediaFile,f);
-					toStore.cacheFilm(dirConfig.getMediaDir(), mediaFile, f, part);
+					toStore.cacheFilm(dirConfig.getMediaDir(), mediaFile,null, f, part);
 				}
 				else {
 					IEpisode episode = fromStore.getEpisode(rootMediaDir, mediaFile);
@@ -161,7 +161,7 @@ public class CLICopyStoreToStore extends AbstractLauncher {
 						fatal(MessageFormat.format(Messages.getString("CLICopyStoreToStore.UnableFindEpisodeInMediaDir"),mediaFile,rootMediaDir)); //$NON-NLS-1$
 						return false;
 					}
-					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(), mediaFile, episode);
+					toStore.cacheEpisode(rootMediaDir.getMediaDirConfig().getMediaDir(),null, mediaFile, episode);
 				}
 				log.info(MessageFormat.format(Messages.getString("CLICopyStoreToStore.STORE_UPDATED"),toStore.getClass().getName(),mediaFile)); //$NON-NLS-1$
 			}

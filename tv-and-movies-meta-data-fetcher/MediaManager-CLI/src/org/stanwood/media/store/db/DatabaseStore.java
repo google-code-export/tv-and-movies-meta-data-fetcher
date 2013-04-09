@@ -59,14 +59,14 @@ public class DatabaseStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile,
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFileName,
 			IEpisode episode) throws StoreException {
 		beginTransaction();
-		cacheEpisodeNoTrans(rootMediaDir, episodeFile, episode);
+		cacheEpisodeNoTrans(rootMediaDir, episodeFile,oldFileName, episode);
 		commitTransaction();
 	}
 
-	protected void cacheEpisodeNoTrans(File rootMediaDir, File episodeFile,
+	protected void cacheEpisodeNoTrans(File rootMediaDir, File episodeFile,File oldFileName,
 			IEpisode episode) throws StoreException {
 		DBEpisode dbEpisode = findEpisode(rootMediaDir, episode);
 		if (dbEpisode == null) {
@@ -87,12 +87,12 @@ public class DatabaseStore implements IStore {
 			}
 			dbEpisode = new DBEpisode();
 			dbEpisode.setSeason(season);
-			updateEpisode(episode, dbEpisode,episodeFile,rootMediaDir);
+			updateEpisode(episode, dbEpisode,episodeFile,oldFileName,rootMediaDir);
 			season.getEpisodes().add(dbEpisode);
 			session.saveOrUpdate(season);
 		}
 		else {
-			updateEpisode(episode, dbEpisode,episodeFile,rootMediaDir);
+			updateEpisode(episode, dbEpisode,episodeFile,oldFileName,rootMediaDir);
 			session.update(dbEpisode);
 		}
 	}
@@ -109,7 +109,7 @@ public class DatabaseStore implements IStore {
 		currentTransaction = session.beginTransaction();
 	}
 
-	protected void updateEpisode(IEpisode episode, DBEpisode dbEpisode,File episodeFile,File rootMediaDir) {
+	protected void updateEpisode(IEpisode episode, DBEpisode dbEpisode,File episodeFile,File oldFileName,File rootMediaDir) {
 		dbEpisode.setActors(episode.getActors());
 		dbEpisode.setDate(episode.getDate());
 		dbEpisode.setDirectors(episode.getDirectors());
@@ -124,7 +124,10 @@ public class DatabaseStore implements IStore {
 			}
 		}
 		if (!found) {
-			files.add(new VideoFile(episodeFile, episodeFile, null, rootMediaDir));
+			if (oldFileName==null) {
+				oldFileName = episodeFile;
+			}
+			files.add(new VideoFile(episodeFile, oldFileName, null, rootMediaDir));
 		}
 		dbEpisode.setFiles(files);
 		dbEpisode.setImageURL(episode.getImageURL());
@@ -332,7 +335,7 @@ public class DatabaseStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,
+	public void cacheFilm(File rootMediaDir, File filmFile,File oldFileName, IFilm film,
 			Integer part) throws StoreException {
 		beginTransaction();
 		DBMediaDirectory dir = getMediaDir(rootMediaDir, true);
@@ -369,7 +372,10 @@ public class DatabaseStore implements IStore {
 			}
 		}
 		if (!found) {
-			files.add(new VideoFile(filmFile, filmFile, null, rootMediaDir));
+			if (oldFileName==null) {
+				oldFileName = filmFile;
+			}
+			files.add(new VideoFile(filmFile, oldFileName, null, rootMediaDir));
 		}
 		foundFilm.setFiles(files);
 

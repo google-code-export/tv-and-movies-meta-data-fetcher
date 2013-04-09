@@ -147,6 +147,13 @@ public class DatabaseStoreTest {
 		}
 	}
 
+	/**
+	 * Used to cache a episode in a data base store
+	 * @param store The store
+	 * @param rawMediaDir The media dir location
+	 * @param epsiodes Episodes to cache
+	 * @throws Exception Thrown if their are any problems
+	 */
 	public static void cacheEpisodes(DatabaseStore store, File rawMediaDir,
 			List<EpisodeData> epsiodes) throws Exception {
 		for (EpisodeData ed : epsiodes) {
@@ -159,7 +166,7 @@ public class DatabaseStoreTest {
 			Assert.assertNull("Check not found before episode is cached",store.getSeason(rawMediaDir, episodeFile, show,1));
 			store.cacheShow(rawMediaDir, episodeFile, show);
 			store.cacheSeason(rawMediaDir, episodeFile, season);
-			store.cacheEpisode(rawMediaDir, episodeFile, episode);
+			store.cacheEpisode(rawMediaDir, episodeFile,null, episode);
 
 
 			IShow foundShow = store.getShow(rawMediaDir, episodeFile, show.getShowId());
@@ -206,7 +213,7 @@ public class DatabaseStoreTest {
 			File filmFile = new File(dir,"The Usual Suspects.avi");
 			IFilm film = Data.createFilm();
 			film.getFiles().add(new VideoFile(filmFile.getAbsoluteFile(), filmFile.getAbsoluteFile(), 1, dir));
-			store.cacheFilm(dir,filmFile, film,1);
+			store.cacheFilm(dir,filmFile,null, film,1);
 //			store.performedActions(null);
 
 			IFilm foundFilm = store.getFilm(dir, filmFile, film.getId());

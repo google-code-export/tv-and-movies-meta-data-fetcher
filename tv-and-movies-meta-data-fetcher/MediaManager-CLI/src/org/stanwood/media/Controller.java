@@ -156,6 +156,10 @@ public class Controller {
 		registerPlugins();
 	}
 
+	/**
+	 * Reload the sources, this can be used when the XBMC addons have changed
+	 * @throws ConfigException Thrown if their is a problem
+	 */
 	public synchronized void reloadSources() throws ConfigException {
 		pluginSources = new ArrayList<ExtensionInfo<? extends ISource>>();
 		pluginSources.add(new TagChimpSourceInfo());

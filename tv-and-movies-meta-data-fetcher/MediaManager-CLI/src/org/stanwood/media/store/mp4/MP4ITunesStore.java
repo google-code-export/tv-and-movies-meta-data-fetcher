@@ -140,7 +140,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem storing the meta data
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,File oldFileName,IEpisode episode) throws StoreException {
 		String name = episodeFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();
@@ -229,7 +229,7 @@ public class MP4ITunesStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile,File oldFileName, IFilm film,Integer part) throws StoreException {
 		String name = filmFile.getName();
 		if (name.endsWith(".mp4") || name.endsWith(".m4v")) {  //$NON-NLS-1$//$NON-NLS-2$
 			validate();

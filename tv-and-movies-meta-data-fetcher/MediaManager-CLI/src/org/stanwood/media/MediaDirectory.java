@@ -184,6 +184,7 @@ public class MediaDirectory {
 	 * @param filmFile The file the film is stored in
 	 * @param searchResult The resulting film from a search
 	 * @param refresh If true, then the stores are ignored.
+	 * @param cacheIfNew True to cache information in stores if it was new to the store
 	 * @return The film, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws SourceException Thrown if their is a source related problem.
@@ -215,7 +216,7 @@ public class MediaDirectory {
 								for (IStore store : stores) {
 									if (!controller.isTestRun()) {
 										try {
-											store.cacheFilm(rootMediaDir,filmFile, film,searchResult.getPart());
+											store.cacheFilm(rootMediaDir,filmFile,null, film,searchResult.getPart());
 										}
 										catch(StoreException e) {
 											log.error(Messages.getString("MediaDirectory.UnableCacheFilm"),e); //$NON-NLS-1$
@@ -304,6 +305,7 @@ public class MediaDirectory {
 	 * @param episodeNums The episode numbers
 	 * @param refresh If true, then the stores are ignored.
 	 * @param episodeFile The file the episode is stored in
+	 * @param storeIfNew True to cache information in stores if it was new to the store
 	 * @return The episode, or null if it can't be found.
 	 * @throws MalformedURLException Thrown if their is a problem creating URL's
 	 * @throws SourceException Thrown if their is a source related problem.
@@ -334,7 +336,7 @@ public class MediaDirectory {
 							if (storeIfNew) {
 								for (IStore store : stores) {
 									try {
-										store.cacheEpisode(rootMediaDir,episodeFile, episode);
+										store.cacheEpisode(rootMediaDir,episodeFile,null, episode);
 									}
 									catch(StoreException e) {
 										log.error(Messages.getString("MediaDirectory.UnableCacheEpisode"),e); //$NON-NLS-1$
@@ -396,7 +398,7 @@ public class MediaDirectory {
 					if (episode != null) {
 						for (IStore store : stores) {
 							episode.setEpisodes(specialNums);
-							store.cacheEpisode(rootMediaDir,specialFile, episode);
+							store.cacheEpisode(rootMediaDir,specialFile,null, episode);
 						}
 						break;
 					}

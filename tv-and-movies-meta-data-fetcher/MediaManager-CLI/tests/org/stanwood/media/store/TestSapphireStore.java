@@ -129,7 +129,7 @@ public class TestSapphireStore  {
 			writers.add("Christopher McQuarrie");
 			film.setWriters(writers);
 
-			xmlSource.cacheFilm(dir,filmFile, film,1);
+			xmlSource.cacheFilm(dir,filmFile,null, film,1);
 
 			File actualFile = new File(dir,"The Usual Suspects.xml");
 			Assert.assertTrue(actualFile.exists());
@@ -175,7 +175,7 @@ public class TestSapphireStore  {
 			episode1.setWriters(Data.createStringList(new String[]{"Write a lot"}));
 			episode1.setActors(Data.createActorsList(new Actor[]{new Actor("sally","betty"),new Actor("Cedric","steve")}));
 			episode1.setEpisodeId("784857");
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,null,episode1);
 
 			episodeFile = new File(eurekaDir,"1x02 - blah.avi");
 			Episode episode2 = new Episode(2,season,false);
@@ -185,7 +185,7 @@ public class TestSapphireStore  {
 			episode2.setTitle("Many Happy Returns");
 			episode2.setRating(new Rating(9.5F,12345));
 			episode2.setEpisodeId("800578");
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode2);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,null,episode2);
 
 			season = new Season(show,2);
 			season.setURL(new URL("http://www.tv.com/show/"+SHOW_ID+"/episode_listings.html?season=2"));
@@ -200,7 +200,7 @@ public class TestSapphireStore  {
 			episode1.setTitle("Phoenix Rising");
 			episode1.setEpisodeId("800578");
 			episode1.setRating(new Rating(0.4F,3434));
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,episode1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,null,episode1);
 
 			episodeFile = new File(eurekaDir,"000 - blah.avi");
 			Episode special1 = new Episode(0,season,true);
@@ -217,7 +217,7 @@ public class TestSapphireStore  {
 			actors.add(new Actor("Write a little","blah"));
 			special1.setActors(actors);
 
-			xmlSource.cacheEpisode(eurekaDir,episodeFile,special1);
+			xmlSource.cacheEpisode(eurekaDir,episodeFile,null,special1);
 
 			File actualFile = new File(eurekaDir,"1x01 - blah.xml");
 			Assert.assertTrue(actualFile.exists());

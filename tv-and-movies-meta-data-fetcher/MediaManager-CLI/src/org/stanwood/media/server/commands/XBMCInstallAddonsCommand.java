@@ -30,11 +30,18 @@ import org.stanwood.media.source.xbmc.updater.AddonDetails;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 
+/**
+ * This command is used to install XBMC addons for the XBMC source
+ */
 public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 
 	private IXBMCUpdater updater;
 	private List<String> addons;
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public XBMCInstallAddonsCommand(Controller controller) {
 		super(controller);
 		updater = controller.getXBMCAddonManager().getUpdater();
@@ -44,6 +51,7 @@ public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 		return updater;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		IConsole console = new IConsole() {
@@ -87,6 +95,10 @@ public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 
 	}
 
+	/**
+	 * Set the list of addons to install using their addon ID from XBMC
+	 * @param addons The addon ID's to install
+	 */
 	@param(name="addons",description="List of addons to be installed")
 	public void setAddons(List<String> addons) {
 		this.addons = addons;

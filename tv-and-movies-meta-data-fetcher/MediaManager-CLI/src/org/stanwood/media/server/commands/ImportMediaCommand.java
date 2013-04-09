@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.server.commands;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -54,20 +55,28 @@ import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * This command is used to import media from watch directiores
+ */
 public class ImportMediaCommand extends AbstractServerCommand {
 
 	private boolean useDefaults = true;
 	private boolean deleteNonMedia = false;
 	private boolean executeActions;
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public ImportMediaCommand(Controller controller) {
 		super(controller);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Importing media...", 105);
+			monitor.beginTask(Messages.getString("ImportMediaCommand.ImportMedia"), 105); //$NON-NLS-1$
 			Set<String> extensions = getAcceptableExtensions(monitor);
 			List<File> files = getNewMediaFiles(extensions,monitor);
 			if (files.size()>0) {
@@ -84,10 +93,10 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 			SubProgressMonitor importMediaMonitor = new SubProgressMonitor(monitor,100);
 			try {
-				importMediaMonitor.beginTask("Importing media...", files.size());
+				importMediaMonitor.beginTask(Messages.getString("ImportMediaCommand.ImportMedia"), files.size()); //$NON-NLS-1$
 				MediaSearcher searcher = new MediaSearcher(getController());
 				for (File file : files) {
-					importMediaMonitor.setTaskName(MessageFormat.format("Importing {0}...",file.getAbsolutePath()));
+					importMediaMonitor.setTaskName(MessageFormat.format(Messages.getString("ImportMediaCommand.Importing"),file.getAbsolutePath())); //$NON-NLS-1$
 					MediaSearchResult result;
 					try {
 						result = searcher.lookupMedia(file,useDefaults);
@@ -111,15 +120,18 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 			SubProgressMonitor renamedFilesMonitor = new SubProgressMonitor(monitor,100);
 			try {
-				renamedFilesMonitor.beginTask("Informing stores of new media", renamedFiles.size());
+				renamedFilesMonitor.beginTask(Messages.getString("ImportMediaCommand.InformingStores"), renamedFiles.size()); //$NON-NLS-1$
 				for (RenamedEntry e : renamedFiles) {
 					for (IStore store : e.getMediaDirectory().getStores()) {
 						File mediaDir = e.getMediaDirectory().getMediaDirConfig().getMediaDir();
 						if (e.getVideo() instanceof IFilm) {
-							store.cacheFilm(mediaDir, e.getNewName(),(IFilm)e.getVideo(), e.getPart());
+							store.cacheFilm(mediaDir, e.getNewName(),e.getOldName(),(IFilm)e.getVideo(), e.getPart());
 						}
 						else {
-							store.cacheEpisode(mediaDir, e.getNewName(), (IEpisode)e.getVideo());
+							IEpisode episode = (IEpisode)e.getVideo();
+//							store.cacheShow(mediaDir, e.getNewName(), episode.getSeason().getShow());
+//							store.cacheSeason(mediaDir, e.getNewName(), episode.getSeason());
+							store.cacheEpisode(mediaDir, e.getNewName(),e.getOldName(),episode );
 						}
 					}
 					renamedFilesMonitor.worked(1);
@@ -132,14 +144,14 @@ public class ImportMediaCommand extends AbstractServerCommand {
 			if (executeActions) {
 				for (Entry<File,List<File>> e : newFiles.entrySet()) {
 					MediaDirectory mediaDir = getController().getMediaDirectory(e.getKey());
-					monitor.setTaskName(MessageFormat.format("Execute store actions on media directory {0}",mediaDir.getMediaDirConfig().getMediaDir()));
+					monitor.setTaskName(MessageFormat.format(Messages.getString("ImportMediaCommand.ExecuteStoreActions"),mediaDir.getMediaDirConfig().getMediaDir())); //$NON-NLS-1$
 					performActions(logger,e.getValue(),mediaDir);
 				}
 			}
 			monitor.worked(1);
 
 			if (deleteNonMedia) {
-				monitor.setTaskName("Removing non media files in watched directories");
+				monitor.setTaskName(Messages.getString("ImportMediaCommand.RemmoveNonMediaFiles")); //$NON-NLS-1$
 				cleanUpNonMediaFiles(logger,extensions);
 			}
 			monitor.worked(1);
@@ -325,7 +337,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 	}
 
 	private List<File> getNewMediaFiles(Set<String>extensions,IProgressMonitor monitor) {
-		monitor.setTaskName("Finding new media files");
+		monitor.setTaskName(Messages.getString("ImportMediaCommand.FindingNewMediaFiles")); //$NON-NLS-1$
 		List<File>newMediaFiles = new ArrayList<File>();
 		for (WatchDirConfig c : getController().getWatchDirectories()) {
 			File f = c.getWatchDir();
@@ -346,7 +358,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 
 	private Set<String> getAcceptableExtensions(IProgressMonitor monitor) throws ConfigException {
-		monitor.setTaskName("Getting accetable media file extensions");
+		monitor.setTaskName(Messages.getString("ImportMediaCommand.GettingMediaFileExtensions")); //$NON-NLS-1$
 		Set<String>extensions = new HashSet<String>();
 		for (File mediaDirLoc :  getController().getMediaDirectories()) {
 			MediaDirectory mediaDir = getController().getMediaDirectory(mediaDirLoc);
@@ -363,16 +375,30 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		return false;
 	}
 
+	/**
+	 * Used to set if non media files should be deleted. Default is false.
+	 * @param value True to delete non media files
+	 */
 	@param(name="deleteNonMedia",description="If set to True, then delete files that are not media files.")
 	public void setDeleteNonMedia(boolean value) {
 		this.deleteNonMedia = value;
 	}
 
+	/**
+	 * If set to true, attempts are made to import the media files into a
+	 * default media directory if the actual media directory can't be found
+	 * @param value True or false to control if using defaults
+	 */
 	@param(name="useDefaults",description="If set to true, attempts are made to import the media files into a default media directory if the actual media directory can't be found")
 	public void setUseDefaults(boolean value) {
 		this.useDefaults = value;
 	}
 
+	/**
+	 * If set to true, then actions of the media directory are executed after importing the media
+	 * @param executeActions true cause the actions to be executed on media directories afterward
+	 * media import
+	 */
 	@param(name="executeActions",description="If set to true, then actions of the media directory are executed after importing the media")
 	public void setExecuteActions(boolean executeActions) {
 		this.executeActions = executeActions;

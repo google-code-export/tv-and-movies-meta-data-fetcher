@@ -82,7 +82,7 @@ public class SapphireStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem writing to the store
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir,File episodeFile, IEpisode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir,File episodeFile,File oldFileName, IEpisode episode) throws StoreException {
 		try {
 			writeEpisode(episodeFile, episode);
 		} catch (IOException e) {
@@ -319,7 +319,7 @@ public class SapphireStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile,File oldFileName, IFilm film,Integer part) throws StoreException {
 		try {
 			writeFilm(filmFile, film);
 		} catch (IOException e) {

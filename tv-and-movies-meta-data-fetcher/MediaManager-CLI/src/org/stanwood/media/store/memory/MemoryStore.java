@@ -54,10 +54,42 @@ public class MemoryStore implements IStore {
 	 * This does nothing as it's all done by the cacheSeason and cacheShow methods
 	 * @param episodeFile the file witch the episode is stored in
 	 * @param episode The episode to write to the store
+	 * @throws StoreException Thrown if their is a store exception problem
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) {
-
+	public void cacheEpisode(File rootMediaDir,File episodeFile,File oldFileName,IEpisode episode) throws StoreException {
+		try {
+			IShow show = episode.getSeason().getShow();
+			ISeason season = episode.getSeason();
+			CacheSeason cacheSeason = (CacheSeason) getSeason(rootMediaDir,episodeFile,show,season.getSeasonNumber());
+			boolean foundEp = false;
+			for (IEpisode ep : cacheSeason.getEpisodes()) {
+				if (ep.getEpisodeId().equals(episode.getEpisodeId())) {
+					foundEp = true;
+					break;
+				}
+			}
+			if (!foundEp) {
+				List<VideoFile> files = episode.getFiles();
+				boolean found = false;
+				for (VideoFile vf : files ) {
+					if (vf.getLocation().equals(episodeFile)) {
+						found = true;
+					}
+				}
+				if (!found) {
+					if (oldFileName==null) {
+						oldFileName = episodeFile;
+					}
+					files.add(new VideoFile(episodeFile, oldFileName, null, rootMediaDir));
+				}
+				episode.setFiles(files);
+				cacheSeason.addEpisode(episode);
+			}
+		}
+		catch (IOException e) {
+			throw new StoreException("Unable to find season",e);
+		}
 	}
 
 	/**
@@ -87,14 +119,16 @@ public class MemoryStore implements IStore {
 	 */
 	@Override
 	public void cacheShow(File rootMediaDir,File episodeFile,IShow show) throws StoreException {
-		Iterator<CacheShow> it = shows.iterator();
-		while (it.hasNext()) {
-			CacheShow foundShow = it.next();
-			if (foundShow.getShowId().equals(show.getShowId()) && foundShow.getSourceId().equals(show.getSourceId())) {
-				it.remove();
+		if (!(show instanceof CacheShow)) {
+			Iterator<CacheShow> it = shows.iterator();
+			while (it.hasNext()) {
+				CacheShow foundShow = it.next();
+				if (foundShow.getShowId().equals(show.getShowId()) && foundShow.getSourceId().equals(show.getSourceId())) {
+					it.remove();
+				}
 			}
+			shows.add(new CacheShow(show));
 		}
-		shows.add(new CacheShow(show));
 	}
 
 	/** {@inheritDoc} */
@@ -138,7 +172,7 @@ public class MemoryStore implements IStore {
 	public ISeason getSeason(File rootMediaDir,File episodeFile,IShow show, int seasonNum) throws StoreException,
 			IOException {
 		if (show instanceof CacheShow) {
-			((CacheShow)show).getSeason(seasonNum);
+			return ((CacheShow)show).getSeason(seasonNum);
 		}
 		else {
 			for (CacheShow cs : shows) {
@@ -203,7 +237,21 @@ public class MemoryStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir,File filmFile,File oldFileName, IFilm film,Integer part) throws StoreException {
+		List<VideoFile> files = film.getFiles();
+		boolean found = false;
+		for (VideoFile vf : files ) {
+			if (vf.getLocation().equals(filmFile)) {
+				found = true;
+			}
+		}
+		if (!found) {
+			if (oldFileName==null) {
+				oldFileName = filmFile;
+			}
+			files.add(new VideoFile(filmFile, oldFileName, null, rootMediaDir));
+		}
+		film.setFiles(files);
 		films.put(filmFile,film);
 	}
 

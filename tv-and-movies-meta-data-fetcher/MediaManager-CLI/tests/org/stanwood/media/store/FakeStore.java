@@ -49,7 +49,7 @@ public class FakeStore implements IStore {
 	 * @param episode The details of the episode
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile,IEpisode episode) {
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFileName,IEpisode episode) {
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class FakeStore implements IStore {
 	 * @param film The film details
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir,File filmFile, IFilm film,Integer part) {
+	public void cacheFilm(File rootMediaDir,File filmFile,File oldFileName, IFilm film,Integer part) {
 
 	}
 

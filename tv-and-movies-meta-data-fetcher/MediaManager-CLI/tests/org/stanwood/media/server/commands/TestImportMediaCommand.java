@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -46,9 +47,17 @@ import org.stanwood.media.store.LoggingStore;
 import org.stanwood.media.store.LoggingStoreInfo;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * This test is used to check the class {@link ImportMediaCommand}. It checks that
+ * media is imported correctly.
+ */
 @SuppressWarnings("nls")
 public class TestImportMediaCommand extends XBMCAddonTestBase {
 
+	/**
+	 * Test the user is told that their was no media to import when the watch dir is empty
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testNoMediaFiles() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -116,68 +125,54 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		files = FileHelper.listFilesAsStrings(filmDir);
 		Collections.sort(files);
 		Assert.assertEquals(1,files.size());
-		System.out.println(LoggingStore.getEvents());
-		List<String> events = LoggingStore.getEvents();
-		int index=0;
-		Assert.assertEquals("init()",events.get(index++));
-		Assert.assertEquals("upgrade()",events.get(index++));
-		Assert.assertEquals("init()",events.get(index++));
-		Assert.assertEquals("upgrade()",events.get(index++));
-		Assert.assertEquals("init()",events.get(index++));
-		Assert.assertEquals("init()",events.get(index++));
-		Assert.assertEquals("searchMedia()",events.get(index++));
-		Assert.assertEquals("getShow()",events.get(index++));
-		Assert.assertEquals("cacheShow()",events.get(index++));
-		Assert.assertEquals("getSeason()",events.get(index++));
-		Assert.assertEquals("cacheSeason()",events.get(index++));
-		Assert.assertEquals("getEpisode()",events.get(index++));
-		Assert.assertEquals("getShow()",events.get(index++));
-		Assert.assertEquals("searchMedia()",events.get(index++));
-		Assert.assertEquals("getShow()",events.get(index++));
-		Assert.assertEquals("getSeason()",events.get(index++));
-		Assert.assertEquals("cacheSeason()",events.get(index++));
-		Assert.assertEquals("getEpisode()",events.get(index++));
-		Assert.assertEquals("getShow()",events.get(index++));
-		Assert.assertEquals("searchMedia()",events.get(index++));
-		Assert.assertEquals("getFilm()",events.get(index++));
-		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.get(index++));
-		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.get(index++));
-		Assert.assertEquals("cacheFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
-		Assert.assertEquals("init()",events.get(index++));
-		if (!events.get(index).equals("searchMedia()")) {
-			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
-			Assert.assertEquals("performedActions()",events.get(index++));
-			Assert.assertEquals("init()",events.get(index++));
-			Assert.assertEquals("searchMedia()",events.get(index++));
-			Assert.assertEquals("getShow()",events.get(index++));
-			Assert.assertEquals("getSeason()",events.get(index++));
-			Assert.assertEquals("cacheSeason()",events.get(index++));
-			Assert.assertEquals("getEpisode()",events.get(index++));
-			Assert.assertEquals("searchMedia()",events.get(index++));
-			Assert.assertEquals("getShow()",events.get(index++));
-			Assert.assertEquals("getSeason()",events.get(index++));
-			Assert.assertEquals("cacheSeason()",events.get(index++));
-			Assert.assertEquals("getEpisode()",events.get(index++));
-			Assert.assertEquals("performedActions()",events.get(index++));
+		Queue<String> events = LoggingStore.getEvents();
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("upgrade()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("upgrade()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("cacheShow()",events.remove());
+		Assert.assertEquals("getSeason()",events.remove());
+		Assert.assertEquals("cacheSeason()",events.remove());
+		Assert.assertEquals("getEpisode()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("getSeason()",events.remove());
+		Assert.assertEquals("cacheSeason()",events.remove());
+		Assert.assertEquals("getEpisode()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getFilm()",events.remove());
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.remove());
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
+		Assert.assertEquals("cacheFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		if (events.peek().equals("performedActions()")) {
+			Assert.assertEquals("performedActions()",events.remove());
+			Assert.assertEquals("init()",events.remove());
+			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+			Assert.assertEquals("performedActions()",events.remove());
 		}
 		else {
-			Assert.assertEquals("searchMedia()",events.get(index++));
-			Assert.assertEquals("getShow()",events.get(index++));
-			Assert.assertEquals("getSeason()",events.get(index++));
-			Assert.assertEquals("cacheSeason()",events.get(index++));
-			Assert.assertEquals("getEpisode()",events.get(index++));
-			Assert.assertEquals("searchMedia()",events.get(index++));
-			Assert.assertEquals("getShow()",events.get(index++));
-			Assert.assertEquals("getSeason()",events.get(index++));
-			Assert.assertEquals("cacheSeason()",events.get(index++));
-			Assert.assertEquals("getEpisode()",events.get(index++));
-			Assert.assertEquals("performedActions()",events.get(index++));
-			Assert.assertEquals("init()",events.get(index++));
-			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.get(index++));
-			Assert.assertEquals("performedActions()",events.get(index++));
+			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+			Assert.assertEquals("performedActions()",events.remove());
+			Assert.assertEquals("init()",events.remove());
+			Assert.assertEquals("performedActions()",events.remove());
 		}
+		LoggingStore.printEvents();
 	}
 
+	/**
+	 * Used to that films can be correctly imported when it's using a NFO file to workout
+	 * what the film is. This checks that the part numbers are also correct. This also tests
+	 * that XBMC addons can be installed as the IMDB sources are needed. None media files will
+	 * be deleted in this test.
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testImportFilmWithNFOFileRemoveNonMedia() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -229,6 +224,12 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals(2,files.size());
 	}
 
+	/**
+	 * Used to that films can be correctly imported when it's using a NFO file to workout
+	 * what the film is. This checks that the part numbers are also correct. This also tests
+	 * that XBMC addons can be installed as the IMDB sources are needed.
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testImportFilmWithNFOFile() throws Exception {
 		cleanup();

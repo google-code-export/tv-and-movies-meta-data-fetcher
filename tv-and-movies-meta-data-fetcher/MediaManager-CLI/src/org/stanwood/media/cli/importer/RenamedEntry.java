@@ -65,14 +65,26 @@ public class RenamedEntry {
 		return newName;
 	}
 
+	/**
+	 * Get the media directory of the entry
+	 * @return The media directory
+	 */
 	public MediaDirectory getMediaDirectory() {
 		return dir;
 	}
 
+	/**
+	 * Get the video information of the entry
+	 * @return The video info of the entry
+	 */
 	public IVideo getVideo() {
 		return video;
 	}
 
+	/**
+	 * Get the part number of the entry
+	 * @return the part number of the entry
+	 */
 	public Integer getPart() {
 		return part;
 	}
