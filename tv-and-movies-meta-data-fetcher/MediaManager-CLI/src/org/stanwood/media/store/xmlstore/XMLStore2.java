@@ -112,7 +112,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile, IEpisode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFileName, IEpisode episode) throws StoreException {
 		clearCaches();
 		ISeason season = episode.getSeason();
 		IShow show = season.getShow();
@@ -120,9 +120,9 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		Document doc = getCache(rootMediaDir);
 		Element seasonNode = getSeasonNode(rootMediaDir, season, doc);
 		if (episode.isSpecial()) {
-			cacheEpisode("special", rootMediaDir, episodeFile, doc, show, seasonNode, episode); //$NON-NLS-1$
+			cacheEpisode("special", rootMediaDir, episodeFile,oldFileName, doc, show, seasonNode, episode); //$NON-NLS-1$
 		} else {
-			cacheEpisode("episode", rootMediaDir, episodeFile, doc, show, seasonNode, episode); //$NON-NLS-1$
+			cacheEpisode("episode", rootMediaDir, episodeFile,oldFileName, doc, show, seasonNode, episode); //$NON-NLS-1$
 		}
 	}
 
@@ -130,7 +130,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 		fileNodes = null;
 	}
 
-	private void cacheEpisode(String nodeName, File rootMediaDir, File episodeFile, Document doc, IShow show,
+	private void cacheEpisode(String nodeName, File rootMediaDir, File episodeFile,File oldFileName, Document doc, IShow show,
 			Element seasonNode, IEpisode episode) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache episode"); //$NON-NLS-1$
@@ -143,7 +143,10 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				}
 			}
 			if (!found) {
-				episode.getFiles().add(new VideoFile(episodeFile, episodeFile, null, rootMediaDir));
+				if (oldFileName==null) {
+					oldFileName = episodeFile;
+				}
+				episode.getFiles().add(new VideoFile(episodeFile, oldFileName, null, rootMediaDir));
 			}
 
 			Node node = selectSingleNode(seasonNode, nodeName + "[@number=" + episode.getEpisodeNumber() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -273,15 +276,18 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film, Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir, File filmFile,File oldFileName, IFilm film, Integer part) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("cache film " + filmFile.getAbsolutePath()); //$NON-NLS-1$
+		}
+		if (oldFileName==null) {
+			oldFileName = filmFile;
 		}
 		clearCaches();
 		Document doc = getCache(rootMediaDir);
 		try {
 			Node storeNode = getStoreNode(doc);
-			film.getFiles().add(new VideoFile(filmFile, filmFile, part, rootMediaDir));
+			film.getFiles().add(new VideoFile(filmFile, oldFileName, part, rootMediaDir));
 			appendFilm(doc, storeNode, film, rootMediaDir,false);
 
 			File cacheFile = getCacheFile(rootMediaDir, FILENAME);

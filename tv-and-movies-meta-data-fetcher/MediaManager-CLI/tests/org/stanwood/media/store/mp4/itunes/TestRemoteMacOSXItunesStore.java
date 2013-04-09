@@ -30,15 +30,10 @@ import org.stanwood.media.util.FileHelper;
 @SuppressWarnings("nls")
 public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest {
 
-	private File nativeDir = null;
-
 	/**
 	 * Used to setup the nativeDir used to find native apps and libs
 	 */
 	public TestRemoteMacOSXItunesStore() {
-		if (System.getProperty("NATIVE_DIR")!=null) {
-			nativeDir = new File(System.getProperty("NATIVE_DIR"));
-		}
 	}
 
 	/**
@@ -92,7 +87,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 
 				store.cacheShow(rawMediaDir, episodeFile, show);
 				store.cacheSeason(rawMediaDir, episodeFile, season);
-				store.cacheEpisode(rawMediaDir, episodeFile, episode);
+				store.cacheEpisode(rawMediaDir, episodeFile,null, episode);
 				System.out.println("Cache episode: " + episodeFile);
 			}
 
@@ -163,7 +158,7 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 
 				store.cacheShow(rawMediaDir, episodeFile, show);
 				store.cacheSeason(rawMediaDir, episodeFile, season);
-				store.cacheEpisode(rawMediaDir, episodeFile, episode);
+				store.cacheEpisode(rawMediaDir, episodeFile,null, episode);
 			}
 
 			recacheTracks();
@@ -208,8 +203,8 @@ public class TestRemoteMacOSXItunesStore extends BaseRemoteMacOSXItunesStoreTest
 
 			Film film = Data.createFilm();
 
-			store.cacheFilm(rawMediaDir, filmFile1, film,1);
-			store.cacheFilm(rawMediaDir, filmFile2, film,2);
+			store.cacheFilm(rawMediaDir, filmFile1,null, film,1);
+			store.cacheFilm(rawMediaDir, filmFile2,null, film,2);
 			store.fileUpdated(mediaDir, new File(rawMediaDir,"The Usual Suspects part1.avi"));
 			store.performedActions(mediaDir);
 

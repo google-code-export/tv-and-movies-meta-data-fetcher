@@ -65,7 +65,7 @@ public class TestXMLStore2 {
 
 				xmlSource.cacheShow(dir, episodeFile, show);
 				xmlSource.cacheSeason(dir, episodeFile, season);
-				xmlSource.cacheEpisode(dir, episodeFile, episode);
+				xmlSource.cacheEpisode(dir, episodeFile,null, episode);
 			}
 
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
@@ -78,8 +78,8 @@ public class TestXMLStore2 {
 			}
 			Film film = Data.createFilm();
 
-			xmlSource.cacheFilm(dir, filmFile1, film,1);
-			xmlSource.cacheFilm(dir, filmFile2, film,2);
+			xmlSource.cacheFilm(dir, filmFile1,null, film,1);
+			xmlSource.cacheFilm(dir, filmFile2,null, film,2);
 
 			File actualFile = new File(dir,".mediaManager-xmlStore.xml");
 			Map<String,String>params = new HashMap<String,String>();

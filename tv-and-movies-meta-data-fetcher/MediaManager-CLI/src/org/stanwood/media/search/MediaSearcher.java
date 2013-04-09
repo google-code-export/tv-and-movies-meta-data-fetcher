@@ -244,7 +244,7 @@ public class MediaSearcher {
 						if (!vf.getLocation().equals(file)) {
 							for (IStore store : dir.getStores()) {
 								if (vf.getLocation().exists()) {
-									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(), film, vf.getPart());
+									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(),null, film, vf.getPart());
 								}
 							}
 						}

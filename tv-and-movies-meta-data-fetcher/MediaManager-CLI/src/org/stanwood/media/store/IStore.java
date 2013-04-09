@@ -52,7 +52,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheEpisode(File rootMediaDir,File episodeFile,IEpisode episode) throws StoreException;
+	public void cacheEpisode(File rootMediaDir,File episodeFile,File orginalFile,IEpisode episode) throws StoreException;
 
 	/**
 	 * This is used to write a season too the store.
@@ -83,7 +83,7 @@ public interface IStore extends IExtension  {
 	 *         it was not specified on the command line.
 	 * @throws StoreException Thrown if their is a problem with the store
 	 */
-	public void cacheFilm(File rootMediaDir,File filmFile,IFilm film,Integer part) throws StoreException;
+	public void cacheFilm(File rootMediaDir,File filmFile,File orginalFile,IFilm film,Integer part) throws StoreException;
 
 	/**
 	 * This gets a episode from the store. If it can't be found, then it will

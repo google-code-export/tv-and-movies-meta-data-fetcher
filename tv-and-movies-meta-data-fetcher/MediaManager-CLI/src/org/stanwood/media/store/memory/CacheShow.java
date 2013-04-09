@@ -24,8 +24,12 @@ public class CacheShow extends Show {
 	 * @param show The show that is been cached
 	 */
 	public CacheShow(IShow show) {
-		super(show.getShowId());
+		super();
+		if (show instanceof CacheShow) {
+			throw new RuntimeException("Not able to cache a already cached show"); //$NON-NLS-1$
+		}
 		this.show = show;
+		setShowId(show.getShowId());
 	}
 
 	/**
@@ -157,6 +161,9 @@ public class CacheShow extends Show {
 	 */
 	@Override
 	public String getShowId() {
+		if (show instanceof CacheShow) {
+			throw new RuntimeException("Not able to cache a already cached show");
+		}
 		return show.getShowId();
 	}
 
@@ -259,4 +266,14 @@ public class CacheShow extends Show {
 		return seasons;
 	}
 
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof IShow) {
+			IShow show = (IShow)o;
+			return show.getShowId().equals(getShowId()) && show.getSourceId().equals(getSourceId());
+		}
+		return false;
+	}
 }

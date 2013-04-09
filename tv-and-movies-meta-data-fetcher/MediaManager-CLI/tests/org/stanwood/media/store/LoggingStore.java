@@ -19,8 +19,10 @@ package org.stanwood.media.store;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IEpisode;
@@ -33,24 +35,25 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.memory.MemoryStore;
 
+@SuppressWarnings("nls")
 public class LoggingStore implements IStore {
 
-	private static List<String>events = new ArrayList<String>();
+//	private static List<String>events = new ArrayList<String>();
+	private static Queue<String> events= new LinkedList<String>();
 
 	private IStore store = new MemoryStore();
 
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile,IEpisode episode) throws StoreException {
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFile,IEpisode episode) throws StoreException {
 		events.add("cacheEpisode("+rootMediaDir.getAbsolutePath()+","+episodeFile.getAbsolutePath()+")");
 		if (store!=null) {
-			store.cacheEpisode(rootMediaDir, episodeFile, episode);
+			store.cacheEpisode(rootMediaDir, episodeFile,oldFile, episode);
 		}
 
 	}
 
 	@Override
-	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season)
-			throws StoreException {
+	public void cacheSeason(File rootMediaDir, File episodeFile, ISeason season) throws StoreException {
 		events.add("cacheSeason()");
 		if (store!=null) {
 			store.cacheSeason(rootMediaDir, episodeFile, season);
@@ -67,10 +70,10 @@ public class LoggingStore implements IStore {
 	}
 
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film, Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir, File filmFile,File oldFile, IFilm film, Integer part) throws StoreException {
 		events.add("cacheFilm("+rootMediaDir.getAbsolutePath()+","+filmFile.getAbsolutePath()+")");
 		if (store!=null) {
-			store.cacheFilm(rootMediaDir, filmFile, film, part);
+			store.cacheFilm(rootMediaDir, filmFile,oldFile, film, part);
 		}
 	}
 
@@ -126,7 +129,7 @@ public class LoggingStore implements IStore {
 		return null;
 	}
 
-	public static List<String>getEvents() {
+	public static Queue<String>getEvents() {
 		return events;
 	}
 
@@ -260,5 +263,24 @@ public class LoggingStore implements IStore {
 			return store.fileKnownByStore(mediaDirectory, file);
 		}
 		return false;
+	}
+
+	public static void printEvents() {
+		String item = null;
+		try {
+			item = events.remove();
+		}
+		catch (NoSuchElementException e) {
+			item = null;
+		}
+		while (item !=null) {
+			System.out.println("Event: " + item);
+			try {
+				item = events.remove();
+			}
+			catch (NoSuchElementException e) {
+				item = null;
+			}
+		}
 	}
 }

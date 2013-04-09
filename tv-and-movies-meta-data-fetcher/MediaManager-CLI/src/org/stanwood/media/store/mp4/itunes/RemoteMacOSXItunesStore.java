@@ -102,7 +102,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile,
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFileName,
 			IEpisode episode) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("Cache Episode: "+ episodeFile); //$NON-NLS-1$
@@ -119,7 +119,7 @@ public class RemoteMacOSXItunesStore implements IStore {
 
 	/** {@inheritDoc} */
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film,
+	public void cacheFilm(File rootMediaDir, File filmFile,File oldFileName, IFilm film,
 			Integer part) throws StoreException {
 		if (log.isDebugEnabled()) {
 			log.debug("Caching Film: "+filmFile); //$NON-NLS-1$

@@ -84,7 +84,7 @@ public class TestFileDatabaseStore {
 			DatabaseStoreTest.cacheEpisodes(store, dir, episodes);
 			Film filmData = Data.createFilm();
 			File filmFile1 = new File(dir,"The Usual Suspects part1.avi");
-			store.cacheFilm(dir, filmFile1, filmData, 1);
+			store.cacheFilm(dir, filmFile1,null, filmData, 1);
 
 			File episodeFile = episodes.get(0).getFile();
 			IShow show = store.getShow(dir, episodeFile, Data.SHOW_ID_EUREKA);

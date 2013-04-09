@@ -27,6 +27,9 @@ import org.stanwood.media.source.xbmc.XBMCException;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 
+/**
+ * This command is used to update addons
+ */
 public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 
 	private Set<String> addons;
@@ -35,6 +38,7 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 		super(controller);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		if (!getController().isTestRun()) {

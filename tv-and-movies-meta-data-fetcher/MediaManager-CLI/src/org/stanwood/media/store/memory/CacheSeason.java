@@ -29,6 +29,9 @@ public class CacheSeason extends Season {
 	 */
 	public CacheSeason(CacheShow show,ISeason season) {
 		super(show,season.getSeasonNumber());
+		if (season instanceof CacheSeason) {
+			throw new RuntimeException("Not able to cache a already cached season"); //$NON-NLS-1$
+		}
 		this.season = season;
 	}
 
@@ -116,5 +119,14 @@ public class CacheSeason extends Season {
 		return season.getShow();
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof ISeason) {
+			ISeason season = (ISeason)o;
+			return season.getSeasonNumber()==getSeasonNumber() && season.getShow().equals(getShow());
+		}
+		return false;
+	}
 
 }
