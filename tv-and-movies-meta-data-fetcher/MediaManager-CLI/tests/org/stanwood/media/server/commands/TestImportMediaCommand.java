@@ -33,16 +33,21 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stanwood.media.Controller;
+import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.rename.RenameAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.manager.TestNFOFilms;
+import org.stanwood.media.extensions.ExtensionInfo;
 import org.stanwood.media.logging.LogSetupHelper;
+import org.stanwood.media.model.IEpisode;
+import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.source.xbmc.XBMCSource;
+import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.LoggingStore;
 import org.stanwood.media.store.LoggingStoreInfo;
 import org.stanwood.media.util.FileHelper;
@@ -164,6 +169,22 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 			Assert.assertEquals("performedActions()",events.remove());
 		}
 		LoggingStore.printEvents();
+
+		ExtensionInfo<? extends IStore> loggingStoreInfo = controller.getStoreInfo(LoggingStore.class.getName());
+
+		MediaDirectory dir = controller.getMediaDirectory(filmDir);
+		LoggingStore logginStore = (LoggingStore) loggingStoreInfo.getExtension(controller,dir.getMediaDirConfig(),0);
+		IFilm film = logginStore.getFilm(dir, new File(filmDir,"Iron Man (2008).avi"));
+		Assert.assertNotNull(film);
+		Assert.assertEquals(1,film.getFiles().size());
+		Assert.assertEquals(new File(filmDir,"Iron Man (2008).avi"),film.getFiles().get(0).getLocation());
+		Assert.assertEquals(new File(watchDir,"iron.man.2009.dvdrip.xvid-amiable.avi"),film.getFiles().get(0).getOrginalLocation());
+
+		dir = controller.getMediaDirectory(showDir);
+		logginStore = (LoggingStore) loggingStoreInfo.getExtension(controller,dir.getMediaDirConfig(),0);
+		IEpisode episode = logginStore.getEpisode(dir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi"));
+		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi").getAbsolutePath(),episode.getFiles().get(0).getLocation().getAbsolutePath());
+		Assert.assertEquals(new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi").getAbsolutePath(),episode.getFiles().get(0).getOrginalLocation().getAbsolutePath());
 	}
 
 	/**
