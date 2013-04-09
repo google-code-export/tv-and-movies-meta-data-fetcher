@@ -61,6 +61,7 @@ public class Film implements IFilm {
 	/**
 	 * Used to create a instance of the film class.
 	 * @param id The id of the film used by the source that it was read from.
+	 * @param url The URL of the film
 	 */
 	public Film(String id,URL url) {
 		setId(id);

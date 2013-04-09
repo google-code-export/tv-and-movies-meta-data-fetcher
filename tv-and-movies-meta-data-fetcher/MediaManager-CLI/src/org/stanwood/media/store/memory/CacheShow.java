@@ -161,9 +161,6 @@ public class CacheShow extends Show {
 	 */
 	@Override
 	public String getShowId() {
-		if (show instanceof CacheShow) {
-			throw new RuntimeException("Not able to cache a already cached show");
-		}
 		return show.getShowId();
 	}
 

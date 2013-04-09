@@ -150,12 +150,6 @@ public class XMLFilm extends XMLVideo implements IFilm {
 	}
 
 	/** {@inheritDoc} */
-//	@Override
-	private void setId(String id) {
-		filmNode.setAttribute("id", id); //$NON-NLS-1$
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public String getSourceId() {
 		try {
@@ -172,12 +166,6 @@ public class XMLFilm extends XMLVideo implements IFilm {
 	@Override
 	public void setSourceId(String sourceId) {
 		filmNode.setAttribute("sourceId", sourceId); //$NON-NLS-1$
-	}
-
-	/** {@inheritDoc} */
-//	@Override
-	private void setFilmUrl(URL url) {
-		filmNode.setAttribute("url", url.toExternalForm()); //$NON-NLS-1$
 	}
 
 	/** {@inheritDoc} */

@@ -88,7 +88,7 @@ public class MemoryStore implements IStore {
 			}
 		}
 		catch (IOException e) {
-			throw new StoreException("Unable to find season",e);
+			throw new StoreException(Messages.getString("UnableFindSeason0"),e); //$NON-NLS-1$
 		}
 	}
 

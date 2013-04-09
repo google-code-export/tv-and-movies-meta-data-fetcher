@@ -51,7 +51,7 @@ import org.stanwood.media.util.FileHelper;
  * "http://appletv.nanopi.net/manual/overriding-metadata/"}.
  * </p>
  * <p>
- * Every time the {@link SapphireStore#cacheEpisode(File, File, IEpisode)} or the {@link SapphireStore#cacheFilm(File, File, IFilm, Integer)}
+ * Every time the {@link SapphireStore#cacheEpisode(File, File, File,IEpisode)} or the {@link SapphireStore#cacheFilm(File, File,File, IFilm, Integer)}
  * method is called, a XML file is written next to the episodes/films file with a
  * .xml extension.
  * </p>
@@ -69,6 +69,9 @@ public class SapphireStore implements IStore {
 	private final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 	private String preferedRating = null;
 
+	/**
+	 * The constructor
+	 */
 	public SapphireStore() {
 
 	}
