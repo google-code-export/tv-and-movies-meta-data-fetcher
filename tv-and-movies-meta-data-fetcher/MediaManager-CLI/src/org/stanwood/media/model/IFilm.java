@@ -32,12 +32,6 @@ public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVi
 	 */
 	public String getId();
 
-//	/**
-//	 * Used to set the id of the film used by the source that it was read from.
-//	 * @param id The id of the film
-//	 */
-//	public void setId(String id);
-
 	/**
 	 * Used to get the source id of the source that was used to retrieve the film information.
 	 * @return The source id
@@ -50,18 +44,11 @@ public interface IFilm extends IVideo,IVideoActors,IVideoGenre,IVideoRating, IVi
 	 */
 	public void setSourceId(String sourceId);
 
-//	/**
-//	 * Used to set the URL used to get a summary of the film
-//	 * @param url The summary URL
-//	 */
-//	public void setFilmUrl(URL url);
-
 	/**
 	 * Used to get the URL used to get a summary of the film
 	 * @return The summary URL
 	 */
 	public URL getFilmUrl();
-
 
 	/**
 	 * Used to get the release date of the film
