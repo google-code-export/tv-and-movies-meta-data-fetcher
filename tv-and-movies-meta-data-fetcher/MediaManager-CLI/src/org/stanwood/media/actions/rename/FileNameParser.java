@@ -49,13 +49,11 @@ public class FileNameParser {
 	private static String SEP = "[\\&\\+\\.\\, \\-]"; //$NON-NLS-1$
 	private static String WHITE_SPACE = "[\\. ]*"; //$NON-NLS-1$
 
-	@SuppressWarnings("nls")
 	private static Pattern MULTI_PATTERNS[] = new Pattern[] {
 		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+FULL_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	};
 
-	@SuppressWarnings("nls")
 	private static Pattern PATTERNS[] = new Pattern[] {
 		// Single episode patterns
 		compile("(.*)[s]([\\d]+)[e]([\\d]+).*"), //$NON-NLS-1$
