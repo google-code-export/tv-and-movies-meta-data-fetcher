@@ -2,7 +2,6 @@ package org.stanwood.media.cli.manager;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,18 +9,15 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.media.MediaDirectory;
-import org.stanwood.media.actions.ActionException;
-import org.stanwood.media.actions.ActionPerformer;
-import org.stanwood.media.actions.IAction;
 import org.stanwood.media.cli.AbstractLauncher;
 import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
+import org.stanwood.media.cli.importer.CLICommandLogger;
 import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.server.commands.ICommandLogger;
+import org.stanwood.media.server.commands.ManageMediaCommand;
+import org.stanwood.media.server.commands.XBMCUpdateAddonsCommand;
 import org.stanwood.media.setup.ConfigException;
-import org.stanwood.media.source.xbmc.XBMCException;
-import org.stanwood.media.source.xbmc.XBMCUpdaterException;
-import org.stanwood.media.source.xbmc.updater.IConsole;
 
 /**
  * <p>
@@ -56,12 +52,8 @@ public class CLIMediaManager extends AbstractLauncher {
 
 	private static final String NOUPDATE_OPTION = "u"; //$NON-NLS-1$
 
-	private MediaDirectory rootMediaDir = null;
-	private boolean xbmcUpdate = true;
-
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
-
 
 	private static IExitHandler exitHandler = null;
 
@@ -110,6 +102,12 @@ public class CLIMediaManager extends AbstractLauncher {
 	}
 
 
+
+	private XBMCUpdateAddonsCommand updateCommand;
+
+	private ManageMediaCommand manageMediaCommand;
+
+
 	private CLIMediaManager(IExitHandler exitHandler) {
 		super("mm-manager",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
@@ -121,50 +119,16 @@ public class CLIMediaManager extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		try  {
-			for (IAction action : rootMediaDir.getActions()) {
-				action.setTestMode(getController().isTestRun());
-			}
-
-			doUpdateCheck();
-
-			ActionPerformer renamer = new ActionPerformer(getController(),rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
-
-			renamer.performActions(new NullProgressMonitor());
-			return true;
-		} catch (ActionException e) {
-			log.error(e.getMessage(),e);
-		} catch (ConfigException e) {
-			log.error(e.getMessage(),e);
-		}
-		return false;
-	}
-
-	private void doUpdateCheck() {
-		if ((!getController().isTestRun()) && xbmcUpdate) {
-			try {
-				log.info("Checking for updated XBMC plugins...."); //$NON-NLS-1$
-				int count = getController().getXBMCAddonManager().getUpdater().update(new IConsole() {
-					@Override
-					public void error(String error) {
-						log.info(error);
-					}
-
-					@Override
-					public void info(String info) {
-						log.info(info);
-					}
-				});
-				if (count>0 ) {
-					log.info(MessageFormat.format(Messages.getString("CLIMediaManager.DOWNLOAD_INSTLAL_UPDATE"),count)); //$NON-NLS-1$
-				}
-			} catch (XBMCUpdaterException e) {
-				log.error(Messages.getString("CLIMediaManager.UNABLE_UPDATE_ADDONS"),e); //$NON-NLS-1$
-			} catch (XBMCException e) {
-				log.error(Messages.getString("CLIMediaManager.UNABLE_UPDATE_ADDONS"),e); //$NON-NLS-1$
+		ICommandLogger logger = new CLICommandLogger(log);
+		if (updateCommand!=null) {
+			if (!updateCommand.execute(logger, new NullProgressMonitor())) {
+				return false;
 			}
 		}
+		return manageMediaCommand.execute(logger, new NullProgressMonitor());
 	}
+
+
 
 	/**
 	 * Used to check the CLI options are valid
@@ -173,31 +137,24 @@ public class CLIMediaManager extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean processOptions(String args[],CommandLine cmd) {
-		rootMediaDir = null;
-
+		try {
+			getController().init(cmd.hasOption(TEST_OPTION));
+		} catch (ConfigException e) {
+			fatal(e);
+			return false;
+		}
+		updateCommand = new XBMCUpdateAddonsCommand(getController());
+		if (cmd.hasOption(NOUPDATE_OPTION)) {
+			updateCommand = null;
+		}
+		manageMediaCommand = new ManageMediaCommand(getController());
 		if (cmd.hasOption(ROOT_MEDIA_DIR_OPTION) && cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION) != null) {
 			File dir = new File(cmd.getOptionValue(ROOT_MEDIA_DIR_OPTION));
-			if (dir.isDirectory()) {
-				try {
-					getController().init(cmd.hasOption(TEST_OPTION));
-					rootMediaDir = getController().getMediaDirectory(dir);
-				} catch (ConfigException e) {
-					fatal(e);
-					return false;
-				}
-			} else {
-				fatal(MessageFormat.format(Messages.getString("CLIMediaManager.MEDIA_DIR_NOT_WRITEABLE"),dir)); //$NON-NLS-1$
-				return false;
-			}
-			if (rootMediaDir==null || !rootMediaDir.getMediaDirConfig().getMediaDir().exists()) {
-				fatal(MessageFormat.format(Messages.getString("CLIMediaManager.MEDIA_DIR_NOT_EXIST"),dir)); //$NON-NLS-1$
-				return false;
-			}
+			List<File>mediaDirs = new ArrayList<File>();
+			mediaDirs.add(dir);
+			manageMediaCommand.setMediaDirectories(mediaDirs);
 		}
 
-		if (cmd.hasOption(NOUPDATE_OPTION)) {
-			xbmcUpdate = false;
-		}
 		return true;
 	}
 
