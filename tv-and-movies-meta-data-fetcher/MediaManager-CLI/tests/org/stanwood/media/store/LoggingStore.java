@@ -168,7 +168,7 @@ public class LoggingStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void performedActions(MediaDirectory dir) throws StoreException {
-		events.add("performedActions()");
+		events.add("performedActions("+dir.getMediaDirConfig().getMediaDir()+")");
 		if (store!=null) {
 			store.performedActions(dir);
 		}
