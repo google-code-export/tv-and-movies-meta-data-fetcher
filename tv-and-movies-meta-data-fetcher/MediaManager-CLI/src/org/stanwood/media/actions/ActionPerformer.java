@@ -241,7 +241,7 @@ public class ActionPerformer implements IActionEventHandler {
 	private void performActionsFiles(List<File> files) throws ActionException {
 		for (File file : files) {
 			if (dir.getMediaDirConfig().getMode().equals(Mode.FILM)) {
-				IFilm film = MediaSearcher.getFilm(dir,file,true);
+				IFilm film = MediaSearcher.getFilm(dir,file,true,true);
 				if (film!=null) {
 					Integer part = MediaSearcher.getFilmPart(dir,file, film);
 					for (IAction action : actions) {
@@ -258,7 +258,7 @@ public class ActionPerformer implements IActionEventHandler {
 				}
 			}
 			else if (dir.getMediaDirConfig().getMode().equals(Mode.TV_SHOW)) {
-				IEpisode episode = MediaSearcher.getTVEpisode(dir, file,true);
+				IEpisode episode = MediaSearcher.getTVEpisode(dir, file,true,true);
 				if (episode!=null) {
 					for (IAction action : actions) {
 						action.perform(dir,episode, file,this);

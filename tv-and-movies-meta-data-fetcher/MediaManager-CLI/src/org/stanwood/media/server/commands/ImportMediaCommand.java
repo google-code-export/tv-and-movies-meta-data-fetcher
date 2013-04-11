@@ -99,7 +99,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 					importMediaMonitor.setTaskName(MessageFormat.format(Messages.getString("ImportMediaCommand.Importing"),file.getAbsolutePath())); //$NON-NLS-1$
 					MediaSearchResult result;
 					try {
-						result = searcher.lookupMedia(file,useDefaults);
+						result = searcher.lookupMedia(file,useDefaults,false);
 						if (result==null) {
 							logger.error(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DETIALS"),file)); //$NON-NLS-1$
 							continue;

@@ -933,7 +933,7 @@ public class MP4ITunesStore implements IStore {
 	private void upgradeAtoms(MediaDirectory mediaDir,File file,List<IAtom> atoms) throws StoreException {
 		try {
 			if (mediaDir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
-				IEpisode episode = MediaSearcher.getTVEpisode(mediaDir, file,true);
+				IEpisode episode = MediaSearcher.getTVEpisode(mediaDir, file,true,true);
 				if (episode!=null) {
 					updateEpsiode(controller,mp4Manager, file, episode);
 					mediaDir.fileChanged(file);
@@ -942,7 +942,7 @@ public class MP4ITunesStore implements IStore {
 			else {
 				IFilm film;
 				try {
-					film = MediaSearcher.getFilm(mediaDir, file,true);
+					film = MediaSearcher.getFilm(mediaDir, file,true,true);
 					if (film!=null) {
 						Integer part = null;
 						for (VideoFile vfile : film.getFiles()) {

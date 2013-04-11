@@ -84,7 +84,7 @@ public class MediaSearcher {
 	 * @return The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */
-	public MediaSearchResult lookupMedia(File mediaFile,boolean useSources) throws ActionException {
+	public MediaSearchResult lookupMedia(File mediaFile,boolean useSources,boolean cacheIfNew) throws ActionException {
 		Mode mode = null;
 		FilmNFOSearchStrategy nfoSearcher = new FilmNFOSearchStrategy();
 		for (MediaDirectory mediaDir : mediaDirs) {
@@ -121,7 +121,7 @@ public class MediaSearcher {
 
 		for (MediaDirectory mediaDir : mediaDirs) {
 			if (mediaDir.getMediaDirConfig().getMode()==mode) {
-				IVideo result = getMediaDetails(mediaDir,mediaFile,useSources);
+				IVideo result = getMediaDetails(mediaDir,mediaFile,useSources,cacheIfNew);
 				if (result!=null) {
 					return new MediaSearchResult(mediaDir,result);
 				}
@@ -146,12 +146,12 @@ public class MediaSearcher {
 		return false;
 	}
 
-	private IVideo getMediaDetails(MediaDirectory dir,File file,boolean useSources) throws ActionException {
+	private IVideo getMediaDetails(MediaDirectory dir,File file,boolean useSources,boolean cacheIfNew) throws ActionException {
 		if (dir.getMediaDirConfig().getMode()==Mode.TV_SHOW) {
-			return getTVEpisode(dir, file,useSources);
+			return getTVEpisode(dir, file,useSources,cacheIfNew);
 		}
 		else {
-			return getFilm(dir, file,useSources);
+			return getFilm(dir, file,useSources,cacheIfNew);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class MediaSearcher {
 	 * @return  The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */
-	public static IFilm getFilm(MediaDirectory dir,File file,boolean useSources) throws ActionException {
+	public static IFilm getFilm(MediaDirectory dir,File file,boolean useSources,boolean cacheIfNew) throws ActionException {
 		try {
 			for (IStore store : dir.getStores()) {
 				if (file.getAbsolutePath().startsWith(dir.getMediaDirConfig().getMediaDir().getAbsolutePath())) {
@@ -175,7 +175,7 @@ public class MediaSearcher {
 			}
 			SearchResult result = findFilm(dir, file,useSources);
 			if (result!=null) {
-				IFilm film = getFilm(result,dir,file);
+				IFilm film = getFilm(result,dir,file,cacheIfNew);
 				if (film!=null) {
 					return film;
 				}
@@ -213,43 +213,51 @@ public class MediaSearcher {
 
 	}
 
-	private static IFilm getFilm(SearchResult result,MediaDirectory dir,File file) throws ActionException {
+	private static IFilm getFilm(SearchResult result,MediaDirectory dir,File file,boolean cacheIfNew) throws ActionException {
 		if (!file.exists()) {
 			return null;
 		}
 		boolean refresh = false;
 		try {
-			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh,false);
+			IFilm film = dir.getFilm(dir.getMediaDirConfig().getMediaDir(), file,result,refresh,cacheIfNew);
 			if (film==null) {
 				log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_FILM"),result.getId(),result.getSourceId(),file.getAbsolutePath())); //$NON-NLS-1$
 				return null;
 			}
-			if (!dir.getController().isTestRun()) {
-//				boolean found = false;
-				Integer maxPart = 0;
+			if (!dir.getController().isTestRun() &&  cacheIfNew) {
+				boolean found = false;
 				for (VideoFile vf : film.getFiles()) {
-//					if (vf.getLocation().equals(file)) {
-//						found = true;
+					if (vf.getLocation().equals(file)) {
+						found = true;
+					}
+				}
+				if (!found) {
+					for (IStore store : dir.getStores()) {
+						store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), file,null, film, result.getPart());
+					}
+				}
+//				boolean foundPart = false;
+//				for (VideoFile vf : film.getFiles()) {
+//					if (result.getPart()!=null) {
+//						if (vf.getPart()!=null && vf.getPart()==result.getPart()) {
+//							foundPart = true;
+//							break;
+//						}
 //					}
-					if (result.getPart()!=null) {
-						if (vf.getPart()!=null && vf.getPart()>maxPart) {
-							maxPart = vf.getPart();
-						}
-					}
-				}
-
-				// Update existing stores with new part
-				if (result.getPart()!=null && result.getPart()>maxPart) {
-					for (VideoFile vf : film.getFiles()) {
-						if (!vf.getLocation().equals(file)) {
-							for (IStore store : dir.getStores()) {
-								if (vf.getLocation().exists()) {
-									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(),null, film, vf.getPart());
-								}
-							}
-						}
-					}
-				}
+//				}
+//
+//				// Update existing stores with new part
+//				if (result.getPart()!=null && !foundPart) {
+//					for (VideoFile vf : film.getFiles()) {
+//						if (!vf.getLocation().equals(file)) {
+//							for (IStore store : dir.getStores()) {
+//								if (vf.getLocation().exists()) {
+//									store.cacheFilm(dir.getMediaDirConfig().getMediaDir(), vf.getLocation(),null, film, vf.getPart());
+//								}
+//							}
+//						}
+//					}
+//				}
 			}
 			return film;
 		}
@@ -266,7 +274,7 @@ public class MediaSearcher {
 	 * @return  The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */
-	public static IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources) throws ActionException {
+	public static IEpisode getTVEpisode(MediaDirectory dir,File file,boolean useSources,boolean cacheIfNew) throws ActionException {
 		boolean refresh = false;
 		try {
 			for (IStore store : dir.getStores()) {
@@ -298,7 +306,7 @@ public class MediaSearcher {
 				if (season == null) {
 					log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABVLE_TO_FIMD_SEASON"),file)); //$NON-NLS-1$
 				} else {
-					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisodes(), refresh,false);
+					IEpisode episode = dir.getEpisode(dir.getMediaDirConfig().getMediaDir(),file, season, data.getEpisodes(), refresh,cacheIfNew);
 					if (episode==null) {
 						log.error(MessageFormat.format(Messages.getString("ActionPerformer.UNABLE_FIND_EPISODE_NUMBER"),file)); //$NON-NLS-1$
 						return null;

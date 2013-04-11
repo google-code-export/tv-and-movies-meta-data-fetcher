@@ -300,7 +300,7 @@ public class TestCLIMediaManager extends XBMCAddonTestBase {
 		String sourceId = "metadata.imdb.com";
 //		String sourceId = "metadata.themoviedb.org";
 		String pattern = "%t{ Part %p}.%x";
-//		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		// Create test files
 		File dir = FileHelper.createTmpDir("movies");
 		File filmsDir = new File(dir, "Films");
