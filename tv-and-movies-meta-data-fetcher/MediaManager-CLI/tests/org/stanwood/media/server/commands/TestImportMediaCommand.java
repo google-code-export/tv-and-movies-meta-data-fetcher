@@ -156,19 +156,20 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
 		Assert.assertEquals("cacheFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
 		Assert.assertEquals("init()",events.remove());
-		if (events.peek().equals("performedActions()")) {
-			Assert.assertEquals("performedActions()",events.remove());
+		if (events.peek().equals("performedActions("+showDir.getAbsolutePath()+")")) {
+			Assert.assertEquals("performedActions("+showDir.getAbsolutePath()+")",events.remove());
 			Assert.assertEquals("init()",events.remove());
 			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
-			Assert.assertEquals("performedActions()",events.remove());
+			Assert.assertEquals("performedActions("+filmDir.getAbsolutePath()+")",events.remove());
 		}
 		else {
 			Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
-			Assert.assertEquals("performedActions()",events.remove());
+			Assert.assertEquals("performedActions("+filmDir.getAbsolutePath()+")",events.remove());
 			Assert.assertEquals("init()",events.remove());
-			Assert.assertEquals("performedActions()",events.remove());
+			Assert.assertEquals("performedActions("+showDir.getAbsolutePath()+")",events.remove());
 		}
-		LoggingStore.printEvents();
+
+		Assert.assertTrue(events.isEmpty());
 
 		ExtensionInfo<? extends IStore> loggingStoreInfo = controller.getStoreInfo(LoggingStore.class.getName());
 
@@ -185,6 +186,22 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		IEpisode episode = logginStore.getEpisode(dir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi"));
 		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi").getAbsolutePath(),episode.getFiles().get(0).getLocation().getAbsolutePath());
 		Assert.assertEquals(new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi").getAbsolutePath(),episode.getFiles().get(0).getOrginalLocation().getAbsolutePath());
+
+		ManageMediaCommand mmCommand = new ManageMediaCommand(controller);
+		List<File>mediaDirs = new ArrayList<File>();
+		mediaDirs.add(filmDir);
+		mediaDirs.add(showDir);
+		result = mmCommand.execute(logger, new NullProgressMonitor());
+		Assert.assertTrue(result);
+
+		Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("performedActions("+filmDir.getAbsolutePath()+")",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("performedActions("+showDir.getAbsolutePath()+")",events.remove());
+
+		Assert.assertTrue(events.isEmpty());
+
 	}
 
 	/**
