@@ -84,6 +84,12 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertNull(result);
 	}
 
+	/**
+	 * Used to test media can be imported into empty media dirs. After importing,
+	 * check that managing the media does not effect it. This also tests the processes
+	 * effect on stores.
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testMediaImportIntoEmptyMediaDirs() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");

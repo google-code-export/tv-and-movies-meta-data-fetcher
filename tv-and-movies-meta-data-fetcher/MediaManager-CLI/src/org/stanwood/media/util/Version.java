@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  */
 public class Version implements Comparable<Version>,Serializable {
 
-	private String normalised;
+	private transient String normalised;
 	private String version;
 
 	/**
