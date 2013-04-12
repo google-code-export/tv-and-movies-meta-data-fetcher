@@ -1,0 +1,3754 @@
+{
+  "addons": [
+    {
+      "id": "metadata.7176.com",
+      "avaliableVersion": {
+        "version": "1.0.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.album.musicbrainz.org",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.musicbrainz.org",
+        "metadata.common.fanart.tv"
+      ]
+    },
+    {
+      "id": "metadata.albums.1ting.com",
+      "avaliableVersion": {
+        "version": "1.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.allmusic.com",
+      "avaliableVersion": {
+        "version": "2.1.0"
+      },
+      "installedVersion": {
+        "version": "2.0.1"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.allmusic.com"
+      ]
+    },
+    {
+      "id": "metadata.albums.daum.net",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.freebase.com",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.last.fm",
+      "avaliableVersion": {
+        "version": "1.2.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.last.fm",
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.merlin.pl",
+      "avaliableVersion": {
+        "version": "1.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.allmusic.com"
+      ]
+    },
+    {
+      "id": "metadata.albums.metal-archives.com",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.naver.com",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.albums.top100.cn",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.anidb.net",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.1ting.com",
+      "avaliableVersion": {
+        "version": "1.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.allmusic.com",
+      "avaliableVersion": {
+        "version": "2.1.0"
+      },
+      "installedVersion": {
+        "version": "2.0.2"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.allmusic.com"
+      ]
+    },
+    {
+      "id": "metadata.artists.daum.net",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.freebase.com",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.last.fm",
+      "avaliableVersion": {
+        "version": "1.3.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.metal-archives.com",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.musicbrainz.org",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.musicbrainz.org",
+        "metadata.common.fanart.tv"
+      ]
+    },
+    {
+      "id": "metadata.artists.naver.com",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.top100.cn",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.artists.universal",
+      "avaliableVersion": {
+        "version": "1.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.allmusic.com",
+        "metadata.common.musicbrainz.org",
+        "metadata.common.fanart.tv"
+      ]
+    },
+    {
+      "id": "metadata.artists.yoyo.pl",
+      "avaliableVersion": {
+        "version": "1.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.htbackdrops.com",
+        "metadata.common.last.fm",
+        "xbmc.metadata",
+        "metadata.common.allmusic.com"
+      ]
+    },
+    {
+      "id": "metadata.asiandb.com",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.atmovies.com.tw",
+      "avaliableVersion": {
+        "version": "1.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.bestanime.co.kr",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.cine.passion-xbmc.org",
+      "avaliableVersion": {
+        "version": "1.1.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.cinefacts.de",
+      "avaliableVersion": {
+        "version": "1.0.13"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.cinemagia.ro",
+      "avaliableVersion": {
+        "version": "1.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.cinemarx.ro",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.common.allmusic.com",
+      "avaliableVersion": {
+        "version": "2.2.0"
+      },
+      "installedVersion": {
+        "version": "1.8.1"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.fanart.tv",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.hdtrailers.net",
+      "avaliableVersion": {
+        "version": "1.0.8"
+      },
+      "installedVersion": {
+        "version": "1.0.4"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.htbackdrops.com",
+      "avaliableVersion": {
+        "version": "1.1.1"
+      },
+      "installedVersion": {
+        "version": "1.0.7"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.imdb.com",
+      "avaliableVersion": {
+        "version": "2.2.3"
+      },
+      "installedVersion": {
+        "version": "2.0.7"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.impa.com",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.last.fm",
+      "avaliableVersion": {
+        "version": "1.3.1"
+      },
+      "installedVersion": {
+        "version": "1.0.4"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.movie.daum.net",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.movieposterdb.com",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.musicbrainz.org",
+      "avaliableVersion": {
+        "version": "1.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.ofdb.de",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.rottentomatoes.com",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.rt.com",
+      "avaliableVersion": {
+        "version": "1.3.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.themoviedb.org",
+      "avaliableVersion": {
+        "version": "2.1.6"
+      },
+      "installedVersion": {
+        "version": "1.0.7"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.trakt.tv",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.common.youtubetrailers",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.disneyinfo.nl",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.douban.com",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.filmaffinity.com",
+      "avaliableVersion": {
+        "version": "1.4.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "plugin.video.youtube",
+        "metadata.common.impa.com"
+      ]
+    },
+    {
+      "id": "metadata.filmbasen.dagbladet.no",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.filmdelta.se",
+      "avaliableVersion": {
+        "version": "1.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.filmstarts.de",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.filmweb.pl",
+      "avaliableVersion": {
+        "version": "1.2.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "metadata.he.israel-music.co.il",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.imdb.com",
+      "avaliableVersion": {
+        "version": "2.5.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "metadata.common.youtubetrailers",
+        "metadata.common.impa.com"
+      ]
+    },
+    {
+      "id": "metadata.kino.de",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.kinobox.cz",
+      "avaliableVersion": {
+        "version": "1.01"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.kinopoisk.ru",
+      "avaliableVersion": {
+        "version": "1.0.43"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.m1905.com",
+      "avaliableVersion": {
+        "version": "1.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.movie.animenewsnetwork.com",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.movie.daum.net",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.movie.daum.net"
+      ]
+    },
+    {
+      "id": "metadata.moviemaze.de",
+      "avaliableVersion": {
+        "version": "1.0.17"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.moviemeter.nl",
+      "avaliableVersion": {
+        "version": "1.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.movieplayer.it",
+      "avaliableVersion": {
+        "version": "1.3.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.mtime.com",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.mtv.com",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "installedVersion": {
+        "version": "1.0.5"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.mymovies.dk",
+      "avaliableVersion": {
+        "version": "1.2.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.mymovies.it",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.ofdb.de",
+      "avaliableVersion": {
+        "version": "1.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "metadata.port.hu",
+      "avaliableVersion": {
+        "version": "1.8.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "metadata.common.impa.com"
+      ]
+    },
+    {
+      "id": "metadata.ptgate.pt",
+      "avaliableVersion": {
+        "version": "1.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "metadata.common.impa.com"
+      ]
+    },
+    {
+      "id": "metadata.rottentomatoes.com",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "metadata.common.rottentomatoes.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "metadata.serialzone.cz",
+      "avaliableVersion": {
+        "version": "1.02"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.sratim.co.il",
+      "avaliableVersion": {
+        "version": "1.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "metadata.common.youtubetrailers"
+      ]
+    },
+    {
+      "id": "metadata.themoviedb.org",
+      "avaliableVersion": {
+        "version": "3.2.0"
+      },
+      "installedVersion": {
+        "version": "1.2.0"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.tv.daum.net",
+      "avaliableVersion": {
+        "version": "1.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.tv.movieplayer.it",
+      "avaliableVersion": {
+        "version": "1.0.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.tvdb.com",
+      "avaliableVersion": {
+        "version": "1.2.4"
+      },
+      "installedVersion": {
+        "version": "1.0.8"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.tvshows.animenewsnetwork.com",
+      "avaliableVersion": {
+        "version": "1.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.tw.movie.yahoo.com",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "metadata.universal",
+      "avaliableVersion": {
+        "version": "1.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "metadata.common.hdtrailers.net",
+        "metadata.common.trakt.tv",
+        "metadata.common.ofdb.de",
+        "xbmc.metadata",
+        "metadata.common.rt.com",
+        "metadata.common.movieposterdb.com",
+        "metadata.common.themoviedb.org",
+        "metadata.common.youtubetrailers",
+        "metadata.common.impa.com"
+      ]
+    },
+    {
+      "id": "metadata.videobuster.de",
+      "avaliableVersion": {
+        "version": "1.1.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.worldart.ru",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "metadata.common.imdb.com",
+        "xbmc.metadata",
+        "metadata.common.themoviedb.org"
+      ]
+    },
+    {
+      "id": "metadata.yahoomusic.com",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.metadata"
+      ]
+    },
+    {
+      "id": "plugin.audio.abradio.cz",
+      "avaliableVersion": {
+        "version": "2.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.di.fm",
+      "avaliableVersion": {
+        "version": "1.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.dr.dk.netradio",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.einslive_de",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.groove",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.icecast",
+      "avaliableVersion": {
+        "version": "11.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.internet.archive",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.modland",
+      "avaliableVersion": {
+        "version": "0.13.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.mozart",
+      "avaliableVersion": {
+        "version": "11.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.npr",
+      "avaliableVersion": {
+        "version": "2.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.podcatcher",
+      "avaliableVersion": {
+        "version": "0.1.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.radio_de",
+      "avaliableVersion": {
+        "version": "1.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.radioma",
+      "avaliableVersion": {
+        "version": "1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.relive",
+      "avaliableVersion": {
+        "version": "0.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.sky.fm",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.soundcloud",
+      "avaliableVersion": {
+        "version": "0.2.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.sverigesradio",
+      "avaliableVersion": {
+        "version": "0.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.audio.vorleser_net",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.image.500px",
+      "avaliableVersion": {
+        "version": "0.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson"
+      ]
+    },
+    {
+      "id": "plugin.image.flickr",
+      "avaliableVersion": {
+        "version": "0.9.92"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.image.google",
+      "avaliableVersion": {
+        "version": "0.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.image.iphoto",
+      "avaliableVersion": {
+        "version": "1.9.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.image.picasa",
+      "avaliableVersion": {
+        "version": "0.8.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.program.advanced.launcher",
+      "avaliableVersion": {
+        "version": "1.7.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.program.jdownloader",
+      "avaliableVersion": {
+        "version": "1.2.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.program.mceremote",
+      "avaliableVersion": {
+        "version": "2.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.program.rtorrent",
+      "avaliableVersion": {
+        "version": "1.11.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.program.utorrent",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.4players",
+      "avaliableVersion": {
+        "version": "1.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.academicearth",
+      "avaliableVersion": {
+        "version": "1.2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.aljazeera",
+      "avaliableVersion": {
+        "version": "0.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.animevice",
+      "avaliableVersion": {
+        "version": "2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.arretsurimages",
+      "avaliableVersion": {
+        "version": "2.1.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.arte_tv",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.bestofyoutube_com",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.bild_de",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.bliptv",
+      "avaliableVersion": {
+        "version": "0.4.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simple.downloader",
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.borsentv.dk",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.chip_de",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.cinemassacre",
+      "avaliableVersion": {
+        "version": "0.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "plugin.video.bliptv",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.circuitboard",
+      "avaliableVersion": {
+        "version": "0.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.urlresolver",
+        "xbmc.gui",
+        "plugin.video.bliptv",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.cnet.podcasts",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.collegehumor",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.comicvine",
+      "avaliableVersion": {
+        "version": "2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.day9",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.deathsquad",
+      "avaliableVersion": {
+        "version": "0.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "plugin.video.vimeo"
+      ]
+    },
+    {
+      "id": "plugin.video.diy",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "plugin.video.dmax",
+      "avaliableVersion": {
+        "version": "0.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dmi.dk",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dr.dk.bonanza",
+      "avaliableVersion": {
+        "version": "2.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dr.dk.live",
+      "avaliableVersion": {
+        "version": "2.1.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dr.dk.podcast",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.drdish-tv_de",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.drnu",
+      "avaliableVersion": {
+        "version": "2.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dtm_tv",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.dump",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.earth.touch",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.eevblog",
+      "avaliableVersion": {
+        "version": "0.2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.engadget",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.eredivisie-live",
+      "avaliableVersion": {
+        "version": "2.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.espn.video",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.eyetv.parser",
+      "avaliableVersion": {
+        "version": "2.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.fernsehkritik_tv",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.fightcasts",
+      "avaliableVersion": {
+        "version": "0.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "plugin.video.mmafighting",
+        "xbmc.python",
+        "plugin.video.youtube",
+        "plugin.video.vimeo"
+      ]
+    },
+    {
+      "id": "plugin.video.filmstarts_de",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.flw.outdoors",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.foodnetwork",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.fox.news",
+      "avaliableVersion": {
+        "version": "2.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "plugin.video.funny.or.die",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.g4tv",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.gaffa.tv",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.gamereactor.dk",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.gamestar",
+      "avaliableVersion": {
+        "version": "0.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.gametest.dk",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.gfq",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.giantbomb",
+      "avaliableVersion": {
+        "version": "3.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.giga_de",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.hgtv",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "plugin.video.hockeystreams",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.hwclips",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.joeroganexperience",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "plugin.video.vimeo"
+      ]
+    },
+    {
+      "id": "plugin.video.jupiterbroadcasting",
+      "avaliableVersion": {
+        "version": "2.6.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.khanacademy",
+      "avaliableVersion": {
+        "version": "1.4.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.lachschon_de",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.leafstv",
+      "avaliableVersion": {
+        "version": "1.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.mediathek",
+      "avaliableVersion": {
+        "version": "0.4.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.mlbmc",
+      "avaliableVersion": {
+        "version": "1.0.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.mmafighting",
+      "avaliableVersion": {
+        "version": "0.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "plugin.video.mtv_de",
+      "avaliableVersion": {
+        "version": "2.0.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.myvideo_de",
+      "avaliableVersion": {
+        "version": "0.1.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.n24_de",
+      "avaliableVersion": {
+        "version": "1.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.nasa",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.nascar",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.national.geographic",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.nederland24",
+      "avaliableVersion": {
+        "version": "2.1.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.news.tv2.dk",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.nos",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.nrk",
+      "avaliableVersion": {
+        "version": "3.1.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.onside.tv",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.pakee",
+      "avaliableVersion": {
+        "version": "1.0.18"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.pbs",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.pennyarcadetv",
+      "avaliableVersion": {
+        "version": "2.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.photocasts",
+      "avaliableVersion": {
+        "version": "0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.previewnetworks",
+      "avaliableVersion": {
+        "version": "2.2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.radbox",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "plugin.video.collegehumor",
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "plugin.video.youtube",
+        "plugin.video.vimeo"
+      ]
+    },
+    {
+      "id": "plugin.video.rbk.no",
+      "avaliableVersion": {
+        "version": "2.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "plugin.video.revision3",
+      "avaliableVersion": {
+        "version": "2.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simple.downloader",
+        "xbmc.python",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.s04tv",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.mechanize",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.sarpur",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.screened",
+      "avaliableVersion": {
+        "version": "2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.sevenload_de",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.spiegelonline",
+      "avaliableVersion": {
+        "version": "1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.svtplay",
+      "avaliableVersion": {
+        "version": "2.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tagesschau",
+      "avaliableVersion": {
+        "version": "1.2.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tageswebschau",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tapetv",
+      "avaliableVersion": {
+        "version": "0.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.techcrunch",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.ted.talks",
+      "avaliableVersion": {
+        "version": "3.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.elementtree",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tested",
+      "avaliableVersion": {
+        "version": "2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.the.trailers",
+      "avaliableVersion": {
+        "version": "0.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tmz",
+      "avaliableVersion": {
+        "version": "2.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tv2.dk",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tv2regionerne.dk",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tv3play.dk",
+      "avaliableVersion": {
+        "version": "1.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tvkaista",
+      "avaliableVersion": {
+        "version": "3.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.tvvn",
+      "avaliableVersion": {
+        "version": "0.7.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.twit",
+      "avaliableVersion": {
+        "version": "1.0.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.vimeo",
+      "avaliableVersion": {
+        "version": "2.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simple.downloader",
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.visir",
+      "avaliableVersion": {
+        "version": "1.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.watch.it.later",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.wimp",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.xbmcswift",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.yousee.tv",
+      "avaliableVersion": {
+        "version": "2.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.pil",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.youtube",
+      "avaliableVersion": {
+        "version": "2.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simple.downloader",
+        "script.module.simplejson",
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "plugin.video.zapiks",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "plugin.video.zdf_de_lite",
+      "avaliableVersion": {
+        "version": "1.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "plugin.video.ziggo.tv",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "repository.xbmc.org",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.rsxs.euphoria",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.rsxs.plasma",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.rsxs.solarwinds",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.xbmc.builtin.black",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.xbmc.builtin.dim",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "screensaver.xbmc.builtin.slideshow",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "script.advanced.wol",
+      "avaliableVersion": {
+        "version": "1.1.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.artistslideshow",
+      "avaliableVersion": {
+        "version": "1.3.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.artwork.downloader",
+      "avaliableVersion": {
+        "version": "1.0.14"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.elementtree",
+        "xbmc.python",
+        "script.common.plugin.cache"
+      ]
+    },
+    {
+      "id": "script.artworkorganizer",
+      "avaliableVersion": {
+        "version": "0.1.10"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.cdartmanager",
+      "avaliableVersion": {
+        "version": "2.5.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.pysqlite",
+        "script.module.pil",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.common.plugin.cache",
+      "avaliableVersion": {
+        "version": "0.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.cu.lyrics",
+      "avaliableVersion": {
+        "version": "2.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.facebook.media",
+      "avaliableVersion": {
+        "version": "0.6.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.web.viewer",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.favourites",
+      "avaliableVersion": {
+        "version": "3.2.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.forum.browser",
+      "avaliableVersion": {
+        "version": "0.8.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.web.viewer",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.game.whatthemovie",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.games.rom.collection.browser",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "service.rom.collection.browser",
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.globalsearch",
+      "avaliableVersion": {
+        "version": "0.2.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.gmail.checker",
+      "avaliableVersion": {
+        "version": "2.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.gomiso",
+      "avaliableVersion": {
+        "version": "1.4.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.ibelight",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.image.bigpictures",
+      "avaliableVersion": {
+        "version": "3.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.image.lastfm.slideshow",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.linux.nm",
+      "avaliableVersion": {
+        "version": "0.1.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.lrclyrics",
+      "avaliableVersion": {
+        "version": "1.4.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.beautifulsoup",
+      "avaliableVersion": {
+        "version": "3.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.brightcove",
+      "avaliableVersion": {
+        "version": "0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.buggalo",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.elementtree",
+      "avaliableVersion": {
+        "version": "1.2.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.mechanize",
+      "avaliableVersion": {
+        "version": "0.2.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.metahandler",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.t0mm0.common",
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.myconnpy",
+      "avaliableVersion": {
+        "version": "0.3.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.parsedom",
+      "avaliableVersion": {
+        "version": "0.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.pil",
+      "avaliableVersion": {
+        "version": "1.1.7"
+      },
+      "installedVersion": {
+        "version": "1.1.7"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.pysqlite",
+      "avaliableVersion": {
+        "version": "2.5.6"
+      },
+      "installedVersion": {
+        "version": "2.5.6"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.simple.downloader",
+      "avaliableVersion": {
+        "version": "0.9.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "script.common.plugin.cache",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "script.module.simplejson",
+      "avaliableVersion": {
+        "version": "2.0.10"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.t0mm0.common",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.module.urlresolver",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.t0mm0.common",
+        "xbmc.python",
+        "plugin.video.youtube"
+      ]
+    },
+    {
+      "id": "script.module.xbmcswift",
+      "avaliableVersion": {
+        "version": "0.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.moviequiz",
+      "avaliableVersion": {
+        "version": "0.5.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "script.module.buggalo",
+        "xbmc.python",
+        "script.module.myconnpy"
+      ]
+    },
+    {
+      "id": "script.mpdc",
+      "avaliableVersion": {
+        "version": "2.0.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.mythbox",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.elementtree",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.njoy",
+      "avaliableVersion": {
+        "version": "0.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.playalbum",
+      "avaliableVersion": {
+        "version": "0.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.playlists",
+      "avaliableVersion": {
+        "version": "0.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.pseudotv",
+      "avaliableVersion": {
+        "version": "2.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.randomandlastitems",
+      "avaliableVersion": {
+        "version": "1.2.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.randomitems",
+      "avaliableVersion": {
+        "version": "3.0.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.elementtree",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.recentlyadded",
+      "avaliableVersion": {
+        "version": "3.0.0"
+      },
+      "installedVersion": {
+        "version": "2.0.2"
+      },
+      "status": "OUT_OF_DATE",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.rss.editor",
+      "avaliableVersion": {
+        "version": "2.0.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.speedfaninfo",
+      "avaliableVersion": {
+        "version": "0.3.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.transmission",
+      "avaliableVersion": {
+        "version": "0.7.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.tv.show.next.aired",
+      "avaliableVersion": {
+        "version": "4.1.20"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.tvguide",
+      "avaliableVersion": {
+        "version": "1.3.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "script.module.elementtree",
+        "script.module.buggalo",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.tvtunes",
+      "avaliableVersion": {
+        "version": "1.0.18"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.watchlist",
+      "avaliableVersion": {
+        "version": "0.1.13"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.web.viewer",
+      "avaliableVersion": {
+        "version": "0.8.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc-pbx-addon",
+      "avaliableVersion": {
+        "version": "1.0.10"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc.audio.mixer",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc.blindplayer",
+      "avaliableVersion": {
+        "version": "1.2.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc.boblight",
+      "avaliableVersion": {
+        "version": "1.0.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc.debug.log",
+      "avaliableVersion": {
+        "version": "11.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmc.subtitles",
+      "avaliableVersion": {
+        "version": "3.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.beautifulsoup",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "script.xbmcbackup",
+      "avaliableVersion": {
+        "version": "0.0.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.dbus.notify",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.libraryautoupdate",
+      "avaliableVersion": {
+        "version": "0.6.2"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.mpris.soundmenu",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.qlock",
+      "avaliableVersion": {
+        "version": "0.5.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.rom.collection.browser",
+      "avaliableVersion": {
+        "version": "0.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "service.watchdog",
+      "avaliableVersion": {
+        "version": "0.6.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "skin.aeon.nox",
+      "avaliableVersion": {
+        "version": "3.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "script.globalsearch",
+        "xbmc.gui",
+        "script.randomandlastitems",
+        "script.artwork.downloader",
+        "script.playlists",
+        "script.watchlist",
+        "script.favourites",
+        "script.artistslideshow"
+      ]
+    },
+    {
+      "id": "skin.back-row",
+      "avaliableVersion": {
+        "version": "3.5.6"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.favourites",
+        "script.tvtunes",
+        "script.artistslideshow"
+      ]
+    },
+    {
+      "id": "skin.confluence",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "installedVersion": {
+        "version": "1.1.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "script.recentlyadded"
+      ]
+    },
+    {
+      "id": "skin.confluence-vertical",
+      "avaliableVersion": {
+        "version": "2.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "skin.jx720",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "skin.metropolis",
+      "avaliableVersion": {
+        "version": "1.1.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.favourites"
+      ]
+    },
+    {
+      "id": "skin.neon",
+      "avaliableVersion": {
+        "version": "2.5.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.favourites"
+      ]
+    },
+    {
+      "id": "skin.pm3-hd",
+      "avaliableVersion": {
+        "version": "2.1.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "skin.quartz",
+      "avaliableVersion": {
+        "version": "3.2.7"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "script.watchlist",
+        "script.favourites"
+      ]
+    },
+    {
+      "id": "skin.rapier",
+      "avaliableVersion": {
+        "version": "4.2.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.watchlist",
+        "script.favourites"
+      ]
+    },
+    {
+      "id": "skin.simplicity",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "xbmc.gui",
+        "script.favourites",
+        "script.logo-downloader",
+        "script.cu.lyrics"
+      ]
+    },
+    {
+      "id": "skin.slik",
+      "avaliableVersion": {
+        "version": "2.0.0"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "skin.transparency",
+      "avaliableVersion": {
+        "version": "4.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.randomitems",
+        "script.globalsearch",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.watchlist",
+        "script.favourites",
+        "service.qlock"
+      ]
+    },
+    {
+      "id": "skin.xeebo",
+      "avaliableVersion": {
+        "version": "4.0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.randomitems",
+        "script.playalbum",
+        "script.globalsearch",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.watchlist",
+        "script.favourites"
+      ]
+    },
+    {
+      "id": "skin.xperience-more",
+      "avaliableVersion": {
+        "version": "1.3.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.tv.show.next.aired",
+        "script.globalsearch",
+        "xbmc.gui",
+        "script.artwork.downloader",
+        "script.watchlist",
+        "script.tvtunes",
+        "script.artistslideshow"
+      ]
+    },
+    {
+      "id": "visualization.dxspectrum",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "visualization.glspectrum",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "visualization.itunes",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "visualization.milkdrop",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "visualization.projectm",
+      "avaliableVersion": {
+        "version": "1.0.1"
+      },
+      "installedVersion": {
+        "version": "1.0.1"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "visualization.waveform",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "weather.ozweather",
+      "avaliableVersion": {
+        "version": "0.3.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python",
+        "script.module.parsedom"
+      ]
+    },
+    {
+      "id": "weather.weatherplus",
+      "avaliableVersion": {
+        "version": "3.0.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "weather.worldweatheronline",
+      "avaliableVersion": {
+        "version": "1.0.8"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "weather.wunderground",
+      "avaliableVersion": {
+        "version": "0.0.9"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "script.module.simplejson",
+        "xbmc.python"
+      ]
+    },
+    {
+      "id": "weather.xbmc.builtin",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "webinterface.XWMM",
+      "avaliableVersion": {
+        "version": "2.0.5"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "webinterface.awxi",
+      "avaliableVersion": {
+        "version": "0.5.3"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.json"
+      ]
+    },
+    {
+      "id": "webinterface.debug",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "webinterface.default",
+      "avaliableVersion": {
+        "version": "1.0.0"
+      },
+      "installedVersion": {
+        "version": "1.0.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "webinterface.home-row",
+      "avaliableVersion": {
+        "version": "1.5.1"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.json"
+      ]
+    },
+    {
+      "id": "webinterface.pwi",
+      "avaliableVersion": {
+        "version": "0.1.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui",
+        "xbmc.json"
+      ]
+    },
+    {
+      "id": "webinterface.wtouch",
+      "avaliableVersion": {
+        "version": "0.4"
+      },
+      "status": "NOT_INSTALLED",
+      "requiredAddons": [
+        "xbmc.gui"
+      ]
+    },
+    {
+      "id": "xbmc.addon",
+      "avaliableVersion": {
+        "version": "1.0"
+      },
+      "installedVersion": {
+        "version": "1.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.core"
+      ]
+    },
+    {
+      "id": "xbmc.core",
+      "avaliableVersion": {
+        "version": "0.1"
+      },
+      "installedVersion": {
+        "version": "0.1"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": []
+    },
+    {
+      "id": "xbmc.gui",
+      "avaliableVersion": {
+        "version": "2.11"
+      },
+      "installedVersion": {
+        "version": "2.11"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.core"
+      ]
+    },
+    {
+      "id": "xbmc.metadata",
+      "avaliableVersion": {
+        "version": "1.0"
+      },
+      "installedVersion": {
+        "version": "1.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.core"
+      ]
+    },
+    {
+      "id": "xbmc.python",
+      "avaliableVersion": {
+        "version": "1.0"
+      },
+      "installedVersion": {
+        "version": "1.0"
+      },
+      "status": "INSTALLED",
+      "requiredAddons": [
+        "xbmc.core"
+      ]
+    }
+  ]
+}

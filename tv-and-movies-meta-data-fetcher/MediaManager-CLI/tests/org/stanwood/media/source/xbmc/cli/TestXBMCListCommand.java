@@ -5,9 +5,15 @@ import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.stanwood.media.Controller;
 import org.stanwood.media.cli.manager.TestCLIMediaManager;
 import org.stanwood.media.logging.LogSetupHelper;
 import org.stanwood.media.model.Mode;
+import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.server.commands.StringBuilderCommandLogger;
+import org.stanwood.media.server.commands.XBMCListAddonsCommand;
+import org.stanwood.media.server.commands.XBMCListAddonsResult;
+import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.source.xbmc.XBMCSource;
 import org.stanwood.media.util.FileHelper;
 
@@ -127,7 +133,24 @@ public class TestXBMCListCommand extends BaseCLITest {
 		// Assert that the plugins was installed
 		reset();
 		assertPluginList("expectedAddonList3.txt");
+	}
 
+	@Test
+	public void testListAsJson() throws Exception {
+		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
+		LogSetupHelper.initLogging(stdout,stderr);
+
+		Controller controller = new Controller(config);
+		controller.init(false);
+
+		XBMCListAddonsCommand cmd = new XBMCListAddonsCommand(controller);
+		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
+		XBMCListAddonsResult result = cmd.execute(logger, new NullProgressMonitor());
+
+		Assert.assertEquals(331,result.getAddons().size());
+
+		String expected = FileHelper.readFileContents(TestXBMCListCommand.class.getResourceAsStream("expectedJsonList.txt"));
+		Assert.assertEquals(expected.trim(), result.toJson(true).trim());
 	}
 
 	protected void assertPluginList(String filename) throws IOException {

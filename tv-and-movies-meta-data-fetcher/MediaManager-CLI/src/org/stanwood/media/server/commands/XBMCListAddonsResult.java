@@ -20,6 +20,9 @@ import java.util.Set;
 
 import org.stanwood.media.source.xbmc.updater.AddonDetails;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class XBMCListAddonsResult implements ICommandResult {
 
 	private Set<AddonDetails> addons;
@@ -30,5 +33,16 @@ public class XBMCListAddonsResult implements ICommandResult {
 
 	public Set<AddonDetails>getAddons() {
 		return addons;
+	}
+
+	public String toJson(boolean prettyPrint) {
+		Gson gson;
+		if (prettyPrint) {
+			gson = new GsonBuilder().setPrettyPrinting().create();
+		}
+		else {
+			gson = new Gson();
+		}
+		return gson.toJson(this);
 	}
 }
