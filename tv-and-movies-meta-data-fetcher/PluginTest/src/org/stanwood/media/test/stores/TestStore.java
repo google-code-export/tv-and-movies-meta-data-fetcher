@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.stanwood.media.Controller;
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
@@ -24,7 +23,7 @@ public class TestStore implements IStore {
 	private static List<String>events = new ArrayList<String>();
 
 	@Override
-	public void cacheEpisode(File rootMediaDir, File episodeFile,
+	public void cacheEpisode(File rootMediaDir, File episodeFile,File oldFileName,
 			IEpisode episode) throws StoreException {
 		events.add("cacheEpisode()");
 	}
@@ -42,7 +41,7 @@ public class TestStore implements IStore {
 	}
 
 	@Override
-	public void cacheFilm(File rootMediaDir, File filmFile, IFilm film, Integer part) throws StoreException {
+	public void cacheFilm(File rootMediaDir, File filmFile,File oldFileName, IFilm film, Integer part) throws StoreException {
 		events.add("cacheFilm()");
 	}
 
