@@ -20,3 +20,5 @@ syntax: regexp
 ^tv-and-movies-meta-data-fetcher/MediaManager-CLI/reports$
 syntax: regexp
 ^tv-and-movies-meta-data-fetcher/MediaManager-CLI/cobertura\.ser$
+syntax: regexp
+\.class$
