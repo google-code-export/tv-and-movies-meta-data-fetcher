@@ -109,11 +109,11 @@ public class CLIImportMedia extends AbstractLauncher {
 	protected boolean run() {
 		ICommandLogger logger = new CLICommandLogger(log);
 		if (updateCommand!=null) {
-			if (!updateCommand.execute(logger, new NullProgressMonitor())) {
+			if (updateCommand.execute(logger, new NullProgressMonitor())==null) {
 				return false;
 			}
 		}
-		return importMediaCommand.execute(logger, new NullProgressMonitor());
+		return importMediaCommand.execute(logger, new NullProgressMonitor())==null;
 	}
 
 

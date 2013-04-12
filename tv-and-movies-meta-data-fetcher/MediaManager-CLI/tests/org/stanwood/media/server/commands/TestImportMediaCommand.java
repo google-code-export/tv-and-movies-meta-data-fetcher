@@ -78,10 +78,10 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		ImportMediaCommand cmd = new ImportMediaCommand(controller);
 		cmd.setUseDefaults(true);
 		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
-		boolean result = cmd.execute(logger, new NullProgressMonitor());
+		ICommandResult result = cmd.execute(logger, new NullProgressMonitor());
 
 		Assert.assertTrue(logger.getResult().toString().contains("INFO:Unable to find any media files"));
-		Assert.assertFalse(result);
+		Assert.assertNull(result);
 	}
 
 	@Test
@@ -114,8 +114,8 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 			throw new IOException("Unable to create file : " + f.getAbsolutePath());
 		}
 
-		boolean result = cmd.execute(logger, new NullProgressMonitor());
-		Assert.assertTrue(result);
+		ICommandResult result = cmd.execute(logger, new NullProgressMonitor());
+		Assert.assertNotNull(result);
 
 		List<String> files = FileHelper.listFilesAsStrings(watchDir);
 		Collections.sort(files);
@@ -192,7 +192,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		mediaDirs.add(filmDir);
 		mediaDirs.add(showDir);
 		result = mmCommand.execute(logger, new NullProgressMonitor());
-		Assert.assertTrue(result);
+		Assert.assertNotNull(result);
 
 		Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
 		Assert.assertEquals("init()",events.remove());
@@ -230,13 +230,13 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		List<String>addons = new ArrayList<String>();
 		addons.add("metadata.imdb.com");
 		installAddonsCmd.setAddons(addons);
-		Assert.assertTrue(installAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(installAddonsCmd.execute(logger, new NullProgressMonitor()));
 		XBMCUpdateAddonsCommand updateAddonsCmd = new XBMCUpdateAddonsCommand(controller);
 		Set<String> updateAddons = new HashSet<String>();
 		updateAddons.add("metadata.imdb.com");
 		updateAddons.add("metadata.common.themoviedb.org");
 		updateAddonsCmd.setAddons(updateAddons);
-		Assert.assertTrue(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
 		Assert.assertTrue(logger.getResult().contains("Installed plugin 'metadata.common.imdb.com"));
 
 		// Create test NFO folder
@@ -245,7 +245,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 		// Import media
 		cmd.setDeleteNonMedia(true);
-		Assert.assertTrue(cmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(cmd.execute(logger, new NullProgressMonitor()));
 
 		List<String> files = FileHelper.listFilesAsStrings(watchDir);
 		Collections.sort(files);
@@ -291,13 +291,13 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		List<String>addons = new ArrayList<String>();
 		addons.add("metadata.imdb.com");
 		installAddonsCmd.setAddons(addons);
-		Assert.assertTrue(installAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(installAddonsCmd.execute(logger, new NullProgressMonitor()));
 		XBMCUpdateAddonsCommand updateAddonsCmd = new XBMCUpdateAddonsCommand(controller);
 		Set<String> updateAddons = new HashSet<String>();
 		updateAddons.add("metadata.imdb.com");
 		updateAddons.add("metadata.common.themoviedb.org");
 		updateAddonsCmd.setAddons(updateAddons);
-		Assert.assertTrue(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(updateAddonsCmd.execute(logger, new NullProgressMonitor()));
 		Assert.assertTrue(logger.getResult().contains("Installed plugin 'metadata.common.imdb.com"));
 
 		// Create test NFO folder
@@ -305,7 +305,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 		// Import media
 //		cmd.setDeleteNonMedia(true);
-		Assert.assertTrue(cmd.execute(logger, new NullProgressMonitor()));
+		Assert.assertNotNull(cmd.execute(logger, new NullProgressMonitor()));
 
 		List<String> files = FileHelper.listFilesAsStrings(watchDir);
 		Collections.sort(files);

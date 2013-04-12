@@ -121,11 +121,11 @@ public class CLIMediaManager extends AbstractLauncher {
 	protected boolean run() {
 		ICommandLogger logger = new CLICommandLogger(log);
 		if (updateCommand!=null) {
-			if (!updateCommand.execute(logger, new NullProgressMonitor())) {
+			if (updateCommand.execute(logger, new NullProgressMonitor())==null) {
 				return false;
 			}
 		}
-		return manageMediaCommand.execute(logger, new NullProgressMonitor());
+		return manageMediaCommand.execute(logger, new NullProgressMonitor())!=null;
 	}
 
 

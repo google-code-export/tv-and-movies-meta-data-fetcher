@@ -33,7 +33,7 @@ import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 /**
  * This command is used to install XBMC addons for the XBMC source
  */
-public class XBMCInstallAddonsCommand extends AbstractServerCommand {
+public class XBMCInstallAddonsCommand extends AbstractServerCommand<EmptyResult> {
 
 	private IXBMCUpdater updater;
 	private List<String> addons;
@@ -53,7 +53,7 @@ public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
+	public EmptyResult execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		IConsole console = new IConsole() {
 			@Override
 			public void error(String error) {
@@ -72,7 +72,7 @@ public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 			Set<AddonDetails> addons = getUpdater().listAddons(console);
 			for (String arg : this.addons) {
 				if (!checkAddon(logger,plugins,arg,addons)) {
-					return false;
+					return null;
 				}
 			}
 
@@ -81,17 +81,17 @@ public class XBMCInstallAddonsCommand extends AbstractServerCommand {
 			}
 			else {
 				logger.error(Messages.getString("InstallCommand.MISSING_ARG")); //$NON-NLS-1$
-				return false;
+				return null;
 			}
 			getController().reloadSources();
 		} catch (XBMCException e) {
 			logger.error(e.getMessage());
-			return false;
+			return null;
 		} catch (ConfigException e) {
 			logger.error(e.getMessage());
-			return false;
+			return null;
 		}
-		return true;
+		return new EmptyResult();
 
 	}
 
