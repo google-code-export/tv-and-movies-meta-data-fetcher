@@ -90,8 +90,8 @@
 			<description>Command line documentation</description>
 			
 			<!-- Create start menu entries for docs -->
-			<singlefile src="@{docs.dir}/userguide/html/MediaManager-userguide-2.1.html" target="$INSTALL_PATH/docs/html/index.html"/>
-			<singlefile src="@{docs.dir}/userguide/MediaManager-userguide-2.1.pdf" target="$INSTALL_PATH/docs/pdf/userguide.pdf"/>
+            <singlefile src="@{docs.dir}/userguide/html/MediaManager-userguide-@{project.version}.html" target="$INSTALL_PATH/docs/html/index.html"/>
+            <singlefile src="@{docs.dir}/userguide/MediaManager-userguide-@{project.version}.pdf" target="$INSTALL_PATH/docs/pdf/userguide.pdf"/>
         </pack>			
         <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../MediaManager-CLI/build/installer/installer-packs.xml"/>            
 	</packs>
