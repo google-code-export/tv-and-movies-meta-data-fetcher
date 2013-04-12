@@ -1,4 +1,3 @@
-XBMC Addon list:
 ID                                    | Status           | Installed Version | Avaliable Version
 ================================================================================================
 metadata.7176.com                     | Not Installed    |                   | 1.0.9            

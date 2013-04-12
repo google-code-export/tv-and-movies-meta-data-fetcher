@@ -6,9 +6,14 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.stanwood.media.cli.ICLICommand;
 import org.stanwood.media.cli.IExitHandler;
-import org.stanwood.media.source.xbmc.XBMCUpdaterException;
+import org.stanwood.media.cli.importer.CLICommandLogger;
+import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.server.commands.XBMCListAddonsCommand;
+import org.stanwood.media.server.commands.XBMCListAddonsResult;
 import org.stanwood.media.source.xbmc.updater.AddonDetails;
 import org.stanwood.media.util.TextTable;
 import org.stanwood.media.util.Version;
@@ -28,6 +33,7 @@ public class ListCommand extends AbstractXBMCSubCommand {
 	private final static String NAME = "list"; //$NON-NLS-1$
 	private final static String DESCRIPTION = Messages.getString("ListCommand.DESC"); //$NON-NLS-1$
 	private final static List<Option>OPTIONS;
+	private final static Log log = LogFactory.getLog(ListCommand.class);
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -46,22 +52,23 @@ public class ListCommand extends AbstractXBMCSubCommand {
 
 	@Override
 	protected boolean run() {
-		try {
-			PrintStream stdout = getStdout();
-			info(Messages.getString("ListCommand.ADDON_LIST")); //$NON-NLS-1$
-			TextTable table = new TextTable(new String[] {Messages.getString("ListCommand.ID"),Messages.getString("ListCommand.STATUS"),Messages.getString("ListCommand.INSTALLED_VERSION"),Messages.getString("ListCommand.AVALIABLE_VERSION")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			for (AddonDetails ad : getUpdater().listAddons(getConsole())) {
-				String installedVer = displayVersion(ad.getInstalledVersion());
-				String avaliableVer = displayVersion(ad.getAvaliableVersion());
-				table.addRow(new String[]{ad.getId(),ad.getStatus().getDisplayName(),installedVer,avaliableVer});
-			}
-			StringBuilder buffer = new StringBuilder();
-			table.printTable(buffer);
-			stdout.print(buffer.toString());
-		} catch (XBMCUpdaterException e) {
-			fatal(e);
+		PrintStream stdout = getStdout();
+		XBMCListAddonsCommand cmd = new XBMCListAddonsCommand(getController());
+		XBMCListAddonsResult result = cmd.execute(new CLICommandLogger(log), new NullProgressMonitor());
+		if (result==null) {
 			return false;
 		}
+
+		TextTable table = new TextTable(new String[] {Messages.getString("ListCommand.ID"),Messages.getString("ListCommand.STATUS"),Messages.getString("ListCommand.INSTALLED_VERSION"),Messages.getString("ListCommand.AVALIABLE_VERSION")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		for (AddonDetails ad : result.getAddons()) {
+			String installedVer = displayVersion(ad.getInstalledVersion());
+			String avaliableVer = displayVersion(ad.getAvaliableVersion());
+			table.addRow(new String[]{ad.getId(),ad.getStatus().getDisplayName(),installedVer,avaliableVer});
+		}
+		StringBuilder buffer = new StringBuilder();
+		table.printTable(buffer);
+		stdout.print(buffer.toString());
+
 		return true;
 	}
 
