@@ -8,9 +8,6 @@ import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.actions.ActionException;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.IActionEventHandler;
-import org.stanwood.media.extensions.ParameterType;
-import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 

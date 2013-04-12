@@ -9,17 +9,12 @@ import java.util.List;
 
 import org.stanwood.media.MediaDirectory;
 import org.stanwood.media.extensions.ExtensionInfo;
-import org.stanwood.media.extensions.ParameterType;
-import org.stanwood.media.model.Episode;
-import org.stanwood.media.model.Film;
 import org.stanwood.media.model.IEpisode;
 import org.stanwood.media.model.IFilm;
 import org.stanwood.media.model.ISeason;
 import org.stanwood.media.model.IShow;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.model.SearchResult;
-import org.stanwood.media.model.Season;
-import org.stanwood.media.model.Show;
 import org.stanwood.media.source.ISource;
 import org.stanwood.media.source.SourceException;
 
