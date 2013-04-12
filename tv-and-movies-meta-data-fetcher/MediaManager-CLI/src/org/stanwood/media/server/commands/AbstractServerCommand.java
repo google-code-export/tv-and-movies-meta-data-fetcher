@@ -25,7 +25,7 @@ import org.stanwood.media.progress.IProgressMonitor;
 /**
  * The base of server commands
  */
-public abstract class AbstractServerCommand {
+public abstract class AbstractServerCommand<R extends ICommandResult> {
 
 	/**
 	 * Used to annotate parameters
@@ -62,5 +62,5 @@ public abstract class AbstractServerCommand {
 	 * @param monitor The progress monitor
 	 * @return True if success, or false if their were errors
 	 */
-	public abstract boolean execute(ICommandLogger logger,IProgressMonitor monitor);
+	public abstract R execute(ICommandLogger logger,IProgressMonitor monitor);
 }

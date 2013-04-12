@@ -24,7 +24,7 @@ import org.stanwood.media.model.IVideo;
 /**
  * Used to store details of files imported from a watch directory
  */
-public class RenamedEntry {
+public class ImportedEntry {
 
 	private File oldName;
 	private File newName;
@@ -40,7 +40,7 @@ public class RenamedEntry {
 	 * @param video The media file information
 	 * @param part The part number of the file or null
 	 */
-	public RenamedEntry(File oldName, File newName,MediaDirectory dir,IVideo video,Integer part) {
+	public ImportedEntry(File oldName, File newName,MediaDirectory dir,IVideo video,Integer part) {
 		super();
 		this.oldName = oldName;
 		this.newName = newName;

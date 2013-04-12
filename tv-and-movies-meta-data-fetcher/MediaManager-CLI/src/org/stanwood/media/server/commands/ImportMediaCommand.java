@@ -37,7 +37,7 @@ import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.actions.IAction;
 import org.stanwood.media.actions.IActionEventHandler;
 import org.stanwood.media.actions.rename.RenameAction;
-import org.stanwood.media.cli.importer.RenamedEntry;
+import org.stanwood.media.cli.importer.ImportedEntry;
 import org.stanwood.media.cli.manager.Messages;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.IEpisode;
@@ -58,7 +58,7 @@ import org.stanwood.media.util.FileHelper;
 /**
  * This command is used to import media from watch directiores
  */
-public class ImportMediaCommand extends AbstractServerCommand {
+public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult> {
 
 	private boolean useDefaults = true;
 	private boolean deleteNonMedia = false;
@@ -74,7 +74,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
+	public ImportMediaResult execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		try {
 			monitor.beginTask(Messages.getString("ImportMediaCommand.ImportMedia"), 105); //$NON-NLS-1$
 			Set<String> extensions = getAcceptableExtensions(monitor);
@@ -84,12 +84,12 @@ public class ImportMediaCommand extends AbstractServerCommand {
 			}
 			else {
 				logger.info(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA")); //$NON-NLS-1$
-				return false;
+				return null;
 			}
 
 
 			Map<File, List<File>> newFiles = setupStoresAndActions();
-			List<RenamedEntry> renamedFiles = new ArrayList<RenamedEntry>();
+			List<ImportedEntry> importedEntries = new ArrayList<ImportedEntry>();
 
 			SubProgressMonitor importMediaMonitor = new SubProgressMonitor(monitor,100);
 			try {
@@ -110,7 +110,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 						continue;
 					}
 
-					moveFileToMediaDir(logger,file, renamedFiles,newFiles, result,searcher);
+					moveFileToMediaDir(logger,file, importedEntries,newFiles, result,searcher);
 					importMediaMonitor.worked(1);
 				}
 			}
@@ -120,8 +120,8 @@ public class ImportMediaCommand extends AbstractServerCommand {
 
 			SubProgressMonitor renamedFilesMonitor = new SubProgressMonitor(monitor,100);
 			try {
-				renamedFilesMonitor.beginTask(Messages.getString("ImportMediaCommand.InformingStores"), renamedFiles.size()); //$NON-NLS-1$
-				for (RenamedEntry e : renamedFiles) {
+				renamedFilesMonitor.beginTask(Messages.getString("ImportMediaCommand.InformingStores"), importedEntries.size()); //$NON-NLS-1$
+				for (ImportedEntry e : importedEntries) {
 					for (IStore store : e.getMediaDirectory().getStores()) {
 						File mediaDir = e.getMediaDirectory().getMediaDirConfig().getMediaDir();
 						if (e.getVideo() instanceof IFilm) {
@@ -129,8 +129,6 @@ public class ImportMediaCommand extends AbstractServerCommand {
 						}
 						else {
 							IEpisode episode = (IEpisode)e.getVideo();
-//							store.cacheShow(mediaDir, e.getNewName(), episode.getSeason().getShow());
-//							store.cacheSeason(mediaDir, e.getNewName(), episode.getSeason());
 							store.cacheEpisode(mediaDir, e.getNewName(),e.getOldName(),episode );
 						}
 					}
@@ -141,6 +139,11 @@ public class ImportMediaCommand extends AbstractServerCommand {
 				renamedFilesMonitor.done();
 			}
 
+			if (deleteNonMedia) {
+				monitor.setTaskName(Messages.getString("ImportMediaCommand.RemmoveNonMediaFiles")); //$NON-NLS-1$
+				cleanUpNonMediaFiles(logger,extensions);
+			}
+			monitor.worked(1);
 			if (executeActions) {
 				for (Entry<File,List<File>> e : newFiles.entrySet()) {
 					MediaDirectory mediaDir = getController().getMediaDirectory(e.getKey());
@@ -150,16 +153,10 @@ public class ImportMediaCommand extends AbstractServerCommand {
 			}
 			monitor.worked(1);
 
-			if (deleteNonMedia) {
-				monitor.setTaskName(Messages.getString("ImportMediaCommand.RemmoveNonMediaFiles")); //$NON-NLS-1$
-				cleanUpNonMediaFiles(logger,extensions);
-			}
-			monitor.worked(1);
-
-			return true;
+			ImportMediaResult result = new ImportMediaResult(importedEntries);
+			return result;
 		} catch (ConfigException e) {
 			logger.error(Messages.getString("CLIImportMedia.UNABLE_READ_CONFIG"),e); //$NON-NLS-1$
-			return false;
 		} catch (StanwoodException e) {
 			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
@@ -168,7 +165,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		finally {
 			monitor.done();
 		}
-		return false;
+		return null;
 	}
 
 	private void cleanUpNonMediaFiles(ICommandLogger logger,Set<String>extensions) {
@@ -271,7 +268,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 		return null;
 	}
 
-	private void moveFileToMediaDir(ICommandLogger logger,File file,final List<RenamedEntry>renamed,final Map<File,List<File>>newFiles,final MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
+	private void moveFileToMediaDir(ICommandLogger logger,File file,final List<ImportedEntry>renamed,final Map<File,List<File>>newFiles,final MediaSearchResult result, MediaSearcher searcher) throws IOException, StoreException, ConfigException {
 		final MediaDirectory dir = findMediaDir(file, result.getVideo());
 		if (dir==null) {
 			throw new ConfigException(MessageFormat.format(Messages.getString("CLIImportMedia.UNABLE_FIND_MEDIA_DIR"),file)); //$NON-NLS-1$
@@ -289,7 +286,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
-						renamed.add(new RenamedEntry(oldName, newName,dir,result.getVideo(),part));
+						renamed.add(new ImportedEntry(oldName, newName,dir,result.getVideo(),part));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 
@@ -308,7 +305,7 @@ public class ImportMediaCommand extends AbstractServerCommand {
 					@Override
 					public void sendEventRenamedFile(File oldName, File newName)
 							throws ActionException {
-						renamed.add(new RenamedEntry(oldName, newName,dir,result.getVideo(),null));
+						renamed.add(new ImportedEntry(oldName, newName,dir,result.getVideo(),null));
 						newFiles.get(mediaDirLoc).add(newName);
 					}
 

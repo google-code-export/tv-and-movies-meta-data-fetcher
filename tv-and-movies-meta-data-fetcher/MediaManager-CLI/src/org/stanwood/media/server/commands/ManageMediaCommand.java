@@ -31,7 +31,7 @@ import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 
 
-public class ManageMediaCommand extends AbstractServerCommand {
+public class ManageMediaCommand extends AbstractServerCommand<EmptyResult> {
 
 	private List<File> mediaDirs;
 
@@ -49,24 +49,24 @@ public class ManageMediaCommand extends AbstractServerCommand {
 	}
 
 	@Override
-	public boolean execute(ICommandLogger logger, IProgressMonitor monitor) {
+	public EmptyResult execute(ICommandLogger logger, IProgressMonitor monitor) {
 		try  {
 			List<MediaDirectory> mediaDirs = getMediaDirs(logger);
 			if (mediaDirs==null) {
-				return false;
+				return null;
 			}
 
 			for (MediaDirectory rootMediaDir : mediaDirs) {
 				ActionPerformer renamer = new ActionPerformer(getController(),rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
 				renamer.performActions(new NullProgressMonitor());
 			}
-			return true;
+			return new EmptyResult();
 		} catch (ActionException e) {
 			logger.error(e.getMessage(),e);
 		} catch (ConfigException e) {
 			logger.error(e.getMessage(),e);
 		}
-		return false;
+		return null;
 	}
 
 	private List<MediaDirectory> getMediaDirs(ICommandLogger logger) {

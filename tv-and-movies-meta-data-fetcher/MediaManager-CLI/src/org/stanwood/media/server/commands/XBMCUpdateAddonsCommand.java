@@ -30,7 +30,7 @@ import org.stanwood.media.source.xbmc.updater.IConsole;
 /**
  * This command is used to update addons
  */
-public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
+public class XBMCUpdateAddonsCommand extends AbstractServerCommand<EmptyResult> {
 
 	private Set<String> addons;
 
@@ -40,7 +40,7 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean execute(final ICommandLogger logger,IProgressMonitor monitor) {
+	public EmptyResult execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		if (!getController().isTestRun()) {
 			try {
 				logger.info(Messages.getString("CLICopyToMediaDir.CHECKING_UPTODATE")); //$NON-NLS-1$
@@ -74,7 +74,7 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand {
 				logger.error(Messages.getString("CLICopyToMediaDir.UNABLE_TO_UPDATE"),e); //$NON-NLS-1$
 			}
 		}
-		return true;
+		return new EmptyResult();
 	}
 
 	@param(name="addons",description="The addons to update. If none are given, then all addons are updated")
