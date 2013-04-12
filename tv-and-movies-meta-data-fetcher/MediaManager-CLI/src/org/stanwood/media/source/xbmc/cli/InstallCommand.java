@@ -52,8 +52,7 @@ public class InstallCommand extends AbstractXBMCSubCommand {
 
 	@Override
 	protected boolean run() {
-		command.execute(new CLICommandLogger(log), new NullProgressMonitor());
-		return true;
+		return command.execute(new CLICommandLogger(log), new NullProgressMonitor())!=null;
 	}
 
 	@SuppressWarnings("unchecked")
