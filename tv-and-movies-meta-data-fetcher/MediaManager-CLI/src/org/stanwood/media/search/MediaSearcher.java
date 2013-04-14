@@ -136,10 +136,13 @@ public class MediaSearcher {
 		SearchHelper.replaceDots(term);
 		Matcher m = FilmSearcher.PATTERN_YEAR2.matcher(term);
 		if (m.matches()) {
-			StringBuilder end= new StringBuilder(m.group(3));
-			SearchHelper.replaceWithSpaces(end);
-			if (SearchHelper.hasStripTokens(stripTokens,end)) {
-				return true;
+			String rightSide = m.group(3);
+			if (FileNameParser.parse(rightSide)==null) {
+				StringBuilder end= new StringBuilder(m.group(3));
+				SearchHelper.replaceWithSpaces(end);
+				if (SearchHelper.hasStripTokens(stripTokens,end)) {
+					return true;
+				}
 			}
 		}
 
