@@ -20,6 +20,8 @@ Extend patterns
 	* Allow multiple patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.
 Document how to add other database drivers
+Automaticly install missing addons if a source for a media dir is defined to use it.
+Handle xbmc addons that are no longer avaliable.
 
 Version 2.4
 -----------
