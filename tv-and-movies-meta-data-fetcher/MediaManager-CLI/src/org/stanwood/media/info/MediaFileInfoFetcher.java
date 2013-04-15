@@ -35,8 +35,8 @@ import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.xml.XMLParser;
-import org.w3c.dom.Document;
 import org.stanwood.media.xml.XMLParserException;
+import org.w3c.dom.Document;
 
 
 /**
@@ -145,13 +145,19 @@ public class MediaFileInfoFetcher {
 
 		try {
 			ByteArrayOutputStream capture = new ByteArrayOutputStream();
-			OutputStream out = new LoggerOutputStream(Level.INFO);
+			OutputStream out;
 			if (captureStdout) {
 				out = capture;
 			}
-			OutputStream err = new LoggerOutputStream(Level.ERROR);
+			else {
+				out = new LoggerOutputStream(Level.INFO);
+			}
+			OutputStream err;;
 			if (captureStderr) {
 				err = capture;
+			}
+			else {
+				err = new LoggerOutputStream(Level.ERROR);
 			}
 			exec.setStreamHandler(new PumpStreamHandler(out,err));
 			int exitCode = exec.execute(cmdLine);
