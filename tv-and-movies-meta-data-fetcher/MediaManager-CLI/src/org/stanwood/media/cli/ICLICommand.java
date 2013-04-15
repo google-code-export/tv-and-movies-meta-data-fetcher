@@ -14,6 +14,10 @@ public interface ICLICommand {
 	 */
 	public String getName();
 
+	/**
+	 * Used to get the controller
+	 * @return The controller
+	 */
 	public Controller getController();
 
 }

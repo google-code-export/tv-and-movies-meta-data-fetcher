@@ -64,8 +64,7 @@ public class FileSeenDatabase extends XMLParser implements ISeenDatabase {
 	}
 
 	/**
-	 * Uses to get a list of seen entries for a media directory
-	 * @param mediaDirectory The media directory
+	 * Uses to get a list of seen entries
 	 * @return The entries
 	 */
 	@Override

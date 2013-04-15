@@ -40,6 +40,10 @@ public abstract class AbstractSubCLICommand extends BaseLauncher implements ICLI
 		return description;
 	}
 
+	/**
+	 * Used to get the controller
+	 * @return the controller
+	 */
 	@Override
 	public Controller getController() {
 		return rootCommand.getController();

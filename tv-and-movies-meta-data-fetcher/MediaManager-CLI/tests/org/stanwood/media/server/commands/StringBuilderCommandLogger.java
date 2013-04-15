@@ -21,11 +21,15 @@ import java.io.StringWriter;
 
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * A command logger that logs the outout to a string builder
+ */
 @SuppressWarnings("nls")
 public class StringBuilderCommandLogger implements ICommandLogger {
 
 	private StringBuilder result = new StringBuilder();
 
+	/** {@inheritDoc} */
 	@Override
 	public void trace(String message, Throwable t) {
 		result.append("TRACE:"+message+FileHelper.LS);
@@ -39,43 +43,54 @@ public class StringBuilderCommandLogger implements ICommandLogger {
 		result.append(sw.toString()+FileHelper.LS);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void trace(String message) {
 		result.append("TRACE:"+message+FileHelper.LS);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void debug(String message, Throwable t) {
 		result.append("DEBUG:"+message+FileHelper.LS);
 		appendStacktrace(t);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void debug(String message) {
 		result.append("DEBUG:"+message+FileHelper.LS);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void error(String message, Throwable t) {
 		result.append("ERROR:"+message+FileHelper.LS);
 		appendStacktrace(t);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void error(String message) {
 		result.append("ERROR:"+message+FileHelper.LS);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void warn(String message) {
 		result.append("WARN:"+message+FileHelper.LS);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void info(String message) {
 		result.append("INFO:"+message+FileHelper.LS);
 	}
 
+	/**
+	 * Used to get the logged results
+	 * @return the logged results
+	 */
 	public String getResult() {
 		return result.toString();
 	}
