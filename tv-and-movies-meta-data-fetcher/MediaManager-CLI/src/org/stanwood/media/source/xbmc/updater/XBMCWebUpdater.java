@@ -57,6 +57,7 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 		DEFAULT_PLUGINS.add("metadata.tvdb.com"); //$NON-NLS-1$
 		DEFAULT_PLUGINS.add("metadata.universal"); //$NON-NLS-1$
 		DEFAULT_PLUGINS.add("metadata.imdb.com"); //$NON-NLS-1$
+		DEFAULT_PLUGINS.add("metadata.epguides.com"); //$NON-NLS-1$
 	}
 
 	/**
