@@ -113,6 +113,7 @@ public class MP4ITunesStore implements IStore {
 
 	/**
 	 * The constructor
+	 * @param controller The controller
 	 * @param storeInfo The store information
 	 */
 	public MP4ITunesStore(Controller controller,MP4ITunesStoreInfo storeInfo) {

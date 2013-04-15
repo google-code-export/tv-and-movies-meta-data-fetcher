@@ -32,7 +32,7 @@ public class TestXMLParser {
 
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test/>\n",XMLParser.domToStr(dom));
 
-		Element testNode = (Element) parser.selectSingleNode(dom, "/test");
+		Element testNode = (Element) XMLParser.selectSingleNode(dom, "/test");
 		testNode.setAttribute("test1", "this is a test");
 		testNode.setAttribute("test2", "Don't look back");
 		testNode.setAttribute("test3", "me & you");
