@@ -30,11 +30,17 @@ import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.setup.ConfigException;
 
-
+/**
+ * This command is used to manage the media in the media directiores
+ */
 public class ManageMediaCommand extends AbstractServerCommand<EmptyResult> {
 
 	private List<File> mediaDirs;
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public ManageMediaCommand(Controller controller) {
 		super(controller);
 	}
@@ -48,6 +54,7 @@ public class ManageMediaCommand extends AbstractServerCommand<EmptyResult> {
 		this.mediaDirs = mediaDirs;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public EmptyResult execute(ICommandLogger logger, IProgressMonitor monitor) {
 		try  {

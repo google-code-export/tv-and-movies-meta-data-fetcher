@@ -16,6 +16,9 @@
  */
 package org.stanwood.media.server.commands;
 
+/**
+ * A empty results class
+ */
 public class EmptyResult implements ICommandResult {
 
 }

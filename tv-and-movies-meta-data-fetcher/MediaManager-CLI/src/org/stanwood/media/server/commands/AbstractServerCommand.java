@@ -24,6 +24,7 @@ import org.stanwood.media.progress.IProgressMonitor;
 
 /**
  * The base of server commands
+ * @param <R> The result type
  */
 public abstract class AbstractServerCommand<R extends ICommandResult> {
 
