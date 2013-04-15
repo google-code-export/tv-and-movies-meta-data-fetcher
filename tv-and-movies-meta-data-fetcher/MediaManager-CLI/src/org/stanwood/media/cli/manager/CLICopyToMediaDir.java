@@ -239,12 +239,6 @@ public class CLICopyToMediaDir extends AbstractLauncher {
 		return true;
 	}
 
-	private void stripFilesNotInStore(List<File> files) {
-		// TODO Auto-generated method stub
-
-	}
-
-
 	protected String getPrintArguments() {
 		return Messages.getString("CLICopyToMediaDir.MEDIA_FILES"); //$NON-NLS-1$
 	}

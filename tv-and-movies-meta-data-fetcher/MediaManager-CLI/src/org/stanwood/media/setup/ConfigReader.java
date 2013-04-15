@@ -70,7 +70,9 @@ public class ConfigReader extends BaseConfigReader {
 	private final static Log log = LogFactory.getLog(ConfigReader.class);
 	private final static String DEFAULT_EXTS[] = new String[] { "avi","mkv","mov","mpg","mpeg","mp4","m4v","srt","sub","divx" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
+	/** Default TV file rename patter */
 	public final static String DEFAULT_TV_FILE_PATTERN = "%n/Season %s/%sx%e - %t{ %d}.%x"; //$NON-NLS-1$
+	/** Default FILM file rename patter */
 	public final static String DEFAULT_FILM_FILE_PATTERN = "%t{ (%y)}{ Part %p}.%x"; //$NON-NLS-1$
 	private final static String DEFAULT_XBMC_ADDON_DIR = "http://mirrors.xbmc.org/addons/eden"; //$NON-NLS-1$
 

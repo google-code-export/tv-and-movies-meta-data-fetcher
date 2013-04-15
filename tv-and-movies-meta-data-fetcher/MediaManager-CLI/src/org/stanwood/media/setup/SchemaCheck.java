@@ -16,6 +16,9 @@
  */
 package org.stanwood.media.setup;
 
+/**
+ * Used to control what kind of checks are done on the database schema
+ */
 public enum SchemaCheck {
 
 	NONE("none"), //$NON-NLS-1$
@@ -28,10 +31,19 @@ public enum SchemaCheck {
 		this.value = value;
 	}
 
+	/**
+	 * Get the value as a string
+	 * @return The value as a string
+	 */
 	public String getValue() {
 		return value;
 	}
 
+	/**
+	 * Get the enum value from a string
+	 * @param value a string
+	 * @return The enum value
+	 */
 	public static SchemaCheck fromValue(String value) {
 		for (SchemaCheck sc : values()) {
 			if (sc.getValue().equalsIgnoreCase(value)) {

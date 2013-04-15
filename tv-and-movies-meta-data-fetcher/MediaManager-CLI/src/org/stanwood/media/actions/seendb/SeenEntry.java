@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Index;
-
 /**
  * Used to store information on files that have been seen
  */
@@ -24,7 +22,7 @@ public class SeenEntry implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "filename",nullable= false,unique=true)	
+	@Column(name = "filename",nullable= false,unique=true)
 	private String fileName;
 	@Column(name = "lastModified",nullable= false)
 	private long lastModified;

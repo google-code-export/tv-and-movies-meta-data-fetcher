@@ -28,10 +28,19 @@ import org.stanwood.media.database.DatabaseException;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.setup.DBResource;
 
+/**
+ * The seen database implemented with a actual database. This is used to store information
+ * about
+ */
 public class DatabaseSeenDatabase implements ISeenDatabase{
 
 	private Session session;
 
+	/**
+	 * The constructor
+	 * @param resource The database resurce
+	 * @throws SeenDBException Thrown if their are any problems
+	 */
 	public DatabaseSeenDatabase(DBResource resource) throws SeenDBException {
 		try {
 			this.session = DBHelper.getInstance().getSession(resource);
