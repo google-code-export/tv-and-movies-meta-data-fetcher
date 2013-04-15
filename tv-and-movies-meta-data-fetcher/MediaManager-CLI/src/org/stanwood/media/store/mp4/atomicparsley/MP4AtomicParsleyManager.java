@@ -243,13 +243,19 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 
 		try {
 			ByteArrayOutputStream capture = new ByteArrayOutputStream();
-			OutputStream out = new LoggerOutputStream(Level.INFO);
+			OutputStream out;
 			if (captureStdout) {
 				out = capture;
 			}
-			OutputStream err = new LoggerOutputStream(Level.ERROR);
+			else {
+				out = new LoggerOutputStream(Level.INFO);
+			}
+			OutputStream err;
 			if (captureStderr) {
 				err = capture;
+			}
+			else {
+				err = new LoggerOutputStream(Level.ERROR);
 			}
 			exec.setStreamHandler(new PumpStreamHandler(out,err));
 			try {
