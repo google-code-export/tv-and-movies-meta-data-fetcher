@@ -123,6 +123,11 @@ public class TestNFOFilms extends XBMCAddonTestBase {
 		CLIManageAddons.main(cmd);
 	}
 
+	/**
+	 * Used to create test files that have a NFO file/dir
+	 * @param mediaDir The root dir to create them in
+	 * @throws IOException Thown if their are any problems
+	 */
 	public static void createFiles(File mediaDir) throws IOException {
 		File nfoDir = new File(mediaDir,"Iron.Man.(2008).DVDRip.XViD-blah [NO-RAR] - [ www.blah.com ]");
 		createFile(new File(nfoDir,"CD1"+File.separator+"ironman_part1.avi"));

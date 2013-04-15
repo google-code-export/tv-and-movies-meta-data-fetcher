@@ -70,12 +70,7 @@ public class FakeStore implements IStore {
 	public void cacheShow(File rootMediaDir,File episodeFile,IShow show) {
 	}
 
-	/**
-	 * This always returns null as this store does not support reading episodes.
-	 * @param episodeFile The file the episode is stored in
-	 * @param season The season the episode belongs to.
-	 * @param episodeNum The number of the episode to read
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public IEpisode getEpisode(File rootMediaDir,File episodeFile,ISeason season, List<Integer> episodeNums) {
 		return null;

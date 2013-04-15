@@ -60,10 +60,18 @@ public class ParsedFileName {
 		this.episodes = episodes;
 	}
 
+	/**
+	 * Get the search term to use
+	 * @return the search term to use
+	 */
 	public String getTerm() {
 		return term;
 	}
 
+	/**
+	 * Set the search term to use
+	 * @param term the search term to use
+	 */
 	public void setTerm(String term) {
 		this.term = term;
 	}

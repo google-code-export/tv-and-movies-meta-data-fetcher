@@ -81,6 +81,7 @@ public class MediaSearcher {
 	 * Used to lookup media file information
 	 * @param mediaFile The media file
 	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @param cacheIfNew If true, will cache results in store if they were not in the store before
 	 * @return The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */
@@ -160,6 +161,7 @@ public class MediaSearcher {
 	 * @param dir The media directory
 	 * @param file The media file
 	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @param cacheIfNew If true, will cache results in store if they were not in the store before
 	 * @return  The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */
@@ -271,6 +273,7 @@ public class MediaSearcher {
 	 * @param dir The media directory
 	 * @param file The media file
 	 * @param useSources If true, then information is fetched remotely as well as locally
+	 * @param cacheIfNew If true, will cache results in store if they were not in the store before
 	 * @return  The media file information, or null if it could not be found.
 	 * @throws ActionException Thrown if their are any problems.
 	 */

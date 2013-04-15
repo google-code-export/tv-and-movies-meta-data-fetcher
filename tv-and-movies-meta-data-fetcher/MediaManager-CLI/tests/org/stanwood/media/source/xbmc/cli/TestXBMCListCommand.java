@@ -135,6 +135,10 @@ public class TestXBMCListCommand extends BaseCLITest {
 		assertPluginList("expectedAddonList3.txt");
 	}
 
+	/**
+	 * Used to test the JSON output of the command
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testListAsJson() throws Exception {
 		ConfigReader config = TestCLIMediaManager.setupTestController(false,mediaDir,"%t.%x",Mode.FILM,XBMCSource.class.getName()+"#metadata.themoviedb.org",new HashMap<String,String>(),null,"");
