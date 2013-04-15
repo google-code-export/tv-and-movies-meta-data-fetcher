@@ -36,6 +36,6 @@ public class RemoteMacOSXItunesStoreInfo extends ExtensionInfo<RemoteMacOSXItune
 
 	@Override
 	protected RemoteMacOSXItunesStore createExtension(Controller controller) {
-		return new RemoteMacOSXItunesStore(controller);
+		return new RemoteMacOSXItunesStore();
 	}
 }

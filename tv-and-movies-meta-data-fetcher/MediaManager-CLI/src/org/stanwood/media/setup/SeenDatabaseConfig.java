@@ -16,14 +16,25 @@
  */
 package org.stanwood.media.setup;
 
+/**
+ * Used to store seen database configuration.
+ */
 public class SeenDatabaseConfig {
 
 	private String resourceId;
 
+	/**
+	 * Used to get the resource ID to use with the Seen DB
+	 * @return The resource ID to use with the Seen DB
+	 */
 	public String getResourceId() {
 		return resourceId;
 	}
 
+	/**
+	 * Used to set the resource ID to use with the Seen DB
+	 * @param resourceId the resource ID to use with the Seen DB
+	 */
 	public void setResourceId(String resourceId) {
 		this.resourceId = resourceId;
 	}
