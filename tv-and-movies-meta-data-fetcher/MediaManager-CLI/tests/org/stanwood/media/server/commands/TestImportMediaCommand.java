@@ -85,13 +85,132 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 	}
 
 	/**
+	 * Test the media is imported into a empry directory. This does not execute the actions.
+	 * So files should not be marked as seen untill the media dir is managed.
+	 */
+	@Test
+	public void testMediaImportIntoEmptyMediaDirsDontExecuteActions() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		File watchDir = FileHelper.createTmpDir("watchdir");
+		File filmDir = FileHelper.createTmpDir("filmDir");
+		File showDir = FileHelper.createTmpDir("showDir");
+		ConfigReader config = createTestConfig(watchDir,filmDir,showDir,LoggingStore.class.getName());
+		Controller controller = new Controller(config);
+		controller.init(false);
+
+		Assert.assertEquals(0,LoggingStore.getEvents().size());
+
+		ImportMediaCommand cmd = new ImportMediaCommand(controller);
+		cmd.setExecuteActions(false);
+		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
+
+		File f = new File(watchDir,"Heroes S02E01 - Blah Blah Blah.avi");
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+		f = new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi");
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+		f = new File(watchDir,"iron.man.2009.dvdrip.xvid-amiable.avi");
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+
+		ICommandResult result = cmd.execute(logger, new NullProgressMonitor());
+		Assert.assertNotNull(result);
+
+		List<String> files = FileHelper.listFilesAsStrings(watchDir);
+		Collections.sort(files);
+		Assert.assertEquals(0,files.size());
+
+		files = FileHelper.listFilesAsStrings(showDir);
+		Collections.sort(files);
+		Assert.assertEquals(2,files.size());
+		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi").getAbsolutePath(),files.get(0));
+		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi").getAbsolutePath(),files.get(1));
+
+		Assert.assertFalse(controller.getSeenDB().isSeen(showDir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi")));
+
+		files = FileHelper.listFilesAsStrings(filmDir);
+		Collections.sort(files);
+		Assert.assertEquals(1,files.size());
+		Queue<String> events = LoggingStore.getEvents();
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("upgrade()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("upgrade()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("cacheShow()",events.remove());
+		Assert.assertEquals("getSeason()",events.remove());
+		Assert.assertEquals("cacheSeason()",events.remove());
+		Assert.assertEquals("getEpisode()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("getSeason()",events.remove());
+		Assert.assertEquals("cacheSeason()",events.remove());
+		Assert.assertEquals("getEpisode()",events.remove());
+		Assert.assertEquals("getShow()",events.remove());
+		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("getFilm()",events.remove());
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.remove());
+		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
+		Assert.assertEquals("cacheFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+
+		Assert.assertTrue(events.isEmpty());
+
+		ExtensionInfo<? extends IStore> loggingStoreInfo = controller.getStoreInfo(LoggingStore.class.getName());
+
+		MediaDirectory dir = controller.getMediaDirectory(filmDir);
+		LoggingStore logginStore = (LoggingStore) loggingStoreInfo.getExtension(controller,dir.getMediaDirConfig(),0);
+		IFilm film = logginStore.getFilm(dir, new File(filmDir,"Iron Man (2008).avi"));
+		Assert.assertNotNull(film);
+		Assert.assertEquals(1,film.getFiles().size());
+		Assert.assertEquals(new File(filmDir,"Iron Man (2008).avi"),film.getFiles().get(0).getLocation());
+		Assert.assertEquals(new File(watchDir,"iron.man.2009.dvdrip.xvid-amiable.avi"),film.getFiles().get(0).getOrginalLocation());
+
+		dir = controller.getMediaDirectory(showDir);
+		logginStore = (LoggingStore) loggingStoreInfo.getExtension(controller,dir.getMediaDirConfig(),0);
+		IEpisode episode = logginStore.getEpisode(dir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi"));
+		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi").getAbsolutePath(),episode.getFiles().get(0).getLocation().getAbsolutePath());
+		Assert.assertEquals(new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi").getAbsolutePath(),episode.getFiles().get(0).getOrginalLocation().getAbsolutePath());
+
+		Assert.assertEquals(0,controller.getSeenDB().getEntries().size());
+
+		ManageMediaCommand mmCommand = new ManageMediaCommand(controller);
+		List<File>mediaDirs = new ArrayList<File>();
+		mediaDirs.add(filmDir);
+		mediaDirs.add(showDir);
+		result = mmCommand.execute(logger, new NullProgressMonitor());
+		Assert.assertNotNull(result);
+
+		Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+		Assert.assertEquals("init()",events.remove());
+
+		Assert.assertEquals("getFilm("+filmDir.getAbsolutePath()+","+filmDir.getAbsolutePath()+File.separator+"Iron Man (2008).avi)",events.remove());
+		Assert.assertEquals("performedActions("+filmDir.getAbsolutePath()+")",events.remove());
+		Assert.assertEquals("init()",events.remove());
+		Assert.assertEquals("performedActions("+showDir.getAbsolutePath()+")",events.remove());
+
+		Assert.assertTrue(events.isEmpty());
+
+		Assert.assertEquals(3,controller.getSeenDB().getEntries().size());
+		Assert.assertTrue(controller.getSeenDB().isSeen(showDir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi")));
+	}
+
+	/**
 	 * Used to test media can be imported into empty media dirs. After importing,
 	 * check that managing the media does not effect it. This also tests the processes
 	 * effect on stores.
 	 * @throws Exception Thrown if their is a problem
 	 */
 	@Test
-	public void testMediaImportIntoEmptyMediaDirs() throws Exception {
+	public void testMediaImportIntoEmptyMediaDirsExecuteActions() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 
 		File watchDir = FileHelper.createTmpDir("watchdir");
@@ -132,6 +251,8 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals(2,files.size());
 		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi").getAbsolutePath(),files.get(0));
 		Assert.assertEquals(new File(showDir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi").getAbsolutePath(),files.get(1));
+
+		Assert.assertTrue(controller.getSeenDB().isSeen(showDir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi")));
 
 		files = FileHelper.listFilesAsStrings(filmDir);
 		Collections.sort(files);
@@ -207,6 +328,8 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals("performedActions("+showDir.getAbsolutePath()+")",events.remove());
 
 		Assert.assertTrue(events.isEmpty());
+
+		Assert.assertTrue(controller.getSeenDB().isSeen(showDir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi")));
 
 	}
 
