@@ -34,6 +34,10 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand<EmptyResult> 
 
 	private Set<String> addons;
 
+	/**
+	 * The constructor
+	 * @param controller The controller
+	 */
 	public XBMCUpdateAddonsCommand(Controller controller) {
 		super(controller);
 	}
@@ -77,6 +81,10 @@ public class XBMCUpdateAddonsCommand extends AbstractServerCommand<EmptyResult> 
 		return new EmptyResult();
 	}
 
+	/**
+	 * Used to set addons to update. If none are given, then all addons are updated
+	 * @param addons set of addons to update
+	 */
 	@param(name="addons",description="The addons to update. If none are given, then all addons are updated")
 	public void setAddons(Set<String> addons) {
 		this.addons = addons;

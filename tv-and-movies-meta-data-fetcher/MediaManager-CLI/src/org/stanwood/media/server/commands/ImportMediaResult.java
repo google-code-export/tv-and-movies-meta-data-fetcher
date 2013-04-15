@@ -20,14 +20,27 @@ import java.util.List;
 
 import org.stanwood.media.cli.importer.ImportedEntry;
 
+/**
+ * the result of the import media command
+ * @author johsta01
+ *
+ */
 public class ImportMediaResult implements ICommandResult {
 
 	private List<ImportedEntry> imported;
 
+	/**
+	 * The constructor
+	 * @param imported Information about the imported entries
+	 */
 	public ImportMediaResult(List<ImportedEntry>imported) {
 		this.imported = imported;
 	}
 
+	/**
+	 * Used to get information about the imported entries
+	 * @return Information about the imported entries
+	 */
 	public List<ImportedEntry>getEntries() {
 		return imported;
 	}

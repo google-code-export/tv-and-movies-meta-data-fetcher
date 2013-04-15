@@ -23,18 +23,34 @@ import org.stanwood.media.source.xbmc.updater.AddonDetails;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Used to store the results of the XBMC list command
+ */
 public class XBMCListAddonsResult implements ICommandResult {
 
 	private Set<AddonDetails> addons;
 
+	/**
+	 * The constructor
+	 * @param addons The addons returned by the list command
+	 */
 	public XBMCListAddonsResult(Set<AddonDetails> addons) {
 		this.addons = addons;
 	}
 
+	/**
+	 * Used to get a list of addons and their details
+	 * @return a list of addons and their details
+	 */
 	public Set<AddonDetails>getAddons() {
 		return addons;
 	}
 
+	/**
+	 * Convert the results to JSON
+	 * @param prettyPrint If true then pretty print the JSON
+	 * @return The JSON output of the result
+	 */
 	public String toJson(boolean prettyPrint) {
 		Gson gson;
 		if (prettyPrint) {

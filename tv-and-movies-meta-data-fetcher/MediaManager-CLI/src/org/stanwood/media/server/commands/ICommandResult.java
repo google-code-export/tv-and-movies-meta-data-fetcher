@@ -16,6 +16,9 @@
  */
 package org.stanwood.media.server.commands;
 
+/**
+ * The command result interface
+ */
 public interface ICommandResult {
 
 }
