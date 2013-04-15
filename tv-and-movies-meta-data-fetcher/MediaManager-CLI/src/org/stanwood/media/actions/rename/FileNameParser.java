@@ -54,7 +54,8 @@ public class FileNameParser {
 		Pattern.compile("(.*?)("+FULL_EP_PATTERN+")"+WHITE_SPACE+"("+SEP+")"+WHITE_SPACE+"("+ONLY_EP_PATTERN+")(.*)",Pattern.CASE_INSENSITIVE ), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	};
 
-	private static Pattern PATTERNS[] = new Pattern[] {
+	/** TV Show patterns */
+	public static Pattern PATTERNS[] = new Pattern[] {
 		// Single episode patterns
 		compile("(.*)[s]([\\d]+)[e]([\\d]+).*"), //$NON-NLS-1$
 		compile("(.*)[s]([\\d]+)\\.[e]([\\d]+).*"), //$NON-NLS-1$

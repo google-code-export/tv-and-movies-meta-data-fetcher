@@ -117,6 +117,7 @@ public class MP4ITunesStore implements IStore {
 	 * @param storeInfo The store information
 	 */
 	public MP4ITunesStore(Controller controller,MP4ITunesStoreInfo storeInfo) {
+		this.controller = controller;
 		this.storeInfo = storeInfo;
 	}
 
