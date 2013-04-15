@@ -47,6 +47,19 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	private String updateSiteAddonsMD5URL;
 
 	/**
+	 * List of default plugins
+	 */
+	static Set<String>DEFAULT_PLUGINS;
+
+	static {
+		DEFAULT_PLUGINS = new HashSet<String>();
+		DEFAULT_PLUGINS.add("metadata.themoviedb.org"); //$NON-NLS-1$
+		DEFAULT_PLUGINS.add("metadata.tvdb.com"); //$NON-NLS-1$
+		DEFAULT_PLUGINS.add("metadata.universal"); //$NON-NLS-1$
+		DEFAULT_PLUGINS.add("metadata.imdb.com"); //$NON-NLS-1$
+	}
+
+	/**
 	 * The constructor
 	 * @param config The Media directory configuration
 	 * @throws XBMCException Thrown if their is a problem reading from the configuration
@@ -547,10 +560,6 @@ public class XBMCWebUpdater extends XMLParser implements IXBMCUpdater {
 	}
 
 	private Set<String> getDefaultPlugins() {
-		Set<String>defaultPlugins = new HashSet<String>();
-		defaultPlugins.add("metadata.themoviedb.org"); //$NON-NLS-1$
-		defaultPlugins.add("metadata.tvdb.com"); //$NON-NLS-1$
-		defaultPlugins.add("metadata.imdb.com"); //$NON-NLS-1$
-		return defaultPlugins;
+		return DEFAULT_PLUGINS;
 	}
 }

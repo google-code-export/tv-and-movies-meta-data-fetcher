@@ -51,6 +51,11 @@ public class TestUpdater extends XBMCAddonTestBase {
 	 */
 	@Test
 	public void testUpdate() throws Exception {
+		XBMCWebUpdater.DEFAULT_PLUGINS = new HashSet<String>();
+		XBMCWebUpdater.DEFAULT_PLUGINS.add("metadata.themoviedb.org"); //$NON-NLS-1$
+		XBMCWebUpdater.DEFAULT_PLUGINS.add("metadata.tvdb.com"); //$NON-NLS-1$
+		XBMCWebUpdater.DEFAULT_PLUGINS.add("metadata.imdb.com"); //$NON-NLS-1$
+
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
 		File addonsDir = FileHelper.createTmpDir("addons");
 		try {
