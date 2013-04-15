@@ -19,13 +19,16 @@ package org.stanwood.media.server.commands;
 import java.util.Set;
 
 import org.stanwood.media.Controller;
-import org.stanwood.media.cli.manager.Messages;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.source.xbmc.XBMCUpdaterException;
+import org.stanwood.media.source.xbmc.cli.Messages;
 import org.stanwood.media.source.xbmc.updater.AddonDetails;
 import org.stanwood.media.source.xbmc.updater.IConsole;
 import org.stanwood.media.source.xbmc.updater.IXBMCUpdater;
 
+/**
+ * A command to list installed addons
+ */
 public class XBMCListAddonsCommand extends AbstractServerCommand<XBMCListAddonsResult> {
 
 	private IXBMCUpdater updater;
