@@ -17,6 +17,8 @@
 package org.stanwood.media;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,6 +28,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.script.Bindings;
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,10 +56,12 @@ import org.stanwood.media.info.MediaFileInfoFetcher;
 import org.stanwood.media.logging.StanwoodException;
 import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.script.ScriptFunction;
 import org.stanwood.media.setup.ConfigException;
 import org.stanwood.media.setup.ConfigReader;
 import org.stanwood.media.setup.DBResource;
 import org.stanwood.media.setup.Plugin;
+import org.stanwood.media.setup.ScriptFile;
 import org.stanwood.media.setup.WatchDirConfig;
 import org.stanwood.media.source.HybridFilmSourceInfo;
 import org.stanwood.media.source.ISource;
@@ -95,6 +107,7 @@ public class Controller {
 	private static MediaFileInfoFetcher fileInfoFetcher;
 
 	private static XBMCAddonManager xbmcMgr;
+	private List<ScriptEngine>scripts = new ArrayList<ScriptEngine>();
 
 	/**
 	 * The constructor
@@ -154,6 +167,45 @@ public class Controller {
 		this.testMode = testMode;
 		registerInbuild();
 		registerPlugins();
+		registerScripts();
+	}
+
+	private void registerScripts() throws ConfigException {
+		ScriptEngineManager scriptMgr = new ScriptEngineManager();
+		for (ScriptFile sf : configReader.getScriptFiles()) {
+			ScriptEngine scriptEngine = scriptMgr.getEngineByName(sf.getLanguage());
+			ScriptContext newContext = new SimpleScriptContext();
+	        Bindings engineScope = newContext.getBindings(ScriptContext.ENGINE_SCOPE);
+			try {
+				scriptEngine.eval(new FileReader(sf.getLocation()),engineScope);
+			} catch (FileNotFoundException e) {
+				throw new ConfigException(MessageFormat.format("Unable to register script {0} as it cound not be found",sf.getLocation()),e);
+			} catch (ScriptException e) {
+				throw new ConfigException(MessageFormat.format("Unable to register script {0}",sf.getLocation()),e);
+			}
+			scripts.add(scriptEngine);
+		}
+	}
+
+	/**
+	 * Used to execute a script function
+	 * @param function The script function
+	 * @param args The arguments to the script
+	 */
+	public void executeScriptFunction(ScriptFunction function,Object ...args )  {
+		for (ScriptEngine se : scripts) {
+			if (se instanceof Invocable) {
+				Invocable inv = (Invocable)se;
+				try {
+					inv.invokeFunction(function.getName(), args);
+				} catch (NoSuchMethodException e) {
+					// Ignore as their is no method
+				}
+				catch (ScriptException e) {
+					log.error(MessageFormat.format("Unable excecute script function {0}",function.getName()),e);
+				}
+			}
+		}
 	}
 
 	/**
