@@ -94,6 +94,7 @@ public class ConfigReader extends BaseConfigReader {
 
 	private String xbmcAddonSite = DEFAULT_XBMC_ADDON_DIR;
 	private SeenDatabaseConfig seenDBConfig;
+	private List<ScriptFile> scriptFiles= new ArrayList<ScriptFile>();
 
 	/** The default strip tokens */
 	public final static List<Pattern> DEFAULT_STRIP_TOKENS;
@@ -137,8 +138,33 @@ public class ConfigReader extends BaseConfigReader {
 			parsePlguins(doc);
 			parseResources(doc);
 			parseSeenDatabase(doc);
+			parseScripts(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException(Messages.getString("UNABLE_PARSE_CONFIG"),e); //$NON-NLS-1$
+		}
+	}
+
+	private void parseScripts(Document doc) throws XMLParserException, ConfigException {
+		if (selectSingleNode(doc,"/mediaManager/scripts/file")!=null) { //$NON-NLS-1$
+			for (Node node : selectNodeList(doc,"/mediaManager/scripts/file")) { //$NON-NLS-1$
+				Element scriptFileNode = (Element)node;
+				ScriptFile sf = new ScriptFile();
+				sf.setLanguage(scriptFileNode.getAttribute("language")); //$NON-NLS-1$
+				sf.setLocation(new File(scriptFileNode.getAttribute("location"))); //$NON-NLS-1$
+				scriptFiles.add(sf);
+			}
+		}
+	}
+
+	private void writeScripts(StringBuilder document, IProgressMonitor progress) {
+		if (scriptFiles.size()>0) {
+			document.append("  <scripts>"+FileHelper.LS); //$NON-NLS-1$
+			for (ScriptFile sf : scriptFiles) {
+				document.append("    <file"); //$NON-NLS-1$
+				document.append(" language=\""+sf.getLanguage()+"\" location=\""+sf.getLocation().getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
+				document.append("/>"+FileHelper.LS); //$NON-NLS-1$
+			}
+			document.append("  </scripts>"+FileHelper.LS); //$NON-NLS-1$
 		}
 	}
 
@@ -937,7 +963,7 @@ public class ConfigReader extends BaseConfigReader {
 	 * @throws ConfigException Thrown if their is a problem
 	 */
 	public void writeConfig(IProgressMonitor monitor,File file) throws  ConfigException {
-		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+7);
+		SubMonitor progress = SubMonitor.convert(monitor, mediaDir.size()+8);
 
 		try {
 			StringBuilder document = new StringBuilder();
@@ -955,6 +981,8 @@ public class ConfigReader extends BaseConfigReader {
 			writeDBResources(document,progress);
 			progress.worked(1);
 			writeSeenDatabase(document,progress);
+			progress.worked(1);
+			writeScripts(document,progress);
 			document.append("</mediaManager>"+FileHelper.LS); //$NON-NLS-1$
 			Document doc = XMLParser.strToDom(document.toString(),SCHEMA_NAME);
 			XMLParser.writeXML(file, doc);
@@ -983,5 +1011,13 @@ public class ConfigReader extends BaseConfigReader {
 	 */
 	public SeenDatabaseConfig getSeenDatabase() {
 		return seenDBConfig;
+	}
+
+	/**
+	 * Used to get the scripts
+	 * @return The scripts
+	 */
+	public List<ScriptFile> getScriptFiles() {
+		return scriptFiles;
 	}
 }

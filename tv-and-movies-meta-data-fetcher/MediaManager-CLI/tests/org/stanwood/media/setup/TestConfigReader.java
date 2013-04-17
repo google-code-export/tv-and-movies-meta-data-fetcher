@@ -213,6 +213,34 @@ public class TestConfigReader {
 	}
 
 	/**
+	 * Test that scripts can be loaded
+	 * @throws Exception Thrown if their are any problems
+	 */
+	@Test
+	public void testScripts() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
+
+		StringBuilder testConfig = new StringBuilder();
+		testConfig.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
+		testConfig.append("<mediaManager>"+FileHelper.LS);
+		testConfig.append("  <scripts>"+FileHelper.LS);
+		testConfig.append("    <file language=\"ruby\" location=\"/blah/blahblah.rb\"/>"+FileHelper.LS);
+		testConfig.append("  </scripts>"+FileHelper.LS);
+		testConfig.append("</mediaManager>"+FileHelper.LS);
+
+		ConfigReader config = createConfigReader(testConfig);
+		List<ScriptFile> sfs = config.getScriptFiles();
+		Assert.assertEquals(1,sfs.size());
+		Assert.assertEquals("ruby",sfs.get(0).getLanguage());
+		Assert.assertEquals("/blah/blahblah.rb",sfs.get(0).getLocation().getAbsolutePath());
+
+		File tmpFile = FileHelper.createTempFile("config", ".xml");
+		config.writeConfig(new NullProgressMonitor(), tmpFile);
+		String written = FileHelper.readFileContents(tmpFile);
+		Assert.assertEquals(testConfig.toString(), written);
+	}
+
+	/**
 	 * Test the seen database setup
 	 * @throws Exception Thrown if their is a problem
 	 */

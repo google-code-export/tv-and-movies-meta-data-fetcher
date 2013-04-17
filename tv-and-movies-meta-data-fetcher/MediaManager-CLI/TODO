@@ -16,6 +16,7 @@ Add script support
 	Add ability to execute scripts before importing form incoming directory
 	Make it possible to have actions completely written in scripts
 Allow script section to be loaded from files	
+Allow scripting libs to be installed (pip, gem)?
 Extend patterns
 	* Allow multiple patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.

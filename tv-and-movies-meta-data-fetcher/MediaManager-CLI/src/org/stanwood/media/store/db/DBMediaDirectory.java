@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
 import org.stanwood.media.model.Film;
 import org.stanwood.media.store.StoreVersion;
 import org.stanwood.media.util.Version;
@@ -31,6 +32,7 @@ public class DBMediaDirectory implements Serializable {
 	@Column(name = "location")
 	private String location;
 	@Column(name = "version")
+	@Type(type="org.stanwood.media.store.db.VersionType")
 	private Version version;
 	@Column(name = "revision")
 	private int revision;
