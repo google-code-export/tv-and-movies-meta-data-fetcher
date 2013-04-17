@@ -18,6 +18,10 @@ package org.stanwood.media.store.db;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,6 +231,30 @@ public class TestFileDatabaseStore {
 			Assert.assertEquals("The Usual Suspects",film.getTitle());
 			Assert.assertEquals(1,film.getWriters().size());
 			Assert.assertEquals("Christopher McQuarrie",film.getWriters().get(0));
+
+			File file = new File(store.getController().getConfigDir(),"mediaInfo.db"); //$NON-NLS-1$
+			Connection c = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try {
+				c = DriverManager.getConnection("jdbc:hsqldb:file:"+file.getAbsolutePath(), "sa", "");
+				stmt = c.prepareStatement("select version from media_dir");
+				rs = stmt.executeQuery();
+				rs.next();
+				Assert.assertEquals("1.0",rs.getString(1));
+			}
+			finally {
+				if (rs!=null) {
+					rs.close();
+				}
+				if (stmt!=null) {
+					stmt.close();
+				}
+				if (c!=null) {
+					c.close();
+				}
+			}
+
 		}
 		finally {
 			FileHelper.delete(configDir);

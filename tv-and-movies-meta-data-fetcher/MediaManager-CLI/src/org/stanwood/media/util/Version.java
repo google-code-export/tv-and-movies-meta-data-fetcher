@@ -1,5 +1,8 @@
 package org.stanwood.media.util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
@@ -76,5 +79,15 @@ public class Version implements Comparable<Version>,Serializable {
 		return version;
 	}
 
+	private void writeObject(ObjectOutputStream oos)
+			throws IOException {
+		oos.writeUTF(this.toString());
+	}
 
+	private void readObject(ObjectInputStream ois)
+	throws ClassNotFoundException, IOException {
+		String version = ois.readUTF();
+		normalised = normalisedVersion(version);
+		this.version = version;
+	}
 }
