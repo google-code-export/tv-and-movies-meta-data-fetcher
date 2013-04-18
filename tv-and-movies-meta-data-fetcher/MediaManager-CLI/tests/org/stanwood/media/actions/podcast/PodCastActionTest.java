@@ -235,6 +235,12 @@ public class PodCastActionTest {
 			public void sendEventDeletedFile(File file) throws ActionException {
 
 			}
+
+			@Override
+			public void sendEventAboutToRenamedFile(File oldName, File newName)
+					throws ActionException {
+
+			}
 		});
 		action.finished(mediaDir);
 

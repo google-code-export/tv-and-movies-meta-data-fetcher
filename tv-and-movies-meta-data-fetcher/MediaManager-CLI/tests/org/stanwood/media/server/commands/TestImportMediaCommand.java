@@ -85,8 +85,13 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertNull(result);
 	}
 
+	/**
+	 * Test that the script events occur even it import media command detects and error
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testScriptEvents() throws Exception {
+		LogSetupHelper.forceReset();
 		ByteArrayOutputStream stdout = new ByteArrayOutputStream();
 		ByteArrayOutputStream stderr = new ByteArrayOutputStream();
 		LogSetupHelper.initLogging(stdout,stderr);
@@ -111,11 +116,15 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 
 		Assert.assertTrue(logger.getResult().toString().contains("INFO:Unable to find any media files"));
 		Assert.assertNull(result);
-
+		System.out.println("-----");
+		System.out.println(stdout);
+		System.out.println("-----");
+		Assert.assertTrue(stdout.toString().contains("onEventPreMediaImport("+watchDir.getAbsolutePath()+")"));
+		Assert.assertTrue(stdout.toString().contains("onEventPostMediaImport("+watchDir.getAbsolutePath()+")"));
 	}
 
 	/**
-	 * Test the media is imported into a empry directory. This does not execute the actions.
+	 * Test the media is imported into a empty directory. This does not execute the actions.
 	 * So files should not be marked as seen untill the media dir is managed.
 	 * @throws Exception Thrown if their are any problems
 	 */
@@ -174,20 +183,23 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals("upgrade()",events.remove());
 		Assert.assertEquals("init()",events.remove());
 		Assert.assertEquals("init()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(Heroes,TV_SHOW,null,"+showDir.getAbsolutePath()+
+				            ","+new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi")+") -> null",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
 		Assert.assertEquals("cacheShow()",events.remove());
 		Assert.assertEquals("getSeason()",events.remove());
 		Assert.assertEquals("cacheSeason()",events.remove());
 		Assert.assertEquals("getEpisode()",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(Heroes,TV_SHOW,null,"+showDir.getAbsolutePath()+","+
+						   new File(watchDir,"Heroes S02E01 - Blah Blah Blah.avi")+") -> 79501:org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com - (http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip) - (null)",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
 		Assert.assertEquals("getSeason()",events.remove());
 		Assert.assertEquals("cacheSeason()",events.remove());
 		Assert.assertEquals("getEpisode()",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(iron man,FILM,null,"+filmDir.getAbsolutePath()+"," +
+				            new File(watchDir,"iron.man.2009.dvdrip.xvid-amiable.avi")+") -> null",events.remove());
 		Assert.assertEquals("getFilm()",events.remove());
 		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.remove());
 		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
@@ -295,20 +307,23 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals("upgrade()",events.remove());
 		Assert.assertEquals("init()",events.remove());
 		Assert.assertEquals("init()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(Heroes,TV_SHOW,null,"+showDir.getAbsolutePath()+
+	            ","+new File(watchDir,"Heroes S01E01 - Blah Blah Blah.avi")+") -> null",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
 		Assert.assertEquals("cacheShow()",events.remove());
 		Assert.assertEquals("getSeason()",events.remove());
 		Assert.assertEquals("cacheSeason()",events.remove());
 		Assert.assertEquals("getEpisode()",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(Heroes,TV_SHOW,null,"+showDir.getAbsolutePath()+","+
+				   new File(watchDir,"Heroes S02E01 - Blah Blah Blah.avi")+") -> 79501:org.stanwood.media.source.xbmc.XBMCSource#metadata.tvdb.com - (http://www.thetvdb.com/api/1D62F2F90030C444/series/79501/all/en.zip) - (null)",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
 		Assert.assertEquals("getSeason()",events.remove());
 		Assert.assertEquals("cacheSeason()",events.remove());
 		Assert.assertEquals("getEpisode()",events.remove());
 		Assert.assertEquals("getShow()",events.remove());
-		Assert.assertEquals("searchMedia()",events.remove());
+		Assert.assertEquals("searchMedia(iron man,FILM,null,"+filmDir.getAbsolutePath()+"," +
+	            new File(watchDir,"iron.man.2009.dvdrip.xvid-amiable.avi")+") -> null",events.remove());
 		Assert.assertEquals("getFilm()",events.remove());
 		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi)",events.remove());
 		Assert.assertEquals("cacheEpisode("+showDir.getAbsolutePath()+","+showDir.getAbsolutePath()+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
@@ -486,7 +501,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals(2,files.size());
 	}
 
-	private void appendMediaDirectory(StringBuilder testConfig,File mediaDir,Mode mode,String sourceId,Map<String,String> sourceParams,String storeId,String dummy,String ... actions) {
+	private static void appendMediaDirectory(StringBuilder testConfig,File mediaDir,Mode mode,String sourceId,Map<String,String> sourceParams,String storeId,String dummy,String ... actions) {
 		boolean ignoreSeen = true;
 		String pattern = ConfigReader.DEFAULT_TV_FILE_PATTERN;
 		if (mode == Mode.FILM) {
@@ -522,7 +537,18 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		testConfig.append("  </mediaDirectory>"+FileHelper.LS);
 	}
 
-	private ConfigReader createTestConfig(File watchDir,File filmDir,File showDir,String store,String extra) throws IOException, ConfigException {
+	/**
+	 * Used to create a test configuration
+	 * @param watchDir The watch folder
+	 * @param filmDir The film folder
+	 * @param showDir The TV folder
+	 * @param store The store ID to add to media dir's, or null to not add one
+	 * @param extra Any extra XML to added to the configuration under &lt;mediaManager&gt;, or null not to add any
+	 * @return The configuration
+	 * @throws IOException Thrown if their is a IO error
+	 * @throws ConfigException Thrown if their is a configuration error
+	 */
+	public static ConfigReader createTestConfig(File watchDir,File filmDir,File showDir,String store,String extra) throws IOException, ConfigException {
 		File configDir = FileHelper.createTmpDir("configDir");
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<mediaManager>"+FileHelper.LS);
@@ -543,7 +569,6 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 		appendMediaDirectory(testConfig, showDir, Mode.TV_SHOW, XBMCSource.class.getName()+"#metadata.tvdb.com",params,store,"",RenameAction.class.getName());
 		testConfig.append("</mediaManager>"+FileHelper.LS);
 
-		System.out.println(testConfig.toString());
 		File configFile = createConfigFileWithContents(testConfig);
 
 		InputStream is = null;

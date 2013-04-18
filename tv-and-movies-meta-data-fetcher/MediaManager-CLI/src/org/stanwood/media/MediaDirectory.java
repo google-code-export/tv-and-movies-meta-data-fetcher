@@ -484,6 +484,21 @@ public class MediaDirectory {
 	}
 
 	/**
+	 * This is used when a file that holds a episode or film is about to be renamed
+	 *
+	 * @param rootMediaDir The root media directory
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
+	 */
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException {
+		for (IStore store : stores) {
+			store.aboutToRenamedFile(rootMediaDir,oldFile, newFile);
+		}
+	}
+
+
+	/**
 	 * Get the configuration of the media directory
 	 * @return the configuration of the media directory
 	 */
@@ -537,4 +552,5 @@ public class MediaDirectory {
 	public Controller getController() {
 		return controller;
 	}
+
 }
