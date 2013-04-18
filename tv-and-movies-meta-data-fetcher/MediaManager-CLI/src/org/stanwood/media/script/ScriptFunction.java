@@ -24,7 +24,11 @@ public enum ScriptFunction {
 	/** The script function executed before importing media */
 	PRE_MEDIA_IMPORT("onEventPreMediaImport"), //$NON-NLS-1$
 	/** The script function executed after importing media */
-	POST_MEDIA_IMPORT("onEventPostMediaImport"); //$NON-NLS-1$
+	POST_MEDIA_IMPORT("onEventPostMediaImport"), //$NON-NLS-1$
+	/** The script function executed before managing media */
+	PRE_MEDIA_MANAGE("onEventPreManageMedia"), //$NON-NLS-1$
+	/** The script function executed after managing media */
+	POST_MEDIA_MANAGE("onEventPostManageMedia"); //$NON-NLS-1$
 
 	private String name;
 

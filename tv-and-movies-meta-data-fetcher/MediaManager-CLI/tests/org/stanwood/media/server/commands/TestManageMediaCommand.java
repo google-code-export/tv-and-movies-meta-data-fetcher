@@ -16,6 +16,7 @@
  */
 package org.stanwood.media.server.commands;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,10 +33,16 @@ import org.stanwood.media.source.xbmc.XBMCAddonTestBase;
 import org.stanwood.media.store.LoggingStore;
 import org.stanwood.media.util.FileHelper;
 
+/**
+ * Used to test the manage media server command
+ */
 @SuppressWarnings("nls")
 public class TestManageMediaCommand extends XBMCAddonTestBase {
 
-
+	/**
+	 * Used to test manage media command works as expected and how it interacts with stores
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testManageMedia() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
@@ -83,8 +90,6 @@ public class TestManageMediaCommand extends XBMCAddonTestBase {
 		EmptyResult result = mmCommand.execute(logger, new NullProgressMonitor());
 		Assert.assertNotNull(result);
 
-
-
 		Assert.assertEquals("init()",events.remove());
 		Assert.assertEquals("upgrade()",events.remove());
 		Assert.assertEquals("init()",events.remove());
@@ -121,9 +126,73 @@ public class TestManageMediaCommand extends XBMCAddonTestBase {
 		Assert.assertEquals("renamedFile("+showDir+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - blah blah....avi,"+showDir+File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - Four Months Later....avi)",events.remove());
 		Assert.assertEquals("performedActions("+showDir+")",events.remove());
 
-		LoggingStore.printEvents();
-
 		Assert.assertTrue(events.isEmpty());
 		Assert.assertTrue(controller.getSeenDB().isSeen(showDir, new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - Genesis.avi")));
+	}
+
+	/**
+	 * Used to test that script events occur while managing media
+	 * @throws Exception Thrown if their is a problem
+	 */
+	@Test
+	public void testScriptEvents() throws Exception {
+		LogSetupHelper.forceReset();
+		ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+		ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+		LogSetupHelper.initLogging(stdout,stderr);
+
+		File watchDir = FileHelper.createTmpDir("watchdir");
+		File filmDir = FileHelper.createTmpDir("filmDir");
+
+		File showDir = FileHelper.createTmpDir("showDir");
+
+		StringBuilder extraConfig = new StringBuilder();
+		extraConfig.append("  <scripts>"+FileHelper.LS);
+		extraConfig.append("    <file language=\"jruby\" location=\""+new File(TestImportMediaCommand.class.getResource("testScript.rb").toURI()).getAbsolutePath()+"\"/>"+FileHelper.LS);
+		extraConfig.append("  </scripts>"+FileHelper.LS);
+		ConfigReader config = TestImportMediaCommand.createTestConfig(watchDir,filmDir,showDir,LoggingStore.class.getName(),extraConfig.toString());
+		Controller controller = new Controller(config);
+		controller.init(false);
+
+		Assert.assertEquals(0,LoggingStore.getEvents().size());
+
+		StringBuilderCommandLogger logger = new StringBuilderCommandLogger();
+
+		File f =new File(showDir,File.separator+"Heroes"+File.separator+"Season 1"+File.separator+"1x01 - blah.avi");
+		if (!f.getParentFile().mkdirs()) {
+			throw new IOException("Unable to create dir : " + f.getParentFile().getAbsolutePath());
+		}
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+		f = new File(showDir,File.separator+"Heroes"+File.separator+"Season 2"+File.separator+"2x01 - blah blah....avi");
+		if (!f.getParentFile().mkdirs()) {
+			throw new IOException("Unable to create dir : " + f.getParentFile().getAbsolutePath());
+		}
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+		f = new File(filmDir,"iron.man.2009.dvdrip.xvid-amiable.avi");
+		if (!f.createNewFile()) {
+			throw new IOException("Unable to create file : " + f.getAbsolutePath());
+		}
+
+
+		Queue<String> events = LoggingStore.getEvents();
+		Assert.assertTrue(events.isEmpty());
+
+		ManageMediaCommand mmCommand = new ManageMediaCommand(controller);
+		List<File>mediaDirs = new ArrayList<File>();
+		mediaDirs.add(filmDir);
+		mediaDirs.add(showDir);
+		mmCommand.setMediaDirectories(mediaDirs);
+		EmptyResult result = mmCommand.execute(logger, new NullProgressMonitor());
+		Assert.assertNotNull(result);
+
+		String strStdout = stdout.toString();
+		Assert.assertTrue(strStdout.contains("onEventPreManageMedia("+filmDir+")"));
+		Assert.assertTrue(strStdout.contains("onEventPostManageMedia("+filmDir+")"));
+		Assert.assertTrue(strStdout.contains("onEventPreManageMedia("+showDir+")"));
+		Assert.assertTrue(strStdout.contains("onEventPostManageMedia("+showDir+")"));
 	}
 }
