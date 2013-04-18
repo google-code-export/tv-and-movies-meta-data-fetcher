@@ -28,6 +28,7 @@ import org.stanwood.media.actions.ActionPerformer;
 import org.stanwood.media.cli.manager.Messages;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.NullProgressMonitor;
+import org.stanwood.media.script.ScriptFunction;
 import org.stanwood.media.setup.ConfigException;
 
 /**
@@ -64,8 +65,14 @@ public class ManageMediaCommand extends AbstractServerCommand<EmptyResult> {
 			}
 
 			for (MediaDirectory rootMediaDir : mediaDirs) {
-				ActionPerformer renamer = new ActionPerformer(getController(),rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
-				renamer.performActions(new NullProgressMonitor());
+				getController().executeScriptFunction(ScriptFunction.PRE_MEDIA_MANAGE, rootMediaDir.getMediaDirConfig().getMediaDir().getAbsolutePath());
+				try {
+					ActionPerformer renamer = new ActionPerformer(getController(),rootMediaDir.getActions(),rootMediaDir,rootMediaDir.getMediaDirConfig().getExtensions());
+					renamer.performActions(new NullProgressMonitor());
+				}
+				finally {
+					getController().executeScriptFunction(ScriptFunction.POST_MEDIA_MANAGE, rootMediaDir.getMediaDirConfig().getMediaDir().getAbsolutePath());
+				}
 			}
 			return new EmptyResult();
 		} catch (ActionException e) {
