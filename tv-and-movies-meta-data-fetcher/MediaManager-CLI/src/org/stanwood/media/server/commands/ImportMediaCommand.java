@@ -156,12 +156,6 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 			monitor.worked(1);
 
 			ImportMediaResult result = new ImportMediaResult(importedEntries);
-
-			for (WatchDirConfig c : getController().getWatchDirectories()) {
-				File f = c.getWatchDir();
-				getController().executeScriptFunction(ScriptFunction.POST_MEDIA_IMPORT, f.getAbsolutePath());
-			}
-
 			return result;
 		} catch (ConfigException e) {
 			logger.error(Messages.getString("CLIImportMedia.UNABLE_READ_CONFIG"),e); //$NON-NLS-1$
@@ -171,7 +165,15 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 			logger.error(e.getMessage(),e);
 		}
 		finally {
-			monitor.done();
+			try {
+				for (WatchDirConfig c : getController().getWatchDirectories()) {
+					File f = c.getWatchDir();
+					getController().executeScriptFunction(ScriptFunction.POST_MEDIA_IMPORT, f.getAbsolutePath());
+				}
+			}
+			finally {
+				monitor.done();
+			}
 		}
 		return null;
 	}
@@ -306,6 +308,12 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 					@Override
 					public void sendEventDeletedFile(File file) throws ActionException {
 					}
+
+					@Override
+					public void sendEventAboutToRenamedFile(File oldName,
+							File newName) throws ActionException {
+
+					}
 				});
 			}
 			else {
@@ -324,6 +332,12 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 
 					@Override
 					public void sendEventDeletedFile(File file) throws ActionException {
+					}
+
+					@Override
+					public void sendEventAboutToRenamedFile(File oldName,
+							File newName) throws ActionException {
+
 					}
 				});
 			}

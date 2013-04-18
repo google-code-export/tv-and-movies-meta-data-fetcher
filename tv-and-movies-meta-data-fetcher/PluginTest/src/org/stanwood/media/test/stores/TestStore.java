@@ -45,7 +45,12 @@ public class TestStore implements IStore {
 		events.add("cacheFilm()");
 	}
 
-	
+	/** {@inheritDoc} */
+	@Override
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile)
+			throws StoreException {
+
+	}
 
 	@Override
 	public ISeason getSeason(File rootMediaDir, File episodeFile, IShow show,

@@ -177,6 +177,7 @@ public class Controller {
 			ScriptContext newContext = new SimpleScriptContext();
 	        Bindings engineScope = newContext.getBindings(ScriptContext.ENGINE_SCOPE);
 			try {
+				scriptEngine.put("log", LogFactory.getLog(sf.getLocation().getAbsolutePath().replaceAll(File.separator, "."))); //$NON-NLS-1$
 				scriptEngine.eval(new FileReader(sf.getLocation()),engineScope);
 			} catch (FileNotFoundException e) {
 				throw new ConfigException(MessageFormat.format("Unable to register script {0} as it cound not be found",sf.getLocation()),e);

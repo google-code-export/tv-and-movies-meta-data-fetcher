@@ -130,6 +130,7 @@ public class RenameAction extends AbstractAction {
 
 					File oldFile = new File(file.getAbsolutePath());
 					try {
+						eventHandler.sendEventAboutToRenamedFile(oldFile, newFile);
 						FileHelper.rename(file,newFile);
 					}
 					catch (IOException e) {
