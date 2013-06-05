@@ -157,8 +157,8 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	    try {
 	        ss = new ServerSocket(port);
 	        ss.setReuseAddress(true);
-	        ds = new DatagramSocket(port);
-	        ds.setReuseAddress(true);
+//	        ds = new DatagramSocket(port);
+//	        ds.setReuseAddress(true);
 	        return true;
 	    } catch (IOException e) {
 	    } finally {
