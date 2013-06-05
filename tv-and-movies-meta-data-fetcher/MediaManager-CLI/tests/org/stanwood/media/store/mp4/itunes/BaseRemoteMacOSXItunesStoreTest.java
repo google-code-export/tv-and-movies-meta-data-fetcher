@@ -76,10 +76,14 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 		if (!Platform.isWindows()) {
 			System.out.println("Waiting for controll server to start on port: " + port);
-			while (available(port)) {
+			while (exception==null && available(port)) {
 				Thread.sleep(100);
 			}
+			if (exception!=null) {
+				throw exception;
+			}
 			System.out.println("Controll server started");
+
 		}
 		else {
 			Thread.sleep(2000);
