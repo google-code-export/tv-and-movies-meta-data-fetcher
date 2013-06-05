@@ -62,6 +62,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 					started = false;
 				}
 				catch (Throwable e) {
+					log.error(e);
 					e.printStackTrace();
 					exception = e;
 				}
@@ -76,8 +77,11 @@ public class BaseRemoteMacOSXItunesStoreTest {
 		}
 		if (!Platform.isWindows()) {
 			System.out.println("Waiting for controll server to start on port: " + port);
-			while (available(port)) {
+			while (exception==null && available(port)) {
 				Thread.sleep(100);
+			}
+			if (exception!=null) {
+				throw exception;
 			}
 			System.out.println("Controll server started");
 		}
@@ -153,8 +157,8 @@ public class BaseRemoteMacOSXItunesStoreTest {
 	    try {
 	        ss = new ServerSocket(port);
 	        ss.setReuseAddress(true);
-	        ds = new DatagramSocket(port);
-	        ds.setReuseAddress(true);
+//	        ds = new DatagramSocket(port);
+//	        ds.setReuseAddress(true);
 	        return true;
 	    } catch (IOException e) {
 	    } finally {
