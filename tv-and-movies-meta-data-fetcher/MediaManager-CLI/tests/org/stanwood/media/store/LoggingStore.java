@@ -310,6 +310,27 @@ public class LoggingStore implements IStore {
 		}
 	}
 
+	/**
+	 * Used to clear the events
+	 */
+	public static void clearEvents() {
+		String item = null;
+		try {
+			item = events.remove();
+		}
+		catch (NoSuchElementException e) {
+			item = null;
+		}
+		while (item !=null) {
+			try {
+				item = events.remove();
+			}
+			catch (NoSuchElementException e) {
+				item = null;
+			}
+		}
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile)
