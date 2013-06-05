@@ -91,7 +91,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 	@Test
 	public void testMediaImportIntoEmptyMediaDirsDontExecuteActions() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-
+		LoggingStore.clearEvents();
 		File watchDir = FileHelper.createTmpDir("watchdir");
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
@@ -212,7 +212,7 @@ public class TestImportMediaCommand extends XBMCAddonTestBase {
 	@Test
 	public void testMediaImportIntoEmptyMediaDirsExecuteActions() throws Exception {
 		LogSetupHelper.initLogingInternalConfigFile("info.log4j.properties");
-
+		LoggingStore.clearEvents();
 		File watchDir = FileHelper.createTmpDir("watchdir");
 		File filmDir = FileHelper.createTmpDir("filmDir");
 		File showDir = FileHelper.createTmpDir("showDir");
