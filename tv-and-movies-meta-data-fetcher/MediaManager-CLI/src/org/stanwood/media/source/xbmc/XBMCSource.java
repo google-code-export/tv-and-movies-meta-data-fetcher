@@ -230,7 +230,8 @@ public class XBMCSource extends XMLParser implements ISource {
 			@Override
 			public void processContents(String contents) throws SourceException {
 				try {
-	    			Document doc = addon.getScraper(Mode.TV_SHOW).getGetDetails(file,contents,showId);
+					XBMCScraper scraper = addon.getScraper(Mode.TV_SHOW);
+	    			Document doc = scraper.getGetDetails(file,contents,showId);
 	    			try {
 	    				String longSummary = getStringFromXML(doc, "details/plot/text()"); //$NON-NLS-1$
 						show.setLongSummary(longSummary);
@@ -269,7 +270,12 @@ public class XBMCSource extends XMLParser implements ISource {
 						}
 					}
 
-					show.getExtraInfo().put("episodeGuideURL", getStringFromXML(doc, "details/episodeguide/url/text()"));  //$NON-NLS-1$//$NON-NLS-2$
+					try {
+						show.getExtraInfo().put("episodeGuideURL", getStringFromXML(doc, "details/episodeguide/url/text()"));  //$NON-NLS-1$//$NON-NLS-2$
+					}
+					catch (XMLParserException e1) {
+						show.getExtraInfo().put("episodeGuideURL", url.toExternalForm());
+					}
 
 				}
 				catch (XMLParserException e) {
@@ -284,7 +290,7 @@ public class XBMCSource extends XMLParser implements ISource {
 		};
 		processor.handleStream();
 
-		if (show.getName() == null || show.getLongSummary()==null) {
+		if (show.getName() == null) {
 			return null; // Show details not complete
 		}
 		return show;
