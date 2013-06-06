@@ -1144,7 +1144,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 				part = Integer.parseInt(((Element) showNodes.item(0)).getAttribute("part")); //$NON-NLS-1$
 			}
 			return new SearchResult(
-					showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"), part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					showEl.getAttribute("id"), showEl.getAttribute("sourceId"),showEl.getAttribute("url"), part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		query = quoteXPathQuery(title);
@@ -1153,7 +1153,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			Element showEl = (Element) showNodes.item(0);
 			Integer part = null;
 			return new SearchResult(
-					showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"), part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					showEl.getAttribute("id"), showEl.getAttribute("sourceId"),showEl.getAttribute("url"), part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		for (Node showNode : selectNodeList(store, "show")) { //$NON-NLS-1$
@@ -1161,7 +1161,7 @@ public class XMLStore2 extends BaseXMLStore implements IStore {
 			if (stripPuncuation(showEl.getAttribute("name")).equalsIgnoreCase(title)) { //$NON-NLS-1$
 				Integer part = null;
 				return new SearchResult(
-						showEl.getAttribute("id"), showEl.getAttribute("url"), showEl.getAttribute("sourceId"), part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						showEl.getAttribute("id"), showEl.getAttribute("sourceId"),showEl.getAttribute("url"),  part, Mode.TV_SHOW); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 
