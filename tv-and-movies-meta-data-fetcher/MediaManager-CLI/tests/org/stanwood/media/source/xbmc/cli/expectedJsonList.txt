@@ -374,9 +374,9 @@
         "version": "1.0.8"
       },
       "installedVersion": {
-        "version": "1.0.4"
+        "version": "1.0.8"
       },
-      "status": "OUT_OF_DATE",
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.metadata"
       ]
@@ -400,9 +400,9 @@
         "version": "2.2.3"
       },
       "installedVersion": {
-        "version": "2.0.7"
+        "version": "2.2.3"
       },
-      "status": "OUT_OF_DATE",
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.metadata"
       ]
@@ -496,9 +496,9 @@
         "version": "2.1.6"
       },
       "installedVersion": {
-        "version": "1.0.7"
+        "version": "2.1.6"
       },
-      "status": "OUT_OF_DATE",
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.metadata"
       ]
@@ -867,14 +867,15 @@
         "version": "3.2.0"
       },
       "installedVersion": {
-        "version": "1.2.0"
+        "version": "3.2.0"
       },
-      "status": "OUT_OF_DATE",
+      "status": "INSTALLED",
       "requiredAddons": [
         "metadata.common.imdb.com",
         "metadata.common.hdtrailers.net",
         "xbmc.metadata",
-        "metadata.common.themoviedb.org"
+        "metadata.common.themoviedb.org",
+        "plugin.video.youtube"
       ]
     },
     {
@@ -2447,7 +2448,10 @@
       "avaliableVersion": {
         "version": "2.9.2"
       },
-      "status": "NOT_INSTALLED",
+      "installedVersion": {
+        "version": "2.9.2"
+      },
+      "status": "INSTALLED",
       "requiredAddons": [
         "script.module.simple.downloader",
         "script.module.simplejson",
@@ -2627,7 +2631,10 @@
       "avaliableVersion": {
         "version": "0.9.2"
       },
-      "status": "NOT_INSTALLED",
+      "installedVersion": {
+        "version": "0.9.2"
+      },
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.python"
       ]
@@ -2862,7 +2869,10 @@
       "avaliableVersion": {
         "version": "0.9.2"
       },
-      "status": "NOT_INSTALLED",
+      "installedVersion": {
+        "version": "0.9.2"
+      },
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.python"
       ]
@@ -2898,7 +2908,10 @@
       "avaliableVersion": {
         "version": "0.9.2"
       },
-      "status": "NOT_INSTALLED",
+      "installedVersion": {
+        "version": "0.9.2"
+      },
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.python",
         "script.common.plugin.cache",
@@ -2910,7 +2923,10 @@
       "avaliableVersion": {
         "version": "2.0.10"
       },
-      "status": "NOT_INSTALLED",
+      "installedVersion": {
+        "version": "2.0.10"
+      },
+      "status": "INSTALLED",
       "requiredAddons": [
         "xbmc.python"
       ]
