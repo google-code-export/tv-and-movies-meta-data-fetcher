@@ -143,7 +143,6 @@ public class XBMCScraper extends XBMCExtension {
 			Map<Integer, String> params = convertParams(contents);
 
 			String result = executeXBMCScraperFunction(funcName,params);
-
 			if (log.isDebugEnabled()) {
 				log.debug("Got result: " + result); //$NON-NLS-1$
 			}
@@ -151,7 +150,7 @@ public class XBMCScraper extends XBMCExtension {
 				result = ""; //$NON-NLS-1$
 			}
 			try {
-				Document doc = XMLParser.strToDom(result);
+				Document doc = XMLParser.strToDom(XMLParser.fixXMl(result));
 				checkForError(doc,funcName);
 				resolveElements(doc);
 				return doc;
@@ -220,7 +219,7 @@ public class XBMCScraper extends XBMCExtension {
 
 		Map<Integer,String> subParams = new HashMap<Integer,String>();
 		subParams.put(1,param);
-		Document results = strToDom(getAddon().executeFunction(functionName, subParams));
+		Document results = strToDom(XMLParser.fixXMl(getAddon().executeFunction(functionName, subParams)));
 		Node parent = node.getParentNode();
 		parent.removeChild(node);
 
@@ -251,7 +250,7 @@ public class XBMCScraper extends XBMCExtension {
 							if (s==null) {
 								s = ""; //$NON-NLS-1$
 							}
-							Document results = strToDom(s);
+							Document results = strToDom(XMLParser.fixXMl(s));
 							Node parent = node.getParentNode();
 							parent.removeChild(node);
 

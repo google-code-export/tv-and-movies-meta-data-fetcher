@@ -236,6 +236,25 @@ public class XMLParser {
 		return strToDom(str,null);
 	}
 
+	public static String fixXMl(String result) {
+        int pos = result.indexOf('&');
+        while (pos!=-1) {
+            String sub = result.substring(pos);
+            if (!(sub.startsWith("&amp;") ||  //$NON-NLS-1$
+            	  sub.startsWith("&apos;") ||  //$NON-NLS-1$
+            	  sub.startsWith("&quot;") || //$NON-NLS-1$
+            	  sub.startsWith("&gt;") ||  //$NON-NLS-1$
+            	  sub.startsWith("&lt;") || //$NON-NLS-1$
+            	  sub.startsWith("&#"))) { //$NON-NLS-1$
+                result = result.substring(0,pos)+"&amp;"+result.substring(pos+1); //$NON-NLS-1$
+                pos = result.indexOf('&');
+                continue;
+            }
+            pos = result.indexOf('&',pos+1);
+        }
+		return result;
+	}
+
 	/**
 	 * Used to convert a XML file to a DOM document
 	 * @param file the XML file
