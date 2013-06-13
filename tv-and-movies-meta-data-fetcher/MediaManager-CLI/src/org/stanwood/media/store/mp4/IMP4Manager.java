@@ -94,4 +94,7 @@ public interface IMP4Manager {
 	 */
 	public File getArtworkFile(URL imageUrl) throws IOException;
 
+
+	public IAtom createArtworkAtomFromFile(MP4AtomKey artwork, File artworkFile) throws IOException;
+
 }
