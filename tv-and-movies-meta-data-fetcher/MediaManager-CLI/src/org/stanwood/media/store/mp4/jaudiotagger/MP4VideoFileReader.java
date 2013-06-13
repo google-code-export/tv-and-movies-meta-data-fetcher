@@ -12,7 +12,6 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
-import org.jaudiotagger.audio.mp4.Mp4TagReader;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
@@ -28,7 +27,7 @@ public class MP4VideoFileReader {
 	private static final int MINIMUM_SIZE_FOR_VALID_AUDIO_FILE = 150;
 
 	private Mp4InfoReader ir = new Mp4InfoReader();
-	private Mp4TagReader tr = new Mp4TagReader();
+	private JATMP4TagReader tr = new JATMP4TagReader();
 
 	protected GenericAudioHeader getEncodingInfo(RandomAccessFile raf)
 			throws CannotReadException, IOException {
