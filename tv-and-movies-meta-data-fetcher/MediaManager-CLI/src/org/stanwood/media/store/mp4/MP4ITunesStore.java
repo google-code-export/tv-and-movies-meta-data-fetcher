@@ -494,16 +494,19 @@ public class MP4ITunesStore implements IStore {
 					IAtom artworkAtom = artworkCache.get(imageUrl);
 					if (artworkAtom==null) {
 						artwork = mp4Manager.getArtworkFile(imageUrl);
-						byte data[] = getBytesFromFile(artwork);
+						artworkAtom = mp4Manager.createArtworkAtomFromFile(MP4AtomKey.ARTWORK, artwork );
+						if (artworkAtom==null) {
+							byte data[] = getBytesFromFile(artwork);
 
 
-						String ext = FileHelper.getExtension(artwork);
-						MP4ArtworkType type = MP4ArtworkType.MP4_ART_JPEG;
-						if (ext.equals("png")) {  //$NON-NLS-1$
-							type = MP4ArtworkType.MP4_ART_PNG;
+							String ext = FileHelper.getExtension(artwork);
+							MP4ArtworkType type = MP4ArtworkType.MP4_ART_JPEG;
+							if (ext.equals("png")) {  //$NON-NLS-1$
+								type = MP4ArtworkType.MP4_ART_PNG;
+							}
+
+							artworkAtom = mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
 						}
-
-						artworkAtom = mp4Manager.createAtom(MP4AtomKey.ARTWORK, type,data.length,data );
 						artworkCache.put(imageUrl,artworkAtom);
 					}
 					return artworkAtom;

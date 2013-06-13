@@ -364,4 +364,9 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		FileHelper.copy(url, file);
 		return file;
 	}
+
+	@Override
+	public IAtom createArtworkAtomFromFile(MP4AtomKey artwork, File artworkFile) {
+		return null;
+	}
 }
