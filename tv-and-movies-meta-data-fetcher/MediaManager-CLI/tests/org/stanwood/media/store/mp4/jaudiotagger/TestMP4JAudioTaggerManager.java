@@ -28,6 +28,7 @@ import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.MP4ITunesStore;
+import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
 import org.stanwood.media.testdata.Data;
 import org.stanwood.media.util.FileHelper;
 import org.stanwood.media.util.Version;
@@ -295,6 +296,12 @@ public class TestMP4JAudioTaggerManager {
 		return manager;
 	}
 
+	protected IMP4Manager createMP4APManager() throws MP4Exception {
+		IMP4Manager manager = new MP4AtomicParsleyManager();
+		manager.init(nativeDir);
+		return manager;
+	}
+
 	/**
 	 * Used to test that the correct atoms are set on a high def film
 	 * @throws Exception Thrown if their are any problems
@@ -377,7 +384,7 @@ public class TestMP4JAudioTaggerManager {
 		expected.append("</plist>]");
 		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Cover Artwork: [covr=1 piece of artwork]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr, size = 9,487 dimensions=9,487x400, mime=300]",atoms.get(index++).toString());
 //		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
 //		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
@@ -436,10 +443,6 @@ public class TestMP4JAudioTaggerManager {
 			}
 		});
 
-		for (IAtom a : atoms) {
-			System.out.println(a.getDisplayName()+"="+a.toString());
-		}
-
 //		Assert.assertEquals(18,atoms.size());
 		int index=0;
 		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 4]",atoms.get(index++).toString());
@@ -491,9 +494,7 @@ public class TestMP4JAudioTaggerManager {
 		expected.append("</plist>]");
 		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Cover Artwork: [covr=1 piece of artwork]",atoms.get(index++).toString());
-//		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
-//		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr, size = 9,487 dimensions=9,487x400, mime=300]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
 		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
 		Assert.assertEquals("Flavour: [flvr=18:1080p]",atoms.get(index++).toString());
@@ -508,6 +509,14 @@ public class TestMP4JAudioTaggerManager {
 		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
 		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
 		Assert.assertEquals("Encoding Tool: [©too=Lavf53.3.0]",atoms.get(index++).toString());
+		try {
+			atoms.get(index++);
+			Assert.fail("Their are more tags");
+		}
+		catch (IndexOutOfBoundsException e) {
+
+		}
+
 
 		try {
 			atoms.get(index++);
@@ -518,6 +527,199 @@ public class TestMP4JAudioTaggerManager {
 		}
 	}
 
+	@Test
+	public void testWriteWithJATReadWithAP() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		URL url = Data.class.getResource("a_video2.mp4");
+		File srcFile = new File(url.toURI());
+		Assert.assertTrue(srcFile.exists());
+
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
+		if (!mp4File.delete() && mp4File.exists()) {
+			throw new IOException("Unable to delete file");
+		}
+		FileHelper.copy(srcFile, mp4File);
+		Film film = createTestFilm();
+
+		IMP4Manager jat = createMP4Manager();
+		IMP4Manager ap = createMP4Manager();
+		MP4ITunesStore.updateFilm(null,jat,mp4File, film,1);
+
+		MP4ITunesStore.updateFilm(null,jat,mp4File, film,1);
+
+		List<IAtom> atoms = ap.listAtoms(mp4File);
+		Collections.sort(atoms, new Comparator<IAtom>() {
+			@Override
+			public int compare(IAtom o1, IAtom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		Assert.assertEquals(17,atoms.size());
+		int index=0;
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 4]",atoms.get(index++).toString());
+		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
+		StringBuilder expected = new StringBuilder();
+		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
+		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
+		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>asset-info</key>"+FileHelper.LS);
+		expected.append("    <dict>"+FileHelper.LS);
+		expected.append("        <key>file-size</key>"+FileHelper.LS);
+		expected.append("        <integer>12365</integer>"+FileHelper.LS);
+		expected.append("    </dict>"+FileHelper.LS);
+		expected.append("    <key>cast</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Stephen Baldwin</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Gabriel Byrne</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Benicio Del Toro</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Kevin Pollak</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>directors</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Bryan Singer</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>studio</key>"+FileHelper.LS);
+		expected.append("    <string>Blah</string>"+FileHelper.LS);
+		expected.append("</dict>"+FileHelper.LS);
+		expected.append("</plist>]");
+		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr, size = 9,487 dimensions=9,487x400, mime=300]",atoms.get(index++).toString());
+//		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
+//		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());
+		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
+		Assert.assertEquals("Sort Artist: [soar=Bryan Singer]",atoms.get(index++).toString());
+		Assert.assertEquals("Sort Name: [sonm=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=9]",atoms.get(index++).toString());
+		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+
+		try {
+			atoms.get(index++);
+			Assert.fail("Did not detect exception");
+		}
+		catch (IndexOutOfBoundsException e) {
+			// Ignore
+		}
+	}
+
+	@Test
+	public void testWriteWithAPReadWithJAT() throws Exception {
+		LogSetupHelper.initLogingInternalConfigFile("debug.log4j.properties");
+		URL url = Data.class.getResource("a_video2.mp4");
+		File srcFile = new File(url.toURI());
+		Assert.assertTrue(srcFile.exists());
+
+		File mp4File = FileHelper.createTempFile("test", ".mp4");
+		if (!mp4File.delete() && mp4File.exists()) {
+			throw new IOException("Unable to delete file");
+		}
+		FileHelper.copy(srcFile, mp4File);
+		Film film = createTestFilm();
+
+		IMP4Manager jat = createMP4Manager();
+		IMP4Manager ap = createMP4Manager();
+		MP4ITunesStore.updateFilm(null,ap,mp4File, film,1);
+
+		List<IAtom> atoms = jat.listAtoms(mp4File);
+		Collections.sort(atoms, new Comparator<IAtom>() {
+			@Override
+			public int compare(IAtom o1, IAtom o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		Assert.assertEquals(17,atoms.size());
+		int index=0;
+		Assert.assertEquals("MediaManager Version: [----;com.google.code;mmVer=2.1 4]",atoms.get(index++).toString());
+		Assert.assertEquals("Certification: [----;com.apple.iTunes;iTunEXTC=mpaa|R|400|]",atoms.get(index++).toString());
+		StringBuilder expected = new StringBuilder();
+		expected.append("[----;com.apple.iTunes;iTunMOVI=<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"+FileHelper.LS);
+		expected.append("<plist version=\"1.0\">"+FileHelper.LS);
+		expected.append("<dict>"+FileHelper.LS);
+		expected.append("    <key>asset-info</key>"+FileHelper.LS);
+		expected.append("    <dict>"+FileHelper.LS);
+		expected.append("        <key>file-size</key>"+FileHelper.LS);
+		expected.append("        <integer>1284</integer>"+FileHelper.LS);
+		expected.append("    </dict>"+FileHelper.LS);
+		expected.append("    <key>cast</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Stephen Baldwin</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Gabriel Byrne</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Benicio Del Toro</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Kevin Pollak</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>directors</key>"+FileHelper.LS);
+		expected.append("    <array>"+FileHelper.LS);
+		expected.append("        <dict>"+FileHelper.LS);
+		expected.append("            <key>name</key>"+FileHelper.LS);
+		expected.append("            <string>Bryan Singer</string>"+FileHelper.LS);
+		expected.append("        </dict>"+FileHelper.LS);
+		expected.append("    </array>"+FileHelper.LS);
+		expected.append("    <key>studio</key>"+FileHelper.LS);
+		expected.append("    <string>Blah</string>"+FileHelper.LS);
+		expected.append("</dict>"+FileHelper.LS);
+		expected.append("</plist>]");
+		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
+		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr, size = 9,487 dimensions=9,487x400, mime=300]",atoms.get(index++).toString());
+//		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
+//		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
+		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
+		Assert.assertEquals("Disc Number: [disk=1 of 1]",atoms.get(index++).toString());
+		Assert.assertEquals("Long description: [ldes=A test description]",atoms.get(index++).toString());
+		Assert.assertTrue(atoms.get(index++).toString().contains("Purchase Date: [purd="));
+		Assert.assertEquals("Sort Artist: [soar=Bryan Singer]",atoms.get(index++).toString());
+		Assert.assertEquals("Sort Name: [sonm=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Media Type: [stik=9]",atoms.get(index++).toString());
+		Assert.assertEquals("Artist: [©ART=Bryan Singer]",atoms.get(index++).toString());
+		Assert.assertEquals("Release Date: [©day=2005-11-10T00:00:00Z]",atoms.get(index++).toString());
+		Assert.assertEquals("Genre, User defined: [©gen=SciFi]",atoms.get(index++).toString());
+		Assert.assertEquals("Name: [©nam=Test film name]",atoms.get(index++).toString());
+		Assert.assertEquals("Encoding Tool: [©too=HandBrake svn3878 2011041801]",atoms.get(index++).toString());
+
+		try {
+			atoms.get(index++);
+			Assert.fail("Did not detect exception");
+		}
+		catch (IndexOutOfBoundsException e) {
+			// Ignore
+		}
+	}
 
 	/**
 	 * Used to test that a film meta data can be written to a .mp4 file
@@ -593,7 +795,7 @@ public class TestMP4JAudioTaggerManager {
 		expected.append("</plist>]");
 		Assert.assertEquals("Movie/Show Information: "+expected.toString(),atoms.get(index++).toString());
 		Assert.assertEquals("Category: [catg=SciFi]",atoms.get(index++).toString());
-		Assert.assertEquals("Cover Artwork: [covr=1 piece of artwork]",atoms.get(index++).toString());
+		Assert.assertEquals("Cover Artwork: [covr, size = 9,487 dimensions=9,487x400, mime=300]",atoms.get(index++).toString());
 //		Assert.assertEquals("Gapless Playback: [pgap=false]",atoms.get(index++).toString());
 //		Assert.assertEquals("Compilation: [cpil=false]",atoms.get(index++).toString());
 		Assert.assertEquals("Description: [desc=A test summary]",atoms.get(index++).toString());
@@ -692,3 +894,4 @@ public class TestMP4JAudioTaggerManager {
 		Assert.assertNotNull(f);
 	}
 }
+

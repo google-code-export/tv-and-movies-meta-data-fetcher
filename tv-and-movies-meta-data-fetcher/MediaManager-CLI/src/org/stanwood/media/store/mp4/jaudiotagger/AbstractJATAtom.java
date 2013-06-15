@@ -16,6 +16,8 @@
  */
 package org.stanwood.media.store.mp4.jaudiotagger;
 
+import org.jaudiotagger.tag.FieldDataInvalidException;
+import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
@@ -32,9 +34,9 @@ public abstract class AbstractJATAtom implements IAtom {
 	 * @param displayName The display name
 	 * @param key The atom key
 	 */
-	public AbstractJATAtom(String displayName,MP4AtomKey key) {
+	public AbstractJATAtom(MP4AtomKey key) {
 		this.key = key;
-		this.displayName = displayName;
+		this.displayName = key.getDisplayName();
 	}
 
 	/**
@@ -46,6 +48,8 @@ public abstract class AbstractJATAtom implements IAtom {
 	public String getName() {
 		return key.getId();
 	}
+
+	public abstract void updateField(Mp4Tag tag) throws FieldDataInvalidException;
 
 	/** {@inheritDoc} */
 	@Override

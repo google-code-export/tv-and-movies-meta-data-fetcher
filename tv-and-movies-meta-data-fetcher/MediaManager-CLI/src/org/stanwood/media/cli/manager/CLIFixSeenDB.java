@@ -30,7 +30,7 @@ import org.stanwood.media.store.mp4.MP4AtomKey;
 import org.stanwood.media.store.mp4.MP4Exception;
 import org.stanwood.media.store.mp4.StikValue;
 import org.stanwood.media.store.mp4.atomicparsley.APAtomNumber;
-import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
+import org.stanwood.media.store.mp4.jaudiotagger.MP4JAudioTaggerManager;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -120,7 +120,7 @@ public class CLIFixSeenDB extends AbstractLauncher {
 				action.setTestMode(getController().isTestRun());
 			}
 			ISeenDatabase seenDb = rootMediaDir.getController().getSeenDB();
-			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
+			IMP4Manager mp4Manager = new MP4JAudioTaggerManager();
 			mp4Manager.init(getController().getNativeFolder());
 
 			//TODO make each store able to validate a media file

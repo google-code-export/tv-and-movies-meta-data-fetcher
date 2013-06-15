@@ -95,6 +95,20 @@ public interface IMP4Manager {
 	public File getArtworkFile(URL imageUrl) throws IOException;
 
 
+	/**
+	 * Create an artwork atom from a image file
+	 * @param artwork The atom key
+	 * @param artworkFile The artwork file
+	 * @return The atom
+	 * @throws IOException Thrown if their is a problem reading the image
+	 */
 	public IAtom createArtworkAtomFromFile(MP4AtomKey artwork, File artworkFile) throws IOException;
+
+	/**
+	 * Used to check if a atom time is supported by the mp4 manager
+	 * @param atom The atom to check
+	 * @return True if the atom is supported
+	 */
+	public boolean supportedAtom(IAtom atom);
 
 }
