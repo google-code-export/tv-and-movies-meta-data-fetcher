@@ -14,6 +14,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.audio.mp4.Mp4FileReader;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagField;
@@ -21,9 +22,11 @@ import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.jaudiotagger.tag.images.StandardArtwork;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
-import org.jaudiotagger.tag.mp4.field.Mp4TagByteField;
+import org.jaudiotagger.tag.mp4.field.Mp4DiscNoField;
 import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
 import org.jaudiotagger.tag.mp4.field.Mp4TagTextField;
+import org.jaudiotagger.tag.mp4.field.Mp4TrackField;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
 import org.stanwood.media.store.mp4.MP4ArtworkType;
@@ -51,25 +54,42 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 	public List<IAtom> listAtoms(File mp4File) throws MP4Exception {
 		try {
 			List<IAtom> atoms = new ArrayList<IAtom>();
-			MP4VideoFileReader reader = new MP4VideoFileReader();
+			Mp4FileReader reader = new Mp4FileReader();
 			AudioFile mp4 = reader.read(mp4File);
 			Tag tag = mp4.getTag();
 			Iterator<TagField> it = tag.getFields();
 			while (it.hasNext()) {
 				TagField field = it.next();
-				MP4AtomKey key = MP4AtomKey.fromKey(field.getId());
 				IAtom atom;
 				if (field instanceof Mp4TagCoverField) {
+					MP4AtomKey key = MP4AtomKey.fromKey(field.getId());
 					Mp4TagCoverField cover = (Mp4TagCoverField)field;
 
 					StandardArtwork artwork = new StandardArtwork();
 					artwork.setBinaryData(cover.getData());
 					artwork.setImageFromData();
 
-					atom = new JATArtworkAtom(key.getDisplayName(), key,artwork);
+					atom = new JATArtworkAtom(key,artwork);
+				}
+				else if (field instanceof Mp4TrackField ) {
+					MP4AtomKey key = MP4AtomKey.fromKey(field.getId());
+					atom = new JATAtomRange(key, ((Mp4TrackField)field).getTrackNo(), ((Mp4TrackField)field).getTrackTotal());
+				}
+				else if (field instanceof Mp4DiscNoField ) {
+					MP4AtomKey key = MP4AtomKey.fromKey(field.getId());
+					atom = new JATAtomRange(key, ((Mp4DiscNoField)field).getDiscNo(), ((Mp4DiscNoField)field).getDiscTotal());
+				}
+				else if (field instanceof Mp4TagTextField){
+					MP4AtomKey key = MP4AtomKey.fromKey(field.getId());
+					atom = new JATStringAtom(key,getAtomTextValue(field));
+				}
+				else if (field instanceof Mp4TagReverseDnsField) {
+					Mp4TagReverseDnsField f = ((Mp4TagReverseDnsField)field);
+					MP4AtomKey key = MP4AtomKey.fromRDNS(f.getDescriptor(),f.getIssuer());
+					atom = new JATStringAtom(key,f.getContent());
 				}
 				else {
-					atom = new JATAtom(key.getDisplayName(),key,getAtomTextValue(field));
+					throw new MP4Exception(MessageFormat.format("Unsupported atom type {0}",field.getClass().getName()));
 				}
 				atoms.add(atom);
 			}
@@ -91,9 +111,9 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 		if (field instanceof Mp4TagTextField) {
 			return ((Mp4TagTextField)field).getContent();
 		}
-		else if (field instanceof Mp4TagByteField) {
-			return ((Mp4TagByteField)field).getContent();
-		}
+//		else if (field instanceof Mp4TagByteField) {
+//			return ((Mp4TagByteField)field).getContent();
+//		}
 		throw new MP4Exception(MessageFormat.format(Messages.getString("MP4Manager.UNSUPPORTED_FIELD"),field.getClass() ,field.getId())); //$NON-NLS-1$
 	}
 
@@ -101,17 +121,12 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 	@Override
 	public void update(File mp4File, List<IAtom> atoms) throws MP4Exception {
 		try {
-			MP4VideoFileReader reader = new MP4VideoFileReader();
+			Mp4FileReader reader = new Mp4FileReader();
 			AudioFile mp4 = reader.read(mp4File);
 			Mp4Tag tag = (Mp4Tag) mp4.getTag();
-			for (IAtom atom : atoms) {
-				if (atom instanceof JATArtworkAtom) {
-					JATArtworkAtom artAtom = (JATArtworkAtom)atom;
-					tag.setField(artAtom.getArtwork());
-				}
-				else {
-					tag.setField(new Mp4TagTextField(atom.getName(),((JATAtom)atom).getValue()));
-				}
+			for (IAtom a : atoms) {
+				AbstractJATAtom  atom = (AbstractJATAtom)a;
+				atom.updateField(tag);
 			}
 			mp4.commit();
 		}
@@ -134,19 +149,19 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 	/** {@inheritDoc } */
 	@Override
 	public IAtom createAtom(MP4AtomKey name, String value) {
-		return new JATAtom(name.getDisplayName(),name,value);
+		return new JATStringAtom(name,value);
 	}
 
 	/** {@inheritDoc } */
 	@Override
 	public IAtom createAtom(MP4AtomKey name, short number, short total) {
-		return createAtom(name,number+"/"+total); //$NON-NLS-1$
+		return new JATAtomRange(name, number, total);
 	}
 
 	/** {@inheritDoc } */
 	@Override
 	public IAtom createAtom(MP4AtomKey name, int value) {
-		return createAtom(name,String.valueOf(value));
+		return new JATAtomNumber(name,value);
 	}
 
 	/** {@inheritDoc } */
@@ -185,19 +200,6 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 		return tmp;
 	}
 
-
-//	/** {@inheritDoc } */
-//	@Override
-//	public IAtom createAtom(StikValue value) {
-//		return createAtom("stik",value.getId());
-//	}
-
-//	/** {@inheritDoc } */
-//	@Override
-//	public IAtom createDiskAtom(byte diskNumber, byte numberOfDisks) {
-//		return createAtom("disk",diskNumber+"/"+)numberOfDisks);
-//	}
-
 	/** {@inheritDoc} */
 	@Override
 	public IAtom createAtom(MP4AtomKey name, boolean value) {
@@ -209,11 +211,18 @@ public class MP4JAudioTaggerManager implements IMP4Manager {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IAtom createArtworkAtomFromFile(MP4AtomKey key, File artworkFile) throws IOException {
 		Artwork artwork = ArtworkFactory.createArtworkFromFile(artworkFile);
-		IAtom atom = new JATArtworkAtom(key.getDisplayName(),key,artwork);
+		IAtom atom = new JATArtworkAtom(key,artwork);
 		return atom;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean supportedAtom(IAtom atom) {
+		return atom instanceof AbstractJATAtom;
 	}
 
 }

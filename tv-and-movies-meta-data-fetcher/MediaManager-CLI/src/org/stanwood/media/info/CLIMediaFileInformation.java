@@ -15,7 +15,7 @@ import org.stanwood.media.cli.DefaultExitHandler;
 import org.stanwood.media.cli.IExitHandler;
 import org.stanwood.media.store.mp4.IAtom;
 import org.stanwood.media.store.mp4.IMP4Manager;
-import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
+import org.stanwood.media.store.mp4.jaudiotagger.MP4JAudioTaggerManager;
 import org.stanwood.media.util.FileHelper;
 
 /**
@@ -67,7 +67,7 @@ public class CLIMediaFileInformation extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		try {
-			IMP4Manager mp4Manager = new MP4AtomicParsleyManager();
+			IMP4Manager mp4Manager = new MP4JAudioTaggerManager();
 			mp4Manager.init(getController().getNativeFolder());
 
 			MediaFileInfoFetcher fileInfoFetcher = new MediaFileInfoFetcher(getController().getNativeFolder());

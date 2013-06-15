@@ -63,9 +63,8 @@ import org.stanwood.media.setup.MediaDirConfig;
 import org.stanwood.media.store.IStore;
 import org.stanwood.media.store.StoreException;
 import org.stanwood.media.store.StoreVersion;
-import org.stanwood.media.store.mp4.atomicparsley.MP4AtomicParsleyManager;
+import org.stanwood.media.store.mp4.jaudiotagger.MP4JAudioTaggerManager;
 import org.stanwood.media.util.FileHelper;
-import org.stanwood.media.util.NativeHelper;
 import org.stanwood.media.util.Version;
 
 /**
@@ -103,7 +102,7 @@ public class MP4ITunesStore implements IStore {
 	private final static Log log = LogFactory.getLog(MP4ITunesStore.class);
 
 	private IMP4Manager mp4Manager;
-	private Class<? extends IMP4Manager> manager = MP4AtomicParsleyManager.class;
+	private Class<? extends IMP4Manager> manager = MP4JAudioTaggerManager.class;
 	private String atomicParsleyCmd;
 	private MP4ITunesStoreInfo storeInfo;
 	private Controller controller;
@@ -124,9 +123,6 @@ public class MP4ITunesStore implements IStore {
 	/** {@inheritDoc} */
 	@Override
 	public void init() throws StoreException {
-		if (atomicParsleyCmd == null) {
-			atomicParsleyCmd = NativeHelper.getNativeApplication(controller.getNativeFolder(),MP4ITunesStoreInfo.PARAM_ATOMIC_PARSLEY_KEY.getName());
-		}
 		try {
 			getMP4Manager().init(controller.getNativeFolder());
 		} catch (MP4Exception e) {
@@ -492,6 +488,9 @@ public class MP4ITunesStore implements IStore {
 		try {
 				try {
 					IAtom artworkAtom = artworkCache.get(imageUrl);
+					if (artworkAtom!=null && !mp4Manager.supportedAtom(artworkAtom)) {
+						artworkAtom = null;
+					}
 					if (artworkAtom==null) {
 						artwork = mp4Manager.getArtworkFile(imageUrl);
 						artworkAtom = mp4Manager.createArtworkAtomFromFile(MP4AtomKey.ARTWORK, artwork );

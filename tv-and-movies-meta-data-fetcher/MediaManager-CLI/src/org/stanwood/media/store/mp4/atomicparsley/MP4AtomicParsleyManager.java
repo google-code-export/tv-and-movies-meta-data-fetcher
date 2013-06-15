@@ -365,8 +365,15 @@ public class MP4AtomicParsleyManager implements IMP4Manager {
 		return file;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IAtom createArtworkAtomFromFile(MP4AtomKey artwork, File artworkFile) {
 		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean supportedAtom(IAtom atom) {
+		return atom instanceof AbstractAPAtom;
 	}
 }

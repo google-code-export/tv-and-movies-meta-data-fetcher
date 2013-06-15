@@ -16,15 +16,19 @@
  */
 package org.stanwood.media.store.mp4.jaudiotagger;
 
+import java.text.MessageFormat;
+
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.media.store.mp4.MP4AtomKey;
 
 public class JATArtworkAtom extends AbstractJATAtom {
 
 	private Artwork artwork;
 
-	public JATArtworkAtom(String displayName, MP4AtomKey key,Artwork artwork) {
-		super(displayName, key);
+	public JATArtworkAtom(MP4AtomKey key,Artwork artwork) {
+		super(key);
 		this.artwork = artwork;
 	}
 
@@ -32,6 +36,18 @@ public class JATArtworkAtom extends AbstractJATAtom {
 		return artwork;
 	}
 
+	@Override
+	public void updateField(Mp4Tag tag) throws FieldDataInvalidException {
+		tag.setField(getArtwork());
+	}
 
+	/**
+	 * Print out the contents of the atom
+	 * @return Textual value of the atom
+	 */
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0}: [{1}, size = {2} dimensions={2}x{3}, mime={4}]",getDisplayName(),getKey().toString(),artwork.getBinaryData().length,artwork.getWidth(),artwork.getHeight(),artwork.getMimeType()); //$NON-NLS-1$
+	}
 
 }

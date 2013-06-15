@@ -42,6 +42,7 @@ public class LogSetupHelper {
 		if (!setupLogging) {
 			resetLogging();
 			PropertyConfigurator.configure(logConfigFile.getAbsolutePath());
+			JavaLoggingToCommonLoggingRedirector.activate();
 			setupLogging = true;
 		}
 	}
@@ -61,6 +62,7 @@ public class LogSetupHelper {
 			if (!configName.equals("")) { //$NON-NLS-1$
 				resetLogging();
 				PropertyConfigurator.configure(LogSetupHelper.class.getResource(configName));
+				JavaLoggingToCommonLoggingRedirector.activate();
 			}
 			setupLogging = true;
 		}
@@ -76,6 +78,7 @@ public class LogSetupHelper {
 			resetLogging();
 			PatternLayout layout = new PatternLayout("%m%n"); //$NON-NLS-1$
 			Logger.getRootLogger().addAppender(new StreamAppender(layout,new PrintStream(stdout),new PrintStream(stderr)));
+			JavaLoggingToCommonLoggingRedirector.activate();
 			setupLogging = true;
 		}
 	}

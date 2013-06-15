@@ -1,5 +1,6 @@
 package org.stanwood.media.store.mp4;
 
+
 /**
  * Implementing classes are used to store and retrieve information about mp4 iso atom boxes
  */
@@ -35,5 +36,6 @@ public interface IAtom {
 	 * @return The atom key
 	 */
 	public MP4AtomKey getKey();
+
 
 }
