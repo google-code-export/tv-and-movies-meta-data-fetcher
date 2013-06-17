@@ -47,6 +47,7 @@ import org.stanwood.media.model.Mode;
 import org.stanwood.media.progress.IProgressMonitor;
 import org.stanwood.media.progress.NullProgressMonitor;
 import org.stanwood.media.progress.SubProgressMonitor;
+import org.stanwood.media.script.ScriptFunction;
 import org.stanwood.media.search.MediaSearchResult;
 import org.stanwood.media.search.MediaSearcher;
 import org.stanwood.media.setup.ConfigException;
@@ -76,6 +77,7 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 	@Override
 	public ImportMediaResult execute(final ICommandLogger logger,IProgressMonitor monitor) {
 		try {
+
 			monitor.beginTask(Messages.getString("ImportMediaCommand.ImportMedia"), 105); //$NON-NLS-1$
 			Set<String> extensions = getAcceptableExtensions(monitor);
 			List<File> files = getNewMediaFiles(extensions,monitor);
@@ -163,7 +165,15 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 			logger.error(e.getMessage(),e);
 		}
 		finally {
-			monitor.done();
+			try {
+				for (WatchDirConfig c : getController().getWatchDirectories()) {
+					File f = c.getWatchDir();
+					getController().executeScriptFunction(ScriptFunction.POST_MEDIA_IMPORT, f.getAbsolutePath());
+				}
+			}
+			finally {
+				monitor.done();
+			}
 		}
 		return null;
 	}
@@ -298,6 +308,12 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 					@Override
 					public void sendEventDeletedFile(File file) throws ActionException {
 					}
+
+					@Override
+					public void sendEventAboutToRenamedFile(File oldName,
+							File newName) throws ActionException {
+
+					}
 				});
 			}
 			else {
@@ -316,6 +332,12 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 
 					@Override
 					public void sendEventDeletedFile(File file) throws ActionException {
+					}
+
+					@Override
+					public void sendEventAboutToRenamedFile(File oldName,
+							File newName) throws ActionException {
+
 					}
 				});
 			}
@@ -338,6 +360,7 @@ public class ImportMediaCommand extends AbstractServerCommand<ImportMediaResult>
 		List<File>newMediaFiles = new ArrayList<File>();
 		for (WatchDirConfig c : getController().getWatchDirectories()) {
 			File f = c.getWatchDir();
+			getController().executeScriptFunction(ScriptFunction.PRE_MEDIA_IMPORT, f.getAbsolutePath());
 			if (f.isDirectory()) {
 				for (File f2 : FileHelper.listFiles(f)) {
 					if (isAllowedMediaFileType(extensions,f2)) {

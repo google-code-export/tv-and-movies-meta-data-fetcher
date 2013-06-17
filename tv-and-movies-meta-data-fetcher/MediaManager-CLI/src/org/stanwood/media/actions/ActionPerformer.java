@@ -347,6 +347,23 @@ public class ActionPerformer implements IActionEventHandler {
 		}
 	}
 
+	@Override
+	public void sendEventAboutToRenamedFile(File oldFile, File newFile) throws ActionException {
+		try {
+			dir.aboutToRenamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+			if (seenDb!=null) {
+				try {
+					seenDb.renamedFile(dir.getMediaDirConfig().getMediaDir(),oldFile,newFile);
+				}
+				catch (SeenDBException e) {
+					throw new ActionException(Messages.getString("ActionPerformer.UnableAccessSeenDatabase"),e); //$NON-NLS-1$
+				}
+			}
+		} catch (StoreException e) {
+			throw new ActionException(Messages.getString("ActionPerformer.UNABLE_RENAME_FILE"),e); //$NON-NLS-1$
+		}
+	}
+
 
 
 

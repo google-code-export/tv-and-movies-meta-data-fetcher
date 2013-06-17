@@ -52,6 +52,11 @@ public class LogSetupHelper {
 		Logger.getRootLogger().setLevel(Level.INFO);
 	}
 
+	public static void forceReset() {
+		setupLogging = false;
+		resetLogging();
+	}
+
 	/**
 	 * Initialise the logging using the configuration file stored in the same package as this class.
 	 * @param configName The name of the configuration file stored in the same package as this class.

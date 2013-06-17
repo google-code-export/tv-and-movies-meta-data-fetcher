@@ -11,11 +11,11 @@ Version 2.3
 -----------
 Add feature to check for updates of media manager
 Add script support
-	New <script> element for the config file. This will contain global script functions
-	Add ability to execute scripts before and after a processing operation of each media directory.
-	Add ability to execute scripts before importing form incoming directory
 	Make it possible to have actions completely written in scripts
+		* This should be installable from a update site.
+		* Possible to specify which stores use the actions		
 Allow script section to be loaded from files	
+Allow scripting libs to be installed (pip, gem)?
 Extend patterns
 	* Allow multiple patterns
 	* Allow patterns to be the result of ruby scripts. This will allow for very advance patterns.

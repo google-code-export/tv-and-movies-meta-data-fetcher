@@ -472,4 +472,11 @@ public class RemoteMacOSXItunesStore implements IStore {
 		}
 		return false;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile)
+			throws StoreException {
+		updateItunes();
+	}
 }

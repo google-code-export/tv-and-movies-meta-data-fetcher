@@ -62,6 +62,7 @@ public class BaseRemoteMacOSXItunesStoreTest {
 					started = false;
 				}
 				catch (Throwable e) {
+					log.error(e);
 					e.printStackTrace();
 					exception = e;
 				}

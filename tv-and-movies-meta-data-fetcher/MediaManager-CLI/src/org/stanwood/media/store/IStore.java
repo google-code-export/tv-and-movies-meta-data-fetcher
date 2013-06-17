@@ -168,6 +168,16 @@ public interface IStore extends IExtension  {
 	public void renamedFile(File rootMediaDir,File oldFile, File newFile) throws StoreException;
 
 	/**
+	 * This is used when a file that holds a episode or film is about to be renamed
+	 * @param rootMediaDir This is the directory which is the root of media, this can be the current directory if
+	 *         it was not specified on the command line.
+	 * @param oldFile The old file
+	 * @param newFile The new file
+	 * @throws StoreException Thrown if their is a problem renaming files
+	 */
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile) throws StoreException;
+
+	/**
 	 * This will get a film from the store. If the film can't be found, then it will return null.
 	 * @param filmFile The file the film is located in.
 	 * @param filmId The id of the film
@@ -284,4 +294,6 @@ public interface IStore extends IExtension  {
 	 * @throws StoreException
 	 */
 	public boolean fileKnownByStore(MediaDirectory mediaDirectory,File file) throws StoreException;
+
+
 }
