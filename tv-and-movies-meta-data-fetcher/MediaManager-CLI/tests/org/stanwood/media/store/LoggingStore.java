@@ -110,11 +110,12 @@ public class LoggingStore implements IStore {
 	@Override
 	public SearchResult searchMedia(String name, Mode mode, Integer part,
 			MediaDirConfig dirConfig, File mediaFile) throws StoreException {
-		events.add("searchMedia()");
+		SearchResult result = null;
 		if (store!=null) {
-			return store.searchMedia(name, mode, part, dirConfig, mediaFile);
+			result = store.searchMedia(name, mode, part, dirConfig, mediaFile);
 		}
-		return null;
+		events.add("searchMedia("+name+","+mode+","+part+","+dirConfig.getMediaDir()+","+mediaFile.getAbsolutePath()+") -> " + result);
+		return result;
 	}
 
 	/** {@inheritDoc} */
@@ -328,6 +329,13 @@ public class LoggingStore implements IStore {
 				item = null;
 			}
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile)
+			throws StoreException {
+		events.add("aboutToRenamedFile()");
 	}
 
 }

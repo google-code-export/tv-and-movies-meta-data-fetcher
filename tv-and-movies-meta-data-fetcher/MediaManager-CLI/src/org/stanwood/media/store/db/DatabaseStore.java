@@ -725,4 +725,11 @@ public class DatabaseStore implements IStore {
 	protected Controller getController() {
 		return controller;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void aboutToRenamedFile(File rootMediaDir, File oldFile, File newFile)
+			throws StoreException {
+
+	}
 }
