@@ -38,3 +38,5 @@ Media Manager v2.1 has been released. This is a major update that focuses on iTu
 - Improved TV Show/Film searching.
 - Fixed issues with launch scripts.
 - Debian/Ubuntu install packages.
+
+[Full Changelog] (https://bitbucket.org/shield007/mediamanager/wiki/Changelog)
