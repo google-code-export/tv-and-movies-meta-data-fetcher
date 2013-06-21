@@ -4,6 +4,7 @@ require 'itunesController/controllserver'
 require 'itunesController/version'
 require 'itunesController/cachedcontroller'
 require 'itunesController/database/backend'
+require 'itunesController/controller_creator'
 
 require 'java'
 
@@ -146,6 +147,17 @@ class TestStuff
     end
 end
 
+class DummyControllerCreator < ItunesController::ControllerCreator
+
+    def initialize(controller)
+        @controller = controller
+    end
+
+    def createController()
+        return @controller
+    end
+end
+
 def resetDummyServer()
     ItunesController::DummyITunesController::resetCommandLog()
     ItunesController::DummyITunesController::resetTracks()
@@ -153,19 +165,19 @@ def resetDummyServer()
 end
 
 def launchServer(configPath,port)
-    begin    
+    begin            
         ItunesController::DummyITunesController::resetCommandLog()
         ItunesController::DummyITunesController::resetTracks()
         itunes=ItunesController::DummyITunesController.new()
-        
+                
         dbBackend = HSQLBackend.new            
         controller=ItunesController::CachedController.new(itunes,dbBackend)
-        TestStuff::setController(controller) 
-        config=ItunesController::ServerConfig.readConfig(configPath)
-        
-        server=ItunesController::ITunesControlServer.new(config,port,controller)
+        TestStuff::setController(controller)
+        config=ItunesController::ServerConfig.readConfig(configPath)  
+        server=ItunesController::ITunesControlServer.new(config,port,DummyControllerCreator.new(controller))
         TestStuff::setServer(server)        
         TestStuff::setDB(dbBackend)
+
         return server
     rescue => exc                
         ItunesController::ItunesControllerLogging::error("Unable to execute command",exc)                        
